@@ -442,6 +442,102 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   margin-top: 8px;
 }
 
+/* ── sync status indicator ────────────────────────────────────────────────── */
+.sync-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  transition: color 0.3s, opacity 0.3s;
+}
+
+/* ── passcode bar (fixed bottom) ──────────────────────────────────────────── */
+.passcode-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #141A14;
+  border-top: 1px solid rgba(237,233,220,0.09);
+  padding: 14px 16px;
+  display: flex;
+  justify-content: center;
+  z-index: 100;
+  /* slide up */
+  animation: slideUp 0.18s ease-out;
+}
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.passcode-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 680px;
+}
+
+.passcode-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(237,233,220,0.5);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.passcode-input {
+  flex: 1;
+  min-width: 0;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(169,180,120,0.3);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #EDE9DA;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.12s;
+}
+.passcode-input::placeholder { color: rgba(237,233,220,0.2); }
+.passcode-input:focus { border-color: rgba(169,180,120,0.65); }
+
+.passcode-submit {
+  background: rgba(146,155,105,0.15);
+  border: 1px solid rgba(169,180,120,0.4);
+  border-radius: 8px;
+  padding: 8px 16px;
+  color: #C6D093;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+.passcode-submit:hover  { background: rgba(146,155,105,0.28); border-color: rgba(169,180,120,0.7); }
+.passcode-submit:active { background: #929B69; border-color: #929B69; color: #0C100C; }
+
+.passcode-dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  color: rgba(237,233,220,0.3);
+  font-size: 14px;
+  flex-shrink: 0;
+  transition: color 0.12s, background 0.12s;
+}
+.passcode-dismiss:hover  { color: rgba(237,233,220,0.65); background: rgba(255,255,255,0.04); }
+.passcode-dismiss:active { color: #EDE9DA; }
+
 /* ── responsive ───────────────────────────────────────────────────────────── */
 @media (max-width: 480px) {
   .headline { font-size: 17px; }

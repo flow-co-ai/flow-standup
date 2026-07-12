@@ -1,6 +1,12 @@
 /* app.js — Flow Ops dashboard
- * Reads site/latest.json, renders client cards, persists handled state.
- * Pure JS, no frameworks. Persistence layer: localStorage (easy to swap).
+ *
+ * Persistence model:
+ *   READ  — public GitHub raw URL, no auth needed
+ *   WRITE — /.netlify/functions/save-checks, requires X-Ops-Key passcode
+ *   LOCAL — localStorage mirror used when the network read fails (offline)
+ *
+ * Checks are stored as { rowId: true } (only checked rows kept).
+ * Each week gets its own file: checks/{week_of}.json on the "state" branch.
  */
 
 // ── constants ─────────────────────────────────────────────────────────────────
@@ -29,38 +35,191 @@ const HEALTH = {
   },
 };
 
-const SOURCE_TAG = { monday: 'MON', meeting: 'MTG', whatsapp: 'WA' };
-const STORAGE_KEY = 'flowops-v3-handled';
-const STALE_DAYS  = 8;
+const SOURCE_TAG   = { monday: 'MON', meeting: 'MTG', whatsapp: 'WA' };
+const STALE_DAYS   = 8;
+const REPO_OWNER   = 'flow-co-ai';
+const REPO_NAME    = 'flow-standup';
+
+const KEY_PASSCODE = 'flowops-passcode';
+const localChecksKey = (weekOf) => `flowops-v4-${weekOf}`;
 
 // ── state ─────────────────────────────────────────────────────────────────────
 
-let standup  = null;
-let handled  = {};   // { "week_of:rowId": true }
-let copiedId = null;
+let standup   = null;
+let handled   = {};       // { rowId: true }  — only checked rows stored
+let copiedId  = null;
 let copyTimer = null;
+let saveTimer = null;
 
-// ── persistence (swap this block to sync to a server later) ───────────────────
+// ── persistence layer ─────────────────────────────────────────────────────────
 
-function loadHandled() {
-  try { handled = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { handled = {}; }
+// --- localStorage (offline mirror) -------------------------------------------
+
+function loadLocal() {
+  if (!standup?.week_of) return;
+  try { handled = JSON.parse(localStorage.getItem(localChecksKey(standup.week_of)) || '{}'); }
+  catch { handled = {}; }
 }
 
-function saveHandled() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(handled)); } catch {}
+function saveLocal() {
+  if (!standup?.week_of) return;
+  try { localStorage.setItem(localChecksKey(standup.week_of), JSON.stringify(handled)); } catch {}
 }
 
-function rowKey(id) {
-  return `${standup?.week_of || 'noweek'}:${id}`;
+// --- passcode -----------------------------------------------------------------
+
+function getPasscode()        { return localStorage.getItem(KEY_PASSCODE) || null; }
+function storePasscode(p)     { localStorage.setItem(KEY_PASSCODE, p); }
+function clearStoredPasscode(){ localStorage.removeItem(KEY_PASSCODE); }
+
+// --- remote read (public, no auth) -------------------------------------------
+
+async function loadRemoteChecks() {
+  if (!standup?.week_of) return;
+  const url =
+    `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}` +
+    `/refs/heads/state/checks/${standup.week_of}.json?t=${Date.now()}`;
+  try {
+    const res = await fetch(url);
+    if (res.status === 404) return;   // fresh week — all unchecked
+    if (!res.ok)            return;   // silently fall back to local
+    const remote = await res.json();
+    if (remote && typeof remote === 'object' && !Array.isArray(remote)) {
+      handled = remote;
+      saveLocal(); // keep local mirror in sync
+      render();
+    }
+  } catch { /* network error — local mirror already loaded */ }
 }
 
-function isHandled(id) { return !!handled[rowKey(id)]; }
+// --- remote write (requires passcode) ----------------------------------------
+
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(doSave, 2000);
+}
+
+async function doSave() {
+  const passcode = getPasscode();
+  if (!passcode) {
+    showPasscodePrompt();
+    return;
+  }
+
+  setSyncStatus('saving');
+
+  try {
+    const res = await fetch('/.netlify/functions/save-checks', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Ops-Key': passcode,
+      },
+      body: JSON.stringify({ week_of: standup.week_of, checks: handled }),
+    });
+
+    if (res.status === 401) {
+      clearStoredPasscode();
+      setSyncStatus('failed');
+      showPasscodePrompt();
+      return;
+    }
+
+    if (!res.ok) {
+      setSyncStatus('failed');
+      return;
+    }
+
+    setSyncStatus('saved');
+  } catch {
+    // Network error — local state is safe; retry on next toggle
+    setSyncStatus('failed');
+  }
+}
+
+// --- toggle ------------------------------------------------------------------
 
 function toggleHandled(id) {
-  const k = rowKey(id);
-  if (handled[k]) delete handled[k]; else handled[k] = true;
-  saveHandled();
+  if (handled[id]) delete handled[id]; else handled[id] = true;
+  saveLocal();
   render();
+  scheduleSave(); // doSave will show passcode prompt if needed
+}
+
+// ── sync status indicator ─────────────────────────────────────────────────────
+
+let fadeTimer = null;
+
+function setSyncStatus(status) {
+  const el_ = document.getElementById('sync-status');
+  if (!el_) return;
+  clearTimeout(fadeTimer);
+
+  const config = {
+    saving: { text: '· syncing…',    color: 'rgba(169,180,120,0.55)' },
+    saved:  { text: '· synced',      color: 'rgba(169,180,120,0.35)' },
+    failed: { text: '· sync failed', color: 'rgba(220,167,70,0.75)'  },
+  }[status];
+
+  if (!config) { el_.hidden = true; return; }
+
+  el_.textContent = config.text;
+  el_.style.color = config.color;
+  el_.hidden = false;
+
+  if (status === 'saved') {
+    fadeTimer = setTimeout(() => { el_.hidden = true; }, 3500);
+  }
+}
+
+// ── passcode prompt ───────────────────────────────────────────────────────────
+
+let promptBar = null;
+
+function showPasscodePrompt() {
+  if (promptBar) { promptBar.hidden = false; focusPasscodeInput(); return; }
+
+  promptBar = el('div', { class: 'passcode-bar', role: 'dialog', 'aria-label': 'Enter ops passcode to sync' },
+    el('form', { class: 'passcode-form', onsubmit: onPasscodeSubmit },
+      el('label', { class: 'passcode-label', for: 'passcode-input', text: 'Sync passcode' }),
+      el('input', {
+        id: 'passcode-input',
+        class: 'passcode-input',
+        type: 'password',
+        placeholder: 'enter passcode…',
+        autocomplete: 'current-password',
+        required: '',
+      }),
+      el('button', { class: 'passcode-submit', type: 'submit', text: 'Sync' }),
+      el('button', {
+        class: 'passcode-dismiss',
+        type: 'button',
+        'aria-label': 'Dismiss',
+        html: '&#10005;',
+        onclick: () => { promptBar.hidden = true; },
+      }),
+    ),
+  );
+
+  document.body.append(promptBar);
+  focusPasscodeInput();
+}
+
+function focusPasscodeInput() {
+  setTimeout(() => document.getElementById('passcode-input')?.focus(), 80);
+}
+
+function onPasscodeSubmit(e) {
+  e.preventDefault();
+  const input = document.getElementById('passcode-input');
+  const val   = (input?.value || '').trim();
+  if (!val) return;
+  storePasscode(val);
+  if (input) input.value = '';
+  promptBar.hidden = true;
+  // Trigger the pending save immediately (skip debounce)
+  clearTimeout(saveTimer);
+  doSave();
 }
 
 // ── clipboard ─────────────────────────────────────────────────────────────────
@@ -90,12 +249,12 @@ function copyText(id, text) {
 function el(tag, props, ...children) {
   const e = document.createElement(tag);
   for (const [k, v] of Object.entries(props || {})) {
-    if      (k === 'class')                    e.className = v;
-    else if (k === 'text')                     e.textContent = v;
-    else if (k === 'html')                     e.innerHTML = v;
-    else if (k.startsWith('on') && typeof v === 'function') e[k] = v;
-    else if (k === 'style' && typeof v === 'object')        Object.assign(e.style, v);
-    else                                       e.setAttribute(k, v);
+    if      (k === 'class')                                    e.className = v;
+    else if (k === 'text')                                     e.textContent = v;
+    else if (k === 'html')                                     e.innerHTML = v;
+    else if (k.startsWith('on') && typeof v === 'function')    e[k] = v;
+    else if (k === 'style'      && typeof v === 'object')      Object.assign(e.style, v);
+    else                                                       e.setAttribute(k, v);
   }
   for (const c of children.flat()) {
     if (c == null) continue;
@@ -105,6 +264,8 @@ function el(tag, props, ...children) {
 }
 
 // ── checkbox builder ──────────────────────────────────────────────────────────
+
+function isHandled(id) { return !!handled[id]; }
 
 function buildCheckbox(id, isStalled) {
   const checked = isHandled(id);
@@ -128,16 +289,15 @@ function buildCheckbox(id, isStalled) {
 function buildRow(item, isStalled) {
   if (!item || typeof item !== 'object') return null;
   const { id, text, source, monday_url: url, item_name, days_stalled } = item;
-  const handled_ = isHandled(id);
-  const tag = SOURCE_TAG[source] || '';
+  const done = isHandled(id);
+  const tag  = SOURCE_TAG[source] || '';
 
   const textSpan = el('span', {
     class: 'row-text',
-    style: { textDecoration: handled_ ? 'line-through' : 'none' },
+    style: { textDecoration: done ? 'line-through' : 'none' },
     text,
   });
 
-  // Right side: days badge (stalled), source chip
   const metaEls = [];
   if (isStalled && days_stalled != null) {
     metaEls.push(el('span', { class: 'days-badge', text: `${days_stalled}d` }));
@@ -146,29 +306,26 @@ function buildRow(item, isStalled) {
 
   let rowContent;
   if (url) {
-    const rightSlot = el('span', { class: 'row-right' },
-      ...metaEls,
-      el('span', { class: 'chevron', html: '&#8599;' }),
-    );
     rowContent = el('a', {
       href: url,
       target: '_blank',
       rel: 'noopener',
       title: item_name || 'Open in Monday.com',
-      class: `${isStalled ? 'stalled-row' : 'highlight-row'}${handled_ ? ' handled' : ''}`,
-    }, textSpan, rightSlot);
+      class: `${isStalled ? 'stalled-row' : 'highlight-row'}${done ? ' handled' : ''}`,
+    },
+      textSpan,
+      el('span', { class: 'row-right' },
+        ...metaEls,
+        el('span', { class: 'chevron', html: '&#8599;' }),
+      ),
+    );
   } else {
-    // Plain row — no chevron, slightly dimmer
-    const metaWrap = el('span', { class: 'source-chip', text: tag });
     rowContent = el('div', {
-      class: `row-plain${handled_ ? ' handled' : ''}`,
-    }, textSpan, metaWrap);
+      class: `row-plain${done ? ' handled' : ''}`,
+    }, textSpan, el('span', { class: 'source-chip', text: tag }));
   }
 
-  return el('div', { class: 'row-wrapper' },
-    buildCheckbox(id, isStalled),
-    rowContent,
-  );
+  return el('div', { class: 'row-wrapper' }, buildCheckbox(id, isStalled), rowContent);
 }
 
 // ── pill builder ──────────────────────────────────────────────────────────────
@@ -180,10 +337,9 @@ function buildPill(action, id) {
     const params = new URLSearchParams();
     if (action.subject) params.set('subject', action.subject);
     if (action.body)    params.set('body', action.body);
-    const to = action.to || '';
     return el('a', {
       class: 'pill',
-      href: `mailto:${to}?${params.toString()}`,
+      href: `mailto:${action.to || ''}?${params.toString()}`,
       target: '_blank',
       rel: 'noopener',
       html: 'Draft email &#8599;',
@@ -209,49 +365,40 @@ function buildPill(action, id) {
 
 function buildNextRow(priority) {
   if (!priority) return null;
-  const id = priority.id;
-  const handled_ = isHandled(id);
+  const id   = priority.id;
+  const done = isHandled(id);
 
-  // Strip "ClientName: " prefix for display
   let displayText = priority.text || '';
-  const colonIdx = displayText.indexOf(': ');
+  const colonIdx  = displayText.indexOf(': ');
   if (colonIdx > 0 && colonIdx < 45) displayText = displayText.slice(colonIdx + 2);
 
   const textEl = el('span', {
     class: 'next-text',
-    style: { textDecoration: handled_ ? 'line-through' : 'none' },
+    style: { textDecoration: done ? 'line-through' : 'none' },
     text: displayText,
   });
 
-  const pill = buildPill(priority.action, id);
-
   const content = el('div', {
-    class: `next-content${handled_ ? ' handled' : ''}`,
-  }, textEl, pill);
+    class: `next-content${done ? ' handled' : ''}`,
+  }, textEl, buildPill(priority.action, id));
 
-  return el('div', { class: 'row-wrapper' },
-    buildCheckbox(id, false),
-    content,
-  );
+  return el('div', { class: 'row-wrapper' }, buildCheckbox(id, false), content);
 }
 
 // ── priority matcher ──────────────────────────────────────────────────────────
 
 function findPriorityForClient(priorities, clientEntry) {
-  const clientName = clientEntry.client;
+  const name = clientEntry.client;
 
-  // 1. Exact client field match (from schema's optional .client property)
-  let match = priorities.find(p => p.client && p.client === clientName);
-  if (match) return match;
+  let m = priorities.find(p => p.client && p.client === name);
+  if (m) return m;
 
-  // 2. Text starts with "ClientName: "
-  const prefix = clientName.toLowerCase() + ': ';
-  match = priorities.find(p => (p.text || '').toLowerCase().startsWith(prefix));
-  if (match) return match;
+  const prefix = name.toLowerCase() + ': ';
+  m = priorities.find(p => (p.text || '').toLowerCase().startsWith(prefix));
+  if (m) return m;
 
-  // 3. Text contains client name as a substring (loose fallback)
-  match = priorities.find(p => (p.text || '').toLowerCase().includes(clientName.toLowerCase()));
-  return match || null;
+  m = priorities.find(p => (p.text || '').toLowerCase().includes(name.toLowerCase()));
+  return m || null;
 }
 
 // ── card builder ──────────────────────────────────────────────────────────────
@@ -259,15 +406,12 @@ function findPriorityForClient(priorities, clientEntry) {
 function buildCard(entry, priorities) {
   const h = HEALTH[entry.health] || HEALTH.on_track;
 
-  // Flatten highlights and stalled across all departments
-  const highlights = (entry.work_by_department || []).flatMap(d => d.highlights   || []);
+  const highlights = (entry.work_by_department || []).flatMap(d => d.highlights    || []);
   const stalled    = (entry.work_by_department || []).flatMap(d => d.stalled_items || []);
-
-  const clientPriority = findPriorityForClient(priorities, entry);
+  const clientPrio = findPriorityForClient(priorities, entry);
 
   const card = el('article', { class: 'client-card' });
 
-  // Header: name + health chip
   card.append(el('div', { class: 'card-header' },
     el('span', { class: 'client-name', text: entry.client }),
     el('span', {
@@ -277,7 +421,6 @@ function buildCard(entry, priorities) {
     }),
   ));
 
-  // Headline
   card.append(el('p', {
     class: 'headline',
     style: { color: h.accent, textShadow: `0 0 26px ${h.glow}` },
@@ -286,7 +429,6 @@ function buildCard(entry, priorities) {
 
   const sections = el('div', { class: 'card-sections' });
 
-  // What happened
   if (highlights.length) {
     const sec = el('div', { class: 'card-section' });
     sec.append(el('span', { class: 'section-label', text: 'What happened' }));
@@ -294,7 +436,6 @@ function buildCard(entry, priorities) {
     sections.append(sec);
   }
 
-  // Stalled
   if (stalled.length) {
     const sec = el('div', { class: 'card-section' });
     sec.append(el('span', { class: 'section-label stalled-label', text: 'Stalled' }));
@@ -302,11 +443,10 @@ function buildCard(entry, priorities) {
     sections.append(sec);
   }
 
-  // Next
-  if (clientPriority) {
+  if (clientPrio) {
     const sec = el('div', { class: 'card-section' });
     sec.append(el('span', { class: 'section-label', text: 'Next' }));
-    const r = buildNextRow(clientPriority);
+    const r = buildNextRow(clientPrio);
     if (r) sec.append(r);
     sections.append(sec);
   }
@@ -321,28 +461,26 @@ function renderFooter() {
   const commsFlags = standup.comms_flags || [];
   const unmapped   = (standup.by_client || []).filter(c => c.client === 'Unmapped');
 
-  const footerItems = [];
-  commsFlags.forEach(f => footerItems.push(typeof f === 'string' ? f : f.text || ''));
+  const items = [];
+  commsFlags.forEach(f => items.push(typeof f === 'string' ? f : f.text || ''));
   unmapped.forEach(u => {
     (u.work_by_department || []).forEach(d => {
-      (d.highlights    || []).forEach(h => footerItems.push(`[Unmapped] ${h.text || h}`));
-      (d.stalled_items || []).forEach(s => footerItems.push(`[Unmapped, stalled] ${s.text || s}`));
+      (d.highlights    || []).forEach(h => items.push(`[Unmapped] ${h.text || h}`));
+      (d.stalled_items || []).forEach(s => items.push(`[Unmapped, stalled] ${s.text || s}`));
     });
   });
 
   const sectionEl = document.getElementById('footer-unmatched');
   const itemsEl   = document.getElementById('footer-items');
-  if (footerItems.length && sectionEl && itemsEl) {
-    footerItems.forEach(t => itemsEl.append(el('div', { class: 'footer-item', text: t })));
+  if (items.length && sectionEl && itemsEl) {
+    items.forEach(t => itemsEl.append(el('div', { class: 'footer-item', text: t })));
     sectionEl.hidden = false;
   }
 
   const ts = document.getElementById('footer-ts');
-  if (ts) {
-    const stamp = standup.week_of
-      ? `Generated for week of ${standup.week_of} from Monday.com boards, meeting transcripts, and team messages.`
-      : '';
-    ts.textContent = stamp;
+  if (ts && standup.week_of) {
+    ts.textContent =
+      `Generated for week of ${standup.week_of} from Monday.com boards, meeting transcripts, and team messages.`;
   }
 }
 
@@ -350,15 +488,11 @@ function renderFooter() {
 
 function render() {
   if (!standup) return;
-
-  const app       = document.getElementById('app');
+  const app        = document.getElementById('app');
   const priorities = standup.this_week_priorities || [];
-
-  // Clear previous cards (leave banners/header intact via HTML structure)
-  app.innerHTML = '';
-
+  app.innerHTML    = '';
   (standup.by_client || []).forEach(entry => {
-    if (entry.client === 'Unmapped') return; // shown in footer
+    if (entry.client === 'Unmapped') return;
     app.append(buildCard(entry, priorities));
   });
 }
@@ -367,17 +501,15 @@ function render() {
 
 function fmtDate(iso) {
   try {
-    const d = new Date(iso + 'T12:00:00Z');
-    return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    return new Date(iso + 'T12:00:00Z')
+      .toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
   } catch { return iso; }
 }
 
 // ── init ──────────────────────────────────────────────────────────────────────
 
 async function init() {
-  loadHandled();
-
-  // Fetch data
+  // 1. Fetch standup JSON
   standup = await (async () => {
     try {
       const res = await fetch('latest.json');
@@ -391,7 +523,10 @@ async function init() {
     return;
   }
 
-  // Staleness check
+  // 2. Load local mirror first (instant, no flicker)
+  loadLocal();
+
+  // 3. Staleness check
   if (standup.week_of) {
     const ageDays = (Date.now() - new Date(standup.week_of + 'T12:00:00Z').getTime()) / 86_400_000;
     if (ageDays > STALE_DAYS) {
@@ -399,14 +534,19 @@ async function init() {
     }
   }
 
-  // Header week label
+  // 4. Header
   const weekEl = document.getElementById('week-of');
   if (weekEl && standup.week_of) {
     weekEl.textContent = `Week of ${fmtDate(standup.week_of)}`;
   }
 
+  // 5. First render with local state
   render();
   renderFooter();
+
+  // 6. Fetch remote checks (replaces local if newer; re-renders if different)
+  //    Runs async so the page is already interactive
+  await loadRemoteChecks();
 }
 
 document.addEventListener('DOMContentLoaded', init);
