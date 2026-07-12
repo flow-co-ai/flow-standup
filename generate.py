@@ -4,6 +4,7 @@ Run: python generate.py
 """
 
 import hashlib
+import io
 import json
 import os
 import shutil
@@ -29,16 +30,97 @@ def load_config() -> dict:
         return json.load(f)
 
 
-def load_playbooks() -> str:
+def _match_playbook_to_client(stem: str, clients_config: dict) -> str:
+    result = resolve_client(stem, clients_config, fuzzy=True)
+    return result if result != "Unmapped" else stem
+
+
+def load_playbooks(clients_config: dict) -> dict[str, str]:
+    """Load local playbooks/*.md files. Returns {canonical_client_or_stem: content}."""
     playbooks_dir = Path("playbooks")
+    result: dict[str, str] = {}
     if not playbooks_dir.exists():
-        return ""
-    sections = []
+        return result
     for filepath in sorted(playbooks_dir.glob("*.md")):
         content = filepath.read_text(encoding="utf-8").strip()
         if content:
-            sections.append(f"### {filepath.stem}\n\n{content}")
-    return "\n\n".join(sections)
+            client = _match_playbook_to_client(filepath.stem, clients_config)
+            result[client] = content
+    return result
+
+
+def load_playbooks_drive(config: dict, clients_config: dict) -> dict[str, str]:
+    """
+    Load .md and Google Doc playbooks from Drive using GOOGLE_SERVICE_ACCOUNT_JSON.
+    Returns {} gracefully on any auth or fetch failure.
+    """
+    folder_id = config.get("playbooks_drive_folder_id", "")
+    sa_json_str = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON", "")
+    if not folder_id or not sa_json_str:
+        return {}
+
+    try:
+        from google.oauth2 import service_account
+        from googleapiclient.discovery import build
+        from googleapiclient.http import MediaIoBaseDownload
+
+        sa_info = json.loads(sa_json_str)
+        creds = service_account.Credentials.from_service_account_info(
+            sa_info, scopes=["https://www.googleapis.com/auth/drive.readonly"]
+        )
+        service = build("drive", "v3", credentials=creds, cache_discovery=False)
+
+        query = (
+            f"'{folder_id}' in parents and trashed = false and ("
+            f"mimeType = 'text/markdown' or "
+            f"mimeType = 'text/plain' or "
+            f"mimeType = 'application/vnd.google-apps.document')"
+        )
+        resp = service.files().list(
+            q=query,
+            fields="files(id, name, mimeType)",
+            pageSize=50,
+        ).execute()
+
+        result: dict[str, str] = {}
+        for file in resp.get("files", []):
+            file_id = file["id"]
+            name = file["name"]
+            mime = file["mimeType"]
+            # Strip extension to get the stem used for client matching
+            stem = name
+            for ext in (".md", ".txt"):
+                if name.lower().endswith(ext):
+                    stem = name[: -len(ext)]
+                    break
+
+            try:
+                if mime == "application/vnd.google-apps.document":
+                    raw = service.files().export(
+                        fileId=file_id, mimeType="text/plain"
+                    ).execute()
+                    content = raw.decode("utf-8", errors="replace").strip()
+                else:
+                    buf = io.BytesIO()
+                    downloader = MediaIoBaseDownload(
+                        buf, service.files().get_media(fileId=file_id)
+                    )
+                    done = False
+                    while not done:
+                        _, done = downloader.next_chunk()
+                    content = buf.getvalue().decode("utf-8", errors="replace").strip()
+
+                if content:
+                    client = _match_playbook_to_client(stem, clients_config)
+                    result[client] = content
+                    print(f"    ✓ '{name}' → {client}")
+            except Exception as exc:
+                print(f"    ⚠️  Drive: could not read '{name}': {exc}")
+
+        return result
+    except Exception as exc:
+        print(f"  ⚠️  Drive playbooks unavailable: {exc}")
+        return {}
 
 
 # ── client grouping ───────────────────────────────────────────────────────────
@@ -112,7 +194,7 @@ def build_prompt(
     monday_data: list,
     fireflies_data,
     whatsapp_data: dict,
-    playbooks_text: str,
+    playbooks_by_client: dict[str, str],
     config: dict,
 ) -> str:
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
@@ -124,19 +206,36 @@ def build_prompt(
         f"# Weekly Standup Input Data — Week ending {today}\n\n"
         "You are a business analyst preparing a Monday morning standup report for the founder of "
         "Flow Co., a B2B healthcare marketing agency. All data below covers the last 7 days.\n\n"
-        "CRITICAL INSTRUCTIONS:\n"
-        "1. The report is organised CLIENT-FIRST. Each client has work spread across up to 4 "
-        "departments (CRM, Ads, Video, Web + SEO).\n"
-        "2. Status change suggestions are SUGGESTIONS ONLY — label them as such, never as decisions.\n"
-        "3. If information is missing or unclear, say so explicitly. Do NOT invent or guess facts.\n"
-        "4. Items in the 'Unmapped' group had no matching client alias — include them faithfully in "
-        "by_client with client='Unmapped', at the bottom. Never drop them.\n"
-        "5. URLS: for highlight and stalled_item objects, set monday_url ONLY to a URL that appears "
-        "verbatim in [monday_url: ...] tags in the input below. NEVER invent, modify, or guess URLs. "
-        "If no URL tag is present for an item, set monday_url to null.\n"
-        "6. For days_stalled: if [last_updated: YYYY-MM-DD] is shown, compute days_stalled as "
-        f"today ({today}) minus that date. If unavailable, set to null.\n"
-        "7. Be concise and actionable. The reader is a non-technical founder.\n"
+        "CRITICAL INSTRUCTIONS:\n\n"
+        "1. CLIENT-FIRST: The report is organised CLIENT-FIRST. Each client has work across up to 4 "
+        "departments (CRM, Ads, Video, Web + SEO). Items in the 'Unmapped' group had no matching "
+        "client alias — include them faithfully in by_client with client='Unmapped', at the bottom. "
+        "Never drop them.\n\n"
+        "2. CROSS-SOURCE CORRELATION is the main job. Actively hunt for mismatches across Monday, "
+        "Fireflies, and WhatsApp: action items agreed in a meeting with no matching Monday task; "
+        "client frustration or urgency in comms not reflected in board status; items marked Done or "
+        "In Progress that comms suggest are actually stuck; things discussed in comms that appear "
+        "nowhere on the boards. Surface these as the highest-value lines. A good standup connects "
+        "dots across sources; a weak one just lists what each source said.\n\n"
+        "3. HEALTH CALLS must be grounded. Weigh comms signals (an unhappy client message, an "
+        "unanswered call, a missed commitment) as heavily as board status. A client can be "
+        "all-tasks-in-progress on Monday and still be at_risk because of what was said. Explain "
+        "the health call in the headline.\n\n"
+        "4. USE THE PLAYBOOKS as the definition of what good looks like per client. If a client's "
+        "playbook is present in the PROJECT PLAYBOOKS section below, judge their health and "
+        "priorities against the workstreams and deliverables it describes — not a generic standard.\n\n"
+        "5. ANTI-HALLUCINATION: every stalled item, correlation, and status suggestion must trace "
+        "to something actually present in the provided data. If inferring, say so ('looks like…', "
+        "'no Monday task found for…'). Never state a connection as fact if the data only implies it. "
+        "For monday_url: ONLY use a URL that appears verbatim in [monday_url: ...] tags below. "
+        "NEVER invent, modify, or guess URLs. If no URL tag is present for an item, set monday_url "
+        "to null.\n\n"
+        "6. HEADLINES must be specific and concrete. 'Case study video stalled 3 weeks and the "
+        "retainer call went unanswered' is good. 'Some progress this week' is useless.\n\n"
+        "7. STATUS SUGGESTIONS are SUGGESTIONS ONLY — label them as such, never as decisions.\n\n"
+        f"8. DAYS_STALLED: if [last_updated: YYYY-MM-DD] is shown, compute days_stalled as today "
+        f"({today}) minus that date. If unavailable, set to null.\n\n"
+        "9. Be concise and actionable. The reader is a non-technical founder.\n"
     )
 
     # ── Monday.com (client-first) ─────────────────────────────────────────────
@@ -231,9 +330,14 @@ def build_prompt(
         parts.append("No WhatsApp messages found in the last 7 days.\n")
 
     # ── Playbooks ─────────────────────────────────────────────────────────────
-    if playbooks_text:
-        parts.append("\n---\n## PROJECT PLAYBOOKS (Context)\n")
-        parts.append(playbooks_text)
+    if playbooks_by_client:
+        parts.append(
+            "\n---\n## PROJECT PLAYBOOKS (what good looks like per client)\n\n"
+            "Each playbook describes the agreed workstreams and deliverables for that client. "
+            "Use these as your benchmark when assessing health and priorities.\n"
+        )
+        for client_key, content in playbooks_by_client.items():
+            parts.append(f"### {client_key}\n\n{content}\n")
 
     return "\n".join(parts)
 
@@ -633,14 +737,19 @@ def main():
         print(f"  ⚠️  WhatsApp read failed: {exc}")
 
     print(f"\n[4/4] Loading playbooks...")
-    playbooks_text = load_playbooks()
-    if playbooks_text:
-        print(f"  ✓ {len(playbooks_text):,} characters")
+    clients_config = config.get("clients", {})
+    print("  Checking Google Drive...")
+    drive_playbooks = load_playbooks_drive(config, clients_config)
+    local_playbooks = load_playbooks(clients_config)
+    # Drive takes precedence; local files fill in any gaps
+    playbooks_by_client = {**local_playbooks, **drive_playbooks}
+    if playbooks_by_client:
+        print(f"  ✓ {len(playbooks_by_client)} playbook(s): {', '.join(playbooks_by_client.keys())}")
     else:
-        print("  — No playbooks found")
+        print("  — No playbooks found (Drive empty or unavailable, no local files)")
 
     print("\nBuilding prompt and calling Claude (claude-sonnet-4-5)...")
-    prompt = build_prompt(monday_data, fireflies_data, whatsapp_data, playbooks_text, config)
+    prompt = build_prompt(monday_data, fireflies_data, whatsapp_data, playbooks_by_client, config)
 
     try:
         standup = call_claude(prompt)
