@@ -1,5 +1,6 @@
 """
 fetch_monday.py — Pulls items and recent updates from Monday.com boards.
+Each item is tagged with its resolved canonical client name.
 Run standalone to test: python fetch_monday.py
 """
 
@@ -14,14 +15,47 @@ load_dotenv()
 MONDAY_API_URL = "https://api.monday.com/v2"
 
 
-def _token():
+# ── client resolution (shared by generate.py) ─────────────────────────────────
+
+def resolve_client(text: str, clients_config: dict, fuzzy: bool = False) -> str:
+    """
+    Map text to a canonical client name using the alias table from config.json.
+
+    fuzzy=False (default): text must exactly equal one alias (case-insensitive).
+                           Used for Monday group titles.
+    fuzzy=True:            any alias that appears as a substring of text matches.
+                           Used for meeting titles and chat file names.
+
+    Returns "Unmapped" when nothing matches.
+    """
+    needle = text.lower().strip()
+    for canonical, aliases in clients_config.items():
+        for alias in aliases:
+            a = alias.lower().strip()
+            if fuzzy:
+                if a in needle:
+                    return canonical
+            else:
+                if needle == a:
+                    return canonical
+    return "Unmapped"
+
+
+# ── Monday API ────────────────────────────────────────────────────────────────
+
+def _token() -> str:
     t = os.environ.get("MONDAY_API_TOKEN", "")
     if not t:
         raise ValueError("MONDAY_API_TOKEN is not set")
     return t
 
 
-def fetch_board(board_id: str, board_name: str, days_back: int = 7) -> dict:
+def fetch_board(
+    board_id: str,
+    board_name: str,
+    days_back: int = 7,
+    clients_config: dict | None = None,
+) -> dict:
     cutoff = datetime.now(timezone.utc) - timedelta(days=days_back)
 
     headers = {
@@ -30,7 +64,6 @@ def fetch_board(board_id: str, board_name: str, days_back: int = 7) -> dict:
         "API-Version": "2023-10",
     }
 
-    # Pull items with column values, subitems, and recent updates in one query.
     query = """
     query GetBoard($ids: [ID!]!) {
       boards(ids: $ids) {
@@ -84,14 +117,21 @@ def fetch_board(board_id: str, board_name: str, days_back: int = 7) -> dict:
     processed = []
 
     for item in raw_items:
-        # Keep only columns that have a value
+        group_title = (item.get("group") or {}).get("title", "")
+
+        # Resolve to canonical client (or "Unmapped")
+        client = (
+            resolve_client(group_title, clients_config)
+            if clients_config
+            else "Unmapped"
+        )
+
         columns = {
             cv["title"]: cv["text"]
             for cv in item.get("column_values", [])
             if cv.get("text")
         }
 
-        # Subitems with their own non-empty columns
         subitems = []
         for sub in item.get("subitems", []):
             sub_cols = {
@@ -101,7 +141,6 @@ def fetch_board(board_id: str, board_name: str, days_back: int = 7) -> dict:
             }
             subitems.append({"name": sub["name"], "columns": sub_cols})
 
-        # Filter updates to within days_back window
         recent_updates = []
         for upd in item.get("updates", []):
             raw_ts = upd.get("created_at", "")
@@ -123,7 +162,10 @@ def fetch_board(board_id: str, board_name: str, days_back: int = 7) -> dict:
         processed.append(
             {
                 "name": item["name"],
-                "group": (item.get("group") or {}).get("title", ""),
+                "item_id": str(item.get("id", "")),
+                "board_id": str(board_id),
+                "group": group_title,
+                "client": client,
                 "columns": columns,
                 "subitems": subitems,
                 "recent_updates": recent_updates,
@@ -134,13 +176,19 @@ def fetch_board(board_id: str, board_name: str, days_back: int = 7) -> dict:
 
 
 def fetch_all_boards(config: dict) -> tuple[list, list]:
-    """Returns (results_list, errors_list). Never raises — errors go into the results."""
+    """Returns (results_list, errors_list). Never raises — errors land in results."""
+    clients_config = config.get("clients", {})
     results = []
     errors = []
 
     for board in config["boards"]:
         try:
-            data = fetch_board(board["id"], board["name"], config.get("days_back", 7))
+            data = fetch_board(
+                board["id"],
+                board["name"],
+                config.get("days_back", 7),
+                clients_config,
+            )
             results.append(data)
             print(f"  ✓ {board['name']}: {len(data['items'])} items")
         except Exception as exc:
@@ -174,10 +222,40 @@ if __name__ == "__main__":
         for item in r["items"]
     )
 
-    print(f"\n── Summary ──────────────────────────")
+    print(f"\n── Board summary ────────────────────────")
     ok = len([r for r in results if "error" not in r])
     print(f"  Boards OK : {ok}/{len(results)}")
     print(f"  Items     : {total_items}")
     print(f"  Updates (last {cfg.get('days_back', 7)} days): {total_updates}")
+
+    # Client breakdown
+    client_counts: dict[str, dict[str, int]] = {}
+    for board in results:
+        dept = board["board_name"]
+        for item in board.get("items", []):
+            c = item.get("client", "Unmapped")
+            client_counts.setdefault(c, {}).setdefault(dept, 0)
+            client_counts[c][dept] += 1
+
+    print(f"\n── Client breakdown ─────────────────────")
+    # Config order first, Unmapped last
+    ordered = list(cfg.get("clients", {}).keys()) + ["Unmapped"]
+    for client in ordered:
+        if client not in client_counts:
+            continue
+        dept_str = ", ".join(f"{d}:{n}" for d, n in sorted(client_counts[client].items()))
+        total = sum(client_counts[client].values())
+        print(f"  {client:<25}  {total:>3} items  ({dept_str})")
+
+    unmapped_groups = {
+        item["group"]
+        for board in results
+        for item in board.get("items", [])
+        if item.get("client") == "Unmapped" and item.get("group")
+    }
+    if unmapped_groups:
+        print(f"\n  ⚠️  Unmapped group names: {sorted(unmapped_groups)}")
+        print("     Add aliases to config.json to assign these to a client.")
+
     if errors:
-        print(f"  Errors    : {errors}")
+        print(f"\n  Errors: {errors}")
