@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flow Ops</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@1,8..60,400;1,8..60,500&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="page">
+
+    <!-- ── BANNERS ───────────────────────────────────────────────────── -->
+    <div id="banner-missing" class="banner" hidden>
+      No standup report found yet. Run <code>python generate.py</code> to generate one.
+    </div>
+    <div id="banner-stale" class="banner banner-warn" hidden>
+      This report is more than 8 days old. The next automated run will refresh it Monday morning.
+    </div>
+
+    <!-- ── HEADER ────────────────────────────────────────────────────── -->
+    <header class="site-header">
+      <a href="/" class="logo-link" aria-label="Flow Ops home">
+        <img src="assets/flowco-logo.png" alt="Flow Co" class="logo-img">
+      </a>
+      <div class="header-right">
+        <span id="week-of" class="week-label">Flow Ops</span>
+        <span class="live-pill">
+          <span class="live-dot" aria-hidden="true"></span>
+          <span class="live-text">Wired to Monday + Fireflies + WhatsApp</span>
+        </span>
+      </div>
+    </header>
+
+    <!-- ── MAIN ──────────────────────────────────────────────────────── -->
+    <main id="app" class="client-list">
+      <!-- cards injected by app.js -->
+    </main>
+
+    <!-- ── FOOTER ────────────────────────────────────────────────────── -->
+    <footer class="site-footer">
+      <div id="footer-unmatched" class="footer-section" hidden>
+        <span class="footer-label">Unmatched</span>
+        <div id="footer-items"></div>
+      </div>
+      <p id="footer-ts" class="footer-ts"></p>
+    </footer>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

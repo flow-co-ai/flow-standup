@@ -141,6 +141,13 @@ def fetch_board(
             }
             subitems.append({"name": sub["name"], "columns": sub_cols})
 
+        item_id = str(item.get("id", ""))
+        monday_url = (
+            f"https://flowcompany.monday.com/boards/{board_id}/pulses/{item_id}"
+            if item_id else None
+        )
+
+        last_updated_dt = None
         recent_updates = []
         for upd in item.get("updates", []):
             raw_ts = upd.get("created_at", "")
@@ -148,6 +155,8 @@ def fetch_board(
                 continue
             try:
                 ts = datetime.fromisoformat(raw_ts.replace("Z", "+00:00"))
+                if last_updated_dt is None or ts > last_updated_dt:
+                    last_updated_dt = ts
                 if ts >= cutoff:
                     recent_updates.append(
                         {
@@ -162,8 +171,10 @@ def fetch_board(
         processed.append(
             {
                 "name": item["name"],
-                "item_id": str(item.get("id", "")),
+                "item_id": item_id,
                 "board_id": str(board_id),
+                "monday_url": monday_url,
+                "last_updated": last_updated_dt.date().isoformat() if last_updated_dt else None,
                 "group": group_title,
                 "client": client,
                 "columns": columns,
