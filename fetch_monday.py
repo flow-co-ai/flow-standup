@@ -1,0 +1,183 @@
+"""
+fetch_monday.py — Pulls items and recent updates from Monday.com boards.
+Run standalone to test: python fetch_monday.py
+"""
+
+import os
+import json
+import requests
+from datetime import datetime, timedelta, timezone
+from dotenv import load_dotenv
+
+load_dotenv()
+
+MONDAY_API_URL = "https://api.monday.com/v2"
+
+
+def _token():
+    t = os.environ.get("MONDAY_API_TOKEN", "")
+    if not t:
+        raise ValueError("MONDAY_API_TOKEN is not set")
+    return t
+
+
+def fetch_board(board_id: str, board_name: str, days_back: int = 7) -> dict:
+    cutoff = datetime.now(timezone.utc) - timedelta(days=days_back)
+
+    headers = {
+        "Authorization": _token(),
+        "Content-Type": "application/json",
+        "API-Version": "2023-10",
+    }
+
+    # Pull items with column values, subitems, and recent updates in one query.
+    query = """
+    query GetBoard($ids: [ID!]!) {
+      boards(ids: $ids) {
+        id
+        name
+        items_page(limit: 100) {
+          items {
+            id
+            name
+            group { title }
+            column_values {
+              id
+              title
+              text
+              value
+            }
+            subitems {
+              id
+              name
+              column_values {
+                id
+                title
+                text
+                value
+              }
+            }
+            updates(limit: 25) {
+              body
+              created_at
+              creator { name }
+            }
+          }
+        }
+      }
+    }
+    """
+
+    resp = requests.post(
+        MONDAY_API_URL,
+        headers=headers,
+        json={"query": query, "variables": {"ids": [str(board_id)]}},
+        timeout=30,
+    )
+    resp.raise_for_status()
+    payload = resp.json()
+
+    if "errors" in payload:
+        raise ValueError(f"Monday API errors: {payload['errors']}")
+
+    raw_items = payload["data"]["boards"][0]["items_page"]["items"]
+    processed = []
+
+    for item in raw_items:
+        # Keep only columns that have a value
+        columns = {
+            cv["title"]: cv["text"]
+            for cv in item.get("column_values", [])
+            if cv.get("text")
+        }
+
+        # Subitems with their own non-empty columns
+        subitems = []
+        for sub in item.get("subitems", []):
+            sub_cols = {
+                cv["title"]: cv["text"]
+                for cv in sub.get("column_values", [])
+                if cv.get("text")
+            }
+            subitems.append({"name": sub["name"], "columns": sub_cols})
+
+        # Filter updates to within days_back window
+        recent_updates = []
+        for upd in item.get("updates", []):
+            raw_ts = upd.get("created_at", "")
+            if not raw_ts:
+                continue
+            try:
+                ts = datetime.fromisoformat(raw_ts.replace("Z", "+00:00"))
+                if ts >= cutoff:
+                    recent_updates.append(
+                        {
+                            "body": upd.get("body", ""),
+                            "created_at": raw_ts,
+                            "creator": (upd.get("creator") or {}).get("name", "Unknown"),
+                        }
+                    )
+            except (ValueError, TypeError):
+                pass
+
+        processed.append(
+            {
+                "name": item["name"],
+                "group": (item.get("group") or {}).get("title", ""),
+                "columns": columns,
+                "subitems": subitems,
+                "recent_updates": recent_updates,
+            }
+        )
+
+    return {"board_name": board_name, "board_id": str(board_id), "items": processed}
+
+
+def fetch_all_boards(config: dict) -> tuple[list, list]:
+    """Returns (results_list, errors_list). Never raises — errors go into the results."""
+    results = []
+    errors = []
+
+    for board in config["boards"]:
+        try:
+            data = fetch_board(board["id"], board["name"], config.get("days_back", 7))
+            results.append(data)
+            print(f"  ✓ {board['name']}: {len(data['items'])} items")
+        except Exception as exc:
+            msg = str(exc)
+            errors.append(f"{board['name']}: {msg}")
+            print(f"  ✗ {board['name']}: {msg}")
+            results.append(
+                {
+                    "board_name": board["name"],
+                    "board_id": str(board["id"]),
+                    "error": msg,
+                    "items": [],
+                }
+            )
+
+    return results, errors
+
+
+# ── standalone test ───────────────────────────────────────────────────────────
+if __name__ == "__main__":
+    with open("config.json") as f:
+        cfg = json.load(f)
+
+    print(f"Fetching {len(cfg['boards'])} Monday.com boards...\n")
+    results, errors = fetch_all_boards(cfg)
+
+    total_items = sum(len(r["items"]) for r in results)
+    total_updates = sum(
+        len(item["recent_updates"])
+        for r in results
+        for item in r["items"]
+    )
+
+    print(f"\n── Summary ──────────────────────────")
+    ok = len([r for r in results if "error" not in r])
+    print(f"  Boards OK : {ok}/{len(results)}")
+    print(f"  Items     : {total_items}")
+    print(f"  Updates (last {cfg.get('days_back', 7)} days): {total_updates}")
+    if errors:
+        print(f"  Errors    : {errors}")
