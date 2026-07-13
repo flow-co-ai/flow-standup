@@ -285,9 +285,12 @@ def build_prompt(
                     parts.append(f"    Participants: {', '.join(participants)}")
                 summary = mt.get("summary") or {}
                 if summary.get("overview"):
-                    parts.append(f"    Overview: {summary['overview']}")
+                    parts.append(f"    Overview: {summary['overview'][:600]}")
                 if summary.get("action_items"):
-                    parts.append(f"    Action Items: {summary['action_items']}")
+                    ai_text = summary["action_items"]
+                    if isinstance(ai_text, str):
+                        ai_text = ai_text[:600]
+                    parts.append(f"    Action Items: {ai_text}")
                 if summary.get("keywords"):
                     kw = summary["keywords"]
                     parts.append(f"    Keywords: {', '.join(kw) if isinstance(kw, list) else kw}")
@@ -565,15 +568,26 @@ def call_claude(prompt: str) -> dict:
 
     response = client.messages.create(
         model="claude-sonnet-4-5",
-        max_tokens=8192,
+        max_tokens=16000,
         tools=[EMIT_STANDUP_TOOL],
         tool_choice={"type": "tool", "name": "emit_standup"},
         messages=[{"role": "user", "content": prompt}],
     )
 
+    print("STOP REASON:", response.stop_reason)
+
+    _REQUIRED_KEYS = {
+        "week_of", "executive_summary", "departments_overview", "by_client",
+        "meetings_digest", "comms_flags", "blockers", "this_week_priorities",
+    }
+
     for block in response.content:
         if getattr(block, "type", None) == "tool_use" and block.name == "emit_standup":
-            return block.input
+            result = block.input
+            missing = _REQUIRED_KEYS - set(result.keys())
+            if missing:
+                print(f"TRUNCATED OUTPUT — missing keys: {sorted(missing)}")
+            return result
 
     raise ValueError("Claude did not call emit_standup — check the API response")
 
