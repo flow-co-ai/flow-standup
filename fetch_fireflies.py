@@ -35,9 +35,12 @@ def _post(query: str, variables: dict) -> dict:
         json={"query": query, "variables": variables},
         timeout=30,
     )
-    resp.raise_for_status()
+    if not resp.ok:
+        print(f"  Fireflies raw error body: {resp.text}")
+        resp.raise_for_status()
     payload = resp.json()
     if "errors" in payload:
+        print(f"  Fireflies GraphQL errors: {payload['errors']}")
         raise ValueError(f"Fireflies API errors: {payload['errors']}")
     return payload
 
@@ -93,12 +96,7 @@ def fetch_transcripts(days_back: int = 7) -> list:
         id
         title
         date
-        participants
-        summary {
-          overview
-          action_items
-          keywords
-        }
+        summary { overview }
       }
     }
     """
@@ -109,17 +107,13 @@ def fetch_transcripts(days_back: int = 7) -> list:
     results = []
     for t in raw:
         summary = t.get("summary") or {}
-        has_summary = bool(
-            summary.get("overview")
-            or summary.get("action_items")
-            or summary.get("keywords")
-        )
+        has_summary = bool(summary.get("overview"))
 
         entry = {
             "id": t.get("id"),
             "title": t.get("title") or "Untitled",
             "date": _parse_ff_date(t.get("date")),
-            "participants": t.get("participants") or [],
+            "participants": [],
             "summary": summary,
         }
 
