@@ -1,5 +1,11 @@
 """
 generate.py — Main orchestrator for the weekly standup.
+
+Architecture (v2): instead of one giant Claude call that produces the whole
+standup (which reliably truncated at max_tokens), this makes ONE SMALL CALL
+PER CLIENT plus one small wrap-up call, then assembles the final standup in
+Python. Mirrors the proven flow-analyst per-client pattern.
+
 Run: python generate.py
 """
 
@@ -21,6 +27,8 @@ from fetch_monday import fetch_all_boards, resolve_client
 from fetch_fireflies import fetch_transcripts
 from fetch_whatsapp import fetch_whatsapp
 from send_email import send_standup_email, markdown_to_simple_html
+
+MODEL = "claude-sonnet-4-5"
 
 
 # ── config / playbooks ────────────────────────────────────────────────────────
@@ -50,10 +58,7 @@ def load_playbooks(clients_config: dict) -> dict[str, str]:
 
 
 def load_playbooks_drive(config: dict, clients_config: dict) -> dict[str, str]:
-    """
-    Load .md and Google Doc playbooks from Drive using GOOGLE_SERVICE_ACCOUNT_JSON.
-    Returns {} gracefully on any auth or fetch failure.
-    """
+    """Load playbooks from the configured Google Drive folder. {} on any failure."""
     folder_id = config.get("playbooks_drive_folder_id", "")
     sa_json_str = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON", "")
     if not folder_id or not sa_json_str:
@@ -87,7 +92,6 @@ def load_playbooks_drive(config: dict, clients_config: dict) -> dict[str, str]:
             file_id = file["id"]
             name = file["name"]
             mime = file["mimeType"]
-            # Strip extension to get the stem used for client matching
             stem = name
             for ext in (".md", ".txt"):
                 if name.lower().endswith(ext):
@@ -158,189 +162,394 @@ def _match_comms_to_client(text: str, clients_config: dict) -> str:
     return result if result != "Unmapped" else "General comms"
 
 
-# ── prompt builder ────────────────────────────────────────────────────────────
+# ── URL lookup (Python owns URLs — the model never writes them) ──────────────
 
-def _fmt_item(item: dict, days_back: int) -> list[str]:
+def build_url_lookup(monday_data: list) -> dict[str, str]:
+    """item_id -> monday_url, from fetched data only. Guarantees no invented URLs."""
+    lookup: dict[str, str] = {}
+    for board in monday_data:
+        for item in board.get("items", []):
+            iid = item.get("item_id")
+            url = item.get("monday_url")
+            if iid and url:
+                lookup[str(iid)] = url
+    return lookup
+
+
+# ── per-client prompt ─────────────────────────────────────────────────────────
+
+def _fmt_item_compact(item: dict, days_back: int) -> list[str]:
+    """Compact item lines. Items are referenced by [id: N] — never by URL."""
     lines = []
-    line = f"  - **{item['name']}**"
-    if item.get("group"):
-        line += f"  [group: {item['group']}]"
+    line = f"  - [id: {item.get('item_id', '?')}] **{item['name']}**"
     lines.append(line)
-
-    if item.get("monday_url"):
-        lines.append(f"    [monday_url: {item['monday_url']}]")
     if item.get("last_updated"):
         lines.append(f"    [last_updated: {item['last_updated']}]")
     if item.get("columns"):
-        lines.append("    Columns: " + ", ".join(f"{k}: {v}" for k, v in item["columns"].items()))
-    if item.get("subitems"):
-        lines.append(f"    Subitems ({len(item['subitems'])}):")
-        for sub in item["subitems"]:
+        cols = ", ".join(f"{k}: {v}" for k, v in list(item["columns"].items())[:12])
+        lines.append(f"    Columns: {cols}")
+    subitems = item.get("subitems") or []
+    if subitems:
+        lines.append(f"    Subitems ({len(subitems)}):")
+        for sub in subitems[:10]:
             sub_line = f"      • {sub['name']}"
             if sub.get("columns"):
-                sub_line += "  | " + ", ".join(f"{k}: {v}" for k, v in sub["columns"].items())
+                sub_line += "  | " + ", ".join(
+                    f"{k}: {v}" for k, v in list(sub["columns"].items())[:6]
+                )
             lines.append(sub_line)
-    if item.get("recent_updates"):
+    updates = item.get("recent_updates") or []
+    if updates:
         lines.append(f"    Updates (last {days_back}d):")
-        for upd in item["recent_updates"]:
+        for upd in updates[:5]:
             ts = upd.get("created_at", "")[:10]
             who = upd.get("creator", "?")
-            body = (upd.get("body") or "")[:300]
+            body = (upd.get("body") or "")[:250]
             lines.append(f"      [{ts} — {who}]: {body}")
     return lines
 
 
-def build_prompt(
-    monday_data: list,
-    fireflies_data,
-    whatsapp_data: dict,
-    playbooks_by_client: dict[str, str],
-    config: dict,
+def build_client_prompt(
+    client: str,
+    departments: dict[str, list],
+    meetings: list,
+    chats: list[tuple],
+    playbook: str | None,
+    today: str,
+    days_back: int,
 ) -> str:
-    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    days_back = config.get("days_back", 7)
-    clients_config = config.get("clients", {})
     parts: list[str] = []
-
     parts.append(
-        f"# Weekly Standup Input Data — Week ending {today}\n\n"
-        "You are a business analyst preparing a Monday morning standup report for the founder of "
-        "Flow Co., a B2B healthcare marketing agency. All data below covers the last 7 days.\n\n"
-        "CRITICAL INSTRUCTIONS:\n\n"
-        "1. CLIENT-FIRST: The report is organised CLIENT-FIRST. Each client has work across up to 4 "
-        "departments (CRM, Ads, Video, Web + SEO). Items in the 'Unmapped' group had no matching "
-        "client alias — include them faithfully in by_client with client='Unmapped', at the bottom. "
-        "Never drop them.\n\n"
-        "2. CROSS-SOURCE CORRELATION is the main job. Actively hunt for mismatches across Monday, "
-        "Fireflies, and WhatsApp: action items agreed in a meeting with no matching Monday task; "
-        "client frustration or urgency in comms not reflected in board status; items marked Done or "
-        "In Progress that comms suggest are actually stuck; things discussed in comms that appear "
-        "nowhere on the boards. Surface these as the highest-value lines. A good standup connects "
-        "dots across sources; a weak one just lists what each source said.\n\n"
-        "3. HEALTH CALLS must be grounded. Weigh comms signals (an unhappy client message, an "
-        "unanswered call, a missed commitment) as heavily as board status. A client can be "
-        "all-tasks-in-progress on Monday and still be at_risk because of what was said. Explain "
-        "the health call in the headline.\n\n"
-        "4. USE THE PLAYBOOKS as the definition of what good looks like per client. If a client's "
-        "playbook is present in the PROJECT PLAYBOOKS section below, judge their health and "
-        "priorities against the workstreams and deliverables it describes — not a generic standard.\n\n"
-        "5. ANTI-HALLUCINATION: every stalled item, correlation, and status suggestion must trace "
-        "to something actually present in the provided data. If inferring, say so ('looks like…', "
-        "'no Monday task found for…'). Never state a connection as fact if the data only implies it. "
-        "For monday_url: ONLY use a URL that appears verbatim in [monday_url: ...] tags below. "
-        "NEVER invent, modify, or guess URLs. If no URL tag is present for an item, set monday_url "
-        "to null.\n\n"
-        "6. HEADLINES must be specific and concrete. 'Case study video stalled 3 weeks and the "
-        "retainer call went unanswered' is good. 'Some progress this week' is useless.\n\n"
-        "7. STATUS SUGGESTIONS are SUGGESTIONS ONLY — label them as such, never as decisions.\n\n"
-        f"8. DAYS_STALLED: if [last_updated: YYYY-MM-DD] is shown, compute days_stalled as today "
-        f"({today}) minus that date. If unavailable, set to null.\n\n"
-        "9. Be concise and actionable. The reader is a non-technical founder.\n"
+        f"# Weekly client review — {client} — week ending {today}\n\n"
+        "You are a business analyst reviewing ONE client for Flow Co., a B2B marketing "
+        "agency. All data below covers the last 7 days and ONLY this client.\n\n"
+        "INSTRUCTIONS:\n"
+        "1. CROSS-SOURCE CORRELATION is the main job: meeting action items with no matching "
+        "Monday task; urgency in comms not reflected in board status; items marked Done or "
+        "In Progress that comms suggest are stuck; things discussed that appear nowhere on "
+        "the boards. These are the highest-value lines.\n"
+        "2. HEALTH must be grounded: weigh comms signals as heavily as board status, and "
+        "explain the health call in the headline. The headline must be one specific, concrete "
+        "sentence ('Case study video stalled 3 weeks and the retainer call went unanswered' "
+        "is good; 'Some progress this week' is useless).\n"
+        "3. LIMITS: at most 4 highlights and at most 3 stalled items — pick only the most "
+        "important. Each row's text is ONE short sentence.\n"
+        "4. monday_item_id: use the [id: N] value verbatim from the data for rows about a "
+        "Monday item. Null for meeting/whatsapp rows. NEVER invent ids.\n"
+        f"5. days_stalled: today ({today}) minus the [last_updated] date, when shown. Else null.\n"
+        "6. Status suggestions are SUGGESTIONS ONLY, never decisions.\n"
+        "7. Anti-hallucination: every claim must trace to the data below. If inferring, say "
+        "so ('looks like…', 'no Monday task found for…').\n"
     )
 
-    # ── Monday.com (client-first) ─────────────────────────────────────────────
-    parts.append("\n---\n## MONDAY.COM DATA (grouped by client)\n")
+    if playbook:
+        parts.append(
+            "\n## CLIENT PLAYBOOK (what good looks like — judge health against this)\n"
+            + playbook[:4000]
+        )
 
-    grouped, board_errors = group_items_by_client(monday_data, clients_config)
+    parts.append("\n## MONDAY.COM ITEMS\n")
+    if departments:
+        for dept in sorted(departments):
+            parts.append(f"### {dept}")
+            for item in departments[dept]:
+                parts.extend(_fmt_item_compact(item, days_back))
+            parts.append("")
+    else:
+        parts.append("No Monday items for this client this week.\n")
 
+    parts.append("\n## MEETINGS (Fireflies)\n")
+    if meetings:
+        for mt in meetings:
+            parts.append(f"**{mt.get('title', 'Untitled')}** — {mt.get('date', 'no date')}")
+            summary = mt.get("summary") or {}
+            if summary.get("overview"):
+                parts.append(f"  Overview: {str(summary['overview'])[:800]}")
+            if summary.get("action_items"):
+                parts.append(f"  Action Items: {str(summary['action_items'])[:800]}")
+            if mt.get("sentences"):
+                parts.append("  [No summary — transcript excerpt:]")
+                for s in mt["sentences"][:12]:
+                    parts.append(f"    {s.get('speaker_name', '?')}: {s.get('text', '')}")
+            parts.append("")
+    else:
+        parts.append("No meetings matched to this client this week.\n")
+
+    parts.append("\n## WHATSAPP\n")
+    if chats:
+        for chat_name, msgs in chats:
+            parts.append(f"**Chat: {chat_name}**")
+            if isinstance(msgs, list):
+                for msg in msgs[:40]:
+                    ts = (msg.get("datetime") or "")[:16]
+                    parts.append(
+                        f"  [{ts}] {msg.get('sender', '?')}: {(msg.get('text') or '')[:250]}"
+                    )
+            parts.append("")
+    else:
+        parts.append("No WhatsApp messages matched to this client this week.\n")
+
+    return "\n".join(parts)
+
+
+# ── tool schemas ──────────────────────────────────────────────────────────────
+
+_CLIENT_ROW = {
+    "type": "object",
+    "required": ["text", "department", "source"],
+    "properties": {
+        "text": {"type": "string", "description": "One short sentence."},
+        "department": {"type": "string", "description": "CRM, Ads, Video, or Web + SEO. Empty string if not board work."},
+        "source": {"type": "string", "enum": ["monday", "meeting", "whatsapp"]},
+        "item_name": {"type": ["string", "null"], "description": "Monday item name if source=monday."},
+        "monday_item_id": {"type": ["string", "null"], "description": "Verbatim [id: N] value from the data. Null otherwise. NEVER invent."},
+        "days_stalled": {"type": ["integer", "null"]},
+    },
+}
+
+EMIT_CLIENT_TOOL = {
+    "name": "emit_client",
+    "description": "Emit the weekly review for ONE client.",
+    "input_schema": {
+        "type": "object",
+        "required": ["headline", "health", "highlights", "stalled_items",
+                     "status_change_suggestions", "risks"],
+        "properties": {
+            "headline": {"type": "string", "description": "One specific, concrete sentence — the most important thing for this client this week."},
+            "health": {"type": "string", "enum": ["on_track", "needs_attention", "at_risk"]},
+            "highlights": {"type": "array", "maxItems": 4, "items": _CLIENT_ROW},
+            "stalled_items": {"type": "array", "maxItems": 3, "items": _CLIENT_ROW},
+            "status_change_suggestions": {
+                "type": "array",
+                "maxItems": 3,
+                "description": "SUGGESTIONS ONLY, never decisions.",
+                "items": {
+                    "type": "object",
+                    "required": ["item_name", "department", "current_status", "suggested_status", "reason"],
+                    "properties": {
+                        "item_name": {"type": "string"},
+                        "department": {"type": "string"},
+                        "current_status": {"type": "string"},
+                        "suggested_status": {"type": "string"},
+                        "reason": {"type": "string"},
+                    },
+                },
+            },
+            "risks": {"type": "array", "maxItems": 3, "items": {"type": "string"}},
+        },
+    },
+}
+
+EMIT_WRAPUP_TOOL = {
+    "name": "emit_wrapup",
+    "description": "Emit the cross-client wrap-up for the weekly standup.",
+    "input_schema": {
+        "type": "object",
+        "required": ["executive_summary", "departments_overview", "comms_flags",
+                     "blockers", "this_week_priorities"],
+        "properties": {
+            "executive_summary": {
+                "type": "string",
+                "description": "3–5 sentences. The most important things across all clients.",
+            },
+            "departments_overview": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": ["department", "summary"],
+                    "properties": {
+                        "department": {"type": "string"},
+                        "summary": {"type": "string", "description": "One sentence on load + anything stuck."},
+                    },
+                },
+            },
+            "comms_flags": {
+                "type": "array", "maxItems": 6, "items": {"type": "string"},
+                "description": "Items needing the founder's attention. Prefix with client name.",
+            },
+            "blockers": {
+                "type": "array", "maxItems": 6, "items": {"type": "string"},
+                "description": "Clear blockers. Prefix with client name.",
+            },
+            "this_week_priorities": {
+                "type": "array",
+                "maxItems": 7,
+                "items": {
+                    "type": "object",
+                    "required": ["text"],
+                    "properties": {
+                        "text": {"type": "string", "description": "Prefixed with client name, e.g. 'Billy Doe Meats: Draft holiday page'."},
+                        "client": {"type": "string"},
+                        "action": {
+                            "type": ["object", "null"],
+                            "description": "Optional draft for founder review only, never sent automatically.",
+                            "required": ["type", "body"],
+                            "properties": {
+                                "type": {"type": "string", "enum": ["email", "copy"]},
+                                "to": {"type": ["string", "null"]},
+                                "subject": {"type": ["string", "null"]},
+                                "body": {"type": "string"},
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
+
+
+# ── Claude calls ──────────────────────────────────────────────────────────────
+
+def _anthropic_client() -> anthropic.Anthropic:
+    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+    if not api_key:
+        raise ValueError("ANTHROPIC_API_KEY is not set")
+    return anthropic.Anthropic(api_key=api_key)
+
+
+def _call_tool(client: anthropic.Anthropic, prompt: str, tool: dict, label: str,
+               max_tokens: int = 3000) -> dict:
+    response = client.messages.create(
+        model=MODEL,
+        max_tokens=max_tokens,
+        temperature=0,
+        tools=[tool],
+        tool_choice={"type": "tool", "name": tool["name"]},
+        messages=[{"role": "user", "content": prompt}],
+    )
+    print(
+        f"  [{label}] stop={response.stop_reason} "
+        f"tokens={response.usage.input_tokens}in/{response.usage.output_tokens}out"
+    )
+    if response.stop_reason == "max_tokens":
+        raise ValueError(f"{label}: output truncated at max_tokens")
+    for block in response.content:
+        if getattr(block, "type", None) == "tool_use" and block.name == tool["name"]:
+            return block.input
+    raise ValueError(f"{label}: model did not call {tool['name']}")
+
+
+# ── assembly ──────────────────────────────────────────────────────────────────
+
+def _attach_urls(rows: list, url_lookup: dict[str, str]) -> list:
+    """Stamp real monday_urls onto rows via monday_item_id. Never invents."""
+    out = []
+    for row in rows or []:
+        if not isinstance(row, dict):
+            continue
+        iid = row.get("monday_item_id")
+        row["monday_url"] = url_lookup.get(str(iid)) if iid else None
+        out.append(row)
+    return out
+
+
+def assemble_client_entry(client: str, result: dict, url_lookup: dict[str, str]) -> dict:
+    """Convert the flat per-client model output into the nested shape the
+    renderer and webpage already consume (work_by_department)."""
+    highlights = _attach_urls(result.get("highlights"), url_lookup)
+    stalled = _attach_urls(result.get("stalled_items"), url_lookup)
+
+    dept_map: dict[str, dict] = {}
+    for row in highlights:
+        dept = row.get("department") or "General"
+        dept_map.setdefault(dept, {"department": dept, "highlights": [], "stalled_items": []})
+        dept_map[dept]["highlights"].append(row)
+    for row in stalled:
+        dept = row.get("department") or "General"
+        dept_map.setdefault(dept, {"department": dept, "highlights": [], "stalled_items": []})
+        dept_map[dept]["stalled_items"].append(row)
+
+    return {
+        "client": client,
+        "headline": result.get("headline", ""),
+        "health": result.get("health", "needs_attention"),
+        "work_by_department": list(dept_map.values()),
+        "status_change_suggestions": result.get("status_change_suggestions", []) or [],
+        "risks": result.get("risks", []) or [],
+    }
+
+
+def build_meetings_digest(fireflies_data, clients_config: dict) -> list:
+    """Deterministic — built in Python from Fireflies data. No model call."""
+    if not isinstance(fireflies_data, list):
+        return []
+
+    def _lines(text, cap: int) -> list[str]:
+        if not text:
+            return []
+        if isinstance(text, list):
+            items = [str(x).strip() for x in text]
+        else:
+            items = [
+                ln.strip().lstrip("-*• ").strip()
+                for ln in str(text).replace("\r", "").split("\n")
+            ]
+        items = [i for i in items if i and not i.startswith("**")][:cap]
+        return items
+
+    digest = []
+    seen_titles = set()
+    for mt in fireflies_data:
+        title = mt.get("title") or "Untitled"
+        date = mt.get("date") or ""
+        key = (title, date)
+        if key in seen_titles:
+            continue  # Fireflies often records duplicates of the same call
+        seen_titles.add(key)
+        summary = mt.get("summary") or {}
+        digest.append({
+            "title": title,
+            "date": date,
+            "client": _match_comms_to_client(title, clients_config),
+            "key_points": _lines(summary.get("overview"), 5),
+            "action_items": _lines(summary.get("action_items"), 6),
+        })
+    return digest
+
+
+def build_wrapup_prompt(client_entries: list, board_errors: dict,
+                        general_meetings: list, today: str) -> str:
+    parts = [
+        f"# Cross-client wrap-up — week ending {today}\n\n"
+        "You are writing the wrap-up sections of Flow Co.'s Monday standup. Below are the "
+        "already-written per-client reviews. Synthesize across them.\n\n"
+        "INSTRUCTIONS:\n"
+        "1. executive_summary: 3–5 sentences, most important things first, specific and concrete.\n"
+        "2. departments_overview: one entry each for CRM, Ads, Video, Web + SEO — one sentence "
+        "on load and anything stuck, drawn from the client reviews below.\n"
+        "3. comms_flags / blockers: only real, grounded items from the reviews. Prefix with "
+        "client name. Empty arrays are fine.\n"
+        "4. this_week_priorities: max 7, the highest-leverage moves, prefixed with client name. "
+        "Where a priority needs founder outreach, attach a draft action (email or copy) written "
+        "for his review — drafts are never sent automatically.\n"
+        "5. Never invent facts not present below.\n"
+    ]
     if board_errors:
-        parts.append("**Board fetch errors:**")
+        parts.append("\n## BOARD FETCH ERRORS (mention in blockers)\n")
         for dept, err in board_errors.items():
-            parts.append(f"  ⚠️  {dept}: {err}")
+            parts.append(f"- {dept}: {err[:200]}")
+
+    parts.append("\n## PER-CLIENT REVIEWS\n")
+    for e in client_entries:
+        parts.append(f"### {e['client']} — {e['health']}")
+        parts.append(f"Headline: {e['headline']}")
+        for dept in e.get("work_by_department", []):
+            for row in dept.get("highlights", []):
+                parts.append(f"  + [{dept['department']}] {row.get('text', '')}")
+            for row in dept.get("stalled_items", []):
+                d = row.get("days_stalled")
+                parts.append(f"  ! [{dept['department']}] {row.get('text', '')}"
+                             + (f" ({d}d stalled)" if d else ""))
+        for r in e.get("risks", []):
+            parts.append(f"  RISK: {r}")
         parts.append("")
 
-    if not grouped:
-        parts.append("No Monday.com data available.\n")
-    else:
-        for client, departments in grouped.items():
-            marker = " *(no matching alias — add to config.json)*" if client == "Unmapped" else ""
-            parts.append(f"### {client}{marker}\n")
-            for dept in sorted(departments):
-                parts.append(f"#### {dept}")
-                for item in departments[dept]:
-                    parts.extend(_fmt_item(item, days_back))
-            parts.append("")
-
-    # ── Fireflies ─────────────────────────────────────────────────────────────
-    parts.append("\n---\n## MEETING TRANSCRIPTS (Fireflies.ai — grouped by client)\n")
-
-    if isinstance(fireflies_data, dict) and "error" in fireflies_data:
-        parts.append(f"⚠️  Fetch error: {fireflies_data['error']}\n")
-    elif isinstance(fireflies_data, list) and fireflies_data:
-        meetings_by_client: dict[str, list] = {}
-        for mt in fireflies_data:
-            client = _match_comms_to_client(mt.get("title", ""), clients_config)
-            meetings_by_client.setdefault(client, []).append(mt)
-
-        ordered_clients = [c for c in clients_config if c in meetings_by_client]
-        if "General comms" in meetings_by_client:
-            ordered_clients.append("General comms")
-
-        for client in ordered_clients:
-            parts.append(f"### {client}")
-            for mt in meetings_by_client[client]:
-                parts.append(f"  **{mt.get('title', 'Untitled')}** — {mt.get('date', 'no date')}")
-                participants = mt.get("participants") or []
-                if participants:
-                    parts.append(f"    Participants: {', '.join(participants)}")
-                summary = mt.get("summary") or {}
-                if summary.get("overview"):
-                    parts.append(f"    Overview: {summary['overview'][:600]}")
-                if summary.get("action_items"):
-                    ai_text = summary["action_items"]
-                    if isinstance(ai_text, str):
-                        ai_text = ai_text[:600]
-                    parts.append(f"    Action Items: {ai_text}")
-                if summary.get("keywords"):
-                    kw = summary["keywords"]
-                    parts.append(f"    Keywords: {', '.join(kw) if isinstance(kw, list) else kw}")
-                if mt.get("sentences"):
-                    parts.append("    [No summary — transcript excerpt:]")
-                    for s in mt["sentences"][:12]:
-                        parts.append(f"      {s.get('speaker_name', '?')}: {s.get('text', '')}")
-            parts.append("")
-    else:
-        parts.append("No meetings recorded in the last 7 days.\n")
-
-    # ── WhatsApp ──────────────────────────────────────────────────────────────
-    parts.append("\n---\n## WHATSAPP MESSAGES (grouped by client)\n")
-
-    if whatsapp_data:
-        chats_by_client: dict[str, list[tuple]] = {}
-        for chat_name, msgs in whatsapp_data.items():
-            client = _match_comms_to_client(chat_name, clients_config)
-            chats_by_client.setdefault(client, []).append((chat_name, msgs))
-
-        ordered_clients = [c for c in clients_config if c in chats_by_client]
-        if "General comms" in chats_by_client:
-            ordered_clients.append("General comms")
-
-        for client in ordered_clients:
-            parts.append(f"### {client}")
-            for chat_name, msgs in chats_by_client[client]:
-                parts.append(f"  **Chat: {chat_name}**")
-                if isinstance(msgs, dict) and "error" in msgs:
-                    parts.append(f"    ⚠️  Read error: {msgs['error']}")
-                elif isinstance(msgs, list):
-                    for msg in msgs:
-                        ts = (msg.get("datetime") or "")[:16]
-                        parts.append(
-                            f"    [{ts}] {msg.get('sender', '?')}: "
-                            f"{(msg.get('text') or '')[:250]}"
-                        )
-            parts.append("")
-    else:
-        parts.append("No WhatsApp messages found in the last 7 days.\n")
-
-    # ── Playbooks ─────────────────────────────────────────────────────────────
-    if playbooks_by_client:
-        parts.append(
-            "\n---\n## PROJECT PLAYBOOKS (what good looks like per client)\n\n"
-            "Each playbook describes the agreed workstreams and deliverables for that client. "
-            "Use these as your benchmark when assessing health and priorities.\n"
-        )
-        for client_key, content in playbooks_by_client.items():
-            parts.append(f"### {client_key}\n\n{content}\n")
+    if general_meetings:
+        parts.append("\n## GENERAL COMMS (meetings not matched to a client)\n")
+        for mt in general_meetings:
+            parts.append(f"- {mt.get('title', '')} ({mt.get('date', '')}): "
+                         + "; ".join(mt.get("key_points", [])[:3]))
 
     return "\n".join(parts)
 
@@ -352,7 +561,7 @@ def _row_id(client: str, text: str) -> str:
 
 
 def inject_ids(standup: dict) -> dict:
-    """Inject stable id fields into every row object after the model responds."""
+    """Inject stable id fields into every row object."""
     for entry in standup.get("by_client", []):
         client = entry.get("client", "")
         for dept in entry.get("work_by_department", []):
@@ -377,222 +586,7 @@ def copy_to_site(src: Path) -> None:
     print(f"  Copied → {dst}")
 
 
-# ── Claude tool schema ────────────────────────────────────────────────────────
-
-_ROW_ITEM = {
-    "type": "object",
-    "required": ["text", "source"],
-    "properties": {
-        "text": {"type": "string"},
-        "source": {"type": "string", "enum": ["monday", "meeting", "whatsapp"]},
-        "monday_url": {
-            "type": ["string", "null"],
-            "description": "Verbatim from [monday_url: ...] in the input. Null if absent. NEVER invent.",
-        },
-        "item_name": {"type": ["string", "null"], "description": "Monday item name if source=monday."},
-    },
-}
-
-_STALLED_ITEM = {
-    **_ROW_ITEM,
-    "properties": {
-        **_ROW_ITEM["properties"],
-        "days_stalled": {
-            "type": ["integer", "null"],
-            "description": "Days since last_updated tag. Null if unavailable.",
-        },
-    },
-}
-
-EMIT_STANDUP_TOOL = {
-    "name": "emit_standup",
-    "description": (
-        "Emit the structured weekly standup report for Flow Co. "
-        "Client-first. 'Unmapped' client entry at bottom if any unresolved Monday groups exist."
-    ),
-    "input_schema": {
-        "type": "object",
-        "required": [
-            "week_of",
-            "executive_summary",
-            "departments_overview",
-            "by_client",
-            "meetings_digest",
-            "comms_flags",
-            "blockers",
-            "this_week_priorities",
-        ],
-        "properties": {
-            "week_of": {
-                "type": "string",
-                "description": "Monday date this standup covers, e.g. 2024-07-14",
-            },
-            "executive_summary": {
-                "type": "string",
-                "description": "3–5 sentences covering the most important things across all clients.",
-            },
-            "departments_overview": {
-                "type": "array",
-                "description": "One entry per department. One sentence each on load + anything stuck.",
-                "items": {
-                    "type": "object",
-                    "required": ["department", "summary"],
-                    "properties": {
-                        "department": {"type": "string"},
-                        "summary": {"type": "string"},
-                    },
-                },
-            },
-            "by_client": {
-                "type": "array",
-                "description": "One entry per client with data. Config order. Unmapped last.",
-                "items": {
-                    "type": "object",
-                    "required": [
-                        "client", "headline", "health",
-                        "work_by_department", "status_change_suggestions", "risks",
-                    ],
-                    "properties": {
-                        "client": {"type": "string"},
-                        "headline": {
-                            "type": "string",
-                            "description": "One sentence: the single most important thing for this client this week.",
-                        },
-                        "health": {
-                            "type": "string",
-                            "enum": ["on_track", "needs_attention", "at_risk"],
-                            "description": "on_track=good momentum, needs_attention=some friction, at_risk=critical issue or stall.",
-                        },
-                        "work_by_department": {
-                            "type": "array",
-                            "description": "One entry per department that has items for this client.",
-                            "items": {
-                                "type": "object",
-                                "required": ["department", "highlights", "stalled_items"],
-                                "properties": {
-                                    "department": {"type": "string"},
-                                    "highlights": {"type": "array", "items": _ROW_ITEM},
-                                    "stalled_items": {"type": "array", "items": _STALLED_ITEM},
-                                },
-                            },
-                        },
-                        "status_change_suggestions": {
-                            "type": "array",
-                            "description": "SUGGESTIONS ONLY, never decisions.",
-                            "items": {
-                                "type": "object",
-                                "required": ["item_name", "department", "current_status", "suggested_status", "reason"],
-                                "properties": {
-                                    "item_name": {"type": "string"},
-                                    "department": {"type": "string"},
-                                    "current_status": {"type": "string"},
-                                    "suggested_status": {"type": "string"},
-                                    "reason": {"type": "string"},
-                                },
-                            },
-                        },
-                        "risks": {
-                            "type": "array",
-                            "items": {"type": "string"},
-                        },
-                    },
-                },
-            },
-            "meetings_digest": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "required": ["title", "date", "key_points", "action_items"],
-                    "properties": {
-                        "title": {"type": "string"},
-                        "date": {"type": "string"},
-                        "client": {"type": "string", "description": "Matched client or 'General comms'."},
-                        "key_points": {"type": "array", "items": {"type": "string"}},
-                        "action_items": {"type": "array", "items": {"type": "string"}},
-                    },
-                },
-            },
-            "comms_flags": {
-                "type": "array",
-                "items": {"type": "string"},
-                "description": "Items needing the founder's attention. Prefix with client name where applicable.",
-            },
-            "blockers": {
-                "type": "array",
-                "items": {"type": "string"},
-                "description": "Clear blockers. Prefix with client name.",
-            },
-            "this_week_priorities": {
-                "type": "array",
-                "description": "Top priorities for the coming week.",
-                "items": {
-                    "type": "object",
-                    "required": ["text"],
-                    "properties": {
-                        "text": {
-                            "type": "string",
-                            "description": "Priority text, prefixed with client name e.g. 'Billy Doe Meats: Draft holiday page'.",
-                        },
-                        "client": {
-                            "type": "string",
-                            "description": "The canonical client this priority belongs to, or 'General' if cross-client.",
-                        },
-                        "action": {
-                            "type": ["object", "null"],
-                            "description": (
-                                "Optional draft action. Drafts are suggestions for founder review only, "
-                                "never sent automatically."
-                            ),
-                            "required": ["type", "body"],
-                            "properties": {
-                                "type": {"type": "string", "enum": ["email", "copy"]},
-                                "to": {"type": ["string", "null"]},
-                                "subject": {"type": ["string", "null"]},
-                                "body": {"type": "string"},
-                            },
-                        },
-                    },
-                },
-            },
-        },
-    },
-}
-
-
-def call_claude(prompt: str) -> dict:
-    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
-    if not api_key:
-        raise ValueError("ANTHROPIC_API_KEY is not set")
-
-    client = anthropic.Anthropic(api_key=api_key)
-
-    response = client.messages.create(
-        model="claude-sonnet-4-5",
-        max_tokens=16000,
-        tools=[EMIT_STANDUP_TOOL],
-        tool_choice={"type": "tool", "name": "emit_standup"},
-        messages=[{"role": "user", "content": prompt}],
-    )
-
-    print("STOP REASON:", response.stop_reason)
-
-    _REQUIRED_KEYS = {
-        "week_of", "executive_summary", "departments_overview", "by_client",
-        "meetings_digest", "comms_flags", "blockers", "this_week_priorities",
-    }
-
-    for block in response.content:
-        if getattr(block, "type", None) == "tool_use" and block.name == "emit_standup":
-            result = block.input
-            missing = _REQUIRED_KEYS - set(result.keys())
-            if missing:
-                print(f"TRUNCATED OUTPUT — missing keys: {sorted(missing)}")
-            return result
-
-    raise ValueError("Claude did not call emit_standup — check the API response")
-
-
-# ── markdown renderer ─────────────────────────────────────────────────────────
+# ── markdown renderer (unchanged output shape) ────────────────────────────────
 
 def _md_row(item) -> str:
     if isinstance(item, str):
@@ -628,14 +622,18 @@ def render_markdown(standup: dict) -> str:
     if dept_overview:
         lines += ["## Departments Overview", ""]
         for d in dept_overview:
-            lines.append(f"- **{d['department']}**: {d['summary']}")
+            lines.append(f"- **{d.get('department', '')}**: {d.get('summary', '')}")
         lines.append("")
 
     lines += ["## By Client", ""]
     for entry in (standup.get("by_client") or []):
         client = entry.get("client", "Unknown")
         health = entry.get("health", "on_track")
-        health_label = {"on_track": "On Track", "needs_attention": "Needs Attention", "at_risk": "At Risk"}.get(health, health)
+        health_label = {
+            "on_track": "On Track",
+            "needs_attention": "Needs Attention",
+            "at_risk": "At Risk",
+        }.get(health, health)
 
         if client == "Unmapped":
             lines.append("### Unmapped Groups")
@@ -723,6 +721,7 @@ def main():
     config = load_config()
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     days_back = config.get("days_back", 7)
+    clients_config = config.get("clients", {})
 
     print("=" * 60)
     print(f"Flow Standup Generator — {today}")
@@ -758,36 +757,123 @@ def main():
         print(f"  ⚠️  WhatsApp read failed: {exc}")
 
     print(f"\n[4/4] Loading playbooks...")
-    clients_config = config.get("clients", {})
     print("  Checking Google Drive...")
     drive_playbooks = load_playbooks_drive(config, clients_config)
     local_playbooks = load_playbooks(clients_config)
-    # Drive takes precedence; local files fill in any gaps
     playbooks_by_client = {**local_playbooks, **drive_playbooks}
     if playbooks_by_client:
         print(f"  ✓ {len(playbooks_by_client)} playbook(s): {', '.join(playbooks_by_client.keys())}")
     else:
         print("  — No playbooks found (Drive empty or unavailable, no local files)")
 
-    print("\nBuilding prompt and calling Claude (claude-sonnet-4-5)...")
-    prompt = build_prompt(monday_data, fireflies_data, whatsapp_data, playbooks_by_client, config)
+    # ── organise inputs per client ────────────────────────────────────────────
+    grouped, board_errors = group_items_by_client(monday_data, clients_config)
+    url_lookup = build_url_lookup(monday_data)
+
+    meetings_by_client: dict[str, list] = {}
+    if isinstance(fireflies_data, list):
+        for mt in fireflies_data:
+            c = _match_comms_to_client(mt.get("title", ""), clients_config)
+            meetings_by_client.setdefault(c, []).append(mt)
+
+    chats_by_client: dict[str, list[tuple]] = {}
+    for chat_name, msgs in (whatsapp_data or {}).items():
+        c = _match_comms_to_client(chat_name, clients_config)
+        chats_by_client.setdefault(c, []).append((chat_name, msgs))
+
+    # Clients with any signal this week (Monday items OR meetings OR chats),
+    # in config order; Unmapped last.
+    active: list[str] = []
+    for c in clients_config:
+        if c in grouped or c in meetings_by_client or c in chats_by_client:
+            active.append(c)
+    for c in grouped:
+        if c not in active and c != "Unmapped":
+            active.append(c)
+    if "Unmapped" in grouped:
+        active.append("Unmapped")
+
+    # ── per-client Claude calls ───────────────────────────────────────────────
+    print(f"\nGenerating per-client reviews ({len(active)} clients, model {MODEL})...")
+    ai = _anthropic_client()
+    client_entries: list[dict] = []
+
+    for c in active:
+        prompt = build_client_prompt(
+            client=c,
+            departments=grouped.get(c, {}),
+            meetings=meetings_by_client.get(c, []),
+            chats=chats_by_client.get(c, []),
+            playbook=playbooks_by_client.get(c),
+            today=today,
+            days_back=days_back,
+        )
+        try:
+            result = _call_tool(ai, prompt, EMIT_CLIENT_TOOL, label=c)
+            client_entries.append(assemble_client_entry(c, result, url_lookup))
+        except Exception as exc:
+            print(f"  ✗ {c}: {exc}")
+            client_entries.append({
+                "client": c,
+                "headline": "Generation failed for this client — see workflow log.",
+                "health": "needs_attention",
+                "work_by_department": [],
+                "status_change_suggestions": [],
+                "risks": [],
+            })
+
+    # ── meetings digest (deterministic) ───────────────────────────────────────
+    meetings_digest = build_meetings_digest(fireflies_data, clients_config)
+    general_meetings = [m for m in meetings_digest if m.get("client") == "General comms"]
+
+    # ── wrap-up call ──────────────────────────────────────────────────────────
+    print("\nGenerating wrap-up...")
+    if isinstance(fireflies_data, dict) and "error" in fireflies_data:
+        board_errors = dict(board_errors)
+        board_errors["Fireflies"] = fireflies_data["error"]
 
     try:
-        standup = call_claude(prompt)
-        print("RAW EMIT OUTPUT:", json.dumps(standup, indent=2))
-        print(f"  keys returned: { {k: (len(v) if isinstance(v, list) else type(v).__name__) for k, v in standup.items()} }")
-        inject_ids(standup)
-        print("  ✓ Standup data received")
+        wrapup = _call_tool(
+            ai,
+            build_wrapup_prompt(client_entries, board_errors, general_meetings, today),
+            EMIT_WRAPUP_TOOL,
+            label="wrap-up",
+            max_tokens=4000,
+        )
     except Exception as exc:
-        print(f"  ✗ Claude API call failed: {exc}")
-        sys.exit(1)
+        print(f"  ✗ wrap-up failed ({exc}) — using fallback")
+        headlines = [
+            f"{e['client']}: {e['headline']}" for e in client_entries if e.get("headline")
+        ]
+        wrapup = {
+            "executive_summary": " ".join(headlines[:5]) or "No summary available this week.",
+            "departments_overview": [],
+            "comms_flags": [],
+            "blockers": [f"{d}: {err}" for d, err in board_errors.items()],
+            "this_week_priorities": [],
+        }
+
+    # ── assemble + write ──────────────────────────────────────────────────────
+    standup = {
+        "week_of": today,
+        "executive_summary": wrapup.get("executive_summary", ""),
+        "departments_overview": wrapup.get("departments_overview", []),
+        "by_client": client_entries,
+        "meetings_digest": meetings_digest,
+        "comms_flags": wrapup.get("comms_flags", []),
+        "blockers": wrapup.get("blockers", []),
+        "this_week_priorities": wrapup.get("this_week_priorities", []),
+    }
+    inject_ids(standup)
+    print(f"\n  ✓ Standup assembled: {len(client_entries)} clients, "
+          f"{len(meetings_digest)} meetings")
 
     standups_dir = Path("standups")
     standups_dir.mkdir(exist_ok=True)
 
     json_path = standups_dir / "latest.json"
     json_path.write_text(json.dumps(standup, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(f"\n  Wrote {json_path}")
+    print(f"  Wrote {json_path}")
 
     copy_to_site(json_path)
 
@@ -802,8 +888,7 @@ def main():
         if not to_address or to_address == "EMAIL_HERE":
             print("  ⚠️  No valid email in config.json — skipping")
         else:
-            week_of = standup.get("week_of", today)
-            subject = f"Flow Standup - Week of {week_of}"
+            subject = f"Flow Standup - Week of {today}"
             send_standup_email(
                 subject, md_content, markdown_to_simple_html(md_content), to_address
             )
