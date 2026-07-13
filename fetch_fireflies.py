@@ -35,12 +35,11 @@ def _post(query: str, variables: dict) -> dict:
         json={"query": query, "variables": variables},
         timeout=30,
     )
-    if not resp.ok:
-        print(f"  Fireflies raw error body: {resp.text}")
-        resp.raise_for_status()
+    print("FIREFLIES RAW STATUS:", resp.status_code)
+    print("FIREFLIES RAW BODY:", resp.text)
+    resp.raise_for_status()
     payload = resp.json()
     if "errors" in payload:
-        print(f"  Fireflies GraphQL errors: {payload['errors']}")
         raise ValueError(f"Fireflies API errors: {payload['errors']}")
     return payload
 
