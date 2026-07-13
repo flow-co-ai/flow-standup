@@ -1,62 +1,60 @@
 {
   "week_of": "2026-07-08",
-  "executive_summary": "Zero data sources available this week: all four Monday boards returned API errors, Fireflies fetch failed with a 400 error, and no WhatsApp messages were captured. This is a complete data blackout. Without visibility into task status, client communications, or meeting outcomes, Flow Co. is flying blind. The founder must immediately investigate the technical failures—check Monday API credentials, verify Fireflies integration, and confirm WhatsApp logging is functioning—before any client work can be properly managed or reported.",
+  "executive_summary": "All data sources failed this week: Monday API returned query errors across all four boards (CRM, Ads, Video, Web + SEO), Fireflies returned a 400 Bad Request error, and no WhatsApp messages were captured. Without access to task status, meeting notes, or client communications, we have zero visibility into client health, project progress, or upcoming deliverables. This is a critical operational blocker that must be resolved immediately to restore reporting capability.",
   "departments_overview": [
     {
       "department": "CRM",
-      "summary": "No data available due to Monday API error; cannot assess load or stalled items."
+      "summary": "Monday API error prevented data fetch; no visibility into active tasks or status."
     },
     {
       "department": "Ads",
-      "summary": "No data available due to Monday API error; cannot assess load or stalled items."
+      "summary": "Monday API error prevented data fetch; no visibility into campaign status or performance."
     },
     {
       "department": "Video",
-      "summary": "No data available due to Monday API error; cannot assess load or stalled items."
+      "summary": "Monday API error prevented data fetch; no visibility into production pipeline or deliverables."
     },
     {
       "department": "Web + SEO",
-      "summary": "No data available due to Monday API error; cannot assess load or stalled items."
+      "summary": "Monday API error prevented data fetch; no visibility into development or optimization work."
     }
   ],
   "by_client": [],
   "meetings_digest": [],
   "comms_flags": [
-    "CRITICAL: All Monday boards (CRM, Ads, Video, Web + SEO) returned API errors—cannot retrieve any task data.",
-    "CRITICAL: Fireflies API returned 400 Bad Request—no meeting transcripts available.",
-    "No WhatsApp messages captured in the last 7 days—verify logging is functioning.",
-    "Complete data blackout: zero visibility into client work, task status, or communications this week.",
-    "Immediate technical triage required: check Monday API credentials/schema changes, verify Fireflies integration, and confirm WhatsApp sync."
+    "CRITICAL: All Monday.com boards failed to fetch due to API query errors (title field issue on ColumnValue type)",
+    "CRITICAL: Fireflies API returned 400 Bad Request; no meeting transcript data available",
+    "No WhatsApp messages captured in the last 7 days; verify integration status"
   ],
   "blockers": [
-    "Monday API failure: all four department boards (CRM, Ads, Video, Web + SEO) are inaccessible due to GraphQL query error on 'title' field.",
-    "Fireflies API failure: 400 error blocking all meeting transcript retrieval.",
-    "WhatsApp integration: no messages logged in 7 days—unclear if this is a technical issue or genuine silence."
+    "Monday.com API integration is broken across all boards (CRM, Ads, Video, Web + SEO) with GraphQL query errors",
+    "Fireflies.ai API access is failing with 400 Bad Request; meeting intelligence is unavailable",
+    "WhatsApp integration returned zero messages; unclear if this is a data issue or actual silence"
   ],
   "this_week_priorities": [
     {
       "client": "General",
-      "text": "General: Restore Monday API access—investigate GraphQL schema change breaking 'title' field query across all boards.",
+      "text": "General: Resolve Monday.com API query error immediately (ColumnValue 'title' field issue) to restore board visibility",
       "action": null,
-      "id": "a0bcc924"
+      "id": "8d69c74f"
     },
     {
       "client": "General",
-      "text": "General: Fix Fireflies integration—diagnose 400 error and restore meeting transcript sync.",
+      "text": "General: Debug Fireflies 400 error and restore meeting transcript pipeline",
       "action": null,
-      "id": "cdd843fc"
+      "id": "3b31a7a4"
     },
     {
       "client": "General",
-      "text": "General: Verify WhatsApp logging is functioning—confirm whether zero messages is technical or operational.",
+      "text": "General: Verify WhatsApp integration is functioning and capturing client communications",
       "action": null,
-      "id": "2454398e"
+      "id": "37f5bc9f"
     },
     {
       "client": "General",
-      "text": "General: Implement data source health monitoring to catch future blackouts before Monday morning.",
+      "text": "General: Manually check in with all active clients this week to assess project health until automated reporting is restored",
       "action": null,
-      "id": "172f6250"
+      "id": "2ed8ca68"
     }
   ]
 }
