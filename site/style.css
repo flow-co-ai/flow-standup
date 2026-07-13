@@ -159,11 +159,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* health chip colors set inline by JS */
 
 .headline {
-  font-family: 'Source Serif 4', serif;
-  font-style: italic;
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 1.35;
+  font-family: 'Space Grotesk', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
   margin-top: 12px;
   text-wrap: pretty;
   /* color + text-shadow set inline by JS */
@@ -307,7 +308,11 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .row-text {
   font-size: 13.5px;
   line-height: 1.45;
-  text-wrap: pretty;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1;
   transition: text-decoration 0.1s;
 }
 
@@ -544,3 +549,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .live-pill { display: none; }
   .site-header { gap: 8px; }
 }
+
+
+/* ── single-line rows (ellipsis) ─────────────────────────────────────────── */
+.highlight-row, .stalled-row, .row-plain { min-width: 0; }
+.row-wrapper > a, .row-wrapper > div { min-width: 0; }
