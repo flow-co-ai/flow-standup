@@ -485,7 +485,8 @@ def build_meetings_digest(fireflies_data, clients_config: dict) -> list:
                 ln.strip().lstrip("-*• ").strip()
                 for ln in str(text).replace("\r", "").split("\n")
             ]
-        items = [i for i in items if i and not i.startswith("**")][:cap]
+        items = [i.replace("**", "").strip() for i in items]
+        items = [i for i in items if i and not i.endswith(":")][:cap]
         return items
 
     digest = []
@@ -660,9 +661,9 @@ def render_markdown(standup: dict) -> str:
                 lines += [_md_row(s) for s in stalled]
                 lines.append("")
 
+        if entry.get("status_change_suggestions"):
+            lines.append("**Status Change Suggestions** *(suggestions only)*:")
         for sug in (entry.get("status_change_suggestions") or []):
-            if lines[-1] != "**Status Change Suggestions** *(suggestions only)*:":
-                lines.append("**Status Change Suggestions** *(suggestions only)*:")
             dept_tag = f" [{sug.get('department', '')}]" if sug.get("department") else ""
             lines.append(
                 f"- **{sug.get('item_name', '')}**{dept_tag}: "
@@ -672,9 +673,9 @@ def render_markdown(standup: dict) -> str:
         if entry.get("status_change_suggestions"):
             lines.append("")
 
+        if entry.get("risks"):
+            lines.append("**Risks:**")
         for r in (entry.get("risks") or []):
-            if lines[-1] != "**Risks:**":
-                lines.append("**Risks:**")
             lines.append(f"- {r}")
         if entry.get("risks"):
             lines.append("")
@@ -684,15 +685,15 @@ def render_markdown(standup: dict) -> str:
         client_tag = f" — *{mt.get('client')}*" if mt.get("client") else ""
         lines.append(f"### {mt.get('title', 'Untitled')} — {mt.get('date', '')}{client_tag}")
         lines.append("")
+        if mt.get("key_points"):
+            lines.append("**Key Points:**")
         for kp in (mt.get("key_points") or []):
-            if lines[-1] != "**Key Points:**":
-                lines.append("**Key Points:**")
             lines.append(f"- {kp}")
         if mt.get("key_points"):
             lines.append("")
+        if mt.get("action_items"):
+            lines.append("**Action Items:**")
         for ai in (mt.get("action_items") or []):
-            if lines[-1] != "**Action Items:**":
-                lines.append("**Action Items:**")
             lines.append(f"- {ai}")
         if mt.get("action_items"):
             lines.append("")
