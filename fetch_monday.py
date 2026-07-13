@@ -74,6 +74,7 @@ def fetch_board(
           items {
             id
             name
+            created_at
             group { id title }
             column_values {
               id
@@ -167,10 +168,13 @@ def fetch_board(
             except (ValueError, TypeError):
                 pass
 
+        created_at = (item.get("created_at") or "")[:10] or None
+
         processed.append(
             {
                 "name": item["name"],
                 "item_id": item_id,
+                "created_at": created_at,
                 "board_id": str(board_id),
                 "monday_url": monday_url,
                 "last_updated": last_updated_dt.date().isoformat() if last_updated_dt else None,

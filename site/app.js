@@ -51,6 +51,27 @@ let copiedId  = null;
 let copyTimer = null;
 let saveTimer = null;
 
+// ── view routing (grid <-> client detail via location.hash) ──────────────────
+
+function currentClientView() {
+  const m = location.hash.match(/^#c=(.+)$/);
+  if (!m) return null;
+  const name = decodeURIComponent(m[1]);
+  const exists = (standup?.by_client || []).some(c => c.client === name);
+  return exists ? name : null;
+}
+
+function openClient(name) {
+  location.hash = `c=${encodeURIComponent(name)}`;
+}
+
+function backToGrid() {
+  // Prefer history.back() when the grid is in history (keeps back-gesture natural)
+  if (location.hash) history.back(); else render();
+}
+
+window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
+
 // ── persistence layer ─────────────────────────────────────────────────────────
 
 // --- localStorage (offline mirror) -------------------------------------------
@@ -401,6 +422,32 @@ function findPriorityForClient(priorities, clientEntry) {
   return m || null;
 }
 
+// ── mini card builder (grid view) ─────────────────────────────────────────────
+
+function buildMiniCard(entry) {
+  const h = HEALTH[entry.health] || HEALTH.on_track;
+
+  const card = el('article', {
+    class: 'mini-card',
+    role: 'button',
+    tabindex: '0',
+    'aria-label': `Open ${entry.client}`,
+    onclick: () => openClient(entry.client),
+    onkeydown: (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openClient(entry.client); }
+    },
+  });
+
+  card.append(el('div', { class: 'mini-state' },
+    el('span', { class: 'mini-dot', style: { background: h.accent, boxShadow: `0 0 8px ${h.glow}` } }),
+    el('span', { class: 'mini-state-label', style: { color: h.accent }, text: h.label }),
+  ));
+  card.append(el('h2', { class: 'mini-name', text: entry.client }));
+  card.append(el('p', { class: 'mini-micro', text: entry.headline || 'No activity recorded this week.' }));
+
+  return card;
+}
+
 // ── card builder ──────────────────────────────────────────────────────────────
 
 function buildCard(entry, priorities) {
@@ -490,10 +537,28 @@ function render() {
   if (!standup) return;
   const app        = document.getElementById('app');
   const priorities = standup.this_week_priorities || [];
+  const viewClient = currentClientView();
   app.innerHTML    = '';
+
+  if (viewClient) {
+    // ── detail view ──
+    app.className = 'client-detail';
+    app.append(el('button', {
+      class: 'back-link',
+      type: 'button',
+      html: '&#8592;&nbsp; All clients',
+      onclick: backToGrid,
+    }));
+    const entry = (standup.by_client || []).find(c => c.client === viewClient);
+    if (entry) app.append(buildCard(entry, priorities));
+    return;
+  }
+
+  // ── grid view ──
+  app.className = 'client-grid';
   (standup.by_client || []).forEach(entry => {
     if (entry.client === 'Unmapped') return;
-    app.append(buildCard(entry, priorities));
+    app.append(buildMiniCard(entry));
   });
 }
 

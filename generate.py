@@ -127,6 +127,33 @@ def load_playbooks_drive(config: dict, clients_config: dict) -> dict[str, str]:
         return {}
 
 
+# ── pulse window (live items only) ────────────────────────────────────────────
+
+def filter_live_items(monday_data: list, config: dict) -> tuple[list, int]:
+    """Keep only items created or updated within the pulse window.
+    Dormant/archived items never reach the AI. Returns (filtered, pruned_count)."""
+    from datetime import timedelta
+    pulse_days = int(config.get("pulse_window_days", 45))
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=pulse_days)).date().isoformat()
+
+    pruned = 0
+    filtered = []
+    for board in monday_data:
+        if "error" in board:
+            filtered.append(board)
+            continue
+        live = []
+        for item in board.get("items", []):
+            last = item.get("last_updated") or ""
+            created = item.get("created_at") or ""
+            if (last and last >= cutoff) or (created and created >= cutoff):
+                live.append(item)
+            else:
+                pruned += 1
+        filtered.append({**board, "items": live})
+    return filtered, pruned
+
+
 # ── client grouping ───────────────────────────────────────────────────────────
 
 def group_items_by_client(
@@ -183,6 +210,8 @@ def _fmt_item_compact(item: dict, days_back: int) -> list[str]:
     lines = []
     line = f"  - [id: {item.get('item_id', '?')}] **{item['name']}**"
     lines.append(line)
+    if item.get("created_at"):
+        lines.append(f"    [created: {item['created_at']}]")
     if item.get("last_updated"):
         lines.append(f"    [last_updated: {item['last_updated']}]")
     if item.get("columns"):
@@ -240,6 +269,13 @@ def build_client_prompt(
         "6. Status suggestions are SUGGESTIONS ONLY, never decisions.\n"
         "7. Anti-hallucination: every claim must trace to the data below. If inferring, say "
         "so ('looks like…', 'no Monday task found for…').\n"
+        f"8. RECENCY RECONCILIATION: every signal is timestamped — [created]/[last_updated] "
+        f"on Monday items, meeting dates, and WhatsApp message times. Today is {today}. The "
+        "NEWEST signal across sources describes the current state of the project. If a meeting "
+        "or WhatsApp message is more recent than an item's last board update, treat the comms "
+        "as the current truth and note the board may be out of date (often a status suggestion). "
+        "Anchor the headline and health call on the freshest evidence, and prefer recent events "
+        "over older ones when choosing highlights.\n"
     )
 
     if playbook:
@@ -732,6 +768,10 @@ def main():
     monday_data = []
     try:
         monday_data, _ = fetch_all_boards(config)
+        monday_data, pruned = filter_live_items(monday_data, config)
+        if pruned:
+            print(f"  Pulse window: pruned {pruned} dormant item(s) "
+                  f"older than {config.get('pulse_window_days', 45)}d")
     except Exception as exc:
         print(f"  ⚠️  Monday.com fetch failed: {exc}")
         monday_data = [{"board_name": "ALL BOARDS", "error": str(exc), "items": []}]
