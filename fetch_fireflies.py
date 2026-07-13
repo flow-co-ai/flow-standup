@@ -62,14 +62,34 @@ def _fetch_sentences(transcript_id: str) -> list:
     )
 
 
+def _parse_ff_date(date_val) -> str:
+    """Convert Fireflies date field (epoch ms or string) to YYYY-MM-DD."""
+    if not date_val:
+        return ""
+    if isinstance(date_val, (int, float)):
+        try:
+            return datetime.fromtimestamp(date_val / 1000, tz=timezone.utc).strftime("%Y-%m-%d")
+        except (ValueError, OSError):
+            return ""
+    if isinstance(date_val, str):
+        # Already a date string — normalise to YYYY-MM-DD if possible
+        for fmt in ("%Y-%m-%d", "%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%dT%H:%M:%SZ"):
+            try:
+                return datetime.strptime(date_val[:len(fmt)], fmt).strftime("%Y-%m-%d")
+            except ValueError:
+                continue
+        return date_val[:10]  # best-effort truncate
+    return str(date_val)
+
+
 def fetch_transcripts(days_back: int = 7) -> list:
     cutoff = datetime.now(timezone.utc) - timedelta(days=days_back)
-    # Fireflies accepts fromDate as "YYYY-MM-DD"
     from_date = cutoff.strftime("%Y-%m-%d")
+    to_date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
     query = """
-    query GetTranscripts($fromDate: String) {
-      transcripts(fromDate: $fromDate) {
+    query Transcripts($fromDate: String, $toDate: String) {
+      transcripts(fromDate: $fromDate, toDate: $toDate, limit: 50) {
         id
         title
         date
@@ -83,7 +103,7 @@ def fetch_transcripts(days_back: int = 7) -> list:
     }
     """
 
-    payload = _post(query, {"fromDate": from_date})
+    payload = _post(query, {"fromDate": from_date, "toDate": to_date})
     raw = (payload.get("data") or {}).get("transcripts", []) or []
 
     results = []
@@ -98,7 +118,7 @@ def fetch_transcripts(days_back: int = 7) -> list:
         entry = {
             "id": t.get("id"),
             "title": t.get("title") or "Untitled",
-            "date": t.get("date") or "",
+            "date": _parse_ff_date(t.get("date")),
             "participants": t.get("participants") or [],
             "summary": summary,
         }

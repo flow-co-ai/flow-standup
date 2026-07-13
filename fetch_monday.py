@@ -69,14 +69,14 @@ def fetch_board(
       boards(ids: $ids) {
         id
         name
+        groups { id title }
         items_page(limit: 100) {
           items {
             id
             name
-            group { title }
+            group { id title }
             column_values {
               id
-              title
               text
               value
             }
@@ -85,7 +85,6 @@ def fetch_board(
               name
               column_values {
                 id
-                title
                 text
                 value
               }
@@ -127,7 +126,7 @@ def fetch_board(
         )
 
         columns = {
-            cv["title"]: cv["text"]
+            cv["id"]: cv["text"]
             for cv in item.get("column_values", [])
             if cv.get("text")
         }
@@ -135,7 +134,7 @@ def fetch_board(
         subitems = []
         for sub in item.get("subitems", []):
             sub_cols = {
-                cv["title"]: cv["text"]
+                cv["id"]: cv["text"]
                 for cv in sub.get("column_values", [])
                 if cv.get("text")
             }

@@ -727,7 +727,7 @@ def main():
     print(f"\n[3/4] Reading WhatsApp exports...")
     whatsapp_data: dict = {}
     try:
-        whatsapp_data = fetch_whatsapp(days_back)
+        whatsapp_data = fetch_whatsapp(days_back, config=config)
         if whatsapp_data:
             total_msgs = sum(len(v) for v in whatsapp_data.values() if isinstance(v, list))
             print(f"  ✓ {len(whatsapp_data)} chats, {total_msgs} messages")
