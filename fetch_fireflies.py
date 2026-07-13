@@ -90,12 +90,16 @@ def fetch_transcripts(days_back: int = 7) -> list:
     to_date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
     query = """
-    query Transcripts($fromDate: String, $toDate: String) {
+    query Transcripts($fromDate: DateTime, $toDate: DateTime) {
       transcripts(fromDate: $fromDate, toDate: $toDate, limit: 50) {
         id
         title
         date
-        summary { overview }
+        summary {
+          overview
+          action_items
+          keywords
+        }
       }
     }
     """
@@ -106,7 +110,11 @@ def fetch_transcripts(days_back: int = 7) -> list:
     results = []
     for t in raw:
         summary = t.get("summary") or {}
-        has_summary = bool(summary.get("overview"))
+        has_summary = bool(
+            summary.get("overview")
+            or summary.get("action_items")
+            or summary.get("keywords")
+        )
 
         entry = {
             "id": t.get("id"),
