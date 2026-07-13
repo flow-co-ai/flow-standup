@@ -565,7 +565,7 @@ def call_claude(prompt: str) -> dict:
 
     response = client.messages.create(
         model="claude-sonnet-4-5",
-        max_tokens=4096,
+        max_tokens=8192,
         tools=[EMIT_STANDUP_TOOL],
         tool_choice={"type": "tool", "name": "emit_standup"},
         messages=[{"role": "user", "content": prompt}],
@@ -618,8 +618,8 @@ def render_markdown(standup: dict) -> str:
         lines.append("")
 
     lines += ["## By Client", ""]
-    for entry in standup.get("by_client", []):
-        client = entry["client"]
+    for entry in (standup.get("by_client") or []):
+        client = entry.get("client", "Unknown")
         health = entry.get("health", "on_track")
         health_label = {"on_track": "On Track", "needs_attention": "Needs Attention", "at_risk": "At Risk"}.get(health, health)
 
@@ -634,62 +634,69 @@ def render_markdown(standup: dict) -> str:
             lines.append(f"*{entry['headline']}*")
             lines.append("")
 
-        for dept_entry in entry.get("work_by_department", []):
-            lines.append(f"#### {dept_entry['department']}")
+        for dept_entry in (entry.get("work_by_department") or []):
+            lines.append(f"#### {dept_entry.get('department', '')}")
             lines.append("")
-            if dept_entry.get("highlights"):
+            highlights = dept_entry.get("highlights") or []
+            if highlights:
                 lines.append("**Highlights:**")
-                lines += [_md_row(h) for h in dept_entry["highlights"]]
+                lines += [_md_row(h) for h in highlights]
                 lines.append("")
-            if dept_entry.get("stalled_items"):
+            stalled = dept_entry.get("stalled_items") or []
+            if stalled:
                 lines.append("**Stalled:**")
-                lines += [_md_row(s) for s in dept_entry["stalled_items"]]
+                lines += [_md_row(s) for s in stalled]
                 lines.append("")
 
+        for sug in (entry.get("status_change_suggestions") or []):
+            if lines[-1] != "**Status Change Suggestions** *(suggestions only)*:":
+                lines.append("**Status Change Suggestions** *(suggestions only)*:")
+            dept_tag = f" [{sug.get('department', '')}]" if sug.get("department") else ""
+            lines.append(
+                f"- **{sug.get('item_name', '')}**{dept_tag}: "
+                f"{sug.get('current_status', '')} → {sug.get('suggested_status', '')}  "
+                f"*(reason: {sug.get('reason', '')})*"
+            )
         if entry.get("status_change_suggestions"):
-            lines.append("**Status Change Suggestions** *(suggestions only)*:")
-            for sug in entry["status_change_suggestions"]:
-                dept_tag = f" [{sug.get('department', '')}]" if sug.get("department") else ""
-                lines.append(
-                    f"- **{sug['item_name']}**{dept_tag}: "
-                    f"{sug['current_status']} → {sug['suggested_status']}  "
-                    f"*(reason: {sug['reason']})*"
-                )
             lines.append("")
 
+        for r in (entry.get("risks") or []):
+            if lines[-1] != "**Risks:**":
+                lines.append("**Risks:**")
+            lines.append(f"- {r}")
         if entry.get("risks"):
-            lines.append("**Risks:**")
-            lines += [f"- {r}" for r in entry["risks"]]
             lines.append("")
 
     lines += ["## Meetings Digest", ""]
-    meetings = standup.get("meetings_digest", [])
-    if meetings:
-        for mt in meetings:
-            client_tag = f" — *{mt['client']}*" if mt.get("client") else ""
-            lines.append(f"### {mt['title']} — {mt['date']}{client_tag}")
-            lines.append("")
-            if mt.get("key_points"):
+    for mt in (standup.get("meetings_digest") or []):
+        client_tag = f" — *{mt.get('client')}*" if mt.get("client") else ""
+        lines.append(f"### {mt.get('title', 'Untitled')} — {mt.get('date', '')}{client_tag}")
+        lines.append("")
+        for kp in (mt.get("key_points") or []):
+            if lines[-1] != "**Key Points:**":
                 lines.append("**Key Points:**")
-                lines += [f"- {kp}" for kp in mt["key_points"]]
-                lines.append("")
-            if mt.get("action_items"):
+            lines.append(f"- {kp}")
+        if mt.get("key_points"):
+            lines.append("")
+        for ai in (mt.get("action_items") or []):
+            if lines[-1] != "**Action Items:**":
                 lines.append("**Action Items:**")
-                lines += [f"- {ai}" for ai in mt["action_items"]]
-                lines.append("")
-    else:
+            lines.append(f"- {ai}")
+        if mt.get("action_items"):
+            lines.append("")
+    if not (standup.get("meetings_digest") or []):
         lines += ["No meetings this week.", ""]
 
     lines += ["## Communications Flags", ""]
-    comms = standup.get("comms_flags", [])
+    comms = standup.get("comms_flags") or []
     lines += ([f"- {c}" for c in comms] if comms else ["Nothing flagged."]) + [""]
 
     lines += ["## Blockers", ""]
-    blockers = standup.get("blockers", [])
+    blockers = standup.get("blockers") or []
     lines += ([f"- {b}" for b in blockers] if blockers else ["No blockers identified."]) + [""]
 
     lines += ["## This Week's Priorities", ""]
-    lines += [_md_priority(p) for p in standup.get("this_week_priorities", [])]
+    lines += [_md_priority(p) for p in (standup.get("this_week_priorities") or [])]
     lines.append("")
 
     lines += ["---", f"*Generated by flow-standup on {generated_at}*"]
@@ -753,6 +760,8 @@ def main():
 
     try:
         standup = call_claude(prompt)
+        print("RAW EMIT OUTPUT:", json.dumps(standup, indent=2))
+        print(f"  keys returned: { {k: (len(v) if isinstance(v, list) else type(v).__name__) for k, v in standup.items()} }")
         inject_ids(standup)
         print("  ✓ Standup data received")
     except Exception as exc:
