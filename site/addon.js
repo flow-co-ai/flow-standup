@@ -25,12 +25,13 @@ async function foLoadQueue() {
   try {
     const res = await fetch("/.netlify/functions/queue", { headers: foHeaders() });
     const data = await res.json();
+    if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
     const items = data.items || [];
     const active = items.filter(it => ACTIVE_STATUSES.includes(it.status));
     const handled = items.filter(it => HANDLED_STATUSES.includes(it.status));
     document.getElementById("fo-queue-cards").innerHTML = foRenderQueue(active, handled);
   } catch (e) {
-    document.getElementById("fo-queue-cards").innerHTML = `<div class="fo-empty">couldn't reach the draft queue</div>`;
+    document.getElementById("fo-queue-cards").innerHTML = `<div class="fo-empty">couldn't reach the draft queue${e && e.message ? ": " + foEscape(e.message) : ""}</div>`;
   }
 }
 
@@ -89,7 +90,11 @@ function foQueueCard(item, handled) {
 }
 
 async function foPatch(id, patch) {
-  await fetch("/.netlify/functions/queue", { method: "POST", headers: foHeaders(), body: JSON.stringify({ id, patch }) });
+  const res = await fetch("/.netlify/functions/queue", { method: "POST", headers: foHeaders(), body: JSON.stringify({ id, patch }) });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    alert("Couldn't update it: " + (data.error || `HTTP ${res.status}`));
+  }
   foLoadQueue();
 }
 
