@@ -287,7 +287,8 @@ def build_client_prompt(
         "3. The BOARD SNAPSHOT is background corroboration only. Do NOT narrate board items "
         "or statuses that nobody talked about, unless one is strikingly stalled or brand new.\n\n"
         "OUTPUT RULES:\n"
-        "- headline: one plain sentence a tired founder absorbs in two seconds. State, not urgency.\n"
+        "- headline: terse phrase, max 8 words, NOT a full sentence. State, not urgency.\n"
+        "- Every row text is a phrase max 10 words — substance over meta.\n"
         "- health: on_track / needs_attention / at_risk, judged comms-first (silence + stalls "
         "can mean needs_attention; an unhappy message outweighs a green board).\n"
         "- highlights: MAX 3, what actually happened this week, drawn from comms first. "
@@ -362,7 +363,7 @@ _CLIENT_ROW = {
     "type": "object",
     "required": ["text", "department", "source"],
     "properties": {
-        "text": {"type": "string", "description": "One short sentence."},
+        "text": {"type": "string", "description": "Phrase max 10 words — no full sentences."},
         "department": {"type": "string", "description": "CRM, Ads, Video, or Web + SEO. Empty string if not board work."},
         "source": {"type": "string", "enum": ["monday", "meeting", "whatsapp"]},
         "item_name": {"type": ["string", "null"], "description": "Monday item name if source=monday."},
