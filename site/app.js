@@ -505,25 +505,6 @@ function buildCard(entry, priorities) {
 // ── footer renderer ───────────────────────────────────────────────────────────
 
 function renderFooter() {
-  const commsFlags = standup.comms_flags || [];
-  const unmapped   = (standup.by_client || []).filter(c => c.client === 'Unmapped');
-
-  const items = [];
-  commsFlags.forEach(f => items.push(typeof f === 'string' ? f : f.text || ''));
-  unmapped.forEach(u => {
-    (u.work_by_department || []).forEach(d => {
-      (d.highlights    || []).forEach(h => items.push(`[Unmapped] ${h.text || h}`));
-      (d.stalled_items || []).forEach(s => items.push(`[Unmapped, stalled] ${s.text || s}`));
-    });
-  });
-
-  const sectionEl = document.getElementById('footer-unmatched');
-  const itemsEl   = document.getElementById('footer-items');
-  if (items.length && sectionEl && itemsEl) {
-    items.forEach(t => itemsEl.append(el('div', { class: 'footer-item', text: t })));
-    sectionEl.hidden = false;
-  }
-
   const ts = document.getElementById('footer-ts');
   if (ts && standup.week_of) {
     ts.textContent =
