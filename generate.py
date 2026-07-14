@@ -189,6 +189,34 @@ def _match_comms_to_client(text: str, clients_config: dict) -> str:
     return result if result != "Unmapped" else "General comms"
 
 
+def match_meeting_clients(mt: dict, clients_config: dict) -> list[str]:
+    """Match a meeting to one or more clients.
+    1) Title match (strongest signal) — single client.
+    2) Else scan the summary CONTENT for client aliases — a meeting that
+       discusses several clients attaches to each of them (max 4).
+    3) Else General comms."""
+    title_match = resolve_client(mt.get("title", ""), clients_config, fuzzy=True)
+    if title_match != "Unmapped":
+        return [title_match]
+
+    summary = mt.get("summary") or {}
+    haystack = " ".join([
+        str(summary.get("overview") or ""),
+        str(summary.get("action_items") or ""),
+        " ".join(summary.get("keywords") or []) if isinstance(summary.get("keywords"), list) else "",
+    ]).lower()
+    if mt.get("sentences"):
+        haystack += " " + " ".join(s.get("text", "") for s in mt["sentences"][:60]).lower()
+
+    matches = []
+    for canonical, aliases in clients_config.items():
+        for alias in aliases:
+            if alias.lower().strip() in haystack:
+                matches.append(canonical)
+                break
+    return matches[:4] if matches else ["General comms"]
+
+
 # ── URL lookup (Python owns URLs — the model never writes them) ──────────────
 
 def build_url_lookup(monday_data: list) -> dict[str, str]:
@@ -531,10 +559,11 @@ def build_meetings_digest(fireflies_data, clients_config: dict) -> list:
             continue  # Fireflies often records duplicates of the same call
         seen_titles.add(key)
         summary = mt.get("summary") or {}
+        matched = match_meeting_clients(mt, clients_config)
         digest.append({
             "title": title,
             "date": date,
-            "client": _match_comms_to_client(title, clients_config),
+            "client": ", ".join(m for m in matched if m != "General comms") or "General comms",
             "key_points": _lines(summary.get("overview"), 5),
             "action_items": _lines(summary.get("action_items"), 6),
         })
@@ -809,12 +838,16 @@ def main():
     meetings_by_client: dict[str, list] = {}
     if isinstance(fireflies_data, list):
         for mt in fireflies_data:
-            c = _match_comms_to_client(mt.get("title", ""), clients_config)
-            meetings_by_client.setdefault(c, []).append(mt)
+            matched = match_meeting_clients(mt, clients_config)
+            for c in matched:
+                meetings_by_client.setdefault(c, []).append(mt)
+            print(f"  meeting '{(mt.get('title') or 'Untitled')[:45]}' → {', '.join(matched)}")
 
     chats_by_client: dict[str, list[tuple]] = {}
     for chat_name, msgs in (whatsapp_data or {}).items():
         c = _match_comms_to_client(chat_name, clients_config)
+        n = len(msgs) if isinstance(msgs, list) else 0
+        print(f"  chat '{chat_name}' ({n} msgs) → {c}")
         chats_by_client.setdefault(c, []).append((chat_name, msgs))
 
     # Clients with any signal this week (Monday items OR meetings OR chats),

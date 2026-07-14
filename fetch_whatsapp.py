@@ -9,6 +9,7 @@ import io
 import json
 import os
 import re
+import zipfile
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -106,16 +107,19 @@ def fetch_whatsapp_drive(config: dict, days_back: int = 7) -> dict:
         )
         service = build("drive", "v3", credentials=creds, cache_discovery=False)
 
+        # No mimetype filter — WhatsApp exports arrive as .txt OR .zip
+        # (iOS "Export Chat" often produces a zip), and Drive mimetypes vary.
         resp = service.files().list(
-            q=f"'{folder_id}' in parents and trashed = false and mimeType = 'text/plain'",
-            fields="files(id, name)",
-            pageSize=50,
+            q=f"'{folder_id}' in parents and trashed = false",
+            fields="files(id, name, mimeType)",
+            pageSize=100,
         ).execute()
 
         chats = {}
         for file in resp.get("files", []):
             name = file["name"]
-            if not name.lower().endswith(".txt"):
+            lower = name.lower()
+            if not (lower.endswith(".txt") or lower.endswith(".zip")):
                 continue
             chat_name = Path(name).stem
             try:
@@ -126,11 +130,35 @@ def fetch_whatsapp_drive(config: dict, days_back: int = 7) -> dict:
                 done = False
                 while not done:
                     _, done = downloader.next_chunk()
-                content = buf.getvalue().decode("utf-8", errors="replace")
-                msgs = _parse_lines(content.splitlines(keepends=True), days_back)
-                if msgs:
-                    chats[chat_name] = msgs
+                raw = buf.getvalue()
+
+                texts = []  # (chat_name, content)
+                if lower.endswith(".zip"):
+                    with zipfile.ZipFile(io.BytesIO(raw)) as zf:
+                        for zname in zf.namelist():
+                            if zname.lower().endswith(".txt"):
+                                inner = zf.read(zname).decode("utf-8", errors="replace")
+                                texts.append((chat_name, inner))
+                    if not texts:
+                        print(f"    ⚠️  '{name}': zip contains no .txt")
+                        continue
+                else:
+                    texts.append((chat_name, raw.decode("utf-8", errors="replace")))
+
+                for cname, content in texts:
+                    lines = content.splitlines(keepends=True)
+                    msgs = _parse_lines(lines, days_back)
+                    total_lines = sum(
+                        1 for ln in lines
+                        if _IOS.match(ln.rstrip("\n")) or _ANDROID.match(ln.rstrip("\n"))
+                    )
+                    print(f"    '{cname}': {total_lines} messages in file, "
+                          f"{len(msgs)} within last {days_back}d"
+                          + ("" if total_lines else "  ⚠️ format not recognised"))
+                    if msgs:
+                        chats[cname] = msgs
             except Exception as exc:
+                print(f"    ⚠️  '{name}': {exc}")
                 chats[chat_name] = {"error": str(exc)}
 
         return chats
