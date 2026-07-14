@@ -1,0 +1,56 @@
+/* ── Ops add-on (draft queue + rundown) — dark Flow Ops tokens ─────────────── */
+.fo-section { margin-top: 34px; }
+.fo-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.12em;
+  color: #A9B478; margin-bottom: 10px;
+}
+.fo-card {
+  background: #141A14;
+  border: 1px solid rgba(237,233,220,0.08);
+  border-radius: 12px;
+  padding: 13px 14px; margin-bottom: 8px;
+}
+.fo-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.fo-title { font-size: 13.5px; font-weight: 600; color: #EDE9DA; margin: 0; }
+.fo-sub { font-size: 12px; color: rgba(220,216,200,0.62); margin: 3px 0 0; }
+.fo-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 3px 9px; border-radius: 6px; white-space: nowrap;
+}
+.fo-b-ready   { background: rgba(140,190,110,0.14); color: #8CBE6E; }
+.fo-b-confirm { background: rgba(220,167,70,0.14);  color: #DCA746; }
+.fo-b-sent, .fo-b-done { background: rgba(237,233,220,0.07); color: rgba(220,216,200,0.55); }
+.fo-actions { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.fo-actions button {
+  background: transparent; border: 1px solid rgba(169,180,120,0.4);
+  color: #C6D093; padding: 6px 11px; border-radius: 999px;
+  font-family: 'Space Grotesk', sans-serif; font-size: 12px; cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+.fo-actions button:hover { background: rgba(146,155,105,0.12); border-color: rgba(169,180,120,0.7); }
+.fo-actions button.fo-primary { background: #929B69; border-color: #929B69; color: #0C100C; font-weight: 600; }
+.fo-actions button.fo-primary:hover { background: #A9B478; }
+.fo-empty { color: rgba(220,216,200,0.45); font-size: 13px; }
+
+.fo-chat { background: #101510; border: 1px solid rgba(237,233,220,0.06); border-radius: 12px; padding: 12px; margin-top: 10px; }
+.fo-chat-log { display: flex; flex-direction: column; gap: 8px; max-height: 260px; overflow-y: auto; margin-bottom: 8px; }
+.fo-msg { padding: 7px 11px; border-radius: 8px; font-size: 13px; max-width: 85%; line-height: 1.5; white-space: pre-wrap; }
+.fo-msg.user { align-self: flex-end; background: #141A14; border: 1px solid rgba(237,233,220,0.1); color: #EDE9DA; }
+.fo-msg.assistant { align-self: flex-start; background: rgba(146,155,105,0.12); color: #DCD8C8; }
+.fo-chat-form { display: flex; gap: 8px; }
+.fo-chat-form input {
+  flex: 1; background: #0C100C; border: 1px solid rgba(237,233,220,0.12);
+  border-radius: 8px; padding: 8px 10px; font-size: 13px; color: #EDE9DA;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.fo-chat-form input::placeholder { color: rgba(220,216,200,0.35); }
+.fo-chat-form input:focus { outline: none; border-color: rgba(169,180,120,0.5); }
+.fo-chat-form button {
+  border: none; background: #929B69; color: #0C100C; border-radius: 8px;
+  padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.fo-chat-form button:hover { background: #A9B478; }
