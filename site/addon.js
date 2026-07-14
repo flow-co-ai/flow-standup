@@ -35,9 +35,24 @@ async function foLoadQueue() {
   }
 }
 
+function foGroupByClient(items) {
+  const groups = new Map();
+  for (const item of items) {
+    const key = item.group || "n/a";
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(item);
+  }
+  // Most items needing attention first, so Naz sees the busiest client at the top.
+  return [...groups.entries()].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
+}
+
 function foRenderQueue(active, handled) {
   const activeHtml = active.length
-    ? active.map(item => foQueueCard(item, false)).join("")
+    ? foGroupByClient(active).map(([client, items]) => `
+      <div class="fo-group">
+        <div class="fo-group-header">${foEscape(client)} <span class="fo-group-count">(${items.length})</span></div>
+        ${items.map(item => foQueueCard(item, false)).join("")}
+      </div>`).join("")
     : `<div class="fo-empty">queue is empty</div>`;
 
   const handledHtml = `
