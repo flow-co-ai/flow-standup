@@ -205,37 +205,35 @@ def build_url_lookup(monday_data: list) -> dict[str, str]:
 
 # ── per-client prompt ─────────────────────────────────────────────────────────
 
-def _fmt_item_compact(item: dict, days_back: int) -> list[str]:
-    """Compact item lines. Items are referenced by [id: N] — never by URL."""
-    lines = []
-    line = f"  - [id: {item.get('item_id', '?')}] **{item['name']}**"
-    lines.append(line)
-    if item.get("created_at"):
-        lines.append(f"    [created: {item['created_at']}]")
+def _board_line(item: dict, today: str) -> str:
+    """One compact line per board item — a snapshot, not an audit."""
+    bits = [f"[id: {item.get('item_id', '?')}] {item['name']}"]
+    cols = item.get("columns") or {}
+    status = next((v for k, v in cols.items() if "status" in k.lower()), None)
+    if status:
+        bits.append(f"status: {status}")
     if item.get("last_updated"):
-        lines.append(f"    [last_updated: {item['last_updated']}]")
-    if item.get("columns"):
-        cols = ", ".join(f"{k}: {v}" for k, v in list(item["columns"].items())[:12])
-        lines.append(f"    Columns: {cols}")
-    subitems = item.get("subitems") or []
-    if subitems:
-        lines.append(f"    Subitems ({len(subitems)}):")
-        for sub in subitems[:10]:
-            sub_line = f"      • {sub['name']}"
-            if sub.get("columns"):
-                sub_line += "  | " + ", ".join(
-                    f"{k}: {v}" for k, v in list(sub["columns"].items())[:6]
-                )
-            lines.append(sub_line)
-    updates = item.get("recent_updates") or []
-    if updates:
-        lines.append(f"    Updates (last {days_back}d):")
-        for upd in updates[:5]:
-            ts = upd.get("created_at", "")[:10]
-            who = upd.get("creator", "?")
-            body = (upd.get("body") or "")[:250]
-            lines.append(f"      [{ts} — {who}]: {body}")
-    return lines
+        bits.append(f"last activity: {item['last_updated']}")
+    elif item.get("created_at"):
+        bits.append(f"created: {item['created_at']}")
+    n_subs = len(item.get("subitems") or [])
+    if n_subs:
+        bits.append(f"{n_subs} subitems")
+    return "  - " + "  |  ".join(bits)
+
+
+def _collect_monday_messages(departments: dict[str, list]) -> list[str]:
+    """Pull update threads out of items into a first-class comms feed."""
+    msgs = []
+    for dept, items in departments.items():
+        for item in items:
+            for upd in (item.get("recent_updates") or [])[:4]:
+                ts = (upd.get("created_at") or "")[:10]
+                who = upd.get("creator", "?")
+                body = (upd.get("body") or "").strip()[:300]
+                if body:
+                    msgs.append(f"  [{ts} — {who}] on \"{item['name']}\" ({dept}): {body}")
+    return sorted(msgs, reverse=True)
 
 
 def build_client_prompt(
@@ -249,81 +247,79 @@ def build_client_prompt(
 ) -> str:
     parts: list[str] = []
     parts.append(
-        f"# Weekly client review — {client} — week ending {today}\n\n"
-        "You are a business analyst reviewing ONE client for Flow Co., a B2B marketing "
-        "agency. All data below covers the last 7 days and ONLY this client.\n\n"
-        "INSTRUCTIONS:\n"
-        "1. CROSS-SOURCE CORRELATION is the main job: meeting action items with no matching "
-        "Monday task; urgency in comms not reflected in board status; items marked Done or "
-        "In Progress that comms suggest are stuck; things discussed that appear nowhere on "
-        "the boards. These are the highest-value lines.\n"
-        "2. HEALTH must be grounded: weigh comms signals as heavily as board status, and "
-        "explain the health call in the headline. The headline must be one specific, concrete "
-        "sentence ('Case study video stalled 3 weeks and the retainer call went unanswered' "
-        "is good; 'Some progress this week' is useless).\n"
-        "3. LIMITS: at most 4 highlights and at most 3 stalled items — pick only the most "
-        "important. Each row's text is ONE short sentence.\n"
-        "4. monday_item_id: use the [id: N] value verbatim from the data for rows about a "
-        "Monday item. Null for meeting/whatsapp rows. NEVER invent ids.\n"
-        f"5. days_stalled: today ({today}) minus the [last_updated] date, when shown. Else null.\n"
-        "6. Status suggestions are SUGGESTIONS ONLY, never decisions.\n"
-        "7. Anti-hallucination: every claim must trace to the data below. If inferring, say "
-        "so ('looks like…', 'no Monday task found for…').\n"
-        f"8. RECENCY RECONCILIATION: every signal is timestamped — [created]/[last_updated] "
-        f"on Monday items, meeting dates, and WhatsApp message times. Today is {today}. The "
-        "NEWEST signal across sources describes the current state of the project. If a meeting "
-        "or WhatsApp message is more recent than an item's last board update, treat the comms "
-        "as the current truth and note the board may be out of date (often a status suggestion). "
-        "Anchor the headline and health call on the freshest evidence, and prefer recent events "
-        "over older ones when choosing highlights.\n"
+        f"# Weekly pulse — {client} — week ending {today}\n\n"
+        "You are writing a CALM WEEKLY PULSE for one client of Flow Co., a marketing agency. "
+        "The reader wants a clear picture of where this project stands — not an audit, not a "
+        "task list, not a call to action.\n\n"
+        "SOURCE PRIORITY — this ordering is the whole point:\n"
+        "1. MEETINGS and MONDAY MESSAGES are the primary truth: what was said, agreed, "
+        "delivered, or raised this week IS the pulse.\n"
+        "2. WHATSAPP messages are secondary color.\n"
+        "3. The BOARD SNAPSHOT is background corroboration only. Do NOT narrate board items "
+        "or statuses that nobody talked about, unless one is strikingly stalled or brand new.\n\n"
+        "OUTPUT RULES:\n"
+        "- headline: one plain sentence a tired founder absorbs in two seconds. State, not urgency.\n"
+        "- health: on_track / needs_attention / at_risk, judged comms-first (silence + stalls "
+        "can mean needs_attention; an unhappy message outweighs a green board).\n"
+        "- highlights: MAX 3, what actually happened this week, drawn from comms first.\n"
+        "- stalled_items: MAX 2, only things genuinely stuck that matter. Skip minor ones.\n"
+        "- status_change_suggestions: usually EMPTY. Only when comms directly contradict the "
+        "board (e.g. delivered in a meeting but board says Working).\n"
+        "- risks: MAX 1, only if real. Otherwise empty.\n"
+        "- Every row cites monday_item_id verbatim from [id: N] when it concerns a board item; "
+        "null for meeting/whatsapp rows. NEVER invent ids.\n"
+        f"- Today is {today}. Newest signal wins. If sources are quiet, say the week was quiet — "
+        "that is a valid pulse. Never pad.\n"
     )
 
     if playbook:
-        parts.append(
-            "\n## CLIENT PLAYBOOK (what good looks like — judge health against this)\n"
-            + playbook[:4000]
-        )
+        parts.append("\n## CLIENT PLAYBOOK (context for what good looks like)\n" + playbook[:3000])
 
-    parts.append("\n## MONDAY.COM ITEMS\n")
-    if departments:
-        for dept in sorted(departments):
-            parts.append(f"### {dept}")
-            for item in departments[dept]:
-                parts.extend(_fmt_item_compact(item, days_back))
-            parts.append("")
-    else:
-        parts.append("No Monday items for this client this week.\n")
-
-    parts.append("\n## MEETINGS (Fireflies)\n")
+    parts.append("\n## 1. MEETINGS THIS WEEK (primary)\n")
     if meetings:
         for mt in meetings:
             parts.append(f"**{mt.get('title', 'Untitled')}** — {mt.get('date', 'no date')}")
             summary = mt.get("summary") or {}
             if summary.get("overview"):
-                parts.append(f"  Overview: {str(summary['overview'])[:800]}")
+                parts.append(f"  Overview: {str(summary['overview'])[:700]}")
             if summary.get("action_items"):
-                parts.append(f"  Action Items: {str(summary['action_items'])[:800]}")
+                parts.append(f"  Action items: {str(summary['action_items'])[:500]}")
             if mt.get("sentences"):
-                parts.append("  [No summary — transcript excerpt:]")
-                for s in mt["sentences"][:12]:
+                parts.append("  [No summary — excerpt:]")
+                for s in mt["sentences"][:10]:
                     parts.append(f"    {s.get('speaker_name', '?')}: {s.get('text', '')}")
             parts.append("")
     else:
-        parts.append("No meetings matched to this client this week.\n")
+        parts.append("None.\n")
 
-    parts.append("\n## WHATSAPP\n")
+    monday_msgs = _collect_monday_messages(departments)
+    parts.append("\n## 2. MONDAY MESSAGES THIS WEEK (primary)\n")
+    if monday_msgs:
+        parts.extend(monday_msgs[:25])
+    else:
+        parts.append("None.")
+
+    parts.append("\n\n## 3. WHATSAPP (secondary)\n")
     if chats:
         for chat_name, msgs in chats:
             parts.append(f"**Chat: {chat_name}**")
             if isinstance(msgs, list):
-                for msg in msgs[:40]:
+                for msg in msgs[:30]:
                     ts = (msg.get("datetime") or "")[:16]
-                    parts.append(
-                        f"  [{ts}] {msg.get('sender', '?')}: {(msg.get('text') or '')[:250]}"
-                    )
+                    parts.append(f"  [{ts}] {msg.get('sender', '?')}: {(msg.get('text') or '')[:220]}")
             parts.append("")
     else:
-        parts.append("No WhatsApp messages matched to this client this week.\n")
+        parts.append("None.\n")
+
+    parts.append("\n## 4. BOARD SNAPSHOT (background only)\n")
+    if departments:
+        for dept in sorted(departments):
+            parts.append(f"### {dept}")
+            for item in departments[dept]:
+                parts.append(_board_line(item, today))
+            parts.append("")
+    else:
+        parts.append("No live board items in the pulse window.\n")
 
     return "\n".join(parts)
 
@@ -353,8 +349,8 @@ EMIT_CLIENT_TOOL = {
         "properties": {
             "headline": {"type": "string", "description": "One specific, concrete sentence — the most important thing for this client this week."},
             "health": {"type": "string", "enum": ["on_track", "needs_attention", "at_risk"]},
-            "highlights": {"type": "array", "maxItems": 4, "items": _CLIENT_ROW},
-            "stalled_items": {"type": "array", "maxItems": 3, "items": _CLIENT_ROW},
+            "highlights": {"type": "array", "maxItems": 3, "items": _CLIENT_ROW},
+            "stalled_items": {"type": "array", "maxItems": 2, "items": _CLIENT_ROW},
             "status_change_suggestions": {
                 "type": "array",
                 "maxItems": 3,
@@ -371,7 +367,7 @@ EMIT_CLIENT_TOOL = {
                     },
                 },
             },
-            "risks": {"type": "array", "maxItems": 3, "items": {"type": "string"}},
+            "risks": {"type": "array", "maxItems": 1, "items": {"type": "string"}},
         },
     },
 }
@@ -552,14 +548,13 @@ def build_wrapup_prompt(client_entries: list, board_errors: dict,
         "You are writing the wrap-up sections of Flow Co.'s Monday standup. Below are the "
         "already-written per-client reviews. Synthesize across them.\n\n"
         "INSTRUCTIONS:\n"
-        "1. executive_summary: 3–5 sentences, most important things first, specific and concrete.\n"
+        "1. executive_summary: 2–3 sentences max, plain and calm. A read, not a siren.\n"
         "2. departments_overview: one entry each for CRM, Ads, Video, Web + SEO — one sentence "
         "on load and anything stuck, drawn from the client reviews below.\n"
         "3. comms_flags / blockers: only real, grounded items from the reviews. Prefix with "
         "client name. Empty arrays are fine.\n"
-        "4. this_week_priorities: max 7, the highest-leverage moves, prefixed with client name. "
-        "Where a priority needs founder outreach, attach a draft action (email or copy) written "
-        "for his review — drafts are never sent automatically.\n"
+        "4. this_week_priorities: max 4, short plain lines prefixed with client name. "
+        "Set action to null — no drafts, this is a pulse, not a task machine.\n"
         "5. Never invent facts not present below.\n"
     ]
     if board_errors:
