@@ -534,6 +534,38 @@ def assemble_client_entry(client: str, result: dict, url_lookup: dict[str, str])
     }
 
 
+def compute_client_stats(departments: dict, meetings: list, chats: list) -> dict:
+    STATUS_MAP = {
+        "start": "todo",
+        "in progress": "working", "working on it": "working", "ongoing": "working",
+        "for review": "review",
+        "stuck": "stuck", "waiting": "stuck",
+        "done": "done",
+    }
+    tasks = todo = working = review = stuck = done = 0
+    monday_msgs = 0
+    for dept_items in departments.values():
+        for item in dept_items:
+            tasks += 1
+            cols = item.get("columns") or {}
+            status_val = next((v for k, v in cols.items() if "status" in k.lower()), "")
+            bucket = STATUS_MAP.get(status_val.lower().strip(), "working")
+            if bucket == "todo": todo += 1
+            elif bucket == "working": working += 1
+            elif bucket == "review": review += 1
+            elif bucket == "stuck": stuck += 1
+            elif bucket == "done": done += 1
+            monday_msgs += len(item.get("recent_updates") or [])
+    wa_msgs = sum(
+        len(msgs) for _, msgs in chats if isinstance(msgs, list)
+    )
+    return {
+        "tasks": tasks, "todo": todo, "working": working,
+        "review": review, "stuck": stuck, "done": done,
+        "monday_msgs": monday_msgs, "meetings": len(meetings), "wa_msgs": wa_msgs,
+    }
+
+
 def build_meetings_digest(fireflies_data, clients_config: dict) -> list:
     """Deterministic — built in Python from Fireflies data. No model call."""
     if not isinstance(fireflies_data, list):
@@ -680,7 +712,7 @@ def render_markdown(standup: dict) -> str:
     generated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     lines: list[str] = []
 
-    lines += [f"# Flow Standup — Week of {week_of}", ""]
+    lines += [f"# Flow Pulse - {week_of}", ""]
     lines += ["## Executive Summary", "", standup.get("executive_summary", ""), ""]
 
     dept_overview = standup.get("departments_overview", [])
@@ -887,17 +919,25 @@ def main():
         )
         try:
             result = _call_tool(ai, prompt, EMIT_CLIENT_TOOL, label=c)
-            client_entries.append(assemble_client_entry(c, result, url_lookup))
+            entry = assemble_client_entry(c, result, url_lookup)
+            entry["stats"] = compute_client_stats(
+                grouped.get(c, {}), meetings_by_client.get(c, []), chats_by_client.get(c, [])
+            )
+            client_entries.append(entry)
         except Exception as exc:
             print(f"  ✗ {c}: {exc}")
-            client_entries.append({
+            fallback = {
                 "client": c,
                 "headline": "Generation failed for this client — see workflow log.",
                 "health": "needs_attention",
                 "work_by_department": [],
                 "status_change_suggestions": [],
                 "risks": [],
-            })
+            }
+            fallback["stats"] = compute_client_stats(
+                grouped.get(c, {}), meetings_by_client.get(c, []), chats_by_client.get(c, [])
+            )
+            client_entries.append(fallback)
 
     # ── meetings digest (deterministic) ───────────────────────────────────────
     meetings_digest = build_meetings_digest(fireflies_data, clients_config)
@@ -965,7 +1005,7 @@ def main():
         if not to_address or to_address == "EMAIL_HERE":
             print("  ⚠️  No valid email in config.json — skipping")
         else:
-            subject = f"Flow Standup - Week of {today}"
+            subject = f"Flow Pulse - {today}"
             send_standup_email(
                 subject, md_content, markdown_to_simple_html(md_content), to_address
             )

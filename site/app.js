@@ -310,26 +310,9 @@ function buildCheckbox(id, isStalled) {
 function buildRow(item, isStalled) {
   if (!item || typeof item !== 'object') return null;
   const { id, text, source, monday_url: url, item_name, days_stalled } = item;
-  const done = isHandled(id);
-  const tag  = SOURCE_TAG[source] || '';
+  const tag = SOURCE_TAG[source] || '';
 
-  // Collapsed = one scannable line. Tapping the text expands it in place.
-  const textSpan = el('span', {
-    class: 'row-text',
-    style: { textDecoration: done ? 'line-through' : 'none' },
-    text,
-    role: 'button',
-    tabindex: '0',
-    'aria-expanded': 'false',
-    onclick: (e) => {
-      e.stopPropagation();
-      const expanded = textSpan.classList.toggle('expanded');
-      textSpan.setAttribute('aria-expanded', String(expanded));
-    },
-    onkeydown: (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); textSpan.click(); }
-    },
-  });
+  const textSpan = el('span', { class: 'row-text', text });
 
   const metaEls = [];
   if (isStalled && days_stalled != null) {
@@ -337,8 +320,6 @@ function buildRow(item, isStalled) {
   }
   if (tag) metaEls.push(el('span', { class: 'source-chip', text: tag }));
 
-  // The Monday link lives ONLY on the right cluster now, so expanding text
-  // and opening the task are separate gestures.
   let rightEl;
   if (url) {
     rightEl = el('a', {
@@ -354,13 +335,9 @@ function buildRow(item, isStalled) {
   }
 
   const rowContent = el('div', {
-    class: `${isStalled ? 'stalled-row' : 'highlight-row'}${done ? ' handled' : ''}`,
+    class: isStalled ? 'stalled-row' : 'highlight-row',
   }, textSpan, rightEl);
 
-  // Checkbox: ONLY on stalled rows — informational lines aren't triage.
-  if (isStalled) {
-    return el('div', { class: 'row-wrapper' }, buildCheckbox(id, true), rowContent);
-  }
   return el('div', { class: 'row-wrapper no-checkbox' }, rowContent);
 }
 
@@ -414,11 +391,9 @@ function buildNextRow(priority) {
     text: displayText,
   });
 
-  const content = el('div', {
-    class: `next-content${done ? ' handled' : ''}`,
-  }, textEl, buildPill(priority.action, id));
+  const content = el('div', { class: 'next-content' }, textEl, buildPill(priority.action, id));
 
-  return el('div', { class: 'row-wrapper' }, buildCheckbox(id, false), content);
+  return el('div', { class: 'row-wrapper no-checkbox' }, content);
 }
 
 // ── priority matcher ──────────────────────────────────────────────────────────
@@ -460,6 +435,24 @@ function buildMiniCard(entry) {
   card.append(el('h2', { class: 'mini-name', text: entry.client }));
   card.append(el('p', { class: 'mini-micro', text: entry.headline || 'No activity recorded this week.' }));
 
+  const s = entry.stats || {};
+  if (s.tasks > 0 || s.monday_msgs > 0 || s.meetings > 0 || s.wa_msgs > 0) {
+    const statsEl = el('div', { class: 'mini-stats' });
+    const chip = (n, label, warn) => el('span', { class: `mini-stat${warn ? ' stat-warn' : ''}` },
+      el('span', { class: 'mini-stat-n', text: String(n) }),
+      ` ${label}`,
+    );
+    if (s.tasks)      statsEl.append(chip(s.tasks, 'tasks', false));
+    if (s.working)    statsEl.append(chip(s.working, 'working', false));
+    if (s.review)     statsEl.append(chip(s.review, 'review', false));
+    if (s.stuck)      statsEl.append(chip(s.stuck, 'stuck', true));
+    if (s.done)       statsEl.append(chip(s.done, 'done', false));
+    if (s.monday_msgs) statsEl.append(chip(s.monday_msgs, 'msgs', false));
+    if (s.meetings)   statsEl.append(chip(s.meetings, 'mtgs', false));
+    if (s.wa_msgs)    statsEl.append(chip(s.wa_msgs, 'wa', false));
+    card.append(statsEl);
+  }
+
   return card;
 }
 
@@ -482,12 +475,6 @@ function buildCard(entry, priorities) {
       text: h.label,
     }),
   ));
-
-  card.append(el('p', {
-    class: 'headline',
-    style: { color: h.accent, textShadow: `0 0 26px ${h.glow}` },
-    text: entry.headline || '',
-  }));
 
   const sections = el('div', { class: 'card-sections' });
 

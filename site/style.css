@@ -308,12 +308,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .row-text {
   font-size: 13.5px;
   line-height: 1.45;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   min-width: 0;
   flex: 1;
-  transition: text-decoration 0.1s;
 }
 
 /* ── row right (chips + chevron) ─────────────────────────────────────────── */
@@ -559,18 +555,17 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* ── grid view (front page) ──────────────────────────────────────────────── */
 .client-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
   margin-top: 18px;
 }
-@media (max-width: 980px) { .client-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 620px) { .client-grid { grid-template-columns: 1fr; } }
 
 .mini-card {
   background: #141A14;
   border: 1px solid rgba(237,233,220,0.08);
   border-radius: 16px;
-  padding: 16px 15px 15px;
+  padding: 20px 19px 17px;
   cursor: pointer;
   transition: border-color 0.14s, background 0.14s, transform 0.14s;
   -webkit-tap-highlight-color: transparent;
@@ -602,7 +597,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .mini-name {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 15.5px;
+  font-size: 17.5px;
   font-weight: 600;
   color: #EDE9DA;
   margin: 9px 0 0;
@@ -612,10 +607,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   line-height: 1.5;
   color: rgba(220,216,200,0.62);
   margin: 6px 0 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 /* ── detail view ─────────────────────────────────────────────────────────── */
@@ -649,14 +640,13 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .back-link:focus-visible { outline: 2px solid #A9B478; outline-offset: 2px; }
 
 
-/* ── expandable rows ─────────────────────────────────────────────────────── */
-.row-text { cursor: pointer; }
-.row-text.expanded {
-  white-space: normal;
-  overflow: visible;
-  text-overflow: clip;
-}
 .row-wrapper.no-checkbox { padding-left: 0; }
 .row-link { text-decoration: none; cursor: pointer; border-radius: 8px; padding: 4px 6px; margin: -4px -6px; }
 .row-link:hover { background: rgba(146,155,105,0.15); }
 .row-link .chevron { color: #A9B478; }
+
+/* ── mini-card stats strip ────────────────────────────────────────────────── */
+.mini-stats { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 12px; padding-top: 11px; border-top: 1px solid rgba(237,233,220,0.07); }
+.mini-stat { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(220,216,200,0.55); }
+.mini-stat-n { color: #C6D093; font-weight: 600; font-size: 12px; }
+.mini-stat.stat-warn, .mini-stat.stat-warn .mini-stat-n { color: #DCA746; }

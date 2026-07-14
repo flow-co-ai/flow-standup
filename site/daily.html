@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flow Ops - Daily</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@1,8..60,400;1,8..60,500&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="addon.css">
+</head>
+<body>
+
+  <div class="page">
+
+    <!-- ── HEADER ────────────────────────────────────────────────────── -->
+    <header class="site-header">
+      <a href="/" class="logo-link" aria-label="Flow Ops home">
+        <img src="assets/flowco-logo.png" alt="Flow Co" class="logo-img">
+      </a>
+      <div class="header-right">
+        <span class="week-label">Daily Ops</span>
+        <span class="live-pill">
+          <span class="live-dot" aria-hidden="true"></span>
+          <span class="live-text">Draft queue + morning rundown</span>
+        </span>
+      </div>
+    </header>
+
+    <!-- ── OPS ADD-ON (draft queue + rundown) ─────────────────────────── -->
+    <section id="ops-addon">
+<div class="fo-section">
+  <div class="fo-label">Draft queue — fireflies-monday-watch, daily</div>
+  <div id="fo-queue-cards"><div class="fo-empty">loading…</div></div>
+  <div class="fo-chat">
+    <div class="fo-chat-log" id="fo-queue-log"></div>
+    <form class="fo-chat-form" onsubmit="return foSendChat(event, 'queue')">
+      <input id="fo-queue-input" type="text" placeholder="Ask about the queue, or tell it to send/update something" />
+      <button type="submit">Send</button>
+    </form>
+  </div>
+</div>
+
+<div class="fo-section">
+  <div class="fo-label">Morning rundown — flow-morning-rundown, daily</div>
+  <div id="fo-rundown-card"><div class="fo-empty">loading…</div></div>
+  <div class="fo-chat">
+    <div class="fo-chat-log" id="fo-rundown-log"></div>
+    <form class="fo-chat-form" onsubmit="return foSendChat(event, 'rundown')">
+      <input id="fo-rundown-input" type="text" placeholder="Ask about today's rundown" />
+      <button type="submit">Send</button>
+    </form>
+  </div>
+</div>
+    </section>
+
+    <!-- ── FOOTER ────────────────────────────────────────────────────── -->
+    <footer class="site-footer">
+      <a href="/" class="footer-ts" style="color:rgba(169,180,120,0.55);">← PULSE</a>
+    </footer>
+
+  </div>
+
+  <script src="addon.js"></script>
+</body>
+</html>
