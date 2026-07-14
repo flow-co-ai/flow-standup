@@ -27,6 +27,7 @@ from fetch_monday import fetch_all_boards, resolve_client
 from fetch_fireflies import fetch_transcripts
 from fetch_whatsapp import fetch_whatsapp
 from send_email import send_standup_email, markdown_to_simple_html
+import archive_monday
 
 MODEL = "claude-sonnet-4-5"
 
@@ -795,6 +796,10 @@ def main():
     monday_data = []
     try:
         monday_data, _ = fetch_all_boards(config)
+        try:
+            archive_monday.archive_updates(monday_data, clients_config)
+        except Exception as _arc_exc:
+            print(f"  ⚠️  Archive step failed (non-blocking): {_arc_exc}")
         monday_data, pruned = filter_live_items(monday_data, config)
         if pruned:
             print(f"  Pulse window: pruned {pruned} dormant item(s) "
