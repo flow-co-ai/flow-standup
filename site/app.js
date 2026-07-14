@@ -313,10 +313,22 @@ function buildRow(item, isStalled) {
   const done = isHandled(id);
   const tag  = SOURCE_TAG[source] || '';
 
+  // Collapsed = one scannable line. Tapping the text expands it in place.
   const textSpan = el('span', {
     class: 'row-text',
     style: { textDecoration: done ? 'line-through' : 'none' },
     text,
+    role: 'button',
+    tabindex: '0',
+    'aria-expanded': 'false',
+    onclick: (e) => {
+      e.stopPropagation();
+      const expanded = textSpan.classList.toggle('expanded');
+      textSpan.setAttribute('aria-expanded', String(expanded));
+    },
+    onkeydown: (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); textSpan.click(); }
+    },
   });
 
   const metaEls = [];
@@ -325,28 +337,31 @@ function buildRow(item, isStalled) {
   }
   if (tag) metaEls.push(el('span', { class: 'source-chip', text: tag }));
 
-  let rowContent;
+  // The Monday link lives ONLY on the right cluster now, so expanding text
+  // and opening the task are separate gestures.
+  let rightEl;
   if (url) {
-    rowContent = el('a', {
+    rightEl = el('a', {
       href: url,
       target: '_blank',
       rel: 'noopener',
       title: item_name || 'Open in Monday.com',
-      class: `${isStalled ? 'stalled-row' : 'highlight-row'}${done ? ' handled' : ''}`,
-    },
-      textSpan,
-      el('span', { class: 'row-right' },
-        ...metaEls,
-        el('span', { class: 'chevron', html: '&#8599;' }),
-      ),
-    );
+      class: 'row-right row-link',
+      onclick: (e) => e.stopPropagation(),
+    }, ...metaEls, el('span', { class: 'chevron', html: '&#8599;' }));
   } else {
-    rowContent = el('div', {
-      class: `row-plain${done ? ' handled' : ''}`,
-    }, textSpan, el('span', { class: 'source-chip', text: tag }));
+    rightEl = el('span', { class: 'row-right' }, ...metaEls);
   }
 
-  return el('div', { class: 'row-wrapper' }, buildCheckbox(id, isStalled), rowContent);
+  const rowContent = el('div', {
+    class: `${isStalled ? 'stalled-row' : 'highlight-row'}${done ? ' handled' : ''}`,
+  }, textSpan, rightEl);
+
+  // Checkbox: ONLY on stalled rows — informational lines aren't triage.
+  if (isStalled) {
+    return el('div', { class: 'row-wrapper' }, buildCheckbox(id, true), rowContent);
+  }
+  return el('div', { class: 'row-wrapper no-checkbox' }, rowContent);
 }
 
 // ── pill builder ──────────────────────────────────────────────────────────────
@@ -505,6 +520,11 @@ function buildCard(entry, priorities) {
 // ── footer renderer ───────────────────────────────────────────────────────────
 
 function renderFooter() {
+  const commsFlags = standup.comms_flags || [];
+  const unmapped   = (standup.by_client || []).filter(c => c.client === 'Unmapped');
+
+  // Unmatched section removed by request — unmapped work stays in the email only.
+
   const ts = document.getElementById('footer-ts');
   if (ts && standup.week_of) {
     ts.textContent =

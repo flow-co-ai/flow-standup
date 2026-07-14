@@ -647,3 +647,16 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .back-link:hover  { color: #C6D093; background: rgba(146,155,105,0.08); }
 .back-link:active { background: rgba(146,155,105,0.16); }
 .back-link:focus-visible { outline: 2px solid #A9B478; outline-offset: 2px; }
+
+
+/* ── expandable rows ─────────────────────────────────────────────────────── */
+.row-text { cursor: pointer; }
+.row-text.expanded {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+.row-wrapper.no-checkbox { padding-left: 0; }
+.row-link { text-decoration: none; cursor: pointer; border-radius: 8px; padding: 4px 6px; margin: -4px -6px; }
+.row-link:hover { background: rgba(146,155,105,0.15); }
+.row-link .chevron { color: #A9B478; }
