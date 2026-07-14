@@ -1,13 +1,11 @@
-// Shared chat backend for both the "Draft queue" panel and the "Morning rundown"
-// panel. Client passes { topic: "queue" | "rundown", messages: [...] } so the
-// system prompt grounds on the right data — same tools available either way.
+// Chat backend for the "Draft queue" panel. Client passes { topic: "queue", messages: [...] }
+// so the system prompt grounds on the right data.
 
 const { getJSON, putJSON } = require("./lib/github");
 const { mondayGraphQL, sendQueueItemToMonday } = require("./lib/monday");
 
 const ANTHROPIC_MODEL = "claude-sonnet-4-5"; // check docs.claude.com/en/docs/about-claude/models if this starts erroring
 const QUEUE_PATH = "checks/draft-queue.json";
-const RUNDOWN_PATH = "checks/rundown.json";
 
 const TOOLS = [
   {
@@ -145,7 +143,6 @@ exports.handler = async (event) => {
   }
 
   const { data: queue } = await getJSON(QUEUE_PATH, { updatedAt: null, items: [] });
-  const { data: rundown } = await getJSON(RUNDOWN_PATH, { date: null, summary: "none yet", flags: [] });
 
   const system = `You are Ask Flow Ops, a private assistant for Naz and Sohib at Flow Company, answering
 under the "${topic || "queue"}" section of the dashboard. You have live tool access to Monday.com,
@@ -154,10 +151,7 @@ send_to_monday actually creates a real Monday item — only use it when clearly 
 never on your own initiative. When you take an action, say plainly what you did so it's easy to double check.
 
 Today's draft queue (checks/draft-queue.json):
-${JSON.stringify(queue, null, 2)}
-
-Today's morning rundown (checks/rundown.json):
-${JSON.stringify(rundown, null, 2)}`;
+${JSON.stringify(queue, null, 2)}`;
 
   let convo = [...messages];
   let finalText = "";

@@ -17,36 +17,74 @@ function foEscape(s) {
   return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
+const ACTIVE_STATUSES = ["ready", "confirm"];
+const HANDLED_STATUSES = ["done", "ignored", "sent"];
+let foHandledExpanded = false;
+
 async function foLoadQueue() {
   try {
     const res = await fetch("/.netlify/functions/queue", { headers: foHeaders() });
     const data = await res.json();
     const items = data.items || [];
-    const el = document.getElementById("fo-queue-cards");
-    el.innerHTML = items.length ? items.map(foQueueCard).join("") : `<div class="fo-empty">queue is empty</div>`;
+    const active = items.filter(it => ACTIVE_STATUSES.includes(it.status));
+    const handled = items.filter(it => HANDLED_STATUSES.includes(it.status));
+    document.getElementById("fo-queue-cards").innerHTML = foRenderQueue(active, handled);
   } catch (e) {
     document.getElementById("fo-queue-cards").innerHTML = `<div class="fo-empty">couldn't reach the draft queue</div>`;
   }
 }
 
-function foQueueCard(item) {
+function foRenderQueue(active, handled) {
+  const activeHtml = active.length
+    ? active.map(item => foQueueCard(item, false)).join("")
+    : `<div class="fo-empty">queue is empty</div>`;
+
+  const handledHtml = `
+    <div class="fo-handled">
+      <button class="fo-handled-toggle" onclick="foToggleHandled()">
+        ${foHandledExpanded ? "▾" : "▸"} handled (${handled.length})
+      </button>
+      <div class="fo-handled-list" ${foHandledExpanded ? "" : "hidden"}>
+        ${handled.length ? handled.map(item => foQueueCard(item, true)).join("") : `<div class="fo-empty">nothing handled yet</div>`}
+      </div>
+    </div>`;
+
+  return activeHtml + handledHtml;
+}
+
+function foToggleHandled() {
+  foHandledExpanded = !foHandledExpanded;
+  foLoadQueue();
+}
+
+function foQueueCard(item, handled) {
   const cls = { ready: "fo-b-ready", confirm: "fo-b-confirm", sent: "fo-b-sent", done: "fo-b-done", ignored: "fo-b-done" }[item.status] || "fo-b-confirm";
-  const done = item.status === "done" || item.status === "ignored" || item.status === "sent";
+
+  const sendControl = item.payload
+    ? `<button class="fo-primary" onclick="foSendToMonday('${item.id}')">send to monday</button>`
+    : `<span class="fo-muted-label">needs /monday-task (multi-item)</span>`;
+
+  const actions = handled
+    ? `<div class="fo-actions">
+        <button onclick="foPatch('${item.id}', {status:'confirm'})">undo</button>
+      </div>`
+    : `<div class="fo-actions">
+        ${sendControl}
+        <button onclick="foPatch('${item.id}', {status:'done'})">mark done</button>
+        <button onclick="foPatch('${item.id}', {status:'ignored'})">ignore</button>
+      </div>`;
+
   return `
     <div class="fo-card">
       <div class="fo-row">
         <div>
           <p class="fo-title">${foEscape(item.title || item.id)}</p>
           <p class="fo-sub">${foEscape(item.note || "")}</p>
+          ${item.sourceLabel ? `<p class="fo-source">${foEscape(item.sourceLabel)}</p>` : ""}
         </div>
         <span class="fo-badge ${cls}">${foEscape(item.status || "confirm")}</span>
       </div>
-      ${done ? "" : `
-      <div class="fo-actions">
-        <button class="fo-primary" onclick="foSendToMonday('${item.id}')">send to monday</button>
-        <button onclick="foPatch('${item.id}', {status:'done'})">mark done</button>
-        <button onclick="foPatch('${item.id}', {status:'ignored'})">ignore</button>
-      </div>`}
+      ${actions}
     </div>`;
 }
 
@@ -63,21 +101,7 @@ async function foSendToMonday(id) {
   foLoadQueue();
 }
 
-async function foLoadRundown() {
-  try {
-    const res = await fetch("/.netlify/functions/rundown", { headers: foHeaders() });
-    const data = await res.json();
-    document.getElementById("fo-rundown-card").innerHTML = `
-      <div class="fo-card">
-        <p class="fo-sub">${foEscape(data.date || "no date")}</p>
-        <p class="fo-title" style="font-weight:400;white-space:pre-wrap;">${foEscape(data.summary || "")}</p>
-      </div>`;
-  } catch (e) {
-    document.getElementById("fo-rundown-card").innerHTML = `<div class="fo-empty">couldn't reach the rundown</div>`;
-  }
-}
-
-const foHistory = { queue: [], rundown: [] };
+const foHistory = { queue: [] };
 
 async function foSendChat(e, topic) {
   e.preventDefault();
@@ -107,4 +131,3 @@ async function foSendChat(e, topic) {
 }
 
 foLoadQueue();
-foLoadRundown();

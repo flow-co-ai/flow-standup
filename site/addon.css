@@ -1,4 +1,4 @@
-/* ── Ops add-on (draft queue + rundown) — dark Flow Ops tokens ─────────────── */
+/* ── Ops add-on (draft queue) — dark Flow Ops tokens ─────────────────────── */
 .fo-section { margin-top: 34px; }
 .fo-label {
   font-family: 'JetBrains Mono', monospace;
@@ -15,6 +15,11 @@
 .fo-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .fo-title { font-size: 13.5px; font-weight: 600; color: #EDE9DA; margin: 0; }
 .fo-sub { font-size: 12px; color: rgba(220,216,200,0.62); margin: 3px 0 0; }
+.fo-source {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; color: rgba(220,216,200,0.4);
+  margin: 5px 0 0; text-transform: uppercase; letter-spacing: 0.04em;
+}
 .fo-badge {
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
@@ -33,7 +38,21 @@
 .fo-actions button:hover { background: rgba(146,155,105,0.12); border-color: rgba(169,180,120,0.7); }
 .fo-actions button.fo-primary { background: #929B69; border-color: #929B69; color: #0C100C; font-weight: 600; }
 .fo-actions button.fo-primary:hover { background: #A9B478; }
+.fo-muted-label {
+  font-family: 'Space Grotesk', sans-serif; font-size: 12px;
+  color: rgba(220,216,200,0.4); padding: 6px 0;
+}
 .fo-empty { color: rgba(220,216,200,0.45); font-size: 13px; }
+
+.fo-handled { margin-top: 14px; }
+.fo-handled-toggle {
+  background: transparent; border: none; color: rgba(220,216,200,0.55);
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  cursor: pointer; padding: 6px 0;
+}
+.fo-handled-toggle:hover { color: #C6D093; }
+.fo-handled-list { margin-top: 6px; }
 
 .fo-chat { background: #101510; border: 1px solid rgba(237,233,220,0.06); border-radius: 12px; padding: 12px; margin-top: 10px; }
 .fo-chat-log { display: flex; flex-direction: column; gap: 8px; max-height: 260px; overflow-y: auto; margin-bottom: 8px; }

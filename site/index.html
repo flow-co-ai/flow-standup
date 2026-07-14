@@ -41,7 +41,7 @@
       <!-- cards injected by app.js -->
     </main>
 
-    <!-- ── OPS ADD-ON (draft queue + rundown) ─────────────────────────── -->
+    <!-- ── OPS ADD-ON (draft queue) ──────────────────────────────────── -->
     <section id="ops-addon">
 <div class="fo-section">
   <div class="fo-label">Draft queue — fireflies-monday-watch, daily</div>
@@ -50,18 +50,6 @@
     <div class="fo-chat-log" id="fo-queue-log"></div>
     <form class="fo-chat-form" onsubmit="return foSendChat(event, 'queue')">
       <input id="fo-queue-input" type="text" placeholder="Ask about the queue, or tell it to send/update something" />
-      <button type="submit">Send</button>
-    </form>
-  </div>
-</div>
-
-<div class="fo-section">
-  <div class="fo-label">Morning rundown — flow-morning-rundown, daily</div>
-  <div id="fo-rundown-card"><div class="fo-empty">loading…</div></div>
-  <div class="fo-chat">
-    <div class="fo-chat-log" id="fo-rundown-log"></div>
-    <form class="fo-chat-form" onsubmit="return foSendChat(event, 'rundown')">
-      <input id="fo-rundown-input" type="text" placeholder="Ask about today's rundown" />
       <button type="submit">Send</button>
     </form>
   </div>
