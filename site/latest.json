@@ -1,22 +1,22 @@
 {
   "week_of": "2026-07-14",
-  "executive_summary": "Four clients saw no activity this week (Billy Doe Meats, Justice Consumer Law, Healing Helps, Steel Round Bars), while CRM work advanced across Full Smile, Quality HVAC, MedStation, Maadi Law, and Unmapped with handoffs, onboarding, and pipeline builds. Liferun has five automation gaps flagged since July 7, including a critical device deactivation flow missing since April and QA emails routing to a departed team member. Unmapped's NextGen mirror and all dependent automations remain blocked by an unsigned Business Associate Agreement.",
+  "executive_summary": "Quality HVAC and MedStation GHL onboardings progressed well with Ahmed joining to fix calendar sync and WhatsApp automation. Maadi Law's pipeline build is ready for review. Five clients—Billy Doe Meats, Justice Consumer Law, Liferun, Healing Helps, and Steel Round Bars—showed complete silence this week with no activity or communication.",
   "departments_overview": [
     {
       "department": "CRM",
-      "summary": "Heavy load with handoffs at Full Smile and Steel Round Bars, onboarding at Quality HVAC and MedStation, pipeline delivery at Maadi Law, and architecture documentation at Unmapped; Liferun has five unverified automation gaps and Unmapped is blocked by unsigned BAA."
+      "summary": "Moderate load with Quality HVAC and MedStation onboardings advancing, Full Smile appointment-sync bug reported, and Unmapped architecture mapped; Steel Round Bars handoff stalled 7 days."
     },
     {
       "department": "Ads",
-      "summary": "Light visible activity; Full Smile LSA silent 21 days, Flow Co Meta item stalled 11 days, and Unmapped team posted updates July 13 with no client response."
+      "summary": "Light load with Maadi Law updates posted; Full Smile LSA inactive 21 days and Billy Doe Meats July 4th creatives published with no follow-up for two weeks."
     },
     {
       "department": "Video",
-      "summary": "No video work reported across any client this week."
+      "summary": "No activity reported across any client this week."
     },
     {
       "department": "Web + SEO",
-      "summary": "Quiet week; Maadi Law admin access granted and audit underway, Healing Helps and Justice Consumer Law show no updates."
+      "summary": "No progress visible; Liferun checkout page stalled 25 days and Healing Helps items untouched."
     }
   ],
   "by_client": [
@@ -45,45 +45,56 @@
       "status_change_suggestions": [],
       "risks": [
         "Complete silence across all channels for the week suggests disengagement or a communication gap."
-      ]
+      ],
+      "stats": {
+        "tasks": 4,
+        "todo": 0,
+        "working": 4,
+        "review": 0,
+        "stuck": 0,
+        "done": 0,
+        "monday_msgs": 0,
+        "meetings": 0,
+        "wa_msgs": 0
+      }
     },
     {
       "client": "Full Smile",
-      "headline": "CRM handoff from previous team to Ahmed's squad is underway, with duplicate contacts cleaned and several technical items queued for resolution.",
-      "health": "on_track",
+      "headline": "CRM work continues with a new appointment-sync bug reported and ad tracking discussion underway.",
+      "health": "needs_attention",
       "work_by_department": [
         {
           "department": "CRM",
           "highlights": [
             {
-              "text": "Sohib handed off duplicate contacts report and credentials (Digital Ocean, Keragon) to Ahmed's new GHL team.",
-              "department": "CRM",
-              "source": "monday",
-              "monday_item_id": "12470627095",
-              "item_name": "HANDOFF",
-              "days_stalled": null,
-              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12470627095",
-              "id": "295928ee"
-            },
-            {
-              "text": "New bug reported: OpenDental appointments booked manually aren't syncing to GHL calendar when opportunity status is moved to 'Appointment Scheduled.'",
+              "text": "New bug reported: OpenDental appointments booked manually are not syncing to the GHL calendar.",
               "department": "CRM",
               "source": "monday",
               "monday_item_id": "12483728477",
               "item_name": "OpenDental Appt Not Syncing to GHL",
               "days_stalled": null,
               "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12483728477",
-              "id": "3689454b"
+              "id": "dd76eda7"
             },
             {
-              "text": "Nacer flagged ad tracking setup for Ahmed's attention on July 10.",
+              "text": "Nacer shared a duplicate contacts report PDF for Full Smile Dental.",
+              "department": "CRM",
+              "source": "monday",
+              "monday_item_id": "12470627095",
+              "item_name": "HANDOFF",
+              "days_stalled": null,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12470627095",
+              "id": "5c05045d"
+            },
+            {
+              "text": "Nacer initiated discussion on ad tracking, tagging Ahmed Memon.",
               "department": "CRM",
               "source": "monday",
               "monday_item_id": "12496201463",
               "item_name": "Ad Tracking",
               "days_stalled": null,
               "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12496201463",
-              "id": "865ff1a9"
+              "id": "e7a68058"
             }
           ],
           "stalled_items": []
@@ -93,20 +104,33 @@
           "highlights": [],
           "stalled_items": [
             {
-              "text": "LSA work has been silent since June 23.",
+              "text": "LSA work has been inactive for three weeks.",
               "department": "Ads",
               "source": "monday",
               "monday_item_id": "11929347398",
               "item_name": "LSA",
               "days_stalled": 21,
               "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/11929347398",
-              "id": "ed8e6f2c"
+              "id": "60feb859"
             }
           ]
         }
       ],
       "status_change_suggestions": [],
-      "risks": []
+      "risks": [
+        "The new appointment-sync bug could lead to missed or double-booked appointments if not resolved quickly."
+      ],
+      "stats": {
+        "tasks": 9,
+        "todo": 0,
+        "working": 9,
+        "review": 0,
+        "stuck": 0,
+        "done": 0,
+        "monday_msgs": 3,
+        "meetings": 0,
+        "wa_msgs": 0
+      }
     },
     {
       "client": "Quality HVAC",
@@ -151,7 +175,18 @@
         }
       ],
       "status_change_suggestions": [],
-      "risks": []
+      "risks": [],
+      "stats": {
+        "tasks": 2,
+        "todo": 0,
+        "working": 2,
+        "review": 0,
+        "stuck": 0,
+        "done": 0,
+        "monday_msgs": 0,
+        "meetings": 1,
+        "wa_msgs": 0
+      }
     },
     {
       "client": "Justice Consumer Law",
@@ -161,54 +196,56 @@
       "status_change_suggestions": [],
       "risks": [
         "Complete silence across all channels for the week — no meetings, messages, or board updates to confirm progress or direction."
-      ]
+      ],
+      "stats": {
+        "tasks": 2,
+        "todo": 0,
+        "working": 2,
+        "review": 0,
+        "stuck": 0,
+        "done": 0,
+        "monday_msgs": 0,
+        "meetings": 0,
+        "wa_msgs": 0
+      }
     },
     {
       "client": "Liferun",
-      "headline": "Five CRM automation gaps flagged for testing and repair, all posted July 7.",
+      "headline": "No activity this week; CRM board shows six items with July 7 timestamps and Ads has a new Google Ads item from July 6.",
       "health": "needs_attention",
       "work_by_department": [
         {
-          "department": "CRM",
-          "highlights": [
+          "department": "Web + SEO",
+          "highlights": [],
+          "stalled_items": [
             {
-              "text": "Shippo label template auto-selection reportedly fixed via Zapier but unverified; needs live end-to-end test.",
-              "department": "CRM",
+              "text": "Checkout Page Update last touched June 19, now 25 days stale.",
+              "department": "Web + SEO",
               "source": "monday",
-              "monday_item_id": "12472536053",
-              "item_name": "Shippo Test",
-              "days_stalled": null,
-              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12472536053",
-              "id": "c7b3b59b"
-            },
-            {
-              "text": "QA failure emails still routing to Hashir (off GHL since June 19); recipient must change to Munib with Nacer backup.",
-              "department": "CRM",
-              "source": "monday",
-              "monday_item_id": "12472451426",
-              "item_name": "QA Reroute",
-              "days_stalled": null,
-              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12472451426",
-              "id": "d0cd2632"
-            },
-            {
-              "text": "Becklar deactivation automation (spec'd March, marked April 1) never confirmed built; highest-risk gap in the system.",
-              "department": "CRM",
-              "source": "monday",
-              "monday_item_id": "12472536909",
-              "item_name": "Becklar Deactivation",
-              "days_stalled": null,
-              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12472536909",
-              "id": "e8fa186e"
+              "item_name": "Checkout Page Update",
+              "monday_item_id": "12322759942",
+              "days_stalled": 25,
+              "monday_url": "https://flowcompany.monday.com/boards/18099807701/pulses/12322759942",
+              "id": "e2f599b2"
             }
-          ],
-          "stalled_items": []
+          ]
         }
       ],
       "status_change_suggestions": [],
       "risks": [
-        "Critical device deactivation automation missing since April; QA failures routing to departed team member since mid-June."
-      ]
+        "Complete silence across meetings, messages, and WhatsApp for the week."
+      ],
+      "stats": {
+        "tasks": 10,
+        "todo": 0,
+        "working": 10,
+        "review": 0,
+        "stuck": 0,
+        "done": 0,
+        "monday_msgs": 0,
+        "meetings": 0,
+        "wa_msgs": 0
+      }
     },
     {
       "client": "Healing Helps",
@@ -217,278 +254,310 @@
       "work_by_department": [],
       "status_change_suggestions": [],
       "risks": [
-        "Complete silence across all channels for the week—no meetings, messages, or board updates to indicate forward momentum."
-      ]
+        "Complete silence across all channels for the week — no meetings, messages, or board updates"
+      ],
+      "stats": {
+        "tasks": 2,
+        "todo": 0,
+        "working": 2,
+        "review": 0,
+        "stuck": 0,
+        "done": 0,
+        "monday_msgs": 0,
+        "meetings": 0,
+        "wa_msgs": 0
+      }
     },
     {
       "client": "Flow Company",
-      "headline": "Flow Co ran internal onboarding sessions for Sugar CRM, HighLevel, and Maadi Law access this week; no client-facing deliverables reported.",
-      "health": "needs_attention",
+      "headline": "Flow Co ran internal onboarding sessions this week for Sugar CRM, HighLevel CRM, and new GHL contractor Ahmed, with no client-facing deliverables.",
+      "health": "on_track",
       "work_by_department": [
         {
           "department": "CRM",
           "highlights": [
             {
-              "text": "Sugar CRM onboarding revealed navigation glitches and 340 accounts missing customer IDs, prompting two new developer hires to accelerate fixes.",
+              "text": "Tom Sugar CRM onboarding covered Epicor integration for real-time quotes, account segmentation by spend (top 15% over $15k/quarter), and UI fixes underway with two new developers hired.",
               "department": "CRM",
               "source": "meeting",
               "monday_item_id": null,
               "item_name": null,
               "days_stalled": null,
               "monday_url": null,
-              "id": "62a6050c"
+              "id": "d166e2fa"
             },
             {
-              "text": "MedStation HighLevel pilot launched to test WhatsApp automation and lead reactivation alongside Como, with 1.5–2 month build time and phone consolidation from 19 numbers to one per user.",
+              "text": "Medstation HighLevel pilot launched to test WhatsApp automation and lead reactivation alongside Como, with NextGen sync via external mirror server and phone number consolidation from 19 to one per user.",
               "department": "CRM",
               "source": "meeting",
               "monday_item_id": null,
               "item_name": null,
               "days_stalled": null,
               "monday_url": null,
-              "id": "15e7cc1b"
+              "id": "2685d423"
+            },
+            {
+              "text": "Ahmed Memon onboarded as GHL contractor at $330/week for six clients, tasked with fixing House Call Pro mappings, technician user ID sync, and joining Medstation kickoff Wednesday July 12.",
+              "department": "CRM",
+              "source": "meeting",
+              "monday_item_id": null,
+              "item_name": null,
+              "days_stalled": null,
+              "monday_url": null,
+              "id": "a3b56bae"
             }
           ],
           "stalled_items": []
-        },
+        }
+      ],
+      "status_change_suggestions": [],
+      "risks": [],
+      "stats": {
+        "tasks": 3,
+        "todo": 0,
+        "working": 3,
+        "review": 0,
+        "stuck": 0,
+        "done": 0,
+        "monday_msgs": 0,
+        "meetings": 8,
+        "wa_msgs": 0
+      }
+    },
+    {
+      "client": "MedStation",
+      "headline": "GHL onboarding kicked off with Ahmed and team; Med Station WhatsApp automation and calendar integration scoped for Brazilian patient outreach.",
+      "health": "on_track",
+      "work_by_department": [
         {
-          "department": "Web + SEO",
+          "department": "CRM",
           "highlights": [
             {
-              "text": "Maadi Law granted admin access to Meta and Google Business for ads; Framer admin access and Clio audit underway for CRM replacement and website rebuild on Shock hosting.",
-              "department": "Web + SEO",
+              "text": "Ahmed joined GHL onboarding call with 2+ years GHL experience and team support, focusing on Med Station's WhatsApp automation for missed call follow-up targeting Brazilian patients.",
+              "department": "CRM",
               "source": "meeting",
               "monday_item_id": null,
               "item_name": null,
               "days_stalled": null,
               "monday_url": null,
-              "id": "a67e9f8a"
+              "id": "6643f24f"
+            },
+            {
+              "text": "Calendar integration solution proposed using precise user ID mapping for appointment accuracy, with APIs and Google Sheets for sync.",
+              "department": "CRM",
+              "source": "meeting",
+              "monday_item_id": null,
+              "item_name": null,
+              "days_stalled": null,
+              "monday_url": null,
+              "id": "b98aee2c"
+            },
+            {
+              "text": "Kickoff call scheduled for Wednesday July 12 at 3pm Chicago time with Ahmed, Sohib, and partner Ali to gather data and clarify Med Station requirements.",
+              "department": "CRM",
+              "source": "meeting",
+              "monday_item_id": null,
+              "item_name": null,
+              "days_stalled": null,
+              "monday_url": null,
+              "id": "46589da0"
+            }
+          ],
+          "stalled_items": []
+        }
+      ],
+      "status_change_suggestions": [],
+      "risks": [],
+      "stats": {
+        "tasks": 0,
+        "todo": 0,
+        "working": 0,
+        "review": 0,
+        "stuck": 0,
+        "done": 0,
+        "monday_msgs": 0,
+        "meetings": 2,
+        "wa_msgs": 0
+      }
+    },
+    {
+      "client": "Maadi Law",
+      "headline": "Pipeline Build is ready for review with intake form, tags, and custom fields complete; Ads team posted updates on Meta and Google.",
+      "health": "on_track",
+      "work_by_department": [
+        {
+          "department": "CRM",
+          "highlights": [
+            {
+              "text": "Pipeline Build completed with Maadi Law Intake pipeline, six required tags, contact/opportunity custom fields, and Base Intake form with Ready to Sign ready for review.",
+              "department": "CRM",
+              "source": "monday",
+              "monday_item_id": "12471734016",
+              "item_name": "Pipeline Build",
+              "days_stalled": null,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12471734016",
+              "id": "6b798d88"
             }
           ],
           "stalled_items": []
         },
         {
           "department": "Ads",
-          "highlights": [],
-          "stalled_items": [
-            {
-              "text": "Meta Ads item last touched July 3, no updates in meetings or messages this week.",
-              "department": "Ads",
-              "source": "monday",
-              "monday_item_id": "12442817624",
-              "item_name": "Meta Ads",
-              "days_stalled": 11,
-              "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12442817624",
-              "id": "73b3914d"
-            },
-            {
-              "text": "Reports item stalled since June 19 with no recent communication.",
-              "department": "Ads",
-              "source": "monday",
-              "monday_item_id": "12184929465",
-              "item_name": "Reports",
-              "days_stalled": 25,
-              "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12184929465",
-              "id": "045aec8c"
-            }
-          ]
-        }
-      ],
-      "status_change_suggestions": [],
-      "risks": [
-        "Week focused entirely on internal tooling and onboarding; no visible progress on Ads or Web + SEO deliverables despite board items open for weeks."
-      ]
-    },
-    {
-      "client": "MedStation",
-      "headline": "GHL onboarding call completed with Ahmed; MedStation kickoff scheduled for Wednesday July 12 at 3pm Chicago time.",
-      "health": "on_track",
-      "work_by_department": [
-        {
-          "department": "CRM",
           "highlights": [
             {
-              "text": "Ahmed confirmed 2+ years GHL expertise and team support, positioning better UX than HubSpot for MedStation's needs.",
-              "department": "CRM",
-              "source": "meeting",
-              "monday_item_id": null,
-              "item_name": null,
+              "text": "Ads team posted Meta campaign update.",
+              "department": "Ads",
+              "source": "monday",
+              "monday_item_id": "12471071784",
+              "item_name": "Meta",
               "days_stalled": null,
-              "monday_url": null,
-              "id": "78b6290b"
+              "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12471071784",
+              "id": "567bd762"
             },
             {
-              "text": "MedStation focus defined: WhatsApp automation for missed call follow-up targeting Brazilian patients, with AI scheduling integration.",
-              "department": "CRM",
-              "source": "meeting",
-              "monday_item_id": null,
-              "item_name": null,
+              "text": "Ads team posted Google campaign update.",
+              "department": "Ads",
+              "source": "monday",
+              "monday_item_id": "12471102491",
+              "item_name": "Google",
               "days_stalled": null,
-              "monday_url": null,
-              "id": "31ddee8c"
-            },
-            {
-              "text": "Kickoff call set for Wednesday July 12 at 3pm Chicago time with Ahmed, Sohib, and partner Ali to gather data and clarify requirements.",
-              "department": "CRM",
-              "source": "meeting",
-              "monday_item_id": null,
-              "item_name": null,
-              "days_stalled": null,
-              "monday_url": null,
-              "id": "22796756"
+              "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12471102491",
+              "id": "8bb6309b"
             }
           ],
           "stalled_items": []
         }
       ],
       "status_change_suggestions": [],
-      "risks": []
-    },
-    {
-      "client": "Maadi Law",
-      "headline": "Maadi Law intake pipeline is ready for review, with core CRM structure and form complete while Clio Grow remains live.",
-      "health": "on_track",
-      "work_by_department": [
-        {
-          "department": "CRM",
-          "highlights": [
-            {
-              "text": "Intake pipeline, six required tags, contact/opportunity custom fields, and Base Intake form with Ready to Sign are complete and ready for review.",
-              "department": "CRM",
-              "source": "monday",
-              "monday_item_id": "12471734016",
-              "item_name": "Pipeline Build",
-              "days_stalled": null,
-              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12471734016",
-              "id": "f869e524"
-            },
-            {
-              "text": "No historical import, messaging workflow, or Clio push is active yet, and Clio Grow remains live.",
-              "department": "CRM",
-              "source": "monday",
-              "monday_item_id": "12471734016",
-              "item_name": "Pipeline Build",
-              "days_stalled": null,
-              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12471734016",
-              "id": "2ea766e1"
-            },
-            {
-              "text": "Clio and Zoom logins provided with 2FA prompt expected for access.",
-              "department": "CRM",
-              "source": "monday",
-              "monday_item_id": "12471734194",
-              "item_name": "ACCESS",
-              "days_stalled": null,
-              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12471734194",
-              "id": "71eb8563"
-            }
-          ],
-          "stalled_items": []
-        }
-      ],
-      "status_change_suggestions": [],
-      "risks": []
+      "risks": [],
+      "stats": {
+        "tasks": 15,
+        "todo": 0,
+        "working": 15,
+        "review": 0,
+        "stuck": 0,
+        "done": 0,
+        "monday_msgs": 4,
+        "meetings": 0,
+        "wa_msgs": 0
+      }
     },
     {
       "client": "Steel Round Bars",
-      "headline": "CRM handoff and first directives logged; no meetings or updates this week.",
+      "headline": "No activity this week; CRM handoff and directives remain untouched since July 7.",
       "health": "needs_attention",
       "work_by_department": [
         {
           "department": "CRM",
-          "highlights": [
+          "highlights": [],
+          "stalled_items": [
             {
-              "text": "Sohib mentioned Ahmed Memon on the CRM handoff item.",
+              "text": "CRM handoff has seen no movement for 7 days.",
               "department": "CRM",
               "source": "monday",
               "monday_item_id": "12470597527",
               "item_name": "HANDOFF",
-              "days_stalled": null,
+              "days_stalled": 7,
               "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12470597527",
-              "id": "f4e13988"
+              "id": "e11ec036"
+            },
+            {
+              "text": "CRM 1st directives have been idle for 7 days.",
+              "department": "CRM",
+              "source": "monday",
+              "monday_item_id": "12470651472",
+              "item_name": "1st DIRECTIVES",
+              "days_stalled": 7,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12470651472",
+              "id": "6dcfa347"
             }
-          ],
-          "stalled_items": []
+          ]
         }
       ],
       "status_change_suggestions": [],
       "risks": [
-        "No meetings or substantive updates this week; momentum unclear."
-      ]
+        "Complete silence across all channels; no client engagement or progress visible this week."
+      ],
+      "stats": {
+        "tasks": 4,
+        "todo": 0,
+        "working": 4,
+        "review": 0,
+        "stuck": 0,
+        "done": 0,
+        "monday_msgs": 0,
+        "meetings": 0,
+        "wa_msgs": 0
+      }
     },
     {
       "client": "Unmapped",
-      "headline": "CRM build documentation landed this week with detailed scopes for nine parallel workstreams, while Ads team pinged for direction on Meta and Google campaigns.",
+      "headline": "CRM architecture mapped out in detail this week; Ads team pinged client on Meta and Google; BAA signature still pending.",
       "health": "needs_attention",
       "work_by_department": [
         {
           "department": "CRM",
           "highlights": [
             {
-              "text": "Sohib documented the full CRM architecture including Weston GHL pilot, NextGen mirror strategy, review engine workflow, and reactivation build to replace the failed Recura attempt.",
+              "text": "Weston location chosen as GHL pilot—one intake person runs fully on GHL while rest of team stays on Kommo, dual-routing new leads into both systems.",
               "department": "CRM",
               "source": "monday",
-              "monday_item_id": "[id: 12484780085]",
+              "monday_item_id": "12484780085",
               "item_name": "Weston Pilot",
               "days_stalled": null,
-              "monday_url": null,
-              "id": "e128c57d"
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12484780085",
+              "id": "99136f72"
             },
             {
-              "text": "Phone consolidation plan confirmed: existing GoTo numbers forward into GHL starting with Weston, reps route via contact owner in GHL app, and one new WhatsApp business line replaces personal numbers.",
+              "text": "NextGen mirror server approach confirmed (pulling data directly is difficult); host decision pending between DigitalOcean and Google Cloud, leaning Google Cloud.",
               "department": "CRM",
               "source": "monday",
-              "monday_item_id": "[id: 12484780179]",
-              "item_name": "Phone Consolidation",
+              "monday_item_id": "12484780084",
+              "item_name": "NextGen Mirror",
               "days_stalled": null,
-              "monday_url": null,
-              "id": "1e6329b3"
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12484780084",
+              "id": "5482079c"
             },
             {
-              "text": "Access confirmed for GBP and Kommo, but Business Associate Agreement remains unsigned and blocks anything touching the NextGen mirror.",
+              "text": "Reactivation Build replaces the failed Recura attempt, will run against existing lead database staged by segment starting with lapsed patients only.",
               "department": "CRM",
               "source": "monday",
-              "monday_item_id": "[id: 12484780082]",
-              "item_name": "Access & BAA",
+              "monday_item_id": "12484780177",
+              "item_name": "Reactivation Build",
               "days_stalled": null,
-              "monday_url": null,
-              "id": "dc2e42d7"
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12484780177",
+              "id": "7ea2db52"
             }
           ],
           "stalled_items": [
             {
-              "text": "NextGen mirror and all dependent automations blocked until Business Associate Agreement is signed.",
+              "text": "Business Associate Agreement not yet signed—blocks anything touching the NextGen mirror.",
               "department": "CRM",
               "source": "monday",
-              "monday_item_id": "[id: 12484780082]",
+              "monday_item_id": "12484780082",
               "item_name": "Access & BAA",
               "days_stalled": null,
-              "monday_url": null,
-              "id": "e7545706"
-            }
-          ]
-        },
-        {
-          "department": "Ads",
-          "highlights": [],
-          "stalled_items": [
-            {
-              "text": "Ads team posted updates on Meta and Google campaigns on July 13 but message content is truncated, no visible client response or direction provided.",
-              "department": "Ads",
-              "source": "monday",
-              "monday_item_id": "[id: 12471102373]",
-              "item_name": "Meta",
-              "days_stalled": null,
-              "monday_url": null,
-              "id": "d9bde9b5"
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12484780082",
+              "id": "a0182d88"
             }
           ]
         }
       ],
       "status_change_suggestions": [],
       "risks": [
-        "Business Associate Agreement signature delay is blocking the NextGen mirror and all downstream CRM automations that depend on patient data."
-      ]
+        "BAA signature delay could stall NextGen integration and dependent CRM workflows."
+      ],
+      "stats": {
+        "tasks": 24,
+        "todo": 0,
+        "working": 24,
+        "review": 0,
+        "stuck": 0,
+        "done": 0,
+        "monday_msgs": 12,
+        "meetings": 0,
+        "wa_msgs": 0
+      }
     }
   ],
   "meetings_digest": [
@@ -593,43 +662,41 @@
     }
   ],
   "comms_flags": [
-    "Billy Doe Meats: Complete silence this week—no activity or updates since late June.",
-    "Justice Consumer Law: No activity or communication this week across Ads and Web + SEO.",
-    "Healing Helps: No activity this week—no meetings, messages, or board updates.",
-    "Steel Round Bars: No meetings or substantive updates this week; momentum unclear.",
-    "Unmapped: Business Associate Agreement signature delay blocking NextGen mirror and all downstream CRM automations.",
-    "Liferun: Critical device deactivation automation missing since April; QA failure emails routing to departed team member since mid-June."
+    "Billy Doe Meats: Complete silence across all channels for the week suggests disengagement or communication gap.",
+    "Full Smile: New appointment-sync bug could lead to missed or double-booked appointments if not resolved quickly.",
+    "Justice Consumer Law: Complete silence—no meetings, messages, or board updates to confirm progress or direction.",
+    "Liferun: Complete silence across meetings, messages, and WhatsApp for the week.",
+    "Steel Round Bars: Complete silence; no client engagement or progress visible this week.",
+    "Unmapped: BAA signature delay could stall NextGen integration and dependent CRM workflows."
   ],
   "blockers": [
-    "Unmapped: NextGen mirror and all dependent automations blocked until Business Associate Agreement is signed.",
-    "Liferun: Becklar deactivation automation (spec'd March, marked April 1) never confirmed built.",
-    "Liferun: QA failure emails still routing to Hashir (off GHL since June 19); recipient must change to Munib with Nacer backup.",
-    "Full Smile: LSA work silent since June 23 (21 days stalled)."
+    "Full Smile: OpenDental appointments booked manually are not syncing to the GHL calendar.",
+    "Unmapped: Business Associate Agreement not yet signed—blocks anything touching the NextGen mirror."
   ],
   "this_week_priorities": [
     {
-      "client": "Liferun",
-      "text": "Liferun: Test and verify five CRM automation gaps flagged July 7, prioritize Becklar deactivation and QA email routing fix.",
+      "client": "Full Smile",
+      "text": "Full Smile: Resolve OpenDental appointment sync bug and restart LSA work.",
       "action": null,
-      "id": "ec1f98ba"
-    },
-    {
-      "client": "Unmapped",
-      "text": "Unmapped: Secure Business Associate Agreement signature to unblock NextGen mirror and dependent automations.",
-      "action": null,
-      "id": "b63fb570"
-    },
-    {
-      "client": "Billy Doe Meats",
-      "text": "Billy Doe Meats: Re-engage client to confirm direction on July 4th ad creatives and reporting.",
-      "action": null,
-      "id": "e531ddd2"
+      "id": "c1650687"
     },
     {
       "client": "MedStation",
-      "text": "MedStation: Complete kickoff call follow-up and begin WhatsApp automation build per July 12 meeting.",
+      "text": "MedStation: Continue GHL calendar integration and WhatsApp automation build with Ahmed.",
       "action": null,
-      "id": "6f5423fe"
+      "id": "2e52f6fe"
+    },
+    {
+      "client": "Maadi Law",
+      "text": "Maadi Law: Review completed pipeline build with intake form and custom fields.",
+      "action": null,
+      "id": "dcc83ae1"
+    },
+    {
+      "client": "Unmapped",
+      "text": "Unmapped: Secure BAA signature to unblock NextGen mirror and CRM workflows.",
+      "action": null,
+      "id": "5cba6703"
     }
   ]
 }
