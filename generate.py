@@ -28,6 +28,8 @@ from fetch_fireflies import fetch_transcripts
 from fetch_whatsapp import fetch_whatsapp
 from send_email import send_standup_email, markdown_to_simple_html
 import archive_monday
+import pulse_story
+import drive_pulse
 
 MODEL = "claude-sonnet-4-5"
 
@@ -380,7 +382,7 @@ EMIT_CLIENT_TOOL = {
         "required": ["headline", "health", "highlights", "stalled_items",
                      "status_change_suggestions", "risks"],
         "properties": {
-            "headline": {"type": "string", "description": "One specific, concrete sentence — the most important thing for this client this week."},
+            "headline": {"type": "string", "description": "Terse status phrase, max 8 words, telegraphic, never a full sentence."},
             "health": {"type": "string", "enum": ["on_track", "needs_attention", "at_risk"]},
             "highlights": {"type": "array", "maxItems": 3, "items": _CLIENT_ROW},
             "stalled_items": {"type": "array", "maxItems": 2, "items": _CLIENT_ROW},
@@ -401,6 +403,15 @@ EMIT_CLIENT_TOOL = {
                 },
             },
             "risks": {"type": "array", "maxItems": 1, "items": {"type": "string"}},
+            "upcoming": {"type": "array", "maxItems": 3, "items": {
+                "type": "object", "required": ["text", "when"],
+                "properties": {
+                    "text": {"type": "string", "description": "Max 8 words."},
+                    "when": {"type": "string", "description": "Day/time or date."},
+                    "source": {"type": "string"},
+                    "monday_item_id": {"type": ["string", "null"]},
+                }}},
+            "next_up": {"type": ["string", "null"], "description": "Single nearest upcoming, one line, null if none."},
         },
     },
 }
@@ -532,6 +543,8 @@ def assemble_client_entry(client: str, result: dict, url_lookup: dict[str, str])
         "work_by_department": list(dept_map.values()),
         "status_change_suggestions": result.get("status_change_suggestions", []) or [],
         "risks": result.get("risks", []) or [],
+        "upcoming": result.get("upcoming", []) or [],
+        "next_up": result.get("next_up"),
     }
 
 
@@ -758,6 +771,12 @@ def render_markdown(standup: dict) -> str:
                 lines += [_md_row(s) for s in stalled]
                 lines.append("")
 
+        if entry.get("upcoming"):
+            lines.append("**Upcoming:**")
+            for u in entry.get("upcoming") or []:
+                lines.append(f"- {u.get('when', '')} - {u.get('text', '')}")
+            lines.append("")
+
         if entry.get("status_change_suggestions"):
             lines.append("**Status Change Suggestions** *(suggestions only)*:")
         for sug in (entry.get("status_change_suggestions") or []):
@@ -904,19 +923,22 @@ def main():
         active.append("Unmapped")
 
     # ── per-client Claude calls ───────────────────────────────────────────────
+    yesterday_pulse, y_name = pulse_story.load_yesterday_pulse(today)
+    print(f"  memory: {'loaded ' + y_name if y_name else 'no prior pulse found'}")
+
     print(f"\nGenerating per-client reviews ({len(active)} clients, model {MODEL})...")
     ai = _anthropic_client()
     client_entries: list[dict] = []
 
     for c in active:
-        prompt = build_client_prompt(
+        prompt = pulse_story.build_story_prompt(
             client=c,
             departments=grouped.get(c, {}),
             meetings=meetings_by_client.get(c, []),
             chats=chats_by_client.get(c, []),
             playbook=playbooks_by_client.get(c),
             today=today,
-            days_back=days_back,
+            yesterday_entry=pulse_story.yesterday_entry_for(yesterday_pulse, c),
         )
         try:
             result = _call_tool(ai, prompt, EMIT_CLIENT_TOOL, label=c)
@@ -993,6 +1015,10 @@ def main():
     json_path.write_text(json.dumps(standup, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"  Wrote {json_path}")
 
+    dated_path = standups_dir / f"{today}.json"
+    dated_path.write_text(json.dumps(standup, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(f"  Wrote {dated_path}")
+
     copy_to_site(json_path)
 
     md_content = render_markdown(standup)
@@ -1012,6 +1038,11 @@ def main():
             )
     except Exception as exc:
         print(f"  ⚠️  Email failed: {exc}")
+
+    try:
+        drive_pulse.upload_daily_pulse(md_content, today, config.get("pulse_archive_folder_id", ""))
+    except Exception as exc:
+        print(f"  Drive pulse warning: {exc}")
 
     print("\n✓ Done.")
 
