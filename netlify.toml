@@ -5,6 +5,11 @@
 [functions]
   directory = "netlify/functions"
 
+[[redirects]]
+  from = "/api/clarify"
+  to = "/.netlify/functions/clarify"
+  status = 200
+
 [[headers]]
   for = "/*"
   [headers.values]

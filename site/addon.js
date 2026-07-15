@@ -106,6 +106,15 @@ function foQueueCard(item, handled) {
   // Handled list has no such header, so its titles keep the full bracket.
   const title = handled ? (item.title || item.id) : foStripGroupPrefix(item.title || item.id, item.group);
 
+  // status "confirm" == content-conflict/no-payload-yet: let Naz answer inline
+  // instead of routing him through /monday-task for a single-line decision.
+  const clarifyBox = !handled && item.status === "confirm"
+    ? `<form class="fo-clarify" onsubmit="return foSubmitClarify(event, '${item.id}')">
+        <input type="text" placeholder="Answer here to unblock this draft" />
+        <button type="submit">Send</button>
+      </form>`
+    : "";
+
   return `
     <div class="fo-card">
       <div class="fo-row">
@@ -117,7 +126,25 @@ function foQueueCard(item, handled) {
         <span class="fo-badge ${cls}">${foEscape(item.status || "confirm")}</span>
       </div>
       ${actions}
+      ${clarifyBox}
     </div>`;
+}
+
+async function foSubmitClarify(e, id) {
+  e.preventDefault();
+  const form = e.target;
+  const input = form.querySelector("input");
+  const message = input.value.trim();
+  if (!message) return false;
+
+  const res = await fetch("/api/clarify", { method: "POST", headers: foHeaders(), body: JSON.stringify({ id, message }) });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || data.error) {
+    alert("Couldn't submit that: " + (data.error || `HTTP ${res.status}`));
+    return false;
+  }
+  form.outerHTML = `<p class="fo-clarify-done">got it — will finalize on next check.</p>`;
+  return false;
 }
 
 async function foPatch(id, patch) {
@@ -135,35 +162,6 @@ async function foSendToMonday(id) {
   const data = await res.json();
   if (data.error) alert("Couldn't send it: " + data.error);
   foLoadQueue();
-}
-
-const foHistory = { queue: [] };
-
-async function foSendChat(e, topic) {
-  e.preventDefault();
-  const input = document.getElementById(`fo-${topic}-input`);
-  const text = input.value.trim();
-  if (!text) return false;
-  input.value = "";
-  const log = document.getElementById(`fo-${topic}-log`);
-  log.insertAdjacentHTML("beforeend", `<div class="fo-msg user">${foEscape(text)}</div>`);
-
-  foHistory[topic].push({ role: "user", content: text });
-  const res = await fetch("/.netlify/functions/chat", {
-    method: "POST",
-    headers: foHeaders(),
-    body: JSON.stringify({ topic, messages: foHistory[topic] }),
-  });
-  const data = await res.json();
-  if (data.error) {
-    log.insertAdjacentHTML("beforeend", `<div class="fo-msg assistant">error: ${foEscape(JSON.stringify(data.error))}</div>`);
-  } else {
-    log.insertAdjacentHTML("beforeend", `<div class="fo-msg assistant">${foEscape(data.reply)}</div>`);
-    foHistory[topic].push({ role: "assistant", content: data.reply });
-    foLoadQueue();
-  }
-  log.scrollTop = log.scrollHeight;
-  return false;
 }
 
 foLoadQueue();
