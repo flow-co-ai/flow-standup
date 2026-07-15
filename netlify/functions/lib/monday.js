@@ -152,6 +152,19 @@ function checkUpdateBodySubstance(updateBody) {
   return null;
 }
 
+// Standing invariant: a real Monday item existing (mondayItemId set) always
+// wins over whatever dashboard status was otherwise about to be written --
+// "undo," an edit_item status change, or any other patch can never leave an
+// item claiming to be un-sent when a real send already happened. Called at
+// every known write point (queue.js's PATCH, item-chat.js's edit_item) right
+// before the item is persisted, so this can't silently drift again.
+function enforceSentInvariant(item) {
+  if (item.mondayItemId && item.status !== "sent") {
+    return { ...item, status: "sent" };
+  }
+  return item;
+}
+
 // Shared by send-to-monday.js (button click) and chat.js (the send_to_monday tool).
 async function sendQueueItemToMonday(id) {
   const { data } = await getJSON(QUEUE_PATH, { updatedAt: null, items: [] });
@@ -289,4 +302,5 @@ module.exports = {
   assignedToLine,
   resolvePayloadFlags,
   checkUpdateBodySubstance,
+  enforceSentInvariant,
 };

@@ -4,6 +4,7 @@
 //         Uses the same OPS_PASSCODE gate as the existing checkmark endpoint.
 
 const { getJSON, putJSON } = require("./lib/github");
+const { enforceSentInvariant } = require("./lib/monday");
 
 const QUEUE_PATH = "checks/draft-queue.json";
 const EMPTY = { updatedAt: null, items: [] };
@@ -28,7 +29,10 @@ exports.handler = async (event) => {
       const { data, sha } = await getJSON(QUEUE_PATH, EMPTY);
       const idx = data.items.findIndex((it) => it.id === id);
       if (idx === -1) return json(404, { error: `no item with id ${id}` });
-      data.items[idx] = { ...data.items[idx], ...patch, updatedAt: new Date().toISOString() };
+      // enforceSentInvariant: a real Monday item existing always wins over
+      // whatever this patch asked for -- e.g. "undo" on a Mondayed card can't
+      // silently claim a real send never happened.
+      data.items[idx] = enforceSentInvariant({ ...data.items[idx], ...patch, updatedAt: new Date().toISOString() });
       data.updatedAt = new Date().toISOString();
       await putJSON(QUEUE_PATH, data, `dashboard: update ${id}`, sha);
       return json(200, data);

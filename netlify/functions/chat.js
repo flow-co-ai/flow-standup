@@ -2,7 +2,7 @@
 // so the system prompt grounds on the right data.
 
 const { getJSON, putJSON } = require("./lib/github");
-const { mondayGraphQL, sendQueueItemToMonday } = require("./lib/monday");
+const { mondayGraphQL, sendQueueItemToMonday, enforceSentInvariant } = require("./lib/monday");
 
 const ANTHROPIC_MODEL = "claude-sonnet-4-5"; // check docs.claude.com/en/docs/about-claude/models if this starts erroring
 const QUEUE_PATH = "checks/draft-queue.json";
@@ -118,7 +118,9 @@ async function runTool(name, input) {
       const { data, sha } = await getJSON(QUEUE_PATH, { updatedAt: null, items: [] });
       const idx = data.items.findIndex((it) => it.id === input.id);
       if (idx === -1) return { error: `no item with id ${input.id}` };
-      data.items[idx] = { ...data.items[idx], ...input.patch, updatedAt: new Date().toISOString() };
+      // enforceSentInvariant: a real Monday item existing always wins over
+      // whatever status this patch asked for.
+      data.items[idx] = enforceSentInvariant({ ...data.items[idx], ...input.patch, updatedAt: new Date().toISOString() });
       data.updatedAt = new Date().toISOString();
       await putJSON(QUEUE_PATH, data, `chat: update ${input.id}`, sha);
       return data.items[idx];

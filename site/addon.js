@@ -33,9 +33,13 @@ const foSectionExpanded = { handled: false, mondayed: false };
 let foItems = [];
 
 function foRenderFromItems(items) {
-  const active = items.filter(it => ACTIVE_STATUSES.includes(it.status));
-  const handled = items.filter(it => HANDLED_STATUSES.includes(it.status));
-  const mondayed = items.filter(it => MONDAYED_STATUSES.includes(it.status));
+  // Standing invariant: a real Monday item existing (mondayItemId set)
+  // always wins over whatever the stored status field says -- so section
+  // placement itself can never show a Mondayed item as active or Handled,
+  // even if some bug upstream left the status field inconsistent.
+  const active = items.filter(it => !it.mondayItemId && ACTIVE_STATUSES.includes(it.status));
+  const handled = items.filter(it => !it.mondayItemId && HANDLED_STATUSES.includes(it.status));
+  const mondayed = items.filter(it => it.mondayItemId || MONDAYED_STATUSES.includes(it.status));
   document.getElementById("fo-queue-cards").innerHTML = foRenderQueue(active, handled, mondayed);
 }
 
@@ -86,7 +90,7 @@ function foRenderCollapsibleSection(key, label, items, emptyText) {
         ${expanded ? "▾" : "▸"} ${label} (${items.length})
       </button>
       <div class="fo-handled-list fo-card-grid" ${expanded ? "" : "hidden"}>
-        ${items.length ? items.map(item => foQueueCard(item, true)).join("") : `<div class="fo-empty">${emptyText}</div>`}
+        ${items.length ? items.map(item => foQueueCard(item, key)).join("") : `<div class="fo-empty">${emptyText}</div>`}
       </div>
     </div>`;
 }
@@ -97,7 +101,7 @@ function foRenderQueue(active, handled, mondayed) {
       <div class="fo-group">
         <div class="fo-group-header">${foEscape(client)} <span class="fo-group-count">(${items.length})</span></div>
         <div class="fo-card-grid">
-          ${items.map(item => foQueueCard(item, false)).join("")}
+          ${items.map(item => foQueueCard(item, "active")).join("")}
         </div>
       </div>`).join("")
     : `<div class="fo-empty">queue is empty</div>`;
@@ -126,17 +130,16 @@ function foStripGroupPrefix(title, group) {
   return title.replace(new RegExp(`^\\[${escaped}\\]\\s*`, "i"), "");
 }
 
-function foQueueCard(item, handled) {
+// section is "active" | "handled" | "mondayed".
+function foQueueCard(item, section) {
   const cls = { ready: "fo-b-ready", confirm: "fo-b-confirm", sent: "fo-b-sent", done: "fo-b-done", ignored: "fo-b-done" }[item.status] || "fo-b-confirm";
   const p = foPriority(item);
 
-  // mondayItemId means a real Monday item already exists for this card -- true
-  // even if its dashboard status got reverted back to active (e.g. via the
-  // Handled section's "undo"), so this always wins over the payload check:
-  // clicking send-to-monday again would create a genuine duplicate on the board.
-  // _sending is a local-only optimistic flag (see foSendToMonday) -- the real
-  // Monday API round trip takes 5-10s, so this shows immediately rather than
-  // leaving the button looking clickable/frozen for that whole stretch.
+  // mondayItemId means a real Monday item already exists for this card --
+  // clicking send-to-monday again would create a genuine duplicate on the
+  // board. _sending is a local-only optimistic flag (see foSendToMonday) --
+  // the real Monday API round trip takes 5-10s, so this shows immediately
+  // rather than leaving the button looking clickable/frozen for that stretch.
   const sendControl = item._sending
     ? `<button class="fo-primary" disabled>sending to monday…</button>`
     : item.mondayItemId
@@ -145,7 +148,15 @@ function foQueueCard(item, handled) {
     ? `<button class="fo-primary" onclick="foSendToMonday('${item.id}')">send to monday</button>`
     : `<span class="fo-muted-label">${foEscape(NULL_REASON_LABELS[item.nullReason] || NULL_REASON_LABELS["multi-item"])}</span>`;
 
-  const actions = handled
+  // Mondayed cards get no "undo" -- a real Monday item exists permanently,
+  // there's nothing local left to revert (see the standing sent-invariant:
+  // mondayItemId always wins over status, so a fake "undo" would just get
+  // silently corrected back on the next write anyway).
+  const actions = section === "mondayed"
+    ? `<div class="fo-actions">
+        <span class="fo-muted-label">sent to Monday${item.mondayItemId ? ` (item ${foEscape(item.mondayItemId)})` : ""}</span>
+      </div>`
+    : section === "handled"
     ? `<div class="fo-actions">
         <button onclick="foPatch('${item.id}', {status:'confirm'})">undo</button>
       </div>`
@@ -157,8 +168,8 @@ function foQueueCard(item, handled) {
 
   // Grouped (active) cards sit under a header already naming the client, so the
   // redundant "[Client Name]" bracket in the title is stripped there; the flat
-  // Handled list has no such header, so its titles keep the full bracket.
-  const title = handled ? (item.title || item.id) : foStripGroupPrefix(item.title || item.id, item.group);
+  // Handled/Mondayed lists have no such header, so their titles keep the full bracket.
+  const title = section === "active" ? foStripGroupPrefix(item.title || item.id, item.group) : (item.title || item.id);
 
   // Every card gets a thread now -- item-chat.js is a general edit assistant
   // for the whole card (reply, edit title/note/payload, change status or

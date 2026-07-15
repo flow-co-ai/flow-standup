@@ -24,6 +24,7 @@ const {
   assignedToLine,
   resolvePayloadFlags,
   checkUpdateBodySubstance,
+  enforceSentInvariant,
 } = require("./lib/monday");
 
 const ANTHROPIC_MODEL = "claude-sonnet-4-5"; // check docs.claude.com/en/docs/about-claude/models if this starts erroring
@@ -597,7 +598,9 @@ ${item.clarification ? `Naz previously told you: "${item.clarification}"` : ""}`
               if (built.error) {
                 result = { error: built.error };
               } else {
-                fresh.data.items[freshIdx] = { ...fresh.data.items[freshIdx], ...built.patch, updatedAt: new Date().toISOString() };
+                // enforceSentInvariant: a real Monday item existing always
+                // wins over whatever status this edit asked for.
+                fresh.data.items[freshIdx] = enforceSentInvariant({ ...fresh.data.items[freshIdx], ...built.patch, updatedAt: new Date().toISOString() });
                 fresh.data.updatedAt = new Date().toISOString();
                 await putJSON(QUEUE_PATH, fresh.data, `item-chat: ${id} edited`, fresh.sha);
                 changed = true;
