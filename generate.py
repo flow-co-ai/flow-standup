@@ -88,6 +88,8 @@ def load_playbooks_drive(config: dict, clients_config: dict) -> dict[str, str]:
             q=query,
             fields="files(id, name, mimeType)",
             pageSize=50,
+            supportsAllDrives=True,
+            includeItemsFromAllDrives=True,
         ).execute()
 
         result: dict[str, str] = {}
@@ -110,7 +112,7 @@ def load_playbooks_drive(config: dict, clients_config: dict) -> dict[str, str]:
                 else:
                     buf = io.BytesIO()
                     downloader = MediaIoBaseDownload(
-                        buf, service.files().get_media(fileId=file_id)
+                        buf, service.files().get_media(fileId=file_id, supportsAllDrives=True)
                     )
                     done = False
                     while not done:
@@ -198,9 +200,10 @@ def match_meeting_clients(mt: dict, clients_config: dict) -> list[str]:
     2) Else scan the summary CONTENT for client aliases — a meeting that
        discusses several clients attaches to each of them (max 4).
     3) Else General comms."""
-    title_match = resolve_client(mt.get("title", ""), clients_config, fuzzy=True)
-    if title_match != "Unmapped":
-        return [title_match]
+    from fetch_monday import all_alias_matches
+    title_matches = all_alias_matches(mt.get("title", ""), clients_config)
+    if title_matches:
+        return title_matches[:4]
 
     summary = mt.get("summary") or {}
     haystack = " ".join([
@@ -211,12 +214,7 @@ def match_meeting_clients(mt: dict, clients_config: dict) -> list[str]:
     if mt.get("sentences"):
         haystack += " " + " ".join(s.get("text", "") for s in mt["sentences"][:60]).lower()
 
-    matches = []
-    for canonical, aliases in clients_config.items():
-        for alias in aliases:
-            if alias.lower().strip() in haystack:
-                matches.append(canonical)
-                break
+    matches = all_alias_matches(haystack, clients_config)
     return matches[:4] if matches else ["General comms"]
 
 

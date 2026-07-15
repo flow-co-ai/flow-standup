@@ -31,17 +31,21 @@ def upload_daily_pulse(markdown_text: str, date_str: str, folder_id: str):
         existing = service.files().list(
             q=f"'{folder_id}' in parents and name = '{name}' and trashed = false",
             fields="files(id)", pageSize=1,
+            supportsAllDrives=True,
+            includeItemsFromAllDrives=True,
         ).execute().get("files", [])
 
         if existing:
             file = service.files().update(
-                fileId=existing[0]["id"], media_body=media
+                fileId=existing[0]["id"], media_body=media,
+                supportsAllDrives=True,
             ).execute()
         else:
             file = service.files().create(
                 body={"name": name, "parents": [folder_id],
                       "mimeType": "application/vnd.google-apps.document"},
                 media_body=media, fields="id",
+                supportsAllDrives=True,
             ).execute()
         print(f"  Drive pulse: wrote '{name}'")
         return file.get("id")

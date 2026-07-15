@@ -113,6 +113,8 @@ def fetch_whatsapp_drive(config: dict, days_back: int = 7) -> dict:
             q=f"'{folder_id}' in parents and trashed = false",
             fields="files(id, name, mimeType)",
             pageSize=100,
+            supportsAllDrives=True,
+            includeItemsFromAllDrives=True,
         ).execute()
 
         chats = {}
@@ -125,7 +127,7 @@ def fetch_whatsapp_drive(config: dict, days_back: int = 7) -> dict:
             try:
                 buf = io.BytesIO()
                 downloader = MediaIoBaseDownload(
-                    buf, service.files().get_media(fileId=file["id"])
+                    buf, service.files().get_media(fileId=file["id"], supportsAllDrives=True)
                 )
                 done = False
                 while not done:

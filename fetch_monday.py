@@ -29,16 +29,37 @@ def resolve_client(text: str, clients_config: dict, fuzzy: bool = False) -> str:
     Returns "Unmapped" when nothing matches.
     """
     needle = text.lower().strip()
+
+    # Exact equality always wins first (original strict behavior).
     for canonical, aliases in clients_config.items():
         for alias in aliases:
+            if needle == alias.lower().strip():
+                return canonical
+
+    # Word-boundary matching: an alias must appear as whole word(s), so
+    # "Flow" matches "Flow OS" but never "workflow". Spaced and unspaced
+    # spellings are treated as equal ("Med Station" == "MedStation").
+    matches = all_alias_matches(text, clients_config)
+    return matches[0] if matches else "Unmapped"
+
+
+def all_alias_matches(text: str, clients_config: dict) -> list[str]:
+    """All clients whose alias appears as a whole word in text, spacing-tolerant."""
+    import re
+    needle = text.lower()
+    found = []
+    for canonical, aliases in clients_config.items():
+        variants = set()
+        for alias in aliases:
             a = alias.lower().strip()
-            if fuzzy:
-                if a in needle:
-                    return canonical
-            else:
-                if needle == a:
-                    return canonical
-    return "Unmapped"
+            if a:
+                variants.add(a)
+                variants.add(a.replace(" ", ""))
+        for v in variants:
+            if re.search(r"(?<!\w)" + re.escape(v) + r"(?!\w)", needle):
+                found.append(canonical)
+                break
+    return found
 
 
 # ── Monday API ────────────────────────────────────────────────────────────────
