@@ -104,7 +104,25 @@ not several items.
 1. Open with "<p>Salam,</p>" -- nothing else, no @-tag at the start.
 2. Body as "<ul><li>...</li></ul>" bullets. Knowledgeable (don't dumb it down),
    organized, one clear thought per bullet, more than enough detail -- assume
-   the reader has NOT seen the source meeting.
+   the reader has NOT seen the source meeting. A single generic sentence
+   ("client wants the lead form fixed") is NEVER an acceptable updateBody, no
+   matter how small the item looks. Always write MULTIPLE bullets covering,
+   at minimum:
+   - **Context**: what happened and why this is being drafted, in enough
+     detail that someone who never saw the source meeting/message understands
+     the situation, not just the headline.
+   - **The actual deliverable(s) or step(s)**, specific enough that the
+     assignee can start executing without a follow-up question.
+   - **Dependencies/constraints**: what this is waiting on, what it depends
+     on, what NOT to touch or change. If there are genuinely none, say so
+     explicitly ("No dependencies -- can start immediately") rather than
+     dropping the point.
+   - **Done/success criterion**: what "finished" looks like for this item --
+     the same "done = ___" test used to decide whether something is a real
+     task at all.
+   If the source content is genuinely thin, that's a sign to ask Naz a
+   follow-up question (or use monday_lookup for more context) rather than
+   drafting a thin one-line update.
 3. Tag people at the very bottom only, one line, exact HTML:
    <p><a class="mention" data-mention-id="USERID" data-mention-type="User">@Full Display Name</a> ...</p>
 4. NEVER use em dashes (—) or en dashes (–). Avoid hyphens outside canonical terms.

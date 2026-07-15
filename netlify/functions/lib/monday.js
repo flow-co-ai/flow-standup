@@ -20,13 +20,21 @@ async function mondayGraphQL(query, variables) {
 
 // Shared by send-to-monday.js (button click) and chat.js (the send_to_monday tool).
 async function sendQueueItemToMonday(id) {
-  const { data, sha } = await getJSON(QUEUE_PATH, { updatedAt: null, items: [] });
+  const { data } = await getJSON(QUEUE_PATH, { updatedAt: null, items: [] });
   const idx = data.items.findIndex((it) => it.id === id);
   if (idx === -1) return { error: `no item with id ${id}` };
   const item = data.items[idx];
   const payload = item.payload;
   if (!payload) {
     return { error: "this draft has no payload -- use /monday-task manually for it" };
+  }
+  // A card's dashboard status can be reverted back to active after a real send
+  // (the "undo" button on a Handled card is one flip away from doing exactly
+  // this) -- but the real Monday item already exists once mondayItemId is set,
+  // so sending again here would create a genuine duplicate on the board. This
+  // is the actual fix, not just refusing based on the (revertible) status.
+  if (item.mondayItemId) {
+    return { error: `already sent to Monday as item ${item.mondayItemId} -- sending again would create a duplicate. Edit the real Monday item directly instead.` };
   }
 
   const mode = payload.mode || "create_item"; // default for any older payloads without a mode field
@@ -71,9 +79,22 @@ async function sendQueueItemToMonday(id) {
       });
     }
 
-    data.items[idx] = { ...item, status: "sent", mondayItemId: resultItemId, updatedAt: new Date().toISOString() };
-    data.updatedAt = new Date().toISOString();
-    await putJSON(QUEUE_PATH, data, `send-to-monday: fired ${id} (${mode})`, sha);
+    // Re-fetch fresh right before writing the "sent" flag. The create/update
+    // calls above are real network round trips to Monday -- long enough for a
+    // concurrent write elsewhere (another card's chat, the automation) to move
+    // checks/draft-queue.json out from under the sha we read at the top. Writing
+    // with that stale sha throws a 409 here *after* the real Monday item already
+    // exists, which was silently leaving cards stuck showing active with a real
+    // duplicate-risk item sitting on Monday. Same fix pattern as item-chat.js's
+    // tool calls.
+    const fresh = await getJSON(QUEUE_PATH, { updatedAt: null, items: [] });
+    const freshIdx = fresh.data.items.findIndex((it) => it.id === id);
+    if (freshIdx === -1) {
+      return { ok: true, mondayItemId: resultItemId, mode, warning: `sent to Monday, but item ${id} no longer exists in the queue to mark as sent` };
+    }
+    fresh.data.items[freshIdx] = { ...fresh.data.items[freshIdx], status: "sent", mondayItemId: resultItemId, updatedAt: new Date().toISOString() };
+    fresh.data.updatedAt = new Date().toISOString();
+    await putJSON(QUEUE_PATH, fresh.data, `send-to-monday: fired ${id} (${mode})`, fresh.sha);
 
     return { ok: true, mondayItemId: resultItemId, mode };
   } catch (err) {

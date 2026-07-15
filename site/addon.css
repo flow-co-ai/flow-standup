@@ -79,6 +79,11 @@
 }
 .fo-handled-toggle:hover { color: #C6D093; }
 .fo-handled-list { margin-top: 6px; }
+/* Author-origin CSS beats the UA [hidden] rule at equal specificity, so the
+   .fo-card-grid class's "display: grid" was silently winning over [hidden]'s
+   "display: none" -- the toggle updated its arrow/count but the list never
+   actually hid. This rule outranks .fo-card-grid on specificity to fix that. */
+.fo-handled-list[hidden] { display: none; }
 
 .fo-itemchat { background: #101510; border: 1px solid rgba(237,233,220,0.06); border-radius: 10px; padding: 10px; margin-top: 10px; }
 .fo-itemchat-log { display: flex; flex-direction: column; gap: 6px; max-height: 220px; overflow-y: auto; }

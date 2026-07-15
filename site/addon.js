@@ -106,7 +106,13 @@ function foQueueCard(item, handled) {
   const cls = { ready: "fo-b-ready", confirm: "fo-b-confirm", sent: "fo-b-sent", done: "fo-b-done", ignored: "fo-b-done" }[item.status] || "fo-b-confirm";
   const p = foPriority(item);
 
-  const sendControl = item.payload
+  // mondayItemId means a real Monday item already exists for this card -- true
+  // even if its dashboard status got reverted back to active (e.g. via the
+  // Handled section's "undo"), so this always wins over the payload check:
+  // clicking send-to-monday again would create a genuine duplicate on the board.
+  const sendControl = item.mondayItemId
+    ? `<span class="fo-muted-label">already sent to Monday (item ${foEscape(item.mondayItemId)})</span>`
+    : item.payload
     ? `<button class="fo-primary" onclick="foSendToMonday('${item.id}')">send to monday</button>`
     : `<span class="fo-muted-label">${foEscape(NULL_REASON_LABELS[item.nullReason] || NULL_REASON_LABELS["multi-item"])}</span>`;
 
