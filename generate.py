@@ -78,12 +78,9 @@ def load_playbooks_drive(config: dict, clients_config: dict) -> dict[str, str]:
         )
         service = build("drive", "v3", credentials=creds, cache_discovery=False)
 
-        query = (
-            f"'{folder_id}' in parents and trashed = false and ("
-            f"mimeType = 'text/markdown' or "
-            f"mimeType = 'text/plain' or "
-            f"mimeType = 'application/vnd.google-apps.document')"
-        )
+        # List everything and filter in code - Drive's mime stamps for uploaded
+        # .md/.txt files are unpredictable (text/x-markdown, octet-stream, etc).
+        query = f"'{folder_id}' in parents and trashed = false"
         resp = service.files().list(
             q=query,
             fields="files(id, name, mimeType)",
@@ -97,8 +94,12 @@ def load_playbooks_drive(config: dict, clients_config: dict) -> dict[str, str]:
             file_id = file["id"]
             name = file["name"]
             mime = file["mimeType"]
+            is_gdoc = mime == "application/vnd.google-apps.document"
+            is_text = name.lower().endswith((".md", ".txt", ".markdown"))
+            if not (is_gdoc or is_text):
+                continue
             stem = name
-            for ext in (".md", ".txt"):
+            for ext in (".md", ".txt", ".markdown"):
                 if name.lower().endswith(ext):
                     stem = name[: -len(ext)]
                     break
