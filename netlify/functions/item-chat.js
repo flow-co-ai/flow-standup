@@ -14,7 +14,16 @@
 // deployed function, so keep this in sync by hand if the canonical doc changes.
 
 const { getJSON, putJSON } = require("./lib/github");
-const { mondayGraphQL, updateMondayColumns } = require("./lib/monday");
+const {
+  mondayGraphQL,
+  updateMondayColumns,
+  STATUS_COLUMN,
+  PEOPLE_COLUMN,
+  BOARD_LABEL_IDS,
+  buildColumnValues,
+  assignedToLine,
+  resolvePayloadFlags,
+} = require("./lib/monday");
 
 const ANTHROPIC_MODEL = "claude-sonnet-4-5"; // check docs.claude.com/en/docs/about-claude/models if this starts erroring
 const QUEUE_PATH = "checks/draft-queue.json";
@@ -305,64 +314,11 @@ function validatePayload(mode, input) {
   return null;
 }
 
-const STATUS_COLUMN = "color_mkwb1trm";
-const PEOPLE_COLUMN = "multiple_person_mkwb5f2e";
-const NAZ_USER_ID = 70062990;
-
-// Board-scoped default assignees (Naz, 2026-07-15): never tag Naz/Sohib by
-// default on any board -- only added via the model's needsNaz flag, a
-// deliberate judgment call, not a default. Enforced here in code rather than
-// just requested in the system prompt, so it can't be silently skipped.
-const BOARD_ASSIGNEES = {
-  "18405754310": [ // Ads: Khurram Jamil + Ads Team
-    { id: 102221064, kind: "person" },
-    { id: 102221061, kind: "person" },
-  ],
-  "18099807701": [ // Web + SEO: Muhammad Hashir Faiz + Zayan Faiz
-    { id: 69741994, kind: "person" },
-    { id: 101662542, kind: "person" },
-  ],
-  "18418241405": [ // CRM: Ahmed Memon + Ali Shaheer
-    { id: 108080159, kind: "person" },
-    { id: 108080161, kind: "person" },
-  ],
-};
-
-const USER_NAMES = {
-  102221064: "Khurram Jamil",
-  102221061: "Ads Team",
-  69741994: "Muhammad Hashir Faiz",
-  101662542: "Zayan Faiz",
-  108080159: "Ahmed Memon",
-  108080161: "Ali Shaheer",
-  69662034: "Sohib Boundaoui",
-  70062990: "Nacer Amrouch",
-};
-
-function buildColumnValues(boardId, blocked, needsNaz) {
-  const assignees = BOARD_ASSIGNEES[boardId];
-  if (!assignees) throw new Error(`no default assignees configured for board ${boardId}`);
-  const personsAndTeams = needsNaz ? [...assignees, { id: NAZ_USER_ID, kind: "person" }] : assignees;
-  return {
-    [STATUS_COLUMN]: { label: blocked ? "Stuck" : "Start" },
-    [PEOPLE_COLUMN]: { personsAndTeams },
-  };
-}
-
-function assignedToLine(personsAndTeams) {
-  return `Assigned to: ${personsAndTeams.map((p) => USER_NAMES[p.id] || `user ${p.id}`).join(", ")}`;
-}
-
-// Maps the item.board label (as stored on the queue item, e.g. "CRM") to a
-// numeric boardId -- needed so edit_item can reassign/recompute columnValues
-// for items that never went through create_item (which is the only mode that
-// stores a numeric boardId on the payload itself).
-const BOARD_LABEL_IDS = {
-  Ads: "18405754310",
-  "Web+SEO": "18099807701",
-  "Dev+SEO": "18099807701",
-  CRM: "18418241405",
-};
+// STATUS_COLUMN/PEOPLE_COLUMN/BOARD_LABEL_IDS/buildColumnValues/assignedToLine/
+// resolvePayloadFlags all now live in lib/monday.js (imported above) -- it's
+// the single enforcement point shared with sendQueueItemToMonday, so a
+// draft's status/people are computed identically whether it's resolved here
+// or sent there, and never drift out of sync between the two.
 
 // Priority is an integer 1-5, defaulting to 3 (normal) if the model omits it
 // or sends something out of range -- see the rubric in SYSTEM_RULES.
@@ -421,9 +377,20 @@ function buildResolvedFields(item, input) {
     return { error: String(err) };
   }
 
-  const payload = { mode: input.mode, itemName: input.itemName, columnValues, updateBody: input.updateBody };
+  // boardId/blocked/needsNaz are stored explicitly (not just baked into
+  // columnValues) so sendQueueItemToMonday can recompute status/people fresh
+  // at send time from these, rather than trusting the columnValues blob below
+  // (which is kept only as a human-readable preview for the dashboard note).
+  const payload = {
+    mode: input.mode,
+    itemName: input.itemName,
+    boardId: input.boardId,
+    blocked: !!input.blocked,
+    needsNaz: !!input.needsNaz,
+    columnValues,
+    updateBody: input.updateBody,
+  };
   if (input.mode === "create_item") {
-    payload.boardId = input.boardId;
     payload.groupId = input.groupId;
   } else {
     payload.parentItemId = input.parentItemId;
@@ -468,14 +435,14 @@ function buildEditFields(item, input) {
     const boardId = input.boardId || (item.payload && item.payload.boardId) || BOARD_LABEL_IDS[item.board];
     if (!boardId) return { error: "need a boardId to set or change assignees on this item -- ask Naz which board it belongs to" };
 
-    // Preserve whichever of blocked/needsNaz isn't being touched right now,
-    // read back off the existing columnValues so e.g. changing only priority
-    // never silently resets an existing Stuck/needsNaz state.
-    const existingCV = item.payload && item.payload.columnValues;
-    const currentBlocked = existingCV ? existingCV[STATUS_COLUMN]?.label === "Stuck" : false;
-    const currentNeedsNaz = existingCV ? (existingCV[PEOPLE_COLUMN]?.personsAndTeams || []).some((p) => p.id === NAZ_USER_ID) : false;
-    const blocked = input.blocked !== undefined ? !!input.blocked : currentBlocked;
-    const needsNaz = input.needsNaz !== undefined ? !!input.needsNaz : currentNeedsNaz;
+    // Preserve whichever of blocked/needsNaz isn't being touched right now --
+    // resolvePayloadFlags reads the explicit fields if present, falling back
+    // to reverse-deriving from a baked columnValues blob for older drafts --
+    // so e.g. changing only priority never silently resets an existing
+    // Stuck/needsNaz state.
+    const currentFlags = item.payload ? resolvePayloadFlags(item.payload) : { blocked: false, needsNaz: false };
+    const blocked = input.blocked !== undefined ? !!input.blocked : currentFlags.blocked;
+    const needsNaz = input.needsNaz !== undefined ? !!input.needsNaz : currentFlags.needsNaz;
 
     let columnValues;
     try {
@@ -484,12 +451,12 @@ function buildEditFields(item, input) {
       return { error: String(err) };
     }
 
-    // update_only payloads don't carry columnValues (the real item they point
-    // at already has its own status/assignees from whenever it was created),
-    // so only rewrite the payload for create_item/create_subitem drafts.
+    // update_only payloads don't carry status/people (the real item they
+    // point at already has its own from whenever it was created), so only
+    // rewrite the payload for create_item/create_subitem drafts.
     if (item.payload && item.payload.mode !== "update_only") {
-      const updatedPayload = { ...item.payload, columnValues };
-      if (item.payload.mode === "create_item") updatedPayload.boardId = boardId;
+      const existingCV = item.payload.columnValues;
+      const updatedPayload = { ...item.payload, boardId, blocked, needsNaz, columnValues };
       patch.payload = updatedPayload;
 
       const assigned = assignedToLine(columnValues[PEOPLE_COLUMN].personsAndTeams);

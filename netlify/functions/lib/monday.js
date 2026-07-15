@@ -1,7 +1,16 @@
 // Payload modes supported by sendQueueItemToMonday:
-//   create_item    (original) -- needs boardId, groupId, itemName, columnValues
-//   create_subitem             -- needs parentItemId, itemName, optional columnValues
+//   create_item    (original) -- needs boardId, groupId, itemName
+//   create_subitem             -- needs parentItemId, itemName (boardId derived if missing)
 //   update_only                -- needs existingItemId, just posts the update, creates nothing
+//
+// Status/people columns for create_item/create_subitem are ALWAYS computed
+// here at send time via buildColumnValues() -- never trusted from whatever
+// payload.columnValues happens to contain. This is the single enforcement
+// point shared with item-chat.js (which imports these from here rather than
+// keeping its own copy) -- drafts authored anywhere (item-chat.js, the
+// fireflies-monday-watch automation, a hand-edited queue entry) all get the
+// same board-scoped default assignees and Start/Stuck status, with no way to
+// silently end up empty.
 
 const { getJSON, putJSON } = require("./github");
 
@@ -16,6 +25,82 @@ async function mondayGraphQL(query, variables) {
   const json = await res.json();
   if (json.errors) throw new Error(JSON.stringify(json.errors));
   return json.data;
+}
+
+const STATUS_COLUMN = "color_mkwb1trm";
+const PEOPLE_COLUMN = "multiple_person_mkwb5f2e";
+const NAZ_USER_ID = 70062990;
+
+// Board-scoped default assignees (Naz, 2026-07-15): never tag Naz/Sohib by
+// default on any board -- only added via a deliberate needsNaz flag, never a
+// default. Enforced here in code rather than just requested in a system
+// prompt, so it can't be silently skipped or omitted by whatever authored
+// the draft.
+const BOARD_ASSIGNEES = {
+  "18405754310": [ // Ads: Khurram Jamil + Ads Team
+    { id: 102221064, kind: "person" },
+    { id: 102221061, kind: "person" },
+  ],
+  "18099807701": [ // Web + SEO: Muhammad Hashir Faiz + Zayan Faiz
+    { id: 69741994, kind: "person" },
+    { id: 101662542, kind: "person" },
+  ],
+  "18418241405": [ // CRM: Ahmed Memon + Ali Shaheer
+    { id: 108080159, kind: "person" },
+    { id: 108080161, kind: "person" },
+  ],
+};
+
+const USER_NAMES = {
+  102221064: "Khurram Jamil",
+  102221061: "Ads Team",
+  69741994: "Muhammad Hashir Faiz",
+  101662542: "Zayan Faiz",
+  108080159: "Ahmed Memon",
+  108080161: "Ali Shaheer",
+  69662034: "Sohib Boundaoui",
+  70062990: "Nacer Amrouch",
+};
+
+// Maps the item.board label (as stored on the queue item, e.g. "CRM") to a
+// numeric boardId -- needed for payloads that only carry the label, not a
+// numeric id (older/externally-authored drafts, or create_subitem payloads
+// drafted before boardId was stored on them explicitly).
+const BOARD_LABEL_IDS = {
+  Ads: "18405754310",
+  "Web+SEO": "18099807701",
+  "Dev+SEO": "18099807701",
+  CRM: "18418241405",
+};
+
+function buildColumnValues(boardId, blocked, needsNaz) {
+  const assignees = BOARD_ASSIGNEES[boardId];
+  if (!assignees) throw new Error(`no default assignees configured for board ${boardId}`);
+  const personsAndTeams = needsNaz ? [...assignees, { id: NAZ_USER_ID, kind: "person" }] : assignees;
+  return {
+    [STATUS_COLUMN]: { label: blocked ? "Stuck" : "Start" },
+    [PEOPLE_COLUMN]: { personsAndTeams },
+  };
+}
+
+function assignedToLine(personsAndTeams) {
+  return `Assigned to: ${personsAndTeams.map((p) => USER_NAMES[p.id] || `user ${p.id}`).join(", ")}`;
+}
+
+// Blocked/needsNaz are the real source of truth once stored as explicit
+// top-level payload fields (set by item-chat.js's resolve_item/edit_item).
+// For drafts that predate that (or came from outside item-chat.js entirely)
+// and only ever got a baked columnValues blob, fall back to reverse-deriving
+// blocked/needsNaz from it so old drafts don't regress to plain defaults.
+function resolvePayloadFlags(payload) {
+  if (payload.blocked !== undefined || payload.needsNaz !== undefined) {
+    return { blocked: !!payload.blocked, needsNaz: !!payload.needsNaz };
+  }
+  const cv = payload.columnValues;
+  if (!cv) return { blocked: false, needsNaz: false };
+  const blocked = cv[STATUS_COLUMN]?.label === "Stuck";
+  const needsNaz = (cv[PEOPLE_COLUMN]?.personsAndTeams || []).some((p) => p.id === NAZ_USER_ID);
+  return { blocked, needsNaz };
 }
 
 // Shared by send-to-monday.js (button click) and chat.js (the send_to_monday tool).
@@ -41,28 +126,46 @@ async function sendQueueItemToMonday(id) {
   let resultItemId;
 
   try {
-    if (mode === "create_item") {
-      if (!payload.boardId || !payload.groupId || !payload.itemName) {
-        return { error: "create_item payload missing boardId/groupId/itemName" };
+    if (mode === "create_item" || mode === "create_subitem") {
+      // boardId can come from the payload itself, or (for older/externally
+      // authored drafts that never stored one) from the item's board label --
+      // either way, this determines the ONLY status/people columns that get
+      // sent, computed fresh below, never read from payload.columnValues.
+      const boardId = payload.boardId || BOARD_LABEL_IDS[item.board];
+      if (!boardId) {
+        return { error: `can't determine which board's team this belongs to -- no boardId on the payload and "${item.board}" isn't a recognized board label` };
       }
-      const created = await mondayGraphQL(
-        `mutation($board: ID!, $group: String!, $name: String!, $cols: JSON) {
-           create_item(board_id: $board, group_id: $group, item_name: $name, column_values: $cols) { id }
-         }`,
-        { board: payload.boardId, group: payload.groupId, name: payload.itemName, cols: JSON.stringify(payload.columnValues || {}) }
-      );
-      resultItemId = created.create_item.id;
-    } else if (mode === "create_subitem") {
-      if (!payload.parentItemId || !payload.itemName) {
-        return { error: "create_subitem payload missing parentItemId/itemName" };
+      const { blocked, needsNaz } = resolvePayloadFlags(payload);
+      let columnValues;
+      try {
+        columnValues = buildColumnValues(boardId, blocked, needsNaz);
+      } catch (err) {
+        return { error: String(err) };
       }
-      const created = await mondayGraphQL(
-        `mutation($parent: ID!, $name: String!, $cols: JSON) {
-           create_subitem(parent_item_id: $parent, item_name: $name, column_values: $cols) { id }
-         }`,
-        { parent: payload.parentItemId, name: payload.itemName, cols: JSON.stringify(payload.columnValues || {}) }
-      );
-      resultItemId = created.create_subitem.id;
+
+      if (mode === "create_item") {
+        if (!payload.groupId || !payload.itemName) {
+          return { error: "create_item payload missing groupId/itemName" };
+        }
+        const created = await mondayGraphQL(
+          `mutation($board: ID!, $group: String!, $name: String!, $cols: JSON) {
+             create_item(board_id: $board, group_id: $group, item_name: $name, column_values: $cols) { id }
+           }`,
+          { board: boardId, group: payload.groupId, name: payload.itemName, cols: JSON.stringify(columnValues) }
+        );
+        resultItemId = created.create_item.id;
+      } else {
+        if (!payload.parentItemId || !payload.itemName) {
+          return { error: "create_subitem payload missing parentItemId/itemName" };
+        }
+        const created = await mondayGraphQL(
+          `mutation($parent: ID!, $name: String!, $cols: JSON) {
+             create_subitem(parent_item_id: $parent, item_name: $name, column_values: $cols) { id }
+           }`,
+          { parent: payload.parentItemId, name: payload.itemName, cols: JSON.stringify(columnValues) }
+        );
+        resultItemId = created.create_subitem.id;
+      }
     } else if (mode === "update_only") {
       if (!payload.existingItemId) {
         return { error: "update_only payload missing existingItemId" };
@@ -117,4 +220,17 @@ async function updateMondayColumns(boardId, itemId, columnValues) {
   );
 }
 
-module.exports = { mondayGraphQL, sendQueueItemToMonday, updateMondayColumns };
+module.exports = {
+  mondayGraphQL,
+  sendQueueItemToMonday,
+  updateMondayColumns,
+  STATUS_COLUMN,
+  PEOPLE_COLUMN,
+  NAZ_USER_ID,
+  BOARD_ASSIGNEES,
+  USER_NAMES,
+  BOARD_LABEL_IDS,
+  buildColumnValues,
+  assignedToLine,
+  resolvePayloadFlags,
+};
