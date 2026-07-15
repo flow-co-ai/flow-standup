@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-15T20:35:52.172Z",
+  "updatedAt": "2026-07-15T20:45:00.000Z",
   "items": [
     {
       "id": "medstation-ghl",
@@ -158,25 +158,14 @@
     {
       "id": "fullsmile-bug",
       "title": "[Full Smile] Fix appointment reminder bug",
-      "note": "Check CRM board Full Smile group first for overlap before drafting -- needs a quick audit first.",
+      "note": "Confirmed already covered by existing CRM board item (OpenDental Appt Not Syncing to GHL, id 12483728477) -- Sohib logged the same reminder/sync bug there on 7/8. No new item needed.",
       "status": "ignored",
       "board": "Web+SEO",
       "group": "Full Smile",
       "source": "fireflies",
       "sourceLabel": "Fireflies: 14-day backfill sweep",
-      "payload": {
-        "mode": "create_item",
-        "updateBody": "<p>Salam,</p>\n<ul>\n<li><strong>Fix</strong> the appointment reminder bug identified in Full Smile's CRM workflow</li>\n<li>Investigate why automated appointment reminders are not triggering or delivering as configured</li>\n<li>Check GHL automation triggers, SMS/email delivery settings, and any OpenDental integration points that may affect reminder timing</li>\n<li><strong>Test</strong> the reminder sequence end-to-end after implementing the fix to confirm reminders fire at the correct intervals</li>\n<li>Document the root cause and resolution for future reference</li>\n</ul>\n<p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
-        "boardId": "18418241405",
-        "groupId": "group_mkxdmhbz",
-        "itemName": "Appointment Reminder Bug",
-        "columnValues": {}
-      },
-      "nullReason": "content-conflict",
-      "clarification": "already on Monday.com",
-      "clarifiedAt": "2026-07-15T00:34:01.301Z",
-      "awaitingFinalize": true,
-      "updatedAt": "2026-07-15T19:29:02.477Z",
+      "payload": null,
+      "updatedAt": "2026-07-15T20:45:00.000Z",
       "priority": 5
     },
     {
@@ -389,6 +378,42 @@
       "priority": 3,
       "updatedAt": "2026-07-15T20:35:52.171Z",
       "mondayItemId": "12544512354"
+    },
+    {
+      "id": "fullsmile-gbp-posting",
+      "title": "[Full Smile] GBP Posting",
+      "note": "Investigate and implement a regular Google Business Profile posting cadence to improve Google Maps ranking. Surfaced 7/15 while Sohib used Full Smile as a case study pitching a new prospect (Citrus Smiles). No existing item on any of the 3 boards.",
+      "status": "ready",
+      "board": "Web+SEO",
+      "group": "Full Smile",
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Citrus Smiles Marketing Systems, 7/15",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18099807701",
+        "groupId": "group_mkxdmhbz",
+        "itemName": "GBP Posting",
+        "columnValues": {
+          "multiple_person_mkwb5f2e": {
+            "personsAndTeams": [
+              {
+                "id": 69741994,
+                "kind": "person"
+              },
+              {
+                "id": 101662542,
+                "kind": "person"
+              }
+            ]
+          },
+          "color_mkwb1trm": {
+            "label": "Start"
+          }
+        },
+        "updateBody": "<p>Salam,</p><ul><li><strong>Investigate and implement</strong> a regular Google Business Profile posting cadence for Full Smile Dental.</li><li>Goal is to <strong>improve Google Maps ranking</strong>. Full Smile organic SEO has already grown from 0 to 100+ ranking keywords, GBP posting is the next lever.</li><li>Sohib flagged this while using Full Smile as a case study in a prospect pitch (Citrus Smiles), so there is outside visibility on this result now.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a></p>"
+      },
+      "priority": 3,
+      "updatedAt": "2026-07-15T20:45:00.000Z"
     }
   ]
 }
