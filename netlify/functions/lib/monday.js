@@ -84,4 +84,16 @@ async function sendQueueItemToMonday(id) {
   }
 }
 
-module.exports = { mondayGraphQL, sendQueueItemToMonday };
+// Pushes a status/people (or any column) change onto an item that already
+// exists for real on a Monday board -- used by item-chat.js's edit_item tool
+// when Naz reassigns or reopens something after it's already been sent.
+async function updateMondayColumns(boardId, itemId, columnValues) {
+  await mondayGraphQL(
+    `mutation($board: ID!, $item: ID!, $cols: JSON!) {
+       change_multiple_column_values(board_id: $board, item_id: $item, column_values: $cols) { id }
+     }`,
+    { board: boardId, item: itemId, cols: JSON.stringify(columnValues) }
+  );
+}
+
+module.exports = { mondayGraphQL, sendQueueItemToMonday, updateMondayColumns };

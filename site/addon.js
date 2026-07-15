@@ -35,6 +35,13 @@ async function foLoadQueue() {
   }
 }
 
+// Items missing a priority (older data, predating the field) sort as if they
+// were a 3 -- normal, not urgent, not last-resort.
+function foPriority(item) {
+  const p = Number(item.priority);
+  return Number.isFinite(p) && p >= 1 && p <= 5 ? p : 3;
+}
+
 function foGroupByClient(items) {
   const groups = new Map();
   for (const item of items) {
@@ -42,8 +49,17 @@ function foGroupByClient(items) {
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(item);
   }
-  // Most items needing attention first, so Naz sees the busiest client at the top.
-  return [...groups.entries()].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
+  for (const list of groups.values()) {
+    list.sort((a, b) => foPriority(a) - foPriority(b));
+  }
+  // Groups holding a genuinely urgent (priority 1-2) item surface first, so a
+  // busy-but-routine client group never buries a smaller group with something
+  // time-sensitive in it. Ties fall back to the prior "busiest client" order.
+  return [...groups.entries()].sort((a, b) => {
+    const urgentA = a[1].some(it => foPriority(it) <= 2) ? 0 : 1;
+    const urgentB = b[1].some(it => foPriority(it) <= 2) ? 0 : 1;
+    return urgentA - urgentB || b[1].length - a[1].length || a[0].localeCompare(b[0]);
+  });
 }
 
 function foRenderQueue(active, handled) {
@@ -51,7 +67,9 @@ function foRenderQueue(active, handled) {
     ? foGroupByClient(active).map(([client, items]) => `
       <div class="fo-group">
         <div class="fo-group-header">${foEscape(client)} <span class="fo-group-count">(${items.length})</span></div>
-        ${items.map(item => foQueueCard(item, false)).join("")}
+        <div class="fo-card-grid">
+          ${items.map(item => foQueueCard(item, false)).join("")}
+        </div>
       </div>`).join("")
     : `<div class="fo-empty">queue is empty</div>`;
 
@@ -60,7 +78,7 @@ function foRenderQueue(active, handled) {
       <button class="fo-handled-toggle" onclick="foToggleHandled()">
         ${foHandledExpanded ? "▾" : "▸"} handled (${handled.length})
       </button>
-      <div class="fo-handled-list" ${foHandledExpanded ? "" : "hidden"}>
+      <div class="fo-handled-list fo-card-grid" ${foHandledExpanded ? "" : "hidden"}>
         ${handled.length ? handled.map(item => foQueueCard(item, true)).join("") : `<div class="fo-empty">nothing handled yet</div>`}
       </div>
     </div>`;
@@ -86,6 +104,7 @@ function foStripGroupPrefix(title, group) {
 
 function foQueueCard(item, handled) {
   const cls = { ready: "fo-b-ready", confirm: "fo-b-confirm", sent: "fo-b-sent", done: "fo-b-done", ignored: "fo-b-done" }[item.status] || "fo-b-confirm";
+  const p = foPriority(item);
 
   const sendControl = item.payload
     ? `<button class="fo-primary" onclick="foSendToMonday('${item.id}')">send to monday</button>`
@@ -106,23 +125,23 @@ function foQueueCard(item, handled) {
   // Handled list has no such header, so its titles keep the full bracket.
   const title = handled ? (item.title || item.id) : foStripGroupPrefix(item.title || item.id, item.group);
 
-  // status "confirm" == content-conflict/no-payload-yet: a real back-and-forth
-  // with item-chat.js, which can query Monday itself and resolve the draft
-  // directly, instead of routing Naz through /monday-task.
-  const itemChatBox = !handled && item.status === "confirm"
-    ? `<div class="fo-itemchat">
-        <div class="fo-itemchat-log" id="fo-chat-log-${item.id}">${foRenderChatMessages(item.id)}</div>
-        <form class="fo-itemchat-form" onsubmit="return foSendItemChat(event, '${item.id}')">
-          <input type="text" placeholder="Answer or ask a follow-up..." />
-          <button type="submit">Send</button>
-        </form>
-      </div>`
-    : "";
+  // Every card gets a thread now -- item-chat.js is a general edit assistant
+  // for the whole card (reply, edit title/note/payload, change status or
+  // priority, reassign), not just a missing-payload resolver, so this is no
+  // longer gated on status === "confirm".
+  const itemChatBox = `
+    <div class="fo-itemchat">
+      <div class="fo-itemchat-log" id="fo-chat-log-${item.id}">${foRenderChatMessages(item.id)}</div>
+      <form class="fo-itemchat-form" onsubmit="return foSendItemChat(event, '${item.id}')">
+        <input type="text" placeholder="Ask, edit, reassign, or resolve..." />
+        <button type="submit">Send</button>
+      </form>
+    </div>`;
 
-  // Once a chat thread has started, the bot is the one doing the audit the
-  // static note used to instruct Naz to do by hand -- that text is now stale,
-  // so hide it (foSendItemChat also hides it live, without waiting on a reload).
-  const chatStarted = !handled && item.status === "confirm" && (foItemChat[item.id] || []).length > 0;
+  // Once a chat thread has started, the bot's conversation is the live source
+  // of truth for this card, so the static note (which may now be stale) hides
+  // (foSendItemChat also hides it live, without waiting on a reload).
+  const chatStarted = (foItemChat[item.id] || []).length > 0;
   const noteHtml = `<p class="fo-sub" id="fo-note-${item.id}" ${chatStarted ? "hidden" : ""}>${foEscape(item.note || "")}</p>`;
 
   return `
@@ -133,7 +152,10 @@ function foQueueCard(item, handled) {
           ${noteHtml}
           ${item.sourceLabel ? `<p class="fo-source">${foEscape(item.sourceLabel)}</p>` : ""}
         </div>
-        <span class="fo-badge ${cls}">${foEscape(item.status || "confirm")}</span>
+        <div class="fo-badges">
+          <span class="fo-priority fo-priority-${p}">P${p}</span>
+          <span class="fo-badge ${cls}">${foEscape(item.status || "confirm")}</span>
+        </div>
       </div>
       ${actions}
       ${itemChatBox}
@@ -141,7 +163,7 @@ function foQueueCard(item, handled) {
 }
 
 // Conversation history per item, kept client-side so a full foLoadQueue()
-// re-render (triggered whenever any card resolves) doesn't lose in-progress
+// re-render (triggered whenever any card changes) doesn't lose in-progress
 // threads on other cards -- each card's log is redrawn from this store.
 const foItemChat = {};
 
@@ -198,11 +220,12 @@ async function foSendItemChat(e, id) {
   }
 
   foItemChat[id].push({ role: "assistant", content: data.reply || "(no reply)" });
-  if (data.resolved) {
-    // Resolved: drop the thread and reload -- the card now shows the real
-    // send-to-monday button (status: ready) or moves to Handled (ignored),
-    // live, without waiting for the next fireflies-monday-watch run.
-    delete foItemChat[id];
+  if (data.changed) {
+    // Something on the card actually changed (payload/status/priority/
+    // reassignment/etc) -- reload so the queue re-sorts and re-groups live,
+    // without waiting for the next fireflies-monday-watch run. The thread
+    // itself is left in foItemChat, so it survives the re-render and Naz can
+    // keep editing the same card in the same conversation.
     foLoadQueue();
   } else {
     foRenderChatLog(id);
