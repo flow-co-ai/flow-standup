@@ -4,9 +4,9 @@
 
 const API = "https://api.github.com";
 
-function repoInfo() {
+function repoInfo(branchOverride) {
   const repo = process.env.GH_REPO || "flow-co-ai/flow-standup";
-  const branch = process.env.GH_STATE_BRANCH || "state";
+  const branch = branchOverride || process.env.GH_STATE_BRANCH || "state";
   return { repo, branch };
 }
 
@@ -28,8 +28,11 @@ async function ghFetch(path, opts = {}) {
 }
 
 // Returns { data, sha }. sha is null if the file doesn't exist yet.
-async function getJSON(filePath, fallback = {}) {
-  const { repo, branch } = repoInfo();
+// branchOverride reads from a specific branch instead of the state branch --
+// e.g. the standup rundown only ever gets pushed to main, so its state-branch
+// copy can be stale; pass "main" there to actually get the current one.
+async function getJSON(filePath, fallback = {}, branchOverride) {
+  const { repo, branch } = repoInfo(branchOverride);
   const res = await ghFetch(`/repos/${repo}/contents/${filePath}?ref=${branch}`);
   if (res.status === 404) return { data: fallback, sha: null };
   const json = await res.json();

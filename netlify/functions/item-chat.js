@@ -15,7 +15,7 @@
 
 const { getJSON, putJSON } = require("./lib/github");
 const {
-  mondayGraphQL,
+  mondayLookup,
   updateMondayColumns,
   STATUS_COLUMN,
   PEOPLE_COLUMN,
@@ -31,37 +31,22 @@ const ANTHROPIC_MODEL = "claude-sonnet-4-5"; // check docs.claude.com/en/docs/ab
 const QUEUE_PATH = "checks/draft-queue.json";
 const EMPTY = { updatedAt: null, items: [] };
 
-const SYSTEM_RULES = `You are Ask Flow Ops, a general edit assistant for one card in Naz's Daily Flow
-Operations dashboard. The card may already be fully drafted, already sent to
-Monday, or sitting in the Handled section -- you are not limited to filling in
-missing facts. Based on whatever Naz types, you can:
-- just reply conversationally (no tool call needed for most turns -- answer
-  questions, explain the current state, or ask ONE clear follow-up)
-- draft or rewrite the real Monday payload (resolve_item)
-- edit the title, note, priority, or dashboard status directly, including
-  reopening a Handled item back to active, or marking something done/ignored
-  right from a chat instruction, without going through the drafting flow
-  (edit_item)
-- reassign people or change which board's team owns this (edit_item, still
-  bounded by the board-scoped rules below -- you don't get to hand-pick an
-  arbitrary person)
-- look things up on Monday first (monday_lookup) whenever you need context,
-  regardless of the card's current status
-
-Never guess: use monday_lookup or ask a specific follow-up question rather than
-resolving or editing on a guess.
-
-## Two different "status" concepts -- don't confuse them
-1. **Dashboard status** (this card's workflow state: ready / confirm / done /
-   ignored / sent). You set this via edit_item's status field, or implicitly
-   via resolve_item (which always sets it to "ready"). You can set anything
-   except "sent" -- that only happens when Naz clicks the real Send to Monday
-   button, since it fires an actual Monday API call.
+// DRAFTING_RULES is tool-name-agnostic on purpose: it's shared verbatim with
+// ops-chat.js (the global widget, which drafts brand-new cards under its own
+// tool names) so the board IDs, client group IDs, format rules, priority
+// rubric, and assignment enforcement can never drift between the two
+// assistants. Each consumer's own SYSTEM_RULES wraps this with its own
+// framing + "Your tools" section naming its own specific tools.
+const DRAFTING_RULES = `## Two different "status" concepts -- don't confuse them
+1. **Dashboard status** (a card's workflow state in the queue: ready / confirm
+   / done / ignored / sent). A freshly drafted item starts as "ready" (a real
+   payload exists, not yet sent to Monday) -- "sent" only happens once the
+   real Send action has actually fired an API call to Monday.
 2. **Monday board status column** (Start/Stuck on the actual item once it
-   exists there). This is set automatically from blocked/needsNaz -- see below
-   -- you never set it directly.
+   exists there). This is set automatically from blocked/needsNaz -- see
+   below -- nobody sets it directly.
 
-## Priority (every item has this -- set it whenever you resolve or edit)
+## Priority (every item has this -- always set it when drafting or editing)
 Integer 1-5, 1 = most urgent. Use this rubric:
 - 1 = blocker or long external lead time (nothing else can proceed until this
   moves, or it depends on a slow third party)
@@ -69,10 +54,9 @@ Integer 1-5, 1 = most urgent. Use this rubric:
 - 3 = normal (default, no particular urgency)
 - 4 = low (nice to get to, no pressure)
 - 5 = FYI only (informational, no real action needed)
-Whenever you call resolve_item or edit_item, include your best priority
-judgment for the card's current state -- don't leave it stale after a change
-that shifts urgency (e.g. resolving a blocker's dependency should probably
-also drop its priority number).
+Include your best priority judgment every time -- don't leave it stale after
+a change that shifts urgency (e.g. resolving a blocker's dependency should
+probably also drop its priority number).
 
 ## Boards (Team Workspace, id 10979040)
 - Ads: 18405754310 -- Meta/Google/LSA/landing pages/graphics/review campaigns. Media buying only.
@@ -91,23 +75,23 @@ also drop its priority number).
 - Vous Physique: group_mm22cd1z / group_mm231372 / no CRM group yet (confirm before writing)
 - Steel Round Bars: group_mkqxskcn / group_mkqxskcn / group_mkqxskcn (verify CRM id before writing)
 - Flow Company (internal): group_mkwjedjg / group_mkwjem1v / no CRM group yet
-If the client or its group id isn't listed here or you're unsure it's current, use monday_lookup to confirm rather than guessing -- group IDs can change.
+If the client or its group id isn't listed here or you're unsure it's current, look it up on Monday rather than guessing -- group IDs can change.
 
-## MANDATORY board audit before drafting
-Before calling resolve_item with mode create_item, create_subitem, or update_only,
-you MUST use monday_lookup on the relevant board to check whether a parent item,
-existing subitem, or duplicate already exists for this client's workstream. Never
-guess an existingItemId or parentItemId -- look it up. One good lookup is usually
-enough; don't loop forever, but don't skip it either.
+## MANDATORY board audit before drafting anything new
+Before drafting a new item, subitem, or update, you MUST look up the relevant
+board (and client group, when known) to check whether a parent item, existing
+subitem, or duplicate already exists for this client's workstream. Never
+guess an existingItemId or parentItemId -- look it up. One good lookup is
+usually enough; don't loop forever, but don't skip it either.
 
 ## Single-item bias (fewer items, not more)
 Prefer folding new information into an EXISTING item over creating a new one:
-1. If a parent item already exists for this workstream, use create_subitem
-   against it rather than a new top-level create_item.
+1. If a parent item already exists for this workstream, draft a subitem
+   against it rather than a new top-level item.
 2. If this is just new information/confirmation about work already tracked,
-   use update_only (post an update, create nothing).
-3. Only use create_item when this is a genuinely new workstream with no
-   existing parent on the board.
+   post an update onto the existing item instead (create nothing new).
+3. Only create a new top-level item when this is a genuinely new workstream
+   with no existing parent on the board.
 Less is more -- one sequenced workflow is one item with steps in the update,
 not several items.
 
@@ -131,14 +115,14 @@ not several items.
    - **Done/success criterion**: what "finished" looks like for this item --
      the same "done = ___" test used to decide whether something is a real
      task at all.
-   If the source content is genuinely thin, that's a sign to ask Naz a
-   follow-up question (or use monday_lookup for more context) rather than
-   drafting a thin one-line update. This is now a HARD gate, not just this
-   instruction: resolve_item and the real send both run a code-level check
-   (at least 2 distinct lines with real detail, not just enough bullets to
-   game the count) and will reject a too-thin updateBody with an error
-   instead of saving/sending it -- if that happens, don't just resubmit the
-   same content, actually add the missing context/goal.
+   If the source content is genuinely thin, that's a sign to ask a follow-up
+   question (or look it up on Monday for more context) rather than drafting a
+   thin one-line update. This is a HARD gate, not just this instruction:
+   drafting and the real send both run a code-level check (at least 2
+   distinct lines with real detail, not just enough bullets to game the
+   count) and will reject a too-thin updateBody with an error instead of
+   saving/sending it -- if that happens, don't just resubmit the same
+   content, actually add the missing context/goal.
 3. Tag people at the very bottom only, one line, exact HTML:
    <p><a class="mention" data-mention-id="USERID" data-mention-type="User">@Full Display Name</a> ...</p>
 4. NEVER use em dashes (—) or en dashes (–). Avoid hyphens outside canonical terms.
@@ -146,27 +130,23 @@ not several items.
 6. Bold (<strong>) action verbs, deadlines, and constraints.
 7. HTML only, no markdown.
 
-## Assignment is automatic and server-enforced -- you never set columnValues yourself
-This applies identically whether you're drafting via resolve_item OR
-reassigning an already-drafted (even already-sent) card via edit_item. Status
-and people columns are always derived server-side from boardId + blocked +
-needsNaz, using fixed default assignees per board:
+## Assignment is automatic and server-enforced -- nobody sets columnValues by hand
+Status and people columns are always derived server-side from boardId +
+blocked + needsNaz, using fixed default assignees per board:
 - Ads board: Khurram Jamil + Ads Team
 - Web+SEO board: Muhammad Hashir Faiz + Zayan Faiz
 - CRM board: Ahmed Memon + Ali Shaheer
 You cannot hand-pick a single person off that pair, or tag anyone outside it --
-if Naz asks for someone not on the fixed list for that board, say so rather
-than inventing a workaround. Do NOT tag Naz or Sohib by default on ANY board.
-Only pass needsNaz: true as a deliberate judgment call when the task is
+if asked for someone not on the fixed list for that board, say so rather than
+inventing a workaround. Do NOT tag Naz or Sohib by default on ANY board. Only
+treat needsNaz as true as a deliberate judgment call when the task is
 genuinely complex or high-stakes enough to need Naz directly involved -- never
-as a default, and never just because Naz asked a question in chat. Status
-defaults to Start. Only pass blocked: true if this is genuinely blocked on a
-client or 3rd party (sets status to Stuck instead, on the Monday board status
-column -- not the dashboard status). create_subitem also requires boardId
-(not used in the mutation itself, but required so the right default
-assignees can be applied). To reassign an item to a different board's team
-(e.g. it was drafted for the wrong board), call edit_item with the new
-boardId.
+as a default, and never just because someone asked a question in chat. Status
+defaults to Start. Only treat blocked as true if this is genuinely blocked on
+a client or 3rd party (sets status to Stuck instead, on the Monday board
+status column -- not the dashboard status). Drafting a subitem also needs
+boardId (not used in the mutation itself, but required so the right default
+assignees can be applied).
 
 Mirror the SAME people in your updateBody's closing mention-chip line (§7),
 using their real Monday user IDs:
@@ -179,7 +159,29 @@ text name in the body. If a client needs to be chased, assign/tag Naz instead
 (and set needsNaz: true).
 
 ## Defaults when unstated
-Leave timeline blank unless a real deadline is named.
+Leave timeline blank unless a real deadline is named.`;
+
+const SYSTEM_RULES = `You are Ask Flow Ops, a general edit assistant for one card in Naz's Daily Flow
+Operations dashboard. The card may already be fully drafted, already sent to
+Monday, or sitting in the Handled section -- you are not limited to filling in
+missing facts. Based on whatever Naz types, you can:
+- just reply conversationally (no tool call needed for most turns -- answer
+  questions, explain the current state, or ask ONE clear follow-up)
+- draft or rewrite the real Monday payload (resolve_item)
+- edit the title, note, priority, or dashboard status directly, including
+  reopening a Handled item back to active, or marking something done/ignored
+  right from a chat instruction, without going through the drafting flow
+  (edit_item)
+- reassign people or change which board's team owns this (edit_item, still
+  bounded by the board-scoped rules below -- you don't get to hand-pick an
+  arbitrary person)
+- look things up on Monday first (monday_lookup) whenever you need context,
+  regardless of the card's current status
+
+Never guess: use monday_lookup or ask a specific follow-up question rather than
+resolving or editing on a guess.
+
+${DRAFTING_RULES}
 
 ## Your tools
 - monday_lookup(boardId, groupId, searchTerm): list or search items on a board.
@@ -266,47 +268,8 @@ const TOOLS = [
   },
 ];
 
-async function mondayLookup(input) {
-  const { boardId, groupId, searchTerm } = input;
-  if (!boardId) throw new Error("monday_lookup needs boardId");
-
-  let items;
-  if (groupId) {
-    // Verified working pattern: board + group scoped together, explicit limit.
-    // An unscoped board-wide query silently misses items past the default page
-    // size on boards with many clients -- that's what was reading as "empty."
-    const data = await mondayGraphQL(
-      `query($boardId: [ID!], $groupId: [String]) {
-         boards(ids: $boardId) {
-           groups(ids: $groupId) {
-             id
-             title
-             items_page(limit: 100) { items { id name column_values { id text } } }
-           }
-         }
-       }`,
-      { boardId: [boardId], groupId: [groupId] }
-    );
-    const board = data?.boards?.[0];
-    if (!board) throw new Error(`monday_lookup: no board found for boardId ${boardId} -- double check the id`);
-    const group = board.groups?.[0];
-    if (!group) throw new Error(`monday_lookup: no group found for groupId ${groupId} on board ${boardId} -- the id may be wrong or have changed`);
-    items = group.items_page?.items || [];
-  } else {
-    const data = await mondayGraphQL(
-      `query($boardId: [ID!]) { boards(ids: $boardId) { items_page(limit: 100) { items { id name column_values { id text } } } } }`,
-      { boardId: [boardId] }
-    );
-    const board = data?.boards?.[0];
-    if (!board) throw new Error(`monday_lookup: no board found for boardId ${boardId} -- double check the id`);
-    items = board.items_page?.items || [];
-  }
-
-  const term = (searchTerm || "").toLowerCase();
-  return term
-    ? items.filter((it) => it.name.toLowerCase().includes(term) || (it.column_values || []).some((cv) => (cv.text || "").toLowerCase().includes(term)))
-    : items;
-}
+// mondayLookup now lives in lib/monday.js (imported above) -- shared verbatim
+// with ops-chat.js's own monday_lookup tool, so both hit the exact same query.
 
 function validatePayload(mode, input) {
   if (mode === "create_item") {
@@ -635,3 +598,15 @@ ${item.clarification ? `Naz previously told you: "${item.clarification}"` : ""}`
     return json(500, { error: String((err && err.message) || err) });
   }
 };
+
+// Exported so ops-chat.js's draft_new_item tool reuses the exact same
+// drafting logic and rules (mandatory board audit prose, priority rubric,
+// §7 format, server-enforced buildColumnValues, the checkUpdateBodySubstance
+// gate) instead of a third copy of any of it. buildResolvedFields itself
+// only reads item.priority as a fallback, so it works unmodified against a
+// synthetic {} "item" when drafting a brand-new card from scratch.
+exports.DRAFTING_RULES = DRAFTING_RULES;
+exports.buildResolvedFields = buildResolvedFields;
+exports.validatePayload = validatePayload;
+exports.htmlToPlainText = htmlToPlainText;
+exports.clampPriority = clampPriority;

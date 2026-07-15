@@ -27,6 +27,76 @@ async function mondayGraphQL(query, variables) {
   return json.data;
 }
 
+// Shared read pattern for the mandatory board audit -- used by item-chat.js's
+// monday_lookup tool and ops-chat.js's monday_lookup tool alike, so both hit
+// the exact same query shape (never a second, slightly-different copy of it).
+// Always a live call, no caching layer anywhere in front of it.
+async function mondayLookup(input) {
+  const { boardId, groupId, searchTerm } = input;
+  if (!boardId) throw new Error("monday_lookup needs boardId");
+
+  let items;
+  if (groupId) {
+    // Verified working pattern: board + group scoped together, explicit limit.
+    // An unscoped board-wide query silently misses items past the default page
+    // size on boards with many clients -- that's what was reading as "empty."
+    const data = await mondayGraphQL(
+      `query($boardId: [ID!], $groupId: [String]) {
+         boards(ids: $boardId) {
+           groups(ids: $groupId) {
+             id
+             title
+             items_page(limit: 100) { items { id name column_values { id text } } }
+           }
+         }
+       }`,
+      { boardId: [boardId], groupId: [groupId] }
+    );
+    const board = data?.boards?.[0];
+    if (!board) throw new Error(`monday_lookup: no board found for boardId ${boardId} -- double check the id`);
+    const group = board.groups?.[0];
+    if (!group) throw new Error(`monday_lookup: no group found for groupId ${groupId} on board ${boardId} -- the id may be wrong or have changed`);
+    items = group.items_page?.items || [];
+  } else {
+    const data = await mondayGraphQL(
+      `query($boardId: [ID!]) { boards(ids: $boardId) { items_page(limit: 100) { items { id name column_values { id text } } } } }`,
+      { boardId: [boardId] }
+    );
+    const board = data?.boards?.[0];
+    if (!board) throw new Error(`monday_lookup: no board found for boardId ${boardId} -- double check the id`);
+    items = board.items_page?.items || [];
+  }
+
+  const term = (searchTerm || "").toLowerCase();
+  return term
+    ? items.filter((it) => it.name.toLowerCase().includes(term) || (it.column_values || []).some((cv) => (cv.text || "").toLowerCase().includes(term)))
+    : items;
+}
+
+// Drills into ONE item for full detail monday_lookup doesn't carry: its
+// subitems (id/name/column_values) and its posted updates (body/creator/
+// date). Used for the "check whether this workstream already has recent
+// activity" step of a board audit, and for answering "what's the latest on
+// X" questions -- always a live call, same as mondayLookup.
+async function mondayItemDetail(itemId) {
+  if (!itemId) throw new Error("monday_item_detail needs itemId");
+  const data = await mondayGraphQL(
+    `query($itemIds: [ID!]) {
+       items(ids: $itemIds) {
+         id
+         name
+         column_values { id text }
+         subitems { id name column_values { id text } }
+         updates(limit: 25) { id body creator { name } created_at }
+       }
+     }`,
+    { itemIds: [itemId] }
+  );
+  const item = data?.items?.[0];
+  if (!item) throw new Error(`monday_item_detail: no item found for id ${itemId} -- double check the id`);
+  return item;
+}
+
 const STATUS_COLUMN = "color_mkwb1trm";
 const PEOPLE_COLUMN = "multiple_person_mkwb5f2e";
 const NAZ_USER_ID = 70062990;
@@ -72,6 +142,13 @@ const BOARD_LABEL_IDS = {
   "Dev+SEO": "18099807701",
   CRM: "18418241405",
 };
+
+// Reverse of BOARD_LABEL_IDS -- Web+SEO and Dev+SEO share an id, and Web+SEO
+// is listed first, so that's the canonical label returned for it.
+function boardLabelForId(boardId) {
+  const entry = Object.entries(BOARD_LABEL_IDS).find(([, id]) => id === boardId);
+  return entry ? entry[0] : null;
+}
 
 function buildColumnValues(boardId, blocked, needsNaz) {
   const assignees = BOARD_ASSIGNEES[boardId];
@@ -290,6 +367,8 @@ async function updateMondayColumns(boardId, itemId, columnValues) {
 
 module.exports = {
   mondayGraphQL,
+  mondayLookup,
+  mondayItemDetail,
   sendQueueItemToMonday,
   updateMondayColumns,
   STATUS_COLUMN,
@@ -298,6 +377,7 @@ module.exports = {
   BOARD_ASSIGNEES,
   USER_NAMES,
   BOARD_LABEL_IDS,
+  boardLabelForId,
   buildColumnValues,
   assignedToLine,
   resolvePayloadFlags,
