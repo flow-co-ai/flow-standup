@@ -73,12 +73,23 @@ function foToggleHandled() {
   foLoadQueue();
 }
 
+const NULL_REASON_LABELS = {
+  "multi-item": "needs /monday-task (multi-item)",
+  "content-conflict": "needs your input before this can be drafted",
+};
+
+function foStripGroupPrefix(title, group) {
+  if (!group) return title;
+  const escaped = group.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return title.replace(new RegExp(`^\\[${escaped}\\]\\s*`, "i"), "");
+}
+
 function foQueueCard(item, handled) {
   const cls = { ready: "fo-b-ready", confirm: "fo-b-confirm", sent: "fo-b-sent", done: "fo-b-done", ignored: "fo-b-done" }[item.status] || "fo-b-confirm";
 
   const sendControl = item.payload
     ? `<button class="fo-primary" onclick="foSendToMonday('${item.id}')">send to monday</button>`
-    : `<span class="fo-muted-label">needs /monday-task (multi-item)</span>`;
+    : `<span class="fo-muted-label">${foEscape(NULL_REASON_LABELS[item.nullReason] || NULL_REASON_LABELS["multi-item"])}</span>`;
 
   const actions = handled
     ? `<div class="fo-actions">
@@ -90,11 +101,16 @@ function foQueueCard(item, handled) {
         <button onclick="foPatch('${item.id}', {status:'ignored'})">ignore</button>
       </div>`;
 
+  // Grouped (active) cards sit under a header already naming the client, so the
+  // redundant "[Client Name]" bracket in the title is stripped there; the flat
+  // Handled list has no such header, so its titles keep the full bracket.
+  const title = handled ? (item.title || item.id) : foStripGroupPrefix(item.title || item.id, item.group);
+
   return `
     <div class="fo-card">
       <div class="fo-row">
         <div>
-          <p class="fo-title">${foEscape(item.title || item.id)}</p>
+          <p class="fo-title">${foEscape(title)}</p>
           <p class="fo-sub">${foEscape(item.note || "")}</p>
           ${item.sourceLabel ? `<p class="fo-source">${foEscape(item.sourceLabel)}</p>` : ""}
         </div>
