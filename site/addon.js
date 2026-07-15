@@ -18,18 +18,34 @@ function foEscape(s) {
 }
 
 const ACTIVE_STATUSES = ["ready", "confirm"];
-const HANDLED_STATUSES = ["done", "ignored", "sent"];
-let foHandledExpanded = false;
+// "sent" gets its own section (Mondayed) -- it's a real, external side effect,
+// not just a local bookkeeping state like done/ignored, so it's worth keeping
+// visually distinct even though both sections are handled-and-collapsed.
+const HANDLED_STATUSES = ["done", "ignored"];
+const MONDAYED_STATUSES = ["sent"];
+const foSectionExpanded = { handled: false, mondayed: false };
+
+// Last-known full queue, kept client-side so button clicks can re-render
+// immediately from a local optimistic guess instead of waiting 5-10s on a
+// round trip (Monday API calls, GitHub commits) before anything visibly
+// changes. Every mutation below patches this in place, re-renders straight
+// away, then reconciles with whatever the server actually persisted.
+let foItems = [];
+
+function foRenderFromItems(items) {
+  const active = items.filter(it => ACTIVE_STATUSES.includes(it.status));
+  const handled = items.filter(it => HANDLED_STATUSES.includes(it.status));
+  const mondayed = items.filter(it => MONDAYED_STATUSES.includes(it.status));
+  document.getElementById("fo-queue-cards").innerHTML = foRenderQueue(active, handled, mondayed);
+}
 
 async function foLoadQueue() {
   try {
     const res = await fetch("/.netlify/functions/queue", { headers: foHeaders() });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
-    const items = data.items || [];
-    const active = items.filter(it => ACTIVE_STATUSES.includes(it.status));
-    const handled = items.filter(it => HANDLED_STATUSES.includes(it.status));
-    document.getElementById("fo-queue-cards").innerHTML = foRenderQueue(active, handled);
+    foItems = data.items || [];
+    foRenderFromItems(foItems);
   } catch (e) {
     document.getElementById("fo-queue-cards").innerHTML = `<div class="fo-empty">couldn't reach the draft queue${e && e.message ? ": " + foEscape(e.message) : ""}</div>`;
   }
@@ -62,7 +78,20 @@ function foGroupByClient(items) {
   });
 }
 
-function foRenderQueue(active, handled) {
+function foRenderCollapsibleSection(key, label, items, emptyText) {
+  const expanded = foSectionExpanded[key];
+  return `
+    <div class="fo-handled">
+      <button class="fo-handled-toggle" onclick="foToggleSection('${key}')">
+        ${expanded ? "▾" : "▸"} ${label} (${items.length})
+      </button>
+      <div class="fo-handled-list fo-card-grid" ${expanded ? "" : "hidden"}>
+        ${items.length ? items.map(item => foQueueCard(item, true)).join("") : `<div class="fo-empty">${emptyText}</div>`}
+      </div>
+    </div>`;
+}
+
+function foRenderQueue(active, handled, mondayed) {
   const activeHtml = active.length
     ? foGroupByClient(active).map(([client, items]) => `
       <div class="fo-group">
@@ -73,22 +102,17 @@ function foRenderQueue(active, handled) {
       </div>`).join("")
     : `<div class="fo-empty">queue is empty</div>`;
 
-  const handledHtml = `
-    <div class="fo-handled">
-      <button class="fo-handled-toggle" onclick="foToggleHandled()">
-        ${foHandledExpanded ? "▾" : "▸"} handled (${handled.length})
-      </button>
-      <div class="fo-handled-list fo-card-grid" ${foHandledExpanded ? "" : "hidden"}>
-        ${handled.length ? handled.map(item => foQueueCard(item, true)).join("") : `<div class="fo-empty">nothing handled yet</div>`}
-      </div>
-    </div>`;
+  const handledHtml = foRenderCollapsibleSection("handled", "handled", handled, "nothing handled yet");
+  const mondayedHtml = foRenderCollapsibleSection("mondayed", "mondayed", mondayed, "nothing sent to monday yet");
 
-  return activeHtml + handledHtml;
+  return activeHtml + handledHtml + mondayedHtml;
 }
 
-function foToggleHandled() {
-  foHandledExpanded = !foHandledExpanded;
-  foLoadQueue();
+function foToggleSection(key) {
+  // Purely local UI state -- no need to round-trip the network just to
+  // expand/collapse a section that's already fully loaded client-side.
+  foSectionExpanded[key] = !foSectionExpanded[key];
+  foRenderFromItems(foItems);
 }
 
 const NULL_REASON_LABELS = {
@@ -110,7 +134,12 @@ function foQueueCard(item, handled) {
   // even if its dashboard status got reverted back to active (e.g. via the
   // Handled section's "undo"), so this always wins over the payload check:
   // clicking send-to-monday again would create a genuine duplicate on the board.
-  const sendControl = item.mondayItemId
+  // _sending is a local-only optimistic flag (see foSendToMonday) -- the real
+  // Monday API round trip takes 5-10s, so this shows immediately rather than
+  // leaving the button looking clickable/frozen for that whole stretch.
+  const sendControl = item._sending
+    ? `<button class="fo-primary" disabled>sending to monday…</button>`
+    : item.mondayItemId
     ? `<span class="fo-muted-label">already sent to Monday (item ${foEscape(item.mondayItemId)})</span>`
     : item.payload
     ? `<button class="fo-primary" onclick="foSendToMonday('${item.id}')">send to monday</button>`
@@ -228,11 +257,20 @@ async function foSendItemChat(e, id) {
   foItemChat[id].push({ role: "assistant", content: data.reply || "(no reply)" });
   if (data.changed) {
     // Something on the card actually changed (payload/status/priority/
-    // reassignment/etc) -- reload so the queue re-sorts and re-groups live,
-    // without waiting for the next fireflies-monday-watch run. The thread
-    // itself is left in foItemChat, so it survives the re-render and Naz can
-    // keep editing the same card in the same conversation.
-    foLoadQueue();
+    // reassignment/etc). item-chat.js already echoes back the fresh item, so
+    // patch it into the local cache and re-render straight away instead of
+    // paying for a second round trip (foLoadQueue) just to re-fetch what we
+    // were already handed. The thread itself is left in foItemChat, so it
+    // survives the re-render and Naz can keep editing the same card in the
+    // same conversation.
+    if (data.item) {
+      const idx = foItems.findIndex(it => it.id === id);
+      if (idx !== -1) foItems[idx] = data.item;
+      else foItems.push(data.item);
+      foRenderFromItems(foItems);
+    } else {
+      foLoadQueue();
+    }
   } else {
     foRenderChatLog(id);
     input.disabled = false;
@@ -242,20 +280,61 @@ async function foSendItemChat(e, id) {
 }
 
 async function foPatch(id, patch) {
-  const res = await fetch("/.netlify/functions/queue", { method: "POST", headers: foHeaders(), body: JSON.stringify({ id, patch }) });
-  if (!res.ok) {
-    const data = await res.json().catch(() => ({}));
-    alert("Couldn't update it: " + (data.error || `HTTP ${res.status}`));
+  const idx = foItems.findIndex(it => it.id === id);
+  const previous = idx !== -1 ? foItems[idx] : null;
+  if (idx !== -1) {
+    // Show the result of the click immediately -- the card moves to whatever
+    // section the new status belongs in right away, rather than sitting still
+    // for the few seconds the GitHub commit round trip actually takes.
+    foItems[idx] = { ...previous, ...patch };
+    foRenderFromItems(foItems);
   }
-  foLoadQueue();
+
+  const res = await fetch("/.netlify/functions/queue", { method: "POST", headers: foHeaders(), body: JSON.stringify({ id, patch }) });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    if (idx !== -1) {
+      foItems[idx] = previous; // the guess was wrong -- put it back
+      foRenderFromItems(foItems);
+    }
+    alert("Couldn't update it: " + (data.error || `HTTP ${res.status}`));
+    return;
+  }
+  // Reconcile with whatever the server actually persisted (updatedAt, any
+  // server-side fields the optimistic patch didn't know about).
+  foItems = data.items || foItems;
+  foRenderFromItems(foItems);
 }
 
 async function foSendToMonday(id) {
   if (!confirm("This creates a real item on Monday. Go ahead?")) return;
+
+  const idx = foItems.findIndex(it => it.id === id);
+  const previous = idx !== -1 ? foItems[idx] : null;
+  if (idx !== -1) {
+    // Can't know the real mondayItemId yet, but showing "sending..." beats
+    // leaving the button looking clickable/frozen for the 5-10s the actual
+    // Monday API calls take. The card stays put (not moved to Mondayed) until
+    // the send is actually confirmed -- it's a real external side effect, not
+    // something to guess the outcome of.
+    foItems[idx] = { ...previous, _sending: true };
+    foRenderFromItems(foItems);
+  }
+
   const res = await fetch("/.netlify/functions/send-to-monday", { method: "POST", headers: foHeaders(), body: JSON.stringify({ id }) });
-  const data = await res.json();
-  if (data.error) alert("Couldn't send it: " + data.error);
-  foLoadQueue();
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || data.error) {
+    if (idx !== -1) {
+      foItems[idx] = previous;
+      foRenderFromItems(foItems);
+    }
+    alert("Couldn't send it: " + (data.error || `HTTP ${res.status}`));
+    return;
+  }
+  if (idx !== -1) {
+    foItems[idx] = { ...previous, status: "sent", mondayItemId: data.mondayItemId };
+  }
+  foRenderFromItems(foItems);
 }
 
 foLoadQueue();

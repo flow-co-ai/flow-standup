@@ -23,6 +23,7 @@ const {
   buildColumnValues,
   assignedToLine,
   resolvePayloadFlags,
+  checkUpdateBodySubstance,
 } = require("./lib/monday");
 
 const ANTHROPIC_MODEL = "claude-sonnet-4-5"; // check docs.claude.com/en/docs/about-claude/models if this starts erroring
@@ -131,7 +132,12 @@ not several items.
      task at all.
    If the source content is genuinely thin, that's a sign to ask Naz a
    follow-up question (or use monday_lookup for more context) rather than
-   drafting a thin one-line update.
+   drafting a thin one-line update. This is now a HARD gate, not just this
+   instruction: resolve_item and the real send both run a code-level check
+   (at least 2 distinct lines with real detail, not just enough bullets to
+   game the count) and will reject a too-thin updateBody with an error
+   instead of saving/sending it -- if that happens, don't just resubmit the
+   same content, actually add the missing context/goal.
 3. Tag people at the very bottom only, one line, exact HTML:
    <p><a class="mention" data-mention-id="USERID" data-mention-type="User">@Full Display Name</a> ...</p>
 4. NEVER use em dashes (—) or en dashes (–). Avoid hyphens outside canonical terms.
@@ -358,6 +364,13 @@ function htmlToPlainText(html) {
 function buildResolvedFields(item, input) {
   const validationError = validatePayload(input.mode, input);
   if (validationError) return { error: validationError };
+
+  // Same hard gate sendQueueItemToMonday enforces right before it actually
+  // fires anything -- checked here too so a thin draft gets rejected back
+  // into the chat immediately (with a concrete reason) instead of only
+  // failing much later when Naz clicks Send.
+  const substanceError = checkUpdateBodySubstance(input.updateBody);
+  if (substanceError) return { error: substanceError };
 
   const priority = input.priority !== undefined
     ? clampPriority(input.priority)

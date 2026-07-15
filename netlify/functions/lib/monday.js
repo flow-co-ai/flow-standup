@@ -103,6 +103,55 @@ function resolvePayloadFlags(payload) {
   return { blocked, needsNaz };
 }
 
+// A single-generic-sentence updateBody has reached the Ads Team twice now --
+// this makes it structurally impossible to send one, rather than relying on
+// whichever model drafted it to remember to do better. Splits updateBody into
+// its block-level lines (same boundaries as item-chat.js's note preview),
+// drops the mandatory "Salam," opener and the trailing mention-chip line
+// (neither is real content), and requires at least MIN_CONTENT_LINES distinct
+// lines with real detail in them -- roughly a problem/context line and a
+// goal/done line, however they're phrased -- not just enough bullets to game
+// the count with filler.
+const MIN_CONTENT_LINES = 2;
+const MIN_LINE_WORDS = 5;
+const MIN_TOTAL_WORDS = 20;
+
+function updateBodyContentLines(html) {
+  if (!html) return [];
+  const text = html
+    .replace(/<li[^>]*>/gi, "")
+    .replace(/<\/li>/gi, "\n")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/p>/gi, "\n")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'");
+  return text
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean)
+    .filter((l) => !/^salam,?$/i.test(l)) // the mandatory §7 opener, not content
+    .filter((l) => !/^@/.test(l)); // a mention-chip-only line, not content
+}
+
+// Returns an error string if updateBody is too thin to actually send, or null
+// if it clears the bar. This is the real gate -- it runs in code, at the last
+// moment before anything fires to Monday, regardless of what the model
+// intended or how thorough its system prompt says to be.
+function checkUpdateBodySubstance(updateBody) {
+  const lines = updateBodyContentLines(updateBody);
+  const substantive = lines.filter((l) => l.split(/\s+/).filter(Boolean).length >= MIN_LINE_WORDS);
+  const totalWords = substantive.reduce((n, l) => n + l.split(/\s+/).filter(Boolean).length, 0);
+  if (substantive.length < MIN_CONTENT_LINES || totalWords < MIN_TOTAL_WORDS) {
+    return `updateBody is too thin to send (${substantive.length} substantive line(s), ${totalWords} words) -- needs at least ${MIN_CONTENT_LINES} real points with actual detail (e.g. a problem/context line and a goal/done line), not a single generic sentence.`;
+  }
+  return null;
+}
+
 // Shared by send-to-monday.js (button click) and chat.js (the send_to_monday tool).
 async function sendQueueItemToMonday(id) {
   const { data } = await getJSON(QUEUE_PATH, { updatedAt: null, items: [] });
@@ -121,6 +170,12 @@ async function sendQueueItemToMonday(id) {
   if (item.mondayItemId) {
     return { error: `already sent to Monday as item ${item.mondayItemId} -- sending again would create a duplicate. Edit the real Monday item directly instead.` };
   }
+  // The hard content gate: nothing fires to Monday -- no item, no update --
+  // until updateBody clears the substance bar. Runs here unconditionally, on
+  // every mode, regardless of whether the payload came from item-chat.js's
+  // own (already-checked) resolve_item or from anywhere else.
+  const substanceError = checkUpdateBodySubstance(payload.updateBody);
+  if (substanceError) return { error: substanceError };
 
   const mode = payload.mode || "create_item"; // default for any older payloads without a mode field
   let resultItemId;
@@ -233,4 +288,5 @@ module.exports = {
   buildColumnValues,
   assignedToLine,
   resolvePayloadFlags,
+  checkUpdateBodySubstance,
 };
