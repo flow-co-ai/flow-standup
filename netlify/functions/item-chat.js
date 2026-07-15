@@ -71,19 +71,32 @@ not several items.
 6. Bold (<strong>) action verbs, deadlines, and constraints.
 7. HTML only, no markdown.
 
-## Role -> Monday user ID mapping (only tag people relevant to the item's board)
-- Ads Team: 102221061 (Ads board only, tag as "@Ads Team")
-- Muhammad Hashir Faiz: 69741994, Zayan Faiz: 101662542 (Web+SEO board -- always both, "@DevTeam")
-- Ahmed Memon: 108080159, Ali Shaheer: 108080161 (CRM board -- always both, "@CRMTeam")
-- Sohib Boundaoui: 69662034
-- Nacer Amrouch (Naz): 70062990
+## Assignment is automatic -- you do not set columnValues yourself
+Every create_item/create_subitem you resolve gets its status and people
+columns set automatically based on the board, using fixed default assignees:
+- Ads board: Khurram Jamil + Ads Team
+- Web+SEO board: Muhammad Hashir Faiz + Zayan Faiz
+- CRM board: Ahmed Memon + Ali Shaheer
+Do NOT tag Naz or Sohib by default on ANY board. Only pass needsNaz: true to
+resolve_item as a deliberate judgment call when the task is genuinely complex
+or high-stakes enough to need Naz directly involved -- never as a default.
+Status defaults to Start. Only pass blocked: true if this is genuinely
+blocked on a client or 3rd party (sets status to Stuck instead).
+create_subitem now also requires boardId (not used in the mutation itself,
+but required so the right default assignees can be applied).
+
+Mirror the SAME people in your updateBody's closing mention-chip line (§7),
+using their real Monday user IDs:
+- Ads Team: 102221061 (tag as "@Ads Team"), Khurram Jamil: 102221064
+- Muhammad Hashir Faiz: 69741994, Zayan Faiz: 101662542
+- Ahmed Memon: 108080159, Ali Shaheer: 108080161
+- Sohib Boundaoui: 69662034, Nacer Amrouch (Naz): 70062990 (only if needsNaz)
 Clients are NEVER Monday users and never get @-tagged -- mention them by plain
-text name in the body. If a client needs to be chased, assign/tag Naz instead.
+text name in the body. If a client needs to be chased, assign/tag Naz instead
+(and set needsNaz: true).
 
 ## Defaults when unstated
-New items land as status Start by default -- don't set a status column unless
-asked to use something else (e.g. Stuck if explicitly blocked on a client/3rd
-party). Leave timeline blank unless a real deadline is named.
+Leave timeline blank unless a real deadline is named.
 
 ## Your tools
 - monday_lookup(boardId, groupId, searchTerm): list or search items on a board.
@@ -97,8 +110,8 @@ party). Leave timeline blank unless a real deadline is named.
   - action: "ignore" -- no Monday action needed (duplicate, informational only,
     already handled elsewhere). No other fields required.
   - action: "draft" -- provide mode (create_item | create_subitem | update_only),
-    the fields that mode needs, and updateBody in the §7 format above (almost
-    always include one -- every drafted item should get a real update posted).
+    the fields that mode needs, updateBody in the §7 format above (almost
+    always include one), and blocked/needsNaz if either genuinely applies.
 
 If you don't have enough yet (ambiguous target, missing confirmation, unclear
 scope), do NOT call resolve_item. Just ask one specific question in your reply.`;
@@ -121,19 +134,20 @@ const TOOLS = [
   {
     name: "resolve_item",
     description:
-      "Finalize this draft. Call this only once, when you have enough to either draft the real Monday payload or determine no action is needed.",
+      "Finalize this draft. Call this only once, when you have enough to either draft the real Monday payload or determine no action is needed. Status and people columns are set automatically from boardId -- you don't provide columnValues yourself, just blocked/needsNaz if either genuinely applies.",
     input_schema: {
       type: "object",
       properties: {
         action: { type: "string", enum: ["draft", "ignore"] },
         mode: { type: "string", enum: ["create_item", "create_subitem", "update_only"] },
-        boardId: { type: "string" },
+        boardId: { type: "string", description: "Required for create_item and create_subitem -- determines the default status/assignee columns." },
         groupId: { type: "string" },
         itemName: { type: "string" },
-        columnValues: { type: "object" },
         parentItemId: { type: "string" },
         existingItemId: { type: "string" },
         updateBody: { type: "string" },
+        blocked: { type: "boolean", description: "True only if genuinely blocked on a client/3rd party -- sets status Stuck instead of the Start default." },
+        needsNaz: { type: "boolean", description: "True only if this is complex/high-stakes enough that Naz should be tagged directly -- a deliberate judgment call, never a default." },
       },
       required: ["action"],
     },
@@ -186,13 +200,123 @@ function validatePayload(mode, input) {
   if (mode === "create_item") {
     if (!input.boardId || !input.groupId || !input.itemName) return "create_item needs boardId, groupId, and itemName";
   } else if (mode === "create_subitem") {
-    if (!input.parentItemId || !input.itemName) return "create_subitem needs parentItemId and itemName";
+    if (!input.boardId || !input.parentItemId || !input.itemName) return "create_subitem needs boardId (for default status/assignees), parentItemId, and itemName";
   } else if (mode === "update_only") {
     if (!input.existingItemId) return "update_only needs existingItemId";
   } else {
     return `unknown mode: ${mode}`;
   }
   return null;
+}
+
+const STATUS_COLUMN = "color_mkwb1trm";
+const PEOPLE_COLUMN = "multiple_person_mkwb5f2e";
+const NAZ_USER_ID = 70062990;
+
+// Board-scoped default assignees (Naz, 2026-07-15): never tag Naz/Sohib by
+// default on any board -- only added via the model's needsNaz flag, a
+// deliberate judgment call, not a default. Enforced here in code rather than
+// just requested in the system prompt, so it can't be silently skipped.
+const BOARD_ASSIGNEES = {
+  "18405754310": [ // Ads: Khurram Jamil + Ads Team
+    { id: 102221064, kind: "person" },
+    { id: 102221061, kind: "person" },
+  ],
+  "18099807701": [ // Web + SEO: Muhammad Hashir Faiz + Zayan Faiz
+    { id: 69741994, kind: "person" },
+    { id: 101662542, kind: "person" },
+  ],
+  "18418241405": [ // CRM: Ahmed Memon + Ali Shaheer
+    { id: 108080159, kind: "person" },
+    { id: 108080161, kind: "person" },
+  ],
+};
+
+const USER_NAMES = {
+  102221064: "Khurram Jamil",
+  102221061: "Ads Team",
+  69741994: "Muhammad Hashir Faiz",
+  101662542: "Zayan Faiz",
+  108080159: "Ahmed Memon",
+  108080161: "Ali Shaheer",
+  69662034: "Sohib Boundaoui",
+  70062990: "Nacer Amrouch",
+};
+
+function buildColumnValues(boardId, blocked, needsNaz) {
+  const assignees = BOARD_ASSIGNEES[boardId];
+  if (!assignees) throw new Error(`no default assignees configured for board ${boardId}`);
+  const personsAndTeams = needsNaz ? [...assignees, { id: NAZ_USER_ID, kind: "person" }] : assignees;
+  return {
+    [STATUS_COLUMN]: { label: blocked ? "Stuck" : "Start" },
+    [PEOPLE_COLUMN]: { personsAndTeams },
+  };
+}
+
+function assignedToLine(personsAndTeams) {
+  return `Assigned to: ${personsAndTeams.map((p) => USER_NAMES[p.id] || `user ${p.id}`).join(", ")}`;
+}
+
+// Turns a §7-format HTML update body into a flat plain-text preview for the
+// card's note field: block boundaries (</li>, <br>, </p>) become " / ",
+// everything else is stripped tags + decoded entities.
+function htmlToPlainText(html) {
+  if (!html) return "";
+  return html
+    .replace(/<li[^>]*>/gi, "")
+    .replace(/<\/li>/gi, " / ")
+    .replace(/<br\s*\/?>/gi, " / ")
+    .replace(/<\/p>/gi, " / ")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/\s*\/\s*/g, " / ")
+    .replace(/\s+/g, " ")
+    .replace(/^\s*\/\s*/, "")
+    .replace(/\s*\/\s*$/, "")
+    .trim();
+}
+
+// Builds the resolved payload + the item.title/item.note rewrite for a
+// "draft" resolution. Returns { error } on validation/lookup failure, or
+// { payload, titleUpdate } on success -- status/people are always computed
+// here, never trusted from the model's tool call.
+function buildResolvedFields(input) {
+  const validationError = validatePayload(input.mode, input);
+  if (validationError) return { error: validationError };
+
+  if (input.mode === "update_only") {
+    return {
+      payload: { mode: "update_only", existingItemId: input.existingItemId, updateBody: input.updateBody },
+      titleUpdate: { note: htmlToPlainText(input.updateBody) },
+    };
+  }
+
+  let columnValues;
+  try {
+    columnValues = buildColumnValues(input.boardId, !!input.blocked, !!input.needsNaz);
+  } catch (err) {
+    return { error: String(err) };
+  }
+
+  const payload = { mode: input.mode, itemName: input.itemName, columnValues, updateBody: input.updateBody };
+  if (input.mode === "create_item") {
+    payload.boardId = input.boardId;
+    payload.groupId = input.groupId;
+  } else {
+    payload.parentItemId = input.parentItemId;
+  }
+
+  const plain = htmlToPlainText(input.updateBody);
+  const assigned = assignedToLine(columnValues[PEOPLE_COLUMN].personsAndTeams);
+  return {
+    payload,
+    titleUpdate: { title: input.itemName, note: [plain, assigned].filter(Boolean).join(" / ") },
+  };
 }
 
 exports.handler = async (event) => {
@@ -268,24 +392,17 @@ ${item.clarification ? `Naz previously told you: "${item.clarification}"` : ""}`
               resolvedItem = fresh.data.items[freshIdx];
               result = { ok: true };
             } else {
-              const validationError = validatePayload(tu.input.mode, tu.input);
-              if (validationError) {
-                result = { error: validationError };
+              const built = buildResolvedFields(tu.input);
+              if (built.error) {
+                result = { error: built.error };
               } else {
-                const payload = { mode: tu.input.mode, updateBody: tu.input.updateBody };
-                if (tu.input.mode === "create_item") {
-                  payload.boardId = tu.input.boardId;
-                  payload.groupId = tu.input.groupId;
-                  payload.itemName = tu.input.itemName;
-                  payload.columnValues = tu.input.columnValues || {};
-                } else if (tu.input.mode === "create_subitem") {
-                  payload.parentItemId = tu.input.parentItemId;
-                  payload.itemName = tu.input.itemName;
-                  payload.columnValues = tu.input.columnValues || {};
-                } else if (tu.input.mode === "update_only") {
-                  payload.existingItemId = tu.input.existingItemId;
-                }
-                fresh.data.items[freshIdx] = { ...fresh.data.items[freshIdx], status: "ready", payload, updatedAt: new Date().toISOString() };
+                fresh.data.items[freshIdx] = {
+                  ...fresh.data.items[freshIdx],
+                  ...built.titleUpdate,
+                  status: "ready",
+                  payload: built.payload,
+                  updatedAt: new Date().toISOString(),
+                };
                 fresh.data.updatedAt = new Date().toISOString();
                 await putJSON(QUEUE_PATH, fresh.data, `item-chat: ${id} resolved (${tu.input.mode})`, fresh.sha);
                 resolved = true;
