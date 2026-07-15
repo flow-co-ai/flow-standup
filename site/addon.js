@@ -106,13 +106,17 @@ function foQueueCard(item, handled) {
   // Handled list has no such header, so its titles keep the full bracket.
   const title = handled ? (item.title || item.id) : foStripGroupPrefix(item.title || item.id, item.group);
 
-  // status "confirm" == content-conflict/no-payload-yet: let Naz answer inline
-  // instead of routing him through /monday-task for a single-line decision.
-  const clarifyBox = !handled && item.status === "confirm"
-    ? `<form class="fo-clarify" onsubmit="return foSubmitClarify(event, '${item.id}')">
-        <input type="text" placeholder="Answer here to unblock this draft" />
-        <button type="submit">Send</button>
-      </form>`
+  // status "confirm" == content-conflict/no-payload-yet: a real back-and-forth
+  // with item-chat.js, which can query Monday itself and resolve the draft
+  // directly, instead of routing Naz through /monday-task.
+  const itemChatBox = !handled && item.status === "confirm"
+    ? `<div class="fo-itemchat">
+        <div class="fo-itemchat-log" id="fo-chat-log-${item.id}">${foRenderChatMessages(item.id)}</div>
+        <form class="fo-itemchat-form" onsubmit="return foSendItemChat(event, '${item.id}')">
+          <input type="text" placeholder="Answer or ask a follow-up..." />
+          <button type="submit">Send</button>
+        </form>
+      </div>`
     : "";
 
   return `
@@ -126,24 +130,75 @@ function foQueueCard(item, handled) {
         <span class="fo-badge ${cls}">${foEscape(item.status || "confirm")}</span>
       </div>
       ${actions}
-      ${clarifyBox}
+      ${itemChatBox}
     </div>`;
 }
 
-async function foSubmitClarify(e, id) {
+// Conversation history per item, kept client-side so a full foLoadQueue()
+// re-render (triggered whenever any card resolves) doesn't lose in-progress
+// threads on other cards -- each card's log is redrawn from this store.
+const foItemChat = {};
+
+function foRenderChatMessages(id, thinking) {
+  const msgs = (foItemChat[id] || []).map(m => `<div class="fo-itemchat-msg ${m.role}">${foEscape(m.content)}</div>`).join("");
+  return msgs + (thinking ? `<div class="fo-itemchat-msg assistant fo-thinking">thinking…</div>` : "");
+}
+
+function foRenderChatLog(id, thinking) {
+  const log = document.getElementById(`fo-chat-log-${id}`);
+  if (!log) return;
+  log.innerHTML = foRenderChatMessages(id, thinking);
+  log.scrollTop = log.scrollHeight;
+}
+
+async function foSendItemChat(e, id) {
   e.preventDefault();
   const form = e.target;
   const input = form.querySelector("input");
+  const button = form.querySelector("button");
   const message = input.value.trim();
   if (!message) return false;
 
-  const res = await fetch("/api/clarify", { method: "POST", headers: foHeaders(), body: JSON.stringify({ id, message }) });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok || data.error) {
-    alert("Couldn't submit that: " + (data.error || `HTTP ${res.status}`));
+  input.value = "";
+  input.disabled = true;
+  button.disabled = true;
+
+  const history = foItemChat[id] || [];
+  foItemChat[id] = [...history, { role: "user", content: message }];
+  foRenderChatLog(id, true);
+
+  let res;
+  try {
+    res = await fetch("/.netlify/functions/item-chat", { method: "POST", headers: foHeaders(), body: JSON.stringify({ id, message, history }) });
+  } catch (err) {
+    foItemChat[id].push({ role: "assistant", content: "error: " + err.message });
+    foRenderChatLog(id);
+    input.disabled = false;
+    button.disabled = false;
     return false;
   }
-  form.outerHTML = `<p class="fo-clarify-done">got it — will finalize on next check.</p>`;
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || data.error) {
+    foItemChat[id].push({ role: "assistant", content: "error: " + (data.error || `HTTP ${res.status}`) });
+    foRenderChatLog(id);
+    input.disabled = false;
+    button.disabled = false;
+    return false;
+  }
+
+  foItemChat[id].push({ role: "assistant", content: data.reply || "(no reply)" });
+  if (data.resolved) {
+    // Resolved: drop the thread and reload -- the card now shows the real
+    // send-to-monday button (status: ready) or moves to Handled (ignored),
+    // live, without waiting for the next fireflies-monday-watch run.
+    delete foItemChat[id];
+    foLoadQueue();
+  } else {
+    foRenderChatLog(id);
+    input.disabled = false;
+    button.disabled = false;
+  }
   return false;
 }
 
