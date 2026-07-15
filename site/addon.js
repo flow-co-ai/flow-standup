@@ -119,12 +119,18 @@ function foQueueCard(item, handled) {
       </div>`
     : "";
 
+  // Once a chat thread has started, the bot is the one doing the audit the
+  // static note used to instruct Naz to do by hand -- that text is now stale,
+  // so hide it (foSendItemChat also hides it live, without waiting on a reload).
+  const chatStarted = !handled && item.status === "confirm" && (foItemChat[item.id] || []).length > 0;
+  const noteHtml = `<p class="fo-sub" id="fo-note-${item.id}" ${chatStarted ? "hidden" : ""}>${foEscape(item.note || "")}</p>`;
+
   return `
     <div class="fo-card">
       <div class="fo-row">
         <div>
           <p class="fo-title">${foEscape(title)}</p>
-          <p class="fo-sub">${foEscape(item.note || "")}</p>
+          ${noteHtml}
           ${item.sourceLabel ? `<p class="fo-source">${foEscape(item.sourceLabel)}</p>` : ""}
         </div>
         <span class="fo-badge ${cls}">${foEscape(item.status || "confirm")}</span>
@@ -164,6 +170,10 @@ async function foSendItemChat(e, id) {
   button.disabled = true;
 
   const history = foItemChat[id] || [];
+  if (history.length === 0) {
+    const noteEl = document.getElementById(`fo-note-${id}`);
+    if (noteEl) noteEl.hidden = true;
+  }
   foItemChat[id] = [...history, { role: "user", content: message }];
   foRenderChatLog(id, true);
 

@@ -86,9 +86,13 @@ asked to use something else (e.g. Stuck if explicitly blocked on a client/3rd
 party). Leave timeline blank unless a real deadline is named.
 
 ## Your tools
-- monday_lookup(boardId, searchTerm): search a board for items/subitems matching
-  a keyword. Use this for the mandatory audit above and to find the real
-  existingItemId/parentItemId.
+- monday_lookup(boardId, groupId, searchTerm): list or search items on a board.
+  ALWAYS pass groupId when you know it (from the Client group IDs table) --
+  it scopes the query to just that client's items. An unscoped board-wide
+  query is unreliable and can miss items on boards with many clients. Omit
+  searchTerm to list everything in scope (the mandatory audit), or pass it to
+  filter by keyword. If this errors (bad board/group id), it tells you so --
+  don't treat an error as "the board is empty," fix the id or ask Naz.
 - resolve_item(...): call this ONCE, when you have enough to finalize. Two shapes:
   - action: "ignore" -- no Monday action needed (duplicate, informational only,
     already handled elsewhere). No other fields required.
@@ -103,14 +107,15 @@ const TOOLS = [
   {
     name: "monday_lookup",
     description:
-      "Search a Monday.com board for items matching a keyword. Returns id, name, and column values for matches. Use this to audit for duplicates or find a parent/existing item -- never guess an id.",
+      "List or search items on a Monday board. ALWAYS pass groupId when you know it (from the Client group IDs table) -- this scopes the query to just that client's items instead of an unscoped board-wide query, which is unreliable on boards with many items. Omit searchTerm to list everything in scope (useful for the mandatory board audit); pass it to filter by keyword. Returns id, name, and column values -- never guess an id, look it up here.",
     input_schema: {
       type: "object",
       properties: {
         boardId: { type: "string", description: "18405754310 (Ads), 18099807701 (Web+SEO), 18418241405 (CRM)" },
-        searchTerm: { type: "string" },
+        groupId: { type: "string", description: "Client's group id on this board, from the Client group IDs table. Strongly recommended." },
+        searchTerm: { type: "string", description: "Optional keyword filter. Omit to list all items in the given board/group." },
       },
-      required: ["boardId", "searchTerm"],
+      required: ["boardId"],
     },
   },
   {
@@ -136,15 +141,45 @@ const TOOLS = [
 ];
 
 async function mondayLookup(input) {
-  const data = await mondayGraphQL(
-    `query($boardId: [ID!]) { boards(ids: $boardId) { items_page(query_params: {}) { items { id name column_values { id text } } } } }`,
-    { boardId: [input.boardId] }
-  );
-  const items = data.boards?.[0]?.items_page?.items || [];
-  const term = (input.searchTerm || "").toLowerCase();
-  return items
-    .filter((it) => it.name.toLowerCase().includes(term) || it.column_values.some((cv) => (cv.text || "").toLowerCase().includes(term)))
-    .slice(0, 10);
+  const { boardId, groupId, searchTerm } = input;
+  if (!boardId) throw new Error("monday_lookup needs boardId");
+
+  let items;
+  if (groupId) {
+    // Verified working pattern: board + group scoped together, explicit limit.
+    // An unscoped board-wide query silently misses items past the default page
+    // size on boards with many clients -- that's what was reading as "empty."
+    const data = await mondayGraphQL(
+      `query($boardId: [ID!], $groupId: [String]) {
+         boards(ids: $boardId) {
+           groups(ids: $groupId) {
+             id
+             title
+             items_page(limit: 100) { items { id name column_values { id text } } }
+           }
+         }
+       }`,
+      { boardId: [boardId], groupId: [groupId] }
+    );
+    const board = data?.boards?.[0];
+    if (!board) throw new Error(`monday_lookup: no board found for boardId ${boardId} -- double check the id`);
+    const group = board.groups?.[0];
+    if (!group) throw new Error(`monday_lookup: no group found for groupId ${groupId} on board ${boardId} -- the id may be wrong or have changed`);
+    items = group.items_page?.items || [];
+  } else {
+    const data = await mondayGraphQL(
+      `query($boardId: [ID!]) { boards(ids: $boardId) { items_page(limit: 100) { items { id name column_values { id text } } } } }`,
+      { boardId: [boardId] }
+    );
+    const board = data?.boards?.[0];
+    if (!board) throw new Error(`monday_lookup: no board found for boardId ${boardId} -- double check the id`);
+    items = board.items_page?.items || [];
+  }
+
+  const term = (searchTerm || "").toLowerCase();
+  return term
+    ? items.filter((it) => it.name.toLowerCase().includes(term) || (it.column_values || []).some((cv) => (cv.text || "").toLowerCase().includes(term)))
+    : items;
 }
 
 function validatePayload(mode, input) {
