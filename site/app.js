@@ -791,10 +791,15 @@ async function init() {
   // below fails, since that's exactly when a manual refresh is most useful.
   initRefreshStandupButton();
 
-  // 1. Fetch standup JSON
+  // 1. Fetch standup JSON. Cache-busted the same way loadRemoteChecks()
+  // already busts its own fetch (?t=Date.now()) -- this one never had that,
+  // so a refresh could keep serving a stale cached copy from the browser or
+  // an intermediate CDN edge after a new standup.yml run actually committed
+  // fresh data. cache: 'no-store' additionally tells the browser's own HTTP
+  // cache to skip itself entirely, regardless of any cache-control header.
   standup = await (async () => {
     try {
-      const res = await fetch('latest.json');
+      const res = await fetch(`latest.json?t=${Date.now()}`, { cache: 'no-store' });
       if (!res.ok) return null;
       return await res.json();
     } catch { return null; }

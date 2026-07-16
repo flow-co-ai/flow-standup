@@ -15,6 +15,7 @@ import json
 import os
 import shutil
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -1194,9 +1195,11 @@ def main():
     print(f"  Wrote {ALERTS_PATH} ({len(alerts)} total pending alert(s))")
 
     print(f"\nGenerating per-client reviews ({len(active)} clients, model {MODEL})...")
-    client_entries: list[dict] = []
 
-    for c in active:
+    def _generate_client_entry(c: str) -> dict:
+        """One client's review -- independent of every other client's, so
+        these run concurrently below. Same success/fallback shape as before,
+        just factored out of the loop body."""
         prompt = pulse_story.build_story_prompt(
             client=c,
             departments=grouped.get(c, {}),
@@ -1209,13 +1212,9 @@ def main():
         try:
             result = _call_tool(ai, prompt, EMIT_CLIENT_TOOL, label=c)
             entry = assemble_client_entry(c, result, url_lookup)
-            entry["stats"] = compute_client_stats(
-                grouped.get(c, {}), meetings_by_client.get(c, []), chats_by_client.get(c, [])
-            )
-            client_entries.append(entry)
         except Exception as exc:
             print(f"  ✗ {c}: {exc}")
-            fallback = {
+            entry = {
                 "client": c,
                 "headline": "Generation failed for this client — see workflow log.",
                 "health": "needs_attention",
@@ -1223,10 +1222,29 @@ def main():
                 "status_change_suggestions": [],
                 "risks": [],
             }
-            fallback["stats"] = compute_client_stats(
-                grouped.get(c, {}), meetings_by_client.get(c, []), chats_by_client.get(c, [])
-            )
-            client_entries.append(fallback)
+        entry["stats"] = compute_client_stats(
+            grouped.get(c, {}), meetings_by_client.get(c, []), chats_by_client.get(c, [])
+        )
+        return entry
+
+    # Each client's review is an independent Claude call -- running them
+    # sequentially was most of this pipeline's wall-clock time. A thread pool
+    # is enough here (the wait is on network I/O, which releases the GIL) --
+    # no need for a full async rewrite. Bounded to 8 concurrent calls so this
+    # doesn't hammer Anthropic's rate limits with a large client list.
+    # as_completed() finishes in whatever order calls actually return, so
+    # results are collected by client name and then reassembled in the
+    # original `active` order (config order, Unmapped last) -- unrelated code
+    # downstream (the wrap-up prompt, the site) shouldn't see client order
+    # change run to run.
+    results_by_client: dict[str, dict] = {}
+    with ThreadPoolExecutor(max_workers=min(8, len(active)) or 1) as pool:
+        futures = {pool.submit(_generate_client_entry, c): c for c in active}
+        for future in as_completed(futures):
+            c = futures[future]
+            results_by_client[c] = future.result()
+
+    client_entries: list[dict] = [results_by_client[c] for c in active]
 
     # ── meetings digest (deterministic) ───────────────────────────────────────
     meetings_digest = build_meetings_digest(fireflies_data, clients_config)
