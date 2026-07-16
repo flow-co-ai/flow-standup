@@ -49,21 +49,31 @@ const STATUS_RESEARCH_RULES = `## Answering "what's the status of X" questions -
 This is the fixed procedure for ANY status question, about any client, any
 topic -- not a special case, not something to reach for only when a first
 attempt seems insufficient. Follow it every time:
-1. Identify which client/group the question is actually about. If that's
-   genuinely ambiguous, ask -- don't guess.
-2. Call monday_client_overview(client). It returns EVERY item in that
-   client's relevant board group(s), already fully detailed (each item's own
-   updates, each of its subitems, each subitem's own updates) -- not just the
-   one item whose name happens to match the topic you were asked about. This
-   is mandatory for every status question, regardless of how confident you
-   are that you already know which single item is "the" relevant one. An
-   item's name matching (or not matching) the topic is never a substitute
-   for having the rest of the group in front of you.
-3. Read through everything the call returned before forming an answer. Never
-   state that something looks stale, unchanged, or "still at X" unless
-   you've actually looked at the updates on every item (and every subitem) in
-   that group -- recency is something you verify across the whole group,
-   never something you assume from the one item you happened to notice.
+1. If you don't already know which client this is about, call
+   monday_search_all_boards(searchTerm) FIRST. It normalizes case and
+   spacing/punctuation (so "digitalocean", "Digital Ocean", and "digital
+   ocean" all match each other) and checks BOTH item names and update text
+   across all 3 boards -- a topic can be real and only ever mentioned inside
+   an update, never in any item's title. It tells you clientsMatched, the
+   distinct clients found. Only ask Naz which client this is about if
+   clientsMatched is empty (genuinely found nothing) or has 2+ entries
+   (found it under multiple different clients) -- if it resolved to exactly
+   one client, proceed with that client, don't ask preemptively just because
+   you weren't sure going in.
+2. Once you know the client (Naz named it directly, or step 1 resolved to
+   exactly one), call monday_client_overview(client). It returns EVERY item
+   in that client's relevant board group(s), already fully detailed (each
+   item's own updates, each of its subitems, each subitem's own updates) --
+   not just the one item whose name happens to match the topic. This is
+   mandatory regardless of how confident you are that you already know which
+   single item is "the" relevant one -- an item's name matching (or not
+   matching) the topic is never a substitute for having the rest of the
+   group in front of you.
+3. Read through everything before forming an answer. Never state that
+   something looks stale, unchanged, or "still at X" unless you've actually
+   looked at the updates on every item (and every subitem) in that group --
+   recency is verified across the whole group, never assumed from the one
+   item you happened to notice.
 4. Cross-reference read_draft_queue(client name or topic) for anything
    Fireflies/WhatsApp-sourced on the same subject, and fold it in (cite it,
    e.g. "per the 7/15 Ads sync...").
@@ -98,22 +108,28 @@ ${STATUS_RESEARCH_RULES}
 ${DRAFTING_RULES}
 
 ## Your tools
+- monday_search_all_boards(searchTerm): use this FIRST whenever the client
+  isn't already known. Normalizes case and spacing/punctuation (so
+  "digitalocean" / "Digital Ocean" / "digital ocean" all match), and checks
+  BOTH item names and update text across all 3 boards -- not just titles.
+  Internally it's a cheap name+recency scan across everything first, then a
+  full detail pull (updates, subitem updates) only for whatever actually
+  matches or was recently touched, so it's not pulling full history for
+  every item on every board just to check names. Returns matches plus
+  clientsMatched (the distinct clients found) -- 0 or 2+ means ask Naz which
+  client; exactly 1 means proceed with that client.
 - monday_client_overview(client): the whole picture for a client in one
-  call -- every item in that client's relevant board group(s) (Ads/Web+SEO/
-  CRM), each one already fully detailed (its own updates, its subitems, each
-  subitem's own updates). No keyword filter, so nothing gets missed because
-  an item's name doesn't happen to mention the topic, and nothing needs a
-  second "is this one relevant" pass -- everything comes back already
-  detailed. This is the mandatory first move for any "status of X" question,
-  per the procedure above.
-- monday_search_all_boards(searchTerm): keyword search across all 3 boards
-  at once (names/columns only, not full detail). Use when the client isn't
-  known yet, or as a supplementary check -- never in place of
-  monday_client_overview once the client is known.
+  call, once you know which client -- every item in that client's relevant
+  board group(s) (Ads/Web+SEO/CRM), each one already fully detailed (its own
+  updates, its subitems, each subitem's own updates). No keyword filter, so
+  nothing gets missed because an item's name doesn't happen to mention the
+  topic, and nothing needs a second "is this one relevant" pass -- this is
+  the mandatory second step for any "status of X" question, per the
+  procedure above.
 - monday_lookup(boardId, groupId, searchTerm): a single board/group lookup,
   names/columns only. Mostly useful for the mandatory board audit before
   drafting on a board you already know; for status questions use
-  monday_client_overview instead.
+  monday_search_all_boards / monday_client_overview instead.
 - monday_item_detail(itemId): full detail on one specific item by id (own
   updates, subitems, subitem updates). monday_client_overview already
   includes this for a whole client group -- reach for this tool on its own
@@ -166,7 +182,7 @@ const TOOLS = [
   {
     name: "monday_search_all_boards",
     description:
-      "Keyword search across all 3 boards at once (Ads, Web+SEO, CRM). Use when the client isn't known yet, or as a supplementary check -- prefer monday_client_overview once you know the client, since this can still miss items whose name/columns don't mention the search term. Returns one entry per board: {board, items}.",
+      "Search across all 3 boards (Ads, Web+SEO, CRM) for when the client isn't known yet. Normalizes case and spacing/punctuation (\"digitalocean\" / \"Digital Ocean\" / \"digital ocean\" all match) and checks both item names AND update text, not just titles -- some things are only ever mentioned inside an update. Returns { matches: [{board, id, name, group, detail}], clientsMatched: [string] }. clientsMatched empty means genuinely nothing found (ask which client); 2+ entries means found under multiple clients (ask which one); exactly 1 means proceed with that client via monday_client_overview.",
     input_schema: {
       type: "object",
       properties: {

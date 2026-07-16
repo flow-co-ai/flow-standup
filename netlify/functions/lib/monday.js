@@ -222,22 +222,106 @@ async function mondayClientOverview(client) {
   );
 }
 
-// Keyword search across all 3 real boards at once (Ads/Web+SEO/CRM, never
-// Video) -- for when the client isn't known yet, or as a supplementary check
-// alongside monday_client_overview. Board-wide (unscoped) per board, so it
-// can still miss an item whose name/columns don't mention the term -- prefer
-// monday_client_overview once the client is known.
+// Strips everything but lowercase letters/digits, so "DigitalOcean",
+// "Digital Ocean", and "digital-ocean" all normalize to the same string.
+// Used for every text comparison in mondaySearchAllBoards -- item names
+// aren't reliably typed/cased consistently, and the search term someone
+// types isn't either.
+function normalizeForMatch(s) {
+  return String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
+}
+
+const RECENT_ACTIVITY_DAYS = 14;
+
+// Cheap per-board scan: id/name/group/updated_at only -- no column_values,
+// no updates. This is the "just check names" pass that's fine to run across
+// an entire board without pulling anything expensive. Queries groups()
+// unfiltered (every group on the board) with items_page nested inside each
+// -- the exact same nesting mondayLookup's groupId branch already uses
+// successfully, just without an ids filter, rather than assuming an
+// unverified flat group{title} field directly on Item.
+async function mondayBoardScan(boardId) {
+  const data = await mondayGraphQL(
+    `query($boardId: [ID!]) {
+       boards(ids: $boardId) {
+         groups {
+           title
+           items_page(limit: 100) { items { id name updated_at } }
+         }
+       }
+     }`,
+    { boardId: [boardId] }
+  );
+  const board = data?.boards?.[0];
+  if (!board) throw new Error(`mondayBoardScan: no board found for boardId ${boardId} -- double check the id`);
+  const groups = board.groups || [];
+  return groups.flatMap((g) => (g.items_page ? g.items_page.items || [] : []).map((it) => ({ ...it, group: g.title })));
+}
+
+// Search across all 3 real boards at once (Ads/Web+SEO/CRM, never Video) for
+// when the client isn't known yet. Two tiers, deliberately, to avoid pulling
+// full update history for every item on every board just to check names:
+//   1. Cheap scan (name/group/updated_at only) across every item on all 3
+//      boards. Candidates are anything whose normalized name matches the
+//      normalized search term, OR anything touched in the last
+//      RECENT_ACTIVITY_DAYS days (a stale item's name not matching is a real
+//      signal it's not the one; a recently-touched item might still be the
+//      real match even if its name doesn't mention the topic at all, and the
+//      cheap pass alone can't see into its update text to know).
+//   2. Full detail (mondayItemDetail -- own updates + subitems' updates) only
+//      for those candidates, never the whole board. A candidate survives as
+//      a real match if its name matched, OR the term actually turns up
+//      somewhere in its own or a subitem's update text -- this is where
+//      "checks update text, not just titles" actually happens.
+// Returns matches (each with board/id/name/group/detail) plus clientsMatched
+// (the distinct client/group names among the matches), so the caller can
+// tell apart "found it," "found it under 2+ clients, ask which," and "found
+// nothing, ask which client."
 async function mondaySearchAllBoards(searchTerm) {
-  return Promise.all(
+  const term = normalizeForMatch(searchTerm);
+  const cutoff = Date.now() - RECENT_ACTIVITY_DAYS * 24 * 60 * 60 * 1000;
+
+  const scanned = await Promise.all(
     BOARD_ORDER.map(async (board) => {
       try {
-        const items = await mondayLookup({ boardId: BOARD_LABEL_IDS[board], searchTerm });
-        return { board, items };
+        return { board, items: await mondayBoardScan(BOARD_LABEL_IDS[board]) };
       } catch (err) {
         return { board, items: [], error: String(err) };
       }
     })
   );
+
+  const candidates = [];
+  for (const { board, items } of scanned) {
+    for (const it of items) {
+      const nameMatches = !!term && normalizeForMatch(it.name).includes(term);
+      const recentlyActive = !!it.updated_at && new Date(it.updated_at).getTime() >= cutoff;
+      if (nameMatches || recentlyActive) {
+        candidates.push({ board, id: it.id, name: it.name, group: it.group || null, nameMatches });
+      }
+    }
+  }
+
+  const detailed = await Promise.all(
+    candidates.map(async (c) => {
+      try {
+        return { ...c, detail: await mondayItemDetail(c.id) };
+      } catch (err) {
+        return { ...c, error: String(err) };
+      }
+    })
+  );
+
+  const matches = detailed.filter((c) => {
+    if (c.nameMatches) return true;
+    if (!c.detail) return false;
+    const ownText = (c.detail.updates || []).map((u) => u.body).join(" ");
+    const subText = (c.detail.subitems || []).flatMap((s) => (s.updates || []).map((u) => u.body)).join(" ");
+    return normalizeForMatch(ownText + " " + subText).includes(term);
+  });
+
+  const clientsMatched = [...new Set(matches.map((m) => m.group).filter(Boolean))];
+  return { matches, clientsMatched };
 }
 
 // Reverse of BOARD_LABEL_IDS -- Web+SEO and Dev+SEO share an id, and Web+SEO
