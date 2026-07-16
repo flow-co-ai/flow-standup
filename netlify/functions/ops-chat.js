@@ -14,6 +14,8 @@ const { getJSON, putJSON } = require("./lib/github");
 const {
   mondayLookup,
   mondayItemDetail,
+  mondayClientOverview,
+  mondaySearchAllBoards,
   boardLabelForId,
 } = require("./lib/monday");
 const { DRAFTING_RULES, buildResolvedFields } = require("./item-chat");
@@ -43,6 +45,39 @@ const FRESHNESS_RULES = `## What's live vs. what's periodic -- be explicit about
   yet." Never imply you searched a transcript or a WhatsApp thread directly --
   you didn't, and can't.`;
 
+const STATUS_RESEARCH_RULES = `## Answering "what's the status of X" questions -- go deep, every time
+A confirmed real bug: asked about Full Smile's DigitalOcean work, this
+assistant once checked one board, found nothing obviously named "DigitalOcean",
+and answered as if that settled it -- missing the CRM board entirely, and
+missing the item that actually had the real recent status on it (an item
+called "Duplicate Contacts" with no mention of "DigitalOcean" in its name at
+all, even though its update history was exactly the answer). Two lessons,
+both mandatory from now on:
+
+1. **Search by CLIENT across all 3 boards, not by topic keyword on one
+   board.** Use monday_client_overview(client) FIRST -- it pulls every item
+   in that client's group on Ads, Web+SEO, AND CRM in one call, so no board
+   ever gets silently skipped. Only fall back to monday_search_all_boards
+   (keyword, all 3 boards) if you don't know which client this is yet, or as
+   a supplementary check -- never as your only search, since a keyword
+   search over item NAMES misses items whose real content is only in the
+   update text, not the title (exactly what happened with "Duplicate
+   Contacts").
+2. **Never stop at "yes, there's an item for this."** For every item that
+   looks relevant (parent or subitem), call monday_item_detail(itemId) and
+   actually read its updates AND its subitems' updates. A parent item's own
+   status column can look untouched (e.g. still "Start") while the real
+   answer -- a fix already live, a specific bug already closed, exactly who
+   did it and when -- is sitting in a subitem's update history, or on a
+   sibling item you'd have missed without step 1. Then also call
+   read_draft_queue(client's name or the topic) to check for a related
+   Fireflies/WhatsApp-sourced note on the same topic, and fold that in too
+   (cite it, e.g. "per the 7/15 Ads sync..."). Only after all of that,
+   synthesize a real answer: what's actually done (who confirmed it, when),
+   what's still blocked or unstarted, what's in progress -- citing names and
+   dates from the real updates. "There's an item called X, status Y" is not
+   an acceptable final answer to a status question by itself.`;
+
 const SYSTEM_RULES = `You are Ask Flow Ops, a general assistant embedded as a floating chat widget
 on every page of Naz's Flow Ops dashboard (the Standup page and the Daily Ops
 page). Unlike item-chat.js's per-card assistant, you aren't scoped to one
@@ -54,25 +89,35 @@ ${FRESHNESS_RULES}
 Never guess: use your tools or ask a specific follow-up question rather than
 answering or drafting on a guess.
 
+${STATUS_RESEARCH_RULES}
+
 ${DRAFTING_RULES}
 
 ## Your tools
-- monday_lookup(boardId, groupId, searchTerm): list or search items on a
-  board. ALWAYS pass groupId when you know it (from the Client group IDs
-  table) -- an unscoped board-wide query is unreliable on boards with many
-  clients. Omit searchTerm to list everything in scope (useful for the
-  mandatory board audit); pass it to filter by keyword.
+- monday_client_overview(client): every item a client has across all 3
+  boards (Ads/Web+SEO/CRM), group-scoped -- no keyword filter, so nothing
+  gets missed by naming. This is your FIRST move for any "status of X"
+  question once you know the client. See the client list below.
+- monday_search_all_boards(searchTerm): keyword search across all 3 boards
+  at once. Use when the client isn't known yet, or as a supplementary check
+  -- not as your only search (see the rules above on why item names can
+  miss the real content).
+- monday_lookup(boardId, groupId, searchTerm): a single board/group lookup.
+  Mostly useful for the mandatory board audit before drafting something on a
+  specific board you already know; for "status of X" research prefer
+  monday_client_overview.
 - monday_item_detail(itemId): full detail on ONE item -- its column values,
-  its subitems, and its recent posted updates. Use this once monday_lookup
-  has found the item you care about and you need to see what's already been
-  said/done on it (e.g. before drafting a duplicate, or to answer "what's the
-  latest on X").
-- read_draft_queue(): fresh GET of the entire live Daily Ops queue
+  its own updates, its subitems, AND each subitem's own updates. Call this on
+  every item that looks relevant before answering a status question -- see
+  the rules above.
+- read_draft_queue(searchTerm?): fresh GET of the live Daily Ops queue
   (checks/draft-queue.json). Each item carries id, title, note, status,
   board, group, source, sourceLabel (which meeting/WhatsApp/automation run it
   came from -- your only window into that periodic content), payload,
-  priority, mondayItemId. Call this again whenever you need current state --
-  never assume an earlier call in this conversation is still accurate.
+  priority, mondayItemId. Pass searchTerm to filter by keyword across
+  title/note/sourceLabel/group (case-insensitive substring); omit it to get
+  everything. Call again whenever you need current state -- never assume an
+  earlier call in this conversation is still accurate.
 - read_latest_rundown(): fresh read of the latest weekly standup rundown
   (executive summary + per-department summaries). Periodic, not live -- check
   week_of to tell Naz how current it actually is.
@@ -80,8 +125,8 @@ ${DRAFTING_RULES}
   write it straight into the live draft queue, so it shows up in the Daily
   Ops dashboard immediately -- exactly as if the fireflies-monday-watch
   automation had drafted it. Complete the mandatory board audit above
-  (monday_lookup / monday_item_detail) BEFORE calling this, to avoid drafting
-  a duplicate of something that already exists. Provide:
+  (monday_client_overview / monday_item_detail) BEFORE calling this, to avoid
+  drafting a duplicate of something that already exists. Provide:
   - client: the client's display name, e.g. "Maadi Law" -- used for the
     dashboard's client grouping and the card title's "[Client]" prefix.
   - mode, and whichever of boardId/groupId/parentItemId/existingItemId that
@@ -98,9 +143,33 @@ ${DRAFTING_RULES}
 
 const TOOLS = [
   {
+    name: "monday_client_overview",
+    description:
+      "Every item a client has across all 3 boards (Ads, Web+SEO, CRM), group-scoped -- no keyword filter, so nothing gets missed because an item's name doesn't happen to mention the topic. This is the FIRST tool to call for any 'status of X' question once you know the client. Returns one entry per board: {board, items} (or {board, items: [], note} if the client has no group there yet).",
+    input_schema: {
+      type: "object",
+      properties: {
+        client: { type: "string", description: "Client display name exactly as it appears in the Client group IDs table, e.g. \"Full Smile\", \"Maadi Law\"." },
+      },
+      required: ["client"],
+    },
+  },
+  {
+    name: "monday_search_all_boards",
+    description:
+      "Keyword search across all 3 boards at once (Ads, Web+SEO, CRM). Use when the client isn't known yet, or as a supplementary check -- prefer monday_client_overview once you know the client, since this can still miss items whose name/columns don't mention the search term. Returns one entry per board: {board, items}.",
+    input_schema: {
+      type: "object",
+      properties: {
+        searchTerm: { type: "string" },
+      },
+      required: ["searchTerm"],
+    },
+  },
+  {
     name: "monday_lookup",
     description:
-      "List or search items on a Monday board. ALWAYS pass groupId when you know it (from the Client group IDs table) -- this scopes the query to just that client's items instead of an unscoped board-wide query, which is unreliable on boards with many items. Omit searchTerm to list everything in scope (useful for the mandatory board audit); pass it to filter by keyword. Returns id, name, and column values -- never guess an id, look it up here. Always a fresh, live call.",
+      "List or search items on ONE specific Monday board. ALWAYS pass groupId when you know it (from the Client group IDs table) -- this scopes the query to just that client's items instead of an unscoped board-wide query, which is unreliable on boards with many items. Mostly useful for the mandatory board audit before drafting on a board you already know; for 'status of X' research prefer monday_client_overview, which covers all 3 boards at once. Returns id, name, and column values -- never guess an id, look it up here. Always a fresh, live call.",
     input_schema: {
       type: "object",
       properties: {
@@ -114,7 +183,7 @@ const TOOLS = [
   {
     name: "monday_item_detail",
     description:
-      "Full detail on one Monday item: its column values, its subitems, and its most recent posted updates (up to 25). Use after monday_lookup finds a candidate item, to see whether it already covers this workstream before drafting something new. Always a fresh, live call.",
+      "Full detail on one Monday item: its column values, its own posted updates, its subitems, AND each subitem's own posted updates. Call this on every item that looks relevant to a status question before answering -- a parent's status column can look untouched while the real answer is in a subitem's update history. Always a fresh, live call.",
     input_schema: {
       type: "object",
       properties: { itemId: { type: "string" } },
@@ -124,8 +193,13 @@ const TOOLS = [
   {
     name: "read_draft_queue",
     description:
-      "Fresh GET of the entire live Daily Ops draft queue (checks/draft-queue.json) -- never a cached copy from earlier in this conversation. Each item carries id, title, note, status, board, group, source, sourceLabel, payload, priority, mondayItemId. Call again whenever time may have passed since your last call.",
-    input_schema: { type: "object", properties: {} },
+      "Fresh GET of the live Daily Ops draft queue (checks/draft-queue.json) -- never a cached copy from earlier in this conversation. Each item carries id, title, note, status, board, group, source, sourceLabel, payload, priority, mondayItemId. Pass searchTerm to filter by keyword across title/note/sourceLabel/group; omit it to get everything. Call again whenever time may have passed since your last call.",
+    input_schema: {
+      type: "object",
+      properties: {
+        searchTerm: { type: "string", description: "Optional keyword filter, case-insensitive substring match across title/note/sourceLabel/group. Omit to get every item." },
+      },
+    },
   },
   {
     name: "read_latest_rundown",
@@ -180,6 +254,19 @@ function uniqueId(client, itemName, existingItems) {
   return `${base}-${n}`;
 }
 
+// Cross-referencing step 3 of the status-research workflow: find anything in
+// the Fireflies/WhatsApp-sourced draft queue mentioning the same topic. Case-
+// insensitive substring match across the fields that actually carry that
+// periodic content (title/note/sourceLabel), plus group for a client-name
+// filter.
+function filterQueueItems(items, searchTerm) {
+  if (!searchTerm) return items;
+  const term = searchTerm.toLowerCase();
+  return items.filter((it) =>
+    [it.title, it.note, it.sourceLabel, it.group].some((f) => (f || "").toLowerCase().includes(term))
+  );
+}
+
 // Reuses item-chat.js's exact buildResolvedFields -- it only reads
 // item.priority as a fallback, so calling it with {} (no pre-existing item)
 // works unmodified for drafting a brand-new card. Writes straight into
@@ -226,7 +313,7 @@ exports.handler = async (event) => {
     let convo = [...(history || []), { role: "user", content: message }];
     let finalText = "";
 
-    for (let turn = 0; turn < 8; turn++) {
+    for (let turn = 0; turn < 10; turn++) {
       const res = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
         headers: {
@@ -250,13 +337,17 @@ exports.handler = async (event) => {
       for (const tu of toolUses) {
         let result;
         try {
-          if (tu.name === "monday_lookup") {
+          if (tu.name === "monday_client_overview") {
+            result = await mondayClientOverview(tu.input.client);
+          } else if (tu.name === "monday_search_all_boards") {
+            result = await mondaySearchAllBoards(tu.input.searchTerm);
+          } else if (tu.name === "monday_lookup") {
             result = await mondayLookup(tu.input);
           } else if (tu.name === "monday_item_detail") {
             result = await mondayItemDetail(tu.input.itemId);
           } else if (tu.name === "read_draft_queue") {
             const { data } = await getJSON(QUEUE_PATH, EMPTY);
-            result = data.items || [];
+            result = filterQueueItems(data.items || [], tu.input.searchTerm);
           } else if (tu.name === "read_latest_rundown") {
             const { data } = await getJSON(RUNDOWN_PATH, null, "main");
             result = data || { error: "no rundown found yet" };

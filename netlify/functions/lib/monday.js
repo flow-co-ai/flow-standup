@@ -73,11 +73,14 @@ async function mondayLookup(input) {
     : items;
 }
 
-// Drills into ONE item for full detail monday_lookup doesn't carry: its
-// subitems (id/name/column_values) and its posted updates (body/creator/
-// date). Used for the "check whether this workstream already has recent
-// activity" step of a board audit, and for answering "what's the latest on
-// X" questions -- always a live call, same as mondayLookup.
+// Drills into ONE item for full detail monday_lookup doesn't carry: its own
+// posted updates, AND (critically) each of its subitems' OWN updates too --
+// a parent item's status often looks stale/unstarted while the real recent
+// activity (a fix actually going live, a bug actually getting closed out) is
+// posted on a specific subitem, not the parent. Two queries, both using the
+// same plain items(ids:) shape (subitems are themselves real items with
+// their own ids) rather than assuming updates nests cleanly inside a
+// subitems selection -- always a live call, same as mondayLookup.
 async function mondayItemDetail(itemId) {
   if (!itemId) throw new Error("monday_item_detail needs itemId");
   const data = await mondayGraphQL(
@@ -86,14 +89,25 @@ async function mondayItemDetail(itemId) {
          id
          name
          column_values { id text }
-         subitems { id name column_values { id text } }
          updates(limit: 25) { id body creator { name } created_at }
+         subitems { id name column_values { id text } }
        }
      }`,
     { itemIds: [itemId] }
   );
   const item = data?.items?.[0];
   if (!item) throw new Error(`monday_item_detail: no item found for id ${itemId} -- double check the id`);
+
+  const subitemIds = (item.subitems || []).map((s) => s.id);
+  if (subitemIds.length) {
+    const subData = await mondayGraphQL(
+      `query($itemIds: [ID!]) { items(ids: $itemIds) { id updates(limit: 25) { id body creator { name } created_at } } }`,
+      { itemIds: subitemIds }
+    );
+    const updatesById = new Map((subData?.items || []).map((s) => [s.id, s.updates || []]));
+    item.subitems = item.subitems.map((s) => ({ ...s, updates: updatesById.get(s.id) || [] }));
+  }
+
   return item;
 }
 
@@ -142,6 +156,76 @@ const BOARD_LABEL_IDS = {
   "Dev+SEO": "18099807701",
   CRM: "18418241405",
 };
+
+// Client -> group id per board. Promoted from the "Client group IDs" prose
+// table in item-chat.js's DRAFTING_RULES into real structured data (Naz,
+// 2026-07-16): a "status of X" question needs every one of a client's items
+// on a board, and a keyword search over item NAMES misses items whose name
+// doesn't happen to mention the topic -- confirmed live: Full Smile's
+// "Duplicate Contacts" item (containing the actual recent fix updates for
+// what was reported as a DigitalOcean/GHL bug) doesn't have "DigitalOcean"
+// anywhere in its name, only in the update bodies posted on it. Group-scoped
+// enumeration (list everything in this client's group, no keyword filter)
+// is the only reliable way to not miss it. null means no group exists yet on
+// that board. Same "verify before writing" caveat as the prose table applies
+// to any WRITE path (a few boards share a group id with another board's,
+// unconfirmed) -- reads here are best-effort and low-risk if slightly off.
+const CLIENT_GROUPS = {
+  "Maadi Law": { Ads: "group_mm51vdbk", "Web+SEO": "group_mm51tkzh", CRM: "group_mm5112vv" },
+  MedStation: { Ads: "group_mm516qss", "Web+SEO": "group_mm51nc9h", CRM: "group_mm512p9w" },
+  "Quality HVAC": { Ads: "group_mm23tg6s", "Web+SEO": "group_mm231wbb", CRM: "group_mm231wbb" },
+  "Full Smile": { Ads: "group_mkxdznat", "Web+SEO": "group_mkxdmhbz", CRM: "group_mkxdmhbz" },
+  "Justice Consumer Law": { Ads: "group_mkqxyga2", "Web+SEO": "group_mkqxyga2", CRM: null },
+  Liferun: { Ads: "group_mkwj8zze", "Web+SEO": "group_mkwj9a1c", CRM: "group_mkwj9a1c" },
+  "BillyDoe Meats": { Ads: "group_mm2dt8f", "Web+SEO": "group_mm2dqm7n", CRM: null },
+  "Vous Physique": { Ads: "group_mm22cd1z", "Web+SEO": "group_mm231372", CRM: null },
+  "Steel Round Bars": { Ads: "group_mkqxskcn", "Web+SEO": "group_mkqxskcn", CRM: "group_mkqxskcn" },
+  "Flow Company": { Ads: "group_mkwjedjg", "Web+SEO": "group_mkwjem1v", CRM: null },
+};
+
+const BOARD_ORDER = ["Ads", "Web+SEO", "CRM"];
+
+// Everything a client has across all 3 boards, group-scoped (no keyword
+// filter, so nothing gets missed by naming) -- the primary tool for "what's
+// the status of X for client Y" questions. One call replaces 3 manual
+// per-board monday_lookup calls, so a board can't get silently skipped.
+async function mondayClientOverview(client) {
+  const groups = CLIENT_GROUPS[client];
+  if (!groups) {
+    const known = Object.keys(CLIENT_GROUPS).join(", ");
+    throw new Error(`monday_client_overview: "${client}" isn't a recognized client. Known clients: ${known}. Check spelling/casing, or use monday_search_all_boards if this is a new/unlisted client.`);
+  }
+  return Promise.all(
+    BOARD_ORDER.map(async (board) => {
+      const groupId = groups[board];
+      if (!groupId) return { board, items: [], note: "no group on this board for this client" };
+      try {
+        const items = await mondayLookup({ boardId: BOARD_LABEL_IDS[board], groupId });
+        return { board, items };
+      } catch (err) {
+        return { board, items: [], error: String(err) };
+      }
+    })
+  );
+}
+
+// Keyword search across all 3 real boards at once (Ads/Web+SEO/CRM, never
+// Video) -- for when the client isn't known yet, or as a supplementary check
+// alongside monday_client_overview. Board-wide (unscoped) per board, so it
+// can still miss an item whose name/columns don't mention the term -- prefer
+// monday_client_overview once the client is known.
+async function mondaySearchAllBoards(searchTerm) {
+  return Promise.all(
+    BOARD_ORDER.map(async (board) => {
+      try {
+        const items = await mondayLookup({ boardId: BOARD_LABEL_IDS[board], searchTerm });
+        return { board, items };
+      } catch (err) {
+        return { board, items: [], error: String(err) };
+      }
+    })
+  );
+}
 
 // Reverse of BOARD_LABEL_IDS -- Web+SEO and Dev+SEO share an id, and Web+SEO
 // is listed first, so that's the canonical label returned for it.
@@ -369,6 +453,8 @@ module.exports = {
   mondayGraphQL,
   mondayLookup,
   mondayItemDetail,
+  mondayClientOverview,
+  mondaySearchAllBoards,
   sendQueueItemToMonday,
   updateMondayColumns,
   STATUS_COLUMN,
@@ -378,6 +464,7 @@ module.exports = {
   USER_NAMES,
   BOARD_LABEL_IDS,
   boardLabelForId,
+  CLIENT_GROUPS,
   buildColumnValues,
   assignedToLine,
   resolvePayloadFlags,
