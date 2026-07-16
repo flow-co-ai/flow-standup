@@ -260,6 +260,23 @@ def match_meeting_clients(mt: dict, clients_config: dict, active_clients: set[st
 # prospect card.
 
 
+def _same_prospect_entity(a: str, b: str) -> bool:
+    """True if a and b are almost certainly the same prospect under two
+    different spellings -- e.g. a model-extracted short entity name ('Citrus
+    Smiles') and the fuller meeting-title variant for the same business
+    ('Citrus Smiles Marketing Systems'). Only merges when the SHORTER name is
+    a whole-word-boundary phrase inside the longer one, and is itself at
+    least two words / 8+ characters -- guards against a single short generic
+    word (e.g. 'Cotton') silently merging into an unrelated longer name."""
+    a_low, b_low = a.lower().strip(), b.lower().strip()
+    if a_low == b_low:
+        return True
+    shorter, longer = (a_low, b_low) if len(a_low) <= len(b_low) else (b_low, a_low)
+    if len(shorter) < 8 or " " not in shorter:
+        return False
+    return re.search(r"(?<!\w)" + re.escape(shorter) + r"(?!\w)", longer) is not None
+
+
 def build_potential_clients(
     monday_data: list, general_meetings: list, general_chats: list,
     non_client_entities: list[str],
@@ -277,8 +294,21 @@ def build_potential_clients(
         if not name or _is_known_non_client(name):
             return
         key = name.lower()
+        # Merge into an existing card for the same prospect under a
+        # different spelling instead of creating a second one -- otherwise
+        # "one card per distinct prospect" quietly breaks whenever two
+        # sources name the same business differently (a meeting title vs. a
+        # model-extracted entity name, say).
+        for existing_key, existing in prospects.items():
+            if _same_prospect_entity(name, existing["name"]):
+                key = existing_key
+                break
         if key not in prospects:
             prospects[key] = {"name": name, "sources": [], "items": []}
+        elif len(name) < len(prospects[key]["name"]):
+            # Prefer the shorter/cleaner name as the card title -- a concise
+            # extracted entity name reads better than a full meeting title.
+            prospects[key]["name"] = name
         if source not in prospects[key]["sources"]:
             prospects[key]["sources"].append(source)
         prospects[key]["items"].append({"source": source, "blurb": blurb, "when": when})
