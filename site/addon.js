@@ -131,7 +131,7 @@ function foRenderQueue(active, handled, mondayed) {
 
   const prospectsHtml = activeProspects.length ? `
     <div class="fo-prospects">
-      <div class="fo-label">Potential clients</div>
+      <div class="fo-label">New clients</div>
       ${foGroupByProspect(activeProspects).map(([name, items]) => `
         <div class="fo-group fo-group-prospect">
           <div class="fo-group-header">${foEscape(name)} <span class="fo-group-count">(${items.length})</span></div>

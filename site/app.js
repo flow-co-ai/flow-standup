@@ -60,6 +60,7 @@ function currentClientView() {
   const m = location.hash.match(/^#c=(.+)$/);
   if (!m) return null;
   const name = decodeURIComponent(m[1]);
+  if (name === 'Unmapped') return null; // never a real client card -- see the grid-view guard below
   const exists = (standup?.by_client || []).some(c => c.client === name);
   return exists ? name : null;
 }
@@ -585,13 +586,13 @@ function buildMiniCard(entry) {
 // one card per distinct prospect, visually distinct (dashed border, no health
 // dot) from the real client mini-cards above it.
 
-const SOURCE_LABEL = { meeting: 'Meeting', whatsapp: 'WhatsApp', monday_group: 'Monday' };
+const SOURCE_LABEL = { meeting: 'Meeting', whatsapp: 'WhatsApp', monday_group: 'Monday', mention: 'Mentioned' };
 
 function buildPotentialCard(p) {
   const card = el('article', { class: 'mini-card potential-card' });
 
   card.append(el('div', { class: 'mini-state' },
-    el('span', { class: 'mini-state-label potential-label', text: 'Potential client' }),
+    el('span', { class: 'mini-state-label potential-label', text: 'New client' }),
   ));
   card.append(el('h2', { class: 'mini-name', text: p.name || 'Unknown' }));
 
@@ -777,13 +778,20 @@ function render() {
   app.className = 'client-grid-page';
 
   const clientGrid = el('div', { class: 'client-grid' });
-  (standup.by_client || []).forEach(entry => clientGrid.append(buildMiniCard(entry)));
+  (standup.by_client || []).forEach(entry => {
+    // Defensive: generate.py should never put "Unmapped" in by_client (it
+    // feeds potential_clients instead) -- but stale/older standup JSON can
+    // still have one, and this guarantees it never renders as a fake client
+    // card even if that invariant is ever violated upstream.
+    if (entry.client === 'Unmapped') return;
+    clientGrid.append(buildMiniCard(entry));
+  });
   app.append(clientGrid);
 
   const potentialClients = standup.potential_clients || [];
   if (potentialClients.length) {
     app.append(el('div', { class: 'section-divider' },
-      el('span', { class: 'section-divider-label', text: 'Potential clients' }),
+      el('span', { class: 'section-divider-label', text: 'New clients' }),
       el('span', { class: 'section-divider-note', text: 'not merged into any client above — confirm before treating as real' }),
     ));
     const potentialGrid = el('div', { class: 'client-grid' });

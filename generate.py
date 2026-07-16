@@ -265,7 +265,10 @@ def _looks_internal(label: str) -> bool:
     return any(hint in low for hint in _INTERNAL_MEETING_HINTS)
 
 
-def build_potential_clients(monday_data: list, general_meetings: list, general_chats: list) -> list[dict]:
+def build_potential_clients(
+    monday_data: list, general_meetings: list, general_chats: list,
+    off_topic_mentions: list[dict] | None = None,
+) -> list[dict]:
     prospects: dict[str, dict] = {}
 
     def _bucket(name: str, source: str, blurb: str, when: str):
@@ -304,6 +307,13 @@ def build_potential_clients(monday_data: list, general_meetings: list, general_c
             if item.get("client") == "Unmapped" and item.get("group"):
                 blurb = f"\"{item.get('name', '')}\" on {board['board_name']} — unrecognized group \"{item['group']}\"."
                 _bucket(item["group"], "monday_group", blurb, item.get("last_updated") or item.get("created_at") or "")
+
+    for m in off_topic_mentions or []:
+        entity = (m.get("entity") or "").strip()
+        text = (m.get("text") or "").strip()
+        if not entity or not text:
+            continue
+        _bucket(entity, "mention", text, "")
 
     return sorted(prospects.values(), key=lambda p: p["name"].lower())
 
@@ -507,6 +517,19 @@ EMIT_CLIENT_TOOL = {
                     "monday_item_id": {"type": ["string", "null"]},
                 }}},
             "next_up": {"type": ["string", "null"], "description": "Single nearest upcoming, one line, null if none."},
+            "other_entities_mentioned": {
+                "type": "array",
+                "maxItems": 4,
+                "description": "Candidates the topical filter excluded -- content from this client's own meetings/chats that was actually about a DIFFERENT named business/person, mentioned only in passing. Never merged into highlights/stalled_items.",
+                "items": {
+                    "type": "object",
+                    "required": ["entity", "text"],
+                    "properties": {
+                        "entity": {"type": "string", "description": "The other business/person's name."},
+                        "text": {"type": "string", "description": "Short blurb of what was said about them, max ~14 words."},
+                    },
+                },
+            },
         },
     },
 }
@@ -689,6 +712,13 @@ def assemble_client_entry(client: str, result: dict, url_lookup: dict[str, str])
         "risks": result.get("risks", []) or [],
         "upcoming": result.get("upcoming", []) or [],
         "next_up": result.get("next_up"),
+        # Transient -- main() pulls this into potential_clients and pops it
+        # before the entry is written to standup.json. Content the topical
+        # filter excluded from this client's own highlights/stalled_items
+        # because it was actually about a different named business/person
+        # mentioned in passing within an otherwise correctly-matched meeting
+        # or chat.
+        "_off_topic_mentions": result.get("other_entities_mentioned", []) or [],
     }
 
 
@@ -1301,12 +1331,10 @@ def main():
         if c not in active and c != "Unmapped":
             active.append(c)
 
-    potential_clients = build_potential_clients(
-        monday_data, meetings_by_client.get("General comms", []), chats_by_client.get("General comms", [])
-    )
-    if potential_clients:
-        print(f"  Potential clients (unmatched, not merged into a signed client): "
-              f"{', '.join(p['name'] for p in potential_clients)}")
+    # potential_clients is assembled further below, after the per-client Claude
+    # calls -- it also folds in other_entities_mentioned, content those calls
+    # themselves filtered out of a correctly-matched client's own card because
+    # it was actually about a different named business/person.
 
     # ── per-client Claude calls ───────────────────────────────────────────────
     yesterday_pulse, y_name = pulse_story.load_yesterday_pulse(today)
@@ -1466,9 +1494,9 @@ def main():
     # doesn't hammer Anthropic's rate limits with a large client list.
     # as_completed() finishes in whatever order calls actually return, so
     # results are collected by client name and then reassembled in the
-    # original `active` order (config order, Unmapped last) -- unrelated code
-    # downstream (the wrap-up prompt, the site) shouldn't see client order
-    # change run to run.
+    # original `active` order (config order) -- unrelated code downstream
+    # (the wrap-up prompt, the site) shouldn't see client order change run
+    # to run.
     results_by_client: dict[str, dict] = {}
     with ThreadPoolExecutor(max_workers=min(8, len(active)) or 1) as pool:
         futures = {pool.submit(_generate_client_entry, c): c for c in active}
@@ -1477,6 +1505,24 @@ def main():
             results_by_client[c] = future.result()
 
     client_entries: list[dict] = [results_by_client[c] for c in active]
+
+    # Content the per-client call itself filtered out of a correctly-matched
+    # client's own card -- a meeting/chat matched this client as a whole, but
+    # a piece of it was actually about a different named business/person
+    # mentioned in passing. Pulled out here (never shipped in standup.json)
+    # and folded into potential_clients below instead of silently riding
+    # along inside the client card it was excluded from.
+    off_topic_mentions: list[dict] = []
+    for entry in client_entries:
+        off_topic_mentions.extend(entry.pop("_off_topic_mentions", []) or [])
+
+    potential_clients = build_potential_clients(
+        monday_data, meetings_by_client.get("General comms", []), chats_by_client.get("General comms", []),
+        off_topic_mentions,
+    )
+    if potential_clients:
+        print(f"  Potential clients (unmatched, not merged into a signed client): "
+              f"{', '.join(p['name'] for p in potential_clients)}")
 
     # ── meetings digest (deterministic) ───────────────────────────────────────
     meetings_digest = build_meetings_digest(fireflies_data, clients_config, active_clients_set)
