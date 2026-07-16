@@ -260,6 +260,79 @@ function onPasscodeSubmit(e) {
   doSave();
 }
 
+// ── refresh standup (manual workflow_dispatch trigger) ────────────────────────
+
+const REFRESH_DEBOUNCE_MS = 60_000; // floor on real re-triggers, independent of the button's own disabled state
+let refreshDebounceUntil = 0;
+
+function initRefreshStandupButton() {
+  const btn = document.getElementById('refresh-standup-btn');
+  if (!btn) return;
+  const labelEl = btn.querySelector('.refresh-label');
+  const errEl   = document.getElementById('refresh-standup-error');
+
+  const showRefreshError = (msg) => { if (errEl) { errEl.textContent = msg; errEl.hidden = false; } };
+  const clearRefreshError = () => { if (errEl) { errEl.hidden = true; errEl.textContent = ''; } };
+
+  btn.addEventListener('click', async () => {
+    // Real re-trigger floor: even though the button re-enables after ~5s
+    // (below), an actual new dispatch is blocked for the full 60s so a burst
+    // of clicks can't queue duplicate runs back to back.
+    if (Date.now() < refreshDebounceUntil) {
+      const secsLeft = Math.ceil((refreshDebounceUntil - Date.now()) / 1000);
+      showRefreshError(`Already triggered — wait ${secsLeft}s before triggering again.`);
+      return;
+    }
+
+    const passcode = getPasscode();
+    if (!passcode) {
+      showPasscodePrompt();
+      return;
+    }
+
+    clearRefreshError();
+    btn.disabled = true;
+    btn.classList.add('is-loading');
+    if (labelEl) labelEl.textContent = 'Triggering...';
+
+    let res;
+    try {
+      res = await fetch('/.netlify/functions/refresh-standup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Ops-Key': passcode },
+      });
+    } catch (err) {
+      btn.classList.remove('is-loading');
+      btn.disabled = false;
+      showRefreshError('Network error: ' + err.message);
+      return;
+    }
+
+    const data = await res.json().catch(() => ({}));
+    btn.classList.remove('is-loading');
+
+    if (!data.ok) {
+      btn.disabled = false;
+      showRefreshError(data.error || `Couldn't trigger (HTTP ${res.status})`);
+      // Distinguish our own passcode gate (data.error === 'unauthorized')
+      // from a GitHub-side auth failure (different message, e.g. bad token
+      // scope) -- only the former means the STORED passcode itself is wrong.
+      if (res.status === 401 && data.error === 'unauthorized') {
+        clearStoredPasscode();
+        showPasscodePrompt();
+      }
+      return;
+    }
+
+    if (labelEl) labelEl.textContent = 'Triggered — takes ~2-3 min, refresh the page after';
+    refreshDebounceUntil = Date.now() + REFRESH_DEBOUNCE_MS;
+    setTimeout(() => {
+      btn.disabled = false;
+      if (labelEl) labelEl.textContent = 'Refresh Standup';
+    }, 5000);
+  });
+}
+
 // ── clipboard ─────────────────────────────────────────────────────────────────
 
 function copyText(id, text) {
@@ -714,6 +787,10 @@ function isoWeekToDateRange(isoWeekStr) {
 // ── init ──────────────────────────────────────────────────────────────────────
 
 async function init() {
+  // Independent of standup.json loading -- wire it up even if the fetch
+  // below fails, since that's exactly when a manual refresh is most useful.
+  initRefreshStandupButton();
+
   // 1. Fetch standup JSON
   standup = await (async () => {
     try {
