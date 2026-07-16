@@ -249,14 +249,20 @@ def build_completion_scan_prompt(
         "'mostly there'.\n\n"
         "For each genuine completion, emit:\n"
         "- client: which client this belongs to, using the client names shown below.\n"
-        "- text: short phrase naming the SPECIFIC thing completed, max 10 words -- the "
-        "actual piece of work, not 'finished the task'.\n"
+        "- text: a short PLAIN-LANGUAGE SUMMARY of what was actually done, max ~14 "
+        "words -- a real sentence fragment describing the work, not just the task's "
+        "name restated. E.g. 'cleaned up duplicate contacts and added a lookup before "
+        "create' rather than 'Duplicate Contacts'. If the source explains WHY or HOW, "
+        "fold that in -- substance over label.\n"
         "- who: the person who said/did it, if named. Null if not clear.\n"
         "- source: 'MTG' if from a meeting, 'WA' if from WhatsApp.\n"
         "- sourceDate: the date of that meeting/message if known (YYYY-MM-DD), else null.\n"
         "- monday_item_id: ONLY if you can confidently match this completion to a "
         "specific item or subitem id shown in the board snapshot below. Null if there's "
         "any doubt at all -- never guess an id.\n\n"
+        "If the same underlying piece of work is described more than once (e.g. a "
+        "WhatsApp message and a near-duplicate follow-up, or two people confirming the "
+        "same thing), emit it ONCE -- don't produce one row per mention.\n\n"
         "If nothing genuinely completed is mentioned anywhere, return an empty list. "
         "Don't manufacture completions just to have something to report.\n"
     )
@@ -309,5 +315,61 @@ def build_completion_scan_prompt(
                         )
     if not any_board:
         parts.append("None.")
+
+    return "\n".join(parts)
+
+
+# -- monday-done summarization (raw status flips -> one real summary line) ----
+
+def build_monday_done_prompt(candidates: list[dict], today: str) -> str:
+    """candidates: [{client, item_name, item_id, subitem_names, recent_updates:
+    [{creator, body, created_at}]}]. Each candidate is everything that flipped to
+    Done on Monday for ONE parent item since it was last checked -- the item
+    itself, its just-finished subitems, or both together. Turns the raw
+    item/subitem names into one short plain-language line per candidate,
+    grounded in whatever update text is available, instead of the site just
+    listing Monday titles verbatim."""
+    parts: list[str] = []
+    parts.append(
+        f"# Monday completions - {today}\n\n"
+        "Each candidate below is one Monday item (and, if listed, its subitems) "
+        "that just turned Done. For EACH candidate, write ONE short plain-language "
+        "line summarizing what was actually completed -- read like a real person "
+        "describing the work, not a restatement of the item/subitem names.\n\n"
+        "If a candidate has subitems listed, your one line must cover the parent "
+        "AND all its listed subitems together (e.g. 'cleaned up existing "
+        "duplicates, fixed update logic, added contact lookup before create' for a "
+        "parent 'Duplicate Contacts' with subitems 'Cleanup', 'Fix updates', 'Add "
+        "lookup') -- never emit more than one line per candidate.\n\n"
+        "Use the recent update text (if present) to say WHAT was done, not just "
+        "THAT something was done -- if updates give no real detail beyond the "
+        "names, write the most concrete plain-language line the names support "
+        "(e.g. 'Duplicate Contacts' + subitem 'Cleanup' -> 'cleaned up duplicate "
+        "contact records'), still phrased as a summary, never the raw title "
+        "verbatim.\n\n"
+        "For each candidate emit:\n"
+        "- client: exactly as given.\n"
+        "- text: the plain-language summary line, max ~16 words.\n"
+        "- item_id: exactly as given, verbatim -- never invent or alter.\n\n"
+        "Emit exactly one row per candidate below, same order, none skipped.\n"
+    )
+
+    parts.append("\n## CANDIDATES\n")
+    for i, c in enumerate(candidates):
+        parts.append(f"### Candidate {i + 1} -- client: {c.get('client', '')}")
+        parts.append(f"item_id: {c.get('item_id', '')}")
+        parts.append(f"Parent item: {c.get('item_name', '')}"
+                     + (" (itself just marked Done)" if c.get("item_done") else " (not itself done -- only subitems below are new)"))
+        subs = c.get("subitem_names") or []
+        if subs:
+            parts.append("Subitems just marked Done: " + "; ".join(subs))
+        updates = c.get("recent_updates") or []
+        if updates:
+            parts.append("Recent updates (context for what happened):")
+            for u in updates[:4]:
+                body = (u.get("body") or "").strip()[:250]
+                if body:
+                    parts.append(f"  [{(u.get('created_at') or '')[:10]} - {u.get('creator', '?')}] {body}")
+        parts.append("")
 
     return "\n".join(parts)

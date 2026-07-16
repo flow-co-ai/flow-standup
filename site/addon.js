@@ -82,6 +82,22 @@ function foGroupByClient(items) {
   });
 }
 
+// Cards the automation couldn't confidently route to a signed client on the
+// active roster (item.potentialClient set instead of a real group) get
+// grouped by that inferred prospect name here, same sort as foGroupByClient.
+function foGroupByProspect(items) {
+  const groups = new Map();
+  for (const item of items) {
+    const key = item.potentialClient || "Unknown";
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(item);
+  }
+  for (const list of groups.values()) {
+    list.sort((a, b) => foPriority(a) - foPriority(b));
+  }
+  return [...groups.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+}
+
 function foRenderCollapsibleSection(key, label, items, emptyText) {
   const expanded = foSectionExpanded[key];
   return `
@@ -96,20 +112,39 @@ function foRenderCollapsibleSection(key, label, items, emptyText) {
 }
 
 function foRenderQueue(active, handled, mondayed) {
-  const activeHtml = active.length
-    ? foGroupByClient(active).map(([client, items]) => `
+  // Cards flagged "unmapped client/workstream" by the automation carry
+  // potentialClient instead of a real roster group -- they get their own
+  // section below instead of being force-grouped under an existing client
+  // or sitting invisibly with nowhere to render.
+  const activeReal      = active.filter(it => !it.potentialClient);
+  const activeProspects = active.filter(it => it.potentialClient);
+
+  const activeHtml = activeReal.length
+    ? foGroupByClient(activeReal).map(([client, items]) => `
       <div class="fo-group">
         <div class="fo-group-header">${foEscape(client)} <span class="fo-group-count">(${items.length})</span></div>
         <div class="fo-card-grid">
           ${items.map(item => foQueueCard(item, "active")).join("")}
         </div>
       </div>`).join("")
-    : `<div class="fo-empty">queue is empty</div>`;
+    : (activeProspects.length ? "" : `<div class="fo-empty">queue is empty</div>`);
+
+  const prospectsHtml = activeProspects.length ? `
+    <div class="fo-prospects">
+      <div class="fo-label">Potential clients</div>
+      ${foGroupByProspect(activeProspects).map(([name, items]) => `
+        <div class="fo-group fo-group-prospect">
+          <div class="fo-group-header">${foEscape(name)} <span class="fo-group-count">(${items.length})</span></div>
+          <div class="fo-card-grid">
+            ${items.map(item => foQueueCard(item, "active")).join("")}
+          </div>
+        </div>`).join("")}
+    </div>` : "";
 
   const handledHtml = foRenderCollapsibleSection("handled", "handled", handled, "nothing handled yet");
   const mondayedHtml = foRenderCollapsibleSection("mondayed", "mondayed", mondayed, "nothing sent to monday yet");
 
-  return activeHtml + handledHtml + mondayedHtml;
+  return activeHtml + prospectsHtml + handledHtml + mondayedHtml;
 }
 
 function foToggleSection(key) {
@@ -122,6 +157,7 @@ function foToggleSection(key) {
 const NULL_REASON_LABELS = {
   "multi-item": "needs /monday-task (multi-item)",
   "content-conflict": "needs your input before this can be drafted",
+  "unmapped-client": "unrecognized client -- confirm before this gets drafted",
 };
 
 function foStripGroupPrefix(title, group) {

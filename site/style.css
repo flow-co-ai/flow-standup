@@ -690,6 +690,38 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 @media (max-width: 620px) { .client-grid { grid-template-columns: 1fr; } }
 
+/* ── potential clients (prospects, kept visually distinct from signed clients) ── */
+.section-divider {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 30px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid rgba(237,233,220,0.08);
+}
+.section-divider-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #A9B478;
+}
+.section-divider-note {
+  font-size: 12px;
+  color: rgba(220,216,200,0.45);
+}
+.potential-card {
+  cursor: default;
+  border-style: dashed;
+  border-color: rgba(237,233,220,0.16);
+  background: #10140F;
+}
+.potential-card:hover { border-color: rgba(237,233,220,0.28); background: #10140F; transform: none; }
+.potential-label {
+  color: rgba(220,216,200,0.55);
+}
+
 .mini-card {
   background: #141A14;
   border: 1px solid rgba(237,233,220,0.08);

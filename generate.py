@@ -9,10 +9,12 @@ Python. Mirrors the proven flow-analyst per-client pattern.
 Run: python generate.py
 """
 
+import difflib
 import hashlib
 import io
 import json
 import os
+import re
 import shutil
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -191,17 +193,34 @@ def group_items_by_client(
     return ordered, board_errors
 
 
-def _match_comms_to_client(text: str, clients_config: dict) -> str:
+def _match_comms_to_client(text: str, clients_config: dict, active_clients: set[str] | None = None) -> str:
+    """active_clients, when given, gates the match: a fuzzy alias hit only
+    counts if that client also has real activity on the actual Monday boards
+    this pulse window. Without that corroboration a superficial resemblance
+    (shared word, similar industry) can't force-assign onto a signed client's
+    card -- it falls through to General comms, which build_potential_clients
+    then decides whether to surface as its own prospect card."""
     result = resolve_client(text, clients_config, fuzzy=True)
-    return result if result != "Unmapped" else "General comms"
+    if result == "Unmapped":
+        return "General comms"
+    if active_clients is not None and result not in active_clients:
+        return "General comms"
+    return result
 
 
-def match_meeting_clients(mt: dict, clients_config: dict) -> list[str]:
+def match_meeting_clients(mt: dict, clients_config: dict, active_clients: set[str]) -> list[str]:
     """Match a meeting to one or more clients.
-    1) Title match (strongest signal) — single client.
-    2) Else scan the summary CONTENT for client aliases — a meeting that
-       discusses several clients attaches to each of them (max 4).
-    3) Else General comms."""
+    1) Title match (strongest signal) — trusted even for a currently-quiet
+       client, since a meeting literally titled with the client's name is
+       strong evidence on its own.
+    2) Else scan the summary CONTENT for client aliases — but a content-only
+       hit is corroboration-only: it's only trusted when that client also has
+       real activity on the actual Monday boards this pulse window
+       (active_clients). Otherwise a prospect that merely resembles a signed
+       client (same industry, an overlapping word) would get force-assigned
+       onto that client's card instead of surfacing as its own prospect.
+    3) Else empty -- caller treats this as unmatched (General comms / a
+       potential-client candidate), never guessed."""
     from fetch_monday import all_alias_matches
     title_matches = all_alias_matches(mt.get("title", ""), clients_config)
     if title_matches:
@@ -217,7 +236,76 @@ def match_meeting_clients(mt: dict, clients_config: dict) -> list[str]:
         haystack += " " + " ".join(s.get("text", "") for s in mt["sentences"][:60]).lower()
 
     matches = all_alias_matches(haystack, clients_config)
-    return matches[:4] if matches else ["General comms"]
+    confirmed = [m for m in matches if m in active_clients]
+    return confirmed[:4]
+
+
+# ── potential clients (prospects, not signed clients) ────────────────────────
+#
+# Anything that doesn't clearly match an existing client in the active roster
+# no longer gets force-merged into whichever signed client it superficially
+# resembles. It lands here instead -- one card per distinct prospect -- fed
+# by three sources: meetings/chats that matched nothing (General comms pool)
+# and real Monday items sitting under a group title that matches no configured
+# client alias at all.
+
+_INTERNAL_MEETING_HINTS = (
+    "weekly sync", "standup", "stand-up", "1:1", "one on one", "ads team",
+    "internal", "retro", "retrospective", "planning", "catch up", "catchup",
+    "sync-up", "syncup", "team sync", "all hands", "check-in", "checkin",
+)
+
+
+def _looks_internal(label: str) -> bool:
+    """Heuristic only: filters out generic internal/ops meeting or chat names
+    (e.g. 'Ads Team Weekly Sync') so they stay in General comms instead of
+    spawning a fake 'prospect' card. Anything else unmatched -- almost always
+    a specific named business or contact -- surfaces as a potential client."""
+    low = (label or "").lower()
+    return any(hint in low for hint in _INTERNAL_MEETING_HINTS)
+
+
+def build_potential_clients(monday_data: list, general_meetings: list, general_chats: list) -> list[dict]:
+    prospects: dict[str, dict] = {}
+
+    def _bucket(name: str, source: str, blurb: str, when: str):
+        name = (name or "").strip()
+        if not name:
+            return
+        key = name.lower()
+        if key not in prospects:
+            prospects[key] = {"name": name, "sources": [], "items": []}
+        if source not in prospects[key]["sources"]:
+            prospects[key]["sources"].append(source)
+        prospects[key]["items"].append({"source": source, "blurb": blurb, "when": when})
+
+    for mt in general_meetings or []:
+        title = mt.get("title") or "Untitled"
+        if _looks_internal(title):
+            continue
+        summary = mt.get("summary") or {}
+        blurb = str(summary.get("overview") or "")[:200] or "Meeting — no summary available."
+        _bucket(title, "meeting", blurb, mt.get("date", ""))
+
+    for chat_name, msgs in general_chats or []:
+        if _looks_internal(chat_name):
+            continue
+        n = len(msgs) if isinstance(msgs, list) else 0
+        if not n:
+            continue
+        last = msgs[-1] if isinstance(msgs, list) and msgs else {}
+        blurb = f"{n} message(s); most recent: {(last.get('text') or '')[:160]}"
+        _bucket(chat_name, "whatsapp", blurb, (last.get("datetime") or "")[:16])
+
+    for board in monday_data:
+        if "error" in board:
+            continue
+        for item in board.get("items", []):
+            if item.get("client") == "Unmapped" and item.get("group"):
+                blurb = f"\"{item.get('name', '')}\" on {board['board_name']} — unrecognized group \"{item['group']}\"."
+                _bucket(item["group"], "monday_group", blurb, item.get("last_updated") or item.get("created_at") or "")
+
+    return sorted(prospects.values(), key=lambda p: p["name"].lower())
 
 
 # ── URL lookup (Python owns URLs — the model never writes them) ──────────────
@@ -495,11 +583,34 @@ EMIT_COMPLETIONS_TOOL = {
                     "required": ["client", "text", "source"],
                     "properties": {
                         "client": {"type": "string"},
-                        "text": {"type": "string", "description": "Short phrase naming the specific piece of work completed, max 10 words."},
+                        "text": {"type": "string", "description": "Short plain-language summary of what was actually done, max ~14 words -- not the raw task/item name restated."},
                         "who": {"type": ["string", "null"], "description": "Person who said/did it, if named."},
                         "source": {"type": "string", "enum": ["MTG", "WA"]},
                         "sourceDate": {"type": ["string", "null"], "description": "YYYY-MM-DD if known, else null."},
                         "monday_item_id": {"type": ["string", "null"], "description": "ONLY if confidently matched to an id shown in the board snapshot. Null if any doubt -- never guess."},
+                    },
+                },
+            },
+        },
+    },
+}
+
+EMIT_MONDAY_DONE_TOOL = {
+    "name": "emit_monday_done",
+    "description": "Emit one summarized completion line per candidate Monday item that just turned Done.",
+    "input_schema": {
+        "type": "object",
+        "required": ["completions"],
+        "properties": {
+            "completions": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": ["client", "text", "item_id"],
+                    "properties": {
+                        "client": {"type": "string"},
+                        "text": {"type": "string", "description": "Plain-language summary of what was completed, max ~16 words, covering the parent item and any listed subitems together."},
+                        "item_id": {"type": "string", "description": "Verbatim from the candidate's item_id. Never invent or alter."},
                     },
                 },
             },
@@ -613,7 +724,7 @@ def compute_client_stats(departments: dict, meetings: list, chats: list) -> dict
     }
 
 
-def build_meetings_digest(fireflies_data, clients_config: dict) -> list:
+def build_meetings_digest(fireflies_data, clients_config: dict, active_clients: set[str]) -> list:
     """Deterministic — built in Python from Fireflies data. No model call."""
     if not isinstance(fireflies_data, list):
         return []
@@ -642,7 +753,7 @@ def build_meetings_digest(fireflies_data, clients_config: dict) -> list:
             continue  # Fireflies often records duplicates of the same call
         seen_titles.add(key)
         summary = mt.get("summary") or {}
-        matched = match_meeting_clients(mt, clients_config)
+        matched = match_meeting_clients(mt, clients_config, active_clients)
         digest.append({
             "title": title,
             "date": date,
@@ -742,25 +853,31 @@ def _iso_week(d: datetime) -> str:
 
 
 def _completion_id(client: str, text: str) -> str:
-    """Stable across runs/days (client+text, not per-run random) so the same
-    completion is never added twice within a week."""
+    """Internal bookkeeping label only (logs/debugging) -- NOT the dedup key.
+    See _is_duplicate_completion for how duplicates are actually decided."""
     return hashlib.sha1(f"{client}:{text}".encode()).hexdigest()[:12]
 
 
 def load_accumulator(path: Path = ACCUMULATOR_PATH) -> dict:
+    default = {"isoWeek": None, "items": [], "priorWeek": {"isoWeek": None, "items": []}, "monday_ids_seen": []}
     if path.exists():
         try:
-            return json.loads(path.read_text(encoding="utf-8"))
+            data = json.loads(path.read_text(encoding="utf-8"))
+            data.setdefault("monday_ids_seen", [])  # older accumulator files predate this field
+            return data
         except Exception:
             pass
-    return {"isoWeek": None, "items": [], "priorWeek": {"isoWeek": None, "items": []}}
+    return default
 
 
 def apply_weekly_reset(acc: dict, current_iso_week: str) -> dict:
     """If the accumulator's isoWeek differs from the current one, this is the
     first run of a new week: move current items into priorWeek (replacing
     whatever was there -- one week of history, not a growing log) and start
-    the new week's items empty."""
+    the new week's items empty. monday_ids_seen is untouched here -- it tracks
+    which real Monday ids have EVER been turned into a completion line, so a
+    status that was already summarized doesn't get re-summarized just because
+    the display week rolled over."""
     if acc.get("isoWeek") != current_iso_week:
         acc["priorWeek"] = {"isoWeek": acc.get("isoWeek"), "items": acc.get("items", [])}
         acc["isoWeek"] = current_iso_week
@@ -779,43 +896,116 @@ def load_alerts(path: Path = ALERTS_PATH) -> list:
     return []
 
 
-def scan_monday_completions(monday_data: list, existing_ids: set) -> list[dict]:
-    """Deterministic -- any item/subitem whose status is already "Done" on
-    Monday, not already recorded. No Monday write needed for these (they're
-    already Done); this just tracks them for the site's Completed section."""
-    found = []
+# ── dedup: by underlying work, not literal text ───────────────────────────────
+#
+# Two mentions of the SAME linked Monday item are always the same completion,
+# no matter how differently worded -- monday_item_id is an exact, authoritative
+# identity when available. Without one (pure WhatsApp/Fireflies text with
+# nothing to link to), fall back to a similarity check on the text instead of
+# an exact-text-hash, so two differently-worded messages describing the same
+# finished work don't create two separate completed-lines.
+
+SIMILARITY_DUP_THRESHOLD = 0.6
+
+
+def _norm_dedup_text(s: str) -> str:
+    return re.sub(r"[^a-z0-9 ]", "", (s or "").lower()).strip()
+
+
+def _text_similarity(a: str, b: str) -> float:
+    return difflib.SequenceMatcher(None, _norm_dedup_text(a), _norm_dedup_text(b)).ratio()
+
+
+def _is_duplicate_completion(candidate: dict, existing: list[dict]) -> bool:
+    mid = candidate.get("monday_item_id")
+    client = candidate.get("client")
+    text = candidate.get("text", "")
+    for it in existing:
+        if mid and it.get("monday_item_id") and str(it["monday_item_id"]) == str(mid):
+            return True
+        if not mid and not it.get("monday_item_id") and it.get("client") == client:
+            if _text_similarity(text, it.get("text", "")) >= SIMILARITY_DUP_THRESHOLD:
+                return True
+    return False
+
+
+def collect_monday_done_candidates(monday_data: list, seen_ids: set) -> list[dict]:
+    """Deterministic grouping only (no text yet) -- for each Monday item,
+    checks whether the item itself and/or any of its subitems just turned
+    Done and haven't been summarized before (tracked by real Monday id in
+    seen_ids, never by eventual display text). When a parent and its
+    subitems are newly Done in the same run, they collapse into ONE
+    candidate so summarize_monday_done can turn them into a single
+    summarized line instead of one row per item/subitem."""
+    candidates = []
     for board in monday_data:
         if "error" in board:
             continue
         for item in board.get("items", []):
             client = item.get("client", "Unmapped")
-            if (item.get("status") or "").strip().lower() == "done":
-                cid = _completion_id(client, item.get("name", ""))
-                if cid not in existing_ids:
-                    found.append({
-                        "id": cid,
-                        "client": client,
-                        "text": item.get("name", ""),
-                        "who": None,
-                        "source": "MON",
-                        "sourceDate": item.get("last_updated") or item.get("created_at"),
-                        "monday_item_id": item.get("item_id"),
-                    })
-            for sub in item.get("subitems", []) or []:
-                if (sub.get("status") or "").strip().lower() == "done":
-                    text = f"{item.get('name', '')} — {sub.get('name', '')}"
-                    cid = _completion_id(client, text)
-                    if cid not in existing_ids:
-                        found.append({
-                            "id": cid,
-                            "client": client,
-                            "text": text,
-                            "who": None,
-                            "source": "MON",
-                            "sourceDate": item.get("last_updated") or item.get("created_at"),
-                            "monday_item_id": sub.get("id"),
-                        })
-    return found
+            item_id = str(item.get("item_id") or "")
+            item_done = (
+                (item.get("status") or "").strip().lower() == "done"
+                and item_id and item_id not in seen_ids
+            )
+            new_subs = [
+                sub for sub in (item.get("subitems", []) or [])
+                if (sub.get("status") or "").strip().lower() == "done"
+                and str(sub.get("id") or "") not in seen_ids
+            ]
+            if not item_done and not new_subs:
+                continue
+            new_ids = ([item_id] if item_done else []) + [str(s["id"]) for s in new_subs if s.get("id")]
+            candidates.append({
+                "client": client,
+                "item_name": item.get("name", ""),
+                "item_id": item_id,
+                "item_done": item_done,
+                "subitem_names": [s.get("name", "") for s in new_subs],
+                "recent_updates": item.get("recent_updates") or [],
+                "sourceDate": item.get("last_updated") or item.get("created_at"),
+                "new_ids": new_ids,
+            })
+    return candidates
+
+
+def summarize_monday_done(ai: "anthropic.Anthropic", candidates: list[dict], today: str) -> list[dict]:
+    """One batched Claude call turns every candidate's raw item/subitem names
+    into a real plain-language summary line. Falls back to a deterministic,
+    still-not-just-the-raw-title line per candidate if the call fails, so a
+    model hiccup never silently drops a completion."""
+    if not candidates:
+        return []
+
+    by_id: dict[str, dict] = {}
+    try:
+        prompt = pulse_story.build_monday_done_prompt(candidates, today)
+        result = _call_tool(ai, prompt, EMIT_MONDAY_DONE_TOOL, label="monday-completions", max_tokens=2000)
+        for row in (result.get("completions", []) or []):
+            iid = row.get("item_id")
+            if iid:
+                by_id[str(iid)] = row
+    except Exception as exc:
+        print(f"  ⚠️  Monday completion summarization failed ({exc}) -- using a plain fallback summary")
+
+    out = []
+    for c in candidates:
+        row = by_id.get(str(c["item_id"]))
+        text = (row.get("text") or "").strip() if row else ""
+        if not text:
+            bits = ([c["item_name"]] if c.get("item_done") else []) + (c.get("subitem_names") or [])
+            bits = [b for b in bits if b]
+            text = f"completed: {', '.join(bits)}" if bits else f"completed: {c['item_name']}"
+        out.append({
+            "client": c["client"],
+            "text": text,
+            "who": None,
+            "source": "MON",
+            "sourceDate": c.get("sourceDate"),
+            "monday_item_id": c["item_id"],
+            "new_ids": c.get("new_ids", []),
+        })
+    return out
 
 
 def build_monday_meta(monday_data: list) -> dict[str, dict]:
@@ -920,11 +1110,7 @@ def render_markdown(standup: dict) -> str:
             "at_risk": "At Risk",
         }.get(health, health)
 
-        if client == "Unmapped":
-            lines.append("### Unmapped Groups")
-            lines.append("*Groups with no matching client alias — add aliases to config.json.*")
-        else:
-            lines.append(f"### {client}  `{health_label}`")
+        lines.append(f"### {client}  `{health_label}`")
         lines.append("")
 
         if entry.get("headline"):
@@ -968,6 +1154,20 @@ def render_markdown(standup: dict) -> str:
         for r in (entry.get("risks") or []):
             lines.append(f"- {r}")
         if entry.get("risks"):
+            lines.append("")
+
+    potential_clients = standup.get("potential_clients") or []
+    if potential_clients:
+        lines += ["## Potential Clients", "",
+                   "*Doesn't clearly match a signed client on the active roster -- not "
+                   "merged into any existing client's card. Confirm before treating as a "
+                   "real onboarding.*", ""]
+        for p in potential_clients:
+            sources = ", ".join(p.get("sources") or [])
+            lines.append(f"### {p.get('name', 'Unknown')}" + (f"  `{sources}`" if sources else ""))
+            for it in (p.get("items") or [])[:5]:
+                when = f" ({it['when']})" if it.get("when") else ""
+                lines.append(f"- {it.get('blurb', '')}{when}")
             lines.append("")
 
     lines += ["## Meetings Digest", ""]
@@ -1069,23 +1269,30 @@ def main():
     grouped, board_errors = group_items_by_client(monday_data, clients_config)
     url_lookup = build_url_lookup(monday_data)
 
+    # Clients with real activity on the actual Monday boards this pulse window --
+    # the only clients a content-only fuzzy match (not a title/chat-name match)
+    # is allowed to land on. See match_meeting_clients / _match_comms_to_client.
+    active_clients_set = {c for c in grouped if c != "Unmapped"}
+
     meetings_by_client: dict[str, list] = {}
     if isinstance(fireflies_data, list):
         for mt in fireflies_data:
-            matched = match_meeting_clients(mt, clients_config)
-            for c in matched:
+            matched = match_meeting_clients(mt, clients_config, active_clients_set)
+            for c in (matched or ["General comms"]):
                 meetings_by_client.setdefault(c, []).append(mt)
-            print(f"  meeting '{(mt.get('title') or 'Untitled')[:45]}' → {', '.join(matched)}")
+            print(f"  meeting '{(mt.get('title') or 'Untitled')[:45]}' → {', '.join(matched) if matched else 'General comms'}")
 
     chats_by_client: dict[str, list[tuple]] = {}
     for chat_name, msgs in (whatsapp_data or {}).items():
-        c = _match_comms_to_client(chat_name, clients_config)
+        c = _match_comms_to_client(chat_name, clients_config, active_clients_set)
         n = len(msgs) if isinstance(msgs, list) else 0
         print(f"  chat '{chat_name}' ({n} msgs) → {c}")
         chats_by_client.setdefault(c, []).append((chat_name, msgs))
 
     # Clients with any signal this week (Monday items OR meetings OR chats),
-    # in config order; Unmapped last.
+    # in config order. Unmapped Monday groups and unmatched meetings/chats no
+    # longer get force-merged into a signed client's card or a full pulse call
+    # of their own -- they feed build_potential_clients below instead.
     active: list[str] = []
     for c in clients_config:
         if c in grouped or c in meetings_by_client or c in chats_by_client:
@@ -1093,8 +1300,13 @@ def main():
     for c in grouped:
         if c not in active and c != "Unmapped":
             active.append(c)
-    if "Unmapped" in grouped:
-        active.append("Unmapped")
+
+    potential_clients = build_potential_clients(
+        monday_data, meetings_by_client.get("General comms", []), chats_by_client.get("General comms", [])
+    )
+    if potential_clients:
+        print(f"  Potential clients (unmatched, not merged into a signed client): "
+              f"{', '.join(p['name'] for p in potential_clients)}")
 
     # ── per-client Claude calls ───────────────────────────────────────────────
     yesterday_pulse, y_name = pulse_story.load_yesterday_pulse(today)
@@ -1107,9 +1319,10 @@ def main():
     accumulator = load_accumulator()
     current_iso_week = _iso_week(datetime.now(timezone.utc))
     apply_weekly_reset(accumulator, current_iso_week)
-    existing_ids = {it["id"] for it in accumulator["items"]}
+    seen_monday_ids = set(accumulator.get("monday_ids_seen", []))
 
-    monday_completions = scan_monday_completions(monday_data, existing_ids)
+    monday_candidates = collect_monday_done_candidates(monday_data, seen_monday_ids)
+    monday_completions = summarize_monday_done(ai, monday_candidates, today)
 
     try:
         completion_prompt = pulse_story.build_completion_scan_prompt(
@@ -1127,11 +1340,7 @@ def main():
         text = (c.get("text") or "").strip()
         if not text:
             continue
-        cid = _completion_id(client, text)
-        if cid in existing_ids:
-            continue
         comms_completions.append({
-            "id": cid,
             "client": client,
             "text": text,
             "who": c.get("who"),
@@ -1140,15 +1349,37 @@ def main():
             "monday_item_id": c.get("monday_item_id"),
         })
 
-    seen_this_run = set()
+    # Dedup by underlying work, not literal text: monday_item_id wins when
+    # available (exact -- two mentions of the same linked Monday item are the
+    # same completion no matter how differently worded); otherwise a
+    # similarity check against this week's already-recorded completions for
+    # the same client catches two differently-worded mentions of the same
+    # finished work (e.g. a WhatsApp message and a near-duplicate follow-up).
+    # Checked against a running pool that grows as candidates are accepted, so
+    # cross-source dupes within the same run (Monday's own Done status and a
+    # WhatsApp message about that same item) also collapse into one line.
+    existing_for_dedup = list(accumulator["items"])
+    newly_seen_monday_ids: set[str] = set()
     deduped_new = []
     for c in monday_completions + comms_completions:
-        if c["id"] in seen_this_run:
+        is_dup = _is_duplicate_completion(c, existing_for_dedup)
+        if c.get("source") == "MON":
+            newly_seen_monday_ids.update(c.get("new_ids", []))
+        if is_dup:
             continue
-        seen_this_run.add(c["id"])
-        deduped_new.append(c)
+        record = {
+            "id": _completion_id(c["client"], c["text"]),
+            "client": c["client"],
+            "text": c["text"],
+            "who": c.get("who"),
+            "source": c["source"],
+            "sourceDate": c.get("sourceDate"),
+            "monday_item_id": c.get("monday_item_id"),
+        }
+        deduped_new.append(record)
+        existing_for_dedup.append(record)
     print(f"  Found {len(monday_completions)} Monday-side + {len(comms_completions)} comms-side "
-          f"new completion(s) ({len(deduped_new)} after dedupe)")
+          f"candidate(s) ({len(deduped_new)} new after dedupe)")
 
     # The one write generate.py is allowed to make to Monday: flip a
     # comms-confirmed completion's status to Done -- only when a
@@ -1186,6 +1417,7 @@ def main():
             print(f"  ✗ Failed to auto-mark Done for {mid}: {exc}")
 
     accumulator["items"].extend(deduped_new)
+    accumulator["monday_ids_seen"] = sorted(seen_monday_ids | newly_seen_monday_ids)
     ACCUMULATOR_PATH.parent.mkdir(exist_ok=True)
     ACCUMULATOR_PATH.write_text(json.dumps(accumulator, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"  Wrote {ACCUMULATOR_PATH}")
@@ -1247,7 +1479,7 @@ def main():
     client_entries: list[dict] = [results_by_client[c] for c in active]
 
     # ── meetings digest (deterministic) ───────────────────────────────────────
-    meetings_digest = build_meetings_digest(fireflies_data, clients_config)
+    meetings_digest = build_meetings_digest(fireflies_data, clients_config, active_clients_set)
     general_meetings = [m for m in meetings_digest if m.get("client") == "General comms"]
 
     # ── wrap-up call ──────────────────────────────────────────────────────────
@@ -1294,6 +1526,7 @@ def main():
         "executive_summary": wrapup.get("executive_summary", ""),
         "departments_overview": wrapup.get("departments_overview", []),
         "by_client": client_entries,
+        "potential_clients": potential_clients,
         "meetings_digest": meetings_digest,
         "comms_flags": wrapup.get("comms_flags", []),
         "blockers": wrapup.get("blockers", []),
@@ -1302,7 +1535,7 @@ def main():
     }
     inject_ids(standup)
     print(f"\n  ✓ Standup assembled: {len(client_entries)} clients, "
-          f"{len(meetings_digest)} meetings")
+          f"{len(potential_clients)} potential client(s), {len(meetings_digest)} meetings")
 
     standups_dir = Path("standups")
     standups_dir.mkdir(exist_ok=True)
