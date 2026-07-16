@@ -65,7 +65,10 @@ function foPriority(item) {
 function foGroupByClient(items) {
   const groups = new Map();
   for (const item of items) {
-    const key = item.group || "n/a";
+    // Guaranteed truthy: foRenderQueue only ever hands this function items
+    // that have a real group -- anything without one goes to
+    // foGroupByProspect instead. There is no "n/a" fallback here on purpose.
+    const key = item.group;
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(item);
   }
@@ -82,13 +85,16 @@ function foGroupByClient(items) {
   });
 }
 
-// Cards the automation couldn't confidently route to a signed client on the
-// active roster (item.potentialClient set instead of a real group) get
-// grouped by that inferred prospect name here, same sort as foGroupByClient.
+// Cards without a real, resolvable Monday group -- whether explicitly
+// flagged potentialClient by the automation, or simply missing a group for
+// any other reason -- get grouped by that inferred prospect name here, same
+// sort as foGroupByClient. Falls back to a named bucket, never "n/a"/
+// "Unknown", for the (ideally rare) case where potentialClient itself
+// wasn't set either.
 function foGroupByProspect(items) {
   const groups = new Map();
   for (const item of items) {
-    const key = item.potentialClient || "Unknown";
+    const key = item.potentialClient || "Unmapped client/workstream";
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(item);
   }
@@ -112,12 +118,15 @@ function foRenderCollapsibleSection(key, label, items, emptyText) {
 }
 
 function foRenderQueue(active, handled, mondayed) {
-  // Cards flagged "unmapped client/workstream" by the automation carry
-  // potentialClient instead of a real roster group -- they get their own
-  // section below instead of being force-grouped under an existing client
-  // or sitting invisibly with nowhere to render.
-  const activeReal      = active.filter(it => !it.potentialClient);
-  const activeProspects = active.filter(it => it.potentialClient);
+  // Structural rule, not a special case for any particular flag: anything
+  // without a real, resolvable Monday group ALWAYS renders in Potential
+  // Clients, never as its own client group and never under a raw "n/a"/
+  // "Unknown" catch-all. This holds regardless of WHY the group is missing
+  // -- explicitly flagged potentialClient by the automation, or any other
+  // reason a group never got set -- so there is no path left for a
+  // groupless card to render silently under a fallback label.
+  const activeReal      = active.filter(it => !!it.group);
+  const activeProspects = active.filter(it => !it.group);
 
   const activeHtml = activeReal.length
     ? foGroupByClient(activeReal).map(([client, items]) => `

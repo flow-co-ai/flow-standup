@@ -257,54 +257,105 @@ def match_meeting_clients(mt: dict, clients_config: dict, active_clients: set[st
 # scanned meeting titles (missed WhatsApp chat names entirely) and had no
 # concept of specific known non-client entities -- add an entry here whenever
 # a genuinely-internal channel or vendor contact starts showing up as a fake
-# prospect card.
+# prospect card. Matched fuzzily (via _text_similarity below), never by exact
+# string equality, so a WhatsApp export's OS-appended "(2)"/"(3)" duplicate
+# suffix or a slightly reworded meeting title still matches the entry.
+
+# ── shared fuzzy-name matching (dedup, exclusions, alias-gap detection) ───────
+#
+# One mechanism, reused everywhere two free-text names might refer to the
+# same real-world thing: completion dedup (a WhatsApp message vs. a
+# near-duplicate follow-up), the non_client_entities exclusion list (a known
+# channel/vendor name vs. however it actually appears in the data), prospect
+# bucketing (two different sources naming the same business differently),
+# and alias-gap detection (an unmapped Monday group vs. an existing client's
+# configured aliases). Adding a case to any of these should never require a
+# new one-off string comparison -- extend this shared function instead.
+
+SIMILARITY_DUP_THRESHOLD = 0.6
 
 
-def _same_prospect_entity(a: str, b: str) -> bool:
-    """True if a and b are almost certainly the same prospect under two
-    different spellings -- e.g. a model-extracted short entity name ('Citrus
-    Smiles') and the fuller meeting-title variant for the same business
-    ('Citrus Smiles Marketing Systems'). Only merges when the SHORTER name is
-    a whole-word-boundary phrase inside the longer one, and is itself at
-    least two words / 8+ characters -- guards against a single short generic
-    word (e.g. 'Cotton') silently merging into an unrelated longer name."""
-    a_low, b_low = a.lower().strip(), b.lower().strip()
-    if a_low == b_low:
-        return True
-    shorter, longer = (a_low, b_low) if len(a_low) <= len(b_low) else (b_low, a_low)
-    if len(shorter) < 8 or " " not in shorter:
-        return False
-    return re.search(r"(?<!\w)" + re.escape(shorter) + r"(?!\w)", longer) is not None
+def _norm_dedup_text(s: str) -> str:
+    return re.sub(r"[^a-z0-9 ]", "", (s or "").lower()).strip()
+
+
+def _text_similarity(a: str, b: str) -> float:
+    """0.0-1.0. A plain SequenceMatcher ratio() on the full strings penalizes
+    a short name that's simply CONTAINED in a longer one (e.g. a concise
+    extracted entity name vs. a fuller title for the same thing) for the
+    length gap alone -- 'Citrus Smiles' vs 'Citrus Smiles Marketing Systems'
+    scores only ~0.59 on ratio() alone, below any reasonable dup threshold,
+    even though every character of the shorter name appears verbatim in the
+    longer one. Full containment (either direction) of a non-trivial-length
+    string (8+ chars, so a short generic word like 'Cotton' can't
+    single-handedly match a longer unrelated name) is treated as a perfect
+    match; everything else falls back to the plain ratio."""
+    na, nb = _norm_dedup_text(a), _norm_dedup_text(b)
+    if not na or not nb:
+        return 0.0
+    shorter, longer = (na, nb) if len(na) <= len(nb) else (nb, na)
+    if len(shorter) >= 8 and shorter in longer:
+        return 1.0
+    return difflib.SequenceMatcher(None, na, nb).ratio()
+
+
+# Client names/aliases are typically short (1-3 words), where plain
+# character-ratio similarity is noisy -- e.g. "Citrus Smiles" vs "Full
+# Smile" scores 0.609 on _text_similarity purely from sharing "smile(s)",
+# comfortably clearing SIMILARITY_DUP_THRESHOLD (0.6) despite being
+# unrelated businesses. Real near-matches (typos, minor renames) score much
+# higher: "Full Smile Dentle" vs "Full Smile" = 1.0, "Fibbid" vs "Fibid" =
+# 0.909, "MedStaton" vs "MedStation" = 0.947. A stricter threshold for this
+# specific short-string comparison cleanly separates the two -- same shared
+# _text_similarity function, just calibrated for where it's applied.
+ALIAS_GAP_SIMILARITY_THRESHOLD = 0.8
+
+
+def _find_near_client_match(name: str, clients_config: dict) -> str | None:
+    """A Monday group with no exact alias match might not be a new prospect
+    at all -- it could be an EXISTING client's group that silently fell out
+    of the roster (renamed on the board, a typo, a missing alias entry that
+    was never added). Checked against every configured client's canonical
+    name and all its aliases with the same shared fuzzy-match mechanism used
+    everywhere else here (just a stricter threshold -- see
+    ALIAS_GAP_SIMILARITY_THRESHOLD above). Returns the canonical client name
+    on a probable match, else None (a genuinely new, unconfigured business,
+    e.g. an early-stage client with no roster entry yet at all)."""
+    for canonical, aliases in clients_config.items():
+        for candidate in [canonical, *(aliases or [])]:
+            if _text_similarity(name, candidate) >= ALIAS_GAP_SIMILARITY_THRESHOLD:
+                return canonical
+    return None
 
 
 def build_potential_clients(
     monday_data: list, general_meetings: list, general_chats: list,
+    clients_config: dict,
     non_client_entities: list[str],
     off_topic_mentions: list[dict] | None = None,
 ) -> list[dict]:
     prospects: dict[str, dict] = {}
-    exclusions = [e.strip().lower() for e in (non_client_entities or []) if (e or "").strip()]
+    exclusions = [e for e in (non_client_entities or []) if (e or "").strip()]
 
     def _is_known_non_client(name: str) -> bool:
-        low = (name or "").strip().lower()
-        return any(low == e or e in low for e in exclusions)
+        return any(_text_similarity(name, e) >= SIMILARITY_DUP_THRESHOLD for e in exclusions)
 
-    def _bucket(name: str, source: str, blurb: str, when: str):
+    def _bucket(name: str, source: str, blurb: str, when: str, possible_existing_client: str | None = None):
         name = (name or "").strip()
         if not name or _is_known_non_client(name):
             return
         key = name.lower()
         # Merge into an existing card for the same prospect under a
-        # different spelling instead of creating a second one -- otherwise
-        # "one card per distinct prospect" quietly breaks whenever two
-        # sources name the same business differently (a meeting title vs. a
-        # model-extracted entity name, say).
+        # different spelling instead of creating a second one -- the exact
+        # same fuzzy-match mechanism (and threshold) used for completion
+        # dedup, so any future pair of differently-worded mentions of the
+        # same prospect merges automatically, not just this one.
         for existing_key, existing in prospects.items():
-            if _same_prospect_entity(name, existing["name"]):
+            if _text_similarity(name, existing["name"]) >= SIMILARITY_DUP_THRESHOLD:
                 key = existing_key
                 break
         if key not in prospects:
-            prospects[key] = {"name": name, "sources": [], "items": []}
+            prospects[key] = {"name": name, "sources": [], "items": [], "possible_existing_client": None}
         elif len(name) < len(prospects[key]["name"]):
             # Prefer the shorter/cleaner name as the card title -- a concise
             # extracted entity name reads better than a full meeting title.
@@ -312,6 +363,8 @@ def build_potential_clients(
         if source not in prospects[key]["sources"]:
             prospects[key]["sources"].append(source)
         prospects[key]["items"].append({"source": source, "blurb": blurb, "when": when})
+        if possible_existing_client:
+            prospects[key]["possible_existing_client"] = possible_existing_client
 
     for mt in general_meetings or []:
         title = mt.get("title") or "Untitled"
@@ -332,8 +385,23 @@ def build_potential_clients(
             continue
         for item in board.get("items", []):
             if item.get("client") == "Unmapped" and item.get("group"):
-                blurb = f"\"{item.get('name', '')}\" on {board['board_name']} — unrecognized group \"{item['group']}\"."
-                _bucket(item["group"], "monday_group", blurb, item.get("last_updated") or item.get("created_at") or "")
+                group = item["group"]
+                # A Monday group with no matching alias might not be a new
+                # prospect at all -- it could be a real signed client's board
+                # activity that silently fell out of the roster (renamed
+                # group, typo, a missing alias entry never added). Checked
+                # against every configured client's canonical name AND all
+                # its aliases with the same shared fuzzy match, so this is
+                # never a client-specific special case.
+                near_client = _find_near_client_match(group, clients_config)
+                if near_client:
+                    blurb = (f"\"{item.get('name', '')}\" on {board['board_name']} — group \"{group}\" has no "
+                             f"configured alias, but closely resembles the existing client \"{near_client}\". "
+                             f"Possible alias gap, not necessarily a new business.")
+                else:
+                    blurb = f"\"{item.get('name', '')}\" on {board['board_name']} — unrecognized group \"{group}\"."
+                _bucket(group, "monday_group", blurb, item.get("last_updated") or item.get("created_at") or "",
+                        possible_existing_client=near_client)
 
     for m in off_topic_mentions or []:
         entity = (m.get("entity") or "").strip()
@@ -953,26 +1021,6 @@ def load_alerts(path: Path = ALERTS_PATH) -> list:
     return []
 
 
-# ── dedup: by underlying work, not literal text ───────────────────────────────
-#
-# Two mentions of the SAME linked Monday item are always the same completion,
-# no matter how differently worded -- monday_item_id is an exact, authoritative
-# identity when available. Without one (pure WhatsApp/Fireflies text with
-# nothing to link to), fall back to a similarity check on the text instead of
-# an exact-text-hash, so two differently-worded messages describing the same
-# finished work don't create two separate completed-lines.
-
-SIMILARITY_DUP_THRESHOLD = 0.6
-
-
-def _norm_dedup_text(s: str) -> str:
-    return re.sub(r"[^a-z0-9 ]", "", (s or "").lower()).strip()
-
-
-def _text_similarity(a: str, b: str) -> float:
-    return difflib.SequenceMatcher(None, _norm_dedup_text(a), _norm_dedup_text(b)).ratio()
-
-
 def _is_duplicate_completion(candidate: dict, existing: list[dict]) -> bool:
     mid = candidate.get("monday_item_id")
     client = candidate.get("client")
@@ -1222,6 +1270,10 @@ def render_markdown(standup: dict) -> str:
         for p in potential_clients:
             sources = ", ".join(p.get("sources") or [])
             lines.append(f"### {p.get('name', 'Unknown')}" + (f"  `{sources}`" if sources else ""))
+            if p.get("possible_existing_client"):
+                lines.append(f"**Possible existing client, alias mismatch:** may actually be "
+                             f"**{p['possible_existing_client']}** -- add a config.json alias if so, "
+                             "rather than treating this as a new business.")
             for it in (p.get("items") or [])[:5]:
                 when = f" ({it['when']})" if it.get("when") else ""
                 lines.append(f"- {it.get('blurb', '')}{when}")
@@ -1545,6 +1597,7 @@ def main():
 
     potential_clients = build_potential_clients(
         monday_data, meetings_by_client.get("General comms", []), chats_by_client.get("General comms", []),
+        clients_config,
         config.get("non_client_entities", []),
         off_topic_mentions,
     )

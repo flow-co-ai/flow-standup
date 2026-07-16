@@ -589,12 +589,19 @@ function buildMiniCard(entry) {
 const SOURCE_LABEL = { meeting: 'Meeting', whatsapp: 'WhatsApp', monday_group: 'Monday', mention: 'Mentioned' };
 
 function buildPotentialCard(p) {
-  const card = el('article', { class: 'mini-card potential-card' });
+  const aliasGap = p.possible_existing_client;
+  const card = el('article', { class: `mini-card potential-card${aliasGap ? ' alias-gap-card' : ''}` });
 
   card.append(el('div', { class: 'mini-state' },
-    el('span', { class: 'mini-state-label potential-label', text: 'Potential client' }),
+    el('span', {
+      class: `mini-state-label potential-label${aliasGap ? ' alias-gap-label' : ''}`,
+      text: aliasGap ? 'Possible existing client — alias mismatch' : 'Potential client',
+    }),
   ));
   card.append(el('h2', { class: 'mini-name', text: p.name || 'Unknown' }));
+  if (aliasGap) {
+    card.append(el('p', { class: 'mini-micro alias-gap-note', text: `May actually be ${aliasGap} — add a config.json alias if so, instead of tracking this as a new business.` }));
+  }
 
   const items = p.items || [];
   const first = items[0];
