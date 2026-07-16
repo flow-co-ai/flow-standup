@@ -244,36 +244,37 @@ def match_meeting_clients(mt: dict, clients_config: dict, active_clients: set[st
 #
 # Anything that doesn't clearly match an existing client in the active roster
 # no longer gets force-merged into whichever signed client it superficially
-# resembles. It lands here instead -- one card per distinct prospect -- fed
-# by three sources: meetings/chats that matched nothing (General comms pool)
-# and real Monday items sitting under a group title that matches no configured
-# client alias at all.
-
-_INTERNAL_MEETING_HINTS = (
-    "weekly sync", "standup", "stand-up", "1:1", "one on one", "ads team",
-    "internal", "retro", "retrospective", "planning", "catch up", "catchup",
-    "sync-up", "syncup", "team sync", "all hands", "check-in", "checkin",
-)
-
-
-def _looks_internal(label: str) -> bool:
-    """Heuristic only: filters out generic internal/ops meeting or chat names
-    (e.g. 'Ads Team Weekly Sync') so they stay in General comms instead of
-    spawning a fake 'prospect' card. Anything else unmatched -- almost always
-    a specific named business or contact -- surfaces as a potential client."""
-    low = (label or "").lower()
-    return any(hint in low for hint in _INTERNAL_MEETING_HINTS)
+# resembles. It lands here instead -- one card per distinct prospect -- fed by
+# meetings/chats that matched nothing (General comms pool), real Monday items
+# sitting under a group title that matches no configured client alias at all,
+# and off-topic content the per-client summarization filtered out of a
+# correctly-matched client's own card.
+#
+# non_client_entities (config.json) is an explicit, maintained exclusion list
+# for known-not-a-prospect entities -- Flow's own internal department
+# WhatsApp channels, known vendor/tool contacts helping with Flow's own
+# platform setup, etc. This replaces a keyword-guess heuristic that only
+# scanned meeting titles (missed WhatsApp chat names entirely) and had no
+# concept of specific known non-client entities -- add an entry here whenever
+# a genuinely-internal channel or vendor contact starts showing up as a fake
+# prospect card.
 
 
 def build_potential_clients(
     monday_data: list, general_meetings: list, general_chats: list,
+    non_client_entities: list[str],
     off_topic_mentions: list[dict] | None = None,
 ) -> list[dict]:
     prospects: dict[str, dict] = {}
+    exclusions = [e.strip().lower() for e in (non_client_entities or []) if (e or "").strip()]
+
+    def _is_known_non_client(name: str) -> bool:
+        low = (name or "").strip().lower()
+        return any(low == e or e in low for e in exclusions)
 
     def _bucket(name: str, source: str, blurb: str, when: str):
         name = (name or "").strip()
-        if not name:
+        if not name or _is_known_non_client(name):
             return
         key = name.lower()
         if key not in prospects:
@@ -284,15 +285,11 @@ def build_potential_clients(
 
     for mt in general_meetings or []:
         title = mt.get("title") or "Untitled"
-        if _looks_internal(title):
-            continue
         summary = mt.get("summary") or {}
         blurb = str(summary.get("overview") or "")[:200] or "Meeting — no summary available."
         _bucket(title, "meeting", blurb, mt.get("date", ""))
 
     for chat_name, msgs in general_chats or []:
-        if _looks_internal(chat_name):
-            continue
         n = len(msgs) if isinstance(msgs, list) else 0
         if not n:
             continue
@@ -1518,6 +1515,7 @@ def main():
 
     potential_clients = build_potential_clients(
         monday_data, meetings_by_client.get("General comms", []), chats_by_client.get("General comms", []),
+        config.get("non_client_entities", []),
         off_topic_mentions,
     )
     if potential_clients:

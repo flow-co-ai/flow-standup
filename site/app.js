@@ -592,7 +592,7 @@ function buildPotentialCard(p) {
   const card = el('article', { class: 'mini-card potential-card' });
 
   card.append(el('div', { class: 'mini-state' },
-    el('span', { class: 'mini-state-label potential-label', text: 'New client' }),
+    el('span', { class: 'mini-state-label potential-label', text: 'Potential client' }),
   ));
   card.append(el('h2', { class: 'mini-name', text: p.name || 'Unknown' }));
 
@@ -791,7 +791,7 @@ function render() {
   const potentialClients = standup.potential_clients || [];
   if (potentialClients.length) {
     app.append(el('div', { class: 'section-divider' },
-      el('span', { class: 'section-divider-label', text: 'New clients' }),
+      el('span', { class: 'section-divider-label', text: 'Potential clients' }),
       el('span', { class: 'section-divider-note', text: 'not merged into any client above — confirm before treating as real' }),
     ));
     const potentialGrid = el('div', { class: 'client-grid' });
