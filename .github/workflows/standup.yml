@@ -44,7 +44,38 @@ jobs:
           git add standups/ site/latest.json archive/ alerts/
           if git diff --staged --quiet; then
             echo "Nothing new to commit."
-          else
-            git commit -m "standup: daily report $(date -u +%Y-%m-%d)"
-            git push
+            exit 0
           fi
+
+          git commit -m "standup: daily report $(date -u +%Y-%m-%d)"
+
+          # Retry on a rejected push (a concurrent run -- e.g. two manual
+          # triggers close together -- landed its commit first): fetch and
+          # rebase onto the latest main, then retry. If the rebase itself
+          # conflicts, there's no sane way to merge two independent full
+          # regenerations of the same generated files -- abort the rebase,
+          # drop this run's commit, and defer to whichever run already
+          # landed, rather than leaving the repo mid-rebase or forcing a
+          # conflicting overwrite.
+          attempt=1
+          max_attempts=5
+          until git push; do
+            if [ "$attempt" -ge "$max_attempts" ]; then
+              echo "::error::Push failed after $max_attempts attempts -- giving up."
+              exit 1
+            fi
+            echo "Push rejected (attempt $attempt/$max_attempts) -- fetching and rebasing onto origin/main..."
+            git fetch origin main
+            if git rebase origin/main; then
+              echo "Rebase succeeded, retrying push..."
+            else
+              echo "Rebase conflicted -- a concurrent run's commit already covers this update. Dropping this run's commit."
+              git rebase --abort
+              git reset --hard origin/main
+              echo "Nothing to push -- deferring to the concurrent run."
+              exit 0
+            fi
+            sleep $((RANDOM % 5 + 1))
+            attempt=$((attempt + 1))
+          done
+          echo "Pushed successfully."
