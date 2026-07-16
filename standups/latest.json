@@ -1,22 +1,22 @@
 {
-  "week_of": "2026-07-15",
-  "executive_summary": "Multiple clients face stalled work and access blockers while new onboarding (MedStation, Tom Sugar) adds coordination load. Ad budget cuts at Full Smile and contact-rate drops at Justice Consumer Law are reshaping lead pipelines. Quality HVAC and Steel Round Bars have items scheduled today with no recent movement.",
+  "week_of": "2026-07-16",
+  "executive_summary": "Eleven clients tracked this week, with six flagged for attention due to stalled work or pending client responses. Quality HVAC and Steel Round Bars show the longest delays (30+ and 9+ days), while Full Smile's CRM sync bug remains unresolved for eight days. New activity includes Full Smile's GBP work launch, MedStation's content production plan, and Cotton Collections' Meta access request.",
   "departments_overview": [
     {
       "department": "CRM",
-      "summary": "Load includes Full Smile duplicate resolution (live), Justice Consumer Law SMS automation planning, and MedStation/Tom Sugar onboarding; stuck items include Full Smile OpenDental sync (7d), Steel Round Bars handoff (8d), and Zoho admin permissions for Justice Consumer Law."
+      "summary": "Load across Full Smile (sync bug, 8d), Justice Consumer Law (permissions, 2d), MedStation (GHL onboarding undefined, 9d), Maadi Law (pipeline review, 3d), Steel Round Bars (handoff + directives, 9d), and Unmapped (silent 8d); multiple items stalled mid-cycle."
     },
     {
       "department": "Ads",
-      "summary": "Full Smile budget cut to $40/day and Google paused, Justice Consumer Law contact rates dropped sharply, Cotton Collections Pixel setup blocked by Meta access (1d), Quality HVAC Google fix stalled 30d, and Flow Company Meta ads inactive 12d."
+      "summary": "Widespread stalls: Quality HVAC (31d + 44d), Cotton Collections (Meta access, 2d), MedStation (demographic report, 1d), Maadi Law (3d), Unmapped (3d), Billy Doe Meats (unspecified), and Flow Company (13d); Cotton Collections access request and Full Smile LSA filtering are active."
     },
     {
       "department": "Video",
-      "summary": "Justice Consumer Law video ads performed well (8 leads last week), but Rocco video content delayed and slowing growth."
+      "summary": "Justice Consumer Law video content delayed two days; MedStation planning 200 videos/month with patient testimonial requests from doctors."
     },
     {
       "department": "Web + SEO",
-      "summary": "Quality HVAC reports stalled 43d and Flow Company website SEO update stalled 16d; no other active work visible."
+      "summary": "Full Smile GBP parent item created for local ranking work; Flow Company website SEO update stalled 17 days with no recent activity."
     }
   ],
   "by_client": [
@@ -24,30 +24,38 @@
       "client": "Billy Doe Meats",
       "headline": "No movement since yesterday",
       "health": "on_track",
-      "work_by_department": [],
-      "status_change_suggestions": [],
-      "risks": [],
-      "upcoming": [
+      "work_by_department": [
         {
-          "text": "Meta Ads",
-          "when": "Tue Jul 15",
-          "source": "monday",
-          "monday_item_id": "12187041023"
-        },
-        {
-          "text": "Reports",
-          "when": "Tue Jul 15",
-          "source": "monday",
-          "monday_item_id": "12184917497"
-        },
-        {
-          "text": "Website Problem",
-          "when": "Tue Jul 15",
-          "source": "monday",
-          "monday_item_id": "12321413451"
+          "department": "Ads",
+          "highlights": [],
+          "stalled_items": [
+            {
+              "text": "Meta Ads",
+              "department": "Ads",
+              "source": "monday",
+              "item_name": "Meta Ads",
+              "monday_item_id": "12187041023",
+              "days_stalled": null,
+              "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12187041023",
+              "id": "a34ef461"
+            },
+            {
+              "text": "Website Problem",
+              "department": "Ads",
+              "source": "monday",
+              "item_name": "Website Problem",
+              "monday_item_id": "12321413451",
+              "days_stalled": null,
+              "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12321413451",
+              "id": "6a948d29"
+            }
+          ]
         }
       ],
-      "next_up": "Tue Jul 15 - Meta Ads, Reports, Website Problem",
+      "status_change_suggestions": [],
+      "risks": [],
+      "upcoming": [],
+      "next_up": null,
       "stats": {
         "tasks": 4,
         "todo": 0,
@@ -62,31 +70,55 @@
     },
     {
       "client": "Full Smile",
-      "headline": "Duplicate contacts resolved; ad tracking awaiting confirmation",
+      "headline": "Citrus pilot proposal pending; GBP work launched",
       "health": "needs_attention",
       "work_by_department": [
         {
-          "department": "CRM",
+          "department": "Ads",
           "highlights": [
             {
-              "text": "Duplicate prevention and source preservation now live",
-              "department": "CRM",
+              "text": "Citrus Smiles pilot proposal scoped for one office",
+              "department": "Ads",
+              "source": "meeting",
+              "monday_item_id": null,
+              "monday_url": null,
+              "id": "0172d48f"
+            },
+            {
+              "text": "LSA spam filtering requested to clean lead counts",
+              "department": "Ads",
               "source": "monday",
-              "monday_item_id": "12472124323",
-              "item_name": "Duplicate Contacts",
-              "days_stalled": null,
-              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12472124323",
-              "id": "ec36a4d1"
+              "monday_item_id": "11929347398",
+              "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/11929347398",
+              "id": "befc4b7c"
             }
           ],
+          "stalled_items": []
+        },
+        {
+          "department": "Web + SEO",
+          "highlights": [
+            {
+              "text": "GBP parent item created for local ranking work",
+              "department": "Web + SEO",
+              "source": "monday",
+              "monday_item_id": "12545635992",
+              "monday_url": "https://flowcompany.monday.com/boards/18099807701/pulses/12545635992",
+              "id": "2a7224c1"
+            }
+          ],
+          "stalled_items": []
+        },
+        {
+          "department": "CRM",
+          "highlights": [],
           "stalled_items": [
             {
               "text": "OpenDental appointment sync bug unresolved",
               "department": "CRM",
               "source": "monday",
               "monday_item_id": "12483728477",
-              "item_name": "OpenDental Appt Not Syncing to GHL",
-              "days_stalled": 7,
+              "days_stalled": 8,
               "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12483728477",
               "id": "7c9ab845"
             },
@@ -95,56 +127,36 @@
               "department": "CRM",
               "source": "monday",
               "monday_item_id": "12496201463",
-              "item_name": "Ad Tracking",
-              "days_stalled": 5,
+              "days_stalled": 6,
               "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12496201463",
               "id": "5606fe88"
             }
           ]
-        },
-        {
-          "department": "Ads",
-          "highlights": [
-            {
-              "text": "Meta budget cut to $40/day, Google Ads paused",
-              "department": "Ads",
-              "source": "meeting",
-              "monday_item_id": null,
-              "item_name": null,
-              "days_stalled": null,
-              "monday_url": null,
-              "id": "82d7fe72"
-            },
-            {
-              "text": "Ads limited to business hours matching intake capacity",
-              "department": "Ads",
-              "source": "meeting",
-              "monday_item_id": null,
-              "item_name": null,
-              "days_stalled": null,
-              "monday_url": null,
-              "id": "ff748b94"
-            }
-          ],
-          "stalled_items": []
         }
       ],
       "status_change_suggestions": [],
       "risks": [
-        "Intake delays causing lead follow-up gaps despite budget cuts"
+        "Citrus pilot proposal and Friday follow-up call not yet confirmed"
       ],
-      "upcoming": [],
-      "next_up": null,
+      "upcoming": [
+        {
+          "text": "Citrus follow-up call with Gur Simran",
+          "when": "Fri 10:30am",
+          "source": "meeting",
+          "monday_item_id": null
+        }
+      ],
+      "next_up": "Fri 10:30am - Citrus follow-up call with Gur Simran",
       "stats": {
-        "tasks": 9,
+        "tasks": 10,
         "todo": 0,
-        "working": 9,
+        "working": 10,
         "review": 0,
         "stuck": 0,
         "done": 0,
-        "monday_msgs": 7,
-        "meetings": 2,
-        "wa_msgs": 15
+        "monday_msgs": 8,
+        "meetings": 4,
+        "wa_msgs": 3
       }
     },
     {
@@ -162,24 +174,18 @@
               "source": "monday",
               "item_name": "HVAC Google Ads fix",
               "monday_item_id": "12275261372",
-              "days_stalled": 30,
+              "days_stalled": 31,
               "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12275261372",
               "id": "2e2685a5"
-            }
-          ]
-        },
-        {
-          "department": "Web + SEO",
-          "highlights": [],
-          "stalled_items": [
+            },
             {
               "text": "Reports",
-              "department": "Web + SEO",
+              "department": "Ads",
               "source": "monday",
               "item_name": "Reports",
-              "monday_item_id": "12187541550",
-              "days_stalled": 43,
-              "monday_url": "https://flowcompany.monday.com/boards/18099807701/pulses/12187541550",
+              "monday_item_id": "12175359339",
+              "days_stalled": 44,
+              "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12175359339",
               "id": "7d225cf1"
             }
           ]
@@ -187,89 +193,40 @@
       ],
       "status_change_suggestions": [],
       "risks": [
-        "Three items scheduled for today (Jul 15) with no activity"
+        "Two Ads items stalled 30+ days with no recent activity"
       ],
-      "upcoming": [
-        {
-          "text": "HANDOFF",
-          "when": "2026-07-15",
-          "source": "monday",
-          "monday_item_id": "12470617768"
-        },
-        {
-          "text": "HVAC Google Ads fix",
-          "when": "2026-07-15",
-          "source": "monday",
-          "monday_item_id": "12275261372"
-        },
-        {
-          "text": "Reports",
-          "when": "2026-07-15",
-          "source": "monday",
-          "monday_item_id": "12187541550"
-        }
-      ],
-      "next_up": "Tue Jul 15 - HANDOFF, HVAC Google Ads fix, Reports",
+      "upcoming": [],
+      "next_up": "",
       "stats": {
-        "tasks": 11,
+        "tasks": 12,
         "todo": 0,
-        "working": 11,
+        "working": 12,
         "review": 0,
         "stuck": 0,
         "done": 0,
-        "monday_msgs": 1,
+        "monday_msgs": 0,
         "meetings": 0,
         "wa_msgs": 10
       }
     },
     {
       "client": "Justice Consumer Law",
-      "headline": "Lead quality & contact rate focus",
+      "headline": "No movement; awaiting reports & permissions",
       "health": "needs_attention",
       "work_by_department": [
         {
-          "department": "Ads",
-          "highlights": [
-            {
-              "text": "Contact rates dropped sharply, hurting conversions",
-              "department": "Ads",
-              "source": "meeting",
-              "monday_item_id": null,
-              "monday_url": null,
-              "id": "b4cbc349"
-            },
-            {
-              "text": "Video ads outperformed: 8 leads last week",
-              "department": "Ads",
-              "source": "meeting",
-              "monday_item_id": null,
-              "monday_url": null,
-              "id": "b9010983"
-            }
-          ],
-          "stalled_items": []
-        },
-        {
           "department": "CRM",
-          "highlights": [
-            {
-              "text": "Automated SMS setup planned to boost engagement",
-              "department": "CRM",
-              "source": "meeting",
-              "monday_item_id": null,
-              "monday_url": null,
-              "id": "98b19cd7"
-            }
-          ],
+          "highlights": [],
           "stalled_items": [
             {
-              "text": "Zoho admin permissions needed for SMS automation",
+              "text": "Zoho admin permissions for SMS automation",
               "department": "CRM",
               "source": "meeting",
+              "days_stalled": 2,
+              "item_name": null,
               "monday_item_id": null,
-              "days_stalled": null,
               "monday_url": null,
-              "id": "70e60d63"
+              "id": "3fa859e7"
             }
           ]
         },
@@ -278,40 +235,28 @@
           "highlights": [],
           "stalled_items": [
             {
-              "text": "Rocco video content delayed, slowing growth",
+              "text": "Rocco video content delayed",
               "department": "Video",
               "source": "meeting",
+              "days_stalled": 2,
+              "item_name": null,
               "monday_item_id": null,
-              "days_stalled": null,
               "monday_url": null,
-              "id": "e389094e"
+              "id": "edc2cfd5"
             }
           ]
         }
       ],
       "status_change_suggestions": [],
       "risks": [
-        "Contact rate drop threatens conversion pipeline despite steady lead volume"
+        "Contact rate issues persist without SMS automation"
       ],
-      "upcoming": [
-        {
-          "text": "Ads reports due",
-          "when": "2026-07-15",
-          "source": "monday",
-          "monday_item_id": "12184988117"
-        },
-        {
-          "text": "Web + SEO reports due",
-          "when": "2026-07-15",
-          "source": "monday",
-          "monday_item_id": "12187490579"
-        }
-      ],
-      "next_up": "Tue Jul 15 - Ads & Web + SEO reports due",
+      "upcoming": [],
+      "next_up": null,
       "stats": {
-        "tasks": 2,
+        "tasks": 3,
         "todo": 0,
-        "working": 2,
+        "working": 3,
         "review": 0,
         "stuck": 0,
         "done": 0,
@@ -324,32 +269,15 @@
       "client": "Liferun",
       "headline": "Stripe payment handoff Loom in progress",
       "health": "on_track",
-      "work_by_department": [
-        {
-          "department": "CRM",
-          "highlights": [
-            {
-              "text": "Khurram recording handoff Loom for new CRM team",
-              "department": "CRM",
-              "source": "monday",
-              "monday_item_id": "12544275651",
-              "item_name": "Stripe Payment Products",
-              "days_stalled": null,
-              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12544275651",
-              "id": "25da4504"
-            }
-          ],
-          "stalled_items": []
-        }
-      ],
+      "work_by_department": [],
       "status_change_suggestions": [],
       "risks": [],
       "upcoming": [],
       "next_up": null,
       "stats": {
-        "tasks": 11,
+        "tasks": 12,
         "todo": 0,
-        "working": 11,
+        "working": 12,
         "review": 0,
         "stuck": 0,
         "done": 0,
@@ -368,9 +296,9 @@
       "upcoming": [],
       "next_up": null,
       "stats": {
-        "tasks": 2,
+        "tasks": 3,
         "todo": 0,
-        "working": 2,
+        "working": 3,
         "review": 0,
         "stuck": 0,
         "done": 0,
@@ -381,38 +309,21 @@
     },
     {
       "client": "Cotton Collections",
-      "headline": "Pixel setup blocked by access issue",
+      "headline": "Meta Ads access requested, awaiting grant",
       "health": "needs_attention",
       "work_by_department": [
         {
           "department": "Ads",
           "highlights": [
             {
-              "text": "Ads team lacks full Meta access for Pixel creation",
+              "text": "Ads team requested full Meta access via email",
               "department": "Ads",
               "source": "monday",
               "monday_item_id": "12542597493",
+              "item_name": "Meta Ads Access",
               "days_stalled": null,
               "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12542597493",
-              "id": "6ee9fdf2"
-            },
-            {
-              "text": "JCL adding automated text follow-up for low contact rates",
-              "department": "Ads",
-              "source": "meeting",
-              "monday_item_id": null,
-              "days_stalled": null,
-              "monday_url": null,
-              "id": "f39d518e"
-            },
-            {
-              "text": "Full Smile Meta budget cut to $40/day, Google paused",
-              "department": "Ads",
-              "source": "meeting",
-              "monday_item_id": null,
-              "days_stalled": null,
-              "monday_url": null,
-              "id": "8e57bf4f"
+              "id": "03ecea03"
             }
           ],
           "stalled_items": [
@@ -421,7 +332,8 @@
               "department": "Ads",
               "source": "monday",
               "monday_item_id": "12542597493",
-              "days_stalled": 1,
+              "item_name": "Meta Ads Access",
+              "days_stalled": 2,
               "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12542597493",
               "id": "b694996e"
             }
@@ -430,7 +342,7 @@
       ],
       "status_change_suggestions": [],
       "risks": [
-        "Pixel setup delay blocks campaign tracking and optimization"
+        "Pixel setup blocked until access granted"
       ],
       "upcoming": [],
       "next_up": null,
@@ -448,55 +360,24 @@
     },
     {
       "client": "Flow Company",
-      "headline": "Meeting covered multi-client campaign adjustments",
+      "headline": "No new activity; two items remain stalled",
       "health": "needs_attention",
       "work_by_department": [
         {
           "department": "Ads",
-          "highlights": [
-            {
-              "text": "Full Smile Meta budget cut to $40/day",
-              "department": "Ads",
-              "source": "meeting",
-              "monday_item_id": null,
-              "monday_url": null,
-              "id": "ae047a6d"
-            },
-            {
-              "text": "JCL pushing immediate text follow-up for leads",
-              "department": "Ads",
-              "source": "meeting",
-              "monday_item_id": null,
-              "monday_url": null,
-              "id": "93027977"
-            }
-          ],
+          "highlights": [],
           "stalled_items": [
             {
               "text": "Meta Ads - no activity",
               "department": "Ads",
               "source": "monday",
-              "monday_item_id": "12442817624",
               "item_name": "Meta Ads",
-              "days_stalled": 12,
+              "monday_item_id": "12442817624",
+              "days_stalled": 13,
               "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12442817624",
               "id": "a4a0d012"
             }
           ]
-        },
-        {
-          "department": "General",
-          "highlights": [
-            {
-              "text": "Medstation onboarding needs multi-team coordination, six locations",
-              "department": "",
-              "source": "meeting",
-              "monday_item_id": null,
-              "monday_url": null,
-              "id": "c27cffb3"
-            }
-          ],
-          "stalled_items": []
         },
         {
           "department": "Web + SEO",
@@ -506,9 +387,9 @@
               "text": "Website SEO Update - stalled",
               "department": "Web + SEO",
               "source": "monday",
-              "monday_item_id": "12402423553",
               "item_name": "Website SEO Update",
-              "days_stalled": 16,
+              "monday_item_id": "12402423553",
+              "days_stalled": 17,
               "monday_url": "https://flowcompany.monday.com/boards/18099807701/pulses/12402423553",
               "id": "59be531a"
             }
@@ -516,24 +397,9 @@
         }
       ],
       "status_change_suggestions": [],
-      "risks": [
-        "Multiple stalled board items while new client work piles up"
-      ],
-      "upcoming": [
-        {
-          "text": "Reports due",
-          "when": "2026-07-15",
-          "source": "monday",
-          "monday_item_id": "12184929465"
-        },
-        {
-          "text": "Website SEO Update due",
-          "when": "2026-07-15",
-          "source": "monday",
-          "monday_item_id": "12402423553"
-        }
-      ],
-      "next_up": "Tue Jul 15 - Reports & Website SEO Update due",
+      "risks": [],
+      "upcoming": [],
+      "next_up": null,
       "stats": {
         "tasks": 3,
         "todo": 0,
@@ -542,55 +408,72 @@
         "stuck": 0,
         "done": 0,
         "monday_msgs": 0,
-        "meetings": 3,
+        "meetings": 2,
         "wa_msgs": 0
       }
     },
     {
       "client": "MedStation",
-      "headline": "Multi-client review; MedStation integration noted",
+      "headline": "Content production meeting; CRM & testimonial plans",
       "health": "needs_attention",
       "work_by_department": [
+        {
+          "department": "Ads",
+          "highlights": [
+            {
+              "text": "$1,000/test budget per clinic, Metro Orlando leads",
+              "department": "Ads",
+              "source": "meeting",
+              "monday_item_id": null,
+              "monday_url": null,
+              "id": "bf8ed483"
+            }
+          ],
+          "stalled_items": [
+            {
+              "text": "Patient demographic report pending from WeMark",
+              "department": "Ads",
+              "source": "meeting",
+              "days_stalled": 1,
+              "monday_item_id": null,
+              "monday_url": null,
+              "id": "51a33711"
+            }
+          ]
+        },
         {
           "department": "General",
           "highlights": [
             {
-              "text": "MedStation needs multi-team integration confirmed",
+              "text": "200 videos/month; doctors to request patient testimonials",
               "department": "",
               "source": "meeting",
               "monday_item_id": null,
               "monday_url": null,
-              "id": "598161a7"
-            },
-            {
-              "text": "Raheel coordinating Monday.com for BV campaigns",
-              "department": "",
-              "source": "meeting",
-              "monday_item_id": null,
-              "monday_url": null,
-              "id": "156a45b3"
-            },
-            {
-              "text": "Sohib monitoring JCL automated text implementation",
-              "department": "",
-              "source": "meeting",
-              "monday_item_id": null,
-              "monday_url": null,
-              "id": "f9070046"
+              "id": "229fdb3d"
             }
           ],
           "stalled_items": []
         },
         {
           "department": "CRM",
-          "highlights": [],
+          "highlights": [
+            {
+              "text": "New CRM to unify WhatsApp, calls, ad tracking",
+              "department": "CRM",
+              "source": "meeting",
+              "monday_item_id": null,
+              "monday_url": null,
+              "id": "4bc3a572"
+            }
+          ],
           "stalled_items": [
             {
               "text": "GHL onboarding next steps undefined",
               "department": "CRM",
               "source": "monday",
+              "days_stalled": 9,
               "monday_item_id": null,
-              "days_stalled": 8,
               "monday_url": null,
               "id": "ea9aac45"
             }
@@ -599,38 +482,19 @@
       ],
       "status_change_suggestions": [],
       "risks": [
-        "CRM items inactive since Jul 8; no progress visible"
+        "Front desk data entry gaps hinder attribution"
       ],
-      "upcoming": [
-        {
-          "text": "Meta ads due",
-          "when": "2026-07-15",
-          "source": "monday",
-          "monday_item_id": "12471102373"
-        },
-        {
-          "text": "Google ads due",
-          "when": "2026-07-15",
-          "source": "monday",
-          "monday_item_id": "12471101969"
-        },
-        {
-          "text": "Reports due",
-          "when": "2026-07-15",
-          "source": "monday",
-          "monday_item_id": "12471121477"
-        }
-      ],
-      "next_up": "Tue Jul 15 - Meta, Google, Reports due",
+      "upcoming": [],
+      "next_up": null,
       "stats": {
-        "tasks": 13,
+        "tasks": 14,
         "todo": 0,
-        "working": 13,
+        "working": 14,
         "review": 0,
         "stuck": 0,
         "done": 0,
-        "monday_msgs": 11,
-        "meetings": 4,
+        "monday_msgs": 2,
+        "meetings": 3,
         "wa_msgs": 0
       }
     },
@@ -647,9 +511,9 @@
               "text": "Meta & Google ads awaiting Nacer response",
               "department": "Ads",
               "source": "monday",
-              "item_name": "Meta / Google",
-              "monday_item_id": null,
-              "days_stalled": 2,
+              "item_name": "Meta",
+              "monday_item_id": "[id: 12471071784]",
+              "days_stalled": 3,
               "monday_url": null,
               "id": "29588bf9"
             }
@@ -665,7 +529,7 @@
               "source": "monday",
               "item_name": "Pipeline Build",
               "monday_item_id": "[id: 12471734016]",
-              "days_stalled": 2,
+              "days_stalled": 3,
               "monday_url": null,
               "id": "39dabf3b"
             }
@@ -677,20 +541,20 @@
       "upcoming": [],
       "next_up": null,
       "stats": {
-        "tasks": 15,
+        "tasks": 16,
         "todo": 0,
-        "working": 15,
+        "working": 16,
         "review": 0,
         "stuck": 0,
         "done": 0,
         "monday_msgs": 3,
         "meetings": 0,
-        "wa_msgs": 18
+        "wa_msgs": 13
       }
     },
     {
       "client": "Steel Round Bars",
-      "headline": "No movement; four items due today",
+      "headline": "Still stalled; three items overdue",
       "health": "needs_attention",
       "work_by_department": [
         {
@@ -703,7 +567,7 @@
               "source": "monday",
               "item_name": "HANDOFF",
               "monday_item_id": "[id: 12470597527]",
-              "days_stalled": 8,
+              "days_stalled": 9,
               "monday_url": null,
               "id": "d4a1ff95"
             },
@@ -713,7 +577,7 @@
               "source": "monday",
               "item_name": "1st DIRECTIVES",
               "monday_item_id": "[id: 12470651472]",
-              "days_stalled": 8,
+              "days_stalled": 9,
               "monday_url": null,
               "id": "bda075bf"
             }
@@ -722,33 +586,14 @@
       ],
       "status_change_suggestions": [],
       "risks": [
-        "Four items scheduled today with no recent activity"
+        "Three items overdue since 2026-07-15 with no client response"
       ],
-      "upcoming": [
-        {
-          "text": "HANDOFF due",
-          "when": "2026-07-15",
-          "source": "monday",
-          "monday_item_id": "[id: 12470597527]"
-        },
-        {
-          "text": "1st DIRECTIVES due",
-          "when": "2026-07-15",
-          "source": "monday",
-          "monday_item_id": "[id: 12470651472]"
-        },
-        {
-          "text": "Report due",
-          "when": "2026-07-15",
-          "source": "monday",
-          "monday_item_id": "[id: 12188164914]"
-        }
-      ],
-      "next_up": "2026-07-15 - HANDOFF, 1st DIRECTIVES, Report, Photos due",
+      "upcoming": [],
+      "next_up": "",
       "stats": {
-        "tasks": 4,
+        "tasks": 5,
         "todo": 0,
-        "working": 4,
+        "working": 5,
         "review": 0,
         "stuck": 0,
         "done": 0,
@@ -767,14 +612,14 @@
           "highlights": [],
           "stalled_items": [
             {
-              "text": "Meta & Google ads scheduled today, no update",
+              "text": "Meta & Google ads scheduled, no update",
               "department": "Ads",
               "source": "monday",
-              "item_name": "Reports",
-              "monday_item_id": "12175288002",
-              "days_stalled": 2,
-              "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12175288002",
-              "id": "7a7190a4"
+              "item_name": "Meta Ads",
+              "monday_item_id": "[id: 11929332685]",
+              "days_stalled": 3,
+              "monday_url": null,
+              "id": "74424228"
             }
           ]
         },
@@ -788,7 +633,7 @@
               "source": "monday",
               "item_name": null,
               "monday_item_id": null,
-              "days_stalled": 7,
+              "days_stalled": 8,
               "monday_url": null,
               "id": "6088a32c"
             }
@@ -797,7 +642,7 @@
       ],
       "status_change_suggestions": [],
       "risks": [
-        "Ads reporting overdue, CRM work stalled one week"
+        "Ads and CRM work stalled over a week with no comms"
       ],
       "upcoming": [],
       "next_up": null,
@@ -815,6 +660,45 @@
     }
   ],
   "meetings_digest": [
+    {
+      "title": "MedStation Content Production",
+      "date": "2026-07-15",
+      "client": "MedStation",
+      "key_points": [
+        "Meta Ads Strategy: $1,000/test budget per clinic, focus on walk-in patients, Metro Orlando clinic leads in performance due to less competition.",
+        "Content Production: 200 videos/month, mix organic/paid; testimonials limited by patient release form issues, doctors to request permissions.",
+        "CRM and Data Tracking: New CRM in development to unify tracking calls, WhatsApp, and ad sources; front desk data entry gaps hinder attribution.",
+        "Patient Segmentation: Middle-aged Brazilian men and women; hormone treatment attracts men, beauty treatments appeal to women; campaign tailored per clinic.",
+        "Operational Coordination: Separate ad accounts per clinic, plan to integrate new CRM with Next Gen system for better tracking and treatment tagging."
+      ],
+      "action_items": [
+        "Agencia WeMark",
+        "Provide a report on patient demographic data such as age and gender to assess ad targeting effectiveness (05:11)",
+        "Have doctors request patient testimonial videos directly on days when Agencia WeMark visits clinics to improve testimonial collection (09:28)",
+        "Connect Sohib's team with clinic leaders and front desk staff across all six clinics to enable better communication and data sharing for marketing campaigns (16:50)",
+        "Coordinate with clinic leaders to provide detailed insights on patient types per location to tailor marketing campaigns effectively (16:50)",
+        "Sohib Boundaoui"
+      ]
+    },
+    {
+      "title": "Citrus Smiles Marketing Systems",
+      "date": "2026-07-15",
+      "client": "Full Smile",
+      "key_points": [
+        "Full Smile Dental Growth: SEO authority score rose rapidly; Meta ads generated 72 leads with 12 patients; Google Ads $1,000 spend yielded 276 clicks and 15 conversions.",
+        "Lead Tracking Automation: GoHighLevel automates texts, appointments, and reviews, tagging sources for quick follow-up and higher conversion rates.",
+        "Localized Marketing Strategy: Neighborhood-specific content and segmented Meta ads target parents and locals, building trust before retargeting with service offers.",
+        "Specialist Positioning: Doctors highlighted by specialties (e.g., sleep apnea) to build trust and attract targeted patient groups.",
+        "Pilot Campaign Plan: Test full marketing system on one office for three months, focusing on ads and CRM with a typical budget around $5,000 monthly."
+      ],
+      "action_items": [
+        "Sohib Boundaoui",
+        "Send a detailed proposal with pricing, ad spend estimates, and campaign scope for running Google Ads and meta ads for one Citrus Smiles office as a pilot test (26:20)",
+        "Coordinate with web SEO team to investigate and implement Google Business Profile update posting strategy to improve Google Maps ranking for Full Smile Dental (15:30)",
+        "Gur Simran Aurora",
+        "Review received proposal and prepare for a quick follow-up call on Friday morning around 10:30am to discuss potential pilot launch and next steps (26:43)"
+      ]
+    },
     {
       "title": "goh-xgjm-nza",
       "date": "2026-07-14",
@@ -874,87 +758,48 @@
         "Review Zoho data for void accounts and cleanse before migration to prevent duplicate outreach (08:25)",
         "Investigate Zoho data structure to confirm separation of leads and accounts (10:20)"
       ]
-    },
-    {
-      "title": "Medstation HighLevel Discussion",
-      "date": "2026-07-08",
-      "client": "MedStation",
-      "key_points": [
-        "Project Task Management: Monday.com will be used for centralized task tracking, with Sohib Boundaoui building and finalizing MedStation tasks.",
-        "Communication Protocol: WhatsApp is set for quick questions to ensure timely and informal communication alongside Monday.com updates.",
-        "Scope Finalization: Tasks reflect agreed project scope for clear deadlines and accountability to streamline management and meet deadlines.",
-        "Dependency on XSS: Further meetings and detailed task scheduling depend on XSS delivery before setting deadlines in Monday.com.",
-        "Phased Planning: The project timeline aligns with external deliverables to maintain progress and avoid scheduling conflicts."
-      ],
-      "action_items": [
-        "Sohib Boundaoui",
-        "Build out the full project task list for MedStation on Monday.com following this call (01:07)",
-        "Ali Shaheer",
-        "Monitor and await the XSS phase completion and prepare for the upcoming meeting to discuss subsequent tasks and deadlines (01:43)",
-        "Use WhatsApp for raising any questions during the project execution phase (02:07)"
-      ]
-    },
-    {
-      "title": "Flow OS.m4a",
-      "date": "2026-07-08",
-      "client": "Flow Company",
-      "key_points": [
-        "Workflow Structure: Workflows handle one-time jobs; loops manage ongoing repetitive tasks like weekly reports and ad optimizations.",
-        "Automation Triggers: Four types include day one, scheduled, continuous, and event-based triggers for precise workflow control.",
-        "Central Hub: Monday.com integrates task creation, communication feeds, and status updates for smooth cross-team coordination.",
-        "Automation Scope: Focus on data processing and insights; human judgment required for client interactions to maintain relationship quality.",
-        "Loop Evaluation: Combines quantitative and qualitative metrics; failures reported to managers for adjustments or suspension."
-      ],
-      "action_items": [
-        "Sohib",
-        "Document the sales asset creation, micro asset messaging, proposal drafting, and playbook development fractals fully in markdown files to ensure process transparency and repeatability (32:19)",
-        "Develop an AI-powered Monday.com master assistant that aggregates task updates, communication histories, and Fireflies transcripts to generate weekly project status standups automatically (34:00)",
-        "Formalize the documentation of the performance review process for client campaign evaluation to enable handoff without direct speaker involvement (36:30)",
-        "Document the process for reviewing video edits and the handoff from the video team to the ads team to streamline collaboration and accountability (36:30)",
-        "Nasr"
-      ]
     }
   ],
   "comms_flags": [
-    "Full Smile: Intake delays causing lead follow-up gaps despite budget cuts",
-    "Justice Consumer Law: Contact rate drop threatens conversion pipeline despite steady lead volume",
-    "Quality HVAC: Three items scheduled for today (Jul 15) with no activity",
-    "Flow Company: Multiple stalled board items while new client work piles up",
-    "MedStation: CRM items inactive since Jul 8; no progress visible",
-    "Steel Round Bars: Four items scheduled today with no recent activity"
+    "Full Smile: Citrus pilot proposal and Friday follow-up call not yet confirmed",
+    "Quality HVAC: Two Ads items stalled 30+ days with no recent activity",
+    "Justice Consumer Law: Contact rate issues persist without SMS automation",
+    "MedStation: Front desk data entry gaps hinder attribution",
+    "Steel Round Bars: Three items overdue since 2026-07-15 with no client response",
+    "Unmapped: Ads and CRM work stalled over a week with no comms"
   ],
   "blockers": [
-    "Full Smile: OpenDental appointment sync bug unresolved (7d stalled)",
-    "Full Smile: Ad tracking numbers routing awaiting confirmation (5d stalled)",
-    "Quality HVAC: HVAC Google Ads fix (30d stalled)",
-    "Justice Consumer Law: Zoho admin permissions needed for SMS automation",
-    "Cotton Collections: Meta Ads access needed for Pixel setup (1d stalled)",
-    "MedStation: GHL onboarding next steps undefined (8d stalled)"
+    "Full Smile: OpenDental appointment sync bug unresolved (8d stalled)",
+    "Full Smile: Ad tracking numbers routing awaiting confirmation (6d stalled)",
+    "Quality HVAC: HVAC Google Ads fix (31d stalled)",
+    "Quality HVAC: Reports (44d stalled)",
+    "Cotton Collections: Meta Ads access needed for Pixel setup (2d stalled)",
+    "Steel Round Bars: HANDOFF awaiting action (9d stalled)"
   ],
   "this_week_priorities": [
     {
-      "client": "Full Smile",
-      "text": "Full Smile: Resolve OpenDental sync bug and confirm ad tracking routing",
-      "action": null,
-      "id": "7ed3570b"
-    },
-    {
-      "client": "Justice Consumer Law",
-      "text": "Justice Consumer Law: Secure Zoho admin access and launch automated SMS to address contact rate drop",
-      "action": null,
-      "id": "504188e1"
-    },
-    {
       "client": "Quality HVAC",
-      "text": "Quality HVAC: Address Google Ads fix and overdue reports",
+      "text": "Quality HVAC: Escalate 30+ day Ads stalls (Google fix, reports)",
       "action": null,
-      "id": "f5402967"
+      "id": "f4987d1c"
     },
     {
-      "client": "MedStation",
-      "text": "MedStation: Define GHL onboarding next steps and coordinate multi-team integration",
+      "client": "Full Smile",
+      "text": "Full Smile: Confirm Citrus pilot proposal and resolve CRM sync bug",
       "action": null,
-      "id": "79947c21"
+      "id": "d9f3514b"
+    },
+    {
+      "client": "Steel Round Bars",
+      "text": "Steel Round Bars: Follow up on overdue handoff and directives",
+      "action": null,
+      "id": "e44a34a8"
+    },
+    {
+      "client": "Cotton Collections",
+      "text": "Cotton Collections: Secure Meta Ads access to unblock Pixel setup",
+      "action": null,
+      "id": "b8f28064"
     }
   ]
 }
