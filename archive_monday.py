@@ -20,6 +20,20 @@ def _synthetic_id(item_id: str, created_at: str, body: str) -> str:
     return hashlib.sha1(raw.encode()).hexdigest()[:16]
 
 
+def _creator_name(upd: dict) -> str:
+    """upd["creator"] has two different shapes depending on where the update
+    came from: fetch_monday.py's regular "recent_updates" already flattens it
+    to a plain name string, while a raw "updates" record (e.g. from a backfill
+    query) still has the unprocessed {"name": ...} object. Handle both --
+    this mismatch was exactly what caused "'str' object has no attribute
+    'get'" when a recent_updates record's already-a-string creator got
+    treated as if it were still that raw dict."""
+    c = upd.get("creator")
+    if isinstance(c, dict):
+        return (c.get("name") or "").strip()
+    return str(c or "").strip()
+
+
 def _prev_ym(ym: str) -> str | None:
     try:
         dt = datetime.strptime(ym, "%Y-%m")
@@ -87,7 +101,7 @@ def archive_updates(monday_data: list, clients_config: dict) -> None:
                 for upd in update_sources:
                     created_at = (upd.get("created_at") or "").strip()
                     body       = (upd.get("body") or "").strip()
-                    creator    = ((upd.get("creator") or {}).get("name") or "").strip()
+                    creator    = _creator_name(upd)
                     raw_id     = upd.get("id") or upd.get("update_id") or ""
                     update_id  = str(raw_id) if raw_id else _synthetic_id(item_id, created_at, body)
 
