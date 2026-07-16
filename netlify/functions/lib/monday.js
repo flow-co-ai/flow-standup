@@ -186,9 +186,17 @@ const CLIENT_GROUPS = {
 const BOARD_ORDER = ["Ads", "Web+SEO", "CRM"];
 
 // Everything a client has across all 3 boards, group-scoped (no keyword
-// filter, so nothing gets missed by naming) -- the primary tool for "what's
-// the status of X for client Y" questions. One call replaces 3 manual
-// per-board monday_lookup calls, so a board can't get silently skipped.
+// filter, so nothing gets missed by naming), with FULL DETAIL -- each item's
+// own updates plus each of its subitems' updates -- already pulled in for
+// every single item in the group, not just ones that look relevant to
+// whatever topic was asked about. This is deliberate: judging an item
+// "relevant" by name before deciding whether to look closer is exactly the
+// gap that misses the one item in the group that doesn't happen to share a
+// name with the topic but has the actual current status on it. Making this
+// the ONE tool call that returns everything, already fully detailed, is what
+// makes that gap structurally impossible rather than a matter of prompting
+// the caller to remember to check "every item that looks relevant" -- there
+// is no relevance filter here at all, everything comes back detailed.
 async function mondayClientOverview(client) {
   const groups = CLIENT_GROUPS[client];
   if (!groups) {
@@ -201,7 +209,12 @@ async function mondayClientOverview(client) {
       if (!groupId) return { board, items: [], note: "no group on this board for this client" };
       try {
         const items = await mondayLookup({ boardId: BOARD_LABEL_IDS[board], groupId });
-        return { board, items };
+        const detailed = await Promise.all(
+          items.map((it) =>
+            mondayItemDetail(it.id).catch((err) => ({ id: it.id, name: it.name, error: String(err) }))
+          )
+        );
+        return { board, items: detailed };
       } catch (err) {
         return { board, items: [], error: String(err) };
       }
