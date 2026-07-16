@@ -324,7 +324,9 @@ function initRefreshStandupButton() {
       return;
     }
 
-    if (labelEl) labelEl.textContent = 'Triggered — takes ~2-3 min, refresh the page after';
+    // Per-client Claude calls now run in parallel (generate.py) instead of
+    // sequentially -- measured real runs dropped from ~2-2.5min to ~1.2-1.4min.
+    if (labelEl) labelEl.textContent = 'Triggered — takes ~1-2 min, refresh the page after';
     refreshDebounceUntil = Date.now() + REFRESH_DEBOUNCE_MS;
     setTimeout(() => {
       btn.disabled = false;
