@@ -291,6 +291,87 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .stalled-row:active { background: rgba(222,110,76,0.2); }
 .stalled-row.handled { opacity: 0.45; }
 
+/* ── completed row (link) ─────────────────────────────────────────────────── */
+.completed-row {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(140,190,110,0.06);
+  border: 1px solid rgba(140,190,110,0.22);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: #DCD8C8;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+  -webkit-tap-highlight-color: transparent;
+}
+.completed-row:hover {
+  background: rgba(140,190,110,0.14);
+  border-color: rgba(140,190,110,0.45);
+  color: #EDE9DA;
+}
+.section-label.completed-label { color: #8CBE6E; }
+
+/* ── prior week (collapsed subsection) ────────────────────────────────────── */
+.prior-week-toggle {
+  align-self: flex-start;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(220,216,200,0.45);
+  padding: 6px 0 2px;
+  cursor: pointer;
+}
+.prior-week-toggle:hover { color: #C6D093; }
+.prior-week-caret { display: inline-block; width: 1em; }
+.prior-week-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+/* ── auto-completed alert banner (page-level) ─────────────────────────────── */
+.alert-banner {
+  margin-top: 20px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(222,80,80,0.4);
+  background: rgba(200,60,60,0.1);
+  color: #E8657D;
+}
+.alert-banner-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.alert-banner-title {
+  font-weight: 600;
+  font-size: 13.5px;
+}
+.alert-banner-dismiss {
+  color: rgba(232,101,125,0.7);
+  font-size: 14px;
+  padding: 2px 6px;
+}
+.alert-banner-dismiss:hover { color: #E8657D; }
+.alert-banner-list {
+  list-style: none;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.alert-banner-item { font-size: 13px; line-height: 1.5; }
+.alert-banner-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: rgba(232,101,125,0.6);
+}
+
 /* ── plain row (no link) ──────────────────────────────────────────────────── */
 .row-plain {
   flex: 1;

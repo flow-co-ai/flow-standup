@@ -23,7 +23,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from fetch_monday import fetch_all_boards, resolve_client
+from fetch_monday import fetch_all_boards, resolve_client, set_monday_status_done
 from fetch_fireflies import fetch_transcripts
 from fetch_whatsapp import fetch_whatsapp
 from send_email import send_standup_email, markdown_to_simple_html
@@ -222,7 +222,9 @@ def match_meeting_clients(mt: dict, clients_config: dict) -> list[str]:
 # ── URL lookup (Python owns URLs — the model never writes them) ──────────────
 
 def build_url_lookup(monday_data: list) -> dict[str, str]:
-    """item_id -> monday_url, from fetched data only. Guarantees no invented URLs."""
+    """item_id (and subitem id) -> monday_url, from fetched data only.
+    Guarantees no invented URLs. Subitems live on a linked board, so their
+    URL uses their OWN board id, not the parent's."""
     lookup: dict[str, str] = {}
     for board in monday_data:
         for item in board.get("items", []):
@@ -230,6 +232,11 @@ def build_url_lookup(monday_data: list) -> dict[str, str]:
             url = item.get("monday_url")
             if iid and url:
                 lookup[str(iid)] = url
+            for sub in item.get("subitems", []) or []:
+                sid = sub.get("id")
+                surl = sub.get("monday_url")
+                if sid and surl:
+                    lookup[str(sid)] = surl
     return lookup
 
 
@@ -473,6 +480,32 @@ EMIT_WRAPUP_TOOL = {
     },
 }
 
+EMIT_COMPLETIONS_TOOL = {
+    "name": "emit_completions",
+    "description": "Emit genuine, unhedged completions of specific named work found in meetings/WhatsApp this run.",
+    "input_schema": {
+        "type": "object",
+        "required": ["completions"],
+        "properties": {
+            "completions": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": ["client", "text", "source"],
+                    "properties": {
+                        "client": {"type": "string"},
+                        "text": {"type": "string", "description": "Short phrase naming the specific piece of work completed, max 10 words."},
+                        "who": {"type": ["string", "null"], "description": "Person who said/did it, if named."},
+                        "source": {"type": "string", "enum": ["MTG", "WA"]},
+                        "sourceDate": {"type": ["string", "null"], "description": "YYYY-MM-DD if known, else null."},
+                        "monday_item_id": {"type": ["string", "null"], "description": "ONLY if confidently matched to an id shown in the board snapshot. Null if any doubt -- never guess."},
+                    },
+                },
+            },
+        },
+    },
+}
+
 
 # ── Claude calls ──────────────────────────────────────────────────────────────
 
@@ -685,6 +718,147 @@ def inject_ids(standup: dict) -> dict:
         if isinstance(item, dict):
             item["id"] = _row_id(item.get("client", "priority"), item.get("text", ""))
     return standup
+
+
+# ── completion tracking (accumulator + alerts) ────────────────────────────────
+#
+# standups/completed-accumulator.json persists across runs: the current ISO
+# week's found completions (items), plus whatever was accumulated the PRIOR
+# ISO week (priorWeek) so last week's finished work stays visible (collapsed)
+# for exactly one more week instead of vanishing the instant the week rolls
+# over. alerts/auto-completed.json is append-only -- every time this pipeline
+# fires its one allowed Monday write (flipping a comms-confirmed completion to
+# Done), a record gets appended so multiple firings across a day/week all show
+# until Naz dismisses them in the UI.
+
+ACCUMULATOR_PATH = Path("standups") / "completed-accumulator.json"
+ALERTS_PATH = Path("alerts") / "auto-completed.json"
+
+
+def _iso_week(d: datetime) -> str:
+    iso = d.isocalendar()
+    return f"{iso.year}-W{iso.week:02d}"
+
+
+def _completion_id(client: str, text: str) -> str:
+    """Stable across runs/days (client+text, not per-run random) so the same
+    completion is never added twice within a week."""
+    return hashlib.sha1(f"{client}:{text}".encode()).hexdigest()[:12]
+
+
+def load_accumulator(path: Path = ACCUMULATOR_PATH) -> dict:
+    if path.exists():
+        try:
+            return json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {"isoWeek": None, "items": [], "priorWeek": {"isoWeek": None, "items": []}}
+
+
+def apply_weekly_reset(acc: dict, current_iso_week: str) -> dict:
+    """If the accumulator's isoWeek differs from the current one, this is the
+    first run of a new week: move current items into priorWeek (replacing
+    whatever was there -- one week of history, not a growing log) and start
+    the new week's items empty."""
+    if acc.get("isoWeek") != current_iso_week:
+        acc["priorWeek"] = {"isoWeek": acc.get("isoWeek"), "items": acc.get("items", [])}
+        acc["isoWeek"] = current_iso_week
+        acc["items"] = []
+    return acc
+
+
+def load_alerts(path: Path = ALERTS_PATH) -> list:
+    if path.exists():
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+            if isinstance(data, list):
+                return data
+        except Exception:
+            pass
+    return []
+
+
+def scan_monday_completions(monday_data: list, existing_ids: set) -> list[dict]:
+    """Deterministic -- any item/subitem whose status is already "Done" on
+    Monday, not already recorded. No Monday write needed for these (they're
+    already Done); this just tracks them for the site's Completed section."""
+    found = []
+    for board in monday_data:
+        if "error" in board:
+            continue
+        for item in board.get("items", []):
+            client = item.get("client", "Unmapped")
+            if (item.get("status") or "").strip().lower() == "done":
+                cid = _completion_id(client, item.get("name", ""))
+                if cid not in existing_ids:
+                    found.append({
+                        "id": cid,
+                        "client": client,
+                        "text": item.get("name", ""),
+                        "who": None,
+                        "source": "MON",
+                        "sourceDate": item.get("last_updated") or item.get("created_at"),
+                        "monday_item_id": item.get("item_id"),
+                    })
+            for sub in item.get("subitems", []) or []:
+                if (sub.get("status") or "").strip().lower() == "done":
+                    text = f"{item.get('name', '')} — {sub.get('name', '')}"
+                    cid = _completion_id(client, text)
+                    if cid not in existing_ids:
+                        found.append({
+                            "id": cid,
+                            "client": client,
+                            "text": text,
+                            "who": None,
+                            "source": "MON",
+                            "sourceDate": item.get("last_updated") or item.get("created_at"),
+                            "monday_item_id": sub.get("id"),
+                        })
+    return found
+
+
+def build_monday_meta(monday_data: list) -> dict[str, dict]:
+    """monday_item_id (item or subitem) -> {status, status_column_id, board_id,
+    board_name} -- everything needed to decide whether a comms-confirmed
+    completion needs the one allowed Monday write, and to actually make it."""
+    meta: dict[str, dict] = {}
+    for board in monday_data:
+        if "error" in board:
+            continue
+        for item in board.get("items", []):
+            if item.get("item_id"):
+                meta[str(item["item_id"])] = {
+                    "status": item.get("status"),
+                    "status_column_id": item.get("status_column_id"),
+                    "board_id": item.get("board_id"),
+                    "board_name": board["board_name"],
+                }
+            for sub in item.get("subitems", []) or []:
+                if sub.get("id"):
+                    meta[str(sub["id"])] = {
+                        "status": sub.get("status"),
+                        "status_column_id": sub.get("status_column_id"),
+                        "board_id": sub.get("board_id"),
+                        "board_name": board["board_name"],
+                    }
+    return meta
+
+
+def _client_completions(items: list, client: str, url_lookup: dict[str, str]) -> list[dict]:
+    """Project accumulator items down to the {text, who, source, monday_url}
+    shape the site renders, filtered to one client."""
+    out = []
+    for it in items:
+        if it.get("client") != client:
+            continue
+        mid = it.get("monday_item_id")
+        out.append({
+            "text": it.get("text", ""),
+            "who": it.get("who"),
+            "source": it.get("source", "MON"),
+            "monday_url": url_lookup.get(str(mid)) if mid else None,
+        })
+    return out
 
 
 # ── site copy ────────────────────────────────────────────────────────────────
@@ -925,8 +1099,101 @@ def main():
     yesterday_pulse, y_name = pulse_story.load_yesterday_pulse(today)
     print(f"  memory: {'loaded ' + y_name if y_name else 'no prior pulse found'}")
 
-    print(f"\nGenerating per-client reviews ({len(active)} clients, model {MODEL})...")
     ai = _anthropic_client()
+
+    # ── completion tracking (accumulator + alerts) ────────────────────────────
+    print("\nScanning for completions (Monday status + Fireflies/WhatsApp mentions)...")
+    accumulator = load_accumulator()
+    current_iso_week = _iso_week(datetime.now(timezone.utc))
+    apply_weekly_reset(accumulator, current_iso_week)
+    existing_ids = {it["id"] for it in accumulator["items"]}
+
+    monday_completions = scan_monday_completions(monday_data, existing_ids)
+
+    try:
+        completion_prompt = pulse_story.build_completion_scan_prompt(
+            meetings_by_client, chats_by_client, grouped, today
+        )
+        completion_result = _call_tool(ai, completion_prompt, EMIT_COMPLETIONS_TOOL, label="completions")
+        raw_completions = completion_result.get("completions", []) or []
+    except Exception as exc:
+        print(f"  ⚠️  Completion scan (Fireflies/WhatsApp) failed: {exc}")
+        raw_completions = []
+
+    comms_completions = []
+    for c in raw_completions:
+        client = c.get("client") or "Unmapped"
+        text = (c.get("text") or "").strip()
+        if not text:
+            continue
+        cid = _completion_id(client, text)
+        if cid in existing_ids:
+            continue
+        comms_completions.append({
+            "id": cid,
+            "client": client,
+            "text": text,
+            "who": c.get("who"),
+            "source": c.get("source") if c.get("source") in ("MTG", "WA") else "MTG",
+            "sourceDate": c.get("sourceDate"),
+            "monday_item_id": c.get("monday_item_id"),
+        })
+
+    seen_this_run = set()
+    deduped_new = []
+    for c in monday_completions + comms_completions:
+        if c["id"] in seen_this_run:
+            continue
+        seen_this_run.add(c["id"])
+        deduped_new.append(c)
+    print(f"  Found {len(monday_completions)} Monday-side + {len(comms_completions)} comms-side "
+          f"new completion(s) ({len(deduped_new)} after dedupe)")
+
+    # The one write generate.py is allowed to make to Monday: flip a
+    # comms-confirmed completion's status to Done -- only when a
+    # monday_item_id was confidently identified and Monday doesn't already
+    # say Done. Mirrors the same rule already live in the
+    # fireflies-monday-watch automation.
+    monday_meta = build_monday_meta(monday_data)
+    alerts = load_alerts()
+    for c in comms_completions:
+        mid = c.get("monday_item_id")
+        if not mid:
+            continue
+        meta = monday_meta.get(str(mid))
+        if not meta:
+            print(f"  ⚠️  '{c['text']}' cites monday_item_id {mid}, not found in this run's "
+                  "board data -- skipping the Monday write.")
+            continue
+        if (meta.get("status") or "").strip().lower() == "done":
+            continue
+        if not meta.get("status_column_id") or not meta.get("board_id"):
+            print(f"  ⚠️  Couldn't determine the status column for item {mid} -- skipping "
+                  f"the Monday write for '{c['text']}'.")
+            continue
+        try:
+            set_monday_status_done(meta["board_id"], mid, meta["status_column_id"])
+            alerts.append({
+                "item": c["text"],
+                "board": meta.get("board_name") or "Unknown",
+                "evidence_source": c["source"],
+                "evidence_text": c["text"],
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+            })
+            print(f"  ⚠️  Auto-marked Done on Monday: {c['text']} ({meta.get('board_name')})")
+        except Exception as exc:
+            print(f"  ✗ Failed to auto-mark Done for {mid}: {exc}")
+
+    accumulator["items"].extend(deduped_new)
+    ACCUMULATOR_PATH.parent.mkdir(exist_ok=True)
+    ACCUMULATOR_PATH.write_text(json.dumps(accumulator, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(f"  Wrote {ACCUMULATOR_PATH}")
+
+    ALERTS_PATH.parent.mkdir(exist_ok=True)
+    ALERTS_PATH.write_text(json.dumps(alerts, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(f"  Wrote {ALERTS_PATH} ({len(alerts)} total pending alert(s))")
+
+    print(f"\nGenerating per-client reviews ({len(active)} clients, model {MODEL})...")
     client_entries: list[dict] = []
 
     for c in active:
@@ -992,6 +1259,17 @@ def main():
             "this_week_priorities": [],
         }
 
+    # ── fold completions into each client entry ───────────────────────────────
+    prior_week_label = accumulator.get("priorWeek", {}).get("isoWeek")
+    prior_week_items = accumulator.get("priorWeek", {}).get("items", [])
+    for entry in client_entries:
+        client = entry["client"]
+        entry["completed_this_week"] = _client_completions(accumulator.get("items", []), client, url_lookup)
+        entry["completed_prior_week"] = {
+            "week_of": prior_week_label,
+            "items": _client_completions(prior_week_items, client, url_lookup),
+        }
+
     # ── assemble + write ──────────────────────────────────────────────────────
     standup = {
         "week_of": today,
@@ -1002,6 +1280,7 @@ def main():
         "comms_flags": wrapup.get("comms_flags", []),
         "blockers": wrapup.get("blockers", []),
         "this_week_priorities": wrapup.get("this_week_priorities", []),
+        "auto_completed_alerts": alerts,
     }
     inject_ids(standup)
     print(f"\n  ✓ Standup assembled: {len(client_entries)} clients, "

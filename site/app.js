@@ -42,6 +42,7 @@ const REPO_NAME    = 'flow-standup';
 
 const KEY_PASSCODE = 'flowops-passcode';
 const localChecksKey = (weekOf) => `flowops-v4-${weekOf}`;
+const KEY_DISMISSED_ALERTS = 'flowops-dismissed-alerts';
 
 // ── state ─────────────────────────────────────────────────────────────────────
 
@@ -50,6 +51,8 @@ let handled   = {};       // { rowId: true }  — only checked rows stored
 let copiedId  = null;
 let copyTimer = null;
 let saveTimer = null;
+let priorWeekExpanded = {}; // { clientName: true } — collapsed-by-default per card
+let dismissedAlerts   = loadDismissedAlerts(); // Set of alert keys already seen
 
 // ── view routing (grid <-> client detail via location.hash) ──────────────────
 
@@ -92,6 +95,20 @@ function saveLocal() {
 function getPasscode()        { return localStorage.getItem(KEY_PASSCODE) || null; }
 function storePasscode(p)     { localStorage.setItem(KEY_PASSCODE, p); }
 function clearStoredPasscode(){ localStorage.removeItem(KEY_PASSCODE); }
+
+// --- dismissed auto-completed alerts (localStorage) ---------------------------
+
+function loadDismissedAlerts() {
+  try { return new Set(JSON.parse(localStorage.getItem(KEY_DISMISSED_ALERTS) || '[]')); }
+  catch { return new Set(); }
+}
+function saveDismissedAlerts(set) {
+  try { localStorage.setItem(KEY_DISMISSED_ALERTS, JSON.stringify([...set])); } catch {}
+}
+// item+board+timestamp is stable across reloads and unique per real alert —
+// dismissing marks exactly the alerts shown at dismiss time, so a NEW alert
+// added later (different timestamp) still brings the banner back.
+function alertKey(a) { return `${a.item}|${a.board}|${a.timestamp}`; }
 
 // --- remote read (public, no auth) -------------------------------------------
 
@@ -341,6 +358,36 @@ function buildRow(item, isStalled) {
   return el('div', { class: 'row-wrapper no-checkbox' }, rowContent);
 }
 
+// completed_this_week / completed_prior_week rows: {text, who, source, monday_url}.
+// source here is already the short tag (MTG/MON/WA) from the accumulator —
+// unlike buildRow's items, it's not mapped through SOURCE_TAG.
+function buildCompletedRow(item) {
+  if (!item || typeof item !== 'object') return null;
+  const { text, who, source, monday_url: url } = item;
+  const label = who ? `${text} — ${who}` : (text || '');
+
+  const textSpan = el('span', { class: 'row-text', text: label });
+  const metaEls = [];
+  if (source) metaEls.push(el('span', { class: 'source-chip', text: source }));
+
+  let rightEl;
+  if (url) {
+    rightEl = el('a', {
+      href: url,
+      target: '_blank',
+      rel: 'noopener',
+      title: 'Open in Monday.com',
+      class: 'row-right row-link',
+      onclick: (e) => e.stopPropagation(),
+    }, ...metaEls, el('span', { class: 'chevron', html: '&#8599;' }));
+  } else {
+    rightEl = el('span', { class: 'row-right' }, ...metaEls);
+  }
+
+  const rowContent = el('div', { class: 'completed-row' }, textSpan, rightEl);
+  return el('div', { class: 'row-wrapper no-checkbox' }, rowContent);
+}
+
 // ── pill builder ──────────────────────────────────────────────────────────────
 
 function buildPill(action, id) {
@@ -492,6 +539,37 @@ function buildCard(entry, priorities) {
     sections.append(sec);
   }
 
+  const completedThisWeek  = entry.completed_this_week || [];
+  const completedPriorWeek = entry.completed_prior_week || {};
+  const completedPriorItems = completedPriorWeek.items || [];
+
+  if (completedThisWeek.length || completedPriorItems.length) {
+    const sec = el('div', { class: 'card-section' });
+    sec.append(el('span', { class: 'section-label completed-label', text: 'Completed' }));
+    completedThisWeek.forEach(c => { const r = buildCompletedRow(c); if (r) sec.append(r); });
+
+    if (completedPriorItems.length) {
+      const expanded   = !!priorWeekExpanded[entry.client];
+      const rangeLabel = isoWeekToDateRange(completedPriorWeek.week_of) || 'prior week';
+      const toggle = el('button', {
+        class: 'prior-week-toggle',
+        type: 'button',
+        onclick: () => { priorWeekExpanded[entry.client] = !expanded; render(); },
+      },
+        el('span', { class: 'prior-week-caret', text: expanded ? '▾' : '▸' }),
+        ` ${rangeLabel} (${completedPriorItems.length})`,
+      );
+      sec.append(toggle);
+
+      if (expanded) {
+        const priorList = el('div', { class: 'prior-week-list' });
+        completedPriorItems.forEach(c => { const r = buildCompletedRow(c); if (r) priorList.append(r); });
+        sec.append(priorList);
+      }
+    }
+    sections.append(sec);
+  }
+
   if (clientPrio) {
     const sec = el('div', { class: 'card-section' });
     sec.append(el('span', { class: 'section-label', text: 'Next' }));
@@ -517,6 +595,53 @@ function renderFooter() {
     ts.textContent =
       `Generated for week of ${standup.week_of} from Monday.com boards, meeting transcripts, and team messages.`;
   }
+}
+
+// ── auto-completed alert banner (page-level, not per-card) ────────────────────
+//
+// generate.py's completion tracker can auto-mark an item Done on Monday from
+// comms evidence alone — GitHub Actions has no way to ping anyone directly,
+// so this banner is the notification channel for that specifically. It stays
+// dismissed (per-alert, via localStorage) once seen, but a genuinely NEW
+// alert (different item/board/timestamp) brings it back.
+
+function renderAlertBanner() {
+  const container = document.getElementById('alert-banner-container');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const alerts = (standup?.auto_completed_alerts || []).filter(a => !dismissedAlerts.has(alertKey(a)));
+  if (!alerts.length) return;
+
+  const list = el('ul', { class: 'alert-banner-list' },
+    ...alerts.map(a => el('li', { class: 'alert-banner-item' },
+      el('span', { class: 'alert-banner-text', text: a.item || '' }),
+      ' ',
+      el('span', {
+        class: 'alert-banner-meta',
+        text: `(${a.board || 'Unknown'} · ${a.evidence_source || ''} · ${fmtTimestamp(a.timestamp)})`,
+      }),
+    )),
+  );
+
+  const banner = el('div', { class: 'alert-banner', role: 'alert' },
+    el('div', { class: 'alert-banner-header' },
+      el('span', { class: 'alert-banner-title', text: '⚠️ Auto-marked Done on Monday' }),
+      el('button', {
+        class: 'alert-banner-dismiss',
+        type: 'button',
+        'aria-label': 'Dismiss',
+        html: '&#10005;',
+        onclick: () => {
+          alerts.forEach(a => dismissedAlerts.add(alertKey(a)));
+          saveDismissedAlerts(dismissedAlerts);
+          renderAlertBanner();
+        },
+      }),
+    ),
+    list,
+  );
+  container.append(banner);
 }
 
 // ── full render (called on every state change) ────────────────────────────────
@@ -559,6 +684,33 @@ function fmtDate(iso) {
   } catch { return iso; }
 }
 
+function fmtTimestamp(iso) {
+  try {
+    return new Date(iso).toLocaleString('en-US', {
+      month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
+    });
+  } catch { return iso || ''; }
+}
+
+// "2026-W28" -> "Jul 7 – Jul 13" (the ISO week's Monday-Sunday range).
+// The accumulator carries the compact ISO week code; this is just for display.
+function isoWeekToDateRange(isoWeekStr) {
+  if (!isoWeekStr) return '';
+  const m = /^(\d{4})-W(\d{2})$/.exec(isoWeekStr);
+  if (!m) return isoWeekStr;
+  const year = parseInt(m[1], 10), week = parseInt(m[2], 10);
+  const jan4 = new Date(Date.UTC(year, 0, 4));
+  const jan4Day = jan4.getUTCDay() || 7; // Mon=1..Sun=7
+  const week1Monday = new Date(jan4);
+  week1Monday.setUTCDate(jan4.getUTCDate() - jan4Day + 1);
+  const monday = new Date(week1Monday);
+  monday.setUTCDate(week1Monday.getUTCDate() + (week - 1) * 7);
+  const sunday = new Date(monday);
+  sunday.setUTCDate(monday.getUTCDate() + 6);
+  const fmt = (d) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+  return `${fmt(monday)} – ${fmt(sunday)}`;
+}
+
 // ── init ──────────────────────────────────────────────────────────────────────
 
 async function init() {
@@ -596,6 +748,7 @@ async function init() {
   // 5. First render with local state
   render();
   renderFooter();
+  renderAlertBanner();
 
   // 6. Fetch remote checks (replaces local if newer; re-renders if different)
   //    Runs async so the page is already interactive

@@ -225,3 +225,89 @@ def build_story_prompt(client: str, departments: dict, meetings: list, chats: li
         parts.append("No live board items in the pulse window.")
 
     return "\n".join(parts)
+
+
+# -- completion scan (Fireflies/WhatsApp -> genuine, unhedged completions) ----
+
+def build_completion_scan_prompt(
+    meetings_by_client: dict, chats_by_client: dict, grouped: dict, today: str
+) -> str:
+    """Cross-client, one shot -- scans meeting transcripts and WhatsApp
+    messages already fetched this run for genuine completions of specific
+    named work. The board snapshot is included ONLY so the model can match a
+    completion to a real monday_item_id when one is obvious -- never to
+    invent one."""
+    parts: list[str] = []
+    parts.append(
+        f"# Completion scan - {today}\n\n"
+        "Scan the meetings and WhatsApp messages below for GENUINE completions of a "
+        "specific, named piece of work. Be strict about hedging.\n\n"
+        "COUNTS AS DONE (examples): 'done', 'completed', 'finished', 'live now', "
+        "'shipped', 'that's fixed', 'pushed live', 'wrapped that up'.\n"
+        "DOES NOT COUNT -- exclude these (examples): 'almost done', 'should be done "
+        "soon', 'working on finishing it', 'close to done', 'will be done by Friday', "
+        "'mostly there'.\n\n"
+        "For each genuine completion, emit:\n"
+        "- client: which client this belongs to, using the client names shown below.\n"
+        "- text: short phrase naming the SPECIFIC thing completed, max 10 words -- the "
+        "actual piece of work, not 'finished the task'.\n"
+        "- who: the person who said/did it, if named. Null if not clear.\n"
+        "- source: 'MTG' if from a meeting, 'WA' if from WhatsApp.\n"
+        "- sourceDate: the date of that meeting/message if known (YYYY-MM-DD), else null.\n"
+        "- monday_item_id: ONLY if you can confidently match this completion to a "
+        "specific item or subitem id shown in the board snapshot below. Null if there's "
+        "any doubt at all -- never guess an id.\n\n"
+        "If nothing genuinely completed is mentioned anywhere, return an empty list. "
+        "Don't manufacture completions just to have something to report.\n"
+    )
+
+    parts.append("\n## MEETINGS (Fireflies)\n")
+    any_meeting = False
+    for client, meetings in (meetings_by_client or {}).items():
+        for mt in meetings:
+            any_meeting = True
+            parts.append(f"### {client} - {mt.get('title', 'Untitled')} ({mt.get('date', 'no date')})")
+            summary = mt.get("summary") or {}
+            if summary.get("overview"):
+                parts.append(f"  Overview: {str(summary['overview'])[:800]}")
+            if summary.get("action_items"):
+                parts.append(f"  Action items: {str(summary['action_items'])[:500]}")
+            if mt.get("sentences"):
+                for s in mt["sentences"][:15]:
+                    parts.append(f"    {s.get('speaker_name', '?')}: {s.get('text', '')}")
+    if not any_meeting:
+        parts.append("None.")
+
+    parts.append("\n## WHATSAPP\n")
+    any_chat = False
+    for client, chats in (chats_by_client or {}).items():
+        for chat_name, msgs in chats:
+            if not isinstance(msgs, list):
+                continue
+            for msg in msgs[:30]:
+                any_chat = True
+                ts = (msg.get("datetime") or "")[:16]
+                parts.append(
+                    f"[{client} / {chat_name} / {ts}] {msg.get('sender', '?')}: "
+                    f"{(msg.get('text') or '')[:220]}"
+                )
+    if not any_chat:
+        parts.append("None.")
+
+    parts.append("\n## BOARD SNAPSHOT (item/subitem ids for matching only -- never invent one)\n")
+    any_board = False
+    for client, departments in (grouped or {}).items():
+        for dept, items in departments.items():
+            for item in items:
+                any_board = True
+                parts.append(f"[{client}] [id: {item.get('item_id', '?')}] {item.get('name', '')} ({dept})")
+                for sub in item.get("subitems", []) or []:
+                    if sub.get("id"):
+                        parts.append(
+                            f"  [{client}] [id: {sub['id']}] {sub.get('name', '')} "
+                            f"(subitem of {item.get('name', '')})"
+                        )
+    if not any_board:
+        parts.append("None.")
+
+    return "\n".join(parts)

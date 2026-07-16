@@ -71,6 +71,53 @@ def _token() -> str:
     return t
 
 
+def _status_column(column_values: list | None) -> tuple[str | None, str | None]:
+    """(column_id, text) for the first status-type column, or (None, None).
+    Matches by type rather than a hardcoded column id, since it needs to work
+    across boards (Ads/CRM/Web+SEO/Video) that may not share the same id."""
+    for cv in column_values or []:
+        if cv.get("type") == "status":
+            return cv.get("id"), cv.get("text")
+    return None, None
+
+
+def set_monday_status_done(board_id: str, item_id: str, status_column_id: str) -> None:
+    """Sets one item/subitem's status column to "Done". This is the ONLY write
+    generate.py is allowed to make to Monday -- mirrors the same rule already
+    live in the fireflies-monday-watch automation. Raises on failure; the
+    caller is responsible for deciding whether that's fatal."""
+    headers = {
+        "Authorization": _token(),
+        "Content-Type": "application/json",
+        "API-Version": "2023-10",
+    }
+    mutation = """
+    mutation SetDone($board: ID!, $item: ID!, $col: String!, $val: JSON!) {
+      change_column_value(board_id: $board, item_id: $item, column_id: $col, value: $val) {
+        id
+      }
+    }
+    """
+    resp = requests.post(
+        MONDAY_API_URL,
+        headers=headers,
+        json={
+            "query": mutation,
+            "variables": {
+                "board": str(board_id),
+                "item": str(item_id),
+                "col": status_column_id,
+                "val": json.dumps({"label": "Done"}),
+            },
+        },
+        timeout=30,
+    )
+    resp.raise_for_status()
+    payload = resp.json()
+    if "errors" in payload:
+        raise ValueError(f"Monday API errors: {payload['errors']}")
+
+
 def fetch_board(
     board_id: str,
     board_name: str,
@@ -101,14 +148,17 @@ def fetch_board(
               id
               text
               value
+              type
             }
             subitems {
               id
               name
+              board { id }
               column_values {
                 id
                 text
                 value
+                type
               }
             }
             updates(limit: 25) {
@@ -152,6 +202,7 @@ def fetch_board(
             for cv in item.get("column_values", [])
             if cv.get("text")
         }
+        status_col_id, status_text = _status_column(item.get("column_values"))
 
         subitems = []
         for sub in item.get("subitems", []):
@@ -160,7 +211,22 @@ def fetch_board(
                 for cv in sub.get("column_values", [])
                 if cv.get("text")
             }
-            subitems.append({"name": sub["name"], "columns": sub_cols})
+            sub_status_col_id, sub_status_text = _status_column(sub.get("column_values"))
+            sub_id = str(sub.get("id", ""))
+            sub_board_id = str((sub.get("board") or {}).get("id") or "")
+            sub_url = (
+                f"https://flowcompany.monday.com/boards/{sub_board_id}/pulses/{sub_id}"
+                if sub_board_id and sub_id else None
+            )
+            subitems.append({
+                "id": sub_id,
+                "name": sub["name"],
+                "columns": sub_cols,
+                "status": sub_status_text,
+                "status_column_id": sub_status_col_id,
+                "board_id": sub_board_id or None,
+                "monday_url": sub_url,
+            })
 
         item_id = str(item.get("id", ""))
         monday_url = (
@@ -202,6 +268,8 @@ def fetch_board(
                 "group": group_title,
                 "client": client,
                 "columns": columns,
+                "status": status_text,
+                "status_column_id": status_col_id,
                 "subitems": subitems,
                 "recent_updates": recent_updates,
             }
