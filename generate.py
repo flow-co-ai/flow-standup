@@ -1224,8 +1224,13 @@ def build_monday_meta(monday_data: list) -> dict[str, dict]:
 
 
 def _client_completions(items: list, client: str, url_lookup: dict[str, str]) -> list[dict]:
-    """Project accumulator items down to the {text, who, source, monday_url}
-    shape the site renders, filtered to one client."""
+    """Project accumulator items down to the {text, who, source, date,
+    monday_url} shape the site renders, filtered to one client. `date` is
+    sourceDate verbatim -- for MON items that's the item's most recent
+    comment/update date (falling back to created_at), for WA/MTG items it's
+    the real message/meeting date the completion-scan extracted. Neither is
+    "the day this pipeline happened to run" -- both already point at the
+    real-world event, which is what the site should show."""
     out = []
     for it in items:
         if it.get("client") != client:
@@ -1235,6 +1240,7 @@ def _client_completions(items: list, client: str, url_lookup: dict[str, str]) ->
             "text": it.get("text", ""),
             "who": it.get("who"),
             "source": it.get("source", "MON"),
+            "date": it.get("sourceDate"),
             "monday_url": url_lookup.get(str(mid)) if mid else None,
         })
     return out

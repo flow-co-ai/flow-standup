@@ -434,17 +434,34 @@ function buildRow(item, isStalled) {
   return el('div', { class: 'row-wrapper no-checkbox' }, rowContent);
 }
 
-// completed_this_week / completed_history[].items rows: {text, who, source, monday_url}.
+const SHORT_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+// Parses a plain "YYYY-MM-DD" (or "YYYY-MM-DDT...") string into "Jul 11"
+// without ever constructing a Date object -- `new Date("2026-07-11")` parses
+// as UTC midnight, which `toLocaleDateString` then renders as the day BEFORE
+// in any timezone behind UTC (all of the Americas). Plain string slicing
+// keeps this exactly the calendar date the pipeline recorded.
+function formatShortDate(isoDateStr) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(isoDateStr || '');
+  if (!m) return '';
+  const month = SHORT_MONTHS[parseInt(m[2], 10) - 1];
+  if (!month) return '';
+  return `${month} ${parseInt(m[3], 10)}`;
+}
+
+// completed_this_week / completed_history[].items rows: {text, who, source, date, monday_url}.
 // source here is already the short tag (MTG/MON/WA) from the accumulator —
 // unlike buildRow's items, it's not mapped through SOURCE_TAG.
 function buildCompletedRow(item) {
   if (!item || typeof item !== 'object') return null;
-  const { text, who, source, monday_url: url } = item;
+  const { text, who, source, date, monday_url: url } = item;
   const label = who ? `${text} — ${who}` : (text || '');
 
   const textSpan = el('span', { class: 'row-text', text: label });
   const metaEls = [];
   if (source) metaEls.push(el('span', { class: 'source-chip', text: source }));
+  const dateLabel = formatShortDate(date);
+  if (dateLabel) metaEls.push(el('span', { class: 'date-chip', text: dateLabel }));
 
   let rightEl;
   if (url) {
