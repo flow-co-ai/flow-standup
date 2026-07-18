@@ -1,5 +1,14 @@
 /* ── Ops add-on (draft queue) — dark Flow Ops tokens ─────────────────────── */
 .fo-section { margin-top: 34px; }
+
+/* Daily Ops is the only page that loads this stylesheet, so it's safe to
+   override the shared `.page > * { max-width: 680px }` rule (style.css)
+   here without touching the Standup page. Desktop-only: on a wide viewport
+   there's no reason to cap the queue to a phone-width column when the grid
+   (.fo-card-grid, minmax(300px, 1fr)) could show many more cards at once. */
+@media (min-width: 900px) {
+  #ops-addon { max-width: none; }
+}
 .fo-label {
   font-family: 'JetBrains Mono', monospace;
   font-size: 10.5px; font-weight: 500;
