@@ -236,13 +236,23 @@ def match_meeting_clients(mt: dict, clients_config: dict, active_clients: set[st
     """Match a meeting to one or more clients.
     1) Title match (strongest signal) — trusted even for a currently-quiet
        client, since a meeting literally titled with the client's name is
-       strong evidence on its own.
+       strong evidence on its own. Can return several clients (a title that
+       genuinely names more than one).
     2) Else scan the summary CONTENT for client aliases — but a content-only
        hit is corroboration-only: it's only trusted when that client also has
        real activity on the actual Monday boards this pulse window
        (active_clients). Otherwise a prospect that merely resembles a signed
        client (same industry, an overlapping word) would get force-assigned
        onto that client's card instead of surfacing as its own prospect.
+       Further restricted to exactly ONE confirmed client -- confirmed live:
+       a meeting titled "goh-xgjm-nza" (a bare Google Meet room code, not a
+       real title) whose content briefly touched four different active
+       clients' campaigns was a generic internal status sync, not any one
+       of their real meetings. A real single-client meeting is never
+       legitimately about several different clients at once, so content
+       matching several is the internal-sync signature, not corroboration --
+       treated the same as no match at all, rather than guessing which one
+       (if any) it's "really" about.
     3) Else empty -- caller treats this as unmatched (General comms / a
        potential-client candidate), never guessed.
     NEVER_MATCH_VIA_MEETING_TEXT is filtered out of both title and content
@@ -264,7 +274,7 @@ def match_meeting_clients(mt: dict, clients_config: dict, active_clients: set[st
 
     matches = [c for c in all_alias_matches(haystack, clients_config) if c not in NEVER_MATCH_VIA_MEETING_TEXT]
     confirmed = [m for m in matches if m in active_clients]
-    return confirmed[:4]
+    return confirmed if len(confirmed) == 1 else []
 
 
 # ── potential clients (prospects, not signed clients) ────────────────────────
@@ -365,7 +375,26 @@ def build_potential_clients(
     exclusions = [e for e in (non_client_entities or []) if (e or "").strip()]
 
     def _is_known_non_client(name: str) -> bool:
-        return any(_text_similarity(name, e) >= SIMILARITY_DUP_THRESHOLD for e in exclusions)
+        needle = (name or "").lower()
+        for e in exclusions:
+            if _text_similarity(name, e) >= SIMILARITY_DUP_THRESHOLD:
+                return True
+            # A short exclusion entry (a person's first name, say) often shows
+            # up as just one word inside a differently-shaped meeting title
+            # ("Sohib X Ziad" for an excluded "Ziad") -- whole-string fuzzy
+            # similarity alone misses that, since the rest of the title
+            # doesn't overlap enough to clear the ratio threshold. Whole-word
+            # containment (same mechanism as real client alias matching,
+            # fetch_monday.all_alias_matches) catches it directly -- no
+            # length floor here, unlike _text_similarity's full-containment
+            # shortcut: a short exclusion word is exactly the case this is
+            # for, not a false-positive risk to guard against, since this
+            # list is a maintained, human-curated exclusion list, not
+            # arbitrary fuzzy client-name matching.
+            e_low = (e or "").strip().lower()
+            if e_low and re.search(r"(?<!\w)" + re.escape(e_low) + r"(?!\w)", needle):
+                return True
+        return False
 
     def _bucket(name: str, source: str, blurb: str, when: str, possible_existing_client: str | None = None,
                 overview: str | None = None, action_items: list[str] | None = None):
