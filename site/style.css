@@ -419,6 +419,26 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   flex-shrink: 0;
 }
 
+/* A completed row with no real update/message text behind it -- a
+   synthesized one-liner rather than a genuine description. Dashed
+   underline + a small "auto" chip flag it for a quick spot-check, without
+   looking like an error state (it's expected, just worth double-checking). */
+.row-text-generated {
+  text-decoration: underline dashed rgba(220,167,70,0.5);
+  text-underline-offset: 3px;
+}
+.generated-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #DCA746;
+  background: rgba(220,167,70,0.12);
+  border-radius: 4px;
+  padding: 1px 5px;
+  flex-shrink: 0;
+}
+
 .days-badge {
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;

@@ -11,6 +11,7 @@ Run: python generate.py
 
 import difflib
 import hashlib
+import html
 import io
 import json
 import os
@@ -1157,11 +1158,102 @@ def collect_monday_done_candidates(monday_data: list, seen_ids: set) -> list[dic
     return candidates
 
 
+def _strip_html(raw: str) -> str:
+    """Monday update bodies are stored as HTML (mentions, formatting tags).
+    Plain text only, for when this gets shown directly rather than read by
+    the model (which can parse the markup itself fine)."""
+    text = raw or ""
+    # @mentions render as an anchor wrapping just the mentioned name -- never
+    # part of the actual message, so the whole anchor goes, not just its
+    # tags (otherwise a trailing "@Ads Team" ends up looking like part of
+    # the sentence once tags are stripped).
+    text = re.sub(r"<a\b[^>]*data-mention-id[^>]*>.*?</a>", " ", text, flags=re.I | re.S)
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = html.unescape(text)
+    # Monday's rich-text editor sprinkles in zero-width/BOM characters that
+    # are invisible but real -- seen in actual archived update bodies.
+    text = re.sub(r"[​‌‍﻿]", "", text)
+    text = re.sub(r"\s+", " ", text).strip()
+    # A bare greeting carries no information -- strip it so a one-line
+    # snippet reads as content, not a salutation ("Salam," is this team's
+    # own convention, seen throughout the real update text).
+    text = re.sub(r"^(salam|salaam|hi|hey|hello)[,:]?\s+(team[,:]?\s+)?", "", text, flags=re.I)
+    return text.strip()
+
+
+def _looks_like_bare_title(text: str, item_name: str, subitem_names: list) -> bool:
+    """True if the model's `text` is empty, or is just the item/subitem
+    name(s) restated -- exactly the "site just listing Monday titles
+    verbatim" outcome build_monday_done_prompt explicitly asks it to avoid.
+    Comparison ignores case/punctuation so 'LSA.' still matches 'LSA'."""
+    norm = lambda s: re.sub(r"[^a-z0-9]", "", (s or "").lower())
+    nt = norm(text)
+    if not nt:
+        return True
+    return any(nt == norm(n) for n in [item_name, *(subitem_names or [])] if n)
+
+
+# Real Monday comments skew heavily toward task assignment ("please do X",
+# "can you fix Y") rather than completion reports ("done", "shipped") --
+# unsurprising, since a status flip to Done is usually itself the
+# completion signal, and comments exist for everything else. Surfacing a
+# request verbatim under a "Completed" heading reads as a claim that the
+# request was fulfilled, which isn't something the comment itself confirms
+# -- so these get treated the same as having no usable update at all,
+# rather than accepted as a description of what was done.
+_REQUEST_PHRASE_RE = re.compile(
+    r"^(please|pls|kindly|can you|could you|would you|make sure|need you to)\b", re.I
+)
+
+
+def _looks_like_a_request(text: str) -> bool:
+    stripped = text.strip()
+    if stripped.endswith("?"):
+        return True
+    if _REQUEST_PHRASE_RE.match(stripped):
+        return True
+    # A collapsed <ul><li> checklist (2+ dash-led fragments) reads as a
+    # garbled instruction dump, not one coherent sentence describing work.
+    return len(re.findall(r"(?:^|\s)-\s", text)) >= 2
+
+
+def _fallback_completion_text(item_name: str, subitem_names: list, recent_updates: list) -> tuple[str, bool]:
+    """Used when the model's own summary is missing or a bare title echo.
+    Prefers a real snippet pulled straight from the item's own most recent
+    update/comment that actually reads like a description of work (genuine
+    source text, not invented -- so NOT flagged as generated) over a
+    synthesized line built only from the item/subitem names (which IS
+    flagged, since there's no real description behind it). Returns
+    (text, generated)."""
+    dated_bodies = [
+        (u.get("created_at") or "", _strip_html(u.get("body") or ""))
+        for u in (recent_updates or [])
+    ]
+    dated_bodies = [(d, b) for d, b in dated_bodies if len(b) >= 15 and not _looks_like_a_request(b)]
+    if dated_bodies:
+        dated_bodies.sort(key=lambda db: db[0])
+        snippet = dated_bodies[-1][1]
+        max_len = 140
+        if len(snippet) > max_len:
+            cut = snippet.rfind(" ", 0, max_len)
+            snippet = (snippet[:cut] if cut > 40 else snippet[:max_len]).rstrip() + "…"
+        return snippet, False
+
+    bits = [b for b in [item_name, *(subitem_names or [])] if b]
+    if len(bits) > 1:
+        return f"Completed: {', '.join(bits)}", True
+    return f"{item_name} marked complete", True
+
+
 def summarize_monday_done(ai: "anthropic.Anthropic", candidates: list[dict], today: str) -> list[dict]:
     """One batched Claude call turns every candidate's raw item/subitem names
-    into a real plain-language summary line. Falls back to a deterministic,
-    still-not-just-the-raw-title line per candidate if the call fails, so a
-    model hiccup never silently drops a completion."""
+    into a real plain-language summary line. If the call fails outright, OR
+    it comes back with just the bare title restated for a given candidate
+    (see _looks_like_bare_title), falls back to real text pulled from that
+    item's own recent updates when there is any, or a clearly-flagged
+    generated one-liner when there truly is nothing richer -- so a thin
+    model output never silently ships as a bare title, and a genuinely
+    invented line is always distinguishable from real source text."""
     if not candidates:
         return []
 
@@ -1180,10 +1272,13 @@ def summarize_monday_done(ai: "anthropic.Anthropic", candidates: list[dict], tod
     for c in candidates:
         row = by_id.get(str(c["item_id"]))
         text = (row.get("text") or "").strip() if row else ""
-        if not text:
-            bits = ([c["item_name"]] if c.get("item_done") else []) + (c.get("subitem_names") or [])
-            bits = [b for b in bits if b]
-            text = f"completed: {', '.join(bits)}" if bits else f"completed: {c['item_name']}"
+        generated = False
+        if _looks_like_bare_title(text, c["item_name"], c.get("subitem_names")):
+            text, generated = _fallback_completion_text(
+                c["item_name"], c.get("subitem_names"), c.get("recent_updates")
+            )
+            print(f"  ⚠️  Monday completion for [{c['client']}] {c['item_name']!r} had no real summary -- "
+                  f"{'used its own recent update text' if not generated else 'generated a placeholder line'}")
         out.append({
             "client": c["client"],
             "text": text,
@@ -1192,6 +1287,7 @@ def summarize_monday_done(ai: "anthropic.Anthropic", candidates: list[dict], tod
             "sourceDate": c.get("sourceDate"),
             "monday_item_id": c["item_id"],
             "new_ids": c.get("new_ids", []),
+            "generated": generated,
         })
     return out
 
@@ -1225,12 +1321,16 @@ def build_monday_meta(monday_data: list) -> dict[str, dict]:
 
 def _client_completions(items: list, client: str, url_lookup: dict[str, str]) -> list[dict]:
     """Project accumulator items down to the {text, who, source, date,
-    monday_url} shape the site renders, filtered to one client. `date` is
-    sourceDate verbatim -- for MON items that's the item's most recent
-    comment/update date (falling back to created_at), for WA/MTG items it's
-    the real message/meeting date the completion-scan extracted. Neither is
-    "the day this pipeline happened to run" -- both already point at the
-    real-world event, which is what the site should show."""
+    generated, monday_url} shape the site renders, filtered to one client.
+    `date` is sourceDate verbatim -- for MON items that's the item's most
+    recent comment/update date (falling back to created_at), for WA/MTG
+    items it's the real message/meeting date the completion-scan extracted.
+    Neither is "the day this pipeline happened to run" -- both already
+    point at the real-world event, which is what the site should show.
+    `generated` (MON-only) flags a synthesized one-liner with no real
+    source text behind it, so it's easy to spot-check against the others,
+    which are all genuine text (an AI paraphrase or a real update/message
+    snippet) -- see summarize_monday_done / _fallback_completion_text."""
     out = []
     for it in items:
         if it.get("client") != client:
@@ -1241,6 +1341,7 @@ def _client_completions(items: list, client: str, url_lookup: dict[str, str]) ->
             "who": it.get("who"),
             "source": it.get("source", "MON"),
             "date": it.get("sourceDate"),
+            "generated": bool(it.get("generated")),
             "monday_url": url_lookup.get(str(mid)) if mid else None,
         })
     return out
@@ -1571,6 +1672,7 @@ def main():
             "source": c["source"],
             "sourceDate": c.get("sourceDate"),
             "monday_item_id": c.get("monday_item_id"),
+            "generated": bool(c.get("generated")),
         }
         deduped_new.append(record)
         existing_for_dedup.append(record)

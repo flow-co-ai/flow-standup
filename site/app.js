@@ -449,16 +449,21 @@ function formatShortDate(isoDateStr) {
   return `${month} ${parseInt(m[3], 10)}`;
 }
 
-// completed_this_week / completed_history[].items rows: {text, who, source, date, monday_url}.
+// completed_this_week / completed_history[].items rows: {text, who, source, date, generated, monday_url}.
 // source here is already the short tag (MTG/MON/WA) from the accumulator —
 // unlike buildRow's items, it's not mapped through SOURCE_TAG.
 function buildCompletedRow(item) {
   if (!item || typeof item !== 'object') return null;
-  const { text, who, source, date, monday_url: url } = item;
+  const { text, who, source, date, generated, monday_url: url } = item;
   const label = who ? `${text} — ${who}` : (text || '');
 
-  const textSpan = el('span', { class: 'row-text', text: label });
+  const textSpanProps = { class: generated ? 'row-text row-text-generated' : 'row-text', text: label };
+  if (generated) {
+    textSpanProps.title = 'No real update text was available for this item — this line is a generated placeholder, not a description someone wrote. Worth a spot-check against the real Monday item.';
+  }
+  const textSpan = el('span', textSpanProps);
   const metaEls = [];
+  if (generated) metaEls.push(el('span', { class: 'generated-chip', text: 'auto', title: 'Generated placeholder — no source text behind this line' }));
   if (source) metaEls.push(el('span', { class: 'source-chip', text: source }));
   const dateLabel = formatShortDate(date);
   if (dateLabel) metaEls.push(el('span', { class: 'date-chip', text: dateLabel }));
