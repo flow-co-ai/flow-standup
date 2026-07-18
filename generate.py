@@ -218,6 +218,20 @@ def _match_comms_to_client(text: str, clients_config: dict, active_clients: set[
     return result
 
 
+# Fireflies auto-titles and transcript content naturally include a client's
+# own name whenever a call is genuinely about their work -- for every other
+# client that's a real signal. Flow Company is different: it's the agency's
+# OWN name, so it shows up in the title and/or content of nearly any call it
+# participates in, whether that's real internal work or a sales pitch to an
+# unrelated prospect. Confirmed live: a call titled "Parth Patel and Flow
+# Company" title-matched Flow Company, and even past that, the transcript's
+# own content ("Send Flow Company's marketing deck to Parth Patel") matches
+# too -- there's no text signal left that can tell the two apart. Flow
+# Company is never a valid meeting-match target here at all; its standup
+# presence comes entirely from its own real Monday board activity instead.
+NEVER_MATCH_VIA_MEETING_TEXT = {"Flow Company"}
+
+
 def match_meeting_clients(mt: dict, clients_config: dict, active_clients: set[str]) -> list[str]:
     """Match a meeting to one or more clients.
     1) Title match (strongest signal) — trusted even for a currently-quiet
@@ -230,9 +244,12 @@ def match_meeting_clients(mt: dict, clients_config: dict, active_clients: set[st
        client (same industry, an overlapping word) would get force-assigned
        onto that client's card instead of surfacing as its own prospect.
     3) Else empty -- caller treats this as unmatched (General comms / a
-       potential-client candidate), never guessed."""
+       potential-client candidate), never guessed.
+    NEVER_MATCH_VIA_MEETING_TEXT is filtered out of both title and content
+    matches before any of the above logic even applies."""
     from fetch_monday import all_alias_matches
-    title_matches = all_alias_matches(mt.get("title", ""), clients_config)
+    title_matches = [c for c in all_alias_matches(mt.get("title", ""), clients_config)
+                      if c not in NEVER_MATCH_VIA_MEETING_TEXT]
     if title_matches:
         return title_matches[:4]
 
@@ -245,7 +262,7 @@ def match_meeting_clients(mt: dict, clients_config: dict, active_clients: set[st
     if mt.get("sentences"):
         haystack += " " + " ".join(s.get("text", "") for s in mt["sentences"][:60]).lower()
 
-    matches = all_alias_matches(haystack, clients_config)
+    matches = [c for c in all_alias_matches(haystack, clients_config) if c not in NEVER_MATCH_VIA_MEETING_TEXT]
     confirmed = [m for m in matches if m in active_clients]
     return confirmed[:4]
 
