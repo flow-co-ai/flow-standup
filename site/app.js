@@ -69,6 +69,18 @@ function openClient(name) {
   location.hash = `c=${encodeURIComponent(name)}`;
 }
 
+function currentProspectView() {
+  const m = location.hash.match(/^#p=(.+)$/);
+  if (!m) return null;
+  const name = decodeURIComponent(m[1]);
+  const exists = (standup?.potential_clients || []).some(p => p.name === name);
+  return exists ? name : null;
+}
+
+function openProspect(name) {
+  location.hash = `p=${encodeURIComponent(name)}`;
+}
+
 function backToGrid() {
   // Prefer history.back() when the grid is in history (keeps back-gesture natural)
   if (location.hash) history.back(); else render();
@@ -612,7 +624,16 @@ const SOURCE_LABEL = { meeting: 'Meeting', whatsapp: 'WhatsApp', monday_group: '
 
 function buildPotentialCard(p) {
   const aliasGap = p.possible_existing_client;
-  const card = el('article', { class: `mini-card potential-card${aliasGap ? ' alias-gap-card' : ''}` });
+  const card = el('article', {
+    class: `mini-card potential-card${aliasGap ? ' alias-gap-card' : ''}`,
+    role: 'button',
+    tabindex: '0',
+    'aria-label': `Open ${p.name || 'potential client'}`,
+    onclick: () => openProspect(p.name),
+    onkeydown: (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openProspect(p.name); }
+    },
+  });
 
   card.append(el('div', { class: 'mini-state' },
     el('span', {
@@ -638,10 +659,72 @@ function buildPotentialCard(p) {
         el('span', { class: 'mini-stat-n', text: String(items.length) }), ' mentions',
       ));
     }
+    if (typeof p.likelihood_percent === 'number') {
+      statsEl.append(el('span', { class: 'mini-stat likelihood-chip-mini' },
+        `${p.likelihood_percent}% `, el('span', { class: 'generated-chip', text: 'est' }),
+      ));
+    }
     card.append(statsEl);
   }
 
   return card;
+}
+
+// ── potential client detail view ──────────────────────────────────────────────
+
+function buildPotentialCardDetail(p) {
+  const aliasGap = p.possible_existing_client;
+  const wrap = el('div', { class: `potential-detail${aliasGap ? ' alias-gap-card' : ''}` });
+
+  wrap.append(el('div', { class: 'mini-state' },
+    el('span', {
+      class: `mini-state-label potential-label${aliasGap ? ' alias-gap-label' : ''}`,
+      text: aliasGap ? 'Possible existing client — alias mismatch' : 'Potential client',
+    }),
+  ));
+  wrap.append(el('h2', { class: 'mini-name', text: p.name || 'Unknown' }));
+  if (aliasGap) {
+    wrap.append(el('p', { class: 'mini-micro alias-gap-note', text: `May actually be ${aliasGap} — add a config.json alias if so, instead of tracking this as a new business.` }));
+  }
+
+  if (typeof p.likelihood_percent === 'number') {
+    const reasonEl = p.likelihood_reason ? el('p', { class: 'likelihood-reason', text: p.likelihood_reason }) : null;
+    wrap.append(el('div', { class: 'likelihood-box' },
+      el('div', { class: 'likelihood-row' },
+        el('span', { class: 'likelihood-percent', text: `${p.likelihood_percent}%` }),
+        el('span', { class: 'likelihood-label', text: 'likelihood of closing' }),
+        el('span', {
+          class: 'generated-chip',
+          text: 'estimate',
+          title: 'A subjective AI read on tone and interest signals in the text below — not measured data.',
+        }),
+      ),
+      reasonEl,
+    ));
+  }
+
+  const items = p.items || [];
+  items.forEach(item => {
+    const sec = el('div', { class: 'card-section potential-item' });
+    const whenLabel = formatShortDate(item.when) || item.when || '';
+    sec.append(el('div', { class: 'potential-item-header' },
+      el('span', { class: 'source-chip', text: SOURCE_LABEL[item.source] || item.source || '' }),
+      whenLabel ? el('span', { class: 'date-chip', text: whenLabel }) : null,
+    ));
+    sec.append(el('p', {
+      class: item.overview ? 'potential-summary' : 'mini-micro',
+      text: item.overview || item.blurb || '',
+    }));
+    if ((item.action_items || []).length) {
+      sec.append(el('span', { class: 'section-label', text: 'Action items' }));
+      const list = el('ul', { class: 'action-items-list' });
+      item.action_items.forEach(a => list.append(el('li', { text: a })));
+      sec.append(list);
+    }
+    wrap.append(sec);
+  });
+
+  return wrap;
 }
 
 // ── card builder ──────────────────────────────────────────────────────────────
@@ -789,7 +872,8 @@ function render() {
   if (!standup) return;
   const app        = document.getElementById('app');
   const priorities = standup.this_week_priorities || [];
-  const viewClient = currentClientView();
+  const viewClient   = currentClientView();
+  const viewProspect = currentProspectView();
   app.innerHTML    = '';
 
   if (viewClient) {
@@ -803,6 +887,20 @@ function render() {
     }));
     const entry = (standup.by_client || []).find(c => c.client === viewClient);
     if (entry) app.append(buildCard(entry, priorities));
+    return;
+  }
+
+  if (viewProspect) {
+    // ── potential-client detail view ──
+    app.className = 'client-detail';
+    app.append(el('button', {
+      class: 'back-link',
+      type: 'button',
+      html: '&#8592;&nbsp; All potential clients',
+      onclick: backToGrid,
+    }));
+    const p = (standup.potential_clients || []).find(pp => pp.name === viewProspect);
+    if (p) app.append(buildPotentialCardDetail(p));
     return;
   }
 

@@ -350,7 +350,8 @@ def build_potential_clients(
     def _is_known_non_client(name: str) -> bool:
         return any(_text_similarity(name, e) >= SIMILARITY_DUP_THRESHOLD for e in exclusions)
 
-    def _bucket(name: str, source: str, blurb: str, when: str, possible_existing_client: str | None = None):
+    def _bucket(name: str, source: str, blurb: str, when: str, possible_existing_client: str | None = None,
+                overview: str | None = None, action_items: list[str] | None = None):
         name = (name or "").strip()
         if not name or _is_known_non_client(name):
             return
@@ -372,15 +373,24 @@ def build_potential_clients(
             prospects[key]["name"] = name
         if source not in prospects[key]["sources"]:
             prospects[key]["sources"].append(source)
-        prospects[key]["items"].append({"source": source, "blurb": blurb, "when": when})
+        prospects[key]["items"].append({
+            "source": source, "blurb": blurb, "when": when,
+            # Only meeting-sourced items have real Fireflies summary data
+            # behind them -- None/empty for whatsapp/monday_group/mention,
+            # the detail view just falls back to the blurb for those.
+            "overview": overview or None,
+            "action_items": action_items or [],
+        })
         if possible_existing_client:
             prospects[key]["possible_existing_client"] = possible_existing_client
 
     for mt in general_meetings or []:
         title = mt.get("title") or "Untitled"
         summary = mt.get("summary") or {}
-        blurb = str(summary.get("overview") or "")[:200] or "Meeting — no summary available."
-        _bucket(title, "meeting", blurb, mt.get("date", ""))
+        overview = str(summary.get("overview") or "").strip()
+        blurb = overview[:200] or "Meeting — no summary available."
+        _bucket(title, "meeting", blurb, mt.get("date", ""),
+                overview=overview or None, action_items=_summary_lines(summary.get("action_items"), 6))
 
     for chat_name, msgs in general_chats or []:
         n = len(msgs) if isinstance(msgs, list) else 0
@@ -421,6 +431,39 @@ def build_potential_clients(
         _bucket(entity, "mention", text, "")
 
     return sorted(prospects.values(), key=lambda p: p["name"].lower())
+
+
+def assess_prospect_likelihood(ai: "anthropic.Anthropic", prospects: list[dict], today: str) -> None:
+    """Mutates each prospect in place with likelihood_percent/likelihood_reason
+    -- a subjective tone read (enthusiasm, objections, next-step commitment,
+    budget talk), never treated as measured data. Skipped entirely (no
+    fields set, no placeholder number) for a prospect the model judged too
+    thin to read, and for the whole list if the call fails outright -- an
+    absent estimate is honest; a guessed one isn't. The site is responsible
+    for always rendering this flagged as an estimate, the same way it flags
+    a generated (as opposed to real) completion summary."""
+    if not prospects:
+        return
+    try:
+        prompt = pulse_story.build_prospect_likelihood_prompt(prospects, today)
+        result = _call_tool(ai, prompt, EMIT_PROSPECT_LIKELIHOOD_TOOL, label="prospect-likelihood", max_tokens=1500)
+        by_name = {}
+        for row in (result.get("assessments", []) or []):
+            name = (row.get("name") or "").strip()
+            if name:
+                by_name[name] = row
+    except Exception as exc:
+        print(f"  ⚠️  Prospect likelihood assessment failed ({exc}) -- no estimates shown this run")
+        return
+
+    for p in prospects:
+        row = by_name.get(p.get("name", ""))
+        if not row:
+            continue
+        pct = row.get("percent")
+        if isinstance(pct, (int, float)) and 0 <= pct <= 100:
+            p["likelihood_percent"] = int(round(pct))
+            p["likelihood_reason"] = (row.get("reason") or "").strip()
 
 
 # ── URL lookup (Python owns URLs — the model never writes them) ──────────────
@@ -746,6 +789,29 @@ EMIT_MONDAY_DONE_TOOL = {
     },
 }
 
+EMIT_PROSPECT_LIKELIHOOD_TOOL = {
+    "name": "emit_prospect_likelihood",
+    "description": "Emit a subjective likelihood-to-close estimate for each prospect there's enough real signal to judge. Skip prospects with too little text to read tone from.",
+    "input_schema": {
+        "type": "object",
+        "required": ["assessments"],
+        "properties": {
+            "assessments": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": ["name", "percent", "reason"],
+                    "properties": {
+                        "name": {"type": "string", "description": "Verbatim from the prospect name given. Never invent or alter."},
+                        "percent": {"type": "integer", "minimum": 0, "maximum": 100},
+                        "reason": {"type": "string", "description": "One short sentence, max ~20 words, citing the specific tone/interest signal behind the number."},
+                    },
+                },
+            },
+        },
+    },
+}
+
 
 # ── Claude calls ──────────────────────────────────────────────────────────────
 
@@ -859,24 +925,31 @@ def compute_client_stats(departments: dict, meetings: list, chats: list) -> dict
     }
 
 
+def _summary_lines(text, cap: int) -> list[str]:
+    """Fireflies' summary.overview/action_items come back as either a plain
+    string (markdown-ish, one bullet per line) or already a list -- normalizes
+    either into a clean list of short lines, stripped of bullet/bold markup.
+    Shared by build_meetings_digest and build_potential_clients so a prospect's
+    detail view reads the same real Fireflies content a client's card does,
+    not a separately-truncated one-off."""
+    if not text:
+        return []
+    if isinstance(text, list):
+        items = [str(x).strip() for x in text]
+    else:
+        items = [
+            ln.strip().lstrip("-*• ").strip()
+            for ln in str(text).replace("\r", "").split("\n")
+        ]
+    items = [i.replace("**", "").strip() for i in items]
+    items = [i for i in items if i and not i.endswith(":")][:cap]
+    return items
+
+
 def build_meetings_digest(fireflies_data, clients_config: dict, active_clients: set[str]) -> list:
     """Deterministic — built in Python from Fireflies data. No model call."""
     if not isinstance(fireflies_data, list):
         return []
-
-    def _lines(text, cap: int) -> list[str]:
-        if not text:
-            return []
-        if isinstance(text, list):
-            items = [str(x).strip() for x in text]
-        else:
-            items = [
-                ln.strip().lstrip("-*• ").strip()
-                for ln in str(text).replace("\r", "").split("\n")
-            ]
-        items = [i.replace("**", "").strip() for i in items]
-        items = [i for i in items if i and not i.endswith(":")][:cap]
-        return items
 
     digest = []
     seen_titles = set()
@@ -893,8 +966,8 @@ def build_meetings_digest(fireflies_data, clients_config: dict, active_clients: 
             "title": title,
             "date": date,
             "client": ", ".join(m for m in matched if m != "General comms") or "General comms",
-            "key_points": _lines(summary.get("overview"), 5),
-            "action_items": _lines(summary.get("action_items"), 6),
+            "key_points": _summary_lines(summary.get("overview"), 5),
+            "action_items": _summary_lines(summary.get("action_items"), 6),
         })
     return digest
 
@@ -1795,6 +1868,7 @@ def main():
     if potential_clients:
         print(f"  Potential clients (unmatched, not merged into a signed client): "
               f"{', '.join(p['name'] for p in potential_clients)}")
+        assess_prospect_likelihood(ai, potential_clients, today)
 
     # ── meetings digest (deterministic) ───────────────────────────────────────
     meetings_digest = build_meetings_digest(fireflies_data, clients_config, active_clients_set)

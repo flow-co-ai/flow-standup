@@ -387,3 +387,48 @@ def build_monday_done_prompt(candidates: list[dict], today: str) -> str:
         parts.append("")
 
     return "\n".join(parts)
+
+
+# -- prospect likelihood-to-close (subjective, never treated as fact) ---------
+
+def build_prospect_likelihood_prompt(prospects: list[dict], today: str) -> str:
+    """prospects: [{name, items: [{source, blurb, when, overview, action_items}]}]
+    -- whatever real text exists per prospect (a meeting's full summary and
+    action items, a WhatsApp thread, a bare mention). Asks for a tone/interest
+    read, not a measurement -- the site always renders this flagged as an
+    estimate, same as it does for a generated (as opposed to real) completion
+    summary."""
+    parts: list[str] = []
+    parts.append(
+        f"# Prospect likelihood assessment - {today}\n\n"
+        "For each prospect below, judge how likely they are to close as a "
+        "paying client based on tone and interest signals in the text: "
+        "enthusiasm, objections raised, commitment to a concrete next step "
+        "(a scheduled call, a signed form, a stated start date), budget or "
+        "pricing discussion, urgency. This is a SUBJECTIVE judgment call about "
+        "tone, not a measurement -- there is no ground truth to check it "
+        "against, so don't hedge by clustering everything near 50.\n\n"
+        "For each prospect you can actually judge, emit:\n"
+        "- name: exactly as given below.\n"
+        "- percent: 0-100, your estimate of likelihood to close.\n"
+        "- reason: one short sentence (max ~20 words) citing the SPECIFIC "
+        "signal that drove your number -- e.g. 'asked about pricing and "
+        "proposed a start date' or 'no response since initial outreach, no "
+        "budget discussed'.\n\n"
+        "If a prospect's text is too thin to form any real judgment (a bare "
+        "one-line mention with no tone or content to read) -- SKIP it "
+        "entirely. Don't invent a number just to have one for every prospect "
+        "on the list.\n"
+    )
+    parts.append("\n## PROSPECTS\n")
+    for p in prospects:
+        parts.append(f"### {p.get('name', '')}")
+        for item in p.get("items", []) or []:
+            when = item.get("when") or "no date"
+            parts.append(f"  [{item.get('source', '?')} / {when}] {item.get('blurb', '')}")
+            if item.get("overview"):
+                parts.append(f"    Full summary: {str(item['overview'])[:600]}")
+            if item.get("action_items"):
+                parts.append(f"    Action items: {'; '.join(item['action_items'][:6])}")
+        parts.append("")
+    return "\n".join(parts)

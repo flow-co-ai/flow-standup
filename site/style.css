@@ -740,12 +740,11 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   color: rgba(220,216,200,0.45);
 }
 .potential-card {
-  cursor: default;
   border-style: dashed;
   border-color: rgba(237,233,220,0.16);
   background: #10140F;
 }
-.potential-card:hover { border-color: rgba(237,233,220,0.28); background: #10140F; transform: none; }
+.potential-card:hover { border-color: rgba(237,233,220,0.4); background: #171E17; }
 .potential-label {
   color: rgba(220,216,200,0.55);
 }
@@ -757,6 +756,78 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .alias-gap-card:hover { border-color: rgba(220,167,70,0.55); background: rgba(220,167,70,0.09); }
 .alias-gap-label { color: #DCA746; }
 .alias-gap-note { color: rgba(220,167,70,0.85); }
+.likelihood-chip-mini {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Space Grotesk', sans-serif;
+  color: rgba(220,216,200,0.7);
+}
+
+/* ── potential client detail view ────────────────────────────────────────── */
+.potential-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.likelihood-box {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(220,167,70,0.06);
+  border: 1px solid rgba(220,167,70,0.2);
+}
+.likelihood-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.likelihood-percent {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #EDE9DA;
+}
+.likelihood-label {
+  font-size: 13px;
+  color: rgba(220,216,200,0.6);
+}
+.likelihood-reason {
+  margin-top: 6px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: rgba(220,216,200,0.6);
+}
+.potential-item {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(237,233,220,0.08);
+}
+.potential-item-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.potential-summary {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: rgba(220,216,200,0.8);
+  white-space: pre-line;
+}
+.action-items-list {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.action-items-list li {
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(220,216,200,0.68);
+}
 
 .mini-card {
   background: #141A14;
