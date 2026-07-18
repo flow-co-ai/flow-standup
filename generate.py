@@ -139,8 +139,14 @@ def load_playbooks_drive(config: dict, clients_config: dict) -> dict[str, str]:
 # ── pulse window (live items only) ────────────────────────────────────────────
 
 def filter_live_items(monday_data: list, config: dict) -> tuple[list, int]:
-    """Keep only items created or updated within the pulse window.
-    Dormant/archived items never reach the AI. Returns (filtered, pruned_count)."""
+    """Keep only items created or updated within the pulse window, UNLESS the
+    item's Monday group already resolved (at fetch time) to a real configured
+    client rather than "Unmapped" -- a signed client shouldn't silently lose
+    their standup card just because their work has gone quiet for
+    pulse_window_days. This filter exists to keep noise (stale items in
+    unmapped/random groups) out of the AI's context, not to prune a real
+    client's history out from under them. Dormant/archived Unmapped items
+    never reach the AI. Returns (filtered, pruned_count)."""
     from datetime import timedelta
     pulse_days = int(config.get("pulse_window_days", 45))
     cutoff = (datetime.now(timezone.utc) - timedelta(days=pulse_days)).date().isoformat()
@@ -153,6 +159,9 @@ def filter_live_items(monday_data: list, config: dict) -> tuple[list, int]:
             continue
         live = []
         for item in board.get("items", []):
+            if item.get("client", "Unmapped") != "Unmapped":
+                live.append(item)
+                continue
             last = item.get("last_updated") or ""
             created = item.get("created_at") or ""
             if (last and last >= cutoff) or (created and created >= cutoff):
@@ -960,16 +969,22 @@ def inject_ids(standup: dict) -> dict:
 # ── completion tracking (accumulator + alerts) ────────────────────────────────
 #
 # standups/completed-accumulator.json persists across runs: the current ISO
-# week's found completions (items), plus whatever was accumulated the PRIOR
-# ISO week (priorWeek) so last week's finished work stays visible (collapsed)
-# for exactly one more week instead of vanishing the instant the week rolls
-# over. alerts/auto-completed.json is append-only -- every time this pipeline
+# week's found completions (items), plus a rolling window of the most
+# recently finished PRIOR weeks (history) so finished work stays visible for
+# HISTORY_WINDOW_WEEKS weeks after the week it was completed in, instead of
+# vanishing (or getting wholesale overwritten) the instant the week rolls
+# over. Whatever ages out of that live window is never discarded -- it's
+# appended to a permanent per-week file under history/completed-archive/, so
+# "did we ever do X for this client" can be checked later instead of guessed
+# at. alerts/auto-completed.json is append-only -- every time this pipeline
 # fires its one allowed Monday write (flipping a comms-confirmed completion to
 # Done), a record gets appended so multiple firings across a day/week all show
 # until Naz dismisses them in the UI.
 
 ACCUMULATOR_PATH = Path("standups") / "completed-accumulator.json"
 ALERTS_PATH = Path("alerts") / "auto-completed.json"
+COMPLETED_ARCHIVE_DIR = Path("history") / "completed-archive"
+HISTORY_WINDOW_WEEKS = 11  # + the current week = 12 rolling weeks shown live
 
 
 def _iso_week(d: datetime) -> str:
@@ -984,27 +999,63 @@ def _completion_id(client: str, text: str) -> str:
 
 
 def load_accumulator(path: Path = ACCUMULATOR_PATH) -> dict:
-    default = {"isoWeek": None, "items": [], "priorWeek": {"isoWeek": None, "items": []}, "monday_ids_seen": []}
+    default = {"isoWeek": None, "items": [], "history": [], "monday_ids_seen": []}
     if path.exists():
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
             data.setdefault("monday_ids_seen", [])  # older accumulator files predate this field
+            if "history" not in data:
+                # Migrate the old single-slot priorWeek shape into the new
+                # rolling history list instead of losing it on the first run
+                # after this change.
+                prior = data.pop("priorWeek", None) or {}
+                data["history"] = [prior] if prior.get("isoWeek") else []
             return data
         except Exception:
             pass
     return default
 
 
+def _archive_completed_week(week: dict, archive_dir: Path = COMPLETED_ARCHIVE_DIR) -> None:
+    """Appends a week's items to its permanent per-ISO-week archive file.
+    Append (not overwrite) because a week could in principle be archived more
+    than once across accumulator lifetimes; the archive is meant to never
+    lose anything that once aged out of the live window."""
+    iso_week = week.get("isoWeek")
+    items = week.get("items", [])
+    if not iso_week or not items:
+        return
+    archive_dir.mkdir(parents=True, exist_ok=True)
+    path = archive_dir / f"{iso_week}.json"
+    existing = []
+    if path.exists():
+        try:
+            existing = json.loads(path.read_text(encoding="utf-8"))
+            if not isinstance(existing, list):
+                existing = []
+        except Exception:
+            existing = []
+    existing.extend(items)
+    path.write_text(json.dumps(existing, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
 def apply_weekly_reset(acc: dict, current_iso_week: str) -> dict:
     """If the accumulator's isoWeek differs from the current one, this is the
-    first run of a new week: move current items into priorWeek (replacing
-    whatever was there -- one week of history, not a growing log) and start
-    the new week's items empty. monday_ids_seen is untouched here -- it tracks
-    which real Monday ids have EVER been turned into a completion line, so a
-    status that was already summarized doesn't get re-summarized just because
-    the display week rolled over."""
+    first run of a new week: the just-finished week's items are pushed onto
+    the front of the rolling `history` list (most recent first) and the new
+    week's items start empty. `history` is capped at HISTORY_WINDOW_WEEKS
+    entries -- together with the current week that's a HISTORY_WINDOW_WEEKS+1
+    rolling window shown live; anything older gets archived (never dropped)
+    via _archive_completed_week. monday_ids_seen is untouched here -- it
+    tracks which real Monday ids have EVER been turned into a completion
+    line, so a status that was already summarized doesn't get re-summarized
+    just because the display week rolled over."""
     if acc.get("isoWeek") != current_iso_week:
-        acc["priorWeek"] = {"isoWeek": acc.get("isoWeek"), "items": acc.get("items", [])}
+        history = acc.setdefault("history", [])
+        if acc.get("isoWeek"):
+            history.insert(0, {"isoWeek": acc.get("isoWeek"), "items": acc.get("items", [])})
+        while len(history) > HISTORY_WINDOW_WEEKS:
+            _archive_completed_week(history.pop())
         acc["isoWeek"] = current_iso_week
         acc["items"] = []
     return acc
@@ -1022,13 +1073,17 @@ def load_alerts(path: Path = ALERTS_PATH) -> list:
 
 
 def _is_duplicate_completion(candidate: dict, existing: list[dict]) -> bool:
+    """A Monday-id match is a fast-path shortcut, not a gate: it never skips
+    the text-similarity check for same-client pairs, since two different (or
+    absent) Monday ids can still describe the exact same finished work in
+    different wording (e.g. a Monday item and a WhatsApp mention of it)."""
     mid = candidate.get("monday_item_id")
     client = candidate.get("client")
     text = candidate.get("text", "")
     for it in existing:
         if mid and it.get("monday_item_id") and str(it["monday_item_id"]) == str(mid):
             return True
-        if not mid and not it.get("monday_item_id") and it.get("client") == client:
+        if client and it.get("client") == client:
             if _text_similarity(text, it.get("text", "")) >= SIMILARITY_DUP_THRESHOLD:
                 return True
     return False
@@ -1637,15 +1692,14 @@ def main():
         }
 
     # ── fold completions into each client entry ───────────────────────────────
-    prior_week_label = accumulator.get("priorWeek", {}).get("isoWeek")
-    prior_week_items = accumulator.get("priorWeek", {}).get("items", [])
+    history_weeks = accumulator.get("history", [])
     for entry in client_entries:
         client = entry["client"]
         entry["completed_this_week"] = _client_completions(accumulator.get("items", []), client, url_lookup)
-        entry["completed_prior_week"] = {
-            "week_of": prior_week_label,
-            "items": _client_completions(prior_week_items, client, url_lookup),
-        }
+        entry["completed_history"] = [
+            {"week_of": wk.get("isoWeek"), "items": _client_completions(wk.get("items", []), client, url_lookup)}
+            for wk in history_weeks
+        ]
 
     # ── assemble + write ──────────────────────────────────────────────────────
     standup = {

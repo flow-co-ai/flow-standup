@@ -41,7 +41,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add standups/ site/latest.json archive/ alerts/
+          git add standups/ site/latest.json archive/ alerts/ history/
           if git diff --staged --quiet; then
             echo "Nothing new to commit."
             exit 0

@@ -51,7 +51,7 @@ let handled   = {};       // { rowId: true }  — only checked rows stored
 let copiedId  = null;
 let copyTimer = null;
 let saveTimer = null;
-let priorWeekExpanded = {}; // { clientName: true } — collapsed-by-default per card
+let historyWeekExpanded = {}; // { `${clientName}::${isoWeek}`: true } — collapsed-by-default per card per week
 let dismissedAlerts   = loadDismissedAlerts(); // Set of alert keys already seen
 
 // ── view routing (grid <-> client detail via location.hash) ──────────────────
@@ -434,7 +434,7 @@ function buildRow(item, isStalled) {
   return el('div', { class: 'row-wrapper no-checkbox' }, rowContent);
 }
 
-// completed_this_week / completed_prior_week rows: {text, who, source, monday_url}.
+// completed_this_week / completed_history[].items rows: {text, who, source, monday_url}.
 // source here is already the short tag (MTG/MON/WA) from the accumulator —
 // unlike buildRow's items, it's not mapped through SOURCE_TAG.
 function buildCompletedRow(item) {
@@ -658,34 +658,37 @@ function buildCard(entry, priorities) {
     sections.append(sec);
   }
 
-  const completedThisWeek  = entry.completed_this_week || [];
-  const completedPriorWeek = entry.completed_prior_week || {};
-  const completedPriorItems = completedPriorWeek.items || [];
+  const completedThisWeek = entry.completed_this_week || [];
+  // Rolling window of the most recently finished prior weeks (newest first),
+  // capped server-side at HISTORY_WINDOW_WEEKS -- weeks with nothing for
+  // this client are skipped rather than rendered as empty toggles.
+  const completedHistory = (entry.completed_history || []).filter(wk => (wk.items || []).length);
 
-  if (completedThisWeek.length || completedPriorItems.length) {
+  if (completedThisWeek.length || completedHistory.length) {
     const sec = el('div', { class: 'card-section' });
     sec.append(el('span', { class: 'section-label completed-label', text: 'Completed' }));
     completedThisWeek.forEach(c => { const r = buildCompletedRow(c); if (r) sec.append(r); });
 
-    if (completedPriorItems.length) {
-      const expanded   = !!priorWeekExpanded[entry.client];
-      const rangeLabel = isoWeekToDateRange(completedPriorWeek.week_of) || 'prior week';
+    completedHistory.forEach(wk => {
+      const expandKey = `${entry.client}::${wk.week_of}`;
+      const expanded  = !!historyWeekExpanded[expandKey];
+      const rangeLabel = isoWeekToDateRange(wk.week_of) || 'prior week';
       const toggle = el('button', {
         class: 'prior-week-toggle',
         type: 'button',
-        onclick: () => { priorWeekExpanded[entry.client] = !expanded; render(); },
+        onclick: () => { historyWeekExpanded[expandKey] = !expanded; render(); },
       },
         el('span', { class: 'prior-week-caret', text: expanded ? '▾' : '▸' }),
-        ` ${rangeLabel} (${completedPriorItems.length})`,
+        ` ${rangeLabel} (${wk.items.length})`,
       );
       sec.append(toggle);
 
       if (expanded) {
         const priorList = el('div', { class: 'prior-week-list' });
-        completedPriorItems.forEach(c => { const r = buildCompletedRow(c); if (r) priorList.append(r); });
+        wk.items.forEach(c => { const r = buildCompletedRow(c); if (r) priorList.append(r); });
         sec.append(priorList);
       }
-    }
+    });
     sections.append(sec);
   }
 
