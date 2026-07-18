@@ -190,7 +190,7 @@ function foQueueCard(item, section) {
     : item.mondayItemId
     ? `<span class="fo-muted-label">already sent to Monday (item ${foEscape(item.mondayItemId)})</span>`
     : item.payload
-    ? `<button class="fo-primary" onclick="foSendToMonday('${item.id}')">send to monday</button>`
+    ? `<button class="fo-primary" onclick="foOpenSendPreview('${item.id}')">send to monday</button>`
     : `<span class="fo-muted-label">${foEscape(NULL_REASON_LABELS[item.nullReason] || NULL_REASON_LABELS["multi-item"])}</span>`;
 
   // Mondayed cards get no "undo" -- a real Monday item exists permanently,
@@ -362,9 +362,13 @@ async function foPatch(id, patch) {
   foRenderFromItems(foItems);
 }
 
+// The real network fire -- unchanged mechanism (still the one human-clicked
+// path that can create/update a real Monday item). The confirmation step now
+// lives entirely in the preview (foOpenSendPreview / foConfirmSendPreview)
+// that calls this, not in a native confirm() here -- there's no caller left
+// that should invoke this without the human having already seen an editable
+// preview of exactly what's about to fire.
 async function foSendToMonday(id) {
-  if (!confirm("This creates a real item on Monday. Go ahead?")) return;
-
   const idx = foItems.findIndex(it => it.id === id);
   const previous = idx !== -1 ? foItems[idx] : null;
   if (idx !== -1) {
@@ -391,6 +395,117 @@ async function foSendToMonday(id) {
     foItems[idx] = { ...previous, status: "sent", mondayItemId: data.mondayItemId };
   }
   foRenderFromItems(foItems);
+}
+
+// ── send-to-monday preview (editable, confirm-before-fire) ───────────────────
+//
+// Mirrors the /monday-task widget's own rule: title and description are
+// contenteditable, nothing fires until an explicit confirm click, and the
+// target board/client is shown plainly. Cancel (or Escape, or clicking the
+// backdrop) tears the overlay down with zero network calls -- editing here
+// is purely in-memory DOM state until Confirm is clicked, which is the only
+// path that ever calls fetch.
+
+function foCloseSendPreview() {
+  document.getElementById("fo-send-preview-overlay")?.remove();
+  document.removeEventListener("keydown", foSendPreviewEscHandler);
+}
+
+function foSendPreviewEscHandler(e) {
+  if (e.key === "Escape") foCloseSendPreview();
+}
+
+function foOpenSendPreview(id) {
+  const item = foItems.find(it => it.id === id);
+  if (!item || !item.payload) return;
+
+  document.getElementById("fo-send-preview-overlay")?.remove();
+
+  const payload = item.payload;
+  const isUpdateOnly = payload.mode === "update_only";
+  const targetBits = [item.board, item.group].filter(Boolean);
+  const targetLabel = targetBits.length ? targetBits.join(" / ") : "Unknown board/client";
+
+  const overlay = document.createElement("div");
+  overlay.id = "fo-send-preview-overlay";
+  overlay.className = "fo-preview-overlay";
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) foCloseSendPreview(); });
+
+  overlay.innerHTML = `
+    <div class="fo-preview-card" role="dialog" aria-modal="true" aria-label="Preview before sending to Monday">
+      <div class="fo-preview-header">
+        <span class="fo-preview-eyebrow">Preview — nothing sent yet</span>
+        <span class="fo-preview-target">${foEscape(targetLabel)}</span>
+      </div>
+      ${isUpdateOnly ? `<p class="fo-preview-note">Posts an update to an existing Monday item — no new item is created.</p>` : `
+        <div class="fo-preview-field">
+          <label class="fo-preview-field-label">Title</label>
+          <div class="fo-preview-title" contenteditable="true" id="fo-preview-title">${foEscape(payload.itemName || "")}</div>
+        </div>
+      `}
+      <div class="fo-preview-field">
+        <label class="fo-preview-field-label">Description</label>
+        <div class="fo-preview-body" contenteditable="true" id="fo-preview-body">${payload.updateBody || ""}</div>
+      </div>
+      <p class="fo-preview-error" id="fo-preview-error" hidden></p>
+      <div class="fo-preview-actions fo-actions">
+        <button type="button" class="fo-preview-cancel" id="fo-preview-cancel-btn">Cancel</button>
+        <button type="button" class="fo-primary" id="fo-preview-confirm-btn">Confirm &amp; send to Monday</button>
+      </div>
+    </div>`;
+
+  document.body.appendChild(overlay);
+  document.getElementById("fo-preview-cancel-btn").addEventListener("click", foCloseSendPreview);
+  document.getElementById("fo-preview-confirm-btn").addEventListener("click", () => foConfirmSendPreview(id));
+  document.addEventListener("keydown", foSendPreviewEscHandler);
+  (document.getElementById("fo-preview-title") || document.getElementById("fo-preview-body"))?.focus();
+}
+
+async function foConfirmSendPreview(id) {
+  const item = foItems.find(it => it.id === id);
+  if (!item || !item.payload) { foCloseSendPreview(); return; }
+
+  const btn = document.getElementById("fo-preview-confirm-btn");
+  const cancelBtn = document.getElementById("fo-preview-cancel-btn");
+  const errEl = document.getElementById("fo-preview-error");
+  const titleEl = document.getElementById("fo-preview-title");
+  const bodyEl = document.getElementById("fo-preview-body");
+
+  const newItemName = titleEl ? titleEl.textContent.trim() : (item.payload.itemName || "");
+  const newUpdateBody = bodyEl ? bodyEl.innerHTML.trim() : (item.payload.updateBody || "");
+  const payloadChanged =
+    newItemName !== (item.payload.itemName || "") || newUpdateBody !== (item.payload.updateBody || "");
+
+  btn.disabled = true;
+  cancelBtn.disabled = true;
+  btn.textContent = "Saving edits…";
+  errEl.hidden = true;
+
+  if (payloadChanged) {
+    const patch = { payload: { ...item.payload, itemName: newItemName, updateBody: newUpdateBody } };
+    if (item.payload.mode !== "update_only") patch.title = newItemName;
+
+    let res, data;
+    try {
+      res = await fetch("/.netlify/functions/queue", { method: "POST", headers: foHeaders(), body: JSON.stringify({ id, patch }) });
+      data = await res.json().catch(() => ({}));
+    } catch (err) {
+      res = null;
+      data = { error: String((err && err.message) || err) };
+    }
+    if (!res || !res.ok || data.error) {
+      errEl.textContent = "Couldn't save your edits, so nothing was sent: " + (data.error || (res ? `HTTP ${res.status}` : "network error"));
+      errEl.hidden = false;
+      btn.disabled = false;
+      cancelBtn.disabled = false;
+      btn.textContent = "Confirm & send to Monday";
+      return;
+    }
+    foItems = data.items || foItems;
+  }
+
+  foCloseSendPreview();
+  await foSendToMonday(id); // the one real write -- unchanged, now only ever reached after this explicit confirm
 }
 
 foLoadQueue();
