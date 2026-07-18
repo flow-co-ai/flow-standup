@@ -41,7 +41,14 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add standups/ site/latest.json archive/ alerts/ history/
+          git add standups/ site/latest.json archive/ alerts/
+          # history/ doesn't exist until a week ages out of the rolling
+          # 12-week window and gets archived for the first time -- `git add`
+          # on a nonexistent pathspec is fatal (exit 128), so only add it
+          # once it's actually there.
+          if [ -d history/ ]; then
+            git add history/
+          fi
           if git diff --staged --quiet; then
             echo "Nothing new to commit."
             exit 0
