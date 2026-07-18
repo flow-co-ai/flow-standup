@@ -263,6 +263,18 @@ def match_meeting_clients(mt: dict, clients_config: dict, active_clients: set[st
     if title_matches:
         return title_matches[:4]
 
+    confirmed = _confirmed_content_matches(mt, clients_config, active_clients)
+    return confirmed if len(confirmed) == 1 else []
+
+
+def _confirmed_content_matches(mt: dict, clients_config: dict, active_clients: set[str]) -> list[str]:
+    """Client aliases found in a meeting's summary/sentence CONTENT, ANDed
+    against active_clients for corroboration -- the raw candidate set
+    match_meeting_clients decides whether to trust (exactly one) or treat
+    as an internal-sync signal instead (more than one). Factored out so
+    is_ambiguous_internal_meeting can reuse the exact same candidate set
+    rather than a second, possibly-drifting copy of this scan."""
+    from fetch_monday import all_alias_matches
     summary = mt.get("summary") or {}
     haystack = " ".join([
         str(summary.get("overview") or ""),
@@ -273,8 +285,26 @@ def match_meeting_clients(mt: dict, clients_config: dict, active_clients: set[st
         haystack += " " + " ".join(s.get("text", "") for s in mt["sentences"][:60]).lower()
 
     matches = [c for c in all_alias_matches(haystack, clients_config) if c not in NEVER_MATCH_VIA_MEETING_TEXT]
-    confirmed = [m for m in matches if m in active_clients]
-    return confirmed if len(confirmed) == 1 else []
+    return [m for m in matches if m in active_clients]
+
+
+def is_ambiguous_internal_meeting(mt: dict, clients_config: dict, active_clients: set[str]) -> bool:
+    """True when a meeting's own content references more than one
+    currently-active client at once, with no title match of its own --
+    the exact signature of a generic internal status sync (confirmed live:
+    a bare Google Meet room code "goh-xgjm-nza" whose content briefly
+    touched four different clients' campaigns), not a genuine unmatched
+    prospect. match_meeting_clients already keeps a meeting like this from
+    landing on any one client's own review (see the "exactly one" rule
+    above) -- this keeps it from ALSO resurfacing as a fabricated
+    potential-client card just because nothing else claimed it. Callers
+    should still let it into meetings_by_client["General comms"] (so it's
+    visible in the meetings digest) and only filter it out of whatever
+    feeds build_potential_clients specifically."""
+    from fetch_monday import all_alias_matches
+    if all_alias_matches(mt.get("title", ""), clients_config):
+        return False
+    return len(_confirmed_content_matches(mt, clients_config, active_clients)) > 1
 
 
 # ── potential clients (prospects, not signed clients) ────────────────────────
@@ -1905,8 +1935,19 @@ def main():
     for entry in client_entries:
         off_topic_mentions.extend(entry.pop("_off_topic_mentions", []) or [])
 
+    # A meeting that content-matched several active clients at once (an
+    # internal status sync, not a real client meeting -- see
+    # is_ambiguous_internal_meeting) still lands in "General comms" above
+    # for meetings_digest visibility, but has no business becoming a
+    # fabricated potential-client card just because nothing else claimed
+    # it -- filtered out of prospect-building specifically, not out of the
+    # digest.
+    prospect_meetings = [
+        m for m in meetings_by_client.get("General comms", [])
+        if not is_ambiguous_internal_meeting(m, clients_config, active_clients_set)
+    ]
     potential_clients = build_potential_clients(
-        monday_data, meetings_by_client.get("General comms", []), chats_by_client.get("General comms", []),
+        monday_data, prospect_meetings, chats_by_client.get("General comms", []),
         clients_config,
         config.get("non_client_entities", []),
         off_topic_mentions,
