@@ -1072,6 +1072,23 @@ def load_alerts(path: Path = ALERTS_PATH) -> list:
     return []
 
 
+# Some genuine same-work completion pairs get reworded heavily enough (by
+# the summarizer, or by whoever typed the WhatsApp message) that they land
+# below SIMILARITY_DUP_THRESHOLD on plain text similarity alone -- e.g.
+# "First 3 video cuts" vs "Delivered first three video cuts for review"
+# scores 0.557; "Website — First Draft" vs "Completed first draft of
+# website." scores 0.577. Both real dupes, both below the shared 0.6
+# threshold used everywhere else (exclusions, prospect bucketing, alias-gap
+# detection) -- lowering that shared threshold to catch these risks new
+# false positives in those other places. Corroboration lets completions
+# specifically use a lower floor instead: same client AND same source AND
+# same sourceDate AND same who is strong enough independent evidence of the
+# same event that a looser text match becomes safe to trust. Same-client
+# pairs that are genuinely unrelated score well below this floor in
+# practice (e.g. "Website — First Draft" vs "First 3 video cuts" = 0.421).
+COMPLETION_CORROBORATED_SIMILARITY_THRESHOLD = 0.45
+
+
 def _is_duplicate_completion(candidate: dict, existing: list[dict]) -> bool:
     """A Monday-id match is a fast-path shortcut, not a gate: it never skips
     the text-similarity check for same-client pairs, since two different (or
@@ -1080,11 +1097,22 @@ def _is_duplicate_completion(candidate: dict, existing: list[dict]) -> bool:
     mid = candidate.get("monday_item_id")
     client = candidate.get("client")
     text = candidate.get("text", "")
+    source = candidate.get("source")
+    source_date = candidate.get("sourceDate")
+    who = candidate.get("who")
     for it in existing:
         if mid and it.get("monday_item_id") and str(it["monday_item_id"]) == str(mid):
             return True
         if client and it.get("client") == client:
-            if _text_similarity(text, it.get("text", "")) >= SIMILARITY_DUP_THRESHOLD:
+            score = _text_similarity(text, it.get("text", ""))
+            if score >= SIMILARITY_DUP_THRESHOLD:
+                return True
+            corroborated = (
+                source and it.get("source") == source
+                and source_date and it.get("sourceDate") == source_date
+                and who == it.get("who")
+            )
+            if corroborated and score >= COMPLETION_CORROBORATED_SIMILARITY_THRESHOLD:
                 return True
     return False
 

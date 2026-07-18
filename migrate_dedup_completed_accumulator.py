@@ -10,10 +10,15 @@ but the fix only prevents new duplicates — it doesn't retroactively clean
 whatever already got stored in standups/completed-accumulator.json before
 the fix landed.
 
-This replays the fixed dedup rules over every already-stored week (the
-current week's items, plus every week already in `history`) and drops
-whatever should have been caught the first time, keeping the earliest-seen
-entry of each duplicate pair.
+This replays the fixed dedup rules -- including the corroborated-match rule
+(same client/source/sourceDate/who lets a lower similarity floor catch
+heavily-reworded mentions of the same event, e.g. "First 3 video cuts" vs
+"Delivered first three video cuts for review") -- over every already-stored
+week (the current week's items, plus every week already in `history`) and
+drops whatever should have been caught the first time, keeping the
+earliest-seen entry of each duplicate pair. Safe to re-run: each pass only
+ever catches pairs the current rules recognize, so re-running after a rule
+change picks up just the newly-recognized pairs.
 
 Safety carve-out: the production fast path matches purely on
 monday_item_id, without checking client — that's fine in the live pipeline
@@ -32,7 +37,12 @@ Run: python migrate_dedup_completed_accumulator.py
 
 import json
 
-from generate import ACCUMULATOR_PATH, SIMILARITY_DUP_THRESHOLD, _text_similarity
+from generate import (
+    ACCUMULATOR_PATH,
+    COMPLETION_CORROBORATED_SIMILARITY_THRESHOLD,
+    SIMILARITY_DUP_THRESHOLD,
+    _text_similarity,
+)
 
 
 def _dedup(items: list[dict], label: str) -> list[dict]:
@@ -41,6 +51,9 @@ def _dedup(items: list[dict], label: str) -> list[dict]:
         mid = candidate.get("monday_item_id")
         client = candidate.get("client")
         text = candidate.get("text", "")
+        source = candidate.get("source")
+        source_date = candidate.get("sourceDate")
+        who = candidate.get("who")
         dropped = False
         for it in kept:
             same_mid = bool(mid and it.get("monday_item_id") and str(it["monday_item_id"]) == str(mid))
@@ -60,13 +73,28 @@ def _dedup(items: list[dict], label: str) -> list[dict]:
                 )
                 dropped = True
                 break
-            if client and it.get("client") == client and _text_similarity(text, it.get("text", "")) >= SIMILARITY_DUP_THRESHOLD:
-                print(
-                    f"  removing duplicate in {label} (similar text, same client {client}): "
-                    f"{text!r} (id={candidate.get('id')}) — kept {it.get('text')!r} (id={it.get('id')})"
+            if client and it.get("client") == client:
+                score = _text_similarity(text, it.get("text", ""))
+                if score >= SIMILARITY_DUP_THRESHOLD:
+                    print(
+                        f"  removing duplicate in {label} (similar text, same client {client}): "
+                        f"{text!r} (id={candidate.get('id')}) — kept {it.get('text')!r} (id={it.get('id')})"
+                    )
+                    dropped = True
+                    break
+                corroborated = (
+                    source and it.get("source") == source
+                    and source_date and it.get("sourceDate") == source_date
+                    and who == it.get("who")
                 )
-                dropped = True
-                break
+                if corroborated and score >= COMPLETION_CORROBORATED_SIMILARITY_THRESHOLD:
+                    print(
+                        f"  removing duplicate in {label} (corroborated: same source/date/who, "
+                        f"score {score:.3f}, same client {client}): "
+                        f"{text!r} (id={candidate.get('id')}) — kept {it.get('text')!r} (id={it.get('id')})"
+                    )
+                    dropped = True
+                    break
         if not dropped:
             kept.append(candidate)
     return kept
