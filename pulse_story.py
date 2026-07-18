@@ -426,9 +426,100 @@ def build_prospect_likelihood_prompt(prospects: list[dict], today: str) -> str:
         for item in p.get("items", []) or []:
             when = item.get("when") or "no date"
             parts.append(f"  [{item.get('source', '?')} / {when}] {item.get('blurb', '')}")
-            if item.get("overview"):
-                parts.append(f"    Full summary: {str(item['overview'])[:600]}")
-            if item.get("action_items"):
-                parts.append(f"    Action items: {'; '.join(item['action_items'][:6])}")
+        # The synthesized summary (one or more merged meetings) is the
+        # richest signal available -- prefer it over the raw per-item
+        # blurbs above when present.
+        if p.get("summary"):
+            parts.append(f"    Full summary: {str(p['summary'])[:600]}")
+        if p.get("action_items"):
+            parts.append(f"    Action items: {'; '.join(p['action_items'][:6])}")
+        parts.append("")
+    return "\n".join(parts)
+
+
+# -- prospect meeting synthesis (clean entity name + one summary per meeting) --
+
+def build_meeting_prospect_synthesis_prompt(meetings: list[dict], today: str) -> str:
+    """meetings: [{title, date, overview, action_items}] -- unmatched Fireflies
+    calls (already filtered clear of internal syncs -- see
+    is_ambiguous_internal_meeting). Fireflies titles are noisy ("Citrus
+    Smiles Marketing Systems", "Parth Patel and Flow Company") and the same
+    real prospect often gets a differently-worded title call to call --
+    this asks for a CLEAN, SHORT entity name per meeting specifically so the
+    existing name-similarity dedup (SIMILARITY_DUP_THRESHOLD) has a fair
+    shot at recognizing two calls as the same prospect, the same way it
+    already does for a clean model-extracted name elsewhere in this
+    pipeline. Also asks for a one-meeting synthesis (not a raw bullet dump)
+    so a prospect with only one meeting never needs a second AI pass to get
+    a clean summary."""
+    parts: list[str] = []
+    parts.append(
+        f"# Prospect meeting synthesis - {today}\n\n"
+        "Each meeting below is an unmatched Fireflies call -- not identified "
+        "as any existing signed client's own meeting. For EACH meeting, "
+        "identify the actual prospect (the specific outside business or "
+        "person this call is with) and write a clean synthesis of it.\n\n"
+        "For each meeting emit:\n"
+        "- index: exactly as given, verbatim.\n"
+        "- entity_name: the SHORT, clean name of the specific business or "
+        "person this call is with -- e.g. 'Citrus Smiles' or 'Parth Patel', "
+        "never the raw meeting title verbatim (titles are often noisy: "
+        "'Citrus Smiles Marketing Systems', 'Parth Patel and Flow Company'). "
+        "If the SAME prospect is clearly the subject across several meetings "
+        "in this batch, use the EXACT SAME entity_name string for all of "
+        "them, so they can be recognized as the same prospect.\n"
+        "- summary: 2-4 plain sentences synthesizing what this ONE meeting "
+        "was actually about -- read like a real person's account, not a "
+        "restated bullet list. Plain prose only: no markdown (no ** bold, "
+        "no leading '-' bullets), no headers.\n"
+        "- action_items: a clean, deduplicated list of concrete next steps "
+        "from this meeting, max 5, plain sentences (no markdown, no "
+        "speaker-name-only entries).\n\n"
+        "Emit exactly one row per meeting below, same order, none skipped.\n"
+    )
+    parts.append("\n## MEETINGS\n")
+    for i, mt in enumerate(meetings):
+        summary = mt.get("summary") or {}
+        parts.append(f"### index {i} -- {mt.get('title', 'Untitled')} ({mt.get('date', 'no date')})")
+        if summary.get("overview"):
+            parts.append(f"  Overview: {str(summary['overview'])[:1000]}")
+        if summary.get("action_items"):
+            parts.append(f"  Action items: {str(summary['action_items'])[:600]}")
+        parts.append("")
+    return "\n".join(parts)
+
+
+def build_prospect_group_synthesis_prompt(prospects: list[dict], today: str) -> str:
+    """prospects: [{name, meeting_summaries: [{summary, action_items}]}] --
+    prospects whose meetings merged into ONE card (2+ real meetings under
+    possibly-different titles, already deduped by clean entity name). Each
+    already has a clean per-meeting synthesis from
+    build_meeting_prospect_synthesis_prompt; this combines those into ONE
+    cohesive summary per prospect instead of showing several back to back."""
+    parts: list[str] = []
+    parts.append(
+        f"# Prospect multi-meeting synthesis - {today}\n\n"
+        "Each prospect below has had more than one real meeting. Combine "
+        "that prospect's separate per-meeting summaries into ONE cohesive "
+        "synthesis of the whole relationship so far -- not a list of "
+        "separate meeting recaps stitched together.\n\n"
+        "For each prospect emit:\n"
+        "- name: exactly as given below.\n"
+        "- summary: 2-5 plain sentences covering the overall arc across all "
+        "their meetings -- what's been discussed, how it's progressed, "
+        "where it stands now. Plain prose only: no markdown (no ** bold, no "
+        "leading '-' bullets), no headers.\n"
+        "- action_items: ONE deduplicated list of concrete next steps across "
+        "ALL their meetings combined, max 6, plain sentences -- merge "
+        "near-duplicate items from different meetings into one.\n\n"
+        "Emit exactly one row per prospect below, same order, none skipped.\n"
+    )
+    parts.append("\n## PROSPECTS\n")
+    for p in prospects:
+        parts.append(f"### {p.get('name', '')}")
+        for i, ms in enumerate(p.get("meeting_summaries", []) or []):
+            parts.append(f"  Meeting {i + 1}: {ms.get('summary', '')}")
+            if ms.get("action_items"):
+                parts.append(f"    Action items: {'; '.join(ms['action_items'])}")
         parts.append("")
     return "\n".join(parts)

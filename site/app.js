@@ -703,26 +703,44 @@ function buildPotentialCardDetail(p) {
     ));
   }
 
-  const items = p.items || [];
-  items.forEach(item => {
+  // One synthesized summary for the whole prospect (single meeting: lifted
+  // directly; several meetings under different titles, now merged by the
+  // clean-entity-name dedup upstream: one combined synthesis) -- never each
+  // meeting's raw content shown back to back. Absent entirely for a
+  // prospect with no meeting behind it at all (mention/chat/monday_group
+  // only), which falls back to the per-item blurbs below same as always.
+  if (p.summary) {
     const sec = el('div', { class: 'card-section potential-item' });
-    const whenLabel = formatShortDate(item.when) || item.when || '';
-    sec.append(el('div', { class: 'potential-item-header' },
-      el('span', { class: 'source-chip', text: SOURCE_LABEL[item.source] || item.source || '' }),
-      whenLabel ? el('span', { class: 'date-chip', text: whenLabel }) : null,
-    ));
-    sec.append(el('p', {
-      class: item.overview ? 'potential-summary' : 'mini-micro',
-      text: item.overview || item.blurb || '',
-    }));
-    if ((item.action_items || []).length) {
+    sec.append(el('span', { class: 'section-label', text: 'Summary' }));
+    sec.append(el('p', { class: 'potential-summary', text: p.summary }));
+    if ((p.action_items || []).length) {
       sec.append(el('span', { class: 'section-label', text: 'Action items' }));
       const list = el('ul', { class: 'action-items-list' });
-      item.action_items.forEach(a => list.append(el('li', { text: a })));
+      p.action_items.forEach(a => list.append(el('li', { text: a })));
       sec.append(list);
     }
     wrap.append(sec);
-  });
+  }
+
+  // Per-mention provenance -- source + date + the short blurb each one
+  // came in with. Never the full overview/action_items here (that's what
+  // the synthesized summary above is for) -- just enough to see how many
+  // times, and from where, this prospect has come up.
+  const items = p.items || [];
+  if (items.length) {
+    const sec = el('div', { class: 'card-section potential-item' });
+    sec.append(el('span', { class: 'section-label', text: p.summary ? 'Mentions' : 'Details' }));
+    items.forEach(item => {
+      const whenLabel = formatShortDate(item.when) || item.when || '';
+      const row = el('div', { class: 'potential-item-header' },
+        el('span', { class: 'source-chip', text: SOURCE_LABEL[item.source] || item.source || '' }),
+        whenLabel ? el('span', { class: 'date-chip', text: whenLabel }) : null,
+      );
+      sec.append(row);
+      sec.append(el('p', { class: 'mini-micro', text: item.blurb || '' }));
+    });
+    wrap.append(sec);
+  }
 
   return wrap;
 }

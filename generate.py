@@ -395,6 +395,125 @@ def _find_near_client_match(name: str, clients_config: dict) -> str | None:
     return None
 
 
+def _strip_markdown(text: str) -> str:
+    """Defense in depth, not a substitute for the prompt asking for plain
+    prose: strips **bold** markers and leading bullet dashes a model
+    sometimes reaches for out of habit even when told not to, so unrendered
+    markdown syntax never reaches the page."""
+    text = re.sub(r"\*\*(.+?)\*\*", r"\1", text or "")
+    text = re.sub(r"(?m)^\s*[-*•]\s+", "", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def synthesize_meeting_prospects(ai: "anthropic.Anthropic", meetings: list[dict], today: str) -> list[dict]:
+    """One batched Claude call turns each unmatched meeting into a clean
+    {entity_name, summary, action_items} -- entity_name specifically so the
+    existing name-similarity dedup in build_potential_clients (unchanged)
+    can recognize two differently-titled meetings as the same real prospect,
+    the same general mechanism already used for a model-extracted entity
+    name elsewhere in this pipeline; summary/action_items so a single-
+    meeting prospect never needs a raw bullet dump or a second AI pass to
+    read cleanly. Falls back per-meeting (raw title as entity_name, a
+    markdown-stripped overview slice as summary) if the call fails or a
+    given meeting's row comes back missing/bare -- a degraded synthesis,
+    never a lost one."""
+    if not meetings:
+        return []
+
+    by_index: dict[int, dict] = {}
+    try:
+        prompt = pulse_story.build_meeting_prospect_synthesis_prompt(meetings, today)
+        result = _call_tool(ai, prompt, EMIT_MEETING_PROSPECT_SYNTHESIS_TOOL, label="prospect-meetings", max_tokens=3000)
+        for row in (result.get("meetings", []) or []):
+            idx = row.get("index")
+            if isinstance(idx, int):
+                by_index[idx] = row
+    except Exception as exc:
+        print(f"  ⚠️  Prospect meeting synthesis failed ({exc}) -- using raw titles/overviews as a fallback")
+
+    out = []
+    for i, mt in enumerate(meetings):
+        row = by_index.get(i)
+        title = mt.get("title") or "Untitled"
+        entity_name = (row.get("entity_name") or "").strip() if row else ""
+        summary = _strip_markdown(row.get("summary") or "") if row else ""
+        action_items = [a for a in (row.get("action_items") or []) if a] if row else []
+        if not entity_name or not summary:
+            fallback_overview = str((mt.get("summary") or {}).get("overview") or "").strip()
+            entity_name = entity_name or title
+            summary = summary or _strip_markdown(fallback_overview)[:400]
+            action_items = action_items or _summary_lines((mt.get("summary") or {}).get("action_items"), 6)
+        out.append({
+            "title": title,
+            "date": mt.get("date", ""),
+            "entity_name": entity_name,
+            "summary": summary or None,
+            "action_items": action_items,
+        })
+    return out
+
+
+def finalize_prospect_summaries(ai: "anthropic.Anthropic", prospects: list[dict], today: str) -> None:
+    """Mutates each prospect in place: lifts its meeting content into ONE
+    top-level summary/action_items field instead of leaving it scattered
+    per-item (which is what caused meeting content to render as several
+    raw bullet dumps back to back). A prospect with exactly one meeting
+    just lifts that meeting's already-clean synthesis directly -- no
+    second AI call needed. A prospect with two or more (post-dedup, so
+    these are genuinely the same real prospect under different meeting
+    titles) gets ONE combined batched call across every such prospect.
+    Per-item overview/action_items are cleared afterward either way --
+    the top-level fields are the only rendering surface now."""
+    single: list[dict] = []
+    multi: list[dict] = []
+    for p in prospects:
+        meeting_items = [it for it in p.get("items", []) if it.get("source") == "meeting" and it.get("overview")]
+        if not meeting_items:
+            continue
+        elif len(meeting_items) == 1:
+            single.append((p, meeting_items))
+        else:
+            multi.append((p, meeting_items))
+
+    for p, meeting_items in single:
+        p["summary"] = meeting_items[0]["overview"]
+        p["action_items"] = meeting_items[0]["action_items"]
+
+    if multi:
+        try:
+            prompt = pulse_story.build_prospect_group_synthesis_prompt(
+                [{"name": p["name"], "meeting_summaries": [
+                    {"summary": it["overview"], "action_items": it["action_items"]} for it in items
+                ]} for p, items in multi],
+                today,
+            )
+            result = _call_tool(ai, prompt, EMIT_PROSPECT_GROUP_SYNTHESIS_TOOL, label="prospect-groups", max_tokens=3000)
+            by_name = {row.get("name"): row for row in (result.get("prospects", []) or []) if row.get("name")}
+        except Exception as exc:
+            print(f"  ⚠️  Prospect group synthesis failed ({exc}) -- falling back to each prospect's most recent meeting")
+            by_name = {}
+
+        for p, meeting_items in multi:
+            row = by_name.get(p["name"])
+            if row and row.get("summary"):
+                p["summary"] = _strip_markdown(row["summary"])
+                p["action_items"] = [a for a in (row.get("action_items") or []) if a]
+            else:
+                # Degraded but not lost: the single most recent meeting's
+                # own clean synthesis, never a multi-meeting raw dump.
+                most_recent = max(meeting_items, key=lambda it: it.get("when") or "")
+                p["summary"] = most_recent["overview"]
+                p["action_items"] = most_recent["action_items"]
+
+    # Per-item overview/action_items were only ever scratch space for this
+    # function -- the top-level fields set above are the one rendering
+    # surface for meeting content from here on.
+    for p in prospects:
+        for it in p.get("items", []):
+            it.pop("overview", None)
+            it.pop("action_items", None)
+
+
 def build_potential_clients(
     monday_data: list, general_meetings: list, general_chats: list,
     clients_config: dict,
@@ -460,13 +579,18 @@ def build_potential_clients(
         if possible_existing_client:
             prospects[key]["possible_existing_client"] = possible_existing_client
 
-    for mt in general_meetings or []:
-        title = mt.get("title") or "Untitled"
-        summary = mt.get("summary") or {}
-        overview = str(summary.get("overview") or "").strip()
+    for sm in general_meetings or []:
+        # sm is a pre-synthesized meeting dict from synthesize_meeting_prospects
+        # (entity_name/summary/action_items), NOT a raw Fireflies transcript --
+        # bucketing by the clean entity_name (rather than the raw, often noisy
+        # meeting title) is what lets the unchanged name-similarity merge
+        # below actually recognize two differently-titled meetings as the
+        # same real prospect.
+        entity_name = sm.get("entity_name") or sm.get("title") or "Untitled"
+        overview = (sm.get("summary") or "").strip()
         blurb = overview[:200] or "Meeting — no summary available."
-        _bucket(title, "meeting", blurb, mt.get("date", ""),
-                overview=overview or None, action_items=_summary_lines(summary.get("action_items"), 6))
+        _bucket(entity_name, "meeting", blurb, sm.get("date", ""),
+                overview=overview or None, action_items=sm.get("action_items") or [])
 
     for chat_name, msgs in general_chats or []:
         n = len(msgs) if isinstance(msgs, list) else 0
@@ -881,6 +1005,53 @@ EMIT_PROSPECT_LIKELIHOOD_TOOL = {
                         "name": {"type": "string", "description": "Verbatim from the prospect name given. Never invent or alter."},
                         "percent": {"type": "integer", "minimum": 0, "maximum": 100},
                         "reason": {"type": "string", "description": "One short sentence, max ~20 words, citing the specific tone/interest signal behind the number."},
+                    },
+                },
+            },
+        },
+    },
+}
+
+EMIT_MEETING_PROSPECT_SYNTHESIS_TOOL = {
+    "name": "emit_meeting_prospect_synthesis",
+    "description": "For each unmatched meeting, identify the real prospect (clean short name) and synthesize what that one meeting was about, plain prose, no markdown.",
+    "input_schema": {
+        "type": "object",
+        "required": ["meetings"],
+        "properties": {
+            "meetings": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": ["index", "entity_name", "summary"],
+                    "properties": {
+                        "index": {"type": "integer", "description": "Verbatim from the meeting's index. Never invent or alter."},
+                        "entity_name": {"type": "string", "description": "Short, clean business/person name -- never the raw meeting title. Same exact string across meetings that are clearly the same prospect."},
+                        "summary": {"type": "string", "description": "2-4 plain sentences, no markdown, synthesizing this one meeting."},
+                        "action_items": {"type": "array", "items": {"type": "string"}, "description": "Max 5, deduplicated, plain sentences."},
+                    },
+                },
+            },
+        },
+    },
+}
+
+EMIT_PROSPECT_GROUP_SYNTHESIS_TOOL = {
+    "name": "emit_prospect_group_synthesis",
+    "description": "For each prospect with more than one real meeting, combine their per-meeting summaries into one cohesive synthesis, plain prose, no markdown.",
+    "input_schema": {
+        "type": "object",
+        "required": ["prospects"],
+        "properties": {
+            "prospects": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": ["name", "summary"],
+                    "properties": {
+                        "name": {"type": "string", "description": "Verbatim from the prospect name given. Never invent or alter."},
+                        "summary": {"type": "string", "description": "2-5 plain sentences covering the whole relationship arc, no markdown."},
+                        "action_items": {"type": "array", "items": {"type": "string"}, "description": "Max 6, deduplicated across all their meetings, plain sentences."},
                     },
                 },
             },
@@ -1942,10 +2113,16 @@ def main():
     # fabricated potential-client card just because nothing else claimed
     # it -- filtered out of prospect-building specifically, not out of the
     # digest.
-    prospect_meetings = [
+    prospect_meetings_raw = [
         m for m in meetings_by_client.get("General comms", [])
         if not is_ambiguous_internal_meeting(m, clients_config, active_clients_set)
     ]
+    # Clean entity name + one-meeting synthesis BEFORE bucketing -- feeding
+    # build_potential_clients's unchanged name-similarity dedup a clean name
+    # per meeting (instead of the raw, often noisy Fireflies title) is what
+    # lets it recognize two differently-titled meetings as the same real
+    # prospect, the same general mechanism already used for other sources.
+    prospect_meetings = synthesize_meeting_prospects(ai, prospect_meetings_raw, today)
     potential_clients = build_potential_clients(
         monday_data, prospect_meetings, chats_by_client.get("General comms", []),
         clients_config,
@@ -1955,6 +2132,11 @@ def main():
     if potential_clients:
         print(f"  Potential clients (unmatched, not merged into a signed client): "
               f"{', '.join(p['name'] for p in potential_clients)}")
+        # Lifts each prospect's meeting content into ONE top-level summary
+        # (single meeting: direct lift; 2+ meetings -- the same real prospect
+        # under different titles, now merged by the clean-name dedup above --
+        # one combined AI synthesis) before likelihood assessment reads it.
+        finalize_prospect_summaries(ai, potential_clients, today)
         assess_prospect_likelihood(ai, potential_clients, today)
 
     # ── meetings digest (deterministic) ───────────────────────────────────────
