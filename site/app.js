@@ -252,14 +252,33 @@ function hiddenProspects() {
 // that visibly lags until a GitHub commit round-trips would feel broken),
 // then either reconcile with the server's real response or roll back.
 
-async function applyOverride(action, payload, optimisticApply) {
+// Every write funnels through this one chain, in the order applyOverride()
+// was CALLED -- not the order their network requests happen to complete in.
+// Without this, two edits fired close together (e.g. rename a card, then
+// immediately rename it again) race: both POSTs can be in flight at once,
+// and updateJSON's retry-on-409 on the backend only guarantees each
+// individual write eventually lands, not that they land in the right
+// ORDER -- whichever request's GitHub commit happens to finish last wins,
+// which is not necessarily the edit the user made last. Serializing here
+// (not just retrying on the backend) is the same fix as Daily Ops' foPending
+// guard on the priority buttons, just as a queue instead of a block, since a
+// card's optimistic UI should still update instantly rather than waiting.
+let overridesWriteChain = Promise.resolve();
+
+function applyOverride(action, payload, optimisticApply) {
   const previous = standupOverrides;
   standupOverrides = optimisticApply({
     overrides: { ...previous.overrides },
     manualProspects: previous.manualProspects.map(p => ({ ...p })),
   });
-  render();
+  render(); // optimistic feedback fires immediately, never queued
 
+  const task = () => sendOverrideWrite(action, payload, previous);
+  overridesWriteChain = overridesWriteChain.then(task, task); // keep the chain alive even if a write throws/reverts
+  return overridesWriteChain;
+}
+
+async function sendOverrideWrite(action, payload, previous) {
   const passcode = getPasscode();
   if (!passcode) {
     standupOverrides = previous;
