@@ -1,14 +1,15 @@
-// POST { message, history } -> the global "Ask Flow Ops" widget, embedded on
-// every page (Standup + Daily Ops), not scoped to one card. It can answer
-// questions against live Monday + the live draft queue, and draft brand-new
-// Daily Ops items from scratch (written straight into checks/draft-queue.json,
-// same schema as every other card, so it shows up in the queue immediately).
+// POST { message, history, context? } -> the global "Ask Flow Ops" widget,
+// embedded on every page (Standup + Daily Ops), not scoped to one card. It
+// can answer questions against live Monday + the live draft queue, draft
+// brand-new Daily Ops items, edit/resolve/remove/reprioritize existing Daily
+// Ops cards, and reorder/hide/rename/edit/add Standup and potential-client
+// cards -- everything the on-page manual controls can do, conversationally.
 //
 // Nothing here is cached across calls or across turns -- every tool below
-// hits GitHub/Monday fresh, every single time. Drafting reuses item-chat.js's
-// exact rules/logic (DRAFTING_RULES, buildResolvedFields) and lib/monday.js's
-// exact enforcement (buildColumnValues, checkUpdateBodySubstance) rather than
-// a third copy of either.
+// hits GitHub/Monday fresh, every single time. Drafting and editing reuse
+// item-chat.js's exact rules/logic (DRAFTING_RULES, buildResolvedFields,
+// editQueueItem) and standup-overrides.js's exact write path
+// (applyStandupOverrideAction) rather than a second copy of either.
 
 const { getJSON, updateJSON } = require("./lib/github");
 const {
@@ -18,7 +19,14 @@ const {
   mondaySearchAllBoards,
   boardLabelForId,
 } = require("./lib/monday");
-const { DRAFTING_RULES, buildResolvedFields } = require("./item-chat");
+const { DRAFTING_RULES, buildResolvedFields, editQueueItem } = require("./item-chat");
+const {
+  applyStandupOverrideAction,
+  NotFoundError: OverrideNotFoundError,
+  BadRequestError: OverrideBadRequestError,
+  OVERRIDES_PATH,
+  EMPTY: EMPTY_OVERRIDES,
+} = require("./standup-overrides");
 
 const ANTHROPIC_MODEL = "claude-sonnet-4-5"; // check docs.claude.com/en/docs/about-claude/models if this starts erroring
 const QUEUE_PATH = "checks/draft-queue.json";
@@ -93,8 +101,13 @@ or a specific follow-up calls for it.`;
 const SYSTEM_RULES = `You are Ask Flow Ops, a general assistant embedded as a floating chat widget
 on every page of Naz's Flow Ops dashboard (the Standup page and the Daily Ops
 page). Unlike item-chat.js's per-card assistant, you aren't scoped to one
-card -- you can answer questions, look things up, and draft brand-new Daily
-Ops items from scratch when asked, not just discuss existing ones.
+card -- you can answer questions, look things up, draft brand-new Daily Ops
+items from scratch, and manage EXISTING cards on either page: edit, resolve,
+reprioritize, or remove a Daily Ops card; reorder, hide, rename, or edit a
+Standup client/potential-client card; add a new potential client by hand.
+This is the same set of actions the on-page manual controls (drag handles,
+inline edit, hide/remove buttons) already do -- you're a second, conversational
+path to the exact same writes, not a separate system.
 
 ${RESPONSE_STYLE_RULES}
 
@@ -164,7 +177,55 @@ ${DRAFTING_RULES}
     "Ops chat: Naz request, 7/16" -- shown on the card like any other item's
     source.
   If you don't have enough yet (ambiguous client/board, missing confirmation,
-  unclear scope), do NOT call draft_new_item. Just ask one specific question.`;
+  unclear scope), do NOT call draft_new_item. Just ask one specific question.
+
+## Managing existing Daily Ops cards
+- edit_queue_item(id, ...): edit, resolve, reprioritize, or remove one
+  existing Daily Ops card by id. Same fields and validation as the per-card
+  chat's own edit_item (title, note, priority 1-5, status, boardId/blocked/
+  needsNaz) -- e.g. it still rejects marking a card "ready" with no drafted
+  payload yet. Setting status to "ignored" IS how you remove/dismiss a
+  card -- there's no hard delete, "ignored" is the only removal concept.
+  Look the id up via read_draft_queue first if you don't already have it
+  (match on title/group/sourceLabel) -- never guess an id.
+
+## Managing existing Standup / potential-client cards
+Cards are identified by a stable key: "client:<name>" for a real client
+(matching by_client[].client from read_latest_rundown exactly), "prospect:
+<name>" for a generated potential client (matching potential_clients[].name),
+or a manual prospect's own id (e.g. "manual-3", from
+read_standup_overrides()'s manualProspects list) for one added by hand.
+Always confirm the exact name/key against a fresh read_latest_rundown and/or
+read_standup_overrides call first -- never guess a key from memory.
+- read_standup_overrides(): fresh GET of checks/standup-overrides.json --
+  every current rank/hidden/rename override, plus the full list of manually-
+  added potential clients (with their real ids). Call this before any
+  reorder/hide/edit so you're working from current state, not a guess.
+- reorder_standup_cards(order): order must be the COMPLETE list of every key
+  in ONE grid (all client:* keys, or all prospect:*/manual-* keys -- never
+  mix the two grids in one call), in the desired final order. This REPLACES
+  the rank of every key given -- omitting a key you didn't mean to touch is
+  fine (it keeps whatever rank it already had), but omitting one you DID want
+  positioned somewhere will leave it out of order. Read both
+  read_latest_rundown (for the full current set of names) and
+  read_standup_overrides (for current ranks) first so the list you submit is
+  actually complete.
+- hide_standup_card(key) / unhide_standup_card(key): hide/unhide one card.
+  Fully reversible -- unhide any time.
+- edit_standup_card(key, patch): patch is whichever of {name, headline,
+  summary} applies -- name for a rename (clients + prospects), headline for
+  a client's one-line grid summary, summary for a prospect's detail-page
+  summary (also the base content for a manual prospect, not an override).
+- add_potential_client(name, summary?): the one manual-create case on the
+  Standup page (real clients come from the Monday roster, never hand-typed).
+- remove_manual_prospect(id): hard delete -- only for a manually-added
+  prospect (an id from read_standup_overrides' manualProspects, e.g.
+  "manual-3"). Cannot target a real client or a generated potential client --
+  use hide_standup_card for those, which is reversible.
+These are all quick, reversible edits (except remove_manual_prospect, which
+only ever affects something Naz added by hand) -- fine to just do them when
+asked, no need to over-confirm. Only ask first if the target card is
+genuinely ambiguous (e.g. two similarly-named clients).`;
 
 const TOOLS = [
   {
@@ -255,6 +316,102 @@ const TOOLS = [
       required: ["client", "mode", "itemName", "updateBody"],
     },
   },
+  {
+    name: "edit_queue_item",
+    description:
+      "Edit, resolve, reprioritize, or remove one existing Daily Ops card by id. Same fields/validation as the per-card chat's edit_item (e.g. rejects status:\"ready\" with no drafted payload yet). Setting status:\"ignored\" is how you remove a card -- there's no hard delete. Look the id up via read_draft_queue first if you don't already have it.",
+    input_schema: {
+      type: "object",
+      properties: {
+        id: { type: "string" },
+        title: { type: "string" },
+        note: { type: "string" },
+        priority: { type: "integer", minimum: 1, maximum: 5 },
+        status: { type: "string", enum: ["ready", "confirm", "done", "ignored"] },
+        boardId: { type: "string", description: "Board-scoped reassignment -- pass alongside blocked/needsNaz to change status-column enforcement." },
+        blocked: { type: "boolean" },
+        needsNaz: { type: "boolean" },
+      },
+      required: ["id"],
+    },
+  },
+  {
+    name: "read_standup_overrides",
+    description:
+      "Fresh GET of checks/standup-overrides.json -- every current rank/hidden/rename override on any Standup/potential-client card, plus the full list of manually-added potential clients (each with its real id). Always call this (and/or read_latest_rundown for the current real names) before reorder_standup_cards/hide_standup_card/edit_standup_card -- never guess a key or a current rank.",
+    input_schema: { type: "object", properties: {} },
+  },
+  {
+    name: "reorder_standup_cards",
+    description:
+      "Reorder one grid's cards on the Standup page. order must be the COMPLETE list of every key in ONE grid (all \"client:<name>\" keys, or all \"prospect:<name>\"/\"manual-<n>\" keys -- never mix the two grids in one call) in the desired final order -- this sets rank = position for every key given. Read read_latest_rundown (full current name list) and read_standup_overrides (current ranks) first so the list is actually complete.",
+    input_schema: {
+      type: "object",
+      properties: {
+        order: { type: "array", items: { type: "string" }, description: "Every key in one grid, in the desired final order." },
+      },
+      required: ["order"],
+    },
+  },
+  {
+    name: "hide_standup_card",
+    description: "Hide one Standup/potential-client card from its grid. Fully reversible via unhide_standup_card.",
+    input_schema: {
+      type: "object",
+      properties: { key: { type: "string", description: "\"client:<name>\", \"prospect:<name>\", or a manual prospect's id." } },
+      required: ["key"],
+    },
+  },
+  {
+    name: "unhide_standup_card",
+    description: "Unhide a previously-hidden Standup/potential-client card.",
+    input_schema: {
+      type: "object",
+      properties: { key: { type: "string" } },
+      required: ["key"],
+    },
+  },
+  {
+    name: "edit_standup_card",
+    description:
+      "Rename or edit one Standup/potential-client card. patch is whichever applies: name (rename -- clients or prospects), headline (a client's one-line grid summary), summary (a prospect's detail-page summary -- also the base note for a manual prospect, not an override).",
+    input_schema: {
+      type: "object",
+      properties: {
+        key: { type: "string" },
+        patch: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            headline: { type: "string" },
+            summary: { type: "string" },
+          },
+        },
+      },
+      required: ["key", "patch"],
+    },
+  },
+  {
+    name: "add_potential_client",
+    description: "Add a new potential-client card by hand on the Standup page -- the one manual-create case there (real clients come from the Monday roster, never hand-typed).",
+    input_schema: {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        summary: { type: "string", description: "Optional short note, shown on the card's detail page." },
+      },
+      required: ["name"],
+    },
+  },
+  {
+    name: "remove_manual_prospect",
+    description: "Hard-delete a manually-added potential client (never a real client or a generated potential client -- use hide_standup_card for those instead, which is reversible). id must be one from read_standup_overrides' manualProspects list, e.g. \"manual-3\".",
+    input_schema: {
+      type: "object",
+      properties: { id: { type: "string" } },
+      required: ["id"],
+    },
+  },
 ];
 
 function slugify(s) {
@@ -327,6 +484,20 @@ async function draftNewItem(input) {
   return { ok: true, item: newItem };
 }
 
+// Thin wrapper around the exact write path standup-overrides.js's own HTTP
+// handler uses -- turns a bad key/id/action into a normal tool_result error
+// instead of the generic 500 the outer per-tool catch would otherwise give
+// an unrecognized custom Error subclass.
+async function runStandupOverrideAction(body) {
+  try {
+    const data = await applyStandupOverrideAction(body);
+    return { ok: true, overrides: data.overrides, manualProspects: data.manualProspects };
+  } catch (err) {
+    if (err instanceof OverrideNotFoundError || err instanceof OverrideBadRequestError) return { error: err.message };
+    throw err;
+  }
+}
+
 exports.handler = async (event) => {
   const json = (statusCode, obj) => ({ statusCode, headers: { "content-type": "application/json" }, body: JSON.stringify(obj) });
 
@@ -381,6 +552,24 @@ exports.handler = async (event) => {
             result = data || { error: "no rundown found yet" };
           } else if (tu.name === "draft_new_item") {
             result = await draftNewItem(tu.input);
+          } else if (tu.name === "edit_queue_item") {
+            const { id, ...patch } = tu.input;
+            result = await editQueueItem(id, patch);
+          } else if (tu.name === "read_standup_overrides") {
+            const { data } = await getJSON(OVERRIDES_PATH, EMPTY_OVERRIDES);
+            result = data;
+          } else if (tu.name === "reorder_standup_cards") {
+            result = await runStandupOverrideAction({ action: "reorder", order: tu.input.order });
+          } else if (tu.name === "hide_standup_card") {
+            result = await runStandupOverrideAction({ action: "hide", key: tu.input.key });
+          } else if (tu.name === "unhide_standup_card") {
+            result = await runStandupOverrideAction({ action: "unhide", key: tu.input.key });
+          } else if (tu.name === "edit_standup_card") {
+            result = await runStandupOverrideAction({ action: "edit", key: tu.input.key, patch: tu.input.patch });
+          } else if (tu.name === "add_potential_client") {
+            result = await runStandupOverrideAction({ action: "addProspect", name: tu.input.name, summary: tu.input.summary });
+          } else if (tu.name === "remove_manual_prospect") {
+            result = await runStandupOverrideAction({ action: "removeManualProspect", id: tu.input.id });
           } else {
             result = { error: `unknown tool ${tu.name}` };
           }
