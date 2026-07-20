@@ -201,18 +201,23 @@ function sortByOverride(items, keyFn) {
     .sort((a, b) => (a.rank - b.rank) || (a.naturalIndex - b.naturalIndex));
 }
 
+// displayName is purely cosmetic (grid card + detail header) -- item.client
+// itself is left untouched everywhere else (hash routing via openClient/
+// currentClientView, and findPriorityForClient's matching in buildCard),
+// since that's the real Monday/roster identity, not something a rename
+// should ever affect.
 function effectiveByClient() {
   const items = (standup?.by_client || []).filter(e => e.client !== 'Unmapped');
   return sortByOverride(items, e => clientKey(e.client))
     .filter(({ ov }) => !ov.hidden)
-    .map(({ item, key, ov }) => ({ ...item, _key: key, headline: ov.headline ?? item.headline }));
+    .map(({ item, key, ov }) => ({ ...item, _key: key, displayName: ov.name ?? item.client, headline: ov.headline ?? item.headline }));
 }
 
 function hiddenClients() {
   const items = (standup?.by_client || []).filter(e => e.client !== 'Unmapped');
   return sortByOverride(items, e => clientKey(e.client))
     .filter(({ ov }) => ov.hidden)
-    .map(({ item, key, ov }) => ({ ...item, _key: key, headline: ov.headline ?? item.headline }));
+    .map(({ item, key, ov }) => ({ ...item, _key: key, displayName: ov.name ?? item.client, headline: ov.headline ?? item.headline }));
 }
 
 // Manual prospects are mapped into the exact same shape as a generated
@@ -843,11 +848,15 @@ function buildMiniCard(entry, orderKeys) {
   const h = HEALTH[entry.health] || HEALTH.on_track;
   const key = entry._key;
 
+  const displayName = entry.displayName || entry.client;
+
   const card = el('article', {
     class: 'mini-card',
     role: 'button',
     tabindex: '0',
-    'aria-label': `Open ${entry.client}`,
+    'aria-label': `Open ${displayName}`,
+    // Routing always uses the real entry.client (Monday/roster identity) --
+    // never displayName, which is purely a cosmetic override.
     onclick: () => openClient(entry.client),
     onkeydown: (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openClient(entry.client); }
@@ -861,13 +870,24 @@ function buildMiniCard(entry, orderKeys) {
     el('span', { class: 'mini-dot', style: { background: h.accent, boxShadow: `0 0 8px ${h.glow}` } }),
     el('span', { class: 'mini-state-label', style: { color: h.accent }, text: h.label }),
   ));
-  card.append(el('h2', { class: 'mini-name', text: entry.client }));
 
-  // Editable in place, same UX as Daily Ops' inline title/note edit -- this
-  // is the ONE field a real client card can override (health/highlights/
-  // stalled/completed are all structured pipeline data, not freely-editable
-  // text; renaming a real client doesn't make sense either, so only the
-  // grid's one-line summary gets this).
+  // Editable in place -- a display-only rename (health/highlights/stalled/
+  // completed are all structured pipeline data keyed off the real
+  // entry.client, which this never touches; see effectiveByClient).
+  card.append(el('h2', {
+    class: 'mini-name',
+    contenteditable: 'true',
+    spellcheck: 'false',
+    'data-original': displayName,
+    onclick: (e) => e.stopPropagation(),
+    onkeydown: editableCardKeydown,
+    onblur: (e) => onCardFieldBlur(e, key, 'name', false),
+    text: displayName,
+  }));
+
+  // Editable in place too, same UX -- the other field a real client card
+  // can override (health/highlights/stalled/completed are all structured
+  // pipeline data, not freely-editable text).
   const headline = entry.headline || 'No activity recorded this week.';
   card.append(el('p', {
     class: 'mini-micro',
@@ -1062,7 +1082,7 @@ function buildPotentialCardDetail(p) {
 
 // ── card builder ──────────────────────────────────────────────────────────────
 
-function buildCard(entry, priorities) {
+function buildCard(entry, priorities, displayName) {
   const h = HEALTH[entry.health] || HEALTH.on_track;
 
   const highlights = (entry.work_by_department || []).flatMap(d => d.highlights    || []);
@@ -1072,7 +1092,7 @@ function buildCard(entry, priorities) {
   const card = el('article', { class: 'client-card' });
 
   card.append(el('div', { class: 'card-header' },
-    el('span', { class: 'client-name', text: entry.client }),
+    el('span', { class: 'client-name', text: displayName || entry.client }),
     el('span', {
       class: 'health-chip',
       style: { color: h.accent, borderColor: h.chipBorder, background: h.chipBg },
@@ -1219,7 +1239,10 @@ function render() {
       onclick: backToGrid,
     }));
     const entry = (standup.by_client || []).find(c => c.client === viewClient);
-    if (entry) app.append(buildCard(entry, priorities));
+    // Display name only -- buildCard still receives the real entry (client
+    // routing/priority-matching there is keyed off entry.client untouched).
+    const displayName = (standupOverrides.overrides || {})[clientKey(viewClient)]?.name;
+    if (entry) app.append(buildCard(entry, priorities, displayName));
     return;
   }
 
