@@ -1,11 +1,15 @@
 // Chat backend for the "Draft queue" panel. Client passes { topic: "queue", messages: [...] }
 // so the system prompt grounds on the right data.
 
-const { getJSON, putJSON } = require("./lib/github");
+const { getJSON, updateJSON } = require("./lib/github");
 const { mondayGraphQL, sendQueueItemToMonday, enforceSentInvariant } = require("./lib/monday");
 
 const ANTHROPIC_MODEL = "claude-sonnet-4-5"; // check docs.claude.com/en/docs/about-claude/models if this starts erroring
 const QUEUE_PATH = "checks/draft-queue.json";
+
+// Aborts an updateJSON write without retrying (item genuinely doesn't exist) --
+// see lib/github.js's updateJSON for why only a ConflictError should retry.
+class ToolAbort extends Error {}
 
 const TOOLS = [
   {
@@ -115,15 +119,20 @@ async function runTool(name, input) {
       return json.data?.search || { error: json.errors };
     }
     case "update_queue_item": {
-      const { data, sha } = await getJSON(QUEUE_PATH, { updatedAt: null, items: [] });
-      const idx = data.items.findIndex((it) => it.id === input.id);
-      if (idx === -1) return { error: `no item with id ${input.id}` };
-      // enforceSentInvariant: a real Monday item existing always wins over
-      // whatever status this patch asked for.
-      data.items[idx] = enforceSentInvariant({ ...data.items[idx], ...input.patch, updatedAt: new Date().toISOString() });
-      data.updatedAt = new Date().toISOString();
-      await putJSON(QUEUE_PATH, data, `chat: update ${input.id}`, sha);
-      return data.items[idx];
+      try {
+        const written = await updateJSON(QUEUE_PATH, (data) => {
+          const idx = data.items.findIndex((it) => it.id === input.id);
+          if (idx === -1) throw new ToolAbort(`no item with id ${input.id}`);
+          // enforceSentInvariant: a real Monday item existing always wins over
+          // whatever status this patch asked for.
+          data.items[idx] = enforceSentInvariant({ ...data.items[idx], ...input.patch, updatedAt: new Date().toISOString() });
+          data.updatedAt = new Date().toISOString();
+          return data;
+        }, `chat: update ${input.id}`, { fallback: { updatedAt: null, items: [] } });
+        return written.items.find((it) => it.id === input.id);
+      } catch (err) {
+        return { error: err instanceof ToolAbort ? err.message : String(err) };
+      }
     }
     case "send_to_monday":
       return sendQueueItemToMonday(input.id);

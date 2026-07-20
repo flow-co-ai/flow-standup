@@ -32,6 +32,13 @@ const foSectionExpanded = { handled: false, mondayed: false };
 // away, then reconciles with whatever the server actually persisted.
 let foItems = [];
 
+// ids currently mid-foPatch(). Rapid clicks on the same card's buttons (e.g.
+// mashing a priority arrow) used to fire several overlapping POSTs -- each
+// read the same GitHub sha, so every one after the first landed as a 409 and
+// got silently rolled back. This blocks the buttons for that card the moment
+// the first click fires so there's only ever one write in flight per item.
+const foPending = new Set();
+
 function foRenderFromItems(items) {
   // Standing invariant: a real Monday item existing (mondayItemId set)
   // always wins over whatever the stored status field says -- so section
@@ -179,6 +186,7 @@ function foStripGroupPrefix(title, group) {
 function foQueueCard(item, section) {
   const cls = { ready: "fo-b-ready", confirm: "fo-b-confirm", sent: "fo-b-sent", done: "fo-b-done", ignored: "fo-b-done" }[item.status] || "fo-b-confirm";
   const p = foPriority(item);
+  const pending = foPending.has(item.id);
 
   // mondayItemId means a real Monday item already exists for this card --
   // clicking send-to-monday again would create a genuine duplicate on the
@@ -203,12 +211,12 @@ function foQueueCard(item, section) {
       </div>`
     : section === "handled"
     ? `<div class="fo-actions">
-        <button onclick="foPatch('${item.id}', {status:'confirm'})">undo</button>
+        <button onclick="foPatch('${item.id}', {status:'confirm'})" ${pending ? "disabled" : ""}>undo</button>
       </div>`
     : `<div class="fo-actions">
         ${sendControl}
-        <button onclick="foPatch('${item.id}', {status:'done'})">mark done</button>
-        <button onclick="foPatch('${item.id}', {status:'ignored'})">ignore</button>
+        <button onclick="foPatch('${item.id}', {status:'done'})" ${pending ? "disabled" : ""}>mark done</button>
+        <button onclick="foPatch('${item.id}', {status:'ignored'})" ${pending ? "disabled" : ""}>ignore</button>
       </div>`;
 
   // Grouped (active) cards sit under a header already naming the client, so the
@@ -258,10 +266,10 @@ function foQueueCard(item, section) {
   // number. Same foPatch() write path as everything else here.
   const priorityControls = section === "active" ? `
       <button type="button" class="fo-priority-btn" title="Raise priority" aria-label="Raise priority"
-        onclick="foBumpPriority('${item.id}', -1)" ${p <= 1 ? "disabled" : ""}>&#9650;</button>
+        onclick="foBumpPriority('${item.id}', -1)" ${p <= 1 || pending ? "disabled" : ""}>&#9650;</button>
       <span class="fo-priority fo-priority-${p}">P${p}</span>
       <button type="button" class="fo-priority-btn" title="Lower priority" aria-label="Lower priority"
-        onclick="foBumpPriority('${item.id}', 1)" ${p >= 5 ? "disabled" : ""}>&#9660;</button>`
+        onclick="foBumpPriority('${item.id}', 1)" ${p >= 5 || pending ? "disabled" : ""}>&#9660;</button>`
     : `<span class="fo-priority fo-priority-${p}">P${p}</span>`;
 
   return `
@@ -405,6 +413,12 @@ async function foSendItemChat(e, id) {
 }
 
 async function foPatch(id, patch) {
+  // Belt-and-suspenders: the render layer already disables this card's
+  // buttons while foPending has its id (see foQueueCard), but guard here too
+  // in case something ever calls foPatch() directly (e.g. the chat tools).
+  if (foPending.has(id)) return;
+  foPending.add(id);
+
   const idx = foItems.findIndex(it => it.id === id);
   const previous = idx !== -1 ? foItems[idx] : null;
   if (idx !== -1) {
@@ -415,20 +429,21 @@ async function foPatch(id, patch) {
     foRenderFromItems(foItems);
   }
 
-  const res = await fetch("/.netlify/functions/queue", { method: "POST", headers: foHeaders(), body: JSON.stringify({ id, patch }) });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    if (idx !== -1) {
-      foItems[idx] = previous; // the guess was wrong -- put it back
-      foRenderFromItems(foItems);
+  try {
+    const res = await fetch("/.netlify/functions/queue", { method: "POST", headers: foHeaders(), body: JSON.stringify({ id, patch }) });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      if (idx !== -1) foItems[idx] = previous; // the guess was wrong -- put it back
+      alert("Couldn't update it: " + (data.error || `HTTP ${res.status}`));
+      return;
     }
-    alert("Couldn't update it: " + (data.error || `HTTP ${res.status}`));
-    return;
+    // Reconcile with whatever the server actually persisted (updatedAt, any
+    // server-side fields the optimistic patch didn't know about).
+    foItems = data.items || foItems;
+  } finally {
+    foPending.delete(id);
+    foRenderFromItems(foItems);
   }
-  // Reconcile with whatever the server actually persisted (updatedAt, any
-  // server-side fields the optimistic patch didn't know about).
-  foItems = data.items || foItems;
-  foRenderFromItems(foItems);
 }
 
 // The real network fire -- unchanged mechanism (still the one human-clicked

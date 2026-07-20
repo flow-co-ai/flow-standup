@@ -3,11 +3,13 @@
 // POST -> patch one item by id: { id, patch: { status: "done" } } etc.
 //         Uses the same OPS_PASSCODE gate as the existing checkmark endpoint.
 
-const { getJSON, putJSON } = require("./lib/github");
+const { getJSON, updateJSON } = require("./lib/github");
 const { enforceSentInvariant } = require("./lib/monday");
 
 const QUEUE_PATH = "checks/draft-queue.json";
 const EMPTY = { updatedAt: null, items: [] };
+
+class NotFoundError extends Error {}
 
 exports.handler = async (event) => {
   const json = (statusCode, obj) => ({ statusCode, headers: { "content-type": "application/json" }, body: JSON.stringify(obj) });
@@ -26,16 +28,22 @@ exports.handler = async (event) => {
     if (event.httpMethod === "POST") {
       const { id, patch } = JSON.parse(event.body || "{}");
       if (!id || !patch) return json(400, { error: "need id and patch" });
-      const { data, sha } = await getJSON(QUEUE_PATH, EMPTY);
-      const idx = data.items.findIndex((it) => it.id === id);
-      if (idx === -1) return json(404, { error: `no item with id ${id}` });
-      // enforceSentInvariant: a real Monday item existing always wins over
-      // whatever this patch asked for -- e.g. "undo" on a Mondayed card can't
-      // silently claim a real send never happened.
-      data.items[idx] = enforceSentInvariant({ ...data.items[idx], ...patch, updatedAt: new Date().toISOString() });
-      data.updatedAt = new Date().toISOString();
-      await putJSON(QUEUE_PATH, data, `dashboard: update ${id}`, sha);
-      return json(200, data);
+      try {
+        const data = await updateJSON(QUEUE_PATH, (data) => {
+          const idx = data.items.findIndex((it) => it.id === id);
+          if (idx === -1) throw new NotFoundError(`no item with id ${id}`);
+          // enforceSentInvariant: a real Monday item existing always wins over
+          // whatever this patch asked for -- e.g. "undo" on a Mondayed card
+          // can't silently claim a real send never happened.
+          data.items[idx] = enforceSentInvariant({ ...data.items[idx], ...patch, updatedAt: new Date().toISOString() });
+          data.updatedAt = new Date().toISOString();
+          return data;
+        }, `dashboard: update ${id}`, { fallback: EMPTY });
+        return json(200, data);
+      } catch (err) {
+        if (err instanceof NotFoundError) return json(404, { error: err.message });
+        throw err;
+      }
     }
 
     return json(405, { error: "method not allowed" });

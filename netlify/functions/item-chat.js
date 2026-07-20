@@ -13,7 +13,7 @@
 // IDs §4/§5). That file lives outside this repo and isn't available to a
 // deployed function, so keep this in sync by hand if the canonical doc changes.
 
-const { getJSON, putJSON } = require("./lib/github");
+const { getJSON, updateJSON } = require("./lib/github");
 const {
   mondayLookup,
   updateMondayColumns,
@@ -30,6 +30,12 @@ const {
 const ANTHROPIC_MODEL = "claude-sonnet-4-5"; // check docs.claude.com/en/docs/about-claude/models if this starts erroring
 const QUEUE_PATH = "checks/draft-queue.json";
 const EMPTY = { updatedAt: null, items: [] };
+
+// Thrown inside an updateJSON mutate callback to abort the write without
+// retrying (item gone, or the drafted/edited fields didn't validate) --
+// anything else thrown (a real ConflictError included) is retried/propagated
+// by updateJSON itself.
+class ToolAbort extends Error {}
 
 // DRAFTING_RULES is tool-name-agnostic on purpose: it's shared verbatim with
 // ops-chat.js (the global widget, which drafts brand-new cards under its own
@@ -518,68 +524,61 @@ ${item.clarification ? `Naz previously told you: "${item.clarification}"` : ""}`
           if (tu.name === "monday_lookup") {
             result = await mondayLookup(tu.input);
           } else if (tu.name === "resolve_item") {
-            // Re-fetch fresh right before writing so a concurrent write elsewhere
-            // (another card, the automation) doesn't collide on a stale sha.
-            const fresh = await getJSON(QUEUE_PATH, EMPTY);
-            const freshIdx = fresh.data.items.findIndex((it) => it.id === id);
-            if (freshIdx === -1) {
-              result = { error: `item ${id} no longer exists` };
-            } else if (tu.input.action === "ignore") {
-              const priority = tu.input.priority !== undefined ? clampPriority(tu.input.priority) : (Number.isFinite(fresh.data.items[freshIdx].priority) ? fresh.data.items[freshIdx].priority : 3);
-              fresh.data.items[freshIdx] = { ...fresh.data.items[freshIdx], status: "ignored", priority, updatedAt: new Date().toISOString() };
-              fresh.data.updatedAt = new Date().toISOString();
-              await putJSON(QUEUE_PATH, fresh.data, `item-chat: ${id} resolved (ignore)`, fresh.sha);
+            // updateJSON re-reads fresh and re-runs this on a 409 (another
+            // card's edit, or the automation, colliding on the same sha) --
+            // so a "no longer exists" / build error found on the LATEST read
+            // is what actually aborts the tool call, not a stale first read.
+            try {
+              const written = await updateJSON(QUEUE_PATH, (data) => {
+                const idx = data.items.findIndex((it) => it.id === id);
+                if (idx === -1) throw new ToolAbort(`item ${id} no longer exists`);
+                if (tu.input.action === "ignore") {
+                  const priority = tu.input.priority !== undefined ? clampPriority(tu.input.priority) : (Number.isFinite(data.items[idx].priority) ? data.items[idx].priority : 3);
+                  data.items[idx] = { ...data.items[idx], status: "ignored", priority, updatedAt: new Date().toISOString() };
+                } else {
+                  const built = buildResolvedFields(data.items[idx], tu.input);
+                  if (built.error) throw new ToolAbort(built.error);
+                  data.items[idx] = { ...data.items[idx], ...built.titleUpdate, status: "ready", payload: built.payload, updatedAt: new Date().toISOString() };
+                }
+                data.updatedAt = new Date().toISOString();
+                return data;
+              }, `item-chat: ${id} resolved (${tu.input.action === "ignore" ? "ignore" : tu.input.mode})`, { fallback: EMPTY });
               changed = true;
-              changedItem = fresh.data.items[freshIdx];
+              changedItem = written.items.find((it) => it.id === id);
               result = { ok: true };
-            } else {
-              const built = buildResolvedFields(fresh.data.items[freshIdx], tu.input);
-              if (built.error) {
-                result = { error: built.error };
-              } else {
-                fresh.data.items[freshIdx] = {
-                  ...fresh.data.items[freshIdx],
-                  ...built.titleUpdate,
-                  status: "ready",
-                  payload: built.payload,
-                  updatedAt: new Date().toISOString(),
-                };
-                fresh.data.updatedAt = new Date().toISOString();
-                await putJSON(QUEUE_PATH, fresh.data, `item-chat: ${id} resolved (${tu.input.mode})`, fresh.sha);
-                changed = true;
-                changedItem = fresh.data.items[freshIdx];
-                result = { ok: true };
-              }
+            } catch (err) {
+              result = { error: err instanceof ToolAbort ? err.message : String(err) };
             }
           } else if (tu.name === "edit_item") {
-            const fresh = await getJSON(QUEUE_PATH, EMPTY);
-            const freshIdx = fresh.data.items.findIndex((it) => it.id === id);
-            if (freshIdx === -1) {
-              result = { error: `item ${id} no longer exists` };
-            } else {
-              const built = buildEditFields(fresh.data.items[freshIdx], tu.input);
-              if (built.error) {
-                result = { error: built.error };
-              } else {
+            try {
+              let liveUpdate = null;
+              const written = await updateJSON(QUEUE_PATH, (data) => {
+                const idx = data.items.findIndex((it) => it.id === id);
+                if (idx === -1) throw new ToolAbort(`item ${id} no longer exists`);
+                const built = buildEditFields(data.items[idx], tu.input);
+                if (built.error) throw new ToolAbort(built.error);
                 // enforceSentInvariant: a real Monday item existing always
                 // wins over whatever status this edit asked for.
-                fresh.data.items[freshIdx] = enforceSentInvariant({ ...fresh.data.items[freshIdx], ...built.patch, updatedAt: new Date().toISOString() });
-                fresh.data.updatedAt = new Date().toISOString();
-                await putJSON(QUEUE_PATH, fresh.data, `item-chat: ${id} edited`, fresh.sha);
-                changed = true;
-                changedItem = fresh.data.items[freshIdx];
-                result = { ok: true };
+                data.items[idx] = enforceSentInvariant({ ...data.items[idx], ...built.patch, updatedAt: new Date().toISOString() });
+                data.updatedAt = new Date().toISOString();
+                liveUpdate = built.liveUpdate || null; // last attempt's wins -- only the write that actually lands matters
+                return data;
+              }, `item-chat: ${id} edited`, { fallback: EMPTY });
+              changed = true;
+              changedItem = written.items.find((it) => it.id === id);
+              result = { ok: true };
 
-                if (built.liveUpdate) {
-                  try {
-                    await updateMondayColumns(built.liveUpdate.boardId, built.liveUpdate.itemId, built.liveUpdate.columnValues);
-                  } catch (err) {
-                    // The local edit already saved -- a failed live push is a
-                    // separate, non-fatal problem the model should surface to Naz.
-                    result = { ok: true, warning: `saved locally but failed to update the live Monday item: ${String(err)}` };
-                  }
+              if (liveUpdate) {
+                try {
+                  await updateMondayColumns(liveUpdate.boardId, liveUpdate.itemId, liveUpdate.columnValues);
+                } catch (err) {
+                  // The local edit already saved -- a failed live push is a
+                  // separate, non-fatal problem the model should surface to Naz.
+                  result = { ok: true, warning: `saved locally but failed to update the live Monday item: ${String(err)}` };
                 }
               }
+            } catch (err) {
+              result = { error: err instanceof ToolAbort ? err.message : String(err) };
             }
           } else {
             result = { error: `unknown tool ${tu.name}` };

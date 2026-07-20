@@ -10,7 +10,7 @@
 // exact enforcement (buildColumnValues, checkUpdateBodySubstance) rather than
 // a third copy of either.
 
-const { getJSON, putJSON } = require("./lib/github");
+const { getJSON, updateJSON } = require("./lib/github");
 const {
   mondayLookup,
   mondayItemDetail,
@@ -300,27 +300,30 @@ async function draftNewItem(input) {
   const built = buildResolvedFields({}, input);
   if (built.error) return { error: built.error };
 
-  const fresh = await getJSON(QUEUE_PATH, EMPTY);
-  const id = uniqueId(input.client, input.itemName, fresh.data.items);
   const boardLabel = input.boardId ? boardLabelForId(input.boardId) || "n/a" : "n/a";
-
-  const newItem = {
-    id,
-    title: built.titleUpdate.title || `[${input.client}] ${input.itemName}`,
-    note: built.titleUpdate.note,
-    status: "ready",
-    board: boardLabel,
-    group: input.client,
-    source: "ops-chat",
-    sourceLabel: input.sourceLabel || `Ops chat: Naz request, ${shortDate(new Date())}`,
-    payload: built.payload,
-    priority: built.titleUpdate.priority,
-    updatedAt: new Date().toISOString(),
-  };
-
-  fresh.data.items.push(newItem);
-  fresh.data.updatedAt = new Date().toISOString();
-  await putJSON(QUEUE_PATH, fresh.data, `ops-chat: drafted new item ${id}`, fresh.sha);
+  let newItem = null;
+  // id is derived from the current items list (so two near-simultaneous drafts
+  // don't collide) -- recomputed inside the retry so a 409 retry re-checks
+  // uniqueness against whatever the other writer actually left behind.
+  await updateJSON(QUEUE_PATH, (data) => {
+    const id = uniqueId(input.client, input.itemName, data.items);
+    newItem = {
+      id,
+      title: built.titleUpdate.title || `[${input.client}] ${input.itemName}`,
+      note: built.titleUpdate.note,
+      status: "ready",
+      board: boardLabel,
+      group: input.client,
+      source: "ops-chat",
+      sourceLabel: input.sourceLabel || `Ops chat: Naz request, ${shortDate(new Date())}`,
+      payload: built.payload,
+      priority: built.titleUpdate.priority,
+      updatedAt: new Date().toISOString(),
+    };
+    data.items.push(newItem);
+    data.updatedAt = new Date().toISOString();
+    return data;
+  }, () => `ops-chat: drafted new item ${newItem.id}`, { fallback: EMPTY });
   return { ok: true, item: newItem };
 }
 
