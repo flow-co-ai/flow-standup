@@ -29,9 +29,47 @@
   align-items: start;
 }
 .fo-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
-.fo-badges { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.fo-badges { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
 .fo-title { font-size: 13.5px; font-weight: 600; color: #EDE9DA; margin: 0; }
 .fo-sub { font-size: 12px; color: rgba(220,216,200,0.62); margin: 3px 0 0; }
+
+/* Direct edit affordance: same text, just a hover/focus cue that it's
+   editable in place -- no separate "edit" button/icon needed. */
+.fo-title[contenteditable], .fo-sub[contenteditable] {
+  border-radius: 4px;
+  padding: 1px 4px;
+  margin-left: -4px;
+  cursor: text;
+  outline: none;
+  transition: background 0.12s, box-shadow 0.12s;
+}
+.fo-title[contenteditable]:hover, .fo-sub[contenteditable]:hover {
+  background: rgba(237,233,220,0.05);
+}
+.fo-title[contenteditable]:focus, .fo-sub[contenteditable]:focus {
+  background: rgba(146,155,105,0.1);
+  box-shadow: 0 0 0 1px rgba(169,180,120,0.5);
+}
+
+.fo-priority-btn {
+  background: transparent;
+  border: 1px solid rgba(237,233,220,0.14);
+  color: rgba(220,216,200,0.55);
+  width: 18px; height: 18px;
+  border-radius: 5px;
+  font-size: 8px;
+  line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+.fo-priority-btn:hover:not(:disabled) {
+  background: rgba(146,155,105,0.14);
+  border-color: rgba(169,180,120,0.5);
+  color: #C6D093;
+}
+.fo-priority-btn:disabled { opacity: 0.25; cursor: default; }
 .fo-source {
   font-family: 'JetBrains Mono', monospace;
   font-size: 10.5px; color: rgba(220,216,200,0.4);

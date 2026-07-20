@@ -233,24 +233,93 @@ function foQueueCard(item, section) {
   // of truth for this card, so the static note (which may now be stale) hides
   // (foSendItemChat also hides it live, without waiting on a reload).
   const chatStarted = (foItemChat[item.id] || []).length > 0;
-  const noteHtml = `<p class="fo-sub" id="fo-note-${item.id}" ${chatStarted ? "hidden" : ""}>${foEscape(item.note || "")}</p>`;
+
+  // Direct manual edit path -- contenteditable title/note, saved via the
+  // existing foPatch() (same PATCH endpoint the chatbot's edit_item tool
+  // already writes through), for the quick tweaks that don't need a
+  // conversation. Enter saves (blurs, which triggers the save); Escape
+  // reverts to the last-saved text without writing anything. data-original
+  // is read back by both handlers, so a plain "clicked in and clicked back
+  // out with no real change" never fires a no-op patch.
+  const titleHtml = `<p class="fo-title" id="fo-title-${item.id}" contenteditable="true" spellcheck="false"
+      data-original="${foEscape(title)}"
+      onkeydown="foEditableKeydown(event)"
+      onblur="foSaveTitleEdit(this, '${item.id}')">${foEscape(title)}</p>`;
+  const noteHtml = `<p class="fo-sub" id="fo-note-${item.id}" contenteditable="true" spellcheck="false"
+      data-original="${foEscape(item.note || "")}"
+      onkeydown="foEditableKeydown(event)"
+      onblur="foSaveNoteEdit(this, '${item.id}')"
+      ${chatStarted ? "hidden" : ""}>${foEscape(item.note || "")}</p>`;
+
+  // Priority (1 most urgent, 5 least) drives sort order within a client
+  // group (foGroupByClient) -- these buttons are the "reorder" affordance
+  // for that: raise/lower priority instead of a free drag, since order
+  // isn't independently stored anywhere today, only derived from this
+  // number. Same foPatch() write path as everything else here.
+  const priorityControls = section === "active" ? `
+      <button type="button" class="fo-priority-btn" title="Raise priority" aria-label="Raise priority"
+        onclick="foBumpPriority('${item.id}', -1)" ${p <= 1 ? "disabled" : ""}>&#9650;</button>
+      <span class="fo-priority fo-priority-${p}">P${p}</span>
+      <button type="button" class="fo-priority-btn" title="Lower priority" aria-label="Lower priority"
+        onclick="foBumpPriority('${item.id}', 1)" ${p >= 5 ? "disabled" : ""}>&#9660;</button>`
+    : `<span class="fo-priority fo-priority-${p}">P${p}</span>`;
 
   return `
     <div class="fo-card">
       <div class="fo-row">
         <div>
-          <p class="fo-title">${foEscape(title)}</p>
+          ${titleHtml}
           ${noteHtml}
           ${item.sourceLabel ? `<p class="fo-source">${foEscape(item.sourceLabel)}</p>` : ""}
         </div>
         <div class="fo-badges">
-          <span class="fo-priority fo-priority-${p}">P${p}</span>
+          ${priorityControls}
           <span class="fo-badge ${cls}">${foEscape(item.status || "confirm")}</span>
         </div>
       </div>
       ${actions}
       ${itemChatBox}
     </div>`;
+}
+
+// Shared keydown handler for the contenteditable title/note fields: Enter
+// saves (blurs -- the blur handler does the actual patch), Shift+Enter is
+// left alone (not used today, but doesn't fight a future multi-line note),
+// Escape reverts to data-original and blurs without saving.
+function foEditableKeydown(e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    e.target.blur();
+  } else if (e.key === "Escape") {
+    e.preventDefault();
+    e.target.textContent = e.target.dataset.original || "";
+    e.target.blur();
+  }
+}
+
+function foSaveTitleEdit(el, id) {
+  const next = el.textContent.trim();
+  const original = el.dataset.original || "";
+  if (!next || next === original) {
+    el.textContent = original; // empty or unchanged -- revert display, no write
+    return;
+  }
+  foPatch(id, { title: next });
+}
+
+function foSaveNoteEdit(el, id) {
+  const next = el.textContent.trim();
+  const original = el.dataset.original || "";
+  if (next === original) return; // note may legitimately be empty, unlike title
+  foPatch(id, { note: next });
+}
+
+function foBumpPriority(id, delta) {
+  const item = foItems.find((it) => it.id === id);
+  if (!item) return;
+  const next = Math.min(5, Math.max(1, foPriority(item) + delta));
+  if (next === foPriority(item)) return;
+  foPatch(id, { priority: next });
 }
 
 // Conversation history per item, kept client-side so a full foLoadQueue()
