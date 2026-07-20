@@ -263,6 +263,15 @@ function hiddenProspects() {
 // (not just retrying on the backend) is the same fix as Daily Ops' foPending
 // guard on the priority buttons, just as a queue instead of a block, since a
 // card's optimistic UI should still update instantly rather than waiting.
+//
+// KNOWN EDGE CASE (parked, not worth chasing further right now): this queue
+// only serializes writes made from THIS page instance. Two browser tabs (or
+// two people) editing the same card at nearly the same moment, or a reload
+// that happens while a write from before the reload is still in flight, can
+// still race the same way this comment describes -- overridesWriteChain
+// starts fresh empty on every page load, so it has no memory of a write that
+// was still in flight in a previous instance. Rare for a private 2-person
+// dashboard; if it starts happening often, this is where to look.
 let overridesWriteChain = Promise.resolve();
 
 function applyOverride(action, payload, optimisticApply) {
