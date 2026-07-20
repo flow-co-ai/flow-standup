@@ -455,6 +455,26 @@ const TOOLS = [
   },
 ];
 
+// context comes from ops-widget.js's ocPageContext() -- { page, hash }. Lets
+// "hide this one" / "reprioritize this" resolve against whatever card
+// detail view (if any) Naz currently has open, without naming it explicitly.
+function describePageContext(context) {
+  if (!context) return "";
+  if (context.page === "daily-ops") {
+    return "\n\n## Where Naz is right now\nOn the Daily Ops page (the draft queue grid -- no per-card detail view there to be \"on\").";
+  }
+  const hash = context.hash || "";
+  const clientMatch = /^#c=(.+)$/.exec(hash);
+  const prospectMatch = /^#p=(.+)$/.exec(hash);
+  if (clientMatch) {
+    return `\n\n## Where Naz is right now\nOn the Standup page, viewing the client detail page for "${decodeURIComponent(clientMatch[1])}". If Naz says "this client" or "this one" without naming it, that's almost certainly who they mean.`;
+  }
+  if (prospectMatch) {
+    return `\n\n## Where Naz is right now\nOn the Standup page, viewing a potential-client detail page (key: ${decodeURIComponent(prospectMatch[1])}). If Naz says "this one" without naming it, that's almost certainly the card they mean -- confirm the real key via read_standup_overrides/read_latest_rundown before acting on it, don't just reuse this key blindly.`;
+  }
+  return "\n\n## Where Naz is right now\nOn the Standup page's grid overview (no specific client/prospect open).";
+}
+
 function slugify(s) {
   return String(s || "")
     .toLowerCase()
@@ -563,9 +583,10 @@ exports.handler = async (event) => {
     if (passcode !== process.env.OPS_PASSCODE) return json(401, { error: "unauthorized" });
     if (event.httpMethod !== "POST") return json(405, { error: "method not allowed" });
 
-    const { message, history } = JSON.parse(event.body || "{}");
+    const { message, history, context } = JSON.parse(event.body || "{}");
     if (!message) return json(400, { error: "need message" });
 
+    const system = SYSTEM_RULES + describePageContext(context);
     let convo = [...(history || []), { role: "user", content: message }];
     let finalText = "";
 
@@ -577,7 +598,7 @@ exports.handler = async (event) => {
           "anthropic-version": "2023-06-01",
           "content-type": "application/json",
         },
-        body: JSON.stringify({ model: ANTHROPIC_MODEL, max_tokens: 2048, system: SYSTEM_RULES, tools: TOOLS, messages: convo }),
+        body: JSON.stringify({ model: ANTHROPIC_MODEL, max_tokens: 2048, system, tools: TOOLS, messages: convo }),
       });
       const msg = await res.json();
       if (msg.type === "error") return json(500, { error: msg.error });

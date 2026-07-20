@@ -20,6 +20,15 @@
     return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   }
 
+  // Both daily.html and index.html load this same file -- pathname tells
+  // ops-chat.js which page Naz is on; index.html's hash (grid / #c=<client>
+  // / #p=<key>) tells it which card's detail view, if any, is open. Lets
+  // "hide this one" / "reprioritize this" resolve without Naz having to
+  // name the card explicitly every time.
+  function ocPageContext() {
+    return { page: location.pathname.includes("daily") ? "daily-ops" : "standup", hash: location.hash || null };
+  }
+
   // In-memory only -- resets on page reload/navigation, same as item-chat's
   // per-card threads. Not persisted; kept simple on purpose.
   const ocHistory = [];
@@ -94,7 +103,7 @@
         res = await fetch("/.netlify/functions/ops-chat", {
           method: "POST",
           headers: ocHeaders(),
-          body: JSON.stringify({ message, history: priorHistory }),
+          body: JSON.stringify({ message, history: priorHistory, context: ocPageContext() }),
         });
       } catch (err) {
         ocHistory.push({ role: "error", content: "error: " + err.message });
