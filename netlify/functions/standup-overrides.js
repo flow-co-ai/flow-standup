@@ -33,6 +33,72 @@ function nextManualId(existing) {
   return `manual-${n}`;
 }
 
+// Shared by this file's own HTTP handler AND ops-chat.js's global standup-
+// card tools -- one retry-safe write path (updateJSON's retry-on-409) for
+// every action, so the global assistant never gets a second, looser copy of
+// this logic. Throws NotFoundError/BadRequestError on a bad request; callers
+// decide how to turn that into a response (HTTP status here, a tool_result
+// error string in ops-chat.js).
+async function applyStandupOverrideAction(body) {
+  return updateJSON(OVERRIDES_PATH, (data) => {
+    data.overrides = data.overrides || {};
+    data.manualProspects = data.manualProspects || [];
+
+    switch (body.action) {
+      case "reorder": {
+        if (!Array.isArray(body.order) || !body.order.length) throw new BadRequestError("need a non-empty order: []");
+        body.order.forEach((key, i) => {
+          data.overrides[key] = { ...(data.overrides[key] || {}), rank: i };
+        });
+        break;
+      }
+      case "hide":
+      case "unhide": {
+        if (!body.key) throw new BadRequestError("need key");
+        data.overrides[body.key] = { ...(data.overrides[body.key] || {}), hidden: body.action === "hide" };
+        break;
+      }
+      case "edit": {
+        if (!body.key || !body.patch) throw new BadRequestError("need key and patch");
+        // A manual prospect's name/summary IS its base content, not an
+        // override of something pipeline-generated -- edit it in place.
+        if (body.key.startsWith("manual-")) {
+          const idx = data.manualProspects.findIndex((p) => p.id === body.key);
+          if (idx === -1) throw new NotFoundError(`no manual prospect ${body.key}`);
+          data.manualProspects[idx] = { ...data.manualProspects[idx], ...body.patch };
+        } else {
+          data.overrides[body.key] = { ...(data.overrides[body.key] || {}), ...body.patch };
+        }
+        break;
+      }
+      case "addProspect": {
+        if (!body.name || !body.name.trim()) throw new BadRequestError("need name");
+        const id = nextManualId(data.manualProspects); // already "manual-<n>" -- don't re-prefix
+        data.manualProspects.push({
+          id,
+          name: body.name.trim(),
+          summary: body.summary || "",
+          createdAt: new Date().toISOString(),
+        });
+        break;
+      }
+      case "removeManualProspect": {
+        if (!body.id) throw new BadRequestError("need id");
+        const idx = data.manualProspects.findIndex((p) => p.id === body.id);
+        if (idx === -1) throw new NotFoundError(`no manual prospect ${body.id}`);
+        data.manualProspects.splice(idx, 1);
+        delete data.overrides[body.id];
+        break;
+      }
+      default:
+        throw new BadRequestError(`unknown action ${body.action}`);
+    }
+
+    data.updatedAt = new Date().toISOString();
+    return data;
+  }, `standup-overrides: ${body.action}`, { fallback: EMPTY });
+}
+
 exports.handler = async (event) => {
   const json = (statusCode, obj) => ({ statusCode, headers: { "content-type": "application/json" }, body: JSON.stringify(obj) });
 
@@ -49,64 +115,7 @@ exports.handler = async (event) => {
     const body = JSON.parse(event.body || "{}");
 
     try {
-      const data = await updateJSON(OVERRIDES_PATH, (data) => {
-        data.overrides = data.overrides || {};
-        data.manualProspects = data.manualProspects || [];
-
-        switch (body.action) {
-          case "reorder": {
-            if (!Array.isArray(body.order) || !body.order.length) throw new BadRequestError("need a non-empty order: []");
-            body.order.forEach((key, i) => {
-              data.overrides[key] = { ...(data.overrides[key] || {}), rank: i };
-            });
-            break;
-          }
-          case "hide":
-          case "unhide": {
-            if (!body.key) throw new BadRequestError("need key");
-            data.overrides[body.key] = { ...(data.overrides[body.key] || {}), hidden: body.action === "hide" };
-            break;
-          }
-          case "edit": {
-            if (!body.key || !body.patch) throw new BadRequestError("need key and patch");
-            // A manual prospect's name/summary IS its base content, not an
-            // override of something pipeline-generated -- edit it in place.
-            if (body.key.startsWith("manual-")) {
-              const idx = data.manualProspects.findIndex((p) => p.id === body.key);
-              if (idx === -1) throw new NotFoundError(`no manual prospect ${body.key}`);
-              data.manualProspects[idx] = { ...data.manualProspects[idx], ...body.patch };
-            } else {
-              data.overrides[body.key] = { ...(data.overrides[body.key] || {}), ...body.patch };
-            }
-            break;
-          }
-          case "addProspect": {
-            if (!body.name || !body.name.trim()) throw new BadRequestError("need name");
-            const id = nextManualId(data.manualProspects); // already "manual-<n>" -- don't re-prefix
-            data.manualProspects.push({
-              id,
-              name: body.name.trim(),
-              summary: body.summary || "",
-              createdAt: new Date().toISOString(),
-            });
-            break;
-          }
-          case "removeManualProspect": {
-            if (!body.id) throw new BadRequestError("need id");
-            const idx = data.manualProspects.findIndex((p) => p.id === body.id);
-            if (idx === -1) throw new NotFoundError(`no manual prospect ${body.id}`);
-            data.manualProspects.splice(idx, 1);
-            delete data.overrides[body.id];
-            break;
-          }
-          default:
-            throw new BadRequestError(`unknown action ${body.action}`);
-        }
-
-        data.updatedAt = new Date().toISOString();
-        return data;
-      }, `standup-overrides: ${body.action}`, { fallback: EMPTY });
-
+      const data = await applyStandupOverrideAction(body);
       return json(200, data);
     } catch (err) {
       if (err instanceof NotFoundError) return json(404, { error: err.message });
@@ -118,3 +127,9 @@ exports.handler = async (event) => {
     return json(500, { error: String((err && err.message) || err) });
   }
 };
+
+exports.applyStandupOverrideAction = applyStandupOverrideAction;
+exports.NotFoundError = NotFoundError;
+exports.BadRequestError = BadRequestError;
+exports.OVERRIDES_PATH = OVERRIDES_PATH;
+exports.EMPTY = EMPTY;

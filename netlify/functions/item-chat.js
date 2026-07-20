@@ -461,6 +461,43 @@ function buildEditFields(item, input) {
   return { patch, liveUpdate };
 }
 
+// Shared by this file's own edit_item tool AND ops-chat.js's global
+// edit_queue_item tool -- one retry-safe write path (buildEditFields'
+// validation + enforceSentInvariant + updateJSON's retry-on-409 + the live
+// Monday column push), so the global assistant never gets a second, looser
+// copy of the same logic.
+async function editQueueItem(id, input) {
+  try {
+    let liveUpdate = null;
+    const written = await updateJSON(QUEUE_PATH, (data) => {
+      const idx = data.items.findIndex((it) => it.id === id);
+      if (idx === -1) throw new ToolAbort(`item ${id} no longer exists`);
+      const built = buildEditFields(data.items[idx], input);
+      if (built.error) throw new ToolAbort(built.error);
+      // enforceSentInvariant: a real Monday item existing always wins over
+      // whatever status this edit asked for.
+      data.items[idx] = enforceSentInvariant({ ...data.items[idx], ...built.patch, updatedAt: new Date().toISOString() });
+      data.updatedAt = new Date().toISOString();
+      liveUpdate = built.liveUpdate || null; // last attempt's wins -- only the write that actually lands matters
+      return data;
+    }, `item-chat: ${id} edited`, { fallback: EMPTY });
+    const item = written.items.find((it) => it.id === id);
+
+    if (liveUpdate) {
+      try {
+        await updateMondayColumns(liveUpdate.boardId, liveUpdate.itemId, liveUpdate.columnValues);
+      } catch (err) {
+        // The local edit already saved -- a failed live push is a separate,
+        // non-fatal problem the caller should surface, not fail the whole edit on.
+        return { ok: true, item, warning: `saved locally but failed to update the live Monday item: ${String(err)}` };
+      }
+    }
+    return { ok: true, item };
+  } catch (err) {
+    return { error: err instanceof ToolAbort ? err.message : String(err) };
+  }
+}
+
 exports.handler = async (event) => {
   const json = (statusCode, obj) => ({ statusCode, headers: { "content-type": "application/json" }, body: JSON.stringify(obj) });
 
@@ -550,36 +587,8 @@ ${item.clarification ? `Naz previously told you: "${item.clarification}"` : ""}`
               result = { error: err instanceof ToolAbort ? err.message : String(err) };
             }
           } else if (tu.name === "edit_item") {
-            try {
-              let liveUpdate = null;
-              const written = await updateJSON(QUEUE_PATH, (data) => {
-                const idx = data.items.findIndex((it) => it.id === id);
-                if (idx === -1) throw new ToolAbort(`item ${id} no longer exists`);
-                const built = buildEditFields(data.items[idx], tu.input);
-                if (built.error) throw new ToolAbort(built.error);
-                // enforceSentInvariant: a real Monday item existing always
-                // wins over whatever status this edit asked for.
-                data.items[idx] = enforceSentInvariant({ ...data.items[idx], ...built.patch, updatedAt: new Date().toISOString() });
-                data.updatedAt = new Date().toISOString();
-                liveUpdate = built.liveUpdate || null; // last attempt's wins -- only the write that actually lands matters
-                return data;
-              }, `item-chat: ${id} edited`, { fallback: EMPTY });
-              changed = true;
-              changedItem = written.items.find((it) => it.id === id);
-              result = { ok: true };
-
-              if (liveUpdate) {
-                try {
-                  await updateMondayColumns(liveUpdate.boardId, liveUpdate.itemId, liveUpdate.columnValues);
-                } catch (err) {
-                  // The local edit already saved -- a failed live push is a
-                  // separate, non-fatal problem the model should surface to Naz.
-                  result = { ok: true, warning: `saved locally but failed to update the live Monday item: ${String(err)}` };
-                }
-              }
-            } catch (err) {
-              result = { error: err instanceof ToolAbort ? err.message : String(err) };
-            }
+            result = await editQueueItem(id, tu.input);
+            if (result.ok) { changed = true; changedItem = result.item; }
           } else {
             result = { error: `unknown tool ${tu.name}` };
           }
@@ -609,3 +618,4 @@ exports.buildResolvedFields = buildResolvedFields;
 exports.validatePayload = validatePayload;
 exports.htmlToPlainText = htmlToPlainText;
 exports.clampPriority = clampPriority;
+exports.editQueueItem = editQueueItem;
