@@ -27,6 +27,7 @@ const {
   OVERRIDES_PATH,
   EMPTY: EMPTY_OVERRIDES,
 } = require("./standup-overrides");
+const { triggerStandupWorkflow } = require("./refresh-standup");
 
 const ANTHROPIC_MODEL = "claude-sonnet-4-5"; // check docs.claude.com/en/docs/about-claude/models if this starts erroring
 const QUEUE_PATH = "checks/draft-queue.json";
@@ -34,24 +35,39 @@ const EMPTY = { updatedAt: null, items: [] };
 const RUNDOWN_PATH = "site/latest.json"; // only ever pushed to main by the Weekly Standup workflow
 
 const FRESHNESS_RULES = `## What's live vs. what's periodic -- be explicit about this, always
-- Monday.com (monday_lookup, monday_item_detail) and the Daily Ops draft queue
-  (read_draft_queue) are queried FRESH, live, right now, on every single call --
-  never a cached copy from earlier in this conversation. Treat what they
-  return as accurate as of this exact moment.
+- Monday.com (monday_lookup, monday_item_detail), the Daily Ops draft queue
+  (read_draft_queue), and the Standup overrides (read_standup_overrides) are
+  queried FRESH, live, right now, on every single call -- never a cached
+  copy from earlier in this conversation. Treat what they return as accurate
+  as of this exact moment.
 - The standup rundown (read_latest_rundown) is also fetched fresh, but the
-  CONTENT it holds is only as current as its own week_of/generated date --
-  it's a periodic synthesis, not a live view.
-- Fireflies meeting transcripts and WhatsApp messages are NOT something you
-  can search live. They only enter this system through the scheduled
-  fireflies-monday-watch automation's periodic runs, which read them,
-  synthesize/summarize, and write the results into the draft queue (as each
-  item's sourceLabel + note) and into the standup rundown. If a question
-  depends on something that automation might not have processed yet, say so
-  explicitly -- e.g. "as of the last automation run (see the item's
-  sourceLabel / the rundown's week_of), I see X -- I have no live access to
-  raw transcripts or WhatsApp, so anything since then wouldn't be reflected
-  yet." Never imply you searched a transcript or a WhatsApp thread directly --
-  you didn't, and can't.`;
+  CONTENT it holds (by_client, potential_clients, etc.) is only as current as
+  its own week_of/generated date -- it's a periodic synthesis, not a live
+  view. If it looks stale for something time-sensitive, that's what
+  trigger_standup_refresh is for.
+- fireflies_search IS live -- a real keyword search against Fireflies right
+  now. It only returns id/title/date per match, NOT full transcript content
+  or a summary -- enough to confirm a meeting happened and when, not to
+  answer "what was said." Don't overstate what it found.
+- WhatsApp messages are NOT something you can search live at all, under any
+  tool. They only enter this system through the scheduled fireflies-monday-
+  watch automation's periodic runs, which read them, synthesize/summarize,
+  and write the results into the draft queue (as each item's sourceLabel +
+  note) and into the standup rundown. If a question depends on WhatsApp
+  content that automation might not have processed yet, say so explicitly --
+  e.g. "as of the last automation run (see the item's sourceLabel / the
+  rundown's week_of), I see X -- I have no live access to WhatsApp, so
+  anything since then wouldn't be reflected yet." Never imply you searched a
+  WhatsApp thread directly -- you didn't, and can't.
+- trigger_standup_refresh kicks off a real ~1-2 minute CI run (the same one
+  the on-page "Refresh Standup" button triggers) that regenerates the
+  standup rundown from Monday + Fireflies + WhatsApp, and can itself write
+  completions to Monday. It does NOT wait for that run to finish -- after
+  calling it, tell Naz it's in progress and to check back in a minute or two
+  (read_latest_rundown will show the OLD data until the run actually
+  completes). Only call it when Naz explicitly asks to refresh/re-run/update
+  the standup -- never speculatively, and don't call it again if it was
+  clearly just triggered (say so and suggest waiting instead).`;
 
 const STATUS_RESEARCH_RULES = `## Answering "what's the status of X" questions -- the standard procedure, always
 This is the fixed procedure for ANY status question, about any client, any
@@ -225,7 +241,15 @@ read_standup_overrides call first -- never guess a key from memory.
 These are all quick, reversible edits (except remove_manual_prospect, which
 only ever affects something Naz added by hand) -- fine to just do them when
 asked, no need to over-confirm. Only ask first if the target card is
-genuinely ambiguous (e.g. two similarly-named clients).`;
+genuinely ambiguous (e.g. two similarly-named clients).
+
+## Live lookups beyond Monday/the queue
+- fireflies_search(keyword, limit?): live keyword search against Fireflies.
+  id/title/date only -- see FRESHNESS_RULES for exactly what this can and
+  can't tell you.
+- trigger_standup_refresh(): kicks off the real standup regenerate CI run.
+  See FRESHNESS_RULES for when to use this and how to talk about it
+  afterward (it's in progress, not done, when this returns).`;
 
 const TOOLS = [
   {
@@ -412,6 +436,23 @@ const TOOLS = [
       required: ["id"],
     },
   },
+  {
+    name: "fireflies_search",
+    description: "Live keyword search against Fireflies meeting transcripts. Returns id/title/date per match only -- NOT full transcript content or a summary, so use this to confirm a meeting happened and when, not to answer what was discussed.",
+    input_schema: {
+      type: "object",
+      properties: {
+        keyword: { type: "string" },
+        limit: { type: "number", description: "Defaults to 5." },
+      },
+      required: ["keyword"],
+    },
+  },
+  {
+    name: "trigger_standup_refresh",
+    description: "Kick off a real, ~1-2 minute CI run that regenerates the standup rundown from Monday + Fireflies + WhatsApp (the same run the on-page \"Refresh Standup\" button triggers). Does not wait for it to finish -- only call this when Naz explicitly asks to refresh/re-run the standup, never speculatively.",
+    input_schema: { type: "object", properties: {} },
+  },
 ];
 
 function slugify(s) {
@@ -498,6 +539,22 @@ async function runStandupOverrideAction(body) {
   }
 }
 
+// Same live Fireflies GraphQL call as the orphaned chat.js's own
+// fireflies_search -- title/date only, no transcript/summary content (see
+// FRESHNESS_RULES for why that distinction matters).
+async function firefliesSearch(keyword, limit) {
+  const res = await fetch("https://api.fireflies.ai/graphql", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${process.env.FIREFLIES_API_KEY}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      query: `query($keyword: String!, $limit: Int) { search(keyword: $keyword, limit: $limit) { id title date } }`,
+      variables: { keyword, limit: limit || 5 },
+    }),
+  });
+  const json = await res.json();
+  return json.data?.search || { error: json.errors };
+}
+
 exports.handler = async (event) => {
   const json = (statusCode, obj) => ({ statusCode, headers: { "content-type": "application/json" }, body: JSON.stringify(obj) });
 
@@ -570,6 +627,10 @@ exports.handler = async (event) => {
             result = await runStandupOverrideAction({ action: "addProspect", name: tu.input.name, summary: tu.input.summary });
           } else if (tu.name === "remove_manual_prospect") {
             result = await runStandupOverrideAction({ action: "removeManualProspect", id: tu.input.id });
+          } else if (tu.name === "fireflies_search") {
+            result = await firefliesSearch(tu.input.keyword, tu.input.limit);
+          } else if (tu.name === "trigger_standup_refresh") {
+            result = await triggerStandupWorkflow();
           } else {
             result = { error: `unknown tool ${tu.name}` };
           }
