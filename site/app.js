@@ -54,6 +54,19 @@ let saveTimer = null;
 let historyWeekExpanded = {}; // { `${clientName}::${isoWeek}`: true } — collapsed-by-default per card per week
 let dismissedAlerts   = loadDismissedAlerts(); // Set of alert keys already seen
 
+// ── card overrides (manual reorder / hide / rename / edit / add) ─────────────
+//
+// latest.json is 100% regenerated from scratch every pipeline run — there's
+// no field in it a manual edit could survive being overwritten in. This is
+// the same pattern as `handled` above (a separate file on the state branch,
+// merged in at render time) but persistent across weeks rather than reset
+// each week, since a hide/rename is meant to stick.
+let standupOverrides = { overrides: {}, manualProspects: [] };
+let dragKey = null; // _key of whichever mini-card is currently mid-drag (one grid at a time)
+let hiddenClientsExpanded = false;
+let hiddenProspectsExpanded = false;
+let showAddProspectForm = false;
+
 // ── view routing (grid <-> client detail via location.hash) ──────────────────
 
 function currentClientView() {
@@ -72,13 +85,16 @@ function openClient(name) {
 function currentProspectView() {
   const m = location.hash.match(/^#p=(.+)$/);
   if (!m) return null;
-  const name = decodeURIComponent(m[1]);
-  const exists = (standup?.potential_clients || []).some(p => p.name === name);
-  return exists ? name : null;
+  const key = decodeURIComponent(m[1]);
+  // Routes on _key (prospect:<name> / manual-<n>), not raw name -- a manual
+  // prospect has no entry in standup.potential_clients to look a name up
+  // against at all, so _key is the only identity that works for both.
+  const exists = effectiveProspects().some(p => p._key === key);
+  return exists ? key : null;
 }
 
-function openProspect(name) {
-  location.hash = `p=${encodeURIComponent(name)}`;
+function openProspect(key) {
+  location.hash = `p=${encodeURIComponent(key)}`;
 }
 
 function backToGrid() {
@@ -141,6 +157,210 @@ async function loadRemoteChecks() {
       render();
     }
   } catch { /* network error — local mirror already loaded */ }
+}
+
+// --- card overrides: read + merge (public, no auth) --------------------------
+//
+// Not week-scoped like checks/<week>.json above -- a hide/rename/reorder is
+// meant to survive into next week's regenerated latest.json, so this is one
+// evergreen file rather than one per week.
+
+async function loadRemoteStandupOverrides() {
+  const url =
+    `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}` +
+    `/refs/heads/state/checks/standup-overrides.json?t=${Date.now()}`;
+  try {
+    const res = await fetch(url);
+    if (res.status === 404) return;   // nothing overridden yet
+    if (!res.ok)            return;   // silently fall back to un-overridden
+    const remote = await res.json();
+    if (remote && typeof remote === 'object' && !Array.isArray(remote)) {
+      standupOverrides = { overrides: remote.overrides || {}, manualProspects: remote.manualProspects || [] };
+      render();
+    }
+  } catch { /* network error — grid renders un-overridden until next load */ }
+}
+
+function clientKey(name)   { return `client:${name}`; }
+function prospectKey(name) { return `prospect:${name}`; }
+
+// Attaches { key, ov, rank, naturalIndex } to each item and sorts by rank
+// (explicit rank always wins; anything never dragged keeps its original
+// pipeline order, appended after everything that HAS been ranked — see
+// reorderKeys, which always submits the full grid's current key order, so
+// the instant any one card in a grid is dragged, every card in that grid
+// becomes ranked at once and this ambiguity stops applying to it).
+function sortByOverride(items, keyFn) {
+  const overrides = standupOverrides.overrides || {};
+  return items
+    .map((item, i) => {
+      const key = keyFn(item);
+      const ov = overrides[key] || {};
+      return { item, key, ov, rank: Number.isFinite(ov.rank) ? ov.rank : Infinity, naturalIndex: i };
+    })
+    .sort((a, b) => (a.rank - b.rank) || (a.naturalIndex - b.naturalIndex));
+}
+
+function effectiveByClient() {
+  const items = (standup?.by_client || []).filter(e => e.client !== 'Unmapped');
+  return sortByOverride(items, e => clientKey(e.client))
+    .filter(({ ov }) => !ov.hidden)
+    .map(({ item, key, ov }) => ({ ...item, _key: key, headline: ov.headline ?? item.headline }));
+}
+
+function hiddenClients() {
+  const items = (standup?.by_client || []).filter(e => e.client !== 'Unmapped');
+  return sortByOverride(items, e => clientKey(e.client))
+    .filter(({ ov }) => ov.hidden)
+    .map(({ item, key, ov }) => ({ ...item, _key: key, headline: ov.headline ?? item.headline }));
+}
+
+// Manual prospects are mapped into the exact same shape as a generated
+// potential_clients entry (empty items/action_items, null likelihood) so
+// buildPotentialCard/buildPotentialCardDetail render them with no special
+// casing at all.
+function allProspectsRaw() {
+  const generated = (standup?.potential_clients || []).map(p => ({ ...p, _key: prospectKey(p.name) }));
+  const manual = (standupOverrides.manualProspects || []).map(p => ({
+    name: p.name, summary: p.summary, items: [], action_items: [], likelihood_percent: null,
+    _key: p.id, _manual: true,
+  }));
+  return [...generated, ...manual];
+}
+
+function effectiveProspects() {
+  return sortByOverride(allProspectsRaw(), p => p._key)
+    .filter(({ ov }) => !ov.hidden)
+    .map(({ item, key, ov }) => ({ ...item, _key: key, name: ov.name ?? item.name, summary: ov.summary ?? item.summary }));
+}
+
+function hiddenProspects() {
+  return sortByOverride(allProspectsRaw(), p => p._key)
+    .filter(({ ov }) => ov.hidden)
+    .map(({ item, key, ov }) => ({ ...item, _key: key, name: ov.name ?? item.name, summary: ov.summary ?? item.summary }));
+}
+
+// --- card overrides: write (requires passcode) --------------------------------
+//
+// Same optimistic-then-reconcile-or-revert shape as toggleHandled/doSave
+// above: apply the guessed result locally and re-render immediately (a drag
+// that visibly lags until a GitHub commit round-trips would feel broken),
+// then either reconcile with the server's real response or roll back.
+
+async function applyOverride(action, payload, optimisticApply) {
+  const previous = standupOverrides;
+  standupOverrides = optimisticApply({
+    overrides: { ...previous.overrides },
+    manualProspects: previous.manualProspects.map(p => ({ ...p })),
+  });
+  render();
+
+  const passcode = getPasscode();
+  if (!passcode) {
+    standupOverrides = previous;
+    render();
+    showPasscodePrompt();
+    return;
+  }
+
+  try {
+    const res = await fetch('/.netlify/functions/standup-overrides', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Ops-Key': passcode },
+      body: JSON.stringify({ action, ...payload }),
+    });
+    if (res.status === 401) {
+      standupOverrides = previous;
+      render();
+      clearStoredPasscode();
+      showPasscodePrompt();
+      return;
+    }
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      standupOverrides = previous;
+      render();
+      alert('Could not save: ' + (data.error || `HTTP ${res.status}`));
+      return;
+    }
+    standupOverrides = { overrides: data.overrides || {}, manualProspects: data.manualProspects || [] };
+    render();
+  } catch (err) {
+    standupOverrides = previous;
+    render();
+    alert('Network error: ' + err.message);
+  }
+}
+
+function reorderKeys(order) {
+  applyOverride('reorder', { order }, (ov) => {
+    order.forEach((key, i) => { ov.overrides[key] = { ...(ov.overrides[key] || {}), rank: i }; });
+    return ov;
+  });
+}
+
+function hideCard(key) {
+  applyOverride('hide', { key }, (ov) => {
+    ov.overrides[key] = { ...(ov.overrides[key] || {}), hidden: true };
+    return ov;
+  });
+}
+
+function unhideCard(key) {
+  applyOverride('unhide', { key }, (ov) => {
+    ov.overrides[key] = { ...(ov.overrides[key] || {}), hidden: false };
+    return ov;
+  });
+}
+
+function addProspect(name, summary) {
+  applyOverride('addProspect', { name, summary }, (ov) => {
+    // Temp id, just for the optimistic render -- the reconciled server
+    // response (the real manualProspects, with the real id) replaces it a
+    // moment later.
+    ov.manualProspects.push({ id: `manual-pending-${ov.manualProspects.length}`, name, summary, createdAt: null });
+    return ov;
+  });
+}
+
+// field is 'headline' (clients) or 'name'/'summary' (prospects). Manual
+// prospects' name/summary IS their base content (edited in place on
+// manualProspects); everything else is an override layered onto generated
+// content (edited into overrides[key]) -- mirrors the same split in
+// standup-overrides.js's own edit handler.
+function saveCardEdit(key, field, next) {
+  applyOverride('edit', { key, patch: { [field]: next } }, (ov) => {
+    if (key.startsWith('manual-')) {
+      const idx = ov.manualProspects.findIndex(p => p.id === key);
+      if (idx !== -1) ov.manualProspects[idx] = { ...ov.manualProspects[idx], [field]: next };
+    } else {
+      ov.overrides[key] = { ...(ov.overrides[key] || {}), [field]: next };
+    }
+    return ov;
+  });
+}
+
+// Shared by every contenteditable card field below. Enter saves (blurs,
+// which triggers the real save); Escape reverts to the last-saved text
+// without writing anything -- same UX as Daily Ops' inline title/note edit.
+function editableCardKeydown(e) {
+  e.stopPropagation(); // the card itself is a role="button" click/keydown target -- Enter here must NOT also navigate
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    e.target.blur();
+  } else if (e.key === 'Escape') {
+    e.preventDefault();
+    e.target.textContent = e.target.dataset.original || '';
+    e.target.blur();
+  }
+}
+
+function onCardFieldBlur(e, key, field, allowEmpty) {
+  const next = e.target.textContent.trim();
+  const original = e.target.dataset.original || '';
+  if (!allowEmpty && !next) { e.target.textContent = original; return; }
+  if (next === original) return;
+  saveCardEdit(key, field, next);
 }
 
 // --- remote write (requires passcode) ----------------------------------------
@@ -569,10 +789,59 @@ function findPriorityForClient(priorities, clientEntry) {
   return m || null;
 }
 
+// ── shared mini-card manual controls (drag to reorder, hide) ─────────────────
+//
+// Same small control row on every mini-card, client or prospect -- the
+// drag handle and remove button both need onclick stopPropagation since the
+// card itself is a click-to-open target (see buildMiniCard/buildPotentialCard).
+
+function buildCardControls(key) {
+  return el('div', { class: 'card-controls' },
+    el('span', {
+      class: 'card-drag-handle',
+      draggable: 'true',
+      title: 'Drag to reorder',
+      'aria-label': 'Drag to reorder',
+      onclick: (e) => e.stopPropagation(),
+      ondragstart: (e) => { dragKey = key; e.dataTransfer.effectAllowed = 'move'; },
+    }, '⠿'),
+    el('button', {
+      class: 'card-remove-btn',
+      type: 'button',
+      title: 'Hide this card',
+      'aria-label': 'Hide this card',
+      onclick: (e) => { e.stopPropagation(); hideCard(key); },
+    }, '✕'),
+  );
+}
+
+// orderKeys is the full current display order for THIS card's grid (closed
+// over from render() at build time) -- dropping onto card `key` moves
+// whatever's mid-drag to that position and persists the whole grid's order.
+function cardDropProps(key, orderKeys) {
+  return {
+    ondragover: (e) => e.preventDefault(),
+    ondrop: (e) => {
+      e.preventDefault();
+      const moving = dragKey;
+      dragKey = null;
+      if (!moving || moving === key) return;
+      const from = orderKeys.indexOf(moving);
+      const to = orderKeys.indexOf(key);
+      if (from === -1 || to === -1) return;
+      const next = [...orderKeys];
+      next.splice(from, 1);
+      next.splice(to, 0, moving);
+      reorderKeys(next);
+    },
+  };
+}
+
 // ── mini card builder (grid view) ─────────────────────────────────────────────
 
-function buildMiniCard(entry) {
+function buildMiniCard(entry, orderKeys) {
   const h = HEALTH[entry.health] || HEALTH.on_track;
+  const key = entry._key;
 
   const card = el('article', {
     class: 'mini-card',
@@ -583,14 +852,33 @@ function buildMiniCard(entry) {
     onkeydown: (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openClient(entry.client); }
     },
+    ...cardDropProps(key, orderKeys),
   });
+
+  card.append(buildCardControls(key));
 
   card.append(el('div', { class: 'mini-state' },
     el('span', { class: 'mini-dot', style: { background: h.accent, boxShadow: `0 0 8px ${h.glow}` } }),
     el('span', { class: 'mini-state-label', style: { color: h.accent }, text: h.label }),
   ));
   card.append(el('h2', { class: 'mini-name', text: entry.client }));
-  card.append(el('p', { class: 'mini-micro', text: entry.headline || 'No activity recorded this week.' }));
+
+  // Editable in place, same UX as Daily Ops' inline title/note edit -- this
+  // is the ONE field a real client card can override (health/highlights/
+  // stalled/completed are all structured pipeline data, not freely-editable
+  // text; renaming a real client doesn't make sense either, so only the
+  // grid's one-line summary gets this).
+  const headline = entry.headline || 'No activity recorded this week.';
+  card.append(el('p', {
+    class: 'mini-micro',
+    contenteditable: 'true',
+    spellcheck: 'false',
+    'data-original': headline,
+    onclick: (e) => e.stopPropagation(),
+    onkeydown: editableCardKeydown,
+    onblur: (e) => onCardFieldBlur(e, key, 'headline', false),
+    text: headline,
+  }));
 
   const s = entry.stats || {};
   if (s.tasks > 0 || s.monday_msgs > 0 || s.meetings > 0 || s.wa_msgs > 0) {
@@ -622,18 +910,22 @@ function buildMiniCard(entry) {
 
 const SOURCE_LABEL = { meeting: 'Meeting', whatsapp: 'WhatsApp', monday_group: 'Monday', mention: 'Mentioned' };
 
-function buildPotentialCard(p) {
+function buildPotentialCard(p, orderKeys) {
   const aliasGap = p.possible_existing_client;
+  const key = p._key;
   const card = el('article', {
     class: `mini-card potential-card${aliasGap ? ' alias-gap-card' : ''}`,
     role: 'button',
     tabindex: '0',
     'aria-label': `Open ${p.name || 'potential client'}`,
-    onclick: () => openProspect(p.name),
+    onclick: () => openProspect(key),
     onkeydown: (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openProspect(p.name); }
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openProspect(key); }
     },
+    ...cardDropProps(key, orderKeys),
   });
+
+  card.append(buildCardControls(key));
 
   card.append(el('div', { class: 'mini-state' },
     el('span', {
@@ -641,7 +933,21 @@ function buildPotentialCard(p) {
       text: aliasGap ? 'Possible existing client — alias mismatch' : 'Potential client',
     }),
   ));
-  card.append(el('h2', { class: 'mini-name', text: p.name || 'Unknown' }));
+
+  // Renaming a real client wouldn't make sense (see buildMiniCard), but a
+  // prospect's name is exactly the kind of thing an AI match can get
+  // slightly wrong -- editable in place here too.
+  const name = p.name || 'Unknown';
+  card.append(el('h2', {
+    class: 'mini-name',
+    contenteditable: 'true',
+    spellcheck: 'false',
+    'data-original': name,
+    onclick: (e) => e.stopPropagation(),
+    onkeydown: editableCardKeydown,
+    onblur: (e) => onCardFieldBlur(e, key, 'name', false),
+    text: name,
+  }));
   if (aliasGap) {
     card.append(el('p', { class: 'mini-micro alias-gap-note', text: `May actually be ${aliasGap} — add a config.json alias if so, instead of tracking this as a new business.` }));
   }
@@ -706,13 +1012,22 @@ function buildPotentialCardDetail(p) {
   // One synthesized summary for the whole prospect (single meeting: lifted
   // directly; several meetings under different titles, now merged by the
   // clean-entity-name dedup upstream: one combined synthesis) -- never each
-  // meeting's raw content shown back to back. Absent entirely for a
-  // prospect with no meeting behind it at all (mention/chat/monday_group
-  // only), which falls back to the per-item blurbs below same as always.
-  if (p.summary) {
+  // meeting's raw content shown back to back. Always rendered (even empty)
+  // now that it's also the one editable field on this page -- a prospect
+  // with nothing generated (or a manual one with no note yet) still needs
+  // somewhere to type one in.
+  {
     const sec = el('div', { class: 'card-section potential-item' });
     sec.append(el('span', { class: 'section-label', text: 'Summary' }));
-    sec.append(el('p', { class: 'potential-summary', text: p.summary }));
+    sec.append(el('p', {
+      class: 'potential-summary',
+      contenteditable: 'true',
+      spellcheck: 'false',
+      'data-original': p.summary || '',
+      onkeydown: editableCardKeydown,
+      onblur: (e) => onCardFieldBlur(e, p._key, 'summary', true),
+      text: p.summary || '',
+    }));
     if ((p.action_items || []).length) {
       sec.append(el('span', { class: 'section-label', text: 'Action items' }));
       const list = el('ul', { class: 'action-items-list' });
@@ -917,7 +1232,10 @@ function render() {
       html: '&#8592;&nbsp; All potential clients',
       onclick: backToGrid,
     }));
-    const p = (standup.potential_clients || []).find(pp => pp.name === viewProspect);
+    // effectiveProspects() (not the raw standup.potential_clients lookup) so
+    // a manual prospect resolves here too, and so name/summary overrides
+    // are already applied by the time buildPotentialCardDetail sees it.
+    const p = effectiveProspects().find(pp => pp._key === viewProspect);
     if (p) app.append(buildPotentialCardDetail(p));
     return;
   }
@@ -925,27 +1243,78 @@ function render() {
   // ── grid view ──
   app.className = 'client-grid-page';
 
+  const clients = effectiveByClient();
+  const clientKeys = clients.map(c => c._key);
   const clientGrid = el('div', { class: 'client-grid' });
-  (standup.by_client || []).forEach(entry => {
-    // Defensive: generate.py should never put "Unmapped" in by_client (it
-    // feeds potential_clients instead) -- but stale/older standup JSON can
-    // still have one, and this guarantees it never renders as a fake client
-    // card even if that invariant is ever violated upstream.
-    if (entry.client === 'Unmapped') return;
-    clientGrid.append(buildMiniCard(entry));
-  });
+  clients.forEach(entry => clientGrid.append(buildMiniCard(entry, clientKeys)));
   app.append(clientGrid);
+  appendHiddenCardsToggle(app, hiddenClients(), () => hiddenClientsExpanded, (v) => { hiddenClientsExpanded = v; }, c => c.client);
 
-  const potentialClients = standup.potential_clients || [];
-  if (potentialClients.length) {
+  const prospects = effectiveProspects();
+  const prospectKeys = prospects.map(p => p._key);
+  const hasAnyProspects = prospects.length || hiddenProspects().length || showAddProspectForm;
+  if (hasAnyProspects) {
     app.append(el('div', { class: 'section-divider' },
       el('span', { class: 'section-divider-label', text: 'Potential clients' }),
       el('span', { class: 'section-divider-note', text: 'not merged into any client above — confirm before treating as real' }),
     ));
-    const potentialGrid = el('div', { class: 'client-grid' });
-    potentialClients.forEach(p => potentialGrid.append(buildPotentialCard(p)));
-    app.append(potentialGrid);
+    if (prospects.length) {
+      const potentialGrid = el('div', { class: 'client-grid' });
+      prospects.forEach(p => potentialGrid.append(buildPotentialCard(p, prospectKeys)));
+      app.append(potentialGrid);
+    }
   }
+  app.append(buildAddProspectControl());
+  appendHiddenCardsToggle(app, hiddenProspects(), () => hiddenProspectsExpanded, (v) => { hiddenProspectsExpanded = v; }, p => p.name);
+}
+
+// Shared by both grids -- a simple "Hidden (n)" toggle + unhide list,
+// same pattern as Daily Ops' collapsed Handled section.
+function appendHiddenCardsToggle(app, hidden, getExpanded, setExpanded, labelFn) {
+  if (!hidden.length) return;
+  const expanded = getExpanded();
+  app.append(el('button', {
+    class: 'hidden-cards-toggle',
+    type: 'button',
+    onclick: () => { setExpanded(!expanded); render(); },
+  }, `${expanded ? '▾' : '▸'} Hidden (${hidden.length})`));
+
+  if (!expanded) return;
+  const list = el('div', { class: 'hidden-cards-list' });
+  hidden.forEach(item => list.append(el('div', { class: 'hidden-card-row' },
+    el('span', { class: 'hidden-card-name', text: labelFn(item) }),
+    el('button', { type: 'button', class: 'hidden-card-unhide', text: 'unhide', onclick: () => unhideCard(item._key) }),
+  )));
+  app.append(list);
+}
+
+// "+ Add potential client" -- the one manual-create affordance on this page
+// (real clients come from Monday/roster, never hand-typed here).
+function buildAddProspectControl() {
+  const wrap = el('div', { class: 'add-prospect-wrap' });
+  wrap.append(el('button', {
+    class: 'add-prospect-btn',
+    type: 'button',
+    text: showAddProspectForm ? 'Cancel' : '+ Add potential client',
+    onclick: () => { showAddProspectForm = !showAddProspectForm; render(); },
+  }));
+
+  if (showAddProspectForm) {
+    const nameInput = el('input', { class: 'add-prospect-input', type: 'text', placeholder: 'Prospect name', required: '' });
+    const noteInput = el('input', { class: 'add-prospect-input', type: 'text', placeholder: 'Note (optional)' });
+    wrap.append(el('form', {
+      class: 'add-prospect-form',
+      onsubmit: (e) => {
+        e.preventDefault();
+        const name = nameInput.value.trim();
+        if (!name) return;
+        addProspect(name, noteInput.value.trim());
+        showAddProspectForm = false;
+      },
+    }, nameInput, noteInput, el('button', { type: 'submit', class: 'add-prospect-submit', text: 'Add' })));
+  }
+
+  return wrap;
 }
 
 // ── date formatting ───────────────────────────────────────────────────────────
@@ -1032,9 +1401,10 @@ async function init() {
   renderFooter();
   renderAlertBanner();
 
-  // 6. Fetch remote checks (replaces local if newer; re-renders if different)
-  //    Runs async so the page is already interactive
-  await loadRemoteChecks();
+  // 6. Fetch remote checks + card overrides (each replaces local/default and
+  //    re-renders on arrival; independent of each other, so run in parallel).
+  //    Runs async so the page is already interactive.
+  await Promise.all([loadRemoteChecks(), loadRemoteStandupOverrides()]);
 }
 
 document.addEventListener('DOMContentLoaded', init);
