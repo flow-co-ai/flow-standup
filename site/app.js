@@ -1271,7 +1271,7 @@ function render() {
   const clientGrid = el('div', { class: 'client-grid' });
   clients.forEach(entry => clientGrid.append(buildMiniCard(entry, clientKeys)));
   app.append(clientGrid);
-  appendHiddenCardsToggle(app, hiddenClients(), () => hiddenClientsExpanded, (v) => { hiddenClientsExpanded = v; }, c => c.client);
+  appendHiddenCardsToggle(app, hiddenClients(), () => hiddenClientsExpanded, (v) => { hiddenClientsExpanded = v; }, c => c.displayName);
 
   const prospects = effectiveProspects();
   const prospectKeys = prospects.map(p => p._key);
