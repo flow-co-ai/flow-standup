@@ -362,6 +362,40 @@ function assignedToLine(personsAndTeams) {
   return `Assigned to: ${personsAndTeams.map((p) => USER_NAMES[p.id] || `user ${p.id}`).join(", ")}`;
 }
 
+// Builds the §7-format trailing mention-chip line for a set of assignees --
+// same shape as the one item-chat.js's drafting instructions specify
+// (`<p><a class="mention" data-mention-id="USERID" ...>@Name</a> ...</p>`).
+function mentionChipLine(personsAndTeams) {
+  const chips = personsAndTeams
+    .map((p) => `<a class="mention" data-mention-id="${p.id}" data-mention-type="User">@${USER_NAMES[p.id] || `user ${p.id}`}</a>`)
+    .join(" ");
+  return `<p>${chips}</p>`;
+}
+
+// Board/assignee changes (the dashboard's board dropdown via queue.js's
+// applyBoardReassignment, or a chat-driven boardId change via item-chat.js's
+// buildEditFields) recompute columnValues' People column and the separate
+// "note" display line, but until this existed, never touched the ACTUAL
+// mention-chip HTML inside updateBody -- so the item's People column would
+// correctly show the new team while the update/comment text posted to
+// Monday still @-tagged and notified the OLD team (confirmed live 2026-07-21:
+// switching a Maadi Law card from Ads to CRM left "@Ads Team @Khurram Jamil"
+// sitting in the update text, correct-looking People column notwithstanding).
+// Strips every real mention anchor found anywhere in updateBody (there's
+// only ever meant to be the one trailing line's worth per §7, but this is
+// robust to however many individual <a> tags make it up, and to any stray
+// whitespace/empty <p> left behind) and appends one fresh trailing line
+// built from the new assignees.
+function swapUpdateBodyMentions(updateBody, personsAndTeams) {
+  if (!updateBody) return updateBody;
+  const stripped = updateBody
+    .replace(/<a[^>]*class="mention"[^>]*>[\s\S]*?<\/a>/gi, "")
+    .replace(/<p>\s*<\/p>/gi, "")
+    .replace(/(\s*&nbsp;\s*)+$/gi, "")
+    .trimEnd();
+  return `${stripped}${mentionChipLine(personsAndTeams)}`;
+}
+
 // Blocked/needsNaz are the real source of truth once stored as explicit
 // top-level payload fields (set by item-chat.js's resolve_item/edit_item).
 // For drafts that predate that (or came from outside item-chat.js entirely)
@@ -615,6 +649,7 @@ module.exports = {
   CLIENT_GROUPS,
   buildColumnValues,
   assignedToLine,
+  swapUpdateBodyMentions,
   resolvePayloadFlags,
   checkUpdateBodySubstance,
   checkMentionsAreReal,
