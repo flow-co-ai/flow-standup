@@ -22,6 +22,7 @@ const {
   BOARD_LABEL_IDS,
   buildColumnValues,
   assignedToLine,
+  swapUpdateBodyMentions,
   resolvePayloadFlags,
   checkUpdateBodySubstance,
   enforceSentInvariant,
@@ -439,7 +440,8 @@ function buildEditFields(item, input) {
     // rewrite the payload for create_item/create_subitem drafts.
     if (item.payload && item.payload.mode !== "update_only") {
       const existingCV = item.payload.columnValues;
-      const updatedPayload = { ...item.payload, boardId, blocked, needsNaz, columnValues };
+      const updateBody = swapUpdateBodyMentions(item.payload.updateBody, columnValues[PEOPLE_COLUMN].personsAndTeams);
+      const updatedPayload = { ...item.payload, boardId, blocked, needsNaz, columnValues, updateBody };
       patch.payload = updatedPayload;
 
       const assigned = assignedToLine(columnValues[PEOPLE_COLUMN].personsAndTeams);
