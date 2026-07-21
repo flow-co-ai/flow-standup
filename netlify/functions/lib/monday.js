@@ -427,6 +427,36 @@ function checkUpdateBodySubstance(updateBody) {
   return null;
 }
 
+// A typed "@Hashir" or "@Muhammad Hashir Faiz" in updateBody is plain text --
+// Monday never fires a notification or renders a chip for it, it just posts
+// as literal characters (see §7's mention-chip HTML format). Strips out real
+// mention anchors first (their own visible text also starts with "@", that's
+// not what this is checking for), then looks for anything still starting
+// with "@" followed by name-shaped text in what's left.
+function findFakeMentionText(html) {
+  if (!html) return [];
+  const withoutRealMentions = String(html).replace(/<a[^>]*class="mention"[^>]*>[\s\S]*?<\/a>/gi, " ");
+  const plainText = withoutRealMentions
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&");
+  const matches = plainText.match(/@[A-Za-z][A-Za-z'.]*(?:\s+[A-Z][A-Za-z'.]*){0,3}/g) || [];
+  return matches.map((m) => m.trim());
+}
+
+// Same "real gate in code, at the last moment" pattern as
+// checkUpdateBodySubstance -- runs unconditionally in sendQueueItemToMonday,
+// regardless of whether updateBody was drafted by the automation, edited via
+// the dashboard's mention picker, or typed by hand anywhere else. Returns an
+// error string naming exactly what looked like a fake mention, or null.
+function checkMentionsAreReal(updateBody) {
+  const fake = findFakeMentionText(updateBody);
+  if (fake.length) {
+    return `updateBody has "${fake.join('", "')}" typed as plain text, not a real Monday mention -- Monday won't notify anyone or render a chip for it. Use the @ picker to insert a real mention instead of typing it.`;
+  }
+  return null;
+}
+
 // Standing invariant: a real Monday item existing (mondayItemId set) always
 // wins over whatever dashboard status was otherwise about to be written --
 // "undo," an edit_item status change, or any other patch can never leave an
@@ -465,6 +495,8 @@ async function sendQueueItemToMonday(id) {
   // own (already-checked) resolve_item or from anywhere else.
   const substanceError = checkUpdateBodySubstance(payload.updateBody);
   if (substanceError) return { error: substanceError };
+  const mentionError = checkMentionsAreReal(payload.updateBody);
+  if (mentionError) return { error: mentionError };
 
   const mode = payload.mode || "create_item"; // default for any older payloads without a mode field
   let resultItemId;
@@ -585,5 +617,7 @@ module.exports = {
   assignedToLine,
   resolvePayloadFlags,
   checkUpdateBodySubstance,
+  checkMentionsAreReal,
+  findFakeMentionText,
   enforceSentInvariant,
 };

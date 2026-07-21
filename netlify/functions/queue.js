@@ -4,7 +4,17 @@
 //         Uses the same OPS_PASSCODE gate as the existing checkmark endpoint.
 
 const { getJSON, updateJSON } = require("./lib/github");
-const { enforceSentInvariant, mondayItemNameAndParent, BOARD_LABEL_IDS, CLIENT_GROUPS } = require("./lib/monday");
+const {
+  enforceSentInvariant,
+  mondayItemNameAndParent,
+  BOARD_LABEL_IDS,
+  CLIENT_GROUPS,
+  USER_NAMES,
+  buildColumnValues,
+  resolvePayloadFlags,
+  assignedToLine,
+  PEOPLE_COLUMN,
+} = require("./lib/monday");
 
 const QUEUE_PATH = "checks/draft-queue.json";
 const EMPTY = { updatedAt: null, items: [] };
@@ -12,15 +22,59 @@ const EMPTY = { updatedAt: null, items: [] };
 class NotFoundError extends Error {}
 
 // Same source of truth the pipeline itself routes with (lib/monday.js) --
-// the dashboard's board/group dropdowns are populated from this, not a
-// second hand-maintained copy of the client roster.
+// the dashboard's board/group dropdowns (and the @ mention picker) are
+// populated from this, not a second hand-maintained copy of the client
+// roster or team.
 function routingOptions() {
   const boardIds = {};
   for (const [name, id] of Object.entries(BOARD_LABEL_IDS)) {
     if (name === "Dev+SEO") continue; // same board/id as "Web+SEO" -- one dropdown option, not two
     boardIds[name] = id;
   }
-  return { boards: Object.keys(boardIds), boardIds, groupsByClient: CLIENT_GROUPS };
+  const people = Object.entries(USER_NAMES).map(([id, name]) => ({ id: Number(id), name }));
+  return { boards: Object.keys(boardIds), boardIds, groupsByClient: CLIENT_GROUPS, people };
+}
+
+// Board-scoped default assignees (Ads -> Ads Team + Khurram, Web+SEO ->
+// Hashir + Zayan, CRM -> Ahmed Memon + Ali Shaheer) are enforced in code at
+// every OTHER write point already (buildColumnValues, used by item-chat.js's
+// edit_item and sendQueueItemToMonday) specifically so this can't be
+// silently skipped -- the dashboard's board dropdown was the one write path
+// that bypassed it, since it only patched the display label + payload.
+// boardId/groupId, never payload.columnValues. Same rule, same function,
+// applied here too: a board change always recomputes the tagged team,
+// never just relabels the card. update_only payloads never carry
+// columnValues at all (they post an update to an existing item, no
+// assignee column to set) -- skipped the same way buildEditFields already
+// skips it for that mode.
+function applyBoardReassignment(existingItem, patch) {
+  const newPayload = patch.payload;
+  const oldPayload = existingItem.payload;
+  if (!newPayload || !oldPayload || oldPayload.mode === "update_only") return patch;
+  const newBoardId = newPayload.boardId;
+  if (!newBoardId || newBoardId === oldPayload.boardId) return patch;
+
+  const { blocked, needsNaz } = resolvePayloadFlags(oldPayload);
+  let columnValues;
+  try {
+    columnValues = buildColumnValues(newBoardId, blocked, needsNaz);
+  } catch (err) {
+    console.error(`queue.js: couldn't recompute default assignees for board ${newBoardId}:`, err);
+    return patch;
+  }
+
+  const merged = { ...patch, payload: { ...newPayload, columnValues } };
+  // Keep the "Assigned to: X, Y" line in note (item-chat.js's system prompt
+  // context) in sync too, same swap buildEditFields already does for a
+  // chat-driven board change -- find-and-replace the OLD line, not append a
+  // second one alongside a stale first.
+  const newAssignedLine = assignedToLine(columnValues[PEOPLE_COLUMN].personsAndTeams);
+  const oldAssignedLine = oldPayload.columnValues ? assignedToLine(oldPayload.columnValues[PEOPLE_COLUMN]?.personsAndTeams || []) : null;
+  const noteBase = (oldAssignedLine && existingItem.note && existingItem.note.includes(oldAssignedLine))
+    ? existingItem.note.replace(oldAssignedLine, "").replace(/\s*\/\s*$/, "").trim()
+    : existingItem.note;
+  merged.note = [noteBase, newAssignedLine].filter(Boolean).join(" / ");
+  return merged;
 }
 
 // update_only payloads only ever carry existingItemId (see SKILL.md A4h) --
@@ -110,10 +164,11 @@ exports.handler = async (event) => {
         const data = await updateJSON(QUEUE_PATH, (data) => {
           const idx = data.items.findIndex((it) => it.id === id);
           if (idx === -1) throw new NotFoundError(`no item with id ${id}`);
+          const effectivePatch = applyBoardReassignment(data.items[idx], patch);
           // enforceSentInvariant: a real Monday item existing always wins over
           // whatever this patch asked for -- e.g. "undo" on a Mondayed card
           // can't silently claim a real send never happened.
-          data.items[idx] = enforceSentInvariant({ ...data.items[idx], ...patch, updatedAt: new Date().toISOString() });
+          data.items[idx] = enforceSentInvariant({ ...data.items[idx], ...effectivePatch, updatedAt: new Date().toISOString() });
           data.updatedAt = new Date().toISOString();
           return data;
         }, `dashboard: update ${id}`, { fallback: EMPTY });

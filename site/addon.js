@@ -260,6 +260,21 @@ function foBuildMondayDetails(item) {
       onkeydown="foUpdateBodyKeydown(event)"
       onblur="foSaveUpdateBodyEdit(this, '${item.id}')">${p.updateBody || ""}</div>`;
 
+  // Inserts real §7 mention markup at the cursor -- the alternative to
+  // typing "@Name", which Monday would just post as literal characters (see
+  // foFindFakeMentions/checkMentionsAreReal, which blocks sending if that
+  // happens anyway). onmousedown preventDefault on the button AND every
+  // option keeps the update-body field's selection alive across the click,
+  // so a mention lands wherever the cursor actually was.
+  const people = foRouting.people || [];
+  const mentionPicker = people.length ? `<span class="fo-mention-wrap">
+      <button type="button" class="fo-mention-btn" title="Insert a mention" aria-label="Insert a mention"
+        onmousedown="event.preventDefault()" onclick="foToggleMentionPicker('${item.id}')">@</button>
+      <div class="fo-mention-picker" id="fo-mentionpicker-${item.id}" hidden>
+        ${people.map((person) => `<button type="button" onmousedown="event.preventDefault()" onclick="foInsertMention('${item.id}', ${person.id})">${foEscape(person.name)}</button>`).join("")}
+      </div>
+    </span>` : "";
+
   return `<div class="fo-monday-details">
       <div class="fo-monday-row">
         <span class="fo-monday-key">${foEscape(nameRow.label)}</span>
@@ -269,7 +284,9 @@ function foBuildMondayDetails(item) {
         <span class="fo-monday-key">Board</span>${boardSelect}
         <span class="fo-monday-key">Group</span>${groupSelect}
       </div>
-      <span class="fo-monday-key">Update text</span>
+      <div class="fo-monday-row">
+        <span class="fo-monday-key">Update text</span>${mentionPicker}
+      </div>
       ${updateBodyBlock}
     </div>`;
 }
@@ -325,6 +342,78 @@ function foSaveUpdateBodyEdit(el, id) {
   if (next === original) return;
   foPatch(id, { payload: { ...item.payload, updateBody: next } });
 }
+
+// Mirrors lib/monday.js's findFakeMentionText exactly -- keep both in sync.
+// A typed "@Hashir" is plain text; Monday won't notify anyone or render a
+// chip for it (see the real §7 mention format below). Strips real mention
+// anchors first, then looks for anything left that still starts with "@"
+// and reads like a name.
+function foFindFakeMentions(html) {
+  if (!html) return [];
+  const withoutRealMentions = String(html).replace(/<a[^>]*class="mention"[^>]*>[\s\S]*?<\/a>/gi, " ");
+  const plainText = withoutRealMentions.replace(/<[^>]+>/g, " ").replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&");
+  const matches = plainText.match(/@[A-Za-z][A-Za-z'.]*(?:\s+[A-Z][A-Za-z'.]*){0,3}/g) || [];
+  return matches.map((m) => m.trim());
+}
+
+// Only one open at a time -- opening one card's picker closes any other.
+function foToggleMentionPicker(cardId) {
+  const picker = document.getElementById(`fo-mentionpicker-${cardId}`);
+  if (!picker) return;
+  const willShow = picker.hidden;
+  document.querySelectorAll(".fo-mention-picker").forEach((el) => { el.hidden = true; });
+  picker.hidden = !willShow;
+}
+
+function foHideMentionPicker(cardId) {
+  const picker = document.getElementById(`fo-mentionpicker-${cardId}`);
+  if (picker) picker.hidden = true;
+}
+
+// Inserts REAL Monday mention markup (the exact §7 HTML format, not typed
+// "@Name" text) at wherever the cursor currently is in this card's update-
+// text field -- or at the end, if the field wasn't already focused (clicking
+// the @ button itself doesn't steal focus, thanks to the onmousedown
+// preventDefault on both the button and every picker option, but there may
+// never have been a selection in this field at all yet). Saves immediately
+// through the same foPatch() path as any other edit here.
+function foInsertMention(cardId, userId) {
+  const person = (foRouting.people || []).find((p) => p.id === userId);
+  const el = document.getElementById(`fo-updatebody-${cardId}`);
+  if (!person || !el) return;
+
+  const html = `<a class="mention" data-mention-id="${person.id}" data-mention-type="User">@${foEscape(person.name)}</a>&nbsp;`;
+  const sel = window.getSelection();
+  const hasSelectionInField = sel && sel.rangeCount > 0 && el.contains(sel.getRangeAt(0).commonAncestorContainer);
+
+  if (hasSelectionInField) {
+    const range = sel.getRangeAt(0);
+    range.deleteContents();
+    const frag = range.createContextualFragment(html);
+    const lastNode = frag.lastChild;
+    range.insertNode(frag);
+    if (lastNode) {
+      range.setStartAfter(lastNode);
+      range.collapse(true);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+  } else {
+    el.focus();
+    el.insertAdjacentHTML("beforeend", html);
+  }
+
+  foHideMentionPicker(cardId);
+  foSaveUpdateBodyEdit(el, cardId);
+}
+
+// Clicking anywhere outside an open picker closes it -- registered once,
+// not per-card.
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".fo-mention-wrap")) {
+    document.querySelectorAll(".fo-mention-picker").forEach((el) => { el.hidden = true; });
+  }
+});
 
 // section is "active" | "handled" | "mondayed".
 function foQueueCard(item, section) {
@@ -605,6 +694,11 @@ function foOpenSendPreview(id) {
   const targetBits = [item.board, item.group].filter(Boolean);
   const targetLabel = targetBits.length ? targetBits.join(" / ") : "Unknown board/client";
 
+  // Surfaced here too, not just at the hard confirm-time gate below -- catch
+  // it the moment the preview opens, in case it slipped through from before
+  // this picker existed, rather than only discovering it after clicking confirm.
+  const fakeMentions = foFindFakeMentions(payload.updateBody);
+
   const overlay = document.createElement("div");
   overlay.id = "fo-send-preview-overlay";
   overlay.className = "fo-preview-overlay";
@@ -626,6 +720,7 @@ function foOpenSendPreview(id) {
         <label class="fo-preview-field-label">Description</label>
         <div class="fo-preview-body" contenteditable="true" id="fo-preview-body">${payload.updateBody || ""}</div>
       </div>
+      ${fakeMentions.length ? `<p class="fo-preview-error">Typed as plain text, not a real mention: ${fakeMentions.map(foEscape).join(", ")}. Close this and use the @ picker on the card instead -- sending will be blocked until it's a real mention.</p>` : ""}
       <p class="fo-preview-error" id="fo-preview-error" hidden></p>
       <div class="fo-preview-actions fo-actions">
         <button type="button" class="fo-preview-cancel" id="fo-preview-cancel-btn">Cancel</button>
@@ -654,6 +749,17 @@ async function foConfirmSendPreview(id) {
   const newUpdateBody = bodyEl ? bodyEl.innerHTML.trim() : (item.payload.updateBody || "");
   const payloadChanged =
     newItemName !== (item.payload.itemName || "") || newUpdateBody !== (item.payload.updateBody || "");
+
+  // Hard gate, same rule sendQueueItemToMonday enforces server-side
+  // (checkMentionsAreReal) -- checked again here against whatever's in the
+  // field right now, including any last edit made in this very modal, so
+  // this can't be bypassed by typing a fake mention in the preview itself.
+  const fakeMentions = foFindFakeMentions(newUpdateBody);
+  if (fakeMentions.length) {
+    errEl.textContent = `Typed as plain text, not a real mention: ${fakeMentions.join(", ")}. Use the @ picker on the card instead of typing "@Name" -- nothing was sent.`;
+    errEl.hidden = false;
+    return;
+  }
 
   btn.disabled = true;
   cancelBtn.disabled = true;
