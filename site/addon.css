@@ -354,6 +354,15 @@
   cursor: pointer;
 }
 .fo-mention-picker button:hover { background: rgba(169,180,120,0.14); }
+.fo-mention-picker[hidden] {
+  /* Bug fix 2026-07-21: .fo-mention-picker's own `display: flex` had equal
+     CSS specificity to the browser's default `[hidden] { display: none }`,
+     so author CSS won and the picker never actually hid after a selection
+     or an outside click, even though addon.js's hidden=true logic was
+     correct all along. This rule's higher specificity (class + attribute)
+     forces it closed whenever the hidden attribute is set. */
+  display: none;
+}
 .fo-monday-details.fo-monday-blocked {
   background: rgba(220,167,70,0.06);
   border-color: rgba(220,167,70,0.2);
