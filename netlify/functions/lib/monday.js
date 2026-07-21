@@ -111,6 +111,23 @@ async function mondayItemDetail(itemId) {
   return item;
 }
 
+// Minimal lookup for queue.js's backfill of a draft-queue item/parent name
+// that's only known by numeric id (an update_only payload's existingItemId,
+// or a create_subitem/update_only payload's parentItemId) -- deliberately
+// NOT mondayItemDetail's full {updates, subitems} pull, which would be
+// wasteful for "just get the name (and, if it's a subitem, its parent's
+// name too)".
+async function mondayItemNameAndParent(itemId) {
+  if (!itemId) throw new Error("mondayItemNameAndParent needs itemId");
+  const data = await mondayGraphQL(
+    `query($itemIds: [ID!]) { items(ids: $itemIds) { id name parent_item { id name } } }`,
+    { itemIds: [itemId] }
+  );
+  const item = data?.items?.[0];
+  if (!item) throw new Error(`mondayItemNameAndParent: no item found for id ${itemId}`);
+  return { id: item.id, name: item.name, parentItem: item.parent_item ? { id: item.parent_item.id, name: item.parent_item.name } : null };
+}
+
 const STATUS_COLUMN = "color_mkwb1trm";
 const PEOPLE_COLUMN = "multiple_person_mkwb5f2e";
 const NAZ_USER_ID = 70062990;
@@ -551,6 +568,7 @@ module.exports = {
   mondayGraphQL,
   mondayLookup,
   mondayItemDetail,
+  mondayItemNameAndParent,
   mondayClientOverview,
   mondaySearchAllBoards,
   sendQueueItemToMonday,

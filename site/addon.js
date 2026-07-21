@@ -32,6 +32,12 @@ const foSectionExpanded = { handled: false, mondayed: false };
 // away, then reconciles with whatever the server actually persisted.
 let foItems = [];
 
+// Board/group dropdown options -- same source of truth the pipeline itself
+// routes with (lib/monday.js's BOARD_LABEL_IDS/CLIENT_GROUPS), returned
+// alongside the queue itself so there's no separate fetch/staleness to
+// manage. Empty until the first successful foLoadQueue().
+let foRouting = { boards: [], boardIds: {}, groupsByClient: {} };
+
 // ids currently mid-foPatch(). Rapid clicks on the same card's buttons (e.g.
 // mashing a priority arrow) used to fire several overlapping POSTs -- each
 // read the same GitHub sha, so every one after the first landed as a 409 and
@@ -56,6 +62,7 @@ async function foLoadQueue() {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
     foItems = data.items || [];
+    if (data.routing) foRouting = data.routing;
     foRenderFromItems(foItems);
   } catch (e) {
     document.getElementById("fo-queue-cards").innerHTML = `<div class="fo-empty">couldn't reach the draft queue${e && e.message ? ": " + foEscape(e.message) : ""}</div>`;
@@ -183,12 +190,31 @@ const NULL_REASON_LABELS = {
 // the paraphrased title/note, it doesn't generate anything new. board/group
 // are already human-readable strings at the top level of the item (not raw
 // Monday ids), so no id-to-label lookup is needed either.
+// parentItemName/parentItemId are backfilled server-side (queue.js's
+// resolveMissingMondayNames) whenever a payload only carries a numeric
+// parentItemId -- resolved live from Monday once, then cached, so this
+// never has to fall back to a bare id except in the brief window before
+// that resolution has run.
 function foMondayNameRow(p) {
-  if (p.mode === "create_subitem") return { label: "Subitem", value: p.itemName || "(untitled)" };
+  const parentLabel = p.parentItemName || (p.parentItemId ? `#${p.parentItemId}` : null);
+  if (p.mode === "create_subitem") {
+    return { label: parentLabel ? `Subitem of ${parentLabel}` : "Subitem", value: p.itemName || "(untitled)" };
+  }
   if (p.mode === "create_item") return { label: "Item", value: p.itemName || "(untitled)" };
   // update_only: nothing new is named -- itemName here (when present) just
   // echoes what the EXISTING item is called, it's not a rename.
-  return { label: "Updating item", value: p.itemName || `#${p.existingItemId || "?"}` };
+  return {
+    label: parentLabel ? `Updating subitem of ${parentLabel}` : "Updating item",
+    value: p.itemName || `#${p.existingItemId || "?"}`,
+  };
+}
+
+// Always includes the item's CURRENT value even if it's not in the known
+// list (an unrecognized-but-real client, or a board name that drifted) --
+// editing must never silently discard a value it doesn't recognize.
+function foSelectOptions(known, current) {
+  const opts = known.includes(current) || !current ? known : [current, ...known];
+  return opts.map((v) => `<option value="${foEscape(v)}" ${v === current ? "selected" : ""}>${foEscape(v)}</option>`).join("");
 }
 
 function foBuildMondayDetails(item) {
@@ -203,7 +229,8 @@ function foBuildMondayDetails(item) {
   }
   // Blocked/unresolved cards (nullReason set) don't have a resolved board/
   // group/update yet by definition -- show that state clearly instead of
-  // empty or broken Monday fields.
+  // empty or broken Monday fields. Nothing here is editable -- there's no
+  // payload structure yet for a board/group/update edit to write into.
   if (!item.payload) {
     const reason = NULL_REASON_LABELS[item.nullReason] || NULL_REASON_LABELS["multi-item"];
     return `<div class="fo-monday-details fo-monday-blocked">
@@ -212,10 +239,26 @@ function foBuildMondayDetails(item) {
   }
 
   const p = item.payload;
+  const pending = foPending.has(item.id);
   const nameRow = foMondayNameRow(p);
-  const updateBodyBlock = p.updateBody
-    ? `<div class="fo-update-body">${p.updateBody}</div>`
-    : `<div class="fo-update-body fo-update-body-missing">No full update draft was captured for this item yet -- showing the summary note above instead.</div>`;
+
+  const boardSelect = `<select class="fo-monday-select" id="fo-board-${item.id}" onchange="foBoardGroupChanged('${item.id}')" ${pending ? "disabled" : ""}>
+      ${foSelectOptions(foRouting.boards || [], item.board)}
+    </select>`;
+  const groupSelect = `<select class="fo-monday-select" id="fo-group-${item.id}" onchange="foBoardGroupChanged('${item.id}')" ${pending ? "disabled" : ""}>
+      ${foSelectOptions(Object.keys(foRouting.groupsByClient || {}), item.group)}
+    </select>`;
+
+  // Directly editable, same click-into-place pattern as the rest of the
+  // dashboard's manual controls -- saves on blur via foPatch(), same write
+  // path as everything else. Empty (not placeholder TEXT) when there's no
+  // draft yet, so an untouched blur never saves the placeholder itself as
+  // if it were real content -- see .fo-update-body-missing:empty::before.
+  const updateBodyBlock = `<div class="fo-update-body${p.updateBody ? "" : " fo-update-body-missing"}" id="fo-updatebody-${item.id}"
+      contenteditable="true" spellcheck="false"
+      data-original="${foEscape(p.updateBody || "")}"
+      onkeydown="foUpdateBodyKeydown(event)"
+      onblur="foSaveUpdateBodyEdit(this, '${item.id}')">${p.updateBody || ""}</div>`;
 
   return `<div class="fo-monday-details">
       <div class="fo-monday-row">
@@ -223,20 +266,64 @@ function foBuildMondayDetails(item) {
         <span class="fo-monday-val">${foEscape(nameRow.value)}</span>
       </div>
       <div class="fo-monday-row">
-        <span class="fo-monday-key">Board</span>
-        <span class="fo-monday-val">${foEscape(item.board || "n/a")}</span>
-        <span class="fo-monday-key">Group</span>
-        <span class="fo-monday-val">${foEscape(item.group || "n/a")}</span>
+        <span class="fo-monday-key">Board</span>${boardSelect}
+        <span class="fo-monday-key">Group</span>${groupSelect}
       </div>
       <span class="fo-monday-key">Update text</span>
       ${updateBodyBlock}
     </div>`;
 }
 
-function foStripGroupPrefix(title, group) {
-  if (!group) return title;
-  const escaped = group.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return title.replace(new RegExp(`^\\[${escaped}\\]\\s*`, "i"), "");
+// Board/group are only ever a display correction for update_only (no
+// boardId/groupId in that payload shape to begin with -- it targets a
+// specific existingItemId, nothing to route). For create_item/create_
+// subitem, this IS the routing decision, so payload.boardId/groupId get
+// updated too -- otherwise the dropdown would show one thing and Monday
+// would receive another.
+function foBoardGroupChanged(id) {
+  const boardSel = document.getElementById(`fo-board-${id}`);
+  const groupSel = document.getElementById(`fo-group-${id}`);
+  if (!boardSel || !groupSel) return;
+  foPatchBoardGroup(id, boardSel.value, groupSel.value);
+}
+
+function foPatchBoardGroup(id, newBoard, newGroup) {
+  const item = foItems.find((it) => it.id === id);
+  if (!item) return;
+  const patch = { board: newBoard, group: newGroup };
+  if (item.payload && (item.payload.mode === "create_item" || item.payload.mode === "create_subitem")) {
+    const boardId = (foRouting.boardIds || {})[newBoard];
+    const groupId = ((foRouting.groupsByClient || {})[newGroup] || {})[newBoard];
+    if (!boardId || !groupId) {
+      alert(`No known Monday group for "${newGroup}" on the ${newBoard} board. The label updated, but the actual Monday routing did not change -- fix this combination (or resolve it via the card's chat) before sending to Monday.`);
+    } else {
+      patch.payload = { ...item.payload, boardId, groupId };
+    }
+  }
+  foPatch(id, patch);
+}
+
+// Enter is left alone here (unlike the single-line fields elsewhere on this
+// dashboard) -- this is real multi-line rich text (bullets, paragraphs),
+// pressing Enter mid-edit needs to insert a line/new bullet, not save-and-
+// blur. Escape still reverts, via innerHTML (not textContent -- this is
+// rendered HTML, not plain text; textContent would dump the raw markup as
+// literal visible text instead of restoring the actual bullets/bold/chips).
+function foUpdateBodyKeydown(e) {
+  if (e.key === "Escape") {
+    e.preventDefault();
+    e.target.innerHTML = e.target.dataset.original || "";
+    e.target.blur();
+  }
+}
+
+function foSaveUpdateBodyEdit(el, id) {
+  const item = foItems.find((it) => it.id === id);
+  if (!item || !item.payload) return;
+  const next = el.innerHTML.trim();
+  const original = el.dataset.original || "";
+  if (next === original) return;
+  foPatch(id, { payload: { ...item.payload, updateBody: next } });
 }
 
 // section is "active" | "handled" | "mondayed".
@@ -282,11 +369,6 @@ function foQueueCard(item, section) {
 
   const mondayDetails = foBuildMondayDetails(item);
 
-  // Grouped (active) cards sit under a header already naming the client, so the
-  // redundant "[Client Name]" bracket in the title is stripped there; the flat
-  // Handled/Mondayed lists have no such header, so their titles keep the full bracket.
-  const title = section === "active" ? foStripGroupPrefix(item.title || item.id, item.group) : (item.title || item.id);
-
   // Every card gets a thread now -- item-chat.js is a general edit assistant
   // for the whole card (reply, edit title/note/payload, change status or
   // priority, reassign), not just a missing-payload resolver, so this is no
@@ -299,28 +381,6 @@ function foQueueCard(item, section) {
         <button type="submit">Send</button>
       </form>
     </div>`;
-
-  // Once a chat thread has started, the bot's conversation is the live source
-  // of truth for this card, so the static note (which may now be stale) hides
-  // (foSendItemChat also hides it live, without waiting on a reload).
-  const chatStarted = (foItemChat[item.id] || []).length > 0;
-
-  // Direct manual edit path -- contenteditable title/note, saved via the
-  // existing foPatch() (same PATCH endpoint the chatbot's edit_item tool
-  // already writes through), for the quick tweaks that don't need a
-  // conversation. Enter saves (blurs, which triggers the save); Escape
-  // reverts to the last-saved text without writing anything. data-original
-  // is read back by both handlers, so a plain "clicked in and clicked back
-  // out with no real change" never fires a no-op patch.
-  const titleHtml = `<p class="fo-title" id="fo-title-${item.id}" contenteditable="true" spellcheck="false"
-      data-original="${foEscape(title)}"
-      onkeydown="foEditableKeydown(event)"
-      onblur="foSaveTitleEdit(this, '${item.id}')">${foEscape(title)}</p>`;
-  const noteHtml = `<p class="fo-sub" id="fo-note-${item.id}" contenteditable="true" spellcheck="false"
-      data-original="${foEscape(item.note || "")}"
-      onkeydown="foEditableKeydown(event)"
-      onblur="foSaveNoteEdit(this, '${item.id}')"
-      ${chatStarted ? "hidden" : ""}>${foEscape(item.note || "")}</p>`;
 
   // Priority (1 most urgent, 5 least) drives sort order within a client
   // group (foGroupByClient) -- these buttons are the "reorder" affordance
@@ -335,13 +395,16 @@ function foQueueCard(item, section) {
         onclick="foBumpPriority('${item.id}', 1)" ${p >= 5 || pending ? "disabled" : ""}>&#9660;</button>`
     : `<span class="fo-priority fo-priority-${p}">P${p}</span>`;
 
+  // The paraphrased title/note are gone -- the Monday-details block below
+  // (real item/subitem name, board, group, actual update text) replaced
+  // them entirely. The source/provenance line is the one thing from that
+  // old header worth keeping (still useful context: which meeting/message
+  // this came from), promoted to sit right above the item name now.
   return `
     <div class="fo-card">
       <div class="fo-row">
         <div>
-          ${titleHtml}
-          ${noteHtml}
-          ${item.sourceLabel ? `<p class="fo-source">${foEscape(item.sourceLabel)}</p>` : ""}
+          ${item.sourceLabel ? `<p class="fo-source fo-source-primary">${foEscape(item.sourceLabel)}</p>` : ""}
         </div>
         <div class="fo-badges">
           ${priorityControls}
@@ -352,38 +415,6 @@ function foQueueCard(item, section) {
       ${actions}
       ${itemChatBox}
     </div>`;
-}
-
-// Shared keydown handler for the contenteditable title/note fields: Enter
-// saves (blurs -- the blur handler does the actual patch), Shift+Enter is
-// left alone (not used today, but doesn't fight a future multi-line note),
-// Escape reverts to data-original and blurs without saving.
-function foEditableKeydown(e) {
-  if (e.key === "Enter" && !e.shiftKey) {
-    e.preventDefault();
-    e.target.blur();
-  } else if (e.key === "Escape") {
-    e.preventDefault();
-    e.target.textContent = e.target.dataset.original || "";
-    e.target.blur();
-  }
-}
-
-function foSaveTitleEdit(el, id) {
-  const next = el.textContent.trim();
-  const original = el.dataset.original || "";
-  if (!next || next === original) {
-    el.textContent = original; // empty or unchanged -- revert display, no write
-    return;
-  }
-  foPatch(id, { title: next });
-}
-
-function foSaveNoteEdit(el, id) {
-  const next = el.textContent.trim();
-  const original = el.dataset.original || "";
-  if (next === original) return; // note may legitimately be empty, unlike title
-  foPatch(id, { note: next });
 }
 
 function foBumpPriority(id, delta) {

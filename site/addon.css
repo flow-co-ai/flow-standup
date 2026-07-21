@@ -75,6 +75,13 @@
   font-size: 10.5px; color: rgba(220,216,200,0.4);
   margin: 5px 0 0; text-transform: uppercase; letter-spacing: 0.04em;
 }
+/* Now the card's one surviving header line (title/note removed) -- brighter
+   and un-margined so it reads as the card's label, not a footnote. */
+.fo-source-primary {
+  margin: 0;
+  font-size: 11px;
+  color: #A9B478;
+}
 .fo-badge {
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
@@ -285,6 +292,19 @@
   font-size: 12.5px; font-weight: 600;
   color: #DCD8C8;
 }
+.fo-monday-select {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px; font-weight: 600;
+  color: #DCD8C8;
+  background: #0C100C;
+  border: 1px solid rgba(237,233,220,0.14);
+  border-radius: 6px;
+  padding: 2px 6px;
+  cursor: pointer;
+}
+.fo-monday-select:hover { border-color: rgba(169,180,120,0.5); }
+.fo-monday-select:focus { outline: none; border-color: rgba(169,180,120,0.6); }
+.fo-monday-select:disabled { opacity: 0.5; cursor: default; }
 .fo-monday-details.fo-monday-blocked {
   background: rgba(220,167,70,0.06);
   border-color: rgba(220,167,70,0.2);
@@ -298,20 +318,37 @@
 
 /* The real HTML that'll actually post to Monday (or already did) -- same
    trusted-content rendering foOpenSendPreview already uses for this exact
-   field, just read-only here. */
+   field, editable in place here the same way as the rest of the dashboard's
+   manual controls (click in, edit, blur to save). */
 .fo-update-body {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 12.5px;
   line-height: 1.55;
   color: rgba(220,216,200,0.78);
+  border-radius: 6px;
+  padding: 3px 6px;
+  margin: 0 -6px;
+  cursor: text;
+  outline: none;
+  transition: background 0.12s, box-shadow 0.12s;
 }
+.fo-update-body:hover { background: rgba(237,233,220,0.05); }
+.fo-update-body:focus { background: rgba(146,155,105,0.08); box-shadow: 0 0 0 1px rgba(169,180,120,0.4); }
 .fo-update-body p { margin: 0 0 6px; }
 .fo-update-body p:last-child { margin-bottom: 0; }
 .fo-update-body ul { margin: 0 0 6px; padding-left: 18px; }
 .fo-update-body ul:last-child { margin-bottom: 0; }
 .fo-update-body li { margin: 3px 0; }
 .fo-update-body strong { color: #EDE9DA; font-weight: 700; }
-.fo-update-body-missing { font-style: italic; color: rgba(220,216,200,0.4); }
+/* Genuinely empty (no draft captured yet), NOT placeholder text sitting in
+   the DOM -- otherwise an untouched blur would save the placeholder itself
+   as if it were real update content. Purely a CSS illusion, gone the
+   moment there's real text (:empty no longer matches). */
+.fo-update-body-missing:empty::before {
+  content: 'No full update draft was captured for this item yet -- click to write one.';
+  font-style: italic;
+  color: rgba(220,216,200,0.4);
+}
 
 /* Monday mention chips (<a class="mention">) -- rendered inert here (no
    real href), styled as a pill instead of a default blue underlined link
