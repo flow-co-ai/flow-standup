@@ -176,6 +176,63 @@ const NULL_REASON_LABELS = {
   "unmapped-client": "unrecognized client -- confirm before this gets drafted",
 };
 
+// Every field here already exists in the pipeline's own payload schema
+// (fireflies-monday-watch SKILL.md step A4h: {mode, boardId+groupId |
+// parentItemId | existingItemId, itemName, columnValues, updateBody}) --
+// this only surfaces Monday's own language directly on the card instead of
+// the paraphrased title/note, it doesn't generate anything new. board/group
+// are already human-readable strings at the top level of the item (not raw
+// Monday ids), so no id-to-label lookup is needed either.
+function foMondayNameRow(p) {
+  if (p.mode === "create_subitem") return { label: "Subitem", value: p.itemName || "(untitled)" };
+  if (p.mode === "create_item") return { label: "Item", value: p.itemName || "(untitled)" };
+  // update_only: nothing new is named -- itemName here (when present) just
+  // echoes what the EXISTING item is called, it's not a rename.
+  return { label: "Updating item", value: p.itemName || `#${p.existingItemId || "?"}` };
+}
+
+function foBuildMondayDetails(item) {
+  // Prospect cards (potentialClient set) were never going to route to
+  // Monday at all -- a distinct state from a genuinely blocked/unresolved
+  // card, so it gets its own label rather than falling through to a
+  // misleading "multi-item" default (the bug this replaces).
+  if (item.potentialClient) {
+    return `<div class="fo-monday-details fo-monday-blocked">
+      <span class="fo-monday-blocked-label">Potential client -- not routed to Monday</span>
+    </div>`;
+  }
+  // Blocked/unresolved cards (nullReason set) don't have a resolved board/
+  // group/update yet by definition -- show that state clearly instead of
+  // empty or broken Monday fields.
+  if (!item.payload) {
+    const reason = NULL_REASON_LABELS[item.nullReason] || NULL_REASON_LABELS["multi-item"];
+    return `<div class="fo-monday-details fo-monday-blocked">
+      <span class="fo-monday-blocked-label">${foEscape(reason)}</span>
+    </div>`;
+  }
+
+  const p = item.payload;
+  const nameRow = foMondayNameRow(p);
+  const updateBodyBlock = p.updateBody
+    ? `<div class="fo-update-body">${p.updateBody}</div>`
+    : `<div class="fo-update-body fo-update-body-missing">No full update draft was captured for this item yet -- showing the summary note above instead.</div>`;
+
+  return `<div class="fo-monday-details">
+      <div class="fo-monday-row">
+        <span class="fo-monday-key">${foEscape(nameRow.label)}</span>
+        <span class="fo-monday-val">${foEscape(nameRow.value)}</span>
+      </div>
+      <div class="fo-monday-row">
+        <span class="fo-monday-key">Board</span>
+        <span class="fo-monday-val">${foEscape(item.board || "n/a")}</span>
+        <span class="fo-monday-key">Group</span>
+        <span class="fo-monday-val">${foEscape(item.group || "n/a")}</span>
+      </div>
+      <span class="fo-monday-key">Update text</span>
+      ${updateBodyBlock}
+    </div>`;
+}
+
 function foStripGroupPrefix(title, group) {
   if (!group) return title;
   const escaped = group.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -193,13 +250,17 @@ function foQueueCard(item, section) {
   // board. _sending is a local-only optimistic flag (see foSendToMonday) --
   // the real Monday API round trip takes 5-10s, so this shows immediately
   // rather than leaving the button looking clickable/frozen for that stretch.
+  // No-payload case renders nothing here (was a duplicate, sometimes
+  // mislabeled -- see foBuildMondayDetails) -- the Monday-details block
+  // above the actions row is now the one place that explains why there's
+  // no send button.
   const sendControl = item._sending
     ? `<button class="fo-primary" disabled>sending to monday…</button>`
     : item.mondayItemId
     ? `<span class="fo-muted-label">already sent to Monday (item ${foEscape(item.mondayItemId)})</span>`
     : item.payload
     ? `<button class="fo-primary" onclick="foOpenSendPreview('${item.id}')">send to monday</button>`
-    : `<span class="fo-muted-label">${foEscape(NULL_REASON_LABELS[item.nullReason] || NULL_REASON_LABELS["multi-item"])}</span>`;
+    : "";
 
   // Mondayed cards get no "undo" -- a real Monday item exists permanently,
   // there's nothing local left to revert (see the standing sent-invariant:
@@ -218,6 +279,8 @@ function foQueueCard(item, section) {
         <button onclick="foPatch('${item.id}', {status:'done'})" ${pending ? "disabled" : ""}>mark done</button>
         <button onclick="foPatch('${item.id}', {status:'ignored'})" ${pending ? "disabled" : ""}>ignore</button>
       </div>`;
+
+  const mondayDetails = foBuildMondayDetails(item);
 
   // Grouped (active) cards sit under a header already naming the client, so the
   // redundant "[Client Name]" bracket in the title is stripped there; the flat
@@ -285,6 +348,7 @@ function foQueueCard(item, section) {
           <span class="fo-badge ${cls}">${foEscape(item.status || "confirm")}</span>
         </div>
       </div>
+      ${mondayDetails}
       ${actions}
       ${itemChatBox}
     </div>`;
