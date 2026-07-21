@@ -13,6 +13,7 @@ const {
   buildColumnValues,
   resolvePayloadFlags,
   assignedToLine,
+  swapUpdateBodyMentions,
   PEOPLE_COLUMN,
 } = require("./lib/monday");
 
@@ -63,7 +64,8 @@ function applyBoardReassignment(existingItem, patch) {
     return patch;
   }
 
-  const merged = { ...patch, payload: { ...newPayload, columnValues } };
+  const updateBody = swapUpdateBodyMentions(newPayload.updateBody, columnValues[PEOPLE_COLUMN].personsAndTeams);
+  const merged = { ...patch, payload: { ...newPayload, columnValues, updateBody } };
   // Keep the "Assigned to: X, Y" line in note (item-chat.js's system prompt
   // context) in sync too, same swap buildEditFields already does for a
   // chat-driven board change -- find-and-replace the OLD line, not append a
