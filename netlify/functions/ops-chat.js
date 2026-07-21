@@ -559,9 +559,20 @@ async function runStandupOverrideAction(body) {
   }
 }
 
-// Same live Fireflies GraphQL call as the orphaned chat.js's own
-// fireflies_search -- title/date only, no transcript/summary content (see
+// Ported from chat.js (now deleted -- this was its one piece still worth
+// keeping) -- title/date only, no transcript/summary content (see
 // FRESHNESS_RULES for why that distinction matters).
+//
+// KNOWN ISSUE (as of Stage 3, not yet fixed): live Fireflies search via the
+// chatbot is not actually working end to end in production -- calls here
+// come back with an error, and the model falls back to answering from the
+// cached draft-queue/Monday data via its other tools instead. That fallback
+// is an acceptable degradation for now (the model still has real, if
+// slightly stale, data to work from), so this is parked rather than being
+// actively debugged -- see the real-time function log first if picking
+// this back up (env vars were confirmed present in Netlify, so the actual
+// failure is still unconfirmed -- API response shape, network egress, or
+// something else entirely).
 async function firefliesSearch(keyword, limit) {
   const res = await fetch("https://api.fireflies.ai/graphql", {
     method: "POST",
@@ -634,6 +645,19 @@ exports.handler = async (event) => {
             result = data || { error: "no rundown found yet" };
           } else if (tu.name === "draft_new_item") {
             result = await draftNewItem(tu.input);
+          // KNOWN ISSUE (as of Stage 3, not yet fixed): editing, hiding, or
+          // renaming a card via the chatbot -- edit_queue_item below, and
+          // hide_standup_card/unhide_standup_card/edit_standup_card/
+          // add_potential_client/remove_manual_prospect further down --
+          // does not actually take effect in production yet, even though it
+          // was verified against the real module graph pre-deploy and the
+          // model reports success. Root cause not yet confirmed (real-time
+          // function logs showed nothing on a failed attempt, before
+          // per-tool-call logging was added -- retry with that logging live
+          // to get the real error before doing anything else here). Only
+          // the direct on-page manual controls (drag handles, inline edit,
+          // hide/remove buttons -- Stage 0/1) are confirmed working right
+          // now; don't tell Naz the chatbot can do this until this is fixed.
           } else if (tu.name === "edit_queue_item") {
             const { id, ...patch } = tu.input;
             result = await editQueueItem(id, patch);

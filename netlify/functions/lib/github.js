@@ -62,8 +62,9 @@ async function putJSON(filePath, data, message, sha = null) {
 }
 
 // Every read-then-write caller in this codebase (queue.js, item-chat.js,
-// ops-chat.js, chat.js) shares the same race: two requests read the same
-// sha, both try to write, the second gets a 409 and the whole write is lost.
+// standup-overrides.js, ops-chat.js) shares the same race: two requests read
+// the same sha, both try to write, the second gets a 409 and the whole write
+// is lost.
 // This wraps that pattern once -- read, let the caller compute the next
 // state from it, write with that sha, and on a 409 just re-read-and-retry
 // (the retry re-runs `mutate` against whatever the other writer actually

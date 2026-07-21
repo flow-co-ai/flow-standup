@@ -423,7 +423,8 @@ function enforceSentInvariant(item) {
   return item;
 }
 
-// Shared by send-to-monday.js (button click) and chat.js (the send_to_monday tool).
+// Shared by send-to-monday.js -- the real network fire behind the send-to-
+// Monday button (and its preview confirmation step in addon.js).
 async function sendQueueItemToMonday(id) {
   const { data } = await getJSON(QUEUE_PATH, { updatedAt: null, items: [] });
   const idx = data.items.findIndex((it) => it.id === id);
