@@ -601,7 +601,10 @@ exports.handler = async (event) => {
         body: JSON.stringify({ model: ANTHROPIC_MODEL, max_tokens: 2048, system, tools: TOOLS, messages: convo }),
       });
       const msg = await res.json();
-      if (msg.type === "error") return json(500, { error: msg.error });
+      if (msg.type === "error") {
+        console.error("ops-chat: Anthropic API returned an error:", JSON.stringify(msg.error));
+        return json(500, { error: msg.error });
+      }
 
       const toolUses = msg.content.filter((b) => b.type === "tool_use");
       const text = msg.content.filter((b) => b.type === "text").map((b) => b.text).join("\n");
@@ -613,6 +616,7 @@ exports.handler = async (event) => {
       const toolResults = [];
       for (const tu of toolUses) {
         let result;
+        console.log(`ops-chat tool call: ${tu.name}`, JSON.stringify(tu.input));
         try {
           if (tu.name === "monday_client_overview") {
             result = await mondayClientOverview(tu.input.client);
@@ -656,7 +660,23 @@ exports.handler = async (event) => {
             result = { error: `unknown tool ${tu.name}` };
           }
         } catch (err) {
+          // Most of these tools (editQueueItem, runStandupOverrideAction,
+          // firefliesSearch, draftNewItem) return { error: ... } as a normal
+          // value on failure rather than throwing -- this catch only covers
+          // a genuinely unexpected exception. Full stack, not just
+          // String(err), since "unauthorized"/network-shape errors otherwise
+          // collapse into a one-line message with no indication of WHERE.
+          console.error(`ops-chat tool ${tu.name} threw:`, err && err.stack ? err.stack : err);
           result = { error: String(err) };
+        }
+        // Log every failure REGARDLESS of whether it threw or just returned
+        // { error }, since the latter is actually the common case for these
+        // tools -- without this, a tool that "fails safely" leaves zero
+        // trace in the function log, only the model's paraphrase of it.
+        if (result && result.error) {
+          console.error(`ops-chat tool ${tu.name} returned an error:`, JSON.stringify(result.error));
+        } else {
+          console.log(`ops-chat tool ${tu.name} succeeded`);
         }
         toolResults.push({ type: "tool_result", tool_use_id: tu.id, content: JSON.stringify(result) });
       }
