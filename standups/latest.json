@@ -1,22 +1,22 @@
 {
-  "week_of": "2026-07-20",
-  "executive_summary": "Twelve of thirteen clients show needs_attention status, with multiple items stalled 6+ days across CRM, Ads, and Web. Quality HVAC and Vous Physique carry the longest stalls (35–88 days) with no recent movement. Full Smile is a bright spot: OpenDental sync bug resolved and lead performance strong at $19/lead.",
+  "week_of": "2026-07-21",
+  "executive_summary": "Twelve clients flagged this week, most with multi-day stalls in Ads, CRM, and access issues. Quality HVAC and Vous Physique show the longest drift (36–89 days), while Full Smile completed a major timezone fix affecting 44 appointments. New discovery calls highlight recurring themes: lead follow-up gaps, lack of automation, and trust-over-volume positioning.",
   "departments_overview": [
     {
       "department": "CRM",
-      "summary": "Moderate load; Full Smile sync bug fixed, but Justice Consumer Law SMS permissions, Liferun handoff Loom, Maadi Law pipeline review, and Steel Round Bars handoff all stalled 6–13 days."
+      "summary": "Moderate load; Full Smile timezone fix shipped successfully, but Justice Consumer Law permissions, Liferun handoff, Steel Round Bars directives, and Maadi Law pipeline all stalled 7–14 days."
     },
     {
       "department": "Ads",
-      "summary": "Heavy load with widespread stalls; Billy Doe Meats creative gap, Quality HVAC fix (35d), Cotton Collections Meta access (8d), Flow Company Meta (17d), Maadi Law awaiting client, and Vous Physique (41d) all stuck."
+      "summary": "Heavy backlog; Billy Doe Meats creative pipeline empty 4 days, Quality HVAC fix stalled 36 days, Cotton Collections access blocked 9 days, Vous Physique dark 42 days, and Maadi Law awaiting client 8 days."
     },
     {
       "department": "Video",
-      "summary": "Light load; Justice Consumer Law Rocco video content delayed 6 days, slowing growth."
+      "summary": "Light load; Justice Consumer Law Rocco video content delayed 7 days, slowing growth."
     },
     {
       "department": "Web + SEO",
-      "summary": "Two long stalls: Flow Company SEO update (21d) and Vous Physique automations (88d) with no recent activity."
+      "summary": "Low activity; Flow Company internal SEO update stalled 22 days, Vous Physique automations untouched 89 days."
     }
   ],
   "by_client": [
@@ -33,7 +33,7 @@
               "text": "Fresh creatives needed to combat content burnout",
               "department": "Ads",
               "source": "meeting",
-              "days_stalled": 3,
+              "days_stalled": 4,
               "item_name": null,
               "monday_item_id": null,
               "monday_url": null,
@@ -43,7 +43,7 @@
               "text": "Major gap in content pipeline",
               "department": "Ads",
               "source": "meeting",
-              "days_stalled": 3,
+              "days_stalled": 4,
               "item_name": null,
               "monday_item_id": null,
               "monday_url": null,
@@ -77,31 +77,41 @@
     },
     {
       "client": "Full Smile",
-      "headline": "OpenDental sync bug resolved; QA test passed",
+      "headline": "DigitalOcean timezone fix complete, 44 appts corrected",
       "health": "needs_attention",
       "work_by_department": [
         {
           "department": "CRM",
           "highlights": [
             {
-              "text": "OpenDental sync bug fixed, QA test passed",
+              "text": "Timezone corrected Chicago; 44 appts fixed, 1 added",
+              "department": "CRM",
+              "source": "monday",
+              "monday_item_id": "12472108604",
+              "item_name": "Digital Ocean",
+              "days_stalled": null,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12472108604",
+              "id": "5e085473"
+            },
+            {
+              "text": "Aug 1 test passed 16/16 exact matches",
+              "department": "CRM",
+              "source": "monday",
+              "monday_item_id": "12472108604",
+              "item_name": "Digital Ocean",
+              "days_stalled": null,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12472108604",
+              "id": "dc16113b"
+            },
+            {
+              "text": "QA test screenshots attached, notifications disabled confirmed",
               "department": "CRM",
               "source": "monday",
               "monday_item_id": "12483728477",
               "item_name": "OpenDental Appt Not Syncing to GHL",
               "days_stalled": null,
               "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12483728477",
-              "id": "53340178"
-            },
-            {
-              "text": "AI note-scraping tool planned for lead tagging optimization",
-              "department": "CRM",
-              "source": "meeting",
-              "monday_item_id": null,
-              "item_name": null,
-              "days_stalled": null,
-              "monday_url": null,
-              "id": "cd746480"
+              "id": "17b5ed50"
             }
           ],
           "stalled_items": [
@@ -111,27 +121,11 @@
               "source": "monday",
               "monday_item_id": "12496201463",
               "item_name": "Ad Tracking",
-              "days_stalled": 10,
+              "days_stalled": 11,
               "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12496201463",
               "id": "5606fe88"
             }
           ]
-        },
-        {
-          "department": "General",
-          "highlights": [
-            {
-              "text": "211 leads YTD at $19 cost; Google outperforms Meta",
-              "department": "",
-              "source": "meeting",
-              "monday_item_id": null,
-              "item_name": null,
-              "days_stalled": null,
-              "monday_url": null,
-              "id": "007ac756"
-            }
-          ],
-          "stalled_items": []
         }
       ],
       "status_change_suggestions": [],
@@ -145,7 +139,7 @@
         "review": 0,
         "stuck": 0,
         "done": 0,
-        "monday_msgs": 9,
+        "monday_msgs": 12,
         "meetings": 4,
         "wa_msgs": 0
       },
@@ -165,6 +159,14 @@
           "date": "2026-07-20",
           "generated": false,
           "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12483728477"
+        },
+        {
+          "text": "Fixed timezone mapping to Chicago CST, corrected doctor assignment and placeholder name bug, re-tested appointment matching",
+          "who": null,
+          "source": "MON",
+          "date": "2026-07-20",
+          "generated": false,
+          "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12472108604"
         }
       ],
       "completed_history": [
@@ -222,7 +224,7 @@
               "source": "monday",
               "item_name": "HVAC Google Ads fix",
               "monday_item_id": "12275261372",
-              "days_stalled": 35,
+              "days_stalled": 36,
               "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12275261372",
               "id": "2e2685a5"
             },
@@ -232,7 +234,7 @@
               "source": "monday",
               "item_name": "Reports",
               "monday_item_id": "12175359339",
-              "days_stalled": 48,
+              "days_stalled": 49,
               "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12175359339",
               "id": "7d225cf1"
             }
@@ -294,7 +296,7 @@
               "text": "Zoho admin permissions needed for SMS automation",
               "department": "CRM",
               "source": "meeting",
-              "days_stalled": 6,
+              "days_stalled": 7,
               "item_name": null,
               "monday_item_id": null,
               "monday_url": null,
@@ -310,7 +312,7 @@
               "text": "Rocco video content delayed, slowing growth",
               "department": "Video",
               "source": "meeting",
-              "days_stalled": 6,
+              "days_stalled": 7,
               "item_name": null,
               "monday_item_id": null,
               "monday_url": null,
@@ -381,9 +383,9 @@
               "text": "Khurram handoff Loom for new CRM team",
               "department": "CRM",
               "source": "monday",
-              "monday_item_id": "12470616714",
+              "days_stalled": 7,
               "item_name": "HANDOFF",
-              "days_stalled": 6,
+              "monday_item_id": "12470616714",
               "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12470616714",
               "id": "bda7a352"
             }
@@ -477,7 +479,7 @@
     },
     {
       "client": "Cotton Collections",
-      "headline": "No new activity; access issue open 8d",
+      "headline": "No new activity; access issue open 9d",
       "health": "needs_attention",
       "work_by_department": [
         {
@@ -490,7 +492,7 @@
               "source": "monday",
               "item_name": "Meta Ads Access",
               "monday_item_id": "12542597493",
-              "days_stalled": 8,
+              "days_stalled": 9,
               "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12542597493",
               "id": "b694996e"
             }
@@ -499,7 +501,7 @@
       ],
       "status_change_suggestions": [],
       "risks": [
-        "Meta Ads access blocking Pixel setup for 8 days"
+        "Pixel setup blocked 9 days; campaign launch at risk"
       ],
       "upcoming": [],
       "next_up": null,
@@ -524,21 +526,32 @@
     },
     {
       "client": "Flow Company",
-      "headline": "No movement; placement & SEO loops open",
+      "headline": "Sohib considering awareness ads relaunch",
       "health": "needs_attention",
       "work_by_department": [
         {
           "department": "Ads",
-          "highlights": [],
+          "highlights": [
+            {
+              "text": "Sohib considering awareness ads relaunch",
+              "department": "Ads",
+              "source": "monday",
+              "monday_item_id": "12582754130",
+              "item_name": "Meta Ads",
+              "days_stalled": null,
+              "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12582754130",
+              "id": "09a7eae8"
+            }
+          ],
           "stalled_items": [
             {
               "text": "Meta Ads - no activity",
               "department": "Ads",
               "source": "monday",
-              "monday_item_id": "12442817624",
+              "monday_item_id": "12582754130",
               "item_name": "Meta Ads",
-              "days_stalled": 17,
-              "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12442817624",
+              "days_stalled": 18,
+              "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12582754130",
               "id": "a4a0d012"
             }
           ]
@@ -553,7 +566,7 @@
               "source": "monday",
               "monday_item_id": "12402423553",
               "item_name": "Website SEO Update",
-              "days_stalled": 21,
+              "days_stalled": 22,
               "monday_url": "https://flowcompany.monday.com/boards/18099807701/pulses/12402423553",
               "id": "59be531a"
             }
@@ -562,12 +575,19 @@
       ],
       "status_change_suggestions": [],
       "risks": [],
-      "upcoming": [],
-      "next_up": null,
+      "upcoming": [
+        {
+          "text": "Meta Ads scheduled",
+          "when": "2026-07-21",
+          "source": "monday",
+          "monday_item_id": "12582754130"
+        }
+      ],
+      "next_up": "Mon Jul 21 - Meta Ads scheduled",
       "stats": {
-        "tasks": 4,
+        "tasks": 3,
         "todo": 0,
-        "working": 4,
+        "working": 3,
         "review": 0,
         "stuck": 0,
         "done": 0,
@@ -586,7 +606,7 @@
               "source": "MON",
               "date": "2026-07-03",
               "generated": true,
-              "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12442817624"
+              "monday_url": null
             },
             {
               "text": "First Clean Data reconciliation review completed",
@@ -613,7 +633,7 @@
               "text": "Patient demographic report from Paulo/Agencia WeMark",
               "department": "",
               "source": "meeting",
-              "days_stalled": 5,
+              "days_stalled": 6,
               "item_name": null,
               "monday_item_id": null,
               "monday_url": null,
@@ -623,7 +643,7 @@
               "text": "Connect Sohib's team with all six clinic leaders",
               "department": "",
               "source": "meeting",
-              "days_stalled": 5,
+              "days_stalled": 6,
               "item_name": null,
               "monday_item_id": null,
               "monday_url": null,
@@ -633,7 +653,9 @@
         }
       ],
       "status_change_suggestions": [],
-      "risks": [],
+      "risks": [
+        "Two open loops stalled 6 days with no follow-up"
+      ],
       "upcoming": [],
       "next_up": null,
       "stats": {
@@ -643,7 +665,7 @@
         "review": 0,
         "stuck": 0,
         "done": 0,
-        "monday_msgs": 2,
+        "monday_msgs": 0,
         "meetings": 2,
         "wa_msgs": 0
       },
@@ -657,7 +679,7 @@
     },
     {
       "client": "Maadi Law",
-      "headline": "No movement; awaiting client responses",
+      "headline": "Still quiet; no client response",
       "health": "needs_attention",
       "work_by_department": [
         {
@@ -669,9 +691,9 @@
               "department": "CRM",
               "source": "monday",
               "item_name": "Pipeline Build",
-              "monday_item_id": "[id: 12471734016]",
-              "days_stalled": 7,
-              "monday_url": null,
+              "monday_item_id": "12471734016",
+              "days_stalled": 8,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12471734016",
               "id": "83c0e9b4"
             }
           ]
@@ -686,7 +708,7 @@
               "source": "monday",
               "item_name": null,
               "monday_item_id": null,
-              "days_stalled": 7,
+              "days_stalled": 8,
               "monday_url": null,
               "id": "29588bf9"
             }
@@ -695,17 +717,10 @@
       ],
       "status_change_suggestions": [],
       "risks": [
-        "Week-long silence on CRM and Ads deliverables"
+        "Client unresponsive for 8 days across CRM and Ads"
       ],
-      "upcoming": [
-        {
-          "text": "Google ads scheduled",
-          "when": "2026-07-20",
-          "source": "monday",
-          "monday_item_id": "[id: 12471102491]"
-        }
-      ],
-      "next_up": "Sun Jul 20 - Google ads scheduled",
+      "upcoming": [],
+      "next_up": null,
       "stats": {
         "tasks": 15,
         "todo": 0,
@@ -713,7 +728,7 @@
         "review": 0,
         "stuck": 0,
         "done": 0,
-        "monday_msgs": 3,
+        "monday_msgs": 0,
         "meetings": 2,
         "wa_msgs": 0
       },
@@ -733,6 +748,14 @@
           "date": "2026-07-13",
           "generated": false,
           "monday_url": "https://flowcompany.monday.com/boards/18418241406/pulses/12471716300"
+        },
+        {
+          "text": "Built pipeline",
+          "who": null,
+          "source": "MON",
+          "date": "2026-07-13",
+          "generated": false,
+          "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12471734016"
         }
       ],
       "completed_history": [
@@ -777,20 +800,31 @@
     },
     {
       "client": "Steel Round Bars",
-      "headline": "Still quiet; three items overdue",
+      "headline": "Calling List tagged; handoff & directives still stalled",
       "health": "needs_attention",
       "work_by_department": [
         {
           "department": "CRM",
-          "highlights": [],
+          "highlights": [
+            {
+              "text": "Calling List tagged Ali Shaheer",
+              "department": "CRM",
+              "source": "monday",
+              "monday_item_id": "12579609244",
+              "item_name": "Calling List",
+              "days_stalled": null,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12579609244",
+              "id": "1231ab83"
+            }
+          ],
           "stalled_items": [
             {
               "text": "HANDOFF awaiting action",
               "department": "CRM",
               "source": "monday",
-              "item_name": "HANDOFF",
               "monday_item_id": "12470597527",
-              "days_stalled": 13,
+              "item_name": "HANDOFF",
+              "days_stalled": 14,
               "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12470597527",
               "id": "d4a1ff95"
             },
@@ -798,9 +832,9 @@
               "text": "1st DIRECTIVES no recent activity",
               "department": "CRM",
               "source": "monday",
-              "item_name": "1st DIRECTIVES",
               "monday_item_id": "12470651472",
-              "days_stalled": 13,
+              "item_name": "1st DIRECTIVES",
+              "days_stalled": 14,
               "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12470651472",
               "id": "bda075bf"
             }
@@ -812,13 +846,13 @@
       "upcoming": [],
       "next_up": null,
       "stats": {
-        "tasks": 6,
+        "tasks": 7,
         "todo": 0,
-        "working": 6,
+        "working": 7,
         "review": 0,
         "stuck": 0,
         "done": 0,
-        "monday_msgs": 0,
+        "monday_msgs": 1,
         "meetings": 0,
         "wa_msgs": 0
       },
@@ -870,7 +904,7 @@
               "source": "monday",
               "item_name": "Meta Ads",
               "monday_item_id": "11929332685",
-              "days_stalled": 41,
+              "days_stalled": 42,
               "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/11929332685",
               "id": "8393e334"
             }
@@ -886,7 +920,7 @@
               "source": "monday",
               "item_name": "Automations",
               "monday_item_id": "11831771926",
-              "days_stalled": 88,
+              "days_stalled": 89,
               "monday_url": "https://flowcompany.monday.com/boards/18099807701/pulses/11831771926",
               "id": "1332a5d2"
             }
@@ -926,34 +960,34 @@
       "items": [
         {
           "source": "meeting",
-          "blurb": "This meeting focused on establishing a partnership philosophy centered on trust and authentic relationships rather than transactional metrics. The discussion emphasized measuring real outcomes like pa",
+          "blurb": "This pilot meeting with Lucas focused on establishing a trust-based partnership philosophy rather than chasing lead volume metrics. The conversation emphasized measuring real outcomes like patient wal",
           "when": "2026-07-17"
         },
         {
           "source": "meeting",
-          "blurb": "This follow-up meeting reinforced the quality-over-volume approach, emphasizing real patient outcomes and health improvements rather than superficial metrics. The discussion built on a decade of relia",
+          "blurb": "This follow-up pilot meeting with Lucas reinforced the quality-over-volume approach and the importance of demonstrating real patient health improvements. The discussion built on a decade of reliable w",
           "when": "2026-07-17"
         },
         {
           "source": "meeting",
-          "blurb": "No overview or action items were provided for this meeting with Citrus Smiles. Based on the date and title pattern, this appears to be another touchpoint in the ongoing pilot engagement with Citrus Sm",
+          "blurb": "This meeting with Citrus Smiles had no overview or action items provided in the source data, indicating it may have been a brief check-in, technical issue, or administrative call. Without additional c",
           "when": "2026-07-15"
         },
         {
           "source": "meeting",
-          "blurb": "No overview or action items were provided for this meeting with Citrus Smiles. This appears to be another session on the same day as index 7, likely continuing discussions about their marketing system",
+          "blurb": "This meeting with Citrus Smiles had no overview or action items provided in the source data, indicating it may have been a brief check-in, technical issue, or administrative call. Without additional c",
           "when": "2026-07-15"
         }
       ],
       "possible_existing_client": null,
-      "summary": "The relationship with Citrus Smiles has centered on establishing a partnership philosophy built on trust, authentic relationships, and measuring real patient outcomes rather than transactional lead metrics. Across multiple meetings, the team has emphasized quality over volume, leveraging a decade of reliable work history to deepen vendor confidence and align stakeholders on a trust-based strategy. The discussions have consistently focused on demonstrating meaningful results through detailed patient data transparency, with the goal of integrating into their existing circle of trusted partners. Two additional touchpoints occurred but specific content was not captured, suggesting ongoing pilot engagement discussions around their marketing systems.",
+      "summary": "Flow Company has engaged with Lucas at Citrus Smiles across multiple touchpoints to establish a trust-based, long-term partnership philosophy centered on real patient outcomes rather than superficial lead metrics. The initial meetings emphasized quality over volume, authentic communication, and integration into Citrus Smiles' trusted circle of partners by demonstrating a decade of reliable work history and commitment to meaningful results like patient walk-ins and completed appointments. The relationship has progressed from foundational trust-building discussions to reinforcing alignment on strategy and transparency, with two additional brief check-ins that lacked detailed documentation but suggest ongoing engagement.",
       "action_items": [
         "Foster deeper trust and transparency with the client to enable mutual evaluation and collaboration effectiveness.",
         "Pursue integration into the existing circle of trusted partners and strengthen relationships to build on long-term trust and reliability.",
         "Provide detailed patient data counts to fulfill the request for transparency on the number of patient walk-ins relevant to the business context."
       ],
       "likelihood_percent": 45,
-      "likelihood_reason": "Multiple meetings show engagement, but no pricing, timeline, or concrete next steps mentioned."
+      "likelihood_reason": "Multiple meetings focused on trust-building philosophy, but no pricing, timeline, or concrete next step committed."
     },
     {
       "name": "Parth Patel",
@@ -963,56 +997,99 @@
       "items": [
         {
           "source": "meeting",
-          "blurb": "This discovery call with Parth Patel covered his four-year-old dental practice serving 9,000 to 10,000 people in a low-competition area with expected population growth to 15,000 to 16,000. The practic",
+          "blurb": "Parth Patel discussed his four-year-old dental practice serving a growing rural community of 9,000 to 10,000 people with low competition. The practice currently uses $500 per month Google Ads and mini",
           "when": "2026-07-16"
         },
         {
           "source": "meeting",
-          "blurb": "This follow-up meeting with Parth Patel reinforced details about his rural dental practice that leads the local digital space with over 600 five-star Google reviews and minimal competition, with plans",
+          "blurb": "This second meeting with Parth Patel covered his rural dental practice's strong local digital presence with over 600 five-star Google reviews and minimal competition. The practice is planning to move ",
           "when": "2026-07-16"
         }
       ],
       "possible_existing_client": null,
-      "summary": "Parth Patel operates a four-year-old dental practice serving 9,000 to 10,000 people in a low-competition area with expected population growth, currently using minimal marketing with 500 dollars monthly Google Ads and limited social media. Flow Company identified significant SEO weaknesses with 823 monthly visits mostly from non-local blog traffic and poor local keyword rankings, despite the practice leading the local digital space with over 600 five-star Google reviews. Across two meetings, Flow Company proposed a comprehensive five thousand dollar monthly retainer plus 1,500 to 3,000 dollars additional ad spend, positioning themselves as a full-service integrated marketing department covering SEO, ads, CRM, and content. Parth is reviewing multiple agencies this week before making a decision.",
+      "summary": "Parth Patel operates a four-year-old dental practice in a growing rural community of 9,000 to 10,000 people with plans to expand as the population reaches 15,000 to 16,000 in three to five years. Flow Company has presented a comprehensive marketing proposal across two meetings, analyzing the practice's current digital performance including 823 monthly organic visits, over 600 five-star Google reviews, and minimal local competition, while identifying opportunities to improve local high-intent keyword rankings. The proposal includes a $5,000 per month full-service retainer plus $1,500 to $3,000 in additional ad spend, positioning Flow as an integrated marketing department with services covering lead tracking, automated texts, review requests, SEO, and local service ads. Parth is currently comparing Flow Company's proposal with other agencies before making a decision.",
       "action_items": [
         "Review Flow Company's marketing deck and compare it with other marketing agencies contacted this week, then provide feedback and decision.",
         "Send Flow Company's marketing deck and detailed proposal including services, pricing, and case studies to Parth Patel for review."
       ],
-      "likelihood_percent": 60,
-      "likelihood_reason": "Received detailed proposal with specific pricing ($5k monthly retainer), actively comparing agencies this week."
+      "likelihood_percent": 70,
+      "likelihood_reason": "Received detailed $5,000/month proposal with pricing, actively comparing agencies this week, clear decision timeline."
     },
     {
-      "name": "Sanjeev Sharma",
+      "name": "Ridge Road Dentistry",
       "sources": [
         "meeting"
       ],
       "items": [
         {
           "source": "meeting",
-          "blurb": "This discovery call with Sanjeev Sharma of Sharma Dental identified critical lead conversion problems with up to 300 leads lacking timely follow-up, resulting in lost patient appointments and wasted a",
+          "blurb": "Mouawia Ghiba discussed ongoing struggles with marketing quality and lead generation at Ridge Road Dentistry. Past agencies failed to deliver financially-ready leads, and a recent website rebuild caus",
+          "when": "2026-07-20"
+        }
+      ],
+      "possible_existing_client": null,
+      "summary": "Mouawia Ghiba discussed ongoing struggles with marketing quality and lead generation at Ridge Road Dentistry. Past agencies failed to deliver financially-ready leads, and a recent website rebuild caused organic traffic to plummet from 468 to 138 monthly visits due to poor SEO implementation. The practice lacks an internal marketing team and dedicated intake staff for lead vetting, which is critical to avoid wasted spend. Flow Company's agency offers AI-driven campaigns at $3,500–$5,000 per month but does not provide the integrated call center lead qualification services that Mouawia considers essential.",
+      "action_items": [
+        "Continue searching for an agency that provides both comprehensive marketing and call center lead qualification services to improve lead quality and conversion.",
+        "Consider moving forward with Implant Machine agency after receiving feedback and evaluating their all-in-one marketing and call center solution.",
+        "Hire an additional front desk or intake person to improve lead handling capacity and follow-up effectiveness at Ridge Road Dentistry.",
+        "Share feedback and research findings on Implant Machine agency with Mouawia to assist in evaluation."
+      ],
+      "likelihood_percent": 15,
+      "likelihood_reason": "Considering competitor agency instead; Flow lacks the integrated call center services Mouawia considers essential."
+    },
+    {
+      "name": "Sharma Dental",
+      "sources": [
+        "meeting"
+      ],
+      "items": [
+        {
+          "source": "meeting",
+          "blurb": "Sanjeev Sharma discussed significant lead conversion problems at Sharma Dental, where up to 300 leads are not followed up properly, resulting in lost patient appointments and wasted ad spend. The prac",
           "when": "2026-07-16"
         },
         {
           "source": "meeting",
-          "blurb": "This second meeting with Sharma Dental dove deeper into operational challenges including poor weekend follow-up motivation and the need to centralize marketing efforts currently spread across multiple",
+          "blurb": "This second meeting with Sanjeev Sharma dove deeper into operational details around lead conversion challenges and marketing fragmentation at Sharma Dental. The discussion covered automated lead engag",
           "when": "2026-07-16"
         }
       ],
       "possible_existing_client": null,
-      "summary": "Sharma Dental faces critical lead conversion problems with up to 300 leads lacking timely follow-up due to fragmented vendors, poor weekend motivation, and no unified tracking or patient re-engagement automation. Flow Company identified a stark SEO gap with only 248 monthly organic visits compared to competitors' 5,000 visits and proposed an integrated platform at five thousand dollars monthly with three thousand dollars ad spend to consolidate marketing efforts. The discussions covered automated lead engagement features, paid advertising strategy using Google Ads and Meta with unique phone numbers for tracking, and plans for CRM and EMR integration with their future Dentrix Ascend system to reduce manual entry and enable patient self-scheduling. Sanjeev is evaluating the proposal with follow-up planned via text message next week.",
+      "summary": "Sanjeev Sharma at Sharma Dental faces critical lead conversion challenges with up to 300 leads not being followed up properly due to fragmented vendor relationships, lack of automation, and no unified tracking system. Flow Company has conducted two detailed meetings addressing these operational issues by proposing an integrated $5,000 per month platform combining SEO, paid ads, CRM, and automation with a team of five to seven specialists, along with features like missed call text triggers, consolidated inbox management, and unique phone number tracking for lead attribution. The discussions revealed significant growth opportunities including fixing the practice's low organic traffic of only 248 monthly visits compared to competitors' 5,000, implementing EMR integration with Dentrix Ascend to reduce manual entry and enable patient self-scheduling, and coordinating with existing Google Ads providers to streamline efforts. Sanjeev is evaluating the proposal with follow-up planned via text message.",
       "action_items": [
-        "Follow up with Sanjeev Sharma next week via text message to discuss potential next steps for engagement.",
+        "Follow up with Sanjeev Sharma next week via text message to discuss potential next steps and Flow's proposal further.",
         "Evaluate Flow Company's proposed integrated marketing and CRM system and respond to Sohib Boundaoui's follow-up text message after initial review.",
-        "Provide details on current staff and their follow-up workflow for leads to coordinate intake and marketing integration.",
         "Coordinate integration setup and customization of marketing and CRM platform with Sharma Dental, especially EMR integration with Dentrix Ascend when they transition.",
         "Collaborate with existing Google Ads providers at Sharma Dental to streamline marketing efforts and avoid duplicated work.",
-        "Perform SEO and website structure fixes including optimization of header tags, Google Business Profile, and consolidation of Facebook pages and Google profiles to improve visibility."
+        "Perform SEO and website structure fixes including optimization of header tags, Google Business Profile, and consolidation of Facebook pages and Google profiles.",
+        "Prepare customized CRM pipeline and automation workflows aligned with Sharma Dental's intake and clinical process including integration with Dentrix Ascend once adopted."
       ],
-      "likelihood_percent": 70,
-      "likelihood_reason": "Clear pain points identified, specific pricing proposed ($5k + $3k ad spend), follow-up scheduled."
+      "likelihood_percent": 75,
+      "likelihood_reason": "Deep operational discussions, detailed $5,000/month proposal accepted for review, scheduled follow-up text next week."
     }
   ],
   "meetings_digest": [
+    {
+      "title": "Mouawia Ghiba and Flow Company",
+      "date": "2026-07-20",
+      "client": "General comms",
+      "key_points": [
+        "Marketing Quality Issues: Past agencies failed to deliver quality, financially-ready leads; no internal marketing team exists, causing follow-up capacity problems.",
+        "SEO and Traffic Decline: Website rebuild cut organic search traffic from 468 to 138 monthly; SEO lacks location keywords, losing ground to competitors.",
+        "Lead Qualification Gap: No dedicated intake team; lead vetting is crucial to avoid wasted marketing spend; call center with vetting is a deal breaker.",
+        "Agency Service Limitations: Marketing agency offers AI-driven campaigns with fees $3,500–$5,000/month but lacks direct call center services, limiting fit.",
+        "Competitive Market: Competitors have up to 653 organic visits monthly; Ridge Road ranks on page two, needing better SEO and Google Business Profile use."
+      ],
+      "action_items": [
+        "Mouawia Ghiba",
+        "Continue searching for an agency that provides both comprehensive marketing and call center lead qualification services to improve lead quality and conversion (17:07)",
+        "Consider moving forward with Implant Machine agency after receiving feedback and evaluating their all-in-one marketing and call center solution (20:34)",
+        "Hire an additional front desk/intake person to improve lead handling capacity and follow-up effectiveness at Ridge Road Dentistry (05:04)",
+        "Sohib Boundaoui",
+        "Share feedback and research findings on Implant Machine agency with Mouawia to assist in evaluation before contract signing (21:28)"
+      ]
+    },
     {
       "title": "Full Smile Dental Review",
       "date": "2026-07-19",
@@ -1245,41 +1322,43 @@
     }
   ],
   "comms_flags": [
-    "Quality HVAC: Two critical Ads items (Google fix 35d, reports 48d) stalled over a month with no comms",
-    "Cotton Collections: Meta Ads access blocking Pixel setup for 8 days",
-    "Maadi Law: Week-long silence on CRM and Ads deliverables",
-    "Vous Physique: Meta Ads inactive since June 9 (41d), automations since April 23 (88d)"
+    "Quality HVAC: Two critical Ads items stalled over a month with no comms",
+    "Cotton Collections: Pixel setup blocked 9 days; campaign launch at risk",
+    "MedStation: Two open loops stalled 6 days with no follow-up",
+    "Maadi Law: Client unresponsive for 8 days across CRM and Ads"
   ],
   "blockers": [
-    "Full Smile: Ad tracking numbers routing awaiting confirmation (10d stalled)",
-    "Justice Consumer Law: Zoho admin permissions needed for SMS automation (6d stalled)",
-    "Cotton Collections: Meta Ads access needed for Pixel setup (8d stalled)",
-    "MedStation: Patient demographic report from Paulo/Agencia WeMark (5d stalled)"
+    "Full Smile: Ad tracking numbers routing awaiting confirmation (11d stalled)",
+    "Quality HVAC: Google Ads fix (36d stalled) and reports (49d stalled)",
+    "Justice Consumer Law: Zoho admin permissions needed for SMS automation (7d stalled)",
+    "Cotton Collections: Meta Ads access needed for Pixel setup (9d stalled)",
+    "Steel Round Bars: HANDOFF and 1st DIRECTIVES awaiting action (14d stalled)",
+    "Vous Physique: Meta Ads dark since June 9 (42d stalled), automations untouched since April 23 (89d stalled)"
   ],
   "this_week_priorities": [
     {
-      "client": "Quality HVAC",
-      "text": "Quality HVAC: Unblock Google Ads fix and reports (35d, 48d stalls)",
+      "client": "Billy Doe Meats",
+      "text": "Billy Doe Meats: Unblock creative pipeline and source fresh ad content",
       "action": null,
-      "id": "bfbe09ad"
+      "id": "9da07d3d"
     },
     {
-      "client": "Billy Doe Meats",
-      "text": "Billy Doe Meats: Deliver fresh creatives to combat content burnout",
+      "client": "Quality HVAC",
+      "text": "Quality HVAC: Resolve 36-day Google Ads fix and 49-day reporting stall",
       "action": null,
-      "id": "cc42cdae"
+      "id": "9ebd9a59"
     },
     {
       "client": "Cotton Collections",
-      "text": "Cotton Collections: Secure Meta Ads access for Pixel setup",
+      "text": "Cotton Collections: Secure Meta Ads access to unblock Pixel setup",
       "action": null,
-      "id": "f135e141"
+      "id": "b8f28064"
     },
     {
       "client": "Maadi Law",
-      "text": "Maadi Law: Follow up on pipeline review and ads awaiting client response",
+      "text": "Maadi Law: Re-engage client on CRM pipeline and ad campaign approvals",
       "action": null,
-      "id": "edfd8532"
+      "id": "fabc0763"
     }
   ],
   "auto_completed_alerts": [
