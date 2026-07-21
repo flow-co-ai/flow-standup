@@ -137,6 +137,9 @@ const NAZ_USER_ID = 70062990;
 // default. Enforced here in code rather than just requested in a system
 // prompt, so it can't be silently skipped or omitted by whatever authored
 // the draft.
+// EXCEPTION (Naz, 2026-07-21): the Video board is Sohib's own -- he IS the
+// default tag there, not an opt-in needsNaz addition. This is the one board
+// where that's deliberate, not a bug to "fix" back to the no-Sohib default.
 const BOARD_ASSIGNEES = {
   "18405754310": [ // Ads: Khurram Jamil + Ads Team
     { id: 102221064, kind: "person" },
@@ -149,6 +152,9 @@ const BOARD_ASSIGNEES = {
   "18418241405": [ // CRM: Ahmed Memon + Ali Shaheer
     { id: 108080159, kind: "person" },
     { id: 108080161, kind: "person" },
+  ],
+  "18100257069": [ // Video: Sohib Boundaoui (deliberate default, see note above)
+    { id: 69662034, kind: "person" },
   ],
 };
 
@@ -172,6 +178,13 @@ const BOARD_LABEL_IDS = {
   "Web+SEO": "18099807701",
   "Dev+SEO": "18099807701",
   CRM: "18418241405",
+  Video: "18100257069", // re-enabled as a real write target 2026-07-21 (Naz) --
+  // was previously excluded on purpose ("no Video board" rule from 2026-05-12,
+  // see monday-automation.md). Reversed: Naz wants video tasks postable here
+  // directly, auto-tagged to Sohib (see BOARD_ASSIGNEES above). Deliberately
+  // still absent from BOARD_ORDER below -- the daily automated audit/health
+  // check across "all 3 boards" stays 3, this is a manual-only path gated
+  // behind a human pressing Send in the dashboard, never fireflies-monday-watch.
 };
 
 // Client -> group id per board. Promoted from the "Client group IDs" prose
@@ -187,17 +200,21 @@ const BOARD_LABEL_IDS = {
 // that board. Same "verify before writing" caveat as the prose table applies
 // to any WRITE path (a few boards share a group id with another board's,
 // unconfirmed) -- reads here are best-effort and low-risk if slightly off.
+// Video sub-key added 2026-07-21 (Naz) -- pulled live from the actual Video
+// board (18100257069, still active, id confirmed via get_board_info) rather
+// than guessed. MedStation has no group there (onboarded after this board
+// went dormant in May) -- null until Naz confirms one should be created.
 const CLIENT_GROUPS = {
-  "Maadi Law": { Ads: "group_mm51vdbk", "Web+SEO": "group_mm51tkzh", CRM: "group_mm5112vv" },
-  MedStation: { Ads: "group_mm516qss", "Web+SEO": "group_mm51nc9h", CRM: "group_mm512p9w" },
-  "Quality HVAC": { Ads: "group_mm23tg6s", "Web+SEO": "group_mm231wbb", CRM: "group_mm231wbb" },
-  "Full Smile": { Ads: "group_mkxdznat", "Web+SEO": "group_mkxdmhbz", CRM: "group_mkxdmhbz" },
-  "Justice Consumer Law": { Ads: "group_mkqxyga2", "Web+SEO": "group_mkqxyga2", CRM: null },
-  Liferun: { Ads: "group_mkwj8zze", "Web+SEO": "group_mkwj9a1c", CRM: "group_mkwj9a1c" },
-  "BillyDoe Meats": { Ads: "group_mm2dt8f", "Web+SEO": "group_mm2dqm7n", CRM: null },
-  "Vous Physique": { Ads: "group_mm22cd1z", "Web+SEO": "group_mm231372", CRM: null },
-  "Steel Round Bars": { Ads: "group_mkqxskcn", "Web+SEO": "group_mkqxskcn", CRM: "group_mkqxskcn" },
-  "Flow Company": { Ads: "group_mkwjedjg", "Web+SEO": "group_mkwjem1v", CRM: null },
+  "Maadi Law": { Ads: "group_mm51vdbk", "Web+SEO": "group_mm51tkzh", CRM: "group_mm5112vv", Video: "group_mm5064vm" },
+  MedStation: { Ads: "group_mm516qss", "Web+SEO": "group_mm51nc9h", CRM: "group_mm512p9w", Video: null },
+  "Quality HVAC": { Ads: "group_mm23tg6s", "Web+SEO": "group_mm231wbb", CRM: "group_mm231wbb", Video: "group_mm2660b4" },
+  "Full Smile": { Ads: "group_mkxdznat", "Web+SEO": "group_mkxdmhbz", CRM: "group_mkxdmhbz", Video: "group_mkxd24va" },
+  "Justice Consumer Law": { Ads: "group_mkqxyga2", "Web+SEO": "group_mkqxyga2", CRM: null, Video: "group_mkqxyga2" },
+  Liferun: { Ads: "group_mkwj8zze", "Web+SEO": "group_mkwj9a1c", CRM: "group_mkwj9a1c", Video: "group_mkwj5qjb" },
+  "BillyDoe Meats": { Ads: "group_mm2dt8f", "Web+SEO": "group_mm2dqm7n", CRM: null, Video: "group_mm2ddrwm" },
+  "Vous Physique": { Ads: "group_mm22cd1z", "Web+SEO": "group_mm231372", CRM: null, Video: "group_mm2pyqs3" },
+  "Steel Round Bars": { Ads: "group_mkqxskcn", "Web+SEO": "group_mkqxskcn", CRM: "group_mkqxskcn", Video: "group_mkqxskcn" },
+  "Flow Company": { Ads: "group_mkwjedjg", "Web+SEO": "group_mkwjem1v", CRM: null, Video: "group_mkwj30hd" },
 };
 
 const BOARD_ORDER = ["Ads", "Web+SEO", "CRM"];
