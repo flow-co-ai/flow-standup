@@ -181,10 +181,11 @@ const BOARD_LABEL_IDS = {
   Video: "18100257069", // re-enabled as a real write target 2026-07-21 (Naz) --
   // was previously excluded on purpose ("no Video board" rule from 2026-05-12,
   // see monday-automation.md). Reversed: Naz wants video tasks postable here
-  // directly, auto-tagged to Sohib (see BOARD_ASSIGNEES above). Deliberately
-  // still absent from BOARD_ORDER below -- the daily automated audit/health
-  // check across "all 3 boards" stays 3, this is a manual-only path gated
-  // behind a human pressing Send in the dashboard, never fireflies-monday-watch.
+  // directly, auto-tagged to Sohib (see BOARD_ASSIGNEES above). Same-day
+  // follow-up: also added to BOARD_ORDER below -- initially left out on the
+  // assumption this was dashboard-only, but Naz confirmed the automated
+  // pipeline (fireflies-monday-watch) and status/search queries should see
+  // it too, not just manual dashboard writes.
 };
 
 // Client -> group id per board. Promoted from the "Client group IDs" prose
@@ -217,7 +218,7 @@ const CLIENT_GROUPS = {
   "Flow Company": { Ads: "group_mkwjedjg", "Web+SEO": "group_mkwjem1v", CRM: null, Video: "group_mkwj30hd" },
 };
 
-const BOARD_ORDER = ["Ads", "Web+SEO", "CRM"];
+const BOARD_ORDER = ["Ads", "Web+SEO", "CRM", "Video"]; // Video added 2026-07-21 (Naz) -- see note above
 
 // Everything a client has across all 3 boards, group-scoped (no keyword
 // filter, so nothing gets missed by naming), with FULL DETAIL -- each item's
@@ -292,10 +293,11 @@ async function mondayBoardScan(boardId) {
   return groups.flatMap((g) => (g.items_page ? g.items_page.items || [] : []).map((it) => ({ ...it, group: g.title })));
 }
 
-// Search across all 3 real boards at once (Ads/Web+SEO/CRM, never Video) for
-// when the client isn't known yet. Two tiers, deliberately, to avoid pulling
-// full update history for every item on every board just to check names:
-//   1. Cheap scan (name/group/updated_at only) across every item on all 3
+// Search across all 4 real boards at once (Ads/Web+SEO/CRM/Video -- Video
+// added 2026-07-21, previously excluded) for when the client isn't known yet.
+// Two tiers, deliberately, to avoid pulling full update history for every
+// item on every board just to check names:
+//   1. Cheap scan (name/group/updated_at only) across every item on all 4
 //      boards. Candidates are anything whose normalized name matches the
 //      normalized search term, OR anything touched in the last
 //      RECENT_ACTIVITY_DAYS days (a stale item's name not matching is a real
