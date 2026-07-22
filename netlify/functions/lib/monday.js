@@ -205,17 +205,28 @@ const BOARD_LABEL_IDS = {
 // board (18100257069, still active, id confirmed via get_board_info) rather
 // than guessed. MedStation has no group there (onboarded after this board
 // went dormant in May) -- null until Naz confirms one should be created.
+// Full audit + gap-fill 2026-07-22 (Naz): every client below now has a real,
+// live-confirmed group id on all 4 boards, no nulls and no "unconfirmed"
+// guesses left. Ads' "Steel Round Bars" group had gone missing entirely
+// (existed as of the 2026-07-10 Tom Sugar correction, gone by 2026-07-22 --
+// cause unknown, recreated). CRM's "Justice Consumer Law" group already
+// existed live but had never been recorded here (was stored as null).
+// CRM's "Billy Doe Meats"/"Vous Physique"/"Flow Company" groups didn't exist
+// at all -- created fresh. Ids that are identical across boards for the same
+// client (e.g. Full Smile's CRM id matching its Web+SEO id) are coincidental,
+// not a bug -- confirmed correct against each board's own live group list,
+// not assumed.
 const CLIENT_GROUPS = {
   "Maadi Law": { Ads: "group_mm51vdbk", "Web+SEO": "group_mm51tkzh", CRM: "group_mm5112vv", Video: "group_mm5064vm" },
-  MedStation: { Ads: "group_mm516qss", "Web+SEO": "group_mm51nc9h", CRM: "group_mm512p9w", Video: "group_mm5gq0cw" }, // group created 2026-07-21 (Naz)
+  MedStation: { Ads: "group_mm516qss", "Web+SEO": "group_mm51nc9h", CRM: "group_mm512p9w", Video: "group_mm5gq0cw" },
   "Quality HVAC": { Ads: "group_mm23tg6s", "Web+SEO": "group_mm231wbb", CRM: "group_mm231wbb", Video: "group_mm2660b4" },
   "Full Smile": { Ads: "group_mkxdznat", "Web+SEO": "group_mkxdmhbz", CRM: "group_mkxdmhbz", Video: "group_mkxd24va" },
-  "Justice Consumer Law": { Ads: "group_mkqxyga2", "Web+SEO": "group_mkqxyga2", CRM: null, Video: "group_mkqxyga2" },
+  "Justice Consumer Law": { Ads: "group_mkqxyga2", "Web+SEO": "group_mkqxyga2", CRM: "group_mm5gdrn3", Video: "group_mkqxyga2" }, // CRM group existed live, never recorded until 2026-07-22
   Liferun: { Ads: "group_mkwj8zze", "Web+SEO": "group_mkwj9a1c", CRM: "group_mkwj9a1c", Video: "group_mkwj5qjb" },
-  "BillyDoe Meats": { Ads: "group_mm2dt8f", "Web+SEO": "group_mm2dqm7n", CRM: null, Video: "group_mm2ddrwm" },
-  "Vous Physique": { Ads: "group_mm22cd1z", "Web+SEO": "group_mm231372", CRM: null, Video: "group_mm2pyqs3" },
-  "Steel Round Bars": { Ads: "group_mkqxskcn", "Web+SEO": "group_mkqxskcn", CRM: "group_mkqxskcn", Video: "group_mkqxskcn" },
-  "Flow Company": { Ads: "group_mkwjedjg", "Web+SEO": "group_mkwjem1v", CRM: null, Video: "group_mkwj30hd" },
+  "BillyDoe Meats": { Ads: "group_mm2dt8f", "Web+SEO": "group_mm2dqm7n", CRM: "group_mm5gt78e", Video: "group_mm2ddrwm" }, // CRM group created 2026-07-22
+  "Vous Physique": { Ads: "group_mm22cd1z", "Web+SEO": "group_mm231372", CRM: "group_mm5gyktb", Video: "group_mm2pyqs3" }, // CRM group created 2026-07-22
+  "Steel Round Bars": { Ads: "group_mm5gmpwf", "Web+SEO": "group_mkqxskcn", CRM: "group_mkqxskcn", Video: "group_mkqxskcn" }, // Ads group recreated 2026-07-22, old one had vanished
+  "Flow Company": { Ads: "group_mkwjedjg", "Web+SEO": "group_mkwjem1v", CRM: "group_mm5g4pdh", Video: "group_mkwj30hd" }, // CRM group created 2026-07-22
 };
 
 const BOARD_ORDER = ["Ads", "Web+SEO", "CRM", "Video"]; // Video added 2026-07-21 (Naz) -- see note above
