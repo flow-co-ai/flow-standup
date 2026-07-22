@@ -82,7 +82,7 @@ Full audit 2026-07-22 -- every client below now has a real, live-confirmed group
 - Full Smile: group_mkxdznat / group_mkxdmhbz / group_mkxdmhbz / group_mkxd24va (CRM and Web+SEO share an id -- confirmed coincidental)
 - Justice Consumer Law: group_mkqxyga2 / group_mkqxyga2 / group_mm5gdrn3 / group_mkqxyga2
 - Liferun: group_mkwj8zze / group_mkwj9a1c / group_mkwj9a1c / group_mkwj5qjb (CRM and Web+SEO share an id -- confirmed coincidental)
-- BillyDoe Meats: group_mm2dt8f / group_mm2dqm7n / group_mm5gt78e / group_mm2ddrwm
+- Billy Doe Meats: group_mm2dt8f / group_mm2dqm7n / group_mm5gt78e / group_mm2ddrwm
 - Vous Physique: group_mm22cd1z / group_mm231372 / group_mm5gyktb / group_mm2pyqs3
 - Steel Round Bars: group_mm5gmpwf / group_mkqxskcn / group_mkqxskcn / group_mkqxskcn (Ads group recreated 2026-07-22, its old one had vanished from the live board)
 - Flow Company (internal): group_mkwjedjg / group_mkwjem1v / group_mm5g4pdh / group_mkwj30hd
