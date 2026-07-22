@@ -106,6 +106,24 @@ Prefer folding new information into an EXISTING item over creating a new one:
 Less is more -- one sequenced workflow is one item with steps in the update,
 not several items.
 
+## Prerequisite check before drafting (Naz, 2026-07-22)
+Before drafting or editing a task, ask whether it silently assumes
+infrastructure/a tool/an integration exists for THIS client that hasn't
+actually been confirmed -- a GHL account, HCP, a specific CRM, a pixel/
+tracking setup, an ad account, etc. Real example that triggered this rule: a
+"build a GHL reporting dashboard" task got drafted for a client with zero GHL
+setup at all (confirmed against flow/GHL Automations -- Flow Company.md and
+an empty, brand-new CRM group -- nothing built there yet). Check that doc (or
+equivalent per-client setup context) and the client's own existing board
+presence -- an empty/new group is itself a signal nothing's been built yet --
+before assuming a prerequisite is actually there. If it's missing or
+unconfirmed: don't draft the dependent task as if it's standalone-ready. Fold
+both into ONE item as explicit sequenced steps (same single-item bias as
+above) -- prerequisite first, dependent task second, with a line making the
+dependency and sequencing explicit (e.g. "don't start step 2 before step 1 is
+done"). If it's genuinely unclear whether the prerequisite exists, flag it for
+Naz rather than guessing either way.
+
 ## Update format (§7) -- updateBody MUST follow this exactly
 1. Open with "<p>Salam,</p>" -- nothing else, no @-tag at the start.
 2. Body as "<ul><li>...</li></ul>" bullets. Knowledgeable (don't dumb it down),
