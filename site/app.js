@@ -1132,7 +1132,7 @@ function buildCard(entry, priorities, displayName) {
 
   if (highlights.length) {
     const sec = el('div', { class: 'card-section' });
-    sec.append(el('span', { class: 'section-label', text: 'What happened' }));
+    sec.append(el('span', { class: 'section-label', text: "What's Happening" }));
     highlights.forEach(h => { const r = buildRow(h, false); if (r) sec.append(r); });
     sections.append(sec);
   }
