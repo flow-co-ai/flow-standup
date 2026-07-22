@@ -206,7 +206,7 @@ const BOARD_LABEL_IDS = {
 // went dormant in May) -- null until Naz confirms one should be created.
 const CLIENT_GROUPS = {
   "Maadi Law": { Ads: "group_mm51vdbk", "Web+SEO": "group_mm51tkzh", CRM: "group_mm5112vv", Video: "group_mm5064vm" },
-  MedStation: { Ads: "group_mm516qss", "Web+SEO": "group_mm51nc9h", CRM: "group_mm512p9w", Video: null },
+  MedStation: { Ads: "group_mm516qss", "Web+SEO": "group_mm51nc9h", CRM: "group_mm512p9w", Video: "group_mm5gq0cw" }, // group created 2026-07-21 (Naz)
   "Quality HVAC": { Ads: "group_mm23tg6s", "Web+SEO": "group_mm231wbb", CRM: "group_mm231wbb", Video: "group_mm2660b4" },
   "Full Smile": { Ads: "group_mkxdznat", "Web+SEO": "group_mkxdmhbz", CRM: "group_mkxdmhbz", Video: "group_mkxd24va" },
   "Justice Consumer Law": { Ads: "group_mkqxyga2", "Web+SEO": "group_mkqxyga2", CRM: null, Video: "group_mkqxyga2" },
