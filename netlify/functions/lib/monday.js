@@ -223,7 +223,7 @@ const CLIENT_GROUPS = {
   "Full Smile": { Ads: "group_mkxdznat", "Web+SEO": "group_mkxdmhbz", CRM: "group_mkxdmhbz", Video: "group_mkxd24va" },
   "Justice Consumer Law": { Ads: "group_mkqxyga2", "Web+SEO": "group_mkqxyga2", CRM: "group_mm5gdrn3", Video: "group_mkqxyga2" }, // CRM group existed live, never recorded until 2026-07-22
   Liferun: { Ads: "group_mkwj8zze", "Web+SEO": "group_mkwj9a1c", CRM: "group_mkwj9a1c", Video: "group_mkwj5qjb" },
-  "BillyDoe Meats": { Ads: "group_mm2dt8f", "Web+SEO": "group_mm2dqm7n", CRM: "group_mm5gt78e", Video: "group_mm2ddrwm" }, // CRM group created 2026-07-22
+  "Billy Doe Meats": { Ads: "group_mm2dt8f", "Web+SEO": "group_mm2dqm7n", CRM: "group_mm5gt78e", Video: "group_mm2ddrwm" }, // key renamed 2026-07-22 from "BillyDoe Meats" (no space) -- that never matched the real Monday group title or what fireflies-monday-watch actually writes to item.group ("Billy Doe Meats", with space), so every lookup for this client silently failed. Root cause of the live "no known group" alert Naz hit.
   "Vous Physique": { Ads: "group_mm22cd1z", "Web+SEO": "group_mm231372", CRM: "group_mm5gyktb", Video: "group_mm2pyqs3" }, // CRM group created 2026-07-22
   "Steel Round Bars": { Ads: "group_mm5gmpwf", "Web+SEO": "group_mkqxskcn", CRM: "group_mkqxskcn", Video: "group_mkqxskcn" }, // Ads group recreated 2026-07-22, old one had vanished
   "Flow Company": { Ads: "group_mkwjedjg", "Web+SEO": "group_mkwjem1v", CRM: "group_mm5g4pdh", Video: "group_mkwj30hd" }, // CRM group created 2026-07-22
