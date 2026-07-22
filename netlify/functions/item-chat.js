@@ -69,20 +69,24 @@ probably also drop its priority number).
 - Ads: 18405754310 -- Meta/Google/LSA/landing pages/graphics/review campaigns. Media buying only.
 - Web + SEO (aka "Dev+SEO"): 18099807701 -- website build, automations, GBP, texting policy, reporting. NOT CRM/GHL work.
 - CRM: 18418241405 (subitems live on linked board 18418241406) -- all GHL/CRM builds, automations, integrations (Kommo/Como, Clio, HCP, NextGen, Sugar). Owned by Ahmed Memon + Ali Shaheer.
-- Video board (18100257069): DO NOT USE for anything. Video work folds into the Ads item it serves.
+- Video: 18100257069 -- reopened 2026-07-21 (previously "DO NOT USE," that's stale, ignore any older copy of this rule you find). Genuine standalone video production/content (shoots, edits, YouTube uploads) goes here, default assignee Sohib alone. Campaign creative that serves a specific live ad still folds into that Ads item instead, same as before.
 
-## Client group IDs (Ads / Web+SEO / CRM)
-- Maadi Law: group_mm51vdbk / group_mm51tkzh / group_mm5112vv
-- MedStation: group_mm516qss / group_mm51nc9h / group_mm512p9w
-- Quality HVAC: group_mm23tg6s / group_mm231wbb / group_mm231wbb (verify CRM id before writing, can differ despite same title)
-- Full Smile: group_mkxdznat / group_mkxdmhbz / group_mkxdmhbz (verify CRM id before writing)
-- Justice Consumer Law: group_mkqxyga2 / group_mkqxyga2 / no CRM group yet
-- Liferun: group_mkwj8zze / group_mkwj9a1c / group_mkwj9a1c (verify CRM id before writing)
-- BillyDoe Meats: group_mm2dt8f / group_mm2dqm7n / no CRM group yet
-- Vous Physique: group_mm22cd1z / group_mm231372 / no CRM group yet (confirm before writing)
-- Steel Round Bars: group_mkqxskcn / group_mkqxskcn / group_mkqxskcn (verify CRM id before writing)
-- Flow Company (internal): group_mkwjedjg / group_mkwjem1v / no CRM group yet
-If the client or its group id isn't listed here or you're unsure it's current, look it up on Monday rather than guessing -- group IDs can change.
+## IMPORTANT: a subitem's parent lives on ONE board -- board and parentItemId must never disagree
+A subitem (parentItemId set) belongs to whatever board its PARENT item is actually on. If you are changing an existing item/subitem's board (not drafting fresh), and it currently has a parentItemId, moving it to a different board almost always means it can no longer be that same parent's subitem -- the old parent lives on the old board, not the new one. When a board change is requested on something that's a subitem: either (a) find/create the equivalent parent workstream on the NEW board and re-point parentItemId there, or (b) if there's no sensible parent on the new board, convert it to a plain top-level item instead (clear parentItemId) and say so explicitly, or (c) ask Naz which he wants rather than silently leaving a stale parentItemId that now points at an item on a board this one no longer lives on. Never leave board and parentItemId pointing at two different boards at once -- that's a broken state, not a valid one.
+
+## Client group IDs (Ads / Web+SEO / CRM / Video)
+Full audit 2026-07-22 -- every client below now has a real, live-confirmed group on all 4 boards. No more "verify before writing" guesses; these were checked directly against each board's live group list.
+- Maadi Law: group_mm51vdbk / group_mm51tkzh / group_mm5112vv / group_mm5064vm
+- MedStation: group_mm516qss / group_mm51nc9h / group_mm512p9w / group_mm5gq0cw
+- Quality HVAC: group_mm23tg6s / group_mm231wbb / group_mm231wbb / group_mm2660b4 (CRM and Web+SEO share an id -- confirmed coincidental, not a bug)
+- Full Smile: group_mkxdznat / group_mkxdmhbz / group_mkxdmhbz / group_mkxd24va (CRM and Web+SEO share an id -- confirmed coincidental)
+- Justice Consumer Law: group_mkqxyga2 / group_mkqxyga2 / group_mm5gdrn3 / group_mkqxyga2
+- Liferun: group_mkwj8zze / group_mkwj9a1c / group_mkwj9a1c / group_mkwj5qjb (CRM and Web+SEO share an id -- confirmed coincidental)
+- BillyDoe Meats: group_mm2dt8f / group_mm2dqm7n / group_mm5gt78e / group_mm2ddrwm
+- Vous Physique: group_mm22cd1z / group_mm231372 / group_mm5gyktb / group_mm2pyqs3
+- Steel Round Bars: group_mm5gmpwf / group_mkqxskcn / group_mkqxskcn / group_mkqxskcn (Ads group recreated 2026-07-22, its old one had vanished from the live board)
+- Flow Company (internal): group_mkwjedjg / group_mkwjem1v / group_mm5g4pdh / group_mkwj30hd
+If the client or its group id isn't listed here or you're unsure it's current, look it up on Monday rather than guessing -- group IDs can change, and this table has gone stale before (missed two board additions in a row -- always cross-check lib/monday.js's CLIENT_GROUPS, the real source of truth, if anything here looks off).
 
 ## MANDATORY board audit before drafting anything new
 Before drafting a new item, subitem, or update, you MUST look up the relevant
@@ -416,8 +420,10 @@ function buildEditFields(item, input) {
 
   let liveUpdate = null;
   if (input.boardId !== undefined || input.blocked !== undefined || input.needsNaz !== undefined) {
-    const boardId = input.boardId || (item.payload && item.payload.boardId) || BOARD_LABEL_IDS[item.board];
+    const oldBoardId = (item.payload && item.payload.boardId) || BOARD_LABEL_IDS[item.board];
+    const boardId = input.boardId || oldBoardId;
     if (!boardId) return { error: "need a boardId to set or change assignees on this item -- ask Naz which board it belongs to" };
+    const boardActuallyChanged = !!(oldBoardId && boardId !== oldBoardId);
 
     // Preserve whichever of blocked/needsNaz isn't being touched right now --
     // resolvePayloadFlags reads the explicit fields if present, falling back
@@ -442,6 +448,22 @@ function buildEditFields(item, input) {
       const existingCV = item.payload.columnValues;
       const updateBody = swapUpdateBodyMentions(item.payload.updateBody, columnValues[PEOPLE_COLUMN].personsAndTeams);
       const updatedPayload = { ...item.payload, boardId, blocked, needsNaz, columnValues, updateBody };
+
+      // Same fix as queue.js's applyBoardReassignment -- a subitem's board is
+      // dictated entirely by its parent (create_subitem only ever sends
+      // parent_item_id to Monday, never payload.boardId), so an actual board
+      // change here can't keep this a valid subitem of its old parent. Detach
+      // it into a plain top-level item rather than leaving board and
+      // parentItemId disagreeing.
+      let detachedNote = null;
+      if (boardActuallyChanged && item.payload.mode === "create_subitem" && item.payload.parentItemId) {
+        updatedPayload.mode = "create_item";
+        delete updatedPayload.parentItemId;
+        delete updatedPayload.parentItemName;
+        const oldParentLabel = item.payload.parentItemName || `#${item.payload.parentItemId}`;
+        detachedNote = `Detached from its parent (was a subitem of ${oldParentLabel}) -- that parent lives on the old board. Now a standalone item -- re-parent it if it should be a subitem of something on the new board instead.`;
+      }
+
       patch.payload = updatedPayload;
 
       const assigned = assignedToLine(columnValues[PEOPLE_COLUMN].personsAndTeams);
@@ -449,7 +471,7 @@ function buildEditFields(item, input) {
       const noteBase = (priorAssigned && item.note && item.note.includes(priorAssigned))
         ? item.note.replace(priorAssigned, "").replace(/\s*\/\s*$/, "").trim()
         : item.note;
-      patch.note = [noteBase, assigned].filter(Boolean).join(" / ");
+      patch.note = [noteBase, assigned, detachedNote].filter(Boolean).join(" / ");
     }
 
     if (item.mondayItemId) {
