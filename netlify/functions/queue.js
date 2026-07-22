@@ -65,7 +65,31 @@ function applyBoardReassignment(existingItem, patch) {
   }
 
   const updateBody = swapUpdateBodyMentions(newPayload.updateBody, columnValues[PEOPLE_COLUMN].personsAndTeams);
-  const merged = { ...patch, payload: { ...newPayload, columnValues, updateBody } };
+  const updatedPayload = { ...newPayload, columnValues, updateBody };
+
+  // A subitem's board is dictated ENTIRELY by its parent (create_subitem's
+  // mutation only takes parent_item_id -- payload.boardId/groupId are never
+  // even sent to Monday for this mode). Switching board here while
+  // parentItemId still points at the OLD parent leaves board and
+  // parentItemId disagreeing -- confirmed live bug 2026-07-21 (Naz): a JCL
+  // item ("Message: JCL Digital, 7/15") was a subitem of "Auto Reply Setup"
+  // (a Web+SEO item), got switched to CRM via this exact dropdown, and kept
+  // pointing at that Web+SEO parent -- it would have silently landed back
+  // on Web+SEO under the old parent when sent, no matter what the card
+  // displayed. Detach it into a plain top-level item instead of leaving that
+  // silently broken -- visible in the note, and in the UI via foMondayNameRow
+  // once parentItemId/parentItemName are gone (addon.js already switches its
+  // label correctly based on mode, no frontend change needed for this part).
+  let detachedNote = null;
+  if (oldPayload.mode === "create_subitem" && oldPayload.parentItemId) {
+    updatedPayload.mode = "create_item";
+    delete updatedPayload.parentItemId;
+    delete updatedPayload.parentItemName;
+    const oldParentLabel = oldPayload.parentItemName || `#${oldPayload.parentItemId}`;
+    detachedNote = `Detached from its parent (was a subitem of ${oldParentLabel}) -- that parent lives on the old board, not ${patch.board || newBoardId}. Now a standalone item -- re-parent it via chat if it should be a subitem of something on the new board instead.`;
+  }
+
+  const merged = { ...patch, payload: updatedPayload };
   // Keep the "Assigned to: X, Y" line in note (item-chat.js's system prompt
   // context) in sync too, same swap buildEditFields already does for a
   // chat-driven board change -- find-and-replace the OLD line, not append a
@@ -75,7 +99,7 @@ function applyBoardReassignment(existingItem, patch) {
   const noteBase = (oldAssignedLine && existingItem.note && existingItem.note.includes(oldAssignedLine))
     ? existingItem.note.replace(oldAssignedLine, "").replace(/\s*\/\s*$/, "").trim()
     : existingItem.note;
-  merged.note = [noteBase, newAssignedLine].filter(Boolean).join(" / ");
+  merged.note = [noteBase, newAssignedLine, detachedNote].filter(Boolean).join(" / ");
   return merged;
 }
 
