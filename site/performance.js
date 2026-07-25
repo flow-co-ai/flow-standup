@@ -1,36 +1,36 @@
-// Performance tab — fetches daily pulse JSONs from flow-analyst and renders per-client cards.
+// Performance tab — fetches daily pulse JSONs and renders the scan strip + client cards.
 
 const PULSE_BASE = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/refs/heads/main/pulse';
 
 // Maps standup client display names → pulse slug (covers known aliases).
 const PULSE_SLUG = {
-  'Billy Doe Meats':      'billy-doe',
-  'Cotton Collections':   'cotton-collections',
-  'Flow Company':         'flow-company',
-  'Full Smile':           'full-smile',
-  'Healing Helps':        'healing-helps',
-  'HVAC':                 'hvac',
-  'Quality HVAC':         'hvac',
-  'Quality HVAC by Fibid':'hvac',
-  'Justice Consumer Law': 'jcl',
-  'Liferun':              'liferun',
-  'Maadi Law':            'maadi-law',
-  'Maadi Law, LLC':       'maadi-law',
-  'Steel Round Bars':     'steel-round-bars',
-  'Vous Physique':        'vous-physique',
+  'Billy Doe Meats':       'billy-doe',
+  'Cotton Collections':    'cotton-collections',
+  'Flow Company':          'flow-company',
+  'Full Smile':            'full-smile',
+  'Healing Helps':         'healing-helps',
+  'HVAC':                  'hvac',
+  'Quality HVAC':          'hvac',
+  'Quality HVAC by Fibid': 'hvac',
+  'Justice Consumer Law':  'jcl',
+  'Liferun':               'liferun',
+  'Maadi Law':             'maadi-law',
+  'Maadi Law, LLC':        'maadi-law',
+  'Steel Round Bars':      'steel-round-bars',
+  'Vous Physique':         'vous-physique',
 };
 
 // Pulse-only clients that may not appear in the standup.
 const PULSE_ONLY = [
-  { client: 'Vous Physique',    slug: 'vous-physique' },
-  { client: 'Maadi Law, LLC',   slug: 'maadi-law' },
-  { client: 'Flow Company',     slug: 'flow-company' },
+  { client: 'Vous Physique',      slug: 'vous-physique' },
+  { client: 'Maadi Law, LLC',     slug: 'maadi-law' },
+  { client: 'Flow Company',       slug: 'flow-company' },
   { client: 'Cotton Collections', slug: 'cotton-collections' },
-  { client: 'Healing Helps',    slug: 'healing-helps' },
-  { client: 'Steel Round Bars', slug: 'steel-round-bars' },
+  { client: 'Healing Helps',      slug: 'healing-helps' },
+  { client: 'Steel Round Bars',   slug: 'steel-round-bars' },
 ];
 
-// ── minimal DOM builder (same pattern as app.js) ──────────────────
+// ── DOM builder (same pattern as app.js) ──────────────────────────
 
 function el(tag, props, ...children) {
   const e = document.createElement(tag);
@@ -39,7 +39,7 @@ function el(tag, props, ...children) {
     else if (k === 'text')                                    e.textContent = v;
     else if (k === 'html')                                    e.innerHTML = v;
     else if (k.startsWith('on') && typeof v === 'function')  e[k] = v;
-    else if (k === 'style'     && typeof v === 'object')     Object.assign(e.style, v);
+    else if (k === 'style'      && typeof v === 'object')    Object.assign(e.style, v);
     else                                                      e.setAttribute(k, v);
   }
   for (const c of children.flat()) {
@@ -49,12 +49,38 @@ function el(tag, props, ...children) {
   return e;
 }
 
-// ── formatting helpers ────────────────────────────────────────────
+// ── Color tokens ──────────────────────────────────────────────────
+
+const C = {
+  olive:  '#A9B478',
+  amber:  '#d9a441',
+  orange: '#d96c4a',
+  muted:  '#6b7060',
+  cream:  '#EDE9DA',
+};
+
+function statusColor(score) {
+  if (score == null) return C.muted;
+  if (score >= 80)   return C.olive;
+  if (score >= 50)   return C.amber;
+  return C.orange;
+}
+
+// Sparkline stroke color based on delta; inverted = positive delta is bad (e.g. CPL).
+function deltaColor(pct, inverted = false) {
+  if (pct == null) return C.muted;
+  const bad = inverted ? pct : -pct;
+  if (bad <= 10)  return C.olive;
+  if (bad <= 30)  return C.amber;
+  return C.orange;
+}
+
+// ── Formatting ────────────────────────────────────────────────────
 
 function fmtMoney(n) {
   if (n == null || isNaN(n)) return '—';
   if (n >= 1000) return '$' + (n / 1000).toFixed(1) + 'k';
-  return '$' + n.toFixed(0);
+  return '$' + (+n).toFixed(0);
 }
 
 function fmtNum(n) {
@@ -64,225 +90,425 @@ function fmtNum(n) {
 
 function fmtDate(iso) {
   if (!iso) return '';
-  try { return new Date(iso + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }
-  catch { return iso; }
+  try {
+    return new Date(iso + 'T12:00:00Z')
+      .toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      .toUpperCase();
+  } catch { return iso.slice(0, 10); }
 }
 
-function deltaEl(pct, invertColors) {
-  if (pct == null) return null;
-  const up   = pct >= 0;
-  const sign = up ? '+' : '';
-  // For spend: up = more spend = neutral-ish; for leads: up = good.
-  // invertColors=true means up is bad (e.g. CPL going up).
-  let cls;
-  if (invertColors) cls = up ? 'down' : 'up';
-  else              cls = up ? 'up'   : 'down';
-  const arrow = up ? '▲' : '▼';
-  return el('span', { class: `perf-delta ${cls}`, text: `${arrow} ${sign}${pct}%` });
+function fmtPct(pct) {
+  if (pct == null) return '—';
+  return (pct >= 0 ? '+' : '') + pct + '%';
 }
 
-// ── card builders ─────────────────────────────────────────────────
-
-function buildStat(label, value, delta) {
-  const stat = el('div', { class: 'perf-stat' });
-  stat.append(el('span', { class: 'perf-stat-label', text: label }));
-  const valueEl = el('span', { class: 'perf-stat-value', text: value });
-  stat.append(valueEl);
-  if (delta) stat.append(delta);
-  return stat;
+// Extract a short human label from a GHL error string, never exposing raw JSON.
+function extractGhlError(err) {
+  if (!err) return 'error';
+  if (err.includes('not_set')) return 'no token';
+  const m = err.match(/\{[^}]{0,300}\}/);
+  if (m) {
+    try {
+      const p = JSON.parse(m[0]);
+      if (p.message) return p.message.toLowerCase().replace(/['"]/g, '').slice(0, 32);
+    } catch {}
+  }
+  const colon = err.indexOf(':');
+  return ((colon >= 0 ? err.slice(colon + 1).trim() : err)).slice(0, 32);
 }
 
-function buildWindsorBlock(windsor, deltas) {
-  const t = windsor.totals;
+// ── Sparkline ─────────────────────────────────────────────────────
+// Returns an inline SVG string. Renders a flat gray midline for empty/missing series
+// so old pulse JSONs (without the series block) never break the page.
 
-  const block = el('div', { class: 'perf-block' });
-  block.append(el('div', { class: 'perf-block-label', text: 'Windsor · Paid & Organic' }));
+function sparkline(values, color, w = 80, h = 22) {
+  const nums = (values || [])
+    .filter(v => v != null && isFinite(+v))
+    .map(Number);
 
-  const stats = el('div', { class: 'perf-stats' });
-
-  const spendDelta = deltas?.spend_7d_pct != null
-    ? deltaEl(deltas.spend_7d_pct, false) : null;
-  stats.append(buildStat('Spend', fmtMoney(t?.spend), spendDelta));
-
-  const leadsDelta = deltas?.leads_7d_pct != null
-    ? deltaEl(deltas.leads_7d_pct, false) : null;
-  stats.append(buildStat('Leads', fmtNum(t?.leads), leadsDelta));
-
-  if (t?.cpl > 0) {
-    stats.append(buildStat('Cost / lead', fmtMoney(t.cpl)));
+  if (nums.length < 2) {
+    const mid = (h / 2).toFixed(1);
+    return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg"><line x1="0" y1="${mid}" x2="${w}" y2="${mid}" stroke="${C.muted}" stroke-width="1.5" opacity="0.35"/></svg>`;
   }
 
-  const gbp = t?.byChannel?.gbp;
-  if (gbp?.actions > 0) {
-    stats.append(buildStat('GBP actions', fmtNum(gbp.actions)));
+  const min = Math.min(...nums);
+  const max = Math.max(...nums);
+  const range = max - min || 1;
+  const pad = 2;
+
+  const pts = nums.map((v, i) => {
+    const x = (i / (nums.length - 1)) * w;
+    const y = h - pad - ((v - min) / range) * (h - 2 * pad);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>`;
+}
+
+// ── Derived series ────────────────────────────────────────────────
+
+function roasSeries(series) {
+  return (series.revenue || []).map((rev, i) => {
+    const s = (series.spend || [])[i];
+    return (s > 0) ? rev / s : null;
+  });
+}
+
+function cplSeries(series) {
+  return (series.spend || []).map((s, i) => {
+    const l = (series.leads || [])[i];
+    return (l > 0) ? s / l : null;
+  });
+}
+
+// ── Domain helpers ────────────────────────────────────────────────
+
+// Returns { key, label } for the biggest absolute delta for the scan chip.
+function biggestScanDelta(deltas, type) {
+  const candidates = (type === 'ecom')
+    ? [{ key: 'roas_7d_pct', label: 'roas' }, { key: 'purchases_7d_pct', label: 'purchases' }]
+    : [{ key: 'leads_7d_pct', label: 'leads' }, { key: 'cpl_7d_pct', label: 'cpl' }];
+  return candidates
+    .filter(c => (deltas || {})[c.key] != null)
+    .sort((a, b) => Math.abs(deltas[b.key]) - Math.abs(deltas[a.key]))[0] ?? null;
+}
+
+// Client-side verdict fallback for old pulse JSONs without server-generated verdict.
+function buildVerdictFallback(name, deltas, flags) {
+  const CANDS = [
+    { key: 'leads_7d_pct',     label: 'leads' },
+    { key: 'purchases_7d_pct', label: 'purchases' },
+    { key: 'roas_7d_pct',      label: 'ROAS' },
+    { key: 'cpl_7d_pct',       label: 'cost per lead' },
+    { key: 'spend_7d_pct',     label: 'spend' },
+    { key: 'sc_7d_pct',        label: 'search clicks' },
+    { key: 'ga4_7d_pct',       label: 'website sessions' },
+    { key: 'gbp_7d_pct',       label: 'Google Business actions' },
+    { key: 'ig_7d_pct',        label: 'Instagram reach' },
+  ].filter(c => (deltas || {})[c.key] != null)
+   .sort((a, b) => Math.abs(deltas[b.key]) - Math.abs(deltas[a.key]));
+
+  if (!CANDS.length) return null;
+  const top = CANDS[0];
+  const val = deltas[top.key];
+  const dir = val > 0 ? 'up' : 'down';
+  let text = `${name} ${top.label} is ${dir} ${Math.abs(val)}% vs the prior 7 days.`;
+  if ((flags || []).includes('lead_drought')) text += ' Lead drought flag is active.';
+  return text;
+}
+
+// Human-readable flag labels.
+function flagLabel(f) {
+  const MAP = {
+    'zero_spend_day':      'zero spend today',
+    'lead_drought':        'lead drought',
+    'channel_dark:meta':   'Meta went dark',
+    'channel_dark:google': 'Google went dark',
+  };
+  return MAP[f] ?? f.replace(/_/g, ' ');
+}
+
+// ── Status dot ────────────────────────────────────────────────────
+
+function statusDot(score, size = 7) {
+  return el('span', {
+    class: 'perf-dot',
+    style: { width: size + 'px', height: size + 'px', background: statusColor(score) },
+  });
+}
+
+// ── Scan strip ────────────────────────────────────────────────────
+
+function buildScanStrip(entries) {
+  const strip = el('div', { class: 'perf-scan-strip' });
+
+  for (const { name, cardId, hasFeed, pulse } of entries) {
+    const score   = hasFeed ? pulse?.score : null;
+    const deltas  = pulse?.windsor?.deltas;
+    const type    = pulse?.type || 'leadgen';
+    const bd      = hasFeed ? biggestScanDelta(deltas, type) : null;
+
+    const chip = el('div', {
+      class: 'perf-scan-chip' + (hasFeed ? '' : ' no-feed'),
+      onclick() {
+        document.getElementById(`card-${cardId}`)
+          ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      },
+    });
+
+    chip.append(statusDot(score, 6));
+    chip.append(el('span', { class: 'perf-scan-name', text: name }));
+
+    if (hasFeed && score != null) {
+      chip.append(el('span', {
+        class: 'perf-scan-score',
+        style: { color: statusColor(score) },
+        text: String(score),
+      }));
+      if (bd) {
+        const val = deltas[bd.key];
+        chip.append(el('span', {
+          class: 'perf-scan-delta',
+          text: `${bd.label} ${fmtPct(val)}`,
+        }));
+      }
+    } else {
+      chip.append(el('span', { class: 'perf-scan-nofeed', text: 'no feed' }));
+    }
+
+    strip.append(chip);
   }
 
-  const ig = windsor.organic?.ig_reach;
-  if (ig > 0) {
-    stats.append(buildStat('IG reach', fmtNum(ig)));
+  return strip;
+}
+
+// ── Hero tile ─────────────────────────────────────────────────────
+
+function buildHeroTile(label, value, ser, delta, { inverted = false, onPaceWhen = false } = {}) {
+  const color  = deltaColor(delta, inverted);
+  const onPace = onPaceWhen && delta != null && Math.abs(delta) <= 10;
+
+  const tile = el('div', { class: 'perf-hero-tile' });
+  tile.append(el('span', { class: 'perf-hero-label', text: label }));
+  tile.append(el('span', { class: 'perf-hero-value', text: value }));
+
+  if (delta != null) {
+    const pctStr = fmtPct(delta);
+    tile.append(el('span', {
+      class: 'perf-hero-delta',
+      style: { color: onPace ? C.muted : color },
+      text:  onPace ? pctStr + ' on pace' : pctStr,
+    }));
   }
 
-  block.append(stats);
+  const sparkEl = el('div', { class: 'perf-hero-spark' });
+  sparkEl.innerHTML = sparkline(ser, color, 108, 28);
+  tile.append(sparkEl);
 
-  const tc = windsor.top_campaign;
-  if (tc?.name) {
-    block.append(
-      el('div', { class: 'perf-campaign' },
-        'Top campaign: ',
-        el('span', { class: 'perf-campaign-name', text: tc.name }),
-        ` · ${fmtMoney(tc.spend)}`
-      )
+  return tile;
+}
+
+// ── Channel row ───────────────────────────────────────────────────
+
+function buildChannelRow(label, ser, metric, delta, inverted = false) {
+  const color = deltaColor(delta, inverted);
+  const row   = el('div', { class: 'perf-channel-row' });
+
+  row.append(el('span', { class: 'perf-ch-label', text: label }));
+
+  const sparkEl = el('span', { class: 'perf-ch-spark' });
+  sparkEl.innerHTML = sparkline(ser, color, 80, 20);
+  row.append(sparkEl);
+
+  row.append(el('span', { class: 'perf-ch-metric', text: metric }));
+  row.append(el('span', {
+    class: 'perf-ch-delta' + (delta == null ? ' perf-ch-delta--null' : ''),
+    style: delta != null ? { color } : {},
+    text:  fmtPct(delta),
+  }));
+
+  return row;
+}
+
+// ── GHL row ───────────────────────────────────────────────────────
+
+function buildGhlRow(ghl) {
+  if (!ghl) return null;
+
+  if (ghl.error) {
+    return el('div', { class: 'perf-ghl-row' },
+      el('span', { class: 'perf-ghl-error-chip' }, 'GHL · ' + extractGhlError(ghl.error))
     );
   }
 
-  const flags = windsor.flags || [];
-  if (flags.length) {
-    const flagsEl = el('div', { class: 'perf-flags' });
-    for (const f of flags) flagsEl.append(el('span', { class: 'perf-flag', text: f }));
-    block.append(flagsEl);
-  }
+  const contacts = fmtNum(ghl.contacts);
+  const opps     = fmtNum(ghl.opportunities?.created?.count);
+  const appts    = fmtNum(ghl.appointments);
 
-  return block;
-}
-
-function buildAnalyticsBlock(analytics) {
-  const block = el('div', { class: 'perf-block' });
-  block.append(el('div', { class: 'perf-block-label', text: 'GA4 · Last 28 days' }));
-  const stats = el('div', { class: 'perf-stats' });
-  stats.append(buildStat('Sessions',    fmtNum(analytics.sessions)));
-  stats.append(buildStat('Users',       fmtNum(analytics.users)));
-  if ((analytics.conversions || 0) > 0)
-    stats.append(buildStat('Conversions', fmtNum(analytics.conversions)));
-  block.append(stats);
-  return block;
-}
-
-function buildSearchBlock(search) {
-  const block = el('div', { class: 'perf-block' });
-  block.append(el('div', { class: 'perf-block-label', text: 'Search Console · Last 28 days' }));
-  const stats = el('div', { class: 'perf-stats' });
-  stats.append(buildStat('Clicks',      fmtNum(search.clicks)));
-  stats.append(buildStat('Impressions', fmtNum(search.impressions)));
-  block.append(stats);
-  return block;
-}
-
-function buildSocialBlock(social) {
-  const block = el('div', { class: 'perf-block' });
-  block.append(el('div', { class: 'perf-block-label', text: 'Instagram · Last 28 days' }));
-  const stats = el('div', { class: 'perf-stats' });
-  if ((social.followers || 0) > 0)
-    stats.append(buildStat('Followers',   fmtNum(social.followers)));
-  stats.append(buildStat('Reach',       fmtNum(social.reach)));
-  stats.append(buildStat('Impressions', fmtNum(social.impressions)));
-  if ((social.engagement || 0) > 0)
-    stats.append(buildStat('Engagement', fmtNum(social.engagement)));
-  block.append(stats);
-  return block;
-}
-
-function buildGhlBlock(ghl) {
-  const block = el('div', { class: 'perf-block' });
-  block.append(el('div', { class: 'perf-block-label', text: 'GHL CRM · Last 28 days' }));
-
-  const stats = el('div', { class: 'perf-stats' });
-
-  stats.append(buildStat('New contacts',   fmtNum(ghl.contacts)));
-  stats.append(buildStat('Opps created',   fmtNum(ghl.opportunities?.created?.count)));
-  stats.append(buildStat('Opp value',      fmtMoney(ghl.opportunities?.created?.value)));
-  stats.append(buildStat('Opps won',       fmtNum(ghl.opportunities?.won?.count)));
-  if ((ghl.opportunities?.won?.value || 0) > 0) {
-    stats.append(buildStat('Won value',    fmtMoney(ghl.opportunities.won.value)));
-  }
-  stats.append(buildStat('Appointments',   fmtNum(ghl.appointments)));
-
-  block.append(stats);
-  return block;
-}
-
-function buildPerfCard(clientName, pulse) {
-  const card = el('article', { class: 'perf-card' });
-
-  const dateLabel = pulse?.date ? fmtDate(pulse.date) : '';
-  card.append(
-    el('div', { class: 'perf-card-header' },
-      el('span', { class: 'perf-client-name', text: clientName }),
-      dateLabel ? el('span', { class: 'perf-date-stamp', text: dateLabel }) : null,
-    )
+  return el('div', { class: 'perf-ghl-row' },
+    el('span', { class: 'perf-ch-label', text: 'GHL' }),
+    el('span', { class: 'perf-ghl-text' }, `${contacts} contacts · ${opps} opps · ${appts} appts`)
   );
+}
 
-  if (!pulse) {
-    card.classList.add('no-feed');
-    card.append(el('p', { class: 'perf-no-feed-msg', text: 'No performance feed connected.' }));
+// ── Main card ─────────────────────────────────────────────────────
+
+function buildCard(entry) {
+  const { name, cardId, hasFeed, pulse } = entry;
+  const card = el('article', {
+    class: 'perf-card' + (hasFeed ? '' : ' perf-card--nofeed'),
+    id: `card-${cardId}`,
+  });
+
+  if (!hasFeed) {
+    card.append(
+      el('div', { class: 'perf-card-header' },
+        el('div', { class: 'perf-card-header-left' },
+          statusDot(null, 8),
+          el('span', { class: 'perf-client-name', text: name })
+        ),
+        el('div', { class: 'perf-card-header-right' },
+          el('span', { class: 'perf-stamp', text: 'NO FEED' })
+        )
+      )
+    );
     return card;
   }
 
-  const windsor = pulse.windsor;
+  const score   = pulse.score;
+  const type    = pulse.type || 'leadgen';
+  const windsor = pulse.windsor || {};
   const ghl     = pulse.ghl;
-  const deltas  = windsor?.deltas;
+  const deltas  = windsor.deltas || {};
+  const series  = windsor.series || {};
+  const totals  = windsor.totals || {};
+  const flags   = windsor.flags  || [];
 
-  // Windsor — paid & organic block
-  if (windsor && !windsor.error) {
-    card.append(buildWindsorBlock(windsor, deltas));
-  } else if (windsor?.error) {
-    card.append(
-      el('div', { class: 'perf-block' },
-        el('div', { class: 'perf-block-label', text: 'Windsor' }),
-        el('p', { class: 'perf-error-msg', text: `No data: ${windsor.error}` }),
-      )
-    );
-  }
+  // ── Header ──
+  const dateStr = fmtDate(pulse.date);
+  const stamp   = (dateStr ? dateStr + ' · ' : '') + '7D VS PRIOR 7D';
 
-  // Analytics / Search Console / Instagram — only when data exists
-  if (windsor?.analytics) card.append(buildAnalyticsBlock(windsor.analytics));
-  if (windsor?.search)    card.append(buildSearchBlock(windsor.search));
-  if (windsor?.social)    card.append(buildSocialBlock(windsor.social));
-
-  // GHL block
-  if (ghl && !ghl.error) {
-    card.append(buildGhlBlock(ghl));
-  } else if (ghl?.error) {
-    card.append(
-      el('div', { class: 'perf-block' },
-        el('div', { class: 'perf-block-label', text: 'GHL CRM' }),
-        el('p', { class: 'perf-error-msg', text: `Error: ${ghl.error}` }),
-      )
-    );
-  }
-
-  return card;
-}
-
-function buildErrorCard(clientName, errMsg) {
-  const card = el('article', { class: 'perf-card' });
   card.append(
     el('div', { class: 'perf-card-header' },
-      el('span', { class: 'perf-client-name', text: clientName }),
+      el('div', { class: 'perf-card-header-left' },
+        statusDot(score, 8),
+        el('span', { class: 'perf-client-name', text: name })
+      ),
+      el('div', { class: 'perf-card-header-right' },
+        score != null
+          ? el('span', { class: 'perf-score', style: { color: statusColor(score) }, text: `${score}/100` })
+          : null,
+        el('span', { class: 'perf-stamp', text: stamp })
+      )
     )
   );
-  card.append(el('p', { class: 'perf-error-msg', text: errMsg }));
+
+  // ── Verdict ──
+  const verdictText = pulse.verdict || buildVerdictFallback(name, deltas, flags);
+  if (verdictText) card.append(el('p', { class: 'perf-verdict', text: verdictText }));
+
+  // ── Hero grid + channel rows (only when Windsor data is present) ──
+  if (!windsor.error) {
+    const heroGrid = el('div', { class: 'perf-hero-grid' });
+
+    if (type === 'ecom') {
+      const roas = totals.roas ?? null;
+      heroGrid.append(buildHeroTile(
+        'ROAS',
+        roas != null ? roas + 'x' : '—',
+        roasSeries(series),
+        deltas.roas_7d_pct
+      ));
+      heroGrid.append(buildHeroTile(
+        'PURCHASES',
+        fmtNum(totals.byChannel?.meta?.purchases),
+        series.purchases,
+        deltas.purchases_7d_pct
+      ));
+      heroGrid.append(buildHeroTile(
+        'SPEND',
+        fmtMoney(totals.spend),
+        series.spend,
+        deltas.spend_7d_pct,
+        { onPaceWhen: true }
+      ));
+    } else {
+      heroGrid.append(buildHeroTile(
+        'LEADS',
+        fmtNum(totals.leads),
+        series.leads,
+        deltas.leads_7d_pct
+      ));
+      heroGrid.append(buildHeroTile(
+        'CPL',
+        fmtMoney(totals.cpl),
+        cplSeries(series),
+        deltas.cpl_7d_pct,
+        { inverted: true }
+      ));
+      heroGrid.append(buildHeroTile(
+        'SPEND',
+        fmtMoney(totals.spend),
+        series.spend,
+        deltas.spend_7d_pct,
+        { onPaceWhen: true }
+      ));
+    }
+    card.append(heroGrid);
+
+    // ── Channel rows ──
+    const chWrap = el('div', { class: 'perf-channels' });
+    let anyChannel = false;
+
+    const meta = totals.byChannel?.meta;
+    if (meta && (meta.leads > 0 || meta.spend > 0)) {
+      chWrap.append(buildChannelRow('META', series.leads, fmtNum(meta.leads), deltas.meta_leads_7d_pct));
+      anyChannel = true;
+    }
+
+    const gads = totals.byChannel?.google_ads;
+    if (gads?.spend > 0) {
+      chWrap.append(buildChannelRow('GOOGLE', series.google_spend, fmtMoney(gads.spend), deltas.google_spend_7d_pct));
+      anyChannel = true;
+    }
+
+    if (windsor.search) {
+      chWrap.append(buildChannelRow('SEARCH', series.sc_clicks, fmtNum(windsor.search.clicks), deltas.sc_7d_pct));
+      anyChannel = true;
+    }
+
+    const gbpActions = totals.byChannel?.gbp?.actions ?? windsor.organic?.gbp_actions ?? 0;
+    if (gbpActions > 0) {
+      chWrap.append(buildChannelRow('GBP', series.gbp_actions, fmtNum(gbpActions), deltas.gbp_7d_pct));
+      anyChannel = true;
+    }
+
+    if (windsor.analytics) {
+      chWrap.append(buildChannelRow('GA4', series.ga4_sessions, fmtNum(windsor.analytics.sessions), deltas.ga4_7d_pct));
+      anyChannel = true;
+    }
+
+    const igReach = windsor.organic?.ig_reach ?? 0;
+    if (igReach > 0) {
+      chWrap.append(buildChannelRow('IG', series.ig_reach, fmtNum(igReach), deltas.ig_7d_pct));
+      anyChannel = true;
+    }
+
+    if (anyChannel) card.append(chWrap);
+  }
+
+  // ── GHL ──
+  const ghlRow = buildGhlRow(ghl);
+  if (ghlRow) card.append(ghlRow);
+
+  // ── Flags ──
+  if (flags.length) {
+    const flagsEl = el('div', { class: 'perf-flags-row' });
+    for (const f of flags) flagsEl.append(el('span', { class: 'perf-flag-chip', text: flagLabel(f) }));
+    card.append(flagsEl);
+  }
+
   return card;
 }
 
-// ── data fetching ─────────────────────────────────────────────────
+// ── Data fetching ─────────────────────────────────────────────────
 
 async function fetchPulse(slug) {
-  const url = `${PULSE_BASE}/${slug}.json?t=${Date.now()}`;
-  const res = await fetch(url);
+  const res = await fetch(`${PULSE_BASE}/${slug}.json?t=${Date.now()}`);
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return await res.json();
+  return res.json();
 }
 
 async function loadStandup() {
   try {
     const res = await fetch(`latest.json?t=${Date.now()}`);
     if (!res.ok) return null;
-    return await res.json();
+    return res.json();
   } catch { return null; }
 }
 
-// ── render ────────────────────────────────────────────────────────
+// ── Init ──────────────────────────────────────────────────────────
 
 async function init() {
   const app = document.getElementById('perf-app');
@@ -292,19 +518,18 @@ async function init() {
     .filter(c => c.client !== 'Unmapped')
     .map(c => c.client);
 
-  // Build the ordered list: standup clients first, then pulse-only extras.
+  // Build ordered client list: standup clients first, then pulse-only extras.
   const seenSlugs  = new Set();
-  const allClients = []; // { client: name, slug: slug|null }
+  const allClients = [];
 
   for (const name of standupClients) {
     const slug = PULSE_SLUG[name] || null;
     if (slug) seenSlugs.add(slug);
-    allClients.push({ client: name, slug });
+    allClients.push({ name, slug });
   }
-
   for (const { client, slug } of PULSE_ONLY) {
-    if (!seenSlugs.has(slug) && !allClients.some(c => c.client === client)) {
-      allClients.push({ client, slug });
+    if (!seenSlugs.has(slug) && !allClients.some(c => c.name === client)) {
+      allClients.push({ name: client, slug });
     }
   }
 
@@ -312,33 +537,33 @@ async function init() {
   const pulseMap = {};
   await Promise.all(
     [...new Set(allClients.map(c => c.slug).filter(Boolean))].map(async slug => {
-      try {
-        pulseMap[slug] = await fetchPulse(slug);
-      } catch (e) {
-        pulseMap[slug] = { _fetchError: e.message };
-      }
+      try { pulseMap[slug] = await fetchPulse(slug); }
+      catch (e) { pulseMap[slug] = { _fetchError: e.message }; }
     })
   );
 
-  // Render.
+  // Build entry objects.
+  const entries = allClients.map(({ name, slug }) => {
+    const pulse   = slug ? (pulseMap[slug] ?? null) : null;
+    const hasFeed = !!(pulse && !pulse._fetchError);
+    const cardId  = slug || name.replace(/\s+/g, '-').toLowerCase();
+    return { name, slug, pulse, hasFeed, cardId };
+  });
+
   app.innerHTML = '';
-  app.className = 'perf-list';
 
-  for (const { client, slug } of allClients) {
-    if (!slug) {
-      app.append(buildPerfCard(client, null));
-      continue;
-    }
+  // Scan strip — original order (matches standup + PULSE_ONLY order).
+  app.append(buildScanStrip(entries));
 
-    const pulse = pulseMap[slug];
-    if (!pulse) {
-      app.append(buildPerfCard(client, null)); // 404 — not connected yet
-    } else if (pulse._fetchError) {
-      app.append(buildErrorCard(client, `Fetch failed: ${pulse._fetchError}`));
-    } else {
-      app.append(buildPerfCard(client, pulse));
-    }
-  }
+  // Cards — lowest score first, no-feed last.
+  const withFeed = entries
+    .filter(e => e.hasFeed)
+    .sort((a, b) => (a.pulse.score ?? 100) - (b.pulse.score ?? 100));
+  const noFeed = entries.filter(e => !e.hasFeed);
+
+  const cardList = el('div', { class: 'perf-list' });
+  for (const e of [...withFeed, ...noFeed]) cardList.append(buildCard(e));
+  app.append(cardList);
 
   const ts = document.getElementById('perf-footer-ts');
   if (ts) ts.textContent = 'Performance data updated daily at 11:00 UTC from Windsor (paid media) and GHL (CRM).';

@@ -202,7 +202,7 @@ export async function fetchWindsor(windsorCfg, apiKey) {
 
   const ensureDay = d => {
     if (!d) return null;
-    if (!daily[d]) daily[d] = { date: d, spend: 0, leads: 0, meta_spend: 0, google_spend: 0, gbp_actions: 0, ig_reach: 0 };
+    if (!daily[d]) daily[d] = { date: d, spend: 0, leads: 0, meta_spend: 0, google_spend: 0, gbp_actions: 0, ig_reach: 0, sc_clicks: 0, ga4_sessions: 0, purchases: 0, revenue: 0 };
     return daily[d];
   };
 
@@ -212,6 +212,8 @@ export async function fetchWindsor(windsorCfg, apiKey) {
     row.spend      += toNum(r.spend);
     row.meta_spend += toNum(r.spend);
     row.leads      += toNum(r[metaLeadsField]);
+    row.purchases  += toNum(r.actions_purchase);
+    row.revenue    += toNum(r.action_values_purchase);
   }
   for (const r of gadsRows) {
     const row = ensureDay(r['segments.date']);
@@ -230,10 +232,16 @@ export async function fetchWindsor(windsorCfg, apiKey) {
     if (!row) continue;
     row.ig_reach += toNum(r.reach_1d);
   }
-  // SC and GA4 have dates but contribute no spend/leads/gbp/ig fields — include
-  // their dates so the daily map is populated even for organic-only clients.
-  for (const r of scRows)  ensureDay(r.date);
-  for (const r of ga4Rows) ensureDay(r.date);
+  for (const r of scRows) {
+    const row = ensureDay(r.date);
+    if (!row) continue;
+    row.sc_clicks += toNum(r.clicks);
+  }
+  for (const r of ga4Rows) {
+    const row = ensureDay(r.date);
+    if (!row) continue;
+    row.ga4_sessions += toNum(r.sessions);
+  }
 
   const dailyRows = Object.values(daily).map(r => ({
     date:         r.date,
@@ -243,6 +251,10 @@ export async function fetchWindsor(windsorCfg, apiKey) {
     google_spend: round2(r.google_spend),
     gbp_actions:  Math.round(r.gbp_actions),
     ig_reach:     Math.round(r.ig_reach),
+    sc_clicks:    Math.round(r.sc_clicks),
+    ga4_sessions: Math.round(r.ga4_sessions),
+    purchases:    Math.round(r.purchases),
+    revenue:      round2(r.revenue),
   })).sort((a, b) => a.date.localeCompare(b.date));
 
   // Most recent date with any data.

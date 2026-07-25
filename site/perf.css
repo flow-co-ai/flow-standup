@@ -1,29 +1,98 @@
-/* Performance tab styles — extends style.css design tokens */
+/* Performance tab styles
+   Tokens: Space Grotesk body · JetBrains Mono numbers/labels/chips · Source Serif 4 italic verdicts
+   bg #0C100C · cards #10150f · cream #EDE9DA · olive #A9B478 · amber #d9a441 · orange #d96c4a · muted #6b7060 */
 
+/* ── Loading placeholder ─────────────────────────────────────────── */
 .perf-loading {
-  color: rgba(220,216,200,0.45);
-  font-size: 13px;
-  margin-top: 24px;
+  color: rgba(237,233,220,0.3);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
   text-align: center;
-  padding: 32px 0;
+  padding: 48px 0;
 }
 
-/* ── client list ────────────────────────────────────────────────── */
+/* ── Status dot ──────────────────────────────────────────────────── */
+.perf-dot {
+  display: inline-block;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Scan strip ──────────────────────────────────────────────────── */
+.perf-scan-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 16px 0 20px;
+}
+
+.perf-scan-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #10150f;
+  border: 1px solid rgba(237,233,220,0.08);
+  border-radius: 99px;
+  padding: 5px 12px 5px 8px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  user-select: none;
+}
+.perf-scan-chip:hover { border-color: rgba(237,233,220,0.2); }
+.perf-scan-chip.no-feed { opacity: 0.5; cursor: default; }
+.perf-scan-chip.no-feed:hover { border-color: rgba(237,233,220,0.08); }
+
+.perf-scan-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: #EDE9DA;
+  white-space: nowrap;
+}
+
+.perf-scan-score {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.perf-scan-delta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: #6b7060;
+  white-space: nowrap;
+}
+
+.perf-scan-nofeed {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: #6b7060;
+  letter-spacing: 0.06em;
+}
+
+/* ── Card list ───────────────────────────────────────────────────── */
 .perf-list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  margin-top: 18px;
+  gap: 12px;
 }
 
-/* ── performance card ───────────────────────────────────────────── */
+/* ── Card ────────────────────────────────────────────────────────── */
 .perf-card {
-  background: #141A14;
-  border: 1px solid rgba(237,233,220,0.08);
+  background: #10150f;
+  border: 1px solid rgba(237,233,220,0.07);
   border-radius: 16px;
-  padding: 18px 16px 16px;
+  padding: 18px 18px 16px;
+  scroll-margin-top: 16px;
 }
 
+.perf-card--nofeed {
+  opacity: 0.42;
+  border-color: rgba(237,233,220,0.04);
+}
+
+/* ── Card header ─────────────────────────────────────────────────── */
 .perf-card-header {
   display: flex;
   align-items: center;
@@ -32,140 +101,196 @@
   margin-bottom: 14px;
 }
 
-.perf-client-name {
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  color: #EDE9DA;
+.perf-card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
 }
 
-.perf-date-stamp {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9.5px;
-  letter-spacing: 0.12em;
-  color: rgba(237,233,220,0.3);
-  white-space: nowrap;
+.perf-card-header-right {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
   flex-shrink: 0;
 }
 
-/* ── data block (windsor / ghl) ─────────────────────────────────── */
-.perf-block {
-  padding: 12px 0 0;
-  border-top: 1px solid rgba(237,233,220,0.07);
-  margin-top: 12px;
+.perf-client-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #EDE9DA;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.perf-block:first-of-type {
-  border-top: none;
-  margin-top: 0;
-  padding-top: 0;
-}
-
-.perf-block-label {
+.perf-score {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 9.5px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(237,233,220,0.35);
-  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
 }
 
-/* ── stat grid ──────────────────────────────────────────────────── */
-.perf-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 18px;
-}
-
-.perf-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 80px;
-}
-
-.perf-stat-label {
+.perf-stamp {
   font-family: 'JetBrains Mono', monospace;
   font-size: 9px;
   letter-spacing: 0.14em;
+  color: #6b7060;
+  white-space: nowrap;
+}
+
+/* ── Verdict ─────────────────────────────────────────────────────── */
+.perf-verdict {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: #cfc9b4;
+  line-height: 1.6;
+  margin: 0 0 16px;
+}
+
+/* ── Hero grid ───────────────────────────────────────────────────── */
+.perf-hero-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(237,233,220,0.07);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.perf-hero-tile {
+  background: #10150f;
+  padding: 12px 14px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.perf-hero-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(237,233,220,0.38);
+  color: #6b7060;
+  margin-bottom: 2px;
 }
 
-.perf-stat-value {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 18px;
-  font-weight: 600;
-  color: #C6D093;
-  line-height: 1.15;
+.perf-hero-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: #EDE9DA;
 }
 
-.perf-stat-value.dim { color: rgba(220,216,200,0.55); font-size: 14px; }
-
-/* ── delta pill ─────────────────────────────────────────────────── */
-.perf-delta {
+.perf-hero-delta {
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
+  letter-spacing: 0.04em;
   margin-top: 1px;
 }
 
-.perf-delta.up   { color: #8CBE6E; }
-.perf-delta.down { color: #DE6E4C; }
-.perf-delta.flat { color: rgba(237,233,220,0.35); }
-
-/* ── campaign row ───────────────────────────────────────────────── */
-.perf-campaign {
-  margin-top: 10px;
-  font-size: 12px;
-  color: rgba(220,216,200,0.55);
-  line-height: 1.45;
+.perf-hero-spark {
+  margin-top: 9px;
+  line-height: 0;
 }
 
-.perf-campaign-name {
-  color: rgba(220,216,200,0.75);
-  font-weight: 500;
+/* ── Channel rows ────────────────────────────────────────────────── */
+.perf-channels {
+  margin-top: 2px;
+  border-top: 1px solid rgba(237,233,220,0.06);
+  padding-top: 2px;
 }
 
-/* ── no-feed card ───────────────────────────────────────────────── */
-.perf-card.no-feed {
-  border-color: rgba(237,233,220,0.04);
-  opacity: 0.55;
+.perf-channel-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 2px;
+  border-bottom: 1px solid rgba(237,233,220,0.04);
+}
+.perf-channel-row:last-child { border-bottom: none; }
+
+.perf-ch-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #6b7060;
+  width: 90px;
+  flex-shrink: 0;
 }
 
-.perf-no-feed-msg {
-  font-size: 12.5px;
-  color: rgba(220,216,200,0.4);
+.perf-ch-spark {
+  flex-shrink: 0;
+  line-height: 0;
 }
 
-/* ── error card ─────────────────────────────────────────────────── */
-.perf-error-msg {
+.perf-ch-metric {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  color: rgba(237,233,220,0.65);
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.perf-ch-delta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  white-space: nowrap;
+  min-width: 46px;
+  text-align: right;
+}
+
+.perf-ch-delta--null { color: #6b7060; }
+
+/* ── GHL row ─────────────────────────────────────────────────────── */
+.perf-ghl-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 2px 4px;
+  margin-top: 4px;
+  border-top: 1px solid rgba(237,233,220,0.06);
+}
+
+.perf-ghl-text {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
-  color: rgba(222,110,76,0.7);
-  margin-top: 4px;
+  color: rgba(237,233,220,0.45);
 }
 
-/* ── flags ──────────────────────────────────────────────────────── */
-.perf-flags {
+.perf-ghl-error-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  background: rgba(217,108,74,0.1);
+  border: 1px solid rgba(217,108,74,0.2);
+  color: #d96c4a;
+  border-radius: 99px;
+  padding: 3px 10px;
+  display: inline-block;
+}
+
+/* ── Flags ───────────────────────────────────────────────────────── */
+.perf-flags-row {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
   margin-top: 10px;
 }
 
-.perf-flag {
+.perf-flag-chip {
   font-family: 'JetBrains Mono', monospace;
   font-size: 9px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  border-radius: 6px;
-  padding: 3px 7px;
-  background: rgba(220,167,70,0.1);
-  color: #DCA746;
-  border: 1px solid rgba(220,167,70,0.25);
+  border-radius: 99px;
+  padding: 3px 8px;
+  background: rgba(107,112,96,0.1);
+  color: #6b7060;
+  border: 1px solid rgba(107,112,96,0.18);
 }
