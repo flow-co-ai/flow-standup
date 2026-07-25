@@ -331,9 +331,111 @@ function buildGhlRow(ghl) {
   );
 }
 
+// ── Buyer layer: passcode + decisions + suggestion pills ──────────
+const KEY_PASSCODE = 'flowops-passcode'; // same key app.js uses
+
+function getPasscode() {
+  let p = localStorage.getItem(KEY_PASSCODE);
+  if (!p) {
+    p = prompt('Ops passcode');
+    if (p) localStorage.setItem(KEY_PASSCODE, p);
+  }
+  return p;
+}
+
+async function postSuggestion(body) {
+  const pass = getPasscode();
+  if (!pass) return { error: 'no passcode' };
+  const res = await fetch('/.netlify/functions/suggestions', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-ops-key': pass },
+    body: JSON.stringify(body),
+  });
+  if (res.status === 401) {
+    localStorage.removeItem(KEY_PASSCODE);
+    return { error: 'wrong passcode — click again to retry' };
+  }
+  try { return await res.json(); } catch { return { error: `HTTP ${res.status}` }; }
+}
+
+async function fetchDecidedIds() {
+  // Only when a passcode is already stored — never prompt on page load.
+  const pass = localStorage.getItem(KEY_PASSCODE);
+  if (!pass) return new Set();
+  try {
+    const res = await fetch('/.netlify/functions/suggestions', { headers: { 'x-ops-key': pass } });
+    if (!res.ok) return new Set();
+    const data = await res.json();
+    return new Set((data.items || []).map(d => `${d.slug}:${d.suggestionId}`));
+  } catch { return new Set(); }
+}
+
+function buildSuggestionPill(s, slug, clientName) {
+  const pill = el('div', { class: `perf-suggestion perf-sug-${s.type}` });
+  pill.append(el('div', { class: 'perf-sug-head' },
+    el('span', { class: 'perf-sug-type', text: s.type.replace('_', ' ') }),
+    el('span', { class: 'perf-sug-text', text: s.text }),
+  ));
+  if (s.monday_update) pill.append(el('div', { class: 'perf-sug-update', text: s.monday_update }));
+
+  const status     = el('span', { class: 'perf-sug-status' });
+  const approveBtn = el('button', { class: 'perf-btn perf-btn-approve', text: 'Approve → Monday',
+    onclick: async () => {
+      approveBtn.disabled = true; dismissBtn.disabled = true;
+      status.textContent = 'Sending…';
+      const r = await postSuggestion({ action: 'approve', slug, clientName, suggestion: s });
+      if (r.ok) { status.textContent = `Sent · item ${r.mondayItemId}`; pill.classList.add('decided'); }
+      else { status.textContent = r.error || 'Failed'; approveBtn.disabled = false; dismissBtn.disabled = false; }
+    } });
+  const dismissBtn = el('button', { class: 'perf-btn perf-btn-dismiss', text: 'Dismiss',
+    onclick: async () => {
+      const reason = prompt('Why dismiss? (the lens learns from this)');
+      if (!reason || !reason.trim()) return;
+      approveBtn.disabled = true; dismissBtn.disabled = true;
+      status.textContent = 'Saving…';
+      const r = await postSuggestion({ action: 'dismiss', slug, clientName, suggestion: s, reason });
+      if (r.ok) { status.textContent = 'Dismissed'; pill.classList.add('decided'); }
+      else { status.textContent = r.error || 'Failed'; approveBtn.disabled = false; dismissBtn.disabled = false; }
+    } });
+
+  const actions = el('div', { class: 'perf-sug-actions' });
+  actions.append(approveBtn, dismissBtn, status);
+  pill.append(actions);
+  return pill;
+}
+
+function buildLensBlock(perf, slug, clientName, decidedIds) {
+  const block = el('div', { class: 'perf-lens' });
+  const when  = perf.generated_at ? fmtDate(perf.generated_at.slice(0, 10)) : '';
+  block.append(el('div', { class: 'perf-lens-label',
+    text: `Analyst + Buyer · ${when}${perf.stale ? ' · carried' : ''}` }));
+
+  if (perf.verdict) block.append(el('p', { class: 'perf-lens-verdict', text: perf.verdict }));
+
+  const findings = perf.findings || [];
+  if (findings.length) {
+    const list = el('div', { class: 'perf-findings' });
+    for (const f of findings) {
+      list.append(el('div', { class: 'perf-finding' },
+        el('span', { class: `perf-conf perf-conf-${f.confidence}`, text: f.confidence }),
+        el('span', { text: f.text }),
+      ));
+    }
+    block.append(list);
+  }
+
+  const open = (perf.suggestions || []).filter(s => !decidedIds.has(`${slug}:${s.id}`));
+  for (const s of open) block.append(buildSuggestionPill(s, slug, clientName));
+
+  if (perf.next_check) {
+    block.append(el('p', { class: 'perf-lens-meta', text: `Next check: ${fmtDate(perf.next_check)}` }));
+  }
+  return block;
+}
+
 // ── Main card ─────────────────────────────────────────────────────
 
-function buildCard(entry) {
+function buildCard(entry, decidedIds = new Set()) {
   const { name, cardId, hasFeed, pulse } = entry;
   const card = el('article', {
     class: 'perf-card' + (hasFeed ? '' : ' perf-card--nofeed'),
@@ -488,6 +590,11 @@ function buildCard(entry) {
     card.append(flagsEl);
   }
 
+  // ── Analyst + Buyer (performance lens) ──
+  if (pulse.performance) {
+    card.append(buildLensBlock(pulse.performance, pulse.slug, name, decidedIds));
+  }
+
   return card;
 }
 
@@ -533,14 +640,17 @@ async function init() {
     }
   }
 
-  // Fetch all pulse JSONs in parallel.
+  // Fetch all pulse JSONs + past decisions in parallel.
   const pulseMap = {};
-  await Promise.all(
-    [...new Set(allClients.map(c => c.slug).filter(Boolean))].map(async slug => {
-      try { pulseMap[slug] = await fetchPulse(slug); }
-      catch (e) { pulseMap[slug] = { _fetchError: e.message }; }
-    })
-  );
+  const [, decidedIds] = await Promise.all([
+    Promise.all(
+      [...new Set(allClients.map(c => c.slug).filter(Boolean))].map(async slug => {
+        try { pulseMap[slug] = await fetchPulse(slug); }
+        catch (e) { pulseMap[slug] = { _fetchError: e.message }; }
+      })
+    ),
+    fetchDecidedIds(),
+  ]);
 
   // Build entry objects.
   const entries = allClients.map(({ name, slug }) => {
@@ -562,7 +672,7 @@ async function init() {
   const noFeed = entries.filter(e => !e.hasFeed);
 
   const cardList = el('div', { class: 'perf-list' });
-  for (const e of [...withFeed, ...noFeed]) cardList.append(buildCard(e));
+  for (const e of [...withFeed, ...noFeed]) cardList.append(buildCard(e, decidedIds));
   app.append(cardList);
 
   const ts = document.getElementById('perf-footer-ts');

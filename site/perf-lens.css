@@ -1,0 +1,110 @@
+/* perf-lens.css — Buyer block: findings + suggestion pills.
+   Loads AFTER perf.css. No class overlaps with it (verdict, hero tiles,
+   sparklines, scan strip all stay perf.css's). Tokens: #0C100C bg,
+   #EDE9DA cream, #A9B478 olive. */
+
+.perf-lens {
+  border-top: 1px solid rgba(169, 180, 120, 0.25);
+  margin-top: 12px;
+  padding-top: 10px;
+}
+
+.perf-lens-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.08em;
+  color: rgba(169, 180, 120, 0.9);
+  margin-bottom: 8px;
+}
+
+.perf-lens-verdict {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: #EDE9DA;
+  margin: 0 0 10px;
+  line-height: 1.35;
+}
+
+/* ── findings ───────────────────────────────────────────────────── */
+
+.perf-findings { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+
+.perf-finding {
+  display: flex; align-items: baseline; gap: 8px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.8rem; color: rgba(237, 233, 218, 0.85);
+  line-height: 1.4;
+}
+
+.perf-conf {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 1px 6px; border-radius: 3px; flex-shrink: 0;
+}
+.perf-conf-confirmed  { color: #A9B478; border: 1px solid rgba(169, 180, 120, 0.5); }
+.perf-conf-probable   { color: #D4C48A; border: 1px solid rgba(212, 196, 138, 0.45); }
+.perf-conf-hypothesis { color: rgba(237, 233, 218, 0.5); border: 1px solid rgba(237, 233, 218, 0.2); }
+
+/* ── suggestion pills ───────────────────────────────────────────── */
+
+.perf-suggestion {
+  background: rgba(237, 233, 218, 0.04);
+  border: 1px solid rgba(169, 180, 120, 0.25);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 8px 0;
+  transition: opacity 0.25s ease;
+}
+.perf-suggestion.decided { opacity: 0.45; }
+
+.perf-sug-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+
+.perf-sug-type {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.06em;
+  padding: 2px 7px; border-radius: 3px; flex-shrink: 0;
+  color: #0C100C; background: #A9B478;
+}
+.perf-sug-kill .perf-sug-type,
+.perf-sug-fix  .perf-sug-type { background: #D4A48A; }
+.perf-sug-watch .perf-sug-type { background: rgba(237, 233, 218, 0.55); }
+
+.perf-sug-text {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.84rem; font-weight: 500; color: #EDE9DA;
+}
+
+.perf-sug-update {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.74rem; color: rgba(237, 233, 218, 0.6);
+  line-height: 1.45; margin-top: 6px;
+}
+
+.perf-sug-actions { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+
+.perf-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem; letter-spacing: 0.03em;
+  padding: 5px 12px; border-radius: 5px; cursor: pointer;
+  border: 1px solid transparent;
+  transition: filter 0.15s ease;
+}
+.perf-btn:hover:not(:disabled) { filter: brightness(1.15); }
+.perf-btn:disabled { opacity: 0.5; cursor: default; }
+
+.perf-btn-approve { background: #A9B478; color: #0C100C; font-weight: 600; }
+.perf-btn-dismiss {
+  background: transparent; color: rgba(237, 233, 218, 0.6);
+  border-color: rgba(237, 233, 218, 0.25);
+}
+
+.perf-sug-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.64rem; color: rgba(169, 180, 120, 0.9);
+}
+
+.perf-lens-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem; color: rgba(237, 233, 218, 0.4);
+  margin-top: 6px;
+}
