@@ -1,0 +1,171 @@
+/* Performance tab styles — extends style.css design tokens */
+
+.perf-loading {
+  color: rgba(220,216,200,0.45);
+  font-size: 13px;
+  margin-top: 24px;
+  text-align: center;
+  padding: 32px 0;
+}
+
+/* ── client list ────────────────────────────────────────────────── */
+.perf-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+/* ── performance card ───────────────────────────────────────────── */
+.perf-card {
+  background: #141A14;
+  border: 1px solid rgba(237,233,220,0.08);
+  border-radius: 16px;
+  padding: 18px 16px 16px;
+}
+
+.perf-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.perf-client-name {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #EDE9DA;
+}
+
+.perf-date-stamp {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  color: rgba(237,233,220,0.3);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── data block (windsor / ghl) ─────────────────────────────────── */
+.perf-block {
+  padding: 12px 0 0;
+  border-top: 1px solid rgba(237,233,220,0.07);
+  margin-top: 12px;
+}
+
+.perf-block:first-of-type {
+  border-top: none;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.perf-block-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(237,233,220,0.35);
+  margin-bottom: 10px;
+}
+
+/* ── stat grid ──────────────────────────────────────────────────── */
+.perf-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+}
+
+.perf-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 80px;
+}
+
+.perf-stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(237,233,220,0.38);
+}
+
+.perf-stat-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #C6D093;
+  line-height: 1.15;
+}
+
+.perf-stat-value.dim { color: rgba(220,216,200,0.55); font-size: 14px; }
+
+/* ── delta pill ─────────────────────────────────────────────────── */
+.perf-delta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-top: 1px;
+}
+
+.perf-delta.up   { color: #8CBE6E; }
+.perf-delta.down { color: #DE6E4C; }
+.perf-delta.flat { color: rgba(237,233,220,0.35); }
+
+/* ── campaign row ───────────────────────────────────────────────── */
+.perf-campaign {
+  margin-top: 10px;
+  font-size: 12px;
+  color: rgba(220,216,200,0.55);
+  line-height: 1.45;
+}
+
+.perf-campaign-name {
+  color: rgba(220,216,200,0.75);
+  font-weight: 500;
+}
+
+/* ── no-feed card ───────────────────────────────────────────────── */
+.perf-card.no-feed {
+  border-color: rgba(237,233,220,0.04);
+  opacity: 0.55;
+}
+
+.perf-no-feed-msg {
+  font-size: 12.5px;
+  color: rgba(220,216,200,0.4);
+}
+
+/* ── error card ─────────────────────────────────────────────────── */
+.perf-error-msg {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: rgba(222,110,76,0.7);
+  margin-top: 4px;
+}
+
+/* ── flags ──────────────────────────────────────────────────────── */
+.perf-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.perf-flag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 6px;
+  padding: 3px 7px;
+  background: rgba(220,167,70,0.1);
+  color: #DCA746;
+  border: 1px solid rgba(220,167,70,0.25);
+}
