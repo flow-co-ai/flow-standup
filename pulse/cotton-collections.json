@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-25T21:11:39.397Z",
+  "generated_at": "2026-07-25T21:35:58.879Z",
   "date": "2026-07-25",
   "slug": "cotton-collections",
   "name": "Cotton Collections",
@@ -412,5 +412,58 @@
       "facebook",
       "instagram"
     ]
+  },
+  "performance": {
+    "generated_at": "2026-07-25T21:37:37.142Z",
+    "cadence": "scheduled_3d",
+    "stale": false,
+    "verdict": "Single-day launch with $14.48 spent; zero leads confirms broken conversion path.",
+    "findings": [
+      {
+        "id": "F1",
+        "priority": 1,
+        "text": "Zero leads from 22 clicks on $14.48 spend: CPL is undefined because no conversion event has ever fired in 28 days.",
+        "confidence": "confirmed",
+        "channel": "meta"
+      },
+      {
+        "id": "F2",
+        "priority": 2,
+        "text": "All $14.48 landed on a single day (2026-07-24); 27 of 28 days show $0 spend — campaign only just launched, no trend possible.",
+        "confidence": "confirmed",
+        "channel": "meta"
+      },
+      {
+        "id": "F3",
+        "priority": 4,
+        "text": "GBP shows 0 calls, 0 directions, 0 web clicks across 28 days; organic has no footprint to backstop paid traffic.",
+        "confidence": "confirmed",
+        "channel": "gbp"
+      }
+    ],
+    "suggestions": [
+      {
+        "id": "S1",
+        "type": "fix",
+        "text": "Audit Meta conversion event and landing page form on Algeria - Sales Campaign before spending another dollar.",
+        "cites": [
+          "F1"
+        ],
+        "monday_item_name": "Fix Meta conversion tracking",
+        "monday_update": "The Algeria - Sales Campaign generated 22 clicks but zero leads on $14.48 spend (2026-07-24), meaning no conversion event has ever fired. Verify the Meta pixel lead event is placed correctly on the thank-you or form-submit page, and confirm the landing page form is functional in Algeria's locale. Success is confirmed when at least one test lead registers in Meta Events Manager. Complete this check by 2026-07-28."
+      },
+      {
+        "id": "S2",
+        "type": "watch",
+        "text": "Hold all budget increases until conversion path is confirmed working; re-check CPL after 3 lead-generating days.",
+        "cites": [
+          "F1",
+          "F2"
+        ],
+        "monday_item_name": "Watch CPL — hold budget",
+        "monday_update": "With only 1 active spend day and 0 leads recorded, there is no CPL baseline to act on. Do not scale the $2.07/day spend rate until the pixel fix (S1) is confirmed and at least 3 consecutive days of lead data are available. Re-check on 2026-07-28 to assess whether conversions have begun flowing."
+      }
+    ],
+    "next_check": "2026-07-28"
   }
 }

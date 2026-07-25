@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-25T21:12:03.238Z",
+  "generated_at": "2026-07-25T21:36:34.069Z",
   "date": "2026-07-25",
   "slug": "hvac",
   "name": "Quality HVAC by Fibid",
@@ -432,5 +432,82 @@
       "searchconsole",
       "google_my_business"
     ]
+  },
+  "performance": {
+    "generated_at": "2026-07-25T21:38:40.673Z",
+    "cadence": "scheduled_3d",
+    "stale": false,
+    "verdict": "CPL efficiency is real, but lead volume is thin and pipeline conversion is unverified.",
+    "findings": [
+      {
+        "id": "F1",
+        "priority": 1,
+        "text": "CPL dropped 22.41% week-over-week, but 28-day total is only 25 GHL leads against 51 Google Ads conversions — a 2:1 gap suggesting double-count or misattribution.",
+        "confidence": "probable",
+        "channel": "google_ads"
+      },
+      {
+        "id": "F2",
+        "priority": 2,
+        "text": "3-day lead signal (Jul 22–24): 1 lead on $274.62 spend vs prior 3 days (Jul 19–21): 4 leads on $316.66 — short-window reversal after the 7d surge.",
+        "confidence": "probable",
+        "channel": "cross-channel"
+      },
+      {
+        "id": "F3",
+        "priority": 2,
+        "text": "GBP actions fell 28.57% week-over-week and hit 0 on Jul 23–24, while paid spend rose 29.31% — organic and paid are diverging, not reinforcing.",
+        "confidence": "confirmed",
+        "channel": "gbp"
+      },
+      {
+        "id": "F4",
+        "priority": 3,
+        "text": "GHL shows 175 opportunities created but 0 won and 0 appointments — 194 contacts entering pipeline with no downstream conversion activity recorded.",
+        "confidence": "confirmed",
+        "channel": "ghl"
+      },
+      {
+        "id": "F5",
+        "priority": 4,
+        "text": "Search clicks fell 52.63% week-over-week and Meta ig_reach dropped 28.67%, while Meta spend held at ~$20/day — diminishing organic and social reach signals.",
+        "confidence": "probable",
+        "channel": "meta"
+      }
+    ],
+    "suggestions": [
+      {
+        "id": "S1",
+        "type": "fix",
+        "text": "Audit Google Ads conversion tracking: reconcile 51 reported conversions vs 25 GHL leads to confirm attribution accuracy.",
+        "cites": [
+          "F1"
+        ],
+        "monday_item_name": "Fix Google Ads conversion audit",
+        "monday_update": "Google Ads reports 51 conversions over 28 days, but GHL shows only 25 leads — a gap of 26 that cannot be explained by timing alone. Pull conversion action definitions in Google Ads and confirm which actions are being counted (calls, form fills, page visits). Success is a reconciled conversion count within 10% of GHL intake by 2026-07-28."
+      },
+      {
+        "id": "S2",
+        "type": "fix",
+        "text": "Investigate GHL pipeline: 175 opps created, 0 won, 0 appointments — confirm intake-to-contact workflow is firing and leads are being worked.",
+        "cites": [
+          "F4"
+        ],
+        "monday_item_name": "Fix GHL pipeline intake check",
+        "monday_update": "GHL shows 175 opportunities created and 194 contacts over 28 days, yet zero appointments booked and zero deals won. This is an intake or follow-up workflow issue, not an ads problem. Confirm that automation sequences are active and that leads are being called or messaged within the first hour. Success check: at least 5 appointments visible in GHL by 2026-07-29."
+      },
+      {
+        "id": "S3",
+        "type": "watch",
+        "text": "Watch 3-day lead recovery on LocalServicesCampaign: if leads remain at ≤1 through Jul 27, review bid strategy before next budget decision.",
+        "cites": [
+          "F2",
+          "F3"
+        ],
+        "monday_item_name": "Watch LocalServices 3-day leads",
+        "monday_update": "The last 3 days (Jul 22–24) produced only 1 lead on $274.62 spend, reversing the 7-day surge. GBP actions also hit zero on Jul 23–24, suggesting a possible demand dip or local visibility issue. Hold all budget changes until Jul 27; if leads are still ≤1 per day at that point, escalate to a bid strategy review on the LocalServicesCampaign."
+      }
+    ],
+    "next_check": "2026-07-28"
   }
 }

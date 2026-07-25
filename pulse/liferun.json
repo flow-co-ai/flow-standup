@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-25T21:12:12.192Z",
+  "generated_at": "2026-07-25T21:36:46.172Z",
   "date": "2026-07-25",
   "slug": "liferun",
   "name": "Liferun",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 74,
   "status": "amber",
-  "verdict": "Leads dropped 41.18% week-over-week while CPL spiked 68.42%, signaling a sharp efficiency decline likely driven by Google Ads delivering zero conversions despite $2,365.05 in 28-day spend, with the top campaign \"BWS - Belle Watch - Sales\" alone consuming $1,188.29.",
+  "verdict": "Leads dropped 41.18% week-over-week while CPL spiked 68.42%, signaling a sharp efficiency decline likely driven by Google Ads' continued zero-conversion output despite $2,365.05 in 28-day spend. Meta remains the sole lead-generating channel (59 leads on $557.56 spend), making overall performance heavily dependent on its stability.",
   "windsor": {
     "totals": {
       "spend": 2922.61,
@@ -431,5 +431,82 @@
       "searchconsole",
       "google_my_business"
     ]
+  },
+  "performance": {
+    "generated_at": "2026-07-25T21:39:03.671Z",
+    "cadence": "scheduled_3d",
+    "stale": false,
+    "verdict": "Google's $2,365 spend is confirmed dead weight; Meta alone is carrying leads.",
+    "findings": [
+      {
+        "id": "F1",
+        "priority": 1,
+        "text": "Google Ads has spent $2,365.05 over 28 days with zero conversions confirmed — $0 return on 58% of total budget.",
+        "confidence": "confirmed",
+        "channel": "google_ads"
+      },
+      {
+        "id": "F2",
+        "priority": 1,
+        "text": "CPL spiked 68.42% week-over-week to ~$49.54 blended; Meta CPL alone is ~$9.45 on 59 leads — the blended figure is Google-inflated, not a Meta problem.",
+        "confidence": "confirmed",
+        "channel": "meta"
+      },
+      {
+        "id": "F3",
+        "priority": 2,
+        "text": "3-day lead signal (Jul 22–24): 0+3+3=6 leads vs prior 3 days (Jul 19–21): 8+0+0=8. Slight recovery but Jul 22 was zero — no sustained rebound confirmed yet.",
+        "confidence": "probable",
+        "channel": "meta"
+      },
+      {
+        "id": "F4",
+        "priority": 2,
+        "text": "Spend spiked to $297.62 on Jul 20 after two $0 days (Jul 21–22 dark), then dropped to $80.29 Jul 24 — erratic delivery pattern may be suppressing Meta lead consistency.",
+        "confidence": "probable",
+        "channel": "meta"
+      },
+      {
+        "id": "F5",
+        "priority": 4,
+        "text": "GHL shows 84 opportunities created vs 59 reported leads — gap of 25 contacts not matched to leads suggests an intake or attribution mismatch, not an ads volume problem.",
+        "confidence": "hypothesis",
+        "channel": "ghl"
+      }
+    ],
+    "suggestions": [
+      {
+        "id": "S1",
+        "type": "kill",
+        "text": "Pause Google Ads entirely — $2,365.05 spent, 0 conversions over 28 days is confirmed waste.",
+        "cites": [
+          "F1"
+        ],
+        "monday_item_name": "Pause Google Ads — Zero Leads",
+        "monday_update": "Google Ads has spent $2,365.05 over the past 28 days with zero recorded conversions and zero leads attributed. We are pausing all Google Ads campaigns to stop confirmed budget waste. Success confirmation: zero further Google spend while Meta lead volume holds or improves. Re-evaluate Google only after the pixel/conversion tracking issue is diagnosed — target by 2026-08-01."
+      },
+      {
+        "id": "S2",
+        "type": "budget_shift",
+        "text": "Shift ~$75/day from paused Google budget into Meta — move incrementally, not the full freed amount.",
+        "cites": [
+          "F1",
+          "F2"
+        ],
+        "monday_item_name": "Meta Budget Shift +$75/day",
+        "monday_update": "With Google paused, redirect $75/day into Meta where all 59 leads originated at ~$9.45 CPL blended. This is a step-shift, not a full reallocation — hold remaining freed budget until Meta delivery stabilises after the erratic Jul 20–24 pattern. Success check: CPL stays below $20 on Meta within 7 days. Review on 2026-08-01."
+      },
+      {
+        "id": "S3",
+        "type": "fix",
+        "text": "Audit GHL intake: 84 opps vs 59 leads is a 25-contact mismatch — confirm whether it's a source mapping or attribution error.",
+        "cites": [
+          "F5"
+        ],
+        "monday_item_name": "GHL Intake Audit — Lead Gap",
+        "monday_update": "GHL shows 84 opportunities created against only 59 leads reported from paid channels — a gap of 25 contacts unaccounted for. This could indicate duplicate sources, manual entry, or a pipeline stage misconfiguration, not an ads problem. Audit the GHL contact source field and opportunity pipeline stages. Confirm clean attribution by 2026-08-01 so future lead counts are reliable."
+      }
+    ],
+    "next_check": "2026-08-01"
   }
 }

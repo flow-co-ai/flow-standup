@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-25T21:11:44.074Z",
+  "generated_at": "2026-07-25T21:36:05.648Z",
   "date": "2026-07-25",
   "slug": "flow-company",
   "name": "Flow Company",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Flow Company generated only 5 leads at a $254.24 CPL over the last 28 days, with Meta carrying all $1,271.19 in spend, flagging a lead drought despite a +200% spike in site conversions week-over-week that has yet to translate into meaningful lead volume. The top campaign \"BWS - Clinic - Awareness - New IG\" consumed $988.75 of budget, suggesting spend is heavily concentrated in awareness rather than conversion-focused activity.",
+  "verdict": "Flow Company generated only 5 leads at a $254.24 CPL over the last 28 days, with Meta carrying all $1,271.19 in spend, flagging a lead drought despite a 200% spike in site conversions week-over-week that has yet to translate into form fills. The top campaign \"BWS - Clinic - Awareness - New IG\" consumed $988.75 of budget, suggesting spend is concentrated in awareness-stage creative that is driving traffic but not converting.",
   "windsor": {
     "totals": {
       "spend": 1271.19,
@@ -438,5 +438,83 @@
       "instagram",
       "searchconsole"
     ]
+  },
+  "performance": {
+    "generated_at": "2026-07-25T21:37:59.264Z",
+    "cadence": "flag_triggered",
+    "stale": false,
+    "verdict": "Awareness spend is burning $254 CPL with no pipeline conversion path visible.",
+    "findings": [
+      {
+        "id": "F1",
+        "priority": 1,
+        "text": "Lead drought confirmed: only 5 leads in 28 days at $254.24 CPL, with zero leads in the last 10 days of the series.",
+        "confidence": "confirmed",
+        "channel": "meta"
+      },
+      {
+        "id": "F2",
+        "priority": 1,
+        "text": "3-day spend signal (Jul 22–24: $36.78, $37.15, $41.68) is flat vs prior 3 days ($48.18, $51.46, $41.43) — spend drifting down while leads remain zero.",
+        "confidence": "confirmed",
+        "channel": "meta"
+      },
+      {
+        "id": "F3",
+        "priority": 3,
+        "text": "Awareness campaign 'BWS - Clinic - Awareness - New IG' consumed $988.75 of $1,271.19 total spend — 77.8% on top-of-funnel with no conversion-stage budget.",
+        "confidence": "confirmed",
+        "channel": "meta"
+      },
+      {
+        "id": "F4",
+        "priority": 4,
+        "text": "GHL shows 16 opportunities created vs only 5 Meta leads — 11 contacts entering pipeline with no tracked ad source; intake attribution gap, not an ads volume problem.",
+        "confidence": "probable",
+        "channel": "ghl"
+      },
+      {
+        "id": "F5",
+        "priority": 4,
+        "text": "GBP has 0 actions, 0 calls, 0 direction requests over 28 days — organic local presence is completely dark and generating no supplementary leads.",
+        "confidence": "confirmed",
+        "channel": "gbp"
+      }
+    ],
+    "suggestions": [
+      {
+        "id": "S1",
+        "type": "budget_shift",
+        "text": "Shift ~$15/day from awareness campaign to a new conversion-objective campaign targeting bottom-of-funnel.",
+        "cites": [
+          "F1",
+          "F3"
+        ],
+        "monday_item_name": "Shift Budget to Conversion Campaign",
+        "monday_update": "The awareness campaign 'BWS - Clinic - Awareness - New IG' has absorbed $988.75 (78% of spend) with only 5 leads over 28 days at $254.24 CPL. Redirect approximately $15/day from that campaign into a new Meta conversion-objective campaign with a lead-form or landing-page goal. Success check: CPL below $150 and at least 3 leads within 14 days of launch. Re-evaluate by 2026-08-08."
+      },
+      {
+        "id": "S2",
+        "type": "fix",
+        "text": "Audit GHL contact source tagging — 16 opps vs 5 tracked ad leads means 11 contacts are unattributed.",
+        "cites": [
+          "F4"
+        ],
+        "monday_item_name": "Fix GHL Attribution Gap",
+        "monday_update": "GHL shows 16 opportunities created in the 28-day window, but Meta only recorded 5 leads — leaving 11 contacts with no confirmed ad source. Review GHL contact source fields and ensure all Meta lead form submissions and landing-page form fills are auto-tagged to the correct campaign. Success check: tracked lead count in GHL matches or exceeds Meta lead count within 7 days of the fix. Re-check by 2026-08-01."
+      },
+      {
+        "id": "S3",
+        "type": "watch",
+        "text": "Watch GA4 sessions (870 over 28d) against lead form completions — conversion rate near 0% warrants landing page audit if no leads by 2026-08-01.",
+        "cites": [
+          "F1",
+          "F3"
+        ],
+        "monday_item_name": "Watch Landing Page CVR",
+        "monday_update": "The site received 870 sessions over 28 days with only 5 leads — an implied conversion rate under 0.6%. This may reflect awareness traffic that is not ready to convert, or a broken/friction-heavy form. No action this cycle as the root cause is unconfirmed. If zero new leads are recorded after the budget shift (S1) goes live, escalate to a full landing page and form audit by 2026-08-01."
+      }
+    ],
+    "next_check": "2026-07-28"
   }
 }

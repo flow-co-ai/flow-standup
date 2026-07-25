@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-25T21:11:35.885Z",
+  "generated_at": "2026-07-25T21:35:55.053Z",
   "date": "2026-07-25",
   "slug": "billy-doe",
   "name": "Billy Doe Meats",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Purchases surged 57.14% week-over-week, driving ROAS up 352.82% and landing at 5.29 over 28 days, likely fueled by the top Meta campaign \"BWS - Muslim Subscription Box - 17/06/26\" which alone captured $676.75 of the $1,408.71 in spend and generated $7,454.89 in revenue. GBP engagement dipped 21.05% WoW, worth monitoring to ensure offline demand keeps pace with the ecom momentum.",
+  "verdict": "Purchases surged 57.14% week-over-week and ROAS jumped 352.82%, likely driven by the top Meta campaign \"BWS - Muslim Subscription Box - 17/06/26\" ($676.75 spend) capturing strong demand. GBP engagement dipped 21.05% over the same period, worth monitoring to ensure local visibility stays healthy.",
   "windsor": {
     "totals": {
       "spend": 1408.71,
@@ -431,5 +431,82 @@
       "searchconsole",
       "google_my_business"
     ]
+  },
+  "performance": {
+    "generated_at": "2026-07-25T21:37:22.423Z",
+    "cadence": "flag_triggered",
+    "stale": false,
+    "verdict": "ROAS surge is real but a single revenue spike is masking fragile purchase consistency.",
+    "findings": [
+      {
+        "id": "F1",
+        "priority": 1,
+        "text": "ROAS 352.82% higher 7d vs prior 7d, but driven heavily by one outlier day (Jul 21 revenue $1,897.05 vs typical $100–500). Baseline efficiency unconfirmed.",
+        "confidence": "probable",
+        "channel": "meta"
+      },
+      {
+        "id": "F2",
+        "priority": 2,
+        "text": "3-day purchase signal: Jul 22–24 shows 1+1+0 purchases vs Jul 19–21 showing 2+2+5. Momentum is decelerating sharply after the spike.",
+        "confidence": "confirmed",
+        "channel": "meta"
+      },
+      {
+        "id": "F3",
+        "priority": 2,
+        "text": "GBP actions zero on Jul 23–24 (vs 16–29/day prior), a 2-day channel_dark event that the score flagged; outage or data gap unknown.",
+        "confidence": "confirmed",
+        "channel": "gbp"
+      },
+      {
+        "id": "F4",
+        "priority": 3,
+        "text": "Spend is flat and consistent (~$50–57/day) while purchases oscillate 0–5 with no pattern; suggests creative fatigue or audience saturation rather than budget constraint.",
+        "confidence": "probable",
+        "channel": "meta"
+      },
+      {
+        "id": "F5",
+        "priority": 4,
+        "text": "GA4 sessions down 5.59% 7d vs prior, with last 3 days averaging 215 vs prior 3-day average of 224 — mild but consistent organic softness.",
+        "confidence": "hypothesis",
+        "channel": "ga4"
+      }
+    ],
+    "suggestions": [
+      {
+        "id": "S1",
+        "type": "watch",
+        "text": "Watch purchase rate Jul 25–27: need ≥2 purchases/day to confirm the ROAS surge is structural, not a one-day spike.",
+        "cites": [
+          "F1",
+          "F2"
+        ],
+        "monday_item_name": "Watch Post-Spike Purchase Rate",
+        "monday_update": "The 352.82% ROAS jump is heavily skewed by a single $1,897.05 revenue day on Jul 21; Jul 22–24 show only 2 purchases total. Hold budget at current ~$52/day and do not scale until Jul 28 shows ≥2 purchases/day across 3 consecutive days. Success = 3-day purchase average returns to ≥2/day by Jul 28."
+      },
+      {
+        "id": "S2",
+        "type": "fix",
+        "text": "Investigate GBP dark on Jul 23–24; restore GBP posting cadence or confirm data pipeline to prevent local visibility drop.",
+        "cites": [
+          "F3"
+        ],
+        "monday_item_name": "Fix GBP Jul 23-24 Dark",
+        "monday_update": "GBP actions dropped to zero on Jul 23 and Jul 24 after averaging 16–29 actions/day. Check whether this is a listing issue, a data feed outage, or a genuine engagement drop. Success = GBP actions return to ≥15/day and are confirmed reported by Jul 28."
+      },
+      {
+        "id": "S3",
+        "type": "creative_refresh",
+        "text": "Introduce 1 new Meta creative into the top campaign; flat $50/day spend with erratic 0–5 purchase days signals audience saturation.",
+        "cites": [
+          "F4"
+        ],
+        "monday_item_name": "Meta Creative Refresh BWS",
+        "monday_update": "Spend on 'BWS - Muslim Subscription Box - 17/06/26' has been consistent at ~$50–57/day for 28 days while purchases swing erratically from 0 to 5 with no improvement trend — a probable saturation signal. Introduce one new creative variant into this campaign at existing budget (no increase). Success = purchase-per-day average rises to ≥2 over any 5-day window by Aug 1."
+      }
+    ],
+    "next_check": "2026-07-28"
   }
 }
