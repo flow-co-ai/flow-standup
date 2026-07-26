@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-26T02:22:32.262Z",
+  "generated_at": "2026-07-26T11:56:57.087Z",
   "date": "2026-07-26",
   "slug": "maadi-law",
   "name": "Maadi Law, LLC",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "GBP activity is the primary story this period, with 97 total actions (22 calls, 47 directions, 28 web clicks) over 28 days, but GBP engagement dropped 61.29% in the last 7 days versus the prior 7 days, likely driven by reduced profile visibility or seasonal search demand. Paid channels (Meta and Google Ads) show zero spend and zero leads, so all lead-gen activity is currently organic.",
+  "verdict": "GBP activity is the only traffic source generating engagement (103 total actions: 25 calls, 47 directions, 31 web clicks over 28 days), but GBP actions dropped 41.94% in the last 7 days versus the prior 7, likely driven by reduced search visibility or seasonal dip. Paid channels (Meta and Google Ads) show zero spend, zero leads, and zero clicks, meaning all lead generation is currently stalled on the paid side.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,23 +25,23 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 97,
-          "calls": 22,
+          "actions": 103,
+          "calls": 25,
           "directions": 47,
-          "web_clicks": 28
+          "web_clicks": 31
         }
       }
     },
     "organic": {
-      "gbp_actions": 97,
-      "ig_reach": 29017
+      "gbp_actions": 103,
+      "ig_reach": 29331
     },
     "top_campaign": null,
     "social": {
       "followers": 0,
-      "reach": 29017,
+      "reach": 29331,
       "impressions": 0,
-      "engagement": 864
+      "engagement": 869
     },
     "latest_day": {
       "date": "2026-07-25",
@@ -50,7 +50,7 @@
       "meta_spend": 0,
       "google_spend": 0,
       "gbp_actions": 0,
-      "ig_reach": 1446,
+      "ig_reach": 1760,
       "sc_clicks": 0,
       "ga4_sessions": 0,
       "purchases": 0,
@@ -62,10 +62,10 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -61.29,
+      "gbp_7d_pct": -41.94,
       "sc_7d_pct": null,
       "ga4_7d_pct": null,
-      "ig_7d_pct": -12.05,
+      "ig_7d_pct": -8.27,
       "spend_per_day_7d": 0
     },
     "flags": [],
@@ -246,7 +246,7 @@
         4,
         5,
         0,
-        2,
+        8,
         0,
         0
       ],
@@ -278,7 +278,7 @@
         767,
         2219,
         1964,
-        1446
+        1760
       ],
       "sc_clicks": [
         0,
@@ -424,60 +424,70 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-07-26T02:25:34.973Z",
+    "generated_at": "2026-07-26T11:59:39.798Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid is fully dark; organic GBP momentum now fading fast.",
+    "verdict": "Paid channels fully dark 28 days; organic GBP now fading too.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google. No paid leads exist; CPL is undefined. This is a structural off state, not a performance problem.",
+        "text": "Zero paid spend, zero leads, zero clicks across all paid channels for all 28 days in window — CPL is undefined and lead gen is fully off.",
         "confidence": "confirmed",
-        "channel": "meta,google"
+        "channel": "meta, google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions dropped 61.29% week-over-week. Last 3 days (Jul 23–25) show 2 total actions vs 9 in prior 3 days (Jul 20–22) — a confirmed 3-day deceleration signal.",
+        "text": "3-day GBP signal (Jul 23–25): 8, 0, 0 actions vs prior 3 days (Jul 20–22): 1, 4, 5 — last 2 days are dead, accelerating the 7d -41.94% drop.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "IG reach fell 12.05% week-over-week and the 3-day read (Jul 23–25: avg ~1,543) follows a spike on Jul 23–25 — directionally mixed but off the Jul 19 peak of 1,900.",
+        "text": "GHL holds 124 contacts and 0 opportunities created — with paid dark 28 days, 124 contacts have no follow-up pipeline pathway; intake infrastructure is unverified.",
         "confidence": "probable",
-        "channel": "instagram"
+        "channel": "ghl"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GHL shows 124 contacts and 0 opportunities created, 0 appointments in 28 days. With 97 GBP actions generating apparent interest, zero pipeline entries suggests an intake process gap.",
-        "confidence": "probable",
-        "channel": "ghl"
+        "text": "IG reach fell 8.27% week-over-week; last 3 days (Jul 23–25) averaged 1,648 vs prior 3 (Jul 20–22) averaging 452 — short spike, no sustained lift, no leads produced.",
+        "confidence": "hypothesis",
+        "channel": "instagram"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Monitor GBP actions daily; if 3-day total stays below 5 by Jul 29, escalate reactivation decision.",
+        "type": "fix",
+        "text": "Confirm why paid accounts are dark — billing, policy, or client pause — before any budget move. Urgency: 28 days elapsed.",
         "cites": [
-          "F2"
+          "F1"
         ],
-        "monday_item_name": "Watch GBP Action Decline",
-        "monday_update": "GBP actions dropped 61.29% week-over-week and the last 3 days (Jul 23–25) logged only 2 total actions vs 9 in the prior 3 days. No paid channels are active to compensate for this organic decline. If the 3-day total remains below 5 by July 29, Sohib should escalate a decision on profile optimization or paid reactivation. Re-check on July 29."
+        "monday_item_name": "Diagnose paid channel outage",
+        "monday_update": "Meta and Google Ads have recorded $0 spend and 0 leads across the full 28-day window with no campaign activity visible. Immediately verify account billing status, any policy holds, and whether the client intentionally paused. Success check: paid spend confirmed active or a client-approved pause reason documented — resolve by 2026-07-28."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GHL intake workflow: 97 GBP actions in 28 days but 0 opportunities created points to a lead capture or routing failure.",
+        "text": "Audit GHL pipeline: 124 contacts, 0 opportunities created — confirm intake automation is routing leads correctly before paid reactivation.",
         "cites": [
-          "F4"
+          "F3"
         ],
-        "monday_item_name": "Fix GHL Intake Routing",
-        "monday_update": "GHL shows 124 contacts and 0 opportunities created against 97 GBP actions (22 calls, 47 directions, 28 web clicks) in the same 28-day window. This disconnect strongly suggests inbound leads are not being logged as opportunities — either the workflow automation is broken or calls are not being tracked. Sohib should trace one recent GBP call through the GHL pipeline to confirm where the handoff fails. Confirm fix by July 29 with at least 1 new opportunity created."
+        "monday_item_name": "GHL pipeline intake audit",
+        "monday_update": "GHL shows 124 contacts but 0 opportunities created and 0 appointments — this means if paid campaigns reactivate and leads arrive, none will enter the pipeline. Audit automation workflows to confirm contact-to-opportunity routing is live. Success check: at least one test lead flows through to an opportunity in GHL — resolve by 2026-07-29."
+      },
+      {
+        "id": "S3",
+        "type": "watch",
+        "text": "Watch GBP daily actions; if 3 consecutive days remain at 0, escalate GBP profile review — last 2 days already zero.",
+        "cites": [
+          "F2"
+        ],
+        "monday_item_name": "GBP action drop watch",
+        "monday_update": "GBP actions were the only lead-adjacent activity (103 over 28 days), but the last 2 days recorded 0 actions and the 7-day delta is -41.94%. Monitor daily through 2026-07-29. If 3 consecutive zero-action days are confirmed, escalate to a GBP profile audit (suspension check, listing edits, review recency)."
       }
     ],
     "next_check": "2026-07-29"
