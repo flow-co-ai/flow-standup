@@ -1,23 +1,23 @@
 {
-  "generated_at": "2026-07-26T11:54:51.336Z",
-  "date": "2026-07-26",
+  "generated_at": "2026-07-27T13:32:46.236Z",
+  "date": "2026-07-27",
   "slug": "cotton-collections",
   "name": "Cotton Collections",
   "type": "leadgen",
   "window_days": 28,
-  "score": 100,
+  "score": 80,
   "status": "green",
-  "verdict": "Cotton Collections spent $31.17 entirely on Meta's \"Algeria - Sales Campaign\" over the past 28 days, generating 49 clicks but zero leads, resulting in no measurable return on ad spend. The complete absence of conversions suggests a likely disconnect between the ad creative or targeting and the landing page experience, which should be investigated urgently before further budget is committed.",
+  "verdict": "Cotton Collections has spent $59.98 over the past 28 days across 90 Meta clicks but generated zero leads, signaling a serious conversion breakdown between the ad and the landing/contact experience. The entire budget is concentrated in the \"Algeria - Sales Campaign,\" so auditing that campaign's landing page and lead form should be the immediate priority.",
   "windsor": {
     "totals": {
-      "spend": 31.17,
+      "spend": 59.98,
       "leads": 0,
       "cpl": 0,
       "byChannel": {
         "meta": {
-          "spend": 31.17,
+          "spend": 59.98,
           "leads": 0,
-          "clicks": 49
+          "clicks": 90
         },
         "google_ads": {
           "spend": 0,
@@ -34,26 +34,26 @@
     },
     "organic": {
       "gbp_actions": 0,
-      "ig_reach": 425
+      "ig_reach": 861
     },
     "top_campaign": {
       "name": "Algeria - Sales Campaign",
-      "spend": 31.17
+      "spend": 59.98
     },
     "social": {
       "followers": 0,
-      "reach": 425,
+      "reach": 861,
       "impressions": 0,
       "engagement": 0
     },
     "latest_day": {
-      "date": "2026-07-25",
-      "spend": 16.65,
+      "date": "2026-07-26",
+      "spend": 28.81,
       "leads": 0,
-      "meta_spend": 16.65,
+      "meta_spend": 28.81,
       "google_spend": 0,
       "gbp_actions": 0,
-      "ig_reach": 267,
+      "ig_reach": 436,
       "sc_clicks": 0,
       "ga4_sessions": 0,
       "purchases": 0,
@@ -69,12 +69,13 @@
       "sc_7d_pct": null,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
-      "spend_per_day_7d": 4.45
+      "spend_per_day_7d": 8.57
     },
-    "flags": [],
+    "flags": [
+      "lead_drought"
+    ],
     "series": {
       "dates": [
-        "2026-06-28",
         "2026-06-29",
         "2026-06-30",
         "2026-07-01",
@@ -101,7 +102,8 @@
         "2026-07-22",
         "2026-07-23",
         "2026-07-24",
-        "2026-07-25"
+        "2026-07-25",
+        "2026-07-26"
       ],
       "spend": [
         0,
@@ -129,9 +131,9 @@
         0,
         0,
         0,
-        0,
         14.52,
-        16.65
+        16.65,
+        28.81
       ],
       "leads": [
         0,
@@ -189,9 +191,9 @@
         0,
         0,
         0,
-        0,
         14.52,
-        16.65
+        16.65,
+        28.81
       ],
       "google_spend": [
         0,
@@ -279,9 +281,9 @@
         0,
         0,
         0,
-        0,
         158,
-        267
+        267,
+        436
       ],
       "sc_clicks": [
         0,
@@ -414,56 +416,81 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-07-25T21:37:37.142Z",
-    "cadence": "scheduled_3d",
-    "stale": true,
-    "verdict": "Single-day launch with $14.48 spent; zero leads confirms broken conversion path.",
+    "generated_at": "2026-07-27T13:36:27.615Z",
+    "cadence": "flag_triggered",
+    "stale": false,
+    "verdict": "Zero leads from $59.98 spend confirms a broken conversion path, not ad failure.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero leads from 22 clicks on $14.48 spend: CPL is undefined because no conversion event has ever fired in 28 days.",
+        "text": "lead_drought confirmed: 0 leads from $59.98 spend and 90 Meta clicks over 28 days — CPL is undefined, conversion rate is 0%.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
-        "priority": 2,
-        "text": "All $14.48 landed on a single day (2026-07-24); 27 of 28 days show $0 spend — campaign only just launched, no trend possible.",
+        "priority": 1,
+        "text": "Spend only activated 3 days ago ($14.52, $16.65, $28.81) after 25 zero-spend days — account was effectively dark until July 25.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F3",
-        "priority": 4,
-        "text": "GBP shows 0 calls, 0 directions, 0 web clicks across 28 days; organic has no footprint to backstop paid traffic.",
+        "priority": 2,
+        "text": "3-day spend trend is sharply escalating (+98% day-over-day to $28.81 on July 26) while leads remain 0 — spending is accelerating into a broken funnel.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "meta"
+      },
+      {
+        "id": "F4",
+        "priority": 4,
+        "text": "IG reach grew from 158 to 436 over the last 3 days alongside spend, but 0 GBP actions and 0 GA4 sessions confirm no traffic is reaching the site.",
+        "confidence": "confirmed",
+        "channel": "meta"
+      },
+      {
+        "id": "F5",
+        "priority": 4,
+        "text": "GHL pipeline is null and GBP shows 0 calls, 0 directions, 0 web clicks — no downstream intake data exists to distinguish an ads problem from a CRM setup gap.",
+        "confidence": "hypothesis",
+        "channel": "organic"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit Meta conversion event and landing page form on Algeria - Sales Campaign before spending another dollar.",
+        "text": "Audit Algeria - Sales Campaign lead form and landing page URL immediately; $59.98 spent with 0 conversions confirms broken destination.",
         "cites": [
-          "F1"
+          "F1",
+          "F3"
         ],
-        "monday_item_name": "Fix Meta conversion tracking",
-        "monday_update": "The Algeria - Sales Campaign generated 22 clicks but zero leads on $14.48 spend (2026-07-24), meaning no conversion event has ever fired. Verify the Meta pixel lead event is placed correctly on the thank-you or form-submit page, and confirm the landing page form is functional in Algeria's locale. Success is confirmed when at least one test lead registers in Meta Events Manager. Complete this check by 2026-07-28."
+        "monday_item_name": "Fix Algeria Campaign Lead Form",
+        "monday_update": "The Algeria - Sales Campaign has spent $59.98 across 90 clicks over 28 days and generated zero leads, with spend now accelerating to $28.81 on July 26 alone. Immediately verify the lead form is live, the destination URL loads correctly, and the Meta lead event is firing on submission. Success is confirmed when at least 1 tracked lead is recorded within 3 days of the fix going live. Re-check on July 30."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Hold all budget increases until conversion path is confirmed working; re-check CPL after 3 lead-generating days.",
+        "text": "Hold spend at current level; do not scale Algeria campaign until conversion path is confirmed working and 1+ lead is recorded.",
         "cites": [
           "F1",
-          "F2"
+          "F3"
         ],
-        "monday_item_name": "Watch CPL — hold budget",
-        "monday_update": "With only 1 active spend day and 0 leads recorded, there is no CPL baseline to act on. Do not scale the $2.07/day spend rate until the pixel fix (S1) is confirmed and at least 3 consecutive days of lead data are available. Re-check on 2026-07-28 to assess whether conversions have begun flowing."
+        "monday_item_name": "Hold Algeria Spend — Watch",
+        "monday_update": "Spend is escalating fast ($14.52 → $16.65 → $28.81 in 3 days) with zero return, so no budget increase is warranted until the funnel fix in S1 is verified. Monitor daily for the first lead event to appear. If 0 leads after the fix is applied, escalate to a campaign rebuild. Re-check July 30."
+      },
+      {
+        "id": "S3",
+        "type": "fix",
+        "text": "Set up GHL pipeline and confirm Meta lead event integration so intake data is visible before next cycle.",
+        "cites": [
+          "F5"
+        ],
+        "monday_item_name": "GHL Pipeline Setup — Cotton",
+        "monday_update": "GHL pipeline data is null and GBP shows zero actions across all touchpoints, meaning there is no downstream visibility even if leads begin arriving. Connect the Meta lead form to GHL and confirm opportunities are being created on submission. Success is a non-null GHL pipeline with at least 1 opportunity populated. Confirm setup by July 30."
       }
     ],
-    "next_check": "2026-07-28"
+    "next_check": "2026-07-30"
   }
 }
