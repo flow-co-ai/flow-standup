@@ -34,6 +34,7 @@ from send_email import send_standup_email, markdown_to_simple_html
 import archive_monday
 import pulse_story
 import drive_pulse
+import scoring
 
 MODEL = "claude-sonnet-4-5"
 
@@ -2180,6 +2181,21 @@ def main():
             for wk in history_weeks
         ]
 
+    # ── Layer 1 operational health scoring (docs/scoring-spec-draft.md §1) ─────
+    print("\nScoring Layer 1 (task stalling, comms quality, cadence, team load)...")
+    try:
+        score_rows = scoring.compute_layer1_scores(
+            call_tool=_call_tool,
+            ai=ai,
+            client_entries=client_entries,
+            grouped=grouped,
+            meetings_by_client=meetings_by_client,
+            today=today,
+        )
+    except Exception as exc:
+        print(f"  ⚠️  Layer 1 scoring failed (non-blocking): {exc}")
+        score_rows = []
+
     # ── assemble + write ──────────────────────────────────────────────────────
     standup = {
         "week_of": today,
@@ -2209,6 +2225,13 @@ def main():
     print(f"  Wrote {dated_path}")
 
     copy_to_site(json_path)
+
+    if score_rows:
+        scoring.append_scores_history(score_rows)
+        print(f"  Wrote {scoring.SCORES_HISTORY_PATH} (+{len(score_rows)} row(s))")
+        site_scores_path = Path("site") / "scores-history.json"
+        shutil.copy2(scoring.SCORES_HISTORY_PATH, site_scores_path)
+        print(f"  Copied → {site_scores_path}")
 
     md_content = render_markdown(standup)
     md_path = standups_dir / f"{today}.md"

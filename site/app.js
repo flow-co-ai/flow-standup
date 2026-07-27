@@ -35,6 +35,55 @@ const HEALTH = {
   },
 };
 
+// Layer 1 operational health sub-scores (docs/scoring-spec-draft.md §1).
+// Same red/yellow/green hues as HEALTH above, generalized to a plain
+// red/yellow/green/null key instead of the health-specific on_track/etc names.
+const SCORE_COLOR = {
+  green:  { accent: '#8CBE6E', chipBorder: 'rgba(140,190,110,0.35)', chipBg: 'rgba(140,190,110,0.08)' },
+  yellow: { accent: '#DCA746', chipBorder: 'rgba(220,167,70,0.35)',  chipBg: 'rgba(220,167,70,0.08)' },
+  red:    { accent: '#DE6E4C', chipBorder: 'rgba(222,110,76,0.4)',   chipBg: 'rgba(222,110,76,0.1)' },
+};
+const SCORE_COLOR_NULL = { accent: 'rgba(237,233,220,0.35)', chipBorder: 'rgba(237,233,220,0.15)', chipBg: 'rgba(237,233,220,0.03)' };
+function scoreColor(label) { return SCORE_COLOR[label] || SCORE_COLOR_NULL; }
+
+// team_load has no label here on purpose -- it's not rendered anywhere in
+// the UI (see the two chip-row builders below), since it's an all-null stub
+// until per-assignee data + capacity thresholds exist. The key is still
+// scored/stored in scoring.py's output (see docs/scoring-spec-draft.md
+// section 1.4) so a future UI change to surface it is a display-only add,
+// not a backend one.
+const SUB_SCORE_LABELS = {
+  task_stalling:   'Task stalling',
+  comms_quality:   'Comms quality',
+  meeting_cadence: 'Meetings',
+};
+const SUB_SCORE_LABELS_COMPACT = {
+  task_stalling:   'Stalling',
+  comms_quality:   'Comms',
+  meeting_cadence: 'Meetings',
+};
+
+// Numeric readback of a red/yellow/green sub-score, for averaging into the
+// aggregate ops-health trend -- mirrors scoring.py's SCORE_VALUE exactly.
+const SCORE_NUMERIC = { red: 20, yellow: 60, green: 100 };
+
+// Aggregate ops-health trend line colors (docs/scoring-spec-draft.md §4).
+// Deliberately NOT red/yellow/green -- those already carry status meaning
+// everywhere else in this app (health chips, sub-score chips), so reusing
+// them here would make a line's color look like a verdict on that instant's
+// value rather than just "which metric this is." Palette validated for CVD
+// safety against this app's dark card surface (#141A14): blue/magenta/violet,
+// each pair >= 15 normal-vision ΔE and >= 8 simulated ΔE (deuteranopia/
+// protanopia/tritanopia). Composite gets the app's neutral ink color instead
+// of a categorical hue, since it's the headline aggregate, not one of the
+// three parts -- drawn thicker so it reads as the primary line.
+const TREND_SUB_DIMENSIONS = [
+  { key: 'task_stalling',   label: 'Task stalling',   color: '#3987e5' },
+  { key: 'comms_quality',   label: 'Comms quality',   color: '#d55181' },
+  { key: 'meeting_cadence', label: 'Meetings',        color: '#9085e9' },
+];
+const TREND_COMPOSITE_COLOR = '#EDE9DA';
+
 const SOURCE_TAG   = { monday: 'MON', meeting: 'MTG', whatsapp: 'WA' };
 const STALE_DAYS   = 8;
 const REPO_OWNER   = 'flow-co-ai';
@@ -46,7 +95,8 @@ const KEY_DISMISSED_ALERTS = 'flowops-dismissed-alerts';
 
 // ── state ─────────────────────────────────────────────────────────────────────
 
-let standup   = null;
+let standup      = null;
+let scoresHistory = []; // scores-history.json — flat rows, {date, client, composite_health, composite_label, sub_scores}
 let handled   = {};       // { rowId: true }  — only checked rows stored
 let copiedId  = null;
 let copyTimer = null;
@@ -872,8 +922,25 @@ function cardDropProps(key, orderKeys) {
 
 // ── mini card builder (grid view) ─────────────────────────────────────────────
 
+// Composite red/yellow/green bucket -> the matching HEALTH entry, so the
+// mini-card badge's label text AND color are driven by the same bucket as
+// the composite number next to it, instead of the older AI-judged
+// entry.health (which was computed independently and could disagree --
+// e.g. a score of 20 and a score of 78 both showing "Needs attention").
+// Falls back to entry.health only when there's no composite to go on
+// (excluded clients, or a client with no scoreable sub-scores yet).
+const COMPOSITE_LABEL_TO_HEALTH_KEY = { green: 'on_track', yellow: 'needs_attention', red: 'at_risk' };
+function effectiveHealthBadge(entry) {
+  const scores = entry.scores;
+  if (scores && scores.composite != null && scores.label) {
+    const healthKey = COMPOSITE_LABEL_TO_HEALTH_KEY[scores.label];
+    if (healthKey) return HEALTH[healthKey];
+  }
+  return HEALTH[entry.health] || HEALTH.on_track;
+}
+
 function buildMiniCard(entry, orderKeys) {
-  const h = HEALTH[entry.health] || HEALTH.on_track;
+  const h = effectiveHealthBadge(entry);
   const key = entry._key;
 
   const displayName = entry.displayName || entry.client;
@@ -894,9 +961,23 @@ function buildMiniCard(entry, orderKeys) {
 
   card.append(buildCardControls(key));
 
-  card.append(el('div', { class: 'mini-state' },
-    el('span', { class: 'mini-dot', style: { background: h.accent, boxShadow: `0 0 8px ${h.glow}` } }),
-    el('span', { class: 'mini-state-label', style: { color: h.accent }, text: h.label }),
+  // The composite is the headline number for this card -- bold and labeled
+  // so it reads as the primary signal, not a small aside next to the status
+  // badge (which just names the bucket the composite already puts it in).
+  const composite = entry.scores && entry.scores.composite;
+  const opsScoreBlock = composite != null
+    ? el('div', { class: 'ops-score-block' },
+        el('span', { class: 'ops-score-value', style: { color: h.accent }, text: `${composite}` }),
+        el('span', { class: 'ops-score-label', text: 'OPS SCORE' }),
+      )
+    : null;
+
+  card.append(el('div', { class: 'mini-top-row' },
+    el('div', { class: 'mini-state' },
+      el('span', { class: 'mini-dot', style: { background: h.accent, boxShadow: `0 0 8px ${h.glow}` } }),
+      el('span', { class: 'mini-state-label', style: { color: h.accent }, text: h.label }),
+    ),
+    opsScoreBlock,
   ));
 
   // Editable in place -- a display-only rename (health/highlights/stalled/
@@ -927,6 +1008,14 @@ function buildMiniCard(entry, orderKeys) {
     onblur: (e) => onCardFieldBlur(e, key, 'headline', false),
     text: headline,
   }));
+
+  if (entry.scores) {
+    const compactRow = el('div', { class: 'subscore-row subscore-row-compact' });
+    ['task_stalling', 'comms_quality', 'meeting_cadence'].forEach(k => {
+      compactRow.append(buildSubScoreChip(k, entry.scores.sub_scores && entry.scores.sub_scores[k], true));
+    });
+    card.append(compactRow);
+  }
 
   const s = entry.stats || {};
   if (s.tasks > 0 || s.monday_msgs > 0 || s.meetings > 0 || s.wa_msgs > 0) {
@@ -1110,8 +1199,78 @@ function buildPotentialCardDetail(p) {
 
 // ── card builder ──────────────────────────────────────────────────────────────
 
+// ── Layer 1 score section (sub-scores, flags, trend) ──────────────────────────
+
+function buildSubScoreChip(key, sub, compact) {
+  const c = scoreColor(sub && sub.score);
+  const labelText = compact
+    ? (SUB_SCORE_LABELS_COMPACT[key] || SUB_SCORE_LABELS[key] || key)
+    : (SUB_SCORE_LABELS[key] || key);
+
+  // When there IS a red/yellow/green score, the chip's own color already
+  // carries that meaning -- printing the word too ("STALLING: YELLOW" on a
+  // yellow chip) is redundant, so only the dimension name shows. When there
+  // ISN'T a score, color can't carry anything (it's neutral gray either
+  // way), so a marker is still needed -- and it distinguishes "N/A" (nothing
+  // will happen until someone configures this) from "···" (already
+  // configured, just hasn't seen its first real signal yet).
+  const valueEl = (sub && sub.score)
+    ? null
+    : el('span', {
+        class: 'subscore-chip-value subscore-chip-value-muted',
+        text: (sub && sub.status === 'awaiting_data') ? '···' : 'N/A',
+      });
+
+  return el('span', {
+    class: `subscore-chip${compact ? ' subscore-chip-compact' : ''}`,
+    style: { color: c.accent, borderColor: c.chipBorder, background: c.chipBg },
+    title: (sub && sub.reason) || 'Not yet scored — see docs/scoring-spec-draft.md',
+  },
+    el('span', { class: 'subscore-chip-label', text: labelText }),
+    valueEl,
+  );
+}
+
+function buildFlagRow(flag) {
+  return el('div', { class: 'flag-row' },
+    el('span', { class: 'flag-row-label', text: flag.label }),
+    el('span', { class: 'flag-row-action', text: flag.action }),
+  );
+}
+
+function buildScoreSection(entry) {
+  const scores = entry.scores;
+  if (!scores) return null;
+
+  const sec = el('div', { class: 'card-section score-section' });
+
+  if (scores.composite != null) {
+    const c = scoreColor(scores.label);
+    sec.append(el('div', { class: 'ops-score-hero' },
+      el('span', { class: 'ops-score-hero-value', style: { color: c.accent }, text: `${scores.composite}` }),
+      el('span', { class: 'ops-score-hero-label', text: 'OPS SCORE' }),
+    ));
+  } else {
+    sec.append(el('span', { class: 'section-label', text: 'Health score' }));
+  }
+
+  const chipRow = el('div', { class: 'subscore-row' });
+  ['task_stalling', 'comms_quality', 'meeting_cadence'].forEach(key => {
+    chipRow.append(buildSubScoreChip(key, scores.sub_scores && scores.sub_scores[key], false));
+  });
+  sec.append(chipRow);
+
+  if ((scores.flags || []).length) {
+    const flagList = el('div', { class: 'flag-list' });
+    scores.flags.forEach(f => flagList.append(buildFlagRow(f)));
+    sec.append(flagList);
+  }
+
+  return sec;
+}
+
 function buildCard(entry, priorities, displayName) {
-  const h = HEALTH[entry.health] || HEALTH.on_track;
+  const h = effectiveHealthBadge(entry);
 
   const highlights = (entry.work_by_department || []).flatMap(d => d.highlights    || []);
   const stalled    = (entry.work_by_department || []).flatMap(d => d.stalled_items || []);
@@ -1129,6 +1288,9 @@ function buildCard(entry, priorities, displayName) {
   ));
 
   const sections = el('div', { class: 'card-sections' });
+
+  const scoreSection = buildScoreSection(entry);
+  if (scoreSection) sections.append(scoreSection);
 
   if (highlights.length) {
     const sec = el('div', { class: 'card-section' });
@@ -1247,6 +1409,146 @@ function renderAlertBanner() {
   container.append(banner);
 }
 
+// ── aggregate ops-health trend (page-level, above the client grid) ────────────
+//
+// One graph for the whole roster, not per-client -- "is the team's overall
+// ops health trending up or down." Averages composite + the 3 currently-live
+// sub-dimensions (team_load excluded -- it's an all-null stub until the
+// per-assignee data exists, so it would just draw an empty line) across every
+// non-excluded client, per day, from scores-history.json.
+
+function _aggregateScoresByDate() {
+  // Dedup to the latest row per (date, client) -- generate.py can in
+  // principle run more than once in a day (e.g. a manual re-run), and each
+  // run appends; without this, a same-day rerun would double-weight that
+  // day's average instead of just superseding the earlier run.
+  const latestByDateClient = new Map();
+  (scoresHistory || []).forEach(r => {
+    if (!r || !r.date || !r.client) return;
+    latestByDateClient.set(`${r.date}::${r.client}`, r);
+  });
+
+  const byDate = new Map();
+  latestByDateClient.forEach(r => {
+    if (!byDate.has(r.date)) byDate.set(r.date, []);
+    byDate.get(r.date).push(r);
+  });
+
+  const dates = [...byDate.keys()].sort();
+  const avg = (nums) => nums.length ? nums.reduce((a, b) => a + b, 0) / nums.length : null;
+
+  const series = { composite: [] };
+  TREND_SUB_DIMENSIONS.forEach(d => { series[d.key] = []; });
+
+  dates.forEach(date => {
+    const rows = byDate.get(date);
+    series.composite.push(avg(rows.map(r => r.composite_health).filter(v => typeof v === 'number')));
+    TREND_SUB_DIMENSIONS.forEach(d => {
+      const vals = rows
+        .map(r => (r.sub_scores || {})[d.key])
+        .map(s => s && SCORE_NUMERIC[s.score])
+        .filter(v => v != null);
+      series[d.key].push(avg(vals));
+    });
+  });
+
+  return { dates, series };
+}
+
+function _trendLinePath(values, xFor, yFor) {
+  // Skips over null gaps (a day where nobody had that sub-score yet) with a
+  // moveto on resume, rather than interpolating through missing data.
+  let d = '';
+  let drawing = false;
+  values.forEach((v, i) => {
+    if (v == null) { drawing = false; return; }
+    d += `${drawing ? 'L' : 'M'}${xFor(i).toFixed(1)},${yFor(v).toFixed(1)} `;
+    drawing = true;
+  });
+  return d.trim();
+}
+
+function buildOpsHealthTrendChart(dates, series) {
+  const w = 640, h = 130, padL = 26, padR = 10, padT = 10, padB = 8;
+  const innerW = w - padL - padR, innerH = h - padT - padB;
+  const xFor = (i) => dates.length > 1 ? padL + (i * innerW) / (dates.length - 1) : padL + innerW / 2;
+  const yFor = (v) => padT + innerH - (Math.max(0, Math.min(100, v)) / 100) * innerH;
+
+  const gridSvg = [0, 50, 100].map(v => {
+    const y = yFor(v).toFixed(1);
+    return `<line x1="${padL}" x2="${w - padR}" y1="${y}" y2="${y}" stroke="rgba(237,233,220,0.08)" stroke-width="1"/>`
+         + `<text x="0" y="${(+y + 3).toFixed(1)}" font-size="8" fill="rgba(220,216,200,0.4)" `
+         + `font-family="JetBrains Mono, monospace">${v}</text>`;
+  }).join('');
+
+  let linesSvg = '';
+  TREND_SUB_DIMENSIONS.forEach(d => {
+    const path = _trendLinePath(series[d.key], xFor, yFor);
+    if (path) linesSvg += `<path d="${path}" fill="none" stroke="${d.color}" stroke-width="1.5" `
+      + `stroke-linecap="round" stroke-linejoin="round"/>`;
+  });
+  const compositePath = _trendLinePath(series.composite, xFor, yFor);
+  if (compositePath) linesSvg += `<path d="${compositePath}" fill="none" stroke="${TREND_COMPOSITE_COLOR}" `
+    + `stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+
+  // Hoverable points on the composite line only -- a native <title> per
+  // point gives a minimal date+value tooltip without a JS hover layer.
+  let dotsSvg = '';
+  series.composite.forEach((v, i) => {
+    if (v == null) return;
+    const x = xFor(i).toFixed(1), y = yFor(v).toFixed(1);
+    dotsSvg += `<circle cx="${x}" cy="${y}" r="4" fill="transparent"/>`
+      .replace('/>', `><title>${dates[i]} — composite ${Math.round(v)}</title></circle>`);
+  });
+
+  const xLabels = `<text x="${padL}" y="${h - 1}" font-size="8" fill="rgba(220,216,200,0.4)" `
+    + `font-family="JetBrains Mono, monospace">${fmtDate(dates[0])}</text>`
+    + `<text x="${w - padR}" y="${h - 1}" text-anchor="end" font-size="8" fill="rgba(220,216,200,0.4)" `
+    + `font-family="JetBrains Mono, monospace">${fmtDate(dates[dates.length - 1])}</text>`;
+
+  const svg = `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" preserveAspectRatio="none" `
+    + `role="img" aria-label="Average operational health across all active clients over time">`
+    + `${gridSvg}${linesSvg}${dotsSvg}${xLabels}</svg>`;
+  return el('div', { class: 'ops-health-trend-chart', html: svg });
+}
+
+function buildOpsHealthTrendLegend() {
+  const item = (color, label, bold) => el('span', { class: 'trend-legend-item' },
+    el('span', { class: 'trend-legend-swatch', style: { background: color, height: bold ? '2.5px' : '1.5px' } }),
+    el('span', { class: 'trend-legend-label', text: label }),
+  );
+  return el('div', { class: 'trend-legend' },
+    item(TREND_COMPOSITE_COLOR, 'Composite (all clients)', true),
+    ...TREND_SUB_DIMENSIONS.map(d => item(d.color, d.label, false)),
+  );
+}
+
+function buildOpsHealthTrend() {
+  const { dates, series } = _aggregateScoresByDate();
+
+  const section = el('section', { class: 'ops-health-trend' });
+  section.append(el('div', { class: 'ops-health-trend-title' }, 'Ops health trend'));
+
+  if (dates.length === 0) {
+    section.append(el('div', {
+      class: 'ops-health-trend-empty',
+      text: 'Not enough history yet — this fills in once generate.py has run a few times.',
+    }));
+    return section;
+  }
+  if (dates.length < 2) {
+    section.append(el('div', {
+      class: 'ops-health-trend-empty',
+      text: `Tracking started ${fmtDate(dates[0])} — trend line appears after a couple more runs.`,
+    }));
+    return section;
+  }
+
+  section.append(buildOpsHealthTrendChart(dates, series));
+  section.append(buildOpsHealthTrendLegend());
+  return section;
+}
+
 // ── full render (called on every state change) ────────────────────────────────
 
 function render() {
@@ -1317,6 +1619,10 @@ function render() {
   }
   app.append(buildAddProspectControl());
   appendHiddenCardsToggle(app, hiddenProspects(), () => hiddenProspectsExpanded, (v) => { hiddenProspectsExpanded = v; }, p => p.name);
+
+  // Last thing on the page, right above the static footer -- cards are the
+  // first thing visible on load, not a graph.
+  app.append(buildOpsHealthTrend());
 }
 
 // Shared by both grids -- a simple "Hidden (n)" toggle + unhide list,
@@ -1429,6 +1735,18 @@ async function init() {
     document.getElementById('banner-missing').hidden = false;
     return;
   }
+
+  // 1b. Score history for the trend line -- optional (may not exist yet on a
+  // fresh deploy before generate.py has written it), so a missing/failed
+  // fetch just means no trend line rather than a page-level error.
+  scoresHistory = await (async () => {
+    try {
+      const res = await fetch(`scores-history.json?t=${Date.now()}`, { cache: 'no-store' });
+      if (!res.ok) return [];
+      const data = await res.json();
+      return Array.isArray(data) ? data : [];
+    } catch { return []; }
+  })();
 
   // 2. Load local mirror first (instant, no flicker)
   loadLocal();

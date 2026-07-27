@@ -162,6 +162,7 @@ def fetch_board(
               }
             }
             updates(limit: 25) {
+              id
               body
               created_at
               creator { name }
@@ -247,6 +248,7 @@ def fetch_board(
                 if ts >= cutoff:
                     recent_updates.append(
                         {
+                            "update_id": str(upd.get("id", "")) or None,
                             "body": upd.get("body", ""),
                             "created_at": raw_ts,
                             "creator": (upd.get("creator") or {}).get("name", "Unknown"),
