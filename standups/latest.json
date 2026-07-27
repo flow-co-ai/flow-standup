@@ -1,28 +1,28 @@
 {
-  "week_of": "2026-07-26",
-  "executive_summary": "Twelve of thirteen clients show stalled work, with several items aging beyond 40 days. Ads and CRM departments carry the heaviest load, with multiple access, tracking, and creative blockers across the portfolio. Four new prospect conversations this week focused on lead quality, SEO recovery, and revenue-share models.",
+  "week_of": "2026-07-27",
+  "executive_summary": "Eleven of twelve clients flagged needs_attention, with multiple items stalled 2–13 weeks. Ads and CRM departments carry the heaviest load, with recurring blockers around client access, tracking setup, and creative refresh. Four new prospect conversations (Tunde, Summit Bags, Mouawia, internal sync) show active pipeline but no immediate revenue impact.",
   "departments_overview": [
     {
       "department": "CRM",
-      "summary": "Moderate load with five open items: tracking setup, admin permissions, handoffs, and HIPAA dashboard requests stalled 5–19 days."
+      "summary": "Moderate load; stuck on client permissions (Full Smile ad tracking 17d, Justice Consumer Law Zoho 13d), handoffs (Liferun 13d, Steel Round Bars 20d), and HIPAA dashboard request (Full Smile 6d)."
     },
     {
       "department": "Ads",
-      "summary": "Heaviest load across the portfolio; nine stalled items including creative burnout, access issues, conversion failures, and multi-week platform fixes (up to 54 days)."
+      "summary": "Heaviest load; multiple long stalls including Quality HVAC (42d, 55d), Vous Physique (48d), Flow Co Meta placement (24d), Cotton Collections access (14d), Billy Doe creatives and conversion (10d each), and Maadi Law client response (14d)."
     },
     {
       "department": "Video",
-      "summary": "Light load; one content delay at Justice Consumer Law stalled 12 days."
+      "summary": "Light load; Justice Consumer Law Rocco video content delayed 13d, slowing growth."
     },
     {
       "department": "Web + SEO",
-      "summary": "Two items stalled long-term: Flow Company SEO update (27 days) and Vous Physique automations (94 days)."
+      "summary": "Light load; Flow Co internal SEO update stalled 28d with no communication, Vous Physique automations stalled 95d."
     }
   ],
   "by_client": [
     {
       "client": "Billy Doe Meats",
-      "headline": "No movement; open loops aging",
+      "headline": "No new activity; loops remain open",
       "health": "needs_attention",
       "work_by_department": [
         {
@@ -33,7 +33,7 @@
               "text": "Fresh creatives needed to combat content burnout",
               "department": "Ads",
               "source": "monday",
-              "days_stalled": 9,
+              "days_stalled": 10,
               "item_name": null,
               "monday_item_id": null,
               "monday_url": null,
@@ -43,7 +43,7 @@
               "text": "/halal-subscribe: 75 sessions, 0 conversions",
               "department": "Ads",
               "source": "monday",
-              "days_stalled": 9,
+              "days_stalled": 10,
               "item_name": "/halal-subscribe Conversion Test",
               "monday_item_id": "[id: 12613897388]",
               "monday_url": null,
@@ -54,7 +54,7 @@
       ],
       "status_change_suggestions": [],
       "risks": [
-        "Two Ads issues stalled >1 week with no visible progress"
+        "Two Ads issues aging with no visible progress"
       ],
       "upcoming": [],
       "next_up": null,
@@ -72,10 +72,43 @@
       "completed_this_week": [],
       "completed_history": [
         {
+          "week_of": "2026-W30",
+          "items": []
+        },
+        {
           "week_of": "2026-W29",
           "items": []
         }
-      ]
+      ],
+      "scores": {
+        "composite": 84,
+        "label": "green",
+        "sub_scores": {
+          "task_stalling": {
+            "score": "yellow",
+            "reason": "0 in review, max stalled 10d",
+            "max_days_stalled": 10,
+            "review_count": 0
+          },
+          "comms_quality": {
+            "score": "green",
+            "reason": "100% medium/high",
+            "pct_medium_high": 100
+          },
+          "meeting_cadence": {
+            "score": "green",
+            "reason": "3d since last meeting (expected every 14d, biweekly)",
+            "gap_days": 3,
+            "expected_days": 14
+          },
+          "team_load": {
+            "score": null,
+            "status": "not_configured",
+            "reason": "no per-assignee task-count data yet -- needs a Monday query grouped by assignee, plus per-person capacity thresholds (docs/scoring-spec-draft.md section 1.4)"
+          }
+        },
+        "flags": []
+      }
     },
     {
       "client": "Full Smile",
@@ -92,7 +125,7 @@
               "source": "monday",
               "monday_item_id": "12496201463",
               "item_name": "Ad Tracking",
-              "days_stalled": 16,
+              "days_stalled": 17,
               "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12496201463",
               "id": "5606fe88"
             },
@@ -102,7 +135,7 @@
               "source": "monday",
               "monday_item_id": "12594370350",
               "item_name": "Marketing Dashboard",
-              "days_stalled": 5,
+              "days_stalled": 6,
               "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12594370350",
               "id": "242538fe"
             }
@@ -121,36 +154,40 @@
         "stuck": 0,
         "done": 0,
         "monday_msgs": 11,
-        "meetings": 2,
+        "meetings": 0,
         "wa_msgs": 0
       },
-      "completed_this_week": [
-        {
-          "text": "Fixed Open Dental sync to stop overwriting contact source attribution",
-          "who": "Ahmed GHL",
-          "source": "WA",
-          "date": "2026-07-14",
-          "generated": false,
-          "monday_url": null
-        },
-        {
-          "text": "Checked sync logs, identified why appointment was missed, fixed root cause and retested with successful GHL sync",
-          "who": null,
-          "source": "MON",
-          "date": "2026-07-20",
-          "generated": false,
-          "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12483728477"
-        },
-        {
-          "text": "Fixed timezone mapping to Chicago CST, corrected doctor assignment and placeholder name bug, re-tested appointment matching",
-          "who": null,
-          "source": "MON",
-          "date": "2026-07-20",
-          "generated": false,
-          "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12472108604"
-        }
-      ],
+      "completed_this_week": [],
       "completed_history": [
+        {
+          "week_of": "2026-W30",
+          "items": [
+            {
+              "text": "Fixed Open Dental sync to stop overwriting contact source attribution",
+              "who": "Ahmed GHL",
+              "source": "WA",
+              "date": "2026-07-14",
+              "generated": false,
+              "monday_url": null
+            },
+            {
+              "text": "Checked sync logs, identified why appointment was missed, fixed root cause and retested with successful GHL sync",
+              "who": null,
+              "source": "MON",
+              "date": "2026-07-20",
+              "generated": false,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12483728477"
+            },
+            {
+              "text": "Fixed timezone mapping to Chicago CST, corrected doctor assignment and placeholder name bug, re-tested appointment matching",
+              "who": null,
+              "source": "MON",
+              "date": "2026-07-20",
+              "generated": false,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12472108604"
+            }
+          ]
+        },
         {
           "week_of": "2026-W29",
           "items": [
@@ -188,7 +225,36 @@
             }
           ]
         }
-      ]
+      ],
+      "scores": {
+        "composite": 67,
+        "label": "yellow",
+        "sub_scores": {
+          "task_stalling": {
+            "score": "red",
+            "reason": "0 in review, max stalled 17d",
+            "max_days_stalled": 17,
+            "review_count": 0
+          },
+          "comms_quality": {
+            "score": "green",
+            "reason": "82% medium/high",
+            "pct_medium_high": 82
+          },
+          "meeting_cadence": {
+            "score": "green",
+            "reason": "3d since last meeting (expected every 14d, biweekly)",
+            "gap_days": 3,
+            "expected_days": 14
+          },
+          "team_load": {
+            "score": null,
+            "status": "not_configured",
+            "reason": "no per-assignee task-count data yet -- needs a Monday query grouped by assignee, plus per-person capacity thresholds (docs/scoring-spec-draft.md section 1.4)"
+          }
+        },
+        "flags": []
+      }
     },
     {
       "client": "Quality HVAC",
@@ -205,7 +271,7 @@
               "source": "monday",
               "item_name": "HVAC Google Ads fix",
               "monday_item_id": "11883740042",
-              "days_stalled": 41,
+              "days_stalled": 42,
               "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/11883740042",
               "id": "2e2685a5"
             },
@@ -215,7 +281,7 @@
               "source": "monday",
               "item_name": "Reports",
               "monday_item_id": "12175359339",
-              "days_stalled": 54,
+              "days_stalled": 55,
               "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12175359339",
               "id": "7d225cf1"
             }
@@ -224,7 +290,7 @@
       ],
       "status_change_suggestions": [],
       "risks": [
-        "Two critical Ads items stalled over 40 days with no recent activity"
+        "Two Ads items stalled 6-8 weeks with no visible progress"
       ],
       "upcoming": [],
       "next_up": null,
@@ -241,6 +307,10 @@
       },
       "completed_this_week": [],
       "completed_history": [
+        {
+          "week_of": "2026-W30",
+          "items": []
+        },
         {
           "week_of": "2026-W29",
           "items": [
@@ -262,7 +332,41 @@
             }
           ]
         }
-      ]
+      ],
+      "scores": {
+        "composite": 49,
+        "label": "red",
+        "sub_scores": {
+          "task_stalling": {
+            "score": "red",
+            "reason": "0 in review, max stalled 55d",
+            "max_days_stalled": 55,
+            "review_count": 0
+          },
+          "comms_quality": {
+            "score": null,
+            "reason": "no data"
+          },
+          "meeting_cadence": {
+            "score": "green",
+            "reason": "11d since last meeting (expected every 14d, biweekly)",
+            "gap_days": 11,
+            "expected_days": 14
+          },
+          "team_load": {
+            "score": null,
+            "status": "not_configured",
+            "reason": "no per-assignee task-count data yet -- needs a Monday query grouped by assignee, plus per-person capacity thresholds (docs/scoring-spec-draft.md section 1.4)"
+          }
+        },
+        "flags": [
+          {
+            "id": "long_stalled_task",
+            "label": "Long-stalled task",
+            "action": "Escalate in next standup — decide kill or keep, don't let it age further"
+          }
+        ]
+      }
     },
     {
       "client": "Justice Consumer Law",
@@ -278,9 +382,9 @@
               "department": "CRM",
               "source": "monday",
               "item_name": "Auto Reply Setup",
-              "monday_item_id": "[id: 12595000355]",
-              "days_stalled": 12,
-              "monday_url": null,
+              "monday_item_id": "12595000355",
+              "days_stalled": 13,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12595000355",
               "id": "70e60d63"
             }
           ]
@@ -295,7 +399,7 @@
               "source": "meeting",
               "item_name": null,
               "monday_item_id": null,
-              "days_stalled": 12,
+              "days_stalled": 13,
               "monday_url": null,
               "id": "e389094e"
             }
@@ -317,17 +421,21 @@
         "meetings": 0,
         "wa_msgs": 0
       },
-      "completed_this_week": [
-        {
-          "text": "Corrected campaign naming error in Zoho CRM for better lead source tracking",
-          "who": "Nacer Amrouch",
-          "source": "MTG",
-          "date": "2026-07-14",
-          "generated": false,
-          "monday_url": null
-        }
-      ],
+      "completed_this_week": [],
       "completed_history": [
+        {
+          "week_of": "2026-W30",
+          "items": [
+            {
+              "text": "Corrected campaign naming error in Zoho CRM for better lead source tracking",
+              "who": "Nacer Amrouch",
+              "source": "MTG",
+              "date": "2026-07-14",
+              "generated": false,
+              "monday_url": null
+            }
+          ]
+        },
         {
           "week_of": "2026-W29",
           "items": [
@@ -349,7 +457,36 @@
             }
           ]
         }
-      ]
+      ],
+      "scores": {
+        "composite": 67,
+        "label": "yellow",
+        "sub_scores": {
+          "task_stalling": {
+            "score": "red",
+            "reason": "0 in review, max stalled 13d",
+            "max_days_stalled": 13,
+            "review_count": 0
+          },
+          "comms_quality": {
+            "score": "green",
+            "reason": "100% medium/high",
+            "pct_medium_high": 100
+          },
+          "meeting_cadence": {
+            "score": "green",
+            "reason": "13d since last meeting (expected every 14d, biweekly)",
+            "gap_days": 13,
+            "expected_days": 14
+          },
+          "team_load": {
+            "score": null,
+            "status": "not_configured",
+            "reason": "no per-assignee task-count data yet -- needs a Monday query grouped by assignee, plus per-person capacity thresholds (docs/scoring-spec-draft.md section 1.4)"
+          }
+        },
+        "flags": []
+      }
     },
     {
       "client": "Liferun",
@@ -366,7 +503,7 @@
               "source": "monday",
               "monday_item_id": "12470616714",
               "item_name": "HANDOFF",
-              "days_stalled": 12,
+              "days_stalled": 13,
               "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12470616714",
               "id": "bda7a352"
             }
@@ -388,17 +525,21 @@
         "meetings": 0,
         "wa_msgs": 0
       },
-      "completed_this_week": [
-        {
-          "text": "Built Stripe payment products setup in GHL",
-          "who": "Khurram Ads",
-          "source": "WA",
-          "date": "2026-07-14",
-          "generated": false,
-          "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12544275651"
-        }
-      ],
+      "completed_this_week": [],
       "completed_history": [
+        {
+          "week_of": "2026-W30",
+          "items": [
+            {
+              "text": "Built Stripe payment products setup in GHL",
+              "who": "Khurram Ads",
+              "source": "WA",
+              "date": "2026-07-14",
+              "generated": false,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12544275651"
+            }
+          ]
+        },
         {
           "week_of": "2026-W29",
           "items": [
@@ -428,7 +569,35 @@
             }
           ]
         }
-      ]
+      ],
+      "scores": {
+        "composite": 57,
+        "label": "yellow",
+        "sub_scores": {
+          "task_stalling": {
+            "score": "red",
+            "reason": "0 in review, max stalled 13d",
+            "max_days_stalled": 13,
+            "review_count": 0
+          },
+          "comms_quality": {
+            "score": "green",
+            "reason": "100% medium/high",
+            "pct_medium_high": 100
+          },
+          "meeting_cadence": {
+            "score": null,
+            "status": "awaiting_data",
+            "reason": "no meeting history recorded yet -- will start scoring once a meeting is logged"
+          },
+          "team_load": {
+            "score": null,
+            "status": "not_configured",
+            "reason": "no per-assignee task-count data yet -- needs a Monday query grouped by assignee, plus per-person capacity thresholds (docs/scoring-spec-draft.md section 1.4)"
+          }
+        },
+        "flags": []
+      }
     },
     {
       "client": "Healing Helps",
@@ -453,14 +622,45 @@
       "completed_this_week": [],
       "completed_history": [
         {
+          "week_of": "2026-W30",
+          "items": []
+        },
+        {
           "week_of": "2026-W29",
           "items": []
         }
-      ]
+      ],
+      "scores": {
+        "composite": 100,
+        "label": "green",
+        "sub_scores": {
+          "task_stalling": {
+            "score": "green",
+            "reason": "0 in review",
+            "max_days_stalled": 0,
+            "review_count": 0
+          },
+          "comms_quality": {
+            "score": null,
+            "reason": "no data"
+          },
+          "meeting_cadence": {
+            "score": null,
+            "status": "awaiting_data",
+            "reason": "no meeting history recorded yet -- will start scoring once a meeting is logged"
+          },
+          "team_load": {
+            "score": null,
+            "status": "not_configured",
+            "reason": "no per-assignee task-count data yet -- needs a Monday query grouped by assignee, plus per-person capacity thresholds (docs/scoring-spec-draft.md section 1.4)"
+          }
+        },
+        "flags": []
+      }
     },
     {
       "client": "Cotton Collections",
-      "headline": "No change; access issue open 13d",
+      "headline": "No change; access issue open 14d",
       "health": "needs_attention",
       "work_by_department": [
         {
@@ -471,7 +671,7 @@
               "text": "Meta Ads access needed for Pixel setup",
               "department": "Ads",
               "source": "monday",
-              "days_stalled": 13,
+              "days_stalled": 14,
               "item_name": null,
               "monday_item_id": null,
               "monday_url": null,
@@ -498,10 +698,42 @@
       "completed_this_week": [],
       "completed_history": [
         {
+          "week_of": "2026-W30",
+          "items": []
+        },
+        {
           "week_of": "2026-W29",
           "items": []
         }
-      ]
+      ],
+      "scores": {
+        "composite": 57,
+        "label": "yellow",
+        "sub_scores": {
+          "task_stalling": {
+            "score": "red",
+            "reason": "0 in review, max stalled 14d",
+            "max_days_stalled": 14,
+            "review_count": 0
+          },
+          "comms_quality": {
+            "score": "green",
+            "reason": "100% medium/high",
+            "pct_medium_high": 100
+          },
+          "meeting_cadence": {
+            "score": null,
+            "status": "not_configured",
+            "reason": "cadence not configured -- add an entry to client_cadence.json (see docs/scoring-spec-draft.md section 1.4)"
+          },
+          "team_load": {
+            "score": null,
+            "status": "not_configured",
+            "reason": "no per-assignee task-count data yet -- needs a Monday query grouped by assignee, plus per-person capacity thresholds (docs/scoring-spec-draft.md section 1.4)"
+          }
+        },
+        "flags": []
+      }
     },
     {
       "client": "Flow Company",
@@ -518,7 +750,7 @@
               "source": "monday",
               "item_name": "Meta Ads",
               "monday_item_id": "12582754130",
-              "days_stalled": 23,
+              "days_stalled": 24,
               "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12582754130",
               "id": "b31abc8f"
             }
@@ -534,7 +766,7 @@
               "source": "monday",
               "item_name": "Website SEO Update",
               "monday_item_id": "12402423553",
-              "days_stalled": 27,
+              "days_stalled": 28,
               "monday_url": "https://flowcompany.monday.com/boards/18099807701/pulses/12402423553",
               "id": "d60f51c7"
             }
@@ -543,7 +775,7 @@
       ],
       "status_change_suggestions": [],
       "risks": [
-        "Two items stalled 3+ weeks with no client or team engagement"
+        "Website SEO Update stalled 28 days with no communication"
       ],
       "upcoming": [],
       "next_up": null,
@@ -560,6 +792,10 @@
       },
       "completed_this_week": [],
       "completed_history": [
+        {
+          "week_of": "2026-W30",
+          "items": []
+        },
         {
           "week_of": "2026-W29",
           "items": [
@@ -585,7 +821,7 @@
     },
     {
       "client": "MedStation",
-      "headline": "No new activity; two loops open 11d",
+      "headline": "No new activity; two loops open 12d",
       "health": "needs_attention",
       "work_by_department": [
         {
@@ -596,9 +832,9 @@
               "text": "Patient demographic report from Paulo/Agencia WeMark",
               "department": "",
               "source": "meeting",
-              "days_stalled": 11,
-              "item_name": null,
+              "days_stalled": 12,
               "monday_item_id": null,
+              "item_name": null,
               "monday_url": null,
               "id": "e4b504f0"
             },
@@ -606,9 +842,9 @@
               "text": "Connect Sohib's team with six clinic leaders",
               "department": "",
               "source": "meeting",
-              "days_stalled": 11,
-              "item_name": null,
+              "days_stalled": 12,
               "monday_item_id": null,
+              "item_name": null,
               "monday_url": null,
               "id": "4df03a04"
             }
@@ -617,7 +853,7 @@
       ],
       "status_change_suggestions": [],
       "risks": [
-        "Two open loops aging 11 days with no movement"
+        "Two open loops stalled 12 days with no follow-up"
       ],
       "upcoming": [],
       "next_up": null,
@@ -635,10 +871,49 @@
       "completed_this_week": [],
       "completed_history": [
         {
+          "week_of": "2026-W30",
+          "items": []
+        },
+        {
           "week_of": "2026-W29",
           "items": []
         }
-      ]
+      ],
+      "scores": {
+        "composite": 39,
+        "label": "red",
+        "sub_scores": {
+          "task_stalling": {
+            "score": "red",
+            "reason": "0 in review, max stalled 12d",
+            "max_days_stalled": 12,
+            "review_count": 0
+          },
+          "comms_quality": {
+            "score": "red",
+            "reason": "0% medium/high",
+            "pct_medium_high": 0
+          },
+          "meeting_cadence": {
+            "score": "green",
+            "reason": "0d since last meeting (expected every 14d, biweekly)",
+            "gap_days": 0,
+            "expected_days": 14
+          },
+          "team_load": {
+            "score": null,
+            "status": "not_configured",
+            "reason": "no per-assignee task-count data yet -- needs a Monday query grouped by assignee, plus per-person capacity thresholds (docs/scoring-spec-draft.md section 1.4)"
+          }
+        },
+        "flags": [
+          {
+            "id": "comms_quality_red",
+            "label": "Comms quality red",
+            "action": "1:1 on update expectations; share one \"high\" example from the team as a model"
+          }
+        ]
+      }
     },
     {
       "client": "Maadi Law",
@@ -653,7 +928,7 @@
               "text": "Meta & Google ads awaiting client response",
               "department": "Ads",
               "source": "monday",
-              "days_stalled": 13,
+              "days_stalled": 14,
               "item_name": null,
               "monday_item_id": null,
               "monday_url": null,
@@ -663,7 +938,7 @@
               "text": "Remove AI visuals from Meta creatives",
               "department": "Ads",
               "source": "monday",
-              "days_stalled": 13,
+              "days_stalled": 14,
               "item_name": null,
               "monday_item_id": null,
               "monday_url": null,
@@ -694,65 +969,69 @@
         "meetings": 0,
         "wa_msgs": 0
       },
-      "completed_this_week": [
-        {
-          "text": "Migrated all data from Clio and updated Monday.com with new buildout",
-          "who": "Nazé Amrouch",
-          "source": "WA",
-          "date": "2026-07-13",
-          "generated": false,
-          "monday_url": null
-        },
-        {
-          "text": "Set up new GHL subaccount with intake pipeline, tags, custom fields, and base intake form",
-          "who": "Ahmed GHL",
-          "source": "WA",
-          "date": "2026-07-13",
-          "generated": false,
-          "monday_url": "https://flowcompany.monday.com/boards/18418241406/pulses/12471716300"
-        },
-        {
-          "text": "Built pipeline",
-          "who": null,
-          "source": "MON",
-          "date": "2026-07-13",
-          "generated": false,
-          "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12471734016"
-        },
-        {
-          "text": "Completed ACCESS setup",
-          "who": null,
-          "source": "MON",
-          "date": "2026-07-08",
-          "generated": false,
-          "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12471734194"
-        },
-        {
-          "text": "Added case managers as GHL users and mapped them to Clio usernames",
-          "who": null,
-          "source": "MON",
-          "date": "2026-07-07",
-          "generated": false,
-          "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12471674976"
-        },
-        {
-          "text": "Built multi-file upload form, tested text-line auto-attach to document section",
-          "who": null,
-          "source": "MON",
-          "date": "2026-07-07",
-          "generated": false,
-          "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12471736810"
-        },
-        {
-          "text": "Audited Grow intake fields and pipeline logic for Clio migration",
-          "who": null,
-          "source": "MON",
-          "date": "2026-07-07",
-          "generated": false,
-          "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12471734017"
-        }
-      ],
+      "completed_this_week": [],
       "completed_history": [
+        {
+          "week_of": "2026-W30",
+          "items": [
+            {
+              "text": "Migrated all data from Clio and updated Monday.com with new buildout",
+              "who": "Nazé Amrouch",
+              "source": "WA",
+              "date": "2026-07-13",
+              "generated": false,
+              "monday_url": null
+            },
+            {
+              "text": "Set up new GHL subaccount with intake pipeline, tags, custom fields, and base intake form",
+              "who": "Ahmed GHL",
+              "source": "WA",
+              "date": "2026-07-13",
+              "generated": false,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241406/pulses/12471716300"
+            },
+            {
+              "text": "Built pipeline",
+              "who": null,
+              "source": "MON",
+              "date": "2026-07-13",
+              "generated": false,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12471734016"
+            },
+            {
+              "text": "Completed ACCESS setup",
+              "who": null,
+              "source": "MON",
+              "date": "2026-07-08",
+              "generated": false,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12471734194"
+            },
+            {
+              "text": "Added case managers as GHL users and mapped them to Clio usernames",
+              "who": null,
+              "source": "MON",
+              "date": "2026-07-07",
+              "generated": false,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12471674976"
+            },
+            {
+              "text": "Built multi-file upload form, tested text-line auto-attach to document section",
+              "who": null,
+              "source": "MON",
+              "date": "2026-07-07",
+              "generated": false,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12471736810"
+            },
+            {
+              "text": "Audited Grow intake fields and pipeline logic for Clio migration",
+              "who": null,
+              "source": "MON",
+              "date": "2026-07-07",
+              "generated": false,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12471734017"
+            }
+          ]
+        },
         {
           "week_of": "2026-W29",
           "items": [
@@ -790,7 +1069,36 @@
             }
           ]
         }
-      ]
+      ],
+      "scores": {
+        "composite": 67,
+        "label": "yellow",
+        "sub_scores": {
+          "task_stalling": {
+            "score": "red",
+            "reason": "0 in review, max stalled 14d",
+            "max_days_stalled": 14,
+            "review_count": 0
+          },
+          "comms_quality": {
+            "score": "green",
+            "reason": "100% medium/high",
+            "pct_medium_high": 100
+          },
+          "meeting_cadence": {
+            "score": "green",
+            "reason": "11d since last meeting (expected every 14d, biweekly)",
+            "gap_days": 11,
+            "expected_days": 14
+          },
+          "team_load": {
+            "score": null,
+            "status": "not_configured",
+            "reason": "no per-assignee task-count data yet -- needs a Monday query grouped by assignee, plus per-person capacity thresholds (docs/scoring-spec-draft.md section 1.4)"
+          }
+        },
+        "flags": []
+      }
     },
     {
       "client": "Steel Round Bars",
@@ -807,7 +1115,7 @@
               "source": "monday",
               "item_name": "HANDOFF",
               "monday_item_id": "[id: 12470597527]",
-              "days_stalled": 19,
+              "days_stalled": 20,
               "monday_url": null,
               "id": "d4a1ff95"
             },
@@ -817,7 +1125,7 @@
               "source": "monday",
               "item_name": "1st DIRECTIVES",
               "monday_item_id": "[id: 12470651472]",
-              "days_stalled": 19,
+              "days_stalled": 20,
               "monday_url": null,
               "id": "bda075bf"
             }
@@ -825,7 +1133,9 @@
         }
       ],
       "status_change_suggestions": [],
-      "risks": [],
+      "risks": [
+        "Two CRM items stalled 20 days; no client engagement"
+      ],
       "upcoming": [],
       "next_up": null,
       "stats": {
@@ -841,6 +1151,10 @@
       },
       "completed_this_week": [],
       "completed_history": [
+        {
+          "week_of": "2026-W30",
+          "items": []
+        },
         {
           "week_of": "2026-W29",
           "items": [
@@ -870,7 +1184,41 @@
             }
           ]
         }
-      ]
+      ],
+      "scores": {
+        "composite": 20,
+        "label": "red",
+        "sub_scores": {
+          "task_stalling": {
+            "score": "red",
+            "reason": "0 in review, max stalled 20d",
+            "max_days_stalled": 20,
+            "review_count": 0
+          },
+          "comms_quality": {
+            "score": "red",
+            "reason": "0% medium/high",
+            "pct_medium_high": 0
+          },
+          "meeting_cadence": {
+            "score": null,
+            "status": "not_configured",
+            "reason": "cadence not configured -- add an entry to client_cadence.json (see docs/scoring-spec-draft.md section 1.4)"
+          },
+          "team_load": {
+            "score": null,
+            "status": "not_configured",
+            "reason": "no per-assignee task-count data yet -- needs a Monday query grouped by assignee, plus per-person capacity thresholds (docs/scoring-spec-draft.md section 1.4)"
+          }
+        },
+        "flags": [
+          {
+            "id": "comms_quality_red",
+            "label": "Comms quality red",
+            "action": "1:1 on update expectations; share one \"high\" example from the team as a model"
+          }
+        ]
+      }
     },
     {
       "client": "Vous Physique",
@@ -887,7 +1235,7 @@
               "source": "monday",
               "item_name": "Meta Ads",
               "monday_item_id": "11929332685",
-              "days_stalled": 47,
+              "days_stalled": 48,
               "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/11929332685",
               "id": "8393e334"
             }
@@ -903,7 +1251,7 @@
               "source": "monday",
               "item_name": "Automations",
               "monday_item_id": "11831771926",
-              "days_stalled": 94,
+              "days_stalled": 95,
               "monday_url": "https://flowcompany.monday.com/boards/18099807701/pulses/11831771926",
               "id": "1332a5d2"
             }
@@ -911,9 +1259,7 @@
         }
       ],
       "status_change_suggestions": [],
-      "risks": [
-        "Two workstreams stalled 47+ days with no client contact"
-      ],
+      "risks": [],
       "upcoming": [],
       "next_up": null,
       "stats": {
@@ -930,6 +1276,10 @@
       "completed_this_week": [],
       "completed_history": [
         {
+          "week_of": "2026-W30",
+          "items": []
+        },
+        {
           "week_of": "2026-W29",
           "items": []
         }
@@ -945,20 +1295,20 @@
       "items": [
         {
           "source": "meeting",
-          "blurb": "Mouawia from Ridge Road Dentistry expressed frustration with past marketing agencies that failed to deliver financially-ready leads and noted his practice lacks an internal marketing team or dedicated",
+          "blurb": "Mouawia from Ridge Road Dentistry expressed frustration with past agencies that failed to deliver financially-ready leads and discussed a significant drop in organic search traffic from 468 to 138 mon",
           "when": "2026-07-20"
         }
       ],
       "possible_existing_client": null,
-      "summary": "Mouawia from Ridge Road Dentistry expressed frustration with past marketing agencies that failed to deliver financially-ready leads and noted his practice lacks an internal marketing team or dedicated intake staff for lead vetting. A recent website rebuild caused organic search traffic to drop from 468 to 138 monthly visits due to missing location keywords, and competitors are outranking them with up to 653 organic visits. He's looking for an agency that provides both comprehensive marketing and call center lead qualification services, with a budget up to $5,000 per month, but Flow Company's lack of direct call center services limits the fit.",
+      "summary": "Mouawia from Ridge Road Dentistry expressed frustration with past agencies that failed to deliver financially-ready leads and discussed a significant drop in organic search traffic from 468 to 138 monthly visits after a website rebuild. He has no internal marketing team or dedicated intake staff, and emphasized that lead vetting via a call center is a deal breaker requirement that the agency cannot provide. The agency's AI-driven marketing services range from $3,500 to $5,000 per month but lack the call center component Mouawia needs, so he is continuing his search for an all-in-one solution that includes both marketing and lead qualification services.",
       "action_items": [
         "Continue searching for an agency that provides both comprehensive marketing and call center lead qualification services to improve lead quality and conversion.",
         "Consider moving forward with Implant Machine agency after receiving feedback and evaluating their all-in-one marketing and call center solution.",
         "Hire an additional front desk or intake person to improve lead handling capacity and follow-up effectiveness at Ridge Road Dentistry.",
         "Share feedback and research findings on Implant Machine agency with Mouawia to assist in evaluation."
       ],
-      "likelihood_percent": 25,
-      "likelihood_reason": "Has budget ($5,000/month) but actively considering competitor agency, no commitment to next step."
+      "likelihood_percent": 10,
+      "likelihood_reason": "Deal breaker requirement (call center) that agency cannot provide; actively searching for alternative solutions."
     },
     {
       "name": "Summit Bags",
@@ -968,26 +1318,26 @@
       "items": [
         {
           "source": "meeting",
-          "blurb": "This call with Summit Bags focused on launching Meta ads to drive revenue for their leather bag business, starting with a $50 per day test budget for one week. The engagement will use a 50 percent rev",
+          "blurb": "This call with Amer from Summit Bags focused on launching Meta ads to drive revenue, starting with a $50 per day test budget for one week to reach ideal customers. They agreed on a 50% revenue share m",
           "when": "2026-07-22"
         },
         {
           "source": "meeting",
-          "blurb": "This second call with Summit Bags refined the Meta ads strategy, focusing on sales-driven campaigns with brand awareness funneling into retargeting, starting at $50 per day with a $300 per week budget",
+          "blurb": "This follow-up discussion with Amer from Summit Bags outlined a Meta ads strategy focused on sales, with brand awareness funneling to retargeting starting at $50 per day and a $300 per week budget for",
           "when": "2026-07-22"
         }
       ],
       "possible_existing_client": null,
-      "summary": "Summit Bags is a leather bag business selling 150 to 180 bags annually with 70 to 75 percent gross margins, and the engagement centers on launching Meta ads under a revenue share model of up to 50 percent revisited every three months. Across two calls, the strategy evolved from an initial $50 per day test budget to a refined sales-driven campaign with brand awareness and retargeting, budgeted at $300 per week ahead of an August launch. The team is working to simplify checkout, integrate Shopify with Meta Shop, and leverage existing influencer and user-generated video content from Facebook and Instagram. Full Facebook Business Manager access for Sohib is being arranged to facilitate ad management and content sourcing.",
+      "summary": "Amer from Summit Bags has engaged in discussions to launch Meta ads with a revenue share model capped at 50% initially, revisited every three months. The strategy evolved from a $50 per day test budget to a structured approach with $300 per week for sales-focused campaigns, incorporating brand awareness and retargeting funnels starting in August. Key operational details include high shipping costs of $40 per bag, integration of Shopify with Meta Shop for in-app purchases, and leveraging existing influencer and user-generated video content from social channels. The agency will receive full Facebook Business Manager access to manage ads directly and review video assets including updated Haram Leather content.",
       "action_items": [
-        "Add Sohib Boundaoui as manager to Facebook Business Manager with full asset access to facilitate ad management and content sourcing.",
-        "Provide content folder including new and existing video and photo assets, including updated Haram Leather video, to agency for review and campaign use.",
-        "Send updated branded Haram leather video asset to agency via WhatsApp.",
-        "Share login details for Facebook Business Manager if needed to complete access setup.",
-        "Review all Facebook and Instagram content and select best assets for initial Meta ads campaign."
+        "Add Sohib Boundaoui as manager to Facebook Business Manager with full asset access to facilitate ad management.",
+        "Send new and existing video content assets, including updated Haram Leather video, via WhatsApp to Sohib Boundaoui for agency review and campaign use.",
+        "Share login details for Facebook Business Manager if needed to complete agency access setup.",
+        "Review all Facebook and Instagram content and select best assets for initial Meta ads campaign.",
+        "Sync Shopify with Meta Shop to enable in-app purchases and reduce checkout friction."
       ],
       "likelihood_percent": 85,
-      "likelihood_reason": "Revenue share deal agreed, budget set ($300/week), August launch planned, actively onboarding with asset sharing."
+      "likelihood_reason": "Agreed on revenue share model, budget set, Facebook access being granted, and August start planned."
     },
     {
       "name": "Tunde Abisogun",
@@ -1002,20 +1352,21 @@
         },
         {
           "source": "meeting",
-          "blurb": "This follow-up call with Tunde's five-month-old dermatology practice covered rising Facebook ad costs and the need to shift strategy toward better lead filtering and SEO growth. His website's domain a",
+          "blurb": "This follow-up call with Tunde's five-month-old dermatology clinic covered rising Facebook ad costs and the need to shift strategy toward better lead filtering and potential call-now ads. His website'",
           "when": "2026-07-24"
         }
       ],
       "possible_existing_client": null,
-      "summary": "Tunde operates a five-month-old dermatology clinic managing marketing partly in-house with Facebook ads and GoHighLevel CRM, and his website has low domain authority at 9 with steady but limited organic growth. Over two calls, discussions focused on SEO support at around $1,500 per month to grow organic traffic through blogging, Google Business optimization, and reviews, as well as rising Facebook ad costs and the need for better lead filtering. Full marketing service pricing ranging from $2,200 to $5,000 per month was revisited, and both parties agreed to reconnect after Tunde completes his acquisition.com cohort in August to discuss potential SEO engagement and AI workflow support.",
+      "summary": "Tunde operates a five-month-old dermatology clinic and is exploring SEO services and AI-driven lead workflows to complement his current in-house Facebook ads and GoHighLevel CRM setup. His website has low domain authority at 9, and he faces rising Facebook ad costs that require better lead filtering and potential call-now ad strategies. The primary interest is SEO support priced around $1,500 per month to drive organic growth through blogging, Google Business optimization, and reviews, along with hybrid AI-human workflows in GoHighLevel. Both discussions concluded with plans to revisit a full engagement after Tunde completes his acquisition.com cohort in August.",
       "action_items": [
-        "Follow up with Sohib after August upon completion of acquisition.com cohort to discuss potential SEO engagement and AI workflow support.",
+        "Follow up with Sohib after August acquisition.com cohort completion to discuss potential SEO engagement and AI workflow support.",
         "Evaluate current SEO and GoHighLevel vendor performance and consider transitioning if needed.",
         "Provide detailed SEO proposal scoped at around $1,500 per month if Tunde opts in later.",
+        "Add more FAQ blog content to website and upload real photos to Google Business Profile.",
         "Continue availability as sounding board and growth partner for marketing-related questions."
       ],
-      "likelihood_percent": 40,
-      "likelihood_reason": "Discussed pricing ($1,500-$5,000/month) but deferred decision until after August cohort completion, no commitment."
+      "likelihood_percent": 35,
+      "likelihood_reason": "Interested in $1,500/month SEO but deferred decision until after August cohort with no commitment."
     }
   ],
   "meetings_digest": [
@@ -1118,53 +1469,26 @@
         "Sohib Boundaoui",
         "Share feedback and research findings on Implant Machine agency with Mouawia to assist in evaluation before contract signing (21:28)"
       ]
-    },
-    {
-      "title": "Full Smile Dental Review",
-      "date": "2026-07-19",
-      "client": "Full Smile",
-      "key_points": [
-        "Lead Generation: 211 leads since Jan 1 at $19 cost with Google Ads proving higher quality than Meta; organic traffic grew 6x.",
-        "Conversion Tracking: Need clearer lead-to-patient data; existing patients confuse lead counts; plan HIPAA-compliant dashboard for spend, leads, and revenue.",
-        "CRM Integration: GHL syncing with Open Dental but bugs cause lead/patient tagging errors; open dental preferred for scheduling; automation planned.",
-        "Communication Tracking: GHL calls/texts help data but office phone preferred for calls; texts from GHL number confuse patients, will switch to office number.",
-        "Strategic Alignment: Monthly reviews planned; clear roles needed in lead generation, capture, revenue ops; budget caution stressed due to cash flow limits."
-      ],
-      "action_items": [
-        "Jamal Sahloul",
-        "Continue documenting call outcomes and scheduling status in Go High Level (GHL) notes for lead qualification (30:14)",
-        "Work with Lily to ensure scheduling primarily occurs in Open Dental but track leads and appointments through GHL (39:53)",
-        "Track patient scheduling in Open Dental including marking marketing leads in appointment notes to aid syncing and data reconciliation (51:18)",
-        "Coordinate with team on preferred call/text workflows integrating GHL number with office Mango number, balancing patient experience and data tracking (31:29)",
-        "Confirm and communicate schedule timing preferences for biweekly or monthly meetings, prioritizing morning weekdays or Sundays (16:53)"
-      ]
     }
   ],
   "comms_flags": [
-    "Quality HVAC: Two critical Ads items stalled over 40 days with no recent activity",
-    "Vous Physique: Two workstreams stalled 47+ days with no client contact",
-    "Flow Company: Two items stalled 3+ weeks with no client or team engagement",
-    "Billy Doe Meats: Two Ads issues stalled >1 week with no visible progress",
-    "MedStation: Two open loops aging 11 days with no movement"
+    "Quality HVAC: Ads items stalled 6–8 weeks with no visible progress",
+    "Flow Company: Internal website SEO update stalled 28 days with no communication",
+    "Vous Physique: Automations stalled 95 days",
+    "Steel Round Bars: Two CRM items stalled 20 days; no client engagement"
   ],
   "blockers": [
-    "Full Smile: Ad tracking numbers routing awaiting confirmation (16d stalled)",
-    "Cotton Collections: Meta Ads access needed for Pixel setup (13d stalled)",
-    "Justice Consumer Law: Zoho admin permissions needed for SMS automation (12d stalled)",
-    "Billy Doe Meats: /halal-subscribe landing page — 75 sessions, 0 conversions (9d stalled)"
+    "Billy Doe Meats: Two Ads issues aging with no visible progress (creatives 10d, /halal-subscribe conversion 10d)",
+    "Full Smile: Ad tracking numbers routing awaiting confirmation (17d)",
+    "Cotton Collections: Meta Ads access needed for Pixel setup (14d)",
+    "MedStation: Two open loops stalled 12 days with no follow-up (patient report, clinic leader connections)"
   ],
   "this_week_priorities": [
     {
       "client": "Quality HVAC",
-      "text": "Quality HVAC: Unblock Google Ads fix and reports (41d+ stalled)",
+      "text": "Quality HVAC: Unblock Google Ads fix and reports (42d, 55d stalls)",
       "action": null,
-      "id": "ba907df7"
-    },
-    {
-      "client": "Vous Physique",
-      "text": "Vous Physique: Re-engage on Meta Ads and automations (47d+ stalled)",
-      "action": null,
-      "id": "dcb59c45"
+      "id": "1a2d535b"
     },
     {
       "client": "Billy Doe Meats",
@@ -1177,6 +1501,12 @@
       "text": "Full Smile: Confirm ad tracking routing and scope HIPAA dashboard",
       "action": null,
       "id": "c1fe8d82"
+    },
+    {
+      "client": "Flow Company",
+      "text": "Flow Company: Restart internal SEO update (28d stall)",
+      "action": null,
+      "id": "eb8d10df"
     }
   ],
   "auto_completed_alerts": [
