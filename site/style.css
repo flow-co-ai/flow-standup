@@ -194,6 +194,145 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 .section-label.stalled-label { color: #DE6E4C; }
 
+/* ── Layer 1 health score section (docs/scoring-spec-draft.md §1) ──────────── */
+
+/* Full-card hero treatment -- this is the number the card is supposed to be
+   read for first, so it's the biggest, boldest thing in the score section. */
+.ops-score-hero {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+.ops-score-hero-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+}
+.ops-score-hero-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(237,233,220,0.4);
+}
+
+.subscore-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.subscore-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 8px;
+  padding: 5px 8px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+.subscore-chip-label { opacity: 0.85; }
+.subscore-chip-value { font-weight: 600; }
+.subscore-chip-value-muted { opacity: 0.6; font-weight: 500; }
+
+/* Compact variant used on grid mini-cards -- same chip, tighter footprint */
+.subscore-row-compact {
+  margin-top: 10px;
+  padding-top: 9px;
+  border-top: 1px solid rgba(237,233,220,0.07);
+  gap: 5px;
+}
+.subscore-chip-compact {
+  font-size: 8.5px;
+  padding: 3px 6px;
+  gap: 4px;
+  border-radius: 6px;
+}
+
+.flag-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+.flag-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: rgba(222,110,76,0.05);
+  border: 1px solid rgba(222,110,76,0.22);
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+.flag-row-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #DE6E4C;
+}
+.flag-row-action {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: rgba(220,216,200,0.75);
+}
+
+/* ── aggregate ops-health trend (page-level, above the client grid) ────────── */
+.ops-health-trend {
+  background: #141A14;
+  border: 1px solid rgba(237,233,220,0.08);
+  border-radius: 16px;
+  padding: 16px 16px 14px;
+  margin-top: 18px;
+}
+.ops-health-trend-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(237,233,220,0.4);
+  margin-bottom: 10px;
+}
+.ops-health-trend-empty {
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(220,216,200,0.55);
+  padding: 6px 0 2px;
+}
+.ops-health-trend-chart { width: 100%; }
+.ops-health-trend-chart svg { display: block; width: 100%; }
+
+.trend-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(237,233,220,0.07);
+}
+.trend-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  color: rgba(220,216,200,0.65);
+}
+.trend-legend-swatch {
+  display: inline-block;
+  width: 14px;
+  border-radius: 2px;
+}
+
 /* ── row wrapper (checkbox + content) ────────────────────────────────────── */
 .row-wrapper {
   display: flex;
@@ -846,10 +985,38 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .mini-card:active { transform: scale(0.985); }
 .mini-card:focus-visible { outline: 2px solid #A9B478; outline-offset: 2px; }
 
+.mini-top-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
 .mini-state {
   display: inline-flex;
   align-items: center;
   gap: 7px;
+  margin-top: 3px; /* optically aligns the small dot+label with the OPS SCORE number's baseline */
+}
+.ops-score-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+.ops-score-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+}
+.ops-score-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(237,233,220,0.4);
+  margin-top: 3px;
 }
 .mini-dot {
   width: 7px;

@@ -84,28 +84,48 @@ def _parse_ff_date(date_val) -> str:
     return str(date_val)
 
 
+_TRANSCRIPTS_QUERY = """
+query Transcripts($fromDate: DateTime, $toDate: DateTime, $limit: Int, $skip: Int) {
+  transcripts(fromDate: $fromDate, toDate: $toDate, limit: $limit, skip: $skip) {
+    id
+    title
+    date
+    summary {
+      overview
+      action_items
+      keywords
+    }
+  }
+}
+"""
+
+
+def _fetch_transcripts_raw(from_date: str, to_date: str) -> list:
+    """Paginates via skip/limit -- a single page silently caps at whatever
+    `limit` is (confirmed live: a 30-day window already returns exactly 50
+    unpaginated, meaning real volume exceeds it), so anything wider than a
+    few days needs this to avoid silently dropping older meetings."""
+    page_size = 50
+    skip = 0
+    raw: list = []
+    while True:
+        payload = _post(_TRANSCRIPTS_QUERY, {
+            "fromDate": from_date, "toDate": to_date, "limit": page_size, "skip": skip,
+        })
+        page = (payload.get("data") or {}).get("transcripts", []) or []
+        raw.extend(page)
+        if len(page) < page_size:
+            break
+        skip += page_size
+    return raw
+
+
 def fetch_transcripts(days_back: int = 7) -> list:
     cutoff = datetime.now(timezone.utc) - timedelta(days=days_back)
     from_date = cutoff.strftime("%Y-%m-%d")
     to_date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
-    query = """
-    query Transcripts($fromDate: DateTime, $toDate: DateTime) {
-      transcripts(fromDate: $fromDate, toDate: $toDate, limit: 50) {
-        id
-        title
-        date
-        summary {
-          overview
-          action_items
-          keywords
-        }
-      }
-    }
-    """
-
-    payload = _post(query, {"fromDate": from_date, "toDate": to_date})
-    raw = (payload.get("data") or {}).get("transcripts", []) or []
+    raw = _fetch_transcripts_raw(from_date, to_date)
 
     results = []
     for t in raw:
