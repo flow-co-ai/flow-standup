@@ -1518,7 +1518,7 @@ function buildOpsHealthTrendLegend() {
     el('span', { class: 'trend-legend-label', text: label }),
   );
   return el('div', { class: 'trend-legend' },
-    item(TREND_COMPOSITE_COLOR, 'Composite (all clients)', true),
+    item(TREND_COMPOSITE_COLOR, 'Overall Health', true),
     ...TREND_SUB_DIMENSIONS.map(d => item(d.color, d.label, false)),
   );
 }
