@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T20:57:45.928Z",
+  "generated_at": "2026-07-27T23:11:12.065Z",
   "date": "2026-07-27",
   "slug": "liferun",
   "name": "Liferun",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 48,
   "status": "orange",
-  "verdict": "CPL spiked 101% week-over-week to $47.56 as leads dropped 41% in the last 7 days, likely driven by Google Ads' \"BWS - Search Campaign - Calls\" ($1,176.76 spend) generating 0 conversions over the 28-day window while continuing to consume the majority of budget ($2,248.48 of $2,806.04 total spend).",
+  "verdict": "CPL spiked 101% week-over-week to $47.56 as leads dropped 41% in the last 7 days, likely driven by Google Ads (\"BWS - Search Campaign - Calls\" alone accounting for $1,176.76 in spend) delivering 0 conversions over the 28-day window while continuing to consume $2,248.48 of the total $2,806.04 budget.",
   "windsor": {
     "totals": {
       "spend": 2806.04,
@@ -437,44 +437,44 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-07-27T20:59:55.231Z",
+    "generated_at": "2026-07-27T23:12:56.779Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Google consuming 80% of budget with zero confirmed conversions for 28 days.",
+    "verdict": "Google is burning $2,248 with zero conversions; Meta alone is working.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Google Ads spent $2,248.48 over 28 days and recorded 0 conversions — every lead in the window came from Meta ($557.56, 59 leads, CPL ~$9.45).",
+        "text": "Google Ads consumed $2,248.48 over 28 days and returned 0 conversions — confirmed dead weight driving CPL to $47.56.",
         "confidence": "confirmed",
-        "channel": "google_ads"
+        "channel": "google"
       },
       {
         "id": "F2",
         "priority": 1,
-        "text": "Blended CPL spiked 101% to $47.56 because Google's zero-conversion spend inflates the denominator; Meta's true CPL is ~$9.45 vs ~$16 baseline.",
+        "text": "Meta delivered all 59 leads on $557.56 spend (CPL ~$9.45), but leads fell 41% last 7 days as Meta spend held roughly flat.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "3-day signal (Jul 22–24) vs prior 3 (Jul 17–19): leads dropped from 15 to 6 while Meta spend fell from ~$98 to ~$81; trend is spend-led, not demand collapse.",
+        "text": "3-day signal (Jul 23–25): 6 leads on $191.49 spend vs prior 3 days (Jul 20–22): 4 leads on $330.94 — Meta efficiency improving but volume still thin.",
         "confidence": "probable",
         "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 2,
-        "text": "channel_dark flags: Jul 25–26 show $0 spend and 0 leads across both channels — 2 consecutive zero-spend days mid-week indicate a billing or campaign pause event.",
+        "text": "Zero spend on Jul 19–20 and Jul 26–27 (zero_spend_day + channel_dark flags) indicates a recurring weekend/scheduling gap causing lead drought.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "cross"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 83 opportunities created but 0 appointments and 0 won; 59 ad leads vs 83 opps suggests manual entry inflating pipeline — intake process needs audit.",
-        "confidence": "hypothesis",
+        "text": "GHL shows 83 opportunities created but 0 won and 0 appointments — pipeline intake is logging contacts but no conversion motion is occurring.",
+        "confidence": "probable",
         "channel": "ghl"
       }
     ],
@@ -482,34 +482,33 @@
       {
         "id": "S1",
         "type": "kill",
-        "text": "Pause BWS - Search Campaign - Calls: $1,176.76 spent, 0 conversions over 28 days — confirmed zero-result spend.",
+        "text": "Pause Google Ads immediately — $2,248.48 spent over 28 days with 0 conversions is a confirmed total loss.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Pause BWS Search Calls Campaign",
-        "monday_update": "Pause 'BWS - Search Campaign - Calls' immediately. This campaign spent $1,176.76 (and Google Ads total $2,248.48) in 28 days with 0 recorded conversions. Success is confirmed when Google Ads spend drops to $0 on this campaign by 2026-07-28. Do not redirect budget until billing/pause issue from F4 is resolved."
+        "monday_item_name": "Pause Google Ads Campaign",
+        "monday_update": "Pause BWS - Search Campaign - Calls and all active Google Ads ad sets effective today. Google consumed $2,248.48 over 28 days with 0 conversions recorded, a confirmed dead-weight channel. Success check: zero Google spend appearing in next report by 2026-07-30. Sohib to confirm client has been informed before pausing."
       },
       {
         "id": "S2",
         "type": "budget_shift",
-        "text": "Shift up to $40/day of freed Google budget into Meta once zero-spend days are explained; Meta CPL is ~$9.45 vs $47.56 blended.",
+        "text": "Redirect up to $50/day from paused Google budget into Meta — Meta CPL is ~$9.45 vs blended $47.56; scale in one step, not more.",
         "cites": [
           "F1",
-          "F2",
-          "F4"
+          "F2"
         ],
-        "monday_item_name": "Meta Budget Shift Post-Pause",
-        "monday_update": "Once the Jul 25–26 zero-spend event is diagnosed and cleared (billing or account suspension), redirect $40/day from paused Google campaign into Meta. Meta delivered all 59 leads at ~$9.45 CPL vs the blended $47.56. Success check: Meta CPL remains below $15 after 7 days of increased spend, by 2026-08-04."
+        "monday_item_name": "Shift Google Budget to Meta",
+        "monday_update": "Following Google pause, move $50/day of recaptured budget into the Meta campaign that generated all 59 leads at ~$9.45 CPL. Do not exceed a 20% single-step increase until CPL holds below $15 for 3 consecutive days. Re-check on 2026-07-30 to confirm Meta lead volume responds without CPL degradation."
       },
       {
         "id": "S3",
         "type": "fix",
-        "text": "Investigate Jul 25–26 zero-spend across all channels; confirm billing or account status before any budget changes execute.",
+        "text": "Resolve zero-spend weekend scheduling gap — ads going dark Sat–Sun is killing weekly lead continuity.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Diagnose Zero-Spend Jul 25–26",
-        "monday_update": "Both Meta and Google recorded $0 spend on Jul 25–26 with no leads. Check Meta and Google Ads account status, billing thresholds, and campaign pause states. This must be resolved before S2 budget shift executes. Confirm accounts are live and spending by 2026-07-28."
+        "monday_item_name": "Fix Weekend Spend Gap",
+        "monday_update": "Audit Meta and Google (pre-pause) campaign schedules for weekend dayparting exclusions causing zero spend on Jul 19–20 and Jul 26–27. Enable 7-day delivery on Meta with the existing daily budget. Success check: no zero-spend days in the next 7-day window; confirm by re-check on 2026-07-30."
       }
     ],
     "next_check": "2026-07-30"

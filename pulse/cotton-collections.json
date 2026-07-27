@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T20:55:57.902Z",
+  "generated_at": "2026-07-27T23:10:18.684Z",
   "date": "2026-07-27",
   "slug": "cotton-collections",
   "name": "Cotton Collections",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Cotton Collections has spent $59.98 over the past 28 days across 90 Meta clicks but generated zero leads, signaling a serious conversion breakdown between the ad and the landing/contact experience. The entire budget is concentrated in the \"Algeria - Sales Campaign,\" so auditing that campaign's landing page and lead form should be the immediate priority.",
+  "verdict": "Cotton Collections has spent $59.98 over the past 28 days across 90 Meta clicks but generated zero leads, signaling a critical conversion breakdown between the ad click and the lead form or landing page. The entire budget is concentrated in the \"Algeria - Sales Campaign,\" so auditing that campaign's post-click experience should be the immediate priority.",
   "windsor": {
     "totals": {
       "spend": 59.98,
@@ -416,71 +416,64 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-07-27T20:59:12.231Z",
+    "generated_at": "2026-07-27T23:12:09.925Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Zero leads across 90 clicks; conversion layer is broken, not the ads.",
+    "verdict": "Spend just launched 3 days ago; zero leads confirms broken post-click conversion.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "lead_drought confirmed: 0 leads from 90 Meta clicks and $59.98 spend — CPL is undefined, meaning the conversion path is non-functional.",
+        "text": "lead_drought confirmed: 90 Meta clicks and $59.98 spend over 28 days produced 0 leads — CPL is undefined, conversion rate is 0%.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Spend only activated 3 days ago ($14.52, $16.65, $28.81); 3-day lead signal is 0 vs 0 prior — campaign is brand new with no baseline to judge efficiency.",
+        "text": "Spend only activated 3 days ago ($14.52 → $16.65 → $28.81); prior 25 days were $0. There is no meaningful baseline to trend against yet.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "Spend accelerating fast: day 3 spend ($28.81) is nearly double day 1 ($14.52), but leads remain 0 — budget is scaling into a broken funnel.",
+        "priority": 3,
+        "text": "GA4 sessions are 0 across all 28 days despite 90 ad clicks — tracking is either uninstalled or broken, obscuring true post-click behaviour.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "ga4"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GBP shows 0 actions, 0 calls, 0 web clicks across 28 days — organic signals are entirely absent, no cross-channel support for paid effort.",
+        "text": "GBP actions, calls, directions, and web clicks are all 0 for the full 28-day window — organic search presence is effectively invisible.",
         "confidence": "confirmed",
         "channel": "gbp"
-      },
-      {
-        "id": "F5",
-        "priority": 4,
-        "text": "GA4 sessions are 0 across all 28 days despite 90 Meta clicks — either GA4 is not installed or clicks are landing on an untracked or broken page.",
-        "confidence": "probable",
-        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit Algeria - Sales Campaign lead form and landing page; verify destination URL resolves and form submits correctly.",
+        "text": "Audit Algeria - Sales Campaign landing page and lead form immediately; 90 clicks at $59.98 have converted at 0%.",
         "cites": [
           "F1",
-          "F5"
+          "F3"
         ],
         "monday_item_name": "Fix Algeria campaign conversion path",
-        "monday_update": "The Algeria - Sales Campaign has received 90 clicks and spent $59.98 with zero leads recorded, and GA4 shows 0 sessions, indicating the destination page or lead form is broken or untracked. Action: manually click through the ad, test the form submission end-to-end, and confirm GA4 tag fires on the thank-you or confirmation step. Success is confirmed when at least 1 tracked lead registers and GA4 sessions appear. Complete audit by 2026-07-29."
+        "monday_update": "The Algeria - Sales Campaign has received 90 clicks and spent $59.98 with zero leads captured. GA4 sessions also read 0, indicating the tracking pixel and/or lead form is broken — clicks are not reaching or firing on the destination page. Verify GA4 tag installation, test the lead form end-to-end, and confirm Meta pixel LeadEvent is firing correctly. Success check: at least 1 confirmed lead captured and 1 GA4 session recorded by 2026-07-30."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Hold current spend; do not scale Algeria campaign further until conversion path is confirmed working.",
+        "text": "Hold all budget changes; campaign is only 3 days old with a broken conversion path — scaling now wastes money.",
         "cites": [
-          "F3",
+          "F2",
           "F1"
         ],
-        "monday_item_name": "Hold Algeria spend — fix first",
-        "monday_update": "Spend escalated from $14.52 to $28.81 in 3 days while leads remain at 0 — continuing to scale would deepen losses into a broken funnel. Hold daily budget at current level until the fix in S1 is verified. Re-check on 2026-07-30 to confirm leads are registering before any scale decision is made."
+        "monday_item_name": "Watch Algeria campaign post-fix",
+        "monday_update": "Spend only began on 2026-07-25 ($14.52, $16.65, $28.81 over 3 days), so there is no performance baseline to act on. Budget decisions cannot be made until the conversion path is confirmed working (see S1). Re-check on 2026-07-31 after the fix is live; if leads remain at 0 after 3 post-fix days, escalate to a kill decision."
       }
     ],
-    "next_check": "2026-07-30"
+    "next_check": "2026-07-31"
   }
 }

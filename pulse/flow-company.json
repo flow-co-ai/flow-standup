@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T20:56:19.408Z",
+  "generated_at": "2026-07-27T23:10:24.873Z",
   "date": "2026-07-27",
   "slug": "flow-company",
   "name": "Flow Company",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Flow Company is in a lead drought with only 4 leads at a $320.04 CPL over the last 28 days, all driven by Meta (zero activity from Google Ads or GBP). The biggest movement is a 300% spike in Instagram engagement week-over-week, likely fueled by the top campaign \"BWS - Clinic - Awareness - New IG\" consuming $1,006.43 of the $1,280.14 total spend, but that awareness push has yet to convert into meaningful lead volume.",
+  "verdict": "Flow Company is in a lead drought with only 4 leads at a $320.04 CPL over 28 days, all from Meta despite $1,280.14 in spend. The standout movement is Instagram sessions spiking +300% week-over-week, likely driven by the top campaign \"BWS - Clinic - Awareness - New IG\" consuming $1,006.43 of budget, but that awareness spend is not yet converting to leads.",
   "windsor": {
     "totals": {
       "spend": 1280.14,
@@ -440,44 +440,44 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-07-27T20:59:34.407Z",
+    "generated_at": "2026-07-27T23:12:34.138Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Awareness spend is running; conversion infrastructure is not.",
+    "verdict": "Awareness spend is confirmed not converting; lead drought is structural, not cyclical.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Lead drought confirmed: only 4 leads in 28 days at $320.04 CPL. Last lead was July 21 — zero for 6 consecutive days.",
+        "text": "Lead drought is severe and confirmed: 4 leads in 28 days at $320.04 CPL, with zero leads in the last 24 of 28 days in the series.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 1,
-        "text": "3-day spend signal (Jul 24–26 avg $35.84) is down vs prior 3 days (Jul 21–23 avg $45.47) — spend is drifting lower with zero conversion output.",
+        "text": "Top campaign 'BWS - Clinic - Awareness - New IG' consumed $1,006.43 of $1,280.14 total spend (79%) with no confirmed lead conversions attributed to it.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Top campaign 'BWS - Clinic - Awareness - New IG' consumed $1,006.43 of $1,280.14 total spend — 79% on awareness, not lead gen. This explains the drought structurally.",
+        "text": "3-day signal (Jul 24–26) vs prior 3 days (Jul 21–23): spend $107.52 vs $135.42 — spend declining while leads remain flat at zero. No recovery in sight.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "IG reach spiked 300% week-over-week to 202, yet zero leads followed. Awareness creative is reaching people but has no conversion path attached.",
-        "confidence": "probable",
+        "text": "IG reach spiked +300% week-over-week and GA4 sessions are 878 over 28 days, but GA4 conversions read 0 — possible GA4 goal misconfiguration masking form submissions.",
+        "confidence": "hypothesis",
         "channel": "meta"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 16 opportunities created but 0 leads attributed to ads and 0 appointments. Intake pipeline exists but ads are not feeding it — not a CRM leak, an ads gap.",
-        "confidence": "confirmed",
+        "text": "GHL shows 17 contacts and 16 opportunities created against only 4 reported leads — 12–13 contacts unaccounted for by ad attribution; intake source unclear.",
+        "confidence": "probable",
         "channel": "meta"
       }
     ],
@@ -485,36 +485,35 @@
       {
         "id": "S1",
         "type": "budget_shift",
-        "text": "Shift $20/day from awareness campaign to a new lead-gen campaign; protect remaining $20/day awareness floor.",
+        "text": "Shift ~$20/day from 'BWS - Clinic - Awareness - New IG' to a direct lead-gen conversion campaign; cap awareness at $25/day.",
         "cites": [
           "F1",
-          "F3"
+          "F2"
         ],
-        "monday_item_name": "Budget Shift: Awareness to Leadgen",
-        "monday_update": "The 'BWS - Clinic - Awareness - New IG' campaign is consuming $1,006.43 (79%) of 28-day spend with only 4 leads at $320.04 CPL. Redirect $20/day from that campaign into a direct-response lead-gen campaign targeting the same audience. Success check: at least 2 leads within 7 days of launch at CPL below $200. Re-evaluate by 2026-08-03."
+        "monday_item_name": "Shift Budget to Conversion",
+        "monday_update": "The awareness campaign 'BWS - Clinic - Awareness - New IG' is consuming $1,006.43 of $1,280.14 in 28-day spend with zero confirmed lead conversions, driving a $320.04 CPL across only 4 leads. Shift approximately $20/day from that campaign into a conversion-objective campaign targeting lead form submissions or website conversions. Success check: CPL below $150 and at least 4 new leads within 14 days of the shift (by 2026-08-10)."
       },
       {
         "id": "S2",
-        "type": "creative_refresh",
-        "text": "Launch a conversion-objective ad with a direct offer or CTA into the existing warm IG audience of 202 reached.",
+        "type": "fix",
+        "text": "Audit GA4 conversion goals — 878 sessions with 0 GA4 conversions signals a broken or unconfigured goal; verify form-submission event fires.",
         "cites": [
-          "F4",
-          "F5"
+          "F4"
         ],
-        "monday_item_name": "Conversion Creative for IG Audience",
-        "monday_update": "IG reach grew 300% week-over-week to 202 but produced zero leads, indicating a warm audience with no conversion path. Create one conversion-objective ad (form or landing page CTA) targeted at this warmed audience. Success check: at least 1 qualified lead generated and entered into GHL pipeline within 7 days. Re-evaluate by 2026-08-03."
+        "monday_item_name": "Fix GA4 Conversion Tracking",
+        "monday_update": "GA4 recorded 878 sessions and 844 users over 28 days but reports 0 conversions, which almost certainly means the conversion event (e.g. form submission or thank-you page) is not tagged correctly. Check the GA4 event configuration and confirm the trigger fires on a test submission. Success check: GA4 shows at least 1 conversion event recorded within 3 days of the fix, confirming the goal is live."
       },
       {
         "id": "S3",
-        "type": "watch",
-        "text": "Watch spend consistency: daily spend fell to $20 on Jul 25 — confirm no budget cap or account issue by Jul 30.",
+        "type": "fix",
+        "text": "Audit GHL intake source for 12–13 contacts with no ad attribution — confirm whether organic or direct leads are bypassing pipeline tracking.",
         "cites": [
-          "F2"
+          "F5"
         ],
-        "monday_item_name": "Watch: Spend Consistency Jul 30",
-        "monday_update": "Daily spend dropped to $20 on July 25 against a recent average of ~$45/day, and the 3-day average has drifted to $35.84. This may indicate a budget cap being hit or an account delivery issue. Check Meta Ads Manager for delivery warnings or budget exhaustion. If spend does not recover to $40+/day by July 30, escalate to account review."
+        "monday_item_name": "GHL Contact Source Audit",
+        "monday_update": "GHL shows 17 contacts and 16 opportunities created, but Meta ads attributed only 4 leads over 28 days — leaving 12–13 contacts with unclear origins. Review GHL contact source fields to determine if these are organic, direct, or referral leads not tagged to a campaign. Success check: all 17 contacts have a confirmed source field populated, clarifying whether the paid funnel is underreporting by 2026-07-31."
       }
     ],
-    "next_check": "2026-07-30"
+    "next_check": "2026-07-31"
   }
 }
