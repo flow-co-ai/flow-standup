@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T13:33:08.108Z",
+  "generated_at": "2026-07-27T20:56:19.408Z",
   "date": "2026-07-27",
   "slug": "flow-company",
   "name": "Flow Company",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Flow Company is in a lead drought with only 4 leads at a $320.04 CPL over the last 28 days, all from Meta despite $1,280.14 in spend. The biggest movement is a 300% spike in Instagram engagement week-over-week, likely driven by the top campaign \"BWS - Clinic - Awareness - New IG\" consuming $1,006.43 of budget, but awareness spend is not yet converting to leads.",
+  "verdict": "Flow Company is in a lead drought with only 4 leads at a $320.04 CPL over the last 28 days, all driven by Meta (zero activity from Google Ads or GBP). The biggest movement is a 300% spike in Instagram engagement week-over-week, likely fueled by the top campaign \"BWS - Clinic - Awareness - New IG\" consuming $1,006.43 of the $1,280.14 total spend, but that awareness push has yet to convert into meaningful lead volume.",
   "windsor": {
     "totals": {
       "spend": 1280.14,
@@ -41,8 +41,8 @@
       "spend": 1006.43
     },
     "analytics": {
-      "sessions": 877,
-      "users": 843,
+      "sessions": 878,
+      "users": 844,
       "conversions": 0
     },
     "search": {
@@ -64,7 +64,7 @@
       "gbp_actions": 0,
       "ig_reach": 0,
       "sc_clicks": 0,
-      "ga4_sessions": 34,
+      "ga4_sessions": 35,
       "purchases": 0,
       "revenue": 0
     },
@@ -76,7 +76,7 @@
       "google_spend_7d_pct": null,
       "gbp_7d_pct": null,
       "sc_7d_pct": 200,
-      "ga4_7d_pct": 2.31,
+      "ga4_7d_pct": 2.78,
       "ig_7d_pct": 300,
       "spend_per_day_7d": 40.16
     },
@@ -352,7 +352,7 @@
         31,
         21,
         20,
-        34
+        35
       ],
       "purchases": [
         0,
@@ -440,78 +440,79 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-07-27T13:36:50.070Z",
+    "generated_at": "2026-07-27T20:59:34.407Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Awareness campaign is burning budget; only 4 leads in 28 days confirms structural misalignment.",
+    "verdict": "Awareness spend is running; conversion infrastructure is not.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Lead drought confirmed: 4 leads in 28 days at $320.04 CPL, with zero leads in the last 25 days of the series.",
+        "text": "Lead drought confirmed: only 4 leads in 28 days at $320.04 CPL. Last lead was July 21 — zero for 6 consecutive days.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 1,
-        "text": "78.6% of $1,280.14 spend ($1,006.43) is in an Awareness campaign — awareness objectives do not generate leads; budget is structurally misallocated.",
+        "text": "3-day spend signal (Jul 24–26 avg $35.84) is down vs prior 3 days (Jul 21–23 avg $45.47) — spend is drifting lower with zero conversion output.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "3-day spend signal (Jul 24–26: $41.68, $20, $45.84 avg ~$35.84) is below the 28-day avg of ~$45.72, a mild downward drift, not a spike.",
-        "confidence": "probable",
+        "text": "Top campaign 'BWS - Clinic - Awareness - New IG' consumed $1,006.43 of $1,280.14 total spend — 79% on awareness, not lead gen. This explains the drought structurally.",
+        "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "IG reach spiked 300% WoW but delivered 0 leads; 877 GA4 sessions with 0 GA4 conversions — awareness is generating traffic, not pipeline.",
-        "confidence": "confirmed",
+        "text": "IG reach spiked 300% week-over-week to 202, yet zero leads followed. Awareness creative is reaching people but has no conversion path attached.",
+        "confidence": "probable",
         "channel": "meta"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 16 opportunities created against only 4 reported leads — a 4:1 ratio suggests either duplicate CRM entries or a lead source not tracked in ads data.",
-        "confidence": "hypothesis",
-        "channel": "ghl"
+        "text": "GHL shows 16 opportunities created but 0 leads attributed to ads and 0 appointments. Intake pipeline exists but ads are not feeding it — not a CRM leak, an ads gap.",
+        "confidence": "confirmed",
+        "channel": "meta"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "budget_shift",
-        "text": "Shift ~$25/day from BWS Awareness campaign into a lead-gen objective campaign to directly address $320.04 CPL.",
+        "text": "Shift $20/day from awareness campaign to a new lead-gen campaign; protect remaining $20/day awareness floor.",
         "cites": [
           "F1",
-          "F2"
+          "F3"
         ],
-        "monday_item_name": "Shift Budget to Lead-Gen",
-        "monday_update": "The Awareness campaign (BWS - Clinic - Awareness - New IG) is consuming $1,006.43 of $1,280.14 total spend (78.6%) while producing 0 leads in the last 25 days. Reallocate approximately $25/day from this awareness campaign into a conversion or lead-gen objective campaign targeting the same audience. Success is defined as CPL dropping below $200 within 14 days (by 2026-08-10). If no lead-gen campaign exists, one must be created before this shift can execute — Sohib to confirm."
+        "monday_item_name": "Budget Shift: Awareness to Leadgen",
+        "monday_update": "The 'BWS - Clinic - Awareness - New IG' campaign is consuming $1,006.43 (79%) of 28-day spend with only 4 leads at $320.04 CPL. Redirect $20/day from that campaign into a direct-response lead-gen campaign targeting the same audience. Success check: at least 2 leads within 7 days of launch at CPL below $200. Re-evaluate by 2026-08-03."
       },
       {
         "id": "S2",
-        "type": "fix",
-        "text": "Audit GHL pipeline: 16 opps vs 4 tracked leads — reconcile source discrepancy to confirm true intake volume.",
+        "type": "creative_refresh",
+        "text": "Launch a conversion-objective ad with a direct offer or CTA into the existing warm IG audience of 202 reached.",
         "cites": [
+          "F4",
           "F5"
         ],
-        "monday_item_name": "GHL Lead Source Audit",
-        "monday_update": "GHL shows 16 opportunities created but ads data reports only 4 leads in the same 28-day window. This 4:1 gap likely means leads are entering via an untracked channel (e.g. direct calls, referrals, organic DMs) or duplicate CRM entries are inflating opp count. Audit GHL contact sources and dedup entries. Success check: a clean attribution breakdown by source completed by 2026-08-03."
+        "monday_item_name": "Conversion Creative for IG Audience",
+        "monday_update": "IG reach grew 300% week-over-week to 202 but produced zero leads, indicating a warm audience with no conversion path. Create one conversion-objective ad (form or landing page CTA) targeted at this warmed audience. Success check: at least 1 qualified lead generated and entered into GHL pipeline within 7 days. Re-evaluate by 2026-08-03."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch IG reach trend — 300% WoW spike with 0 conversions; re-check on 2026-07-30 for any lead crossover.",
+        "text": "Watch spend consistency: daily spend fell to $20 on Jul 25 — confirm no budget cap or account issue by Jul 30.",
         "cites": [
-          "F4"
+          "F2"
         ],
-        "monday_item_name": "Watch IG Reach vs Leads",
-        "monday_update": "Instagram reach spiked 300% week-over-week but produced 0 leads and 0 GA4 conversions. This is awareness momentum with no bottom-funnel payoff yet. Monitor whether the reach increase begins driving lead form submissions or site conversions by 2026-07-30. If still 0 leads by that date, treat as confirmed that reach alone is not converting and deprioritise the awareness objective further."
+        "monday_item_name": "Watch: Spend Consistency Jul 30",
+        "monday_update": "Daily spend dropped to $20 on July 25 against a recent average of ~$45/day, and the 3-day average has drifted to $35.84. This may indicate a budget cap being hit or an account delivery issue. Check Meta Ads Manager for delivery warnings or budget exhaustion. If spend does not recover to $40+/day by July 30, escalate to account review."
       }
     ],
     "next_check": "2026-07-30"

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T13:32:20.866Z",
+  "generated_at": "2026-07-27T20:55:16.888Z",
   "date": "2026-07-27",
   "slug": "billy-doe",
   "name": "Billy Doe Meats",
@@ -7,16 +7,16 @@
   "window_days": 28,
   "score": 60,
   "status": "amber",
-  "verdict": "ROAS dropped 67.14% week-over-week and purchases fell 36.36%, likely driven by the top campaign \"BWS - Muslim Subscription Box - 17/06/26\" (spending $697.88, nearly half of total budget) underperforming as audience saturation or creative fatigue sets in. GBP engagement also slid 21.77%, suggesting softer overall brand demand that is compounding the revenue pressure.",
+  "verdict": "ROAS dropped 67.15% week-over-week despite a modest 3.94% spend increase, likely driven by the top campaign \"BWS - Muslim Subscription Box - 17/06/26\" absorbing $697.97 of the $1,437.17 budget while purchases fell 36.36%, signaling the creative or audience may be fatiguing and needs a refresh.",
   "windsor": {
     "totals": {
-      "spend": 1437.05,
+      "spend": 1437.17,
       "leads": 0,
       "cpl": 0,
       "roas": 4.8,
       "byChannel": {
         "meta": {
-          "spend": 1437.05,
+          "spend": 1437.17,
           "leads": 0,
           "clicks": 1450,
           "purchases": 36,
@@ -41,7 +41,7 @@
     },
     "top_campaign": {
       "name": "BWS - Muslim Subscription Box - 17/06/26",
-      "spend": 697.88
+      "spend": 697.97
     },
     "analytics": {
       "sessions": 6301,
@@ -60,9 +60,9 @@
     },
     "latest_day": {
       "date": "2026-07-26",
-      "spend": 62.81,
+      "spend": 62.93,
       "leads": 0,
-      "meta_spend": 62.81,
+      "meta_spend": 62.93,
       "google_spend": 0,
       "gbp_actions": 0,
       "ig_reach": 947,
@@ -72,7 +72,7 @@
       "revenue": 0
     },
     "deltas": {
-      "spend_7d_pct": 3.91,
+      "spend_7d_pct": 3.94,
       "leads_7d_pct": null,
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
@@ -81,9 +81,9 @@
       "sc_7d_pct": null,
       "ga4_7d_pct": -3.28,
       "ig_7d_pct": 2.46,
-      "spend_per_day_7d": 54.45,
+      "spend_per_day_7d": 54.47,
       "purchases_7d_pct": -36.36,
-      "roas_7d_pct": -67.14
+      "roas_7d_pct": -67.15
     },
     "flags": [
       "lead_drought"
@@ -147,7 +147,7 @@
         49.98,
         56.03,
         52.82,
-        62.81
+        62.93
       ],
       "leads": [
         0,
@@ -207,7 +207,7 @@
         49.98,
         56.03,
         52.82,
-        62.81
+        62.93
       ],
       "google_spend": [
         0,
@@ -433,79 +433,81 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-07-27T13:36:04.413Z",
+    "generated_at": "2026-07-27T20:58:53.594Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Purchase engine has stalled 7 days; ROAS collapse is structural, not seasonal.",
+    "verdict": "ROAS collapse is real; last 6 days show zero purchases — not just a dip.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "ROAS fell 67.14% week-over-week; last 7 purchases are zero across Jul 20–26, revenue $0 for 5 straight days.",
+        "text": "Zero purchases recorded across the last 6 days (Jul 21–26), confirming ROAS collapse to 0 in that window, not a 7d averaging artifact.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
-        "priority": 2,
-        "text": "3-day signal (Jul 24–26) vs prior 3 (Jul 21–23): purchases 0 vs 6, revenue $0 vs $951.77 — confirmed downtrend, not noise.",
+        "priority": 1,
+        "text": "ROAS down -67.15% week-over-week; 28-day blended ROAS is 4.8x but the last 6-day streak of $0 revenue on ~$52/day spend is a full breakdown.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F3",
-        "priority": 3,
-        "text": "Top campaign 'BWS - Muslim Subscription Box' consumed $697.88 (49% of 28d spend) while delivering zero purchases in the last 7 days.",
+        "priority": 2,
+        "text": "3-day signal (Jul 24–26): 0 purchases, $171.78 spend vs prior 3 days (Jul 21–23): 6 purchases, $163.51 spend — a sharp directional reversal, not noise.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Spend held flat (+3.91%) while results collapsed — flat $52–62/day spend against zero purchases for 5 days is textbook creative/audience fatigue.",
+        "text": "GBP actions recorded 0 on Jul 25 and Jul 26 (prior daily average ~19), suggesting either a tracking gap or a sudden organic drop coinciding with ad fatigue.",
         "confidence": "probable",
-        "channel": "meta"
+        "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GBP actions show 0 for Jul 25–26 (data gap likely), down 21.77% overall; softer organic demand removes the safety net under paid underperformance.",
-        "confidence": "hypothesis",
-        "channel": "gbp"
+        "text": "GA4 sessions held steady (~231–287 in last 3 days) while purchases hit 0, pointing to a conversion/checkout breakdown rather than a traffic loss.",
+        "confidence": "probable",
+        "channel": "meta"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "kill",
-        "text": "Pause 'BWS - Muslim Subscription Box' campaign immediately; $697.88 spent, zero purchases last 7 days.",
+        "type": "fix",
+        "text": "Audit Shopify-Meta purchase pixel immediately; 6 consecutive zero-purchase days with stable sessions signals a tracking or checkout break.",
         "cites": [
-          "F1",
-          "F3"
+          "F3",
+          "F5"
         ],
-        "monday_item_name": "Pause Muslim Sub Box Campaign",
-        "monday_update": "Pause the 'BWS - Muslim Subscription Box - 17/06/26' campaign. It has consumed $697.88 over 28 days and delivered zero purchases in the last 7 days, contributing directly to the 67.14% ROAS collapse. Success is confirmed when daily spend stops flowing to this campaign and daily ROAS begins recovering toward the 28d baseline of 4.8. Re-check by 2026-07-30."
+        "monday_item_name": "Fix Meta Purchase Pixel",
+        "monday_update": "GA4 sessions averaged 251/day over the last 3 days (Jul 24–26) while Meta recorded 0 purchases and $0 revenue — this divergence points to a Shopify-Meta pixel fire failure or a checkout page break, not an ads problem. Verify the Meta purchase event is firing on Shopify order confirmation using Meta Events Manager and a test purchase. Success is confirmed when at least 1 purchase event registers in Events Manager; resolve by 2026-07-29 before any budget decisions are made."
       },
       {
         "id": "S2",
         "type": "creative_refresh",
-        "text": "Launch new creative into the paused campaign slot targeting a refreshed audience; prior 21d showed up to $1,897 revenue in a single day.",
+        "text": "Queue 1–2 new creatives into BWS Muslim Subscription Box campaign; top campaign has absorbed $697.97 with results now flat for 6 days.",
         "cites": [
-          "F4",
-          "F2"
+          "F1",
+          "F2",
+          "F3"
         ],
-        "monday_item_name": "New Creative — Meats Refresh",
-        "monday_update": "Deploy at least one new ad creative (new visual and copy) into a replacement campaign using a fresh or broadened audience, informed by the Jul 19 revenue peak of $1,897.05. The existing creative has run against the same audience long enough to produce 5 consecutive zero-purchase days despite $52–62/day in spend. Success check: at least 2 purchases within the first 3 days of the new creative going live. Review on 2026-07-30."
+        "monday_item_name": "Refresh Muslim Box Creative",
+        "monday_update": "The top campaign 'BWS - Muslim Subscription Box - 17/06/26' has spent $697.97 of the 28-day budget while purchases across all campaigns have been zero for 6 consecutive days (Jul 21–26). Introduce 1–2 new creative variants (new visual or copy angle) without increasing budget. Success is 1+ purchase attributed within 3 days of launch; re-check 2026-07-30."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Monitor GBP data gap for Jul 25–26; if actions remain zero by Jul 30, investigate tracking or listing issue.",
+        "text": "Hold all budget changes until pixel fix (S1) confirmed; current $54/day spend is defensible only if tracking is restored by Jul 29.",
         "cites": [
+          "F1",
           "F5"
         ],
-        "monday_item_name": "Watch GBP Data Gap",
-        "monday_update": "GBP actions recorded 0 for Jul 25 and Jul 26, which may be a reporting lag or a real listing issue. No paid action is warranted yet. If GBP actions remain at zero when next checked on 2026-07-30, escalate to investigate the Google Business Profile listing for suspension or tracking breakage. Success check: GBP actions resume at prior average of ~20/day."
+        "monday_item_name": "Watch Spend — Pixel Gate",
+        "monday_update": "Do not scale or kill any campaigns until the purchase pixel status is confirmed (S1 deadline: 2026-07-29). Spending ~$54/day with zero attributed revenue for 6 days is unsustainable but may be a measurement error rather than a true ROAS collapse. Re-check purchases and revenue on 2026-07-30; if pixel is confirmed working and purchases remain 0, escalate to a kill or budget_shift decision."
       }
     ],
     "next_check": "2026-07-30"

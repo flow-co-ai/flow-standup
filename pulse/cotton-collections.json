@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T13:32:46.236Z",
+  "generated_at": "2026-07-27T20:55:57.902Z",
   "date": "2026-07-27",
   "slug": "cotton-collections",
   "name": "Cotton Collections",
@@ -416,79 +416,69 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-07-27T13:36:27.615Z",
+    "generated_at": "2026-07-27T20:59:12.231Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Zero leads from $59.98 spend confirms a broken conversion path, not ad failure.",
+    "verdict": "Zero leads across 90 clicks; conversion layer is broken, not the ads.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "lead_drought confirmed: 0 leads from $59.98 spend and 90 Meta clicks over 28 days — CPL is undefined, conversion rate is 0%.",
+        "text": "lead_drought confirmed: 0 leads from 90 Meta clicks and $59.98 spend — CPL is undefined, meaning the conversion path is non-functional.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
-        "priority": 1,
-        "text": "Spend only activated 3 days ago ($14.52, $16.65, $28.81) after 25 zero-spend days — account was effectively dark until July 25.",
+        "priority": 2,
+        "text": "Spend only activated 3 days ago ($14.52, $16.65, $28.81); 3-day lead signal is 0 vs 0 prior — campaign is brand new with no baseline to judge efficiency.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "3-day spend trend is sharply escalating (+98% day-over-day to $28.81 on July 26) while leads remain 0 — spending is accelerating into a broken funnel.",
+        "text": "Spend accelerating fast: day 3 spend ($28.81) is nearly double day 1 ($14.52), but leads remain 0 — budget is scaling into a broken funnel.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "IG reach grew from 158 to 436 over the last 3 days alongside spend, but 0 GBP actions and 0 GA4 sessions confirm no traffic is reaching the site.",
+        "text": "GBP shows 0 actions, 0 calls, 0 web clicks across 28 days — organic signals are entirely absent, no cross-channel support for paid effort.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL pipeline is null and GBP shows 0 calls, 0 directions, 0 web clicks — no downstream intake data exists to distinguish an ads problem from a CRM setup gap.",
-        "confidence": "hypothesis",
-        "channel": "organic"
+        "text": "GA4 sessions are 0 across all 28 days despite 90 Meta clicks — either GA4 is not installed or clicks are landing on an untracked or broken page.",
+        "confidence": "probable",
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit Algeria - Sales Campaign lead form and landing page URL immediately; $59.98 spent with 0 conversions confirms broken destination.",
+        "text": "Audit Algeria - Sales Campaign lead form and landing page; verify destination URL resolves and form submits correctly.",
         "cites": [
           "F1",
-          "F3"
+          "F5"
         ],
-        "monday_item_name": "Fix Algeria Campaign Lead Form",
-        "monday_update": "The Algeria - Sales Campaign has spent $59.98 across 90 clicks over 28 days and generated zero leads, with spend now accelerating to $28.81 on July 26 alone. Immediately verify the lead form is live, the destination URL loads correctly, and the Meta lead event is firing on submission. Success is confirmed when at least 1 tracked lead is recorded within 3 days of the fix going live. Re-check on July 30."
+        "monday_item_name": "Fix Algeria campaign conversion path",
+        "monday_update": "The Algeria - Sales Campaign has received 90 clicks and spent $59.98 with zero leads recorded, and GA4 shows 0 sessions, indicating the destination page or lead form is broken or untracked. Action: manually click through the ad, test the form submission end-to-end, and confirm GA4 tag fires on the thank-you or confirmation step. Success is confirmed when at least 1 tracked lead registers and GA4 sessions appear. Complete audit by 2026-07-29."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Hold spend at current level; do not scale Algeria campaign until conversion path is confirmed working and 1+ lead is recorded.",
+        "text": "Hold current spend; do not scale Algeria campaign further until conversion path is confirmed working.",
         "cites": [
-          "F1",
-          "F3"
+          "F3",
+          "F1"
         ],
-        "monday_item_name": "Hold Algeria Spend — Watch",
-        "monday_update": "Spend is escalating fast ($14.52 → $16.65 → $28.81 in 3 days) with zero return, so no budget increase is warranted until the funnel fix in S1 is verified. Monitor daily for the first lead event to appear. If 0 leads after the fix is applied, escalate to a campaign rebuild. Re-check July 30."
-      },
-      {
-        "id": "S3",
-        "type": "fix",
-        "text": "Set up GHL pipeline and confirm Meta lead event integration so intake data is visible before next cycle.",
-        "cites": [
-          "F5"
-        ],
-        "monday_item_name": "GHL Pipeline Setup — Cotton",
-        "monday_update": "GHL pipeline data is null and GBP shows zero actions across all touchpoints, meaning there is no downstream visibility even if leads begin arriving. Connect the Meta lead form to GHL and confirm opportunities are being created on submission. Success is a non-null GHL pipeline with at least 1 opportunity populated. Confirm setup by July 30."
+        "monday_item_name": "Hold Algeria spend — fix first",
+        "monday_update": "Spend escalated from $14.52 to $28.81 in 3 days while leads remain at 0 — continuing to scale would deepen losses into a broken funnel. Hold daily budget at current level until the fix in S1 is verified. Re-check on 2026-07-30 to confirm leads are registering before any scale decision is made."
       }
     ],
     "next_check": "2026-07-30"

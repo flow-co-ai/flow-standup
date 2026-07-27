@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T13:35:41.745Z",
+  "generated_at": "2026-07-27T20:58:27.704Z",
   "date": "2026-07-27",
   "slug": "vous-physique",
   "name": "Vous Physique",
@@ -414,62 +414,61 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-07-27T13:37:31.256Z",
+    "generated_at": "2026-07-27T21:00:11.047Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Ads dark for 17 days; the 10 leads and $44 CPL are stale history.",
+    "verdict": "Ads dark for 17 days; $444 spent, 10 leads, all now stale.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Spend has been $0 every day since 2026-07-10 — 17 consecutive zero-spend days. No leads, no delivery, account appears paused or budget exhausted.",
+        "text": "Spend has been $0 every day since 2026-07-10 — 17 consecutive zero-spend days. All 10 leads came from the first 10 active days.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3-day signal (Jul 24–26) vs prior 3 (Jul 21–23): spend $0 vs $0, leads 0 vs 0 — flat zero on both windows. No trend to compute; the channel is dark.",
+        "text": "3-day signal (Jul 24-26) vs prior 3 (Jul 21-23): spend $0 vs $0, leads $0 vs $0 — campaign remains fully dark with no recovery.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "IG reach collapsed from ~450/day while ads ran (Jun 29–Jul 9) to single digits (<10/day) since Jul 10, confirming reach is purely ad-driven with zero organic base.",
-        "confidence": "confirmed",
+        "text": "CPL when active (Jun 29–Jul 9) was $44.45 on 10 leads from $444 spend. The daily verdict's IG spike (+194%) reflects near-zero base reach: 6–29 impressions vs 0.",
+        "confidence": "probable",
         "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "Daily verdict cited +194.12% IG spike as a positive signal; data shows reach of 29 on Jul 23 vs a prior-week average of ~3 — noise on a dead baseline, not resonance.",
+        "text": "GBP shows 0 actions across the entire 28-day window — no organic local intent signal to offset the paid blackout.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Immediately audit Meta account status — confirm whether campaigns are paused, budget exhausted, or account disabled. Restore delivery.",
+        "text": "Diagnose and restore Meta campaign spend — 17 zero-spend days confirm a billing, budget, or account-level block.",
         "cites": [
           "F1",
           "F2"
         ],
-        "monday_item_name": "Fix Meta Account Dark Issue",
-        "monday_update": "Meta spend has been $0 for 17 consecutive days (Jul 10–Jul 26), producing zero leads since Jul 9. Audit the Meta Business Manager immediately: check campaign/ad set status, billing, account flags, and policy violations. Success is confirmed when spend resumes and at least 1 lead is recorded within 3 days of restoration. Re-check by 2026-07-30."
+        "monday_item_name": "Restore Meta Campaign Spend",
+        "monday_update": "Meta has recorded $0 spend every day from 2026-07-10 through 2026-07-26 — 17 consecutive dark days. Investigate billing status, campaign budget exhaustion, ad account flags, or policy holds on the BWS - Leads Campaign - Broad ($186.08 of prior 28-day spend). Success is confirmed when spend resumes above $15/day for 3 straight days. Resolve and verify by 2026-07-30."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Once ads reactivate, watch CPL vs the 28-day baseline of $44.45 for 3 full days before any budget moves.",
+        "text": "Once spend resumes, watch CPL vs the $44.45 active-period baseline for 3 days before any scale action.",
         "cites": [
-          "F1",
           "F3"
         ],
-        "monday_item_name": "Watch CPL on Relaunch",
-        "monday_update": "The only CPL reference available is $44.45 over 28 days (10 leads, $444.46 spend) from the period ending Jul 9. Once ads are live again, monitor daily CPL for 3 consecutive days. If CPL holds at or below $44.45, budget scaling is defensible. Re-check 2026-07-30."
+        "monday_item_name": "Watch CPL on Restart",
+        "monday_update": "The only confirmed CPL baseline is $44.45 from 10 leads across Jun 29–Jul 9. Once campaigns are live again, monitor CPL daily against that figure. If CPL stays at or below $44.45 for 3 consecutive days, escalate to a scale suggestion. Re-check 2026-07-30."
       }
     ],
     "next_check": "2026-07-30"
