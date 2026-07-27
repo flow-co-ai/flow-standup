@@ -230,10 +230,15 @@ function buildScanStrip(entries) {
 
     const chip = el('div', {
       class: 'perf-scan-chip' + (hasFeed ? '' : ' no-feed'),
-      onclick() {
-        document.getElementById(`card-${cardId}`)
-          ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      },
+      ...(hasFeed ? {
+        onclick() {
+          const slug = pulse?.slug || cardId;
+          const c = document.getElementById(`perf-card-${slug}`);
+          if (!c) return;
+          c.classList.remove('collapsed');
+          c.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        },
+      } : {}),
     });
 
     chip.append(statusDot(score, 6));
@@ -437,9 +442,10 @@ function buildLensBlock(perf, slug, clientName, decidedIds) {
 
 function buildCard(entry, decidedIds = new Set()) {
   const { name, cardId, hasFeed, pulse } = entry;
+  const slug = pulse?.slug || cardId;
   const card = el('article', {
     class: 'perf-card' + (hasFeed ? '' : ' perf-card--nofeed'),
-    id: `card-${cardId}`,
+    id: `perf-card-${slug}`,
   });
 
   if (!hasFeed) {
@@ -466,28 +472,37 @@ function buildCard(entry, decidedIds = new Set()) {
   const totals  = windsor.totals || {};
   const flags   = windsor.flags  || [];
 
-  // ── Header ──
+  // ── Header (always visible, toggles collapse) ──
   const dateStr = fmtDate(pulse.date);
   const stamp   = (dateStr ? dateStr + ' · ' : '') + '7D VS PRIOR 7D';
 
-  card.append(
-    el('div', { class: 'perf-card-header' },
-      el('div', { class: 'perf-card-header-left' },
-        statusDot(score, 8),
-        el('span', { class: 'perf-client-name', text: name })
-      ),
-      el('div', { class: 'perf-card-header-right' },
-        score != null
-          ? el('span', { class: 'perf-score', style: { color: statusColor(score) }, text: `${score}/100` })
-          : null,
-        el('span', { class: 'perf-stamp', text: stamp })
-      )
+  const chevron = el('span', { class: 'perf-chevron', text: '▾' });
+
+  const header = el('div', {
+    class: 'perf-card-header',
+    style: { cursor: 'pointer' },
+    onclick() { card.classList.toggle('collapsed'); },
+  },
+    el('div', { class: 'perf-card-header-left' },
+      statusDot(score, 8),
+      el('span', { class: 'perf-client-name', text: name })
+    ),
+    el('div', { class: 'perf-card-header-right' },
+      score != null
+        ? el('span', { class: 'perf-score', style: { color: statusColor(score) }, text: `${score}/100` })
+        : null,
+      el('span', { class: 'perf-stamp', text: stamp }),
+      chevron
     )
   );
+  card.append(header);
+
+  // ── Body (collapses) ──
+  const body = el('div', { class: 'perf-card-body' });
 
   // ── Verdict ──
   const verdictText = pulse.verdict || buildVerdictFallback(name, deltas, flags);
-  if (verdictText) card.append(el('p', { class: 'perf-verdict', text: verdictText }));
+  if (verdictText) body.append(el('p', { class: 'perf-verdict', text: verdictText }));
 
   // ── Hero grid + channel rows (only when Windsor data is present) ──
   if (!windsor.error) {
@@ -536,7 +551,7 @@ function buildCard(entry, decidedIds = new Set()) {
         { onPaceWhen: true }
       ));
     }
-    card.append(heroGrid);
+    body.append(heroGrid);
 
     // ── Channel rows ──
     const chWrap = el('div', { class: 'perf-channels' });
@@ -576,25 +591,26 @@ function buildCard(entry, decidedIds = new Set()) {
       anyChannel = true;
     }
 
-    if (anyChannel) card.append(chWrap);
+    if (anyChannel) body.append(chWrap);
   }
 
   // ── GHL ──
   const ghlRow = buildGhlRow(ghl);
-  if (ghlRow) card.append(ghlRow);
+  if (ghlRow) body.append(ghlRow);
 
   // ── Flags ──
   if (flags.length) {
     const flagsEl = el('div', { class: 'perf-flags-row' });
     for (const f of flags) flagsEl.append(el('span', { class: 'perf-flag-chip', text: flagLabel(f) }));
-    card.append(flagsEl);
+    body.append(flagsEl);
   }
 
   // ── Analyst + Buyer (performance lens) ──
   if (pulse.performance) {
-    card.append(buildLensBlock(pulse.performance, pulse.slug, name, decidedIds));
+    body.append(buildLensBlock(pulse.performance, pulse.slug, name, decidedIds));
   }
 
+  card.append(body);
   return card;
 }
 
@@ -672,7 +688,31 @@ async function init() {
   const noFeed = entries.filter(e => !e.hasFeed);
 
   const cardList = el('div', { class: 'perf-list' });
-  for (const e of [...withFeed, ...noFeed]) cardList.append(buildCard(e, decidedIds));
+
+  // Build all cards collapsed by default.
+  for (const e of [...withFeed, ...noFeed]) {
+    const card = buildCard(e, decidedIds);
+    card.classList.add('collapsed');
+    cardList.append(card);
+  }
+
+  // Worst-score card (first in withFeed) starts expanded.
+  if (withFeed.length) {
+    const worstSlug = withFeed[0].pulse?.slug || withFeed[0].cardId;
+    cardList.querySelector(`#perf-card-${worstSlug}`)?.classList.remove('collapsed');
+  }
+
+  // Cards with open (undecided) suggestions start expanded.
+  for (const e of withFeed) {
+    const perf = e.pulse?.performance;
+    if (!perf) continue;
+    const hasOpen = (perf.suggestions || []).some(s => !decidedIds.has(`${e.slug}:${s.id}`));
+    if (hasOpen) {
+      const slug = e.pulse?.slug || e.cardId;
+      cardList.querySelector(`#perf-card-${slug}`)?.classList.remove('collapsed');
+    }
+  }
+
   app.append(cardList);
 
   const ts = document.getElementById('perf-footer-ts');

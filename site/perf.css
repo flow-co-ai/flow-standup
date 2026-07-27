@@ -294,3 +294,22 @@
   color: #6b7060;
   border: 1px solid rgba(107,112,96,0.18);
 }
+
+/* ── Collapsible cards ───────────────────────────────────────────── */
+.perf-card-body { }
+
+.perf-card.collapsed .perf-card-body { display: none; }
+
+.perf-card.collapsed { padding-bottom: 14px; }
+
+.perf-card.collapsed .perf-card-header { margin-bottom: 0; }
+
+.perf-chevron {
+  font-size: 0.7rem;
+  color: rgba(237,233,218,0.45);
+  transition: transform 0.15s ease;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+
+.perf-card.collapsed .perf-chevron { transform: rotate(-90deg); }
