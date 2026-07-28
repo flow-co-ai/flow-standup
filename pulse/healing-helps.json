@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-07-27T23:10:35.925Z",
-  "date": "2026-07-27",
+  "generated_at": "2026-07-28T12:31:42.949Z",
+  "date": "2026-07-28",
   "slug": "healing-helps",
   "name": "Healing Helps",
   "type": "leadgen",
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Healing Helps has zero paid spend and zero leads over the last 28 days, so all engagement is organic. GBP drove 70 total actions (3 calls, 32 directions, 35 web clicks), though GBP activity is down 8.33% week-over-week while GA4 sessions are up 72%, suggesting growing site interest that is not yet being captured by a paid lead gen strategy.",
+  "verdict": "GBP was the sole active lead driver this period, generating 70 total actions (35 directions, 32 web clicks, 3 calls) with no spend recorded across Meta or Google Ads. GBP engagement surged 100% week-over-week, likely driven by increased organic local search visibility, while GA4 sessions also rose 64.29% versus the prior 7 days.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -27,8 +27,8 @@
         "gbp": {
           "actions": 70,
           "calls": 3,
-          "directions": 32,
-          "web_clicks": 35
+          "directions": 35,
+          "web_clicks": 32
         }
       }
     },
@@ -38,12 +38,12 @@
     },
     "top_campaign": null,
     "analytics": {
-      "sessions": 166,
-      "users": 134,
+      "sessions": 169,
+      "users": 136,
       "conversions": 0
     },
     "latest_day": {
-      "date": "2026-07-26",
+      "date": "2026-07-27",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -51,7 +51,7 @@
       "gbp_actions": 0,
       "ig_reach": 0,
       "sc_clicks": 0,
-      "ga4_sessions": 4,
+      "ga4_sessions": 9,
       "purchases": 0,
       "revenue": 0
     },
@@ -61,16 +61,15 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -8.33,
+      "gbp_7d_pct": 100,
       "sc_7d_pct": null,
-      "ga4_7d_pct": 72,
+      "ga4_7d_pct": 64.29,
       "ig_7d_pct": null,
       "spend_per_day_7d": 0
     },
     "flags": [],
     "series": {
       "dates": [
-        "2026-06-29",
         "2026-06-30",
         "2026-07-01",
         "2026-07-02",
@@ -97,7 +96,8 @@
         "2026-07-23",
         "2026-07-24",
         "2026-07-25",
-        "2026-07-26"
+        "2026-07-26",
+        "2026-07-27"
       ],
       "spend": [
         0,
@@ -220,7 +220,6 @@
         0
       ],
       "gbp_actions": [
-        5,
         3,
         6,
         4,
@@ -246,6 +245,7 @@
         2,
         4,
         0,
+        5,
         0,
         0
       ],
@@ -311,7 +311,6 @@
       ],
       "ga4_sessions": [
         6,
-        6,
         8,
         10,
         2,
@@ -337,7 +336,8 @@
         10,
         2,
         2,
-        4
+        4,
+        9
       ],
       "purchases": [
         0,
@@ -410,62 +410,62 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-07-25T21:38:17.376Z",
+    "generated_at": "2026-07-28T12:35:11.363Z",
     "cadence": "scheduled_3d",
-    "stale": true,
-    "verdict": "Paid channels are fully dark; only GBP organic sustains any visibility.",
+    "stale": false,
+    "verdict": "Ads fully dark; GBP organic carrying all load alone.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — Meta and Google Ads both $0. No leads, no CPL to measure. Entire account is dark on paid.",
+        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google. No CPL is calculable; all lead infrastructure is dormant.",
         "confidence": "confirmed",
-        "channel": "meta, google_ads"
+        "channel": "meta, google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions dropped 46.15% last 7d. Last 3 days (Jul 22–24) sum to just 2 actions vs 7 in the prior 3 (Jul 19–21), confirming decline is real, not noise.",
-        "confidence": "confirmed",
+        "text": "GBP 3-day signal (Jul 25–27): 5, 0, 0 actions vs prior 3 days (Jul 22–24): 2, 4, 0 — momentum stalling after the 100% weekly surge.",
+        "confidence": "probable",
         "channel": "gbp"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "GA4 sessions rose 53.57% week-over-week — last 3 days (Jul 22–24) averaged 7 sessions vs 2.3 in prior 3 (Jul 19–21). Website interest exists despite zero paid and falling GBP.",
-        "confidence": "probable",
+        "priority": 3,
+        "text": "GA4 sessions recovering: last 3 days (Jul 25–27) averaged 5.0 vs prior 3 (Jul 22–24) at 7.0 — slight dip but 28-day avg is ~5.5, so within noise.",
+        "confidence": "hypothesis",
         "channel": "ga4"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GA4 shows 171 sessions and 0 conversions over 28 days. GHL pipeline is null. Intake or tracking is likely broken — leads cannot be captured even if ads were running.",
+        "text": "70 GBP actions (35 directions, 32 web clicks, 3 calls) in 28 days with 0 recorded GHL leads — intake pipeline not capturing organic intent.",
         "confidence": "probable",
-        "channel": "ga4"
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit GA4 conversion events and GHL form/intake: 171 sessions and 0 conversions over 28 days indicates a broken capture path.",
+        "text": "Audit GHL intake: 3 GBP calls and 32 web clicks are arriving with 0 leads recorded — fix the capture path first.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Fix Lead Capture Tracking",
-        "monday_update": "GA4 recorded 171 sessions and 0 conversions over the 28-day window, and the GHL pipeline is returning null — meaning no leads are being captured regardless of traffic source. Audit the GA4 conversion event firing, the GHL form embed, and any webhook between the site and CRM. Success is confirmed when at least one test submission appears in GHL and registers as a GA4 conversion. Complete by 2026-07-28."
+        "monday_item_name": "Fix GHL Organic Lead Capture",
+        "monday_update": "GBP generated 70 actions (including 3 calls and 32 web clicks) over 28 days, but GHL shows zero leads recorded — a clear intake leak. Audit the GBP-to-GHL call tracking and website form submission path to ensure contacts are being logged. Success looks like GHL capturing at least the call and form traffic that matches GBP web clicks within 7 days. Re-check by 2026-08-04."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GBP actions recovery: currently 2 actions in last 3 days. Re-check at next cycle before any paid reactivation decision.",
+        "text": "Watch GBP momentum: last 3 days show 5, 0, 0 actions — confirm whether the 100% surge was a one-week spike before any paid reactivation.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Watch GBP Action Recovery",
-        "monday_update": "GBP actions fell 46.15% week-over-week, with only 2 actions in the last 3 days (Jul 22–24) versus 7 in the prior 3. This is the sole active lead-generation signal for Healing Helps right now. Monitor GBP actions daily; if the 3-day average does not recover above 5 by 2026-07-28, investigate listing health (reviews, Q&A freshness, category accuracy). No paid budget should be reactivated until the intake path (S1) is confirmed working."
+        "monday_item_name": "Watch GBP Momentum Drop",
+        "monday_update": "GBP actions surged 100% week-over-week but the last 3 days (Jul 25–27) recorded only 5, 0, 0 actions, suggesting the spike may be fading. No paid spend exists to compensate if organic softens further. Monitor daily GBP action counts through 2026-07-31; if the 3-day average falls below 2, escalate to a paid reactivation conversation with Sohib. Re-check 2026-07-31."
       }
     ],
-    "next_check": "2026-07-28"
+    "next_check": "2026-07-31"
   }
 }
