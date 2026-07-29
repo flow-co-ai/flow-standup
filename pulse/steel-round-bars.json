@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-07-28T12:33:30.754Z",
-  "date": "2026-07-28",
+  "generated_at": "2026-07-29T12:58:15.988Z",
+  "date": "2026-07-29",
   "slug": "steel-round-bars",
   "name": "Steel Round Bars",
   "type": "leadgen",
   "window_days": 28,
-  "score": 100,
+  "score": 90,
   "status": "green",
-  "verdict": "With zero spend and zero leads from paid channels over the last 28 days, this account is running entirely on organic presence, where Google Business Profile drove 424 total actions (303 directions, 18 calls, 103 web clicks). The biggest concern is a -16.82% drop in GBP activity over the last 7 days, likely reflecting reduced local search demand or a dip in profile visibility that warrants a review of GBP content and posting cadence.",
+  "verdict": "With zero spend and zero leads across Meta and Google Ads in the last 28 days, paid channels are completely inactive, leaving all engagement to Google Business Profile which recorded 410 total actions (290 directions, 103 web clicks, 17 calls) but is trending down sharply, off 24% in the last 7 days likely due to reduced organic search demand or seasonal slowdown.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,24 +25,24 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 424,
-          "calls": 18,
-          "directions": 303,
+          "actions": 410,
+          "calls": 17,
+          "directions": 290,
           "web_clicks": 103
         }
       }
     },
     "organic": {
-      "gbp_actions": 424,
+      "gbp_actions": 410,
       "ig_reach": 0
     },
     "top_campaign": null,
     "search": {
-      "clicks": 426,
-      "impressions": 70047
+      "clicks": 406,
+      "impressions": 67007
     },
     "latest_day": {
-      "date": "2026-07-27",
+      "date": "2026-07-28",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -60,8 +60,8 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -16.82,
-      "sc_7d_pct": -16.38,
+      "gbp_7d_pct": -24.04,
+      "sc_7d_pct": -41.8,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
       "spend_per_day_7d": 0
@@ -69,7 +69,6 @@
     "flags": [],
     "series": {
       "dates": [
-        "2026-06-30",
         "2026-07-01",
         "2026-07-02",
         "2026-07-03",
@@ -96,7 +95,8 @@
         "2026-07-24",
         "2026-07-25",
         "2026-07-26",
-        "2026-07-27"
+        "2026-07-27",
+        "2026-07-28"
       ],
       "spend": [
         0,
@@ -219,7 +219,6 @@
         0
       ],
       "gbp_actions": [
-        17,
         18,
         17,
         9,
@@ -244,7 +243,8 @@
         13,
         18,
         31,
-        14,
+        15,
+        2,
         0,
         0
       ],
@@ -279,7 +279,6 @@
         0
       ],
       "sc_clicks": [
-        20,
         27,
         12,
         3,
@@ -306,6 +305,7 @@
         19,
         2,
         8,
+        0,
         0
       ],
       "ga4_sessions": [
@@ -409,63 +409,81 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-07-26T11:59:57.013Z",
+    "generated_at": "2026-07-29T13:01:38.752Z",
     "cadence": "scheduled_3d",
-    "stale": true,
-    "verdict": "No paid activity for 28 days; organic-only signals are softening.",
+    "stale": false,
+    "verdict": "Paid channels are dead; organic is now fading too — no safety net.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days; $0 Meta and $0 Google Ads means no trackable CPL or lead pipeline exists at all.",
+        "text": "Zero paid spend and zero leads for all 28 days in window. No Meta, no Google Ads — this account is generating no paid pipeline whatsoever.",
         "confidence": "confirmed",
-        "channel": "cross-channel"
+        "channel": "meta, google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions fell 26.92% week-over-week to a 3-day signal of 0 actions (Jul 24–25 both zero), confirming a real organic deceleration, not noise.",
-        "confidence": "confirmed",
+        "text": "GBP actions last 2 days are 0 and 0 (Jul 27–28), vs a 28-day average of ~14.6/day — the sharpest drop in the series, not just seasonal drift.",
+        "confidence": "probable",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Search clicks rose 7.34% week-over-week; last 3 days averaged 15.7 clicks vs prior 3-day average of 23.3 — search demand exists but GBP is not converting it.",
-        "confidence": "probable",
+        "text": "Search clicks (sc) also collapsed: last 3 days averaged 2.7 clicks/day vs prior 3-day avg of 20.3 — a 87% drop, confirming organic demand erosion, not just GBP.",
+        "confidence": "confirmed",
         "channel": "organic"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "445 search clicks and 71,947 impressions over 28 days with 0 paid leads means intent traffic has no paid capture mechanism to intercept it.",
+        "text": "GBP is down 24% week-on-week across 410 total actions, with directions (290) dominant — suggesting intent exists locally but call volume (17) is critically thin.",
         "confidence": "confirmed",
-        "channel": "cross-channel"
+        "channel": "gbp"
+      },
+      {
+        "id": "F5",
+        "priority": 4,
+        "text": "GA4 sessions are zero for all 28 days — either tracking is broken or the property is disconnected, making web conversion data completely invisible.",
+        "confidence": "confirmed",
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Monitor GBP actions daily; if 3-day total stays below 10, escalate to GBP profile audit before any paid activation.",
+        "type": "fix",
+        "text": "Verify GA4 property connection immediately — 28 days of zero sessions signals a broken or unmapped property, not zero traffic.",
         "cites": [
-          "F2"
+          "F5"
         ],
-        "monday_item_name": "Watch GBP Action Recovery",
-        "monday_update": "GBP actions hit 0 on both Jul 24 and Jul 25, continuing a 26.92% week-over-week decline. No paid channels are running to compensate, so GBP is the sole lead source and it is softening. Success check: 3-day GBP action total returns above 30 by 2026-07-29. If not, flag for a GBP profile audit before considering paid re-activation."
+        "monday_item_name": "Fix GA4 Tracking Connection",
+        "monday_update": "GA4 sessions have read zero for all 28 days in the series — this is almost certainly a disconnected or misconfigured property, not real zero traffic. Audit the GA4 data stream and confirm the measurement ID matches the live site. Success check: at least one non-zero session day within 3 days of the fix. Deadline: 2026-08-01."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch search clicks trend; 445 clicks and 71,947 impressions in 28 days confirm category demand worth capturing via paid search.",
+        "text": "Watch GBP and sc_clicks through Aug 1 — last 2 days at zero may be a reporting lag, not a true signal. Do not act until 3-day pattern confirms.",
         "cites": [
-          "F3",
+          "F2",
+          "F3"
+        ],
+        "monday_item_name": "Watch GBP & Search Drop",
+        "monday_update": "GBP actions hit 0 on Jul 27 and Jul 28, and sc_clicks averaged 2.7/day over the last 3 days vs 20.3 the prior 3 days — an 87% drop. This may be a weekend/reporting lag given the series shows prior weekend dips (e.g. Jul 4: 0 clicks, Jul 5: 5). Re-check on 2026-08-01: if the 3-day average remains below 8 clicks/day, escalate to a GBP profile audit and consider reactivating paid search to protect local intent capture."
+      },
+      {
+        "id": "S3",
+        "type": "fix",
+        "text": "Escalate paid reactivation decision to Sohib — account has zero paid activity for 28+ days with no pipeline fallback. CPL baseline cannot be defended at zero spend.",
+        "cites": [
+          "F1",
           "F4"
         ],
-        "monday_item_name": "Watch Search Demand Signal",
-        "monday_update": "Search clicks are up 7.34% week-over-week and 71,947 impressions were recorded in the 28-day window, confirming active search demand for steel round bars. No paid Google Ads spend exists to capture this traffic. Re-check on 2026-07-29: if GBP stabilises and client confirms budget availability, this demand signal justifies a paid search activation discussion with Sohib."
+        "monday_item_name": "Reactivate Paid — Decision Needed",
+        "monday_update": "Steel Round Bars has recorded zero Meta and zero Google Ads spend for the entire 28-day window, generating zero leads. GBP is producing 410 actions but call volume is only 17 and declining. There is no paid safety net if organic continues to drop. Sohib to confirm: is the account intentionally paused (budget hold, seasonal pause), or is this a lapsed campaign that needs reactivation? Decision needed by 2026-08-01 to avoid further pipeline drought."
       }
     ],
-    "next_check": "2026-07-29"
+    "next_check": "2026-08-01"
   }
 }
