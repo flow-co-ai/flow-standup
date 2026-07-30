@@ -17,13 +17,31 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
       - name: Set up Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install dependencies
+      - name: Install Node dependencies
         run: npm install
+
+      - name: Sync playbooks from Drive
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: python sync_playbooks.py
+
+      - name: Extract timeline plans
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node extract_timeline.js
 
       - name: Run daily pulse
         env:
@@ -36,13 +54,25 @@ jobs:
       - name: Apply performance lens
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          FORCE_PERFORMANCE: '1'
         run: node apply_performance.js
+
+      - name: Apply reporter lens
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          FORCE_REPORTER: '1'
+        run: node apply_reporter.js
+
+      - name: Build timeline
+        env:
+          STATE_BRANCH: state
+        run: node build_timeline.js
 
       - name: Commit pulse and history
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add pulse/ history/
+          git add pulse/ history/ reports/ playbooks/ timeline/
           if git diff --staged --quiet; then
             echo "Nothing changed — skipping commit."
             exit 0

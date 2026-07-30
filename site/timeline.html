@@ -3,13 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Flow Ops - Daily</title>
+  <title>Flow Ops - Timeline</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@1,8..60,400;1,8..60,500&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="addon.css">
-  <link rel="stylesheet" href="ops-widget.css">
+  <link rel="stylesheet" href="timeline.css">
 </head>
 <body>
 
@@ -21,10 +20,10 @@
         <img src="assets/flowco-logo.png" alt="Flow Co" class="logo-img">
       </a>
       <div class="header-right">
-        <span class="week-label">Daily Ops</span>
+        <span class="week-label">Timeline · Engagements</span>
         <span class="live-pill">
           <span class="live-dot" aria-hidden="true"></span>
-          <span class="live-text">Draft queue</span>
+          <span class="live-text">Playbook-Driven</span>
         </span>
       </div>
     </header>
@@ -32,27 +31,23 @@
     <!-- ── TAB BAR ──────────────────────────────────────────────────── -->
     <nav class="tab-bar">
       <a href="/" class="tab">Standup</a>
-      <a href="/daily.html" class="tab active">Daily Ops</a>
+      <a href="/daily.html" class="tab">Daily Ops</a>
       <a href="/performance.html" class="tab">Performance</a>
-      <a href="/timeline.html" class="tab">Timeline</a>
+      <a href="/timeline.html" class="tab active">Timeline</a>
     </nav>
 
-    <!-- ── OPS ADD-ON (draft queue) ──────────────────────────────────── -->
-    <section id="ops-addon">
-<div class="fo-section">
-  <div class="fo-label">Daily Flow Operations</div>
-  <div id="fo-queue-cards"><div class="fo-empty">loading…</div></div>
-</div>
-    </section>
+    <!-- ── MAIN ─────────────────────────────────────────────────────── -->
+    <main id="tl-app">
+      <div class="tl-loading">Loading timeline data…</div>
+    </main>
 
     <!-- ── FOOTER ────────────────────────────────────────────────────── -->
     <footer class="site-footer">
-      <p class="footer-ts">Flow Co · Daily Ops</p>
+      <p class="footer-ts">Timeline data reflects active engagement playbooks.</p>
     </footer>
 
   </div>
 
-  <script src="addon.js"></script>
-  <script src="ops-widget.js"></script>
+  <script src="timeline.js"></script>
 </body>
 </html>

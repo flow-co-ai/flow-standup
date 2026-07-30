@@ -3,10 +3,9 @@
 const PULSE_BASE = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/refs/heads/main/pulse';
 
 // Maps standup client display names → pulse slug (covers known aliases).
+// Inactive clients (active: false in clients.json) are omitted.
 const PULSE_SLUG = {
   'Billy Doe Meats':       'billy-doe',
-  'Cotton Collections':    'cotton-collections',
-  'Flow Company':          'flow-company',
   'Full Smile':            'full-smile',
   'Healing Helps':         'healing-helps',
   'HVAC':                  'hvac',
@@ -16,19 +15,27 @@ const PULSE_SLUG = {
   'Liferun':               'liferun',
   'Maadi Law':             'maadi-law',
   'Maadi Law, LLC':        'maadi-law',
-  'Steel Round Bars':      'steel-round-bars',
-  'Vous Physique':         'vous-physique',
+  'Steel Round Bars':      'steel-ohare',   // legacy standup name; ohare is the umbrella slug
+  'Forte Metals':          'steel-forte',
+  'Advance Grinding':      'steel-advance',
+  "O'Hare Precision":      'steel-ohare',
 };
 
-// Pulse-only clients that may not appear in the standup.
+// Pulse-only clients that may not appear in the standup (inactive excluded).
 const PULSE_ONLY = [
-  { client: 'Vous Physique',      slug: 'vous-physique' },
-  { client: 'Maadi Law, LLC',     slug: 'maadi-law' },
-  { client: 'Flow Company',       slug: 'flow-company' },
-  { client: 'Cotton Collections', slug: 'cotton-collections' },
-  { client: 'Healing Helps',      slug: 'healing-helps' },
-  { client: 'Steel Round Bars',   slug: 'steel-round-bars' },
+  { client: 'Maadi Law, LLC',   slug: 'maadi-law' },
+  { client: 'Healing Helps',    slug: 'healing-helps' },
+  { client: 'Forte Metals',     slug: 'steel-forte' },
+  { client: 'Advance Grinding', slug: 'steel-advance' },
+  { client: "O'Hare Precision", slug: 'steel-ohare' },
 ];
+
+// Short labels for steel sub-clients in the scan strip.
+const STEEL_CHIP_LABEL = {
+  'steel-forte':   "STEEL · FORTE",
+  'steel-advance': "STEEL · ADVANCE",
+  'steel-ohare':   "STEEL · O'HARE",
+};
 
 // ── DOM builder (same pattern as app.js) ──────────────────────────
 
@@ -227,6 +234,7 @@ function buildScanStrip(entries) {
     const deltas  = pulse?.windsor?.deltas;
     const type    = pulse?.type || 'leadgen';
     const bd      = hasFeed ? biggestScanDelta(deltas, type) : null;
+    const chipName = STEEL_CHIP_LABEL[cardId] || name;
 
     const chip = el('div', {
       class: 'perf-scan-chip' + (hasFeed ? '' : ' no-feed'),
@@ -235,14 +243,13 @@ function buildScanStrip(entries) {
           const slug = pulse?.slug || cardId;
           const c = document.getElementById(`perf-card-${slug}`);
           if (!c) return;
-          c.classList.remove('collapsed');
           c.scrollIntoView({ behavior: 'smooth', block: 'start' });
         },
       } : {}),
     });
 
     chip.append(statusDot(score, 6));
-    chip.append(el('span', { class: 'perf-scan-name', text: name }));
+    chip.append(el('span', { class: 'perf-scan-name', text: chipName }));
 
     if (hasFeed && score != null) {
       chip.append(el('span', {
@@ -472,17 +479,11 @@ function buildCard(entry, decidedIds = new Set()) {
   const totals  = windsor.totals || {};
   const flags   = windsor.flags  || [];
 
-  // ── Header (always visible, toggles collapse) ──
+  // ── Header ──
   const dateStr = fmtDate(pulse.date);
   const stamp   = (dateStr ? dateStr + ' · ' : '') + '7D VS PRIOR 7D';
 
-  const chevron = el('span', { class: 'perf-chevron', text: '▾' });
-
-  const header = el('div', {
-    class: 'perf-card-header',
-    style: { cursor: 'pointer' },
-    onclick() { card.classList.toggle('collapsed'); },
-  },
+  const header = el('div', { class: 'perf-card-header' },
     el('div', { class: 'perf-card-header-left' },
       statusDot(score, 8),
       el('span', { class: 'perf-client-name', text: name })
@@ -492,7 +493,6 @@ function buildCard(entry, decidedIds = new Set()) {
         ? el('span', { class: 'perf-score', style: { color: statusColor(score) }, text: `${score}/100` })
         : null,
       el('span', { class: 'perf-stamp', text: stamp }),
-      chevron
     )
   );
   card.append(header);
@@ -505,6 +505,9 @@ function buildCard(entry, decidedIds = new Set()) {
   if (verdictText) body.append(el('p', { class: 'perf-verdict', text: verdictText }));
 
   // ── Hero grid + channel rows (only when Windsor data is present) ──
+  let chWrap = null;
+  let anyChannel = false;
+
   if (!windsor.error) {
     const heroGrid = el('div', { class: 'perf-hero-grid' });
 
@@ -553,9 +556,8 @@ function buildCard(entry, decidedIds = new Set()) {
     }
     body.append(heroGrid);
 
-    // ── Channel rows ──
-    const chWrap = el('div', { class: 'perf-channels' });
-    let anyChannel = false;
+    // ── Channel rows (collected for DETAILS toggle below) ──
+    chWrap = el('div', { class: 'perf-channels' });
 
     const meta = totals.byChannel?.meta;
     if (meta && (meta.leads > 0 || meta.spend > 0)) {
@@ -590,13 +592,17 @@ function buildCard(entry, decidedIds = new Set()) {
       chWrap.append(buildChannelRow('IG', series.ig_reach, fmtNum(igReach), deltas.ig_7d_pct));
       anyChannel = true;
     }
-
-    if (anyChannel) body.append(chWrap);
   }
 
-  // ── GHL ──
+  // ── DETAILS toggle: channels + GHL, collapsed by default ──
   const ghlRow = buildGhlRow(ghl);
-  if (ghlRow) body.append(ghlRow);
+  if (anyChannel || ghlRow) {
+    const det = el('details', { class: 'perf-details' });
+    det.append(el('summary', { class: 'perf-details-summary', text: 'DETAILS' }));
+    if (chWrap && anyChannel) det.append(chWrap);
+    if (ghlRow) det.append(ghlRow);
+    body.append(det);
+  }
 
   // ── Flags ──
   if (flags.length) {
@@ -689,28 +695,8 @@ async function init() {
 
   const cardList = el('div', { class: 'perf-list' });
 
-  // Build all cards collapsed by default.
   for (const e of [...withFeed, ...noFeed]) {
-    const card = buildCard(e, decidedIds);
-    card.classList.add('collapsed');
-    cardList.append(card);
-  }
-
-  // Worst-score card (first in withFeed) starts expanded.
-  if (withFeed.length) {
-    const worstSlug = withFeed[0].pulse?.slug || withFeed[0].cardId;
-    cardList.querySelector(`#perf-card-${worstSlug}`)?.classList.remove('collapsed');
-  }
-
-  // Cards with open (undecided) suggestions start expanded.
-  for (const e of withFeed) {
-    const perf = e.pulse?.performance;
-    if (!perf) continue;
-    const hasOpen = (perf.suggestions || []).some(s => !decidedIds.has(`${e.slug}:${s.id}`));
-    if (hasOpen) {
-      const slug = e.pulse?.slug || e.cardId;
-      cardList.querySelector(`#perf-card-${slug}`)?.classList.remove('collapsed');
-    }
+    cardList.append(buildCard(e, decidedIds));
   }
 
   app.append(cardList);

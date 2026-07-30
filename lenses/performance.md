@@ -61,6 +61,10 @@ RULES FOR FINDINGS:
 - Data gaps are findings, not guesses. Known issues: Google Ads
   conversions read zero for some clients (client-side pixel), Billy Doe
   Meta purchase events fire inconsistently via Shopify.
+- SOW gate: if OVERDUE MILESTONES are present in the context, each must
+  appear as a priority-2 finding (channel: "SOW"). Group them into one
+  finding only when the cause is identical. Clients with no SOW section
+  produce no SOW findings.
 
 ---
 
@@ -97,6 +101,9 @@ RULES FOR SUGGESTIONS:
   unless the numbers moved meaningfully since — and then open with what
   changed. APPROVED suggestions are live experiments: reference them
   ("scaled +20% on {date} — CPL holding") instead of re-suggesting.
+- Scope guard: never suggest a channel, service, or tactic that does not
+  appear in the SOW section (if present) and is not already active in the
+  data. Introducing work outside the engagement scope is not a buyer call.
 
 ---
 
