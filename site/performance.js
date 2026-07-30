@@ -224,6 +224,20 @@ function statusDot(score, size = 7) {
   });
 }
 
+// ── Client switcher ───────────────────────────────────────────────
+// Hides every perf-card and shows only the one matching slug.
+
+function showClient(slug) {
+  document.querySelectorAll('#perf-app .perf-card').forEach(c => {
+    c.style.display = 'none';
+  });
+  const target = document.getElementById(`perf-card-${slug}`);
+  if (target) target.style.display = '';
+  document.querySelectorAll('.perf-scan-chip[data-slug]').forEach(c => {
+    c.classList.toggle('active', c.dataset.slug === slug);
+  });
+}
+
 // ── Scan strip ────────────────────────────────────────────────────
 
 function buildScanStrip(entries) {
@@ -238,13 +252,9 @@ function buildScanStrip(entries) {
 
     const chip = el('div', {
       class: 'perf-scan-chip' + (hasFeed ? '' : ' no-feed'),
+      'data-slug': cardId,
       ...(hasFeed ? {
-        onclick() {
-          const slug = pulse?.slug || cardId;
-          const c = document.getElementById(`perf-card-${slug}`);
-          if (!c) return;
-          c.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        },
+        onclick() { showClient(pulse?.slug || cardId); },
       } : {}),
     });
 
@@ -388,7 +398,12 @@ function buildSuggestionPill(s, slug, clientName) {
     el('span', { class: 'perf-sug-type', text: s.type.replace('_', ' ') }),
     el('span', { class: 'perf-sug-text', text: s.text }),
   ));
-  if (s.monday_update) pill.append(el('div', { class: 'perf-sug-update', text: s.monday_update }));
+  if (s.monday_update) {
+    const det = el('details', { class: 'perf-details' });
+    det.append(el('summary', { class: 'perf-details-summary', text: 'MONDAY UPDATE' }));
+    det.append(el('div', { class: 'perf-sug-update', text: s.monday_update }));
+    pill.append(det);
+  }
 
   const status     = el('span', { class: 'perf-sug-status' });
   const approveBtn = el('button', { class: 'perf-btn perf-btn-approve', text: 'Approve → Monday',
@@ -426,12 +441,17 @@ function buildLensBlock(perf, slug, clientName, decidedIds) {
 
   const findings = perf.findings || [];
   if (findings.length) {
+    const mkFinding = f => el('div', { class: 'perf-finding' },
+      el('span', { class: `perf-conf perf-conf-${f.confidence}`, text: f.confidence }),
+      el('span', { text: f.text }),
+    );
     const list = el('div', { class: 'perf-findings' });
-    for (const f of findings) {
-      list.append(el('div', { class: 'perf-finding' },
-        el('span', { class: `perf-conf perf-conf-${f.confidence}`, text: f.confidence }),
-        el('span', { text: f.text }),
-      ));
+    findings.slice(0, 3).forEach(f => list.append(mkFinding(f)));
+    if (findings.length > 3) {
+      const det = el('details', { class: 'perf-details' });
+      det.append(el('summary', { class: 'perf-details-summary', text: `+${findings.length - 3} more` }));
+      findings.slice(3).forEach(f => det.append(mkFinding(f)));
+      list.append(det);
     }
     block.append(list);
   }
@@ -696,10 +716,17 @@ async function init() {
   const cardList = el('div', { class: 'perf-list' });
 
   for (const e of [...withFeed, ...noFeed]) {
-    cardList.append(buildCard(e, decidedIds));
+    const card = buildCard(e, decidedIds);
+    card.style.display = 'none';   // hidden until showClient is called
+    cardList.append(card);
   }
 
   app.append(cardList);
+
+  // Show the worst-score card (first in withFeed) via showClient.
+  if (withFeed.length) {
+    showClient(withFeed[0].pulse?.slug || withFeed[0].cardId);
+  }
 
   const ts = document.getElementById('perf-footer-ts');
   if (ts) ts.textContent = 'Performance data updated daily at 11:00 UTC from Windsor (paid media) and GHL (CRM).';

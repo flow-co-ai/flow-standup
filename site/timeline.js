@@ -53,23 +53,28 @@ function datePct(dateStr, startStr, endStr) {
 }
 
 function monthHeaders(startStr, endStr) {
-  // Returns [{label: 'AUG', pct: 12.5}, ...]
-  // Iterate from floor(start month) to months within/past end
-  const results = [];
-  const endDate = new Date(endStr + 'T00:00:00Z');
-  const startDate = new Date(startStr + 'T00:00:00Z');
-
-  // Floor to first of start month
-  let cur = new Date(Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth(), 1));
-
+  // Steps month-by-month from floor(start) to end; labels year crossings 'JAN '27'.
   const MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  const results = [];
 
-  while (cur <= endDate) {
-    const isoStr = cur.toISOString().slice(0, 10);
-    const pct = datePct(isoStr, startStr, endStr);
-    results.push({ label: MONTHS[cur.getUTCMonth()], pct });
-    // Advance to first of next month
-    cur = new Date(Date.UTC(cur.getUTCFullYear(), cur.getUTCMonth() + 1, 1));
+  const s = new Date(startStr + 'T00:00:00Z');
+  const e = new Date(endStr   + 'T00:00:00Z');
+  const startYear = s.getUTCFullYear();
+
+  let yr  = startYear;
+  let mon = s.getUTCMonth();  // floor to start month
+
+  while (true) {
+    const d = new Date(Date.UTC(yr, mon, 1));
+    if (d > e) break;
+    const iso = d.toISOString().slice(0, 10);
+    const pct = datePct(iso, startStr, endStr);
+    const label = yr !== startYear
+      ? `${MONTHS[mon]} '${String(yr).slice(2)}`
+      : MONTHS[mon];
+    results.push({ label, pct });
+    mon++;
+    if (mon > 11) { mon = 0; yr++; }
   }
 
   return results;
@@ -136,17 +141,26 @@ function factChip(label, value) {
 
 // ── Progress panel ────────────────────────────────────────────────────────────
 function buildProgressPanel(data) {
-  // bar track with fill + planned tick
+  const today      = isoToday();
+  const notStarted = !!data.engagement?.start && today < data.engagement.start;
+
   const barTrack = el('div', { class: 'tl-bar-track' });
   const fill = el('div', { class: 'tl-bar-fill' });
   fill.style.width = data.actualPct || '0%';
   barTrack.append(fill);
-  const tick = el('div', { class: 'tl-planned-tick' });
-  tick.style.left = (data.plannedPct || 0) + '%';
-  barTrack.append(tick);
+  if (!notStarted) {
+    const tick = el('div', { class: 'tl-planned-tick' });
+    tick.style.left = (data.plannedPct || 0) + '%';
+    barTrack.append(tick);
+  }
 
-  const paceEl = el('div', { class: 'tl-pace-label', text: data.paceLabel || '' });
-  paceEl.style.color = data.paceColor || '#C6D093';
+  const paceEl = el('div', {
+    class: 'tl-pace-label',
+    text:  notStarted ? 'NOT STARTED' : (data.paceLabel || ''),
+  });
+  paceEl.style.color = notStarted
+    ? 'rgba(237,233,218,0.35)'
+    : (data.paceColor || '#C6D093');
 
   const left = el('div', { class: 'tl-progress-left' },
     el('div', { class: 'tl-scope-num', text: data.actualPct || '0%' }),
@@ -173,6 +187,25 @@ function buildProgressPanel(data) {
   );
 
   return el('div', { class: 'tl-progress' }, left, right);
+}
+
+// ── Bar sub-row stacking ──────────────────────────────────────────────────────
+// Assigns overlapping bars to sub-rows so they never paint on top of each other.
+function assignSubRows(bars, engStart, engEnd) {
+  const sorted     = [...bars].sort((a, b) => a.start.localeCompare(b.start));
+  const rowEndPcts = [];   // last bar's right-pct for each sub-row
+  const placed     = [];
+
+  for (const bar of sorted) {
+    const l = datePct(bar.start, engStart, engEnd);
+    const r = datePct(bar.end,   engStart, engEnd);
+    let rowIdx = rowEndPcts.findIndex(endPct => endPct <= l);
+    if (rowIdx === -1) { rowIdx = rowEndPcts.length; rowEndPcts.push(r); }
+    else               { rowEndPcts[rowIdx] = r; }
+    placed.push({ bar, rowIdx, l, r });
+  }
+
+  return { placed, rowCount: Math.max(1, rowEndPcts.length) };
 }
 
 // ── Gantt ─────────────────────────────────────────────────────────────────────
@@ -240,16 +273,20 @@ function buildGantt(data) {
       track.append(gl);
     }
 
-    // Planned bars
-    for (const bar of bars) {
-      const l = datePct(bar.start, start, end);
-      const r = datePct(bar.end,   start, end);
+    // Planned bars — stacked into sub-rows to avoid label collision
+    const BASE_H = 44;
+    const ROW_H  = 28;
+    const { placed, rowCount } = assignSubRows(bars, start, end);
+    track.style.height = (BASE_H + (rowCount - 1) * ROW_H) + 'px';
+
+    for (const { bar, rowIdx, l, r } of placed) {
       const w = Math.max(r - l, 0.5);
       const barEl = el('div', { class: 'tl-bar' },
         el('span', { class: 'tl-bar-lbl', text: bar.label })
       );
       barEl.style.left  = l + '%';
       barEl.style.width = w + '%';
+      barEl.style.top   = (rowIdx * ROW_H) + 'px';
       if (bar.inferred) barEl.style.opacity = '0.6';
       track.append(barEl);
     }
