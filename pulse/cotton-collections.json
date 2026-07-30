@@ -1,23 +1,23 @@
 {
-  "generated_at": "2026-07-29T12:55:32.681Z",
-  "date": "2026-07-29",
+  "generated_at": "2026-07-30T12:23:02.865Z",
+  "date": "2026-07-30",
   "slug": "cotton-collections",
   "name": "Cotton Collections",
   "type": "leadgen",
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Cotton Collections has spent $102.06 over the past 28 days entirely through Meta (170 clicks), yet generated zero leads, signaling a serious conversion breakdown likely driven by a landing page or form issue rather than a traffic problem. The entire budget is concentrated in the \"Algeria - Sales Campaign,\" so auditing that campaign's post-click experience should be the immediate priority.",
+  "verdict": "Cotton Collections has spent $117.26 over the past 28 days entirely through Meta's \"Algeria - Sales Campaign\" (199 clicks), yet has generated zero leads, signaling a serious conversion breakdown between the ad click and the lead capture step. Immediate attention is needed to audit the landing page or lead form to understand why clicks are not converting.",
   "windsor": {
     "totals": {
-      "spend": 102.06,
+      "spend": 117.26,
       "leads": 0,
       "cpl": 0,
       "byChannel": {
         "meta": {
-          "spend": 102.06,
+          "spend": 117.26,
           "leads": 0,
-          "clicks": 170
+          "clicks": 199
         },
         "google_ads": {
           "spend": 0,
@@ -34,26 +34,26 @@
     },
     "organic": {
       "gbp_actions": 0,
-      "ig_reach": 1498
+      "ig_reach": 1738
     },
     "top_campaign": {
       "name": "Algeria - Sales Campaign",
-      "spend": 102.06
+      "spend": 117.26
     },
     "social": {
       "followers": 0,
-      "reach": 1498,
+      "reach": 1738,
       "impressions": 0,
       "engagement": 0
     },
     "latest_day": {
-      "date": "2026-07-28",
-      "spend": 22.09,
+      "date": "2026-07-29",
+      "spend": 15.13,
       "leads": 0,
-      "meta_spend": 22.09,
+      "meta_spend": 15.13,
       "google_spend": 0,
       "gbp_actions": 0,
-      "ig_reach": 346,
+      "ig_reach": 240,
       "sc_clicks": 0,
       "ga4_sessions": 0,
       "purchases": 0,
@@ -69,14 +69,13 @@
       "sc_7d_pct": null,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
-      "spend_per_day_7d": 14.58
+      "spend_per_day_7d": 16.75
     },
     "flags": [
       "lead_drought"
     ],
     "series": {
       "dates": [
-        "2026-07-01",
         "2026-07-02",
         "2026-07-03",
         "2026-07-04",
@@ -103,10 +102,10 @@
         "2026-07-25",
         "2026-07-26",
         "2026-07-27",
-        "2026-07-28"
+        "2026-07-28",
+        "2026-07-29"
       ],
       "spend": [
-        0,
         0,
         0,
         0,
@@ -133,7 +132,8 @@
         16.65,
         28.81,
         19.99,
-        22.09
+        22.16,
+        15.13
       ],
       "leads": [
         0,
@@ -188,12 +188,12 @@
         0,
         0,
         0,
-        0,
         14.52,
         16.65,
         28.81,
         19.99,
-        22.09
+        22.16,
+        15.13
       ],
       "google_spend": [
         0,
@@ -278,12 +278,12 @@
         0,
         0,
         0,
-        0,
         158,
         267,
         436,
         291,
-        346
+        346,
+        240
       ],
       "sc_clicks": [
         0,
@@ -416,36 +416,43 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-07-29T12:59:19.279Z",
+    "generated_at": "2026-07-30T12:26:13.946Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "$102 spent, zero leads: conversion infrastructure is broken, not ads.",
+    "verdict": "$117 spent, 199 clicks, zero leads: conversion layer is broken.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "lead_drought flag confirmed: 0 leads from 170 clicks and $102.06 spend across 5 active days — CPL is undefined, efficiency is zero.",
+        "text": "lead_drought confirmed: 199 Meta clicks and $117.26 spent since Jul 22 have produced zero leads across the full 28-day window.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
-        "priority": 2,
-        "text": "3-day spend signal (Jul 26–28: $28.81, $19.99, $22.09) shows active and consistent spend, yet leads remain 0 across all 5 live days — not a spend problem.",
+        "priority": 1,
+        "text": "CPL is mathematically undefined — zero leads on $117.26 spend means no efficiency baseline exists; every dollar spent is currently wasted.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F3",
-        "priority": 3,
-        "text": "GA4 sessions are zero across all 28 days despite 170 Meta clicks — traffic is not reaching or registering on the site, pointing to a broken destination URL or uninstalled pixel.",
-        "confidence": "probable",
+        "priority": 2,
+        "text": "3-day signal (Jul 27–29): spend averaged $19.09/day vs $19.99/day prior 3 days — spend is steady, but leads remained zero across all 6 days; no improvement trend.",
+        "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F4",
+        "priority": 3,
+        "text": "GA4 sessions are zero for all 28 days despite 199 ad clicks — tracking is either broken or the landing page destination is not the tracked domain.",
+        "confidence": "probable",
+        "channel": "ga4"
+      },
+      {
+        "id": "F5",
         "priority": 4,
-        "text": "GBP shows 0 actions, 0 calls, 0 directions across the full 28-day window — no organic fallback is absorbing any intent while paid is broken.",
+        "text": "GBP shows zero actions, calls, and web clicks over 28 days; organic has no supporting signal — all demand generation is on Meta alone with no fallback.",
         "confidence": "confirmed",
         "channel": "gbp"
       }
@@ -454,26 +461,27 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Pause Algeria - Sales Campaign immediately; $102.06 spent with 0 leads and 0 GA4 sessions confirms broken post-click destination.",
+        "text": "Audit Meta lead form or landing page URL immediately; pause Algeria campaign if fix not confirmed within 48 hours.",
         "cites": [
           "F1",
           "F2",
-          "F3"
+          "F4"
         ],
-        "monday_item_name": "Fix Algeria Campaign Destination",
-        "monday_update": "Pause the Algeria - Sales Campaign now — it has burned $102.06 across 5 days producing zero leads and zero GA4 sessions, meaning clicks are not reaching a functional landing page or the tracking is completely broken. Audit the campaign's destination URL for 404s, redirect loops, or a missing/broken lead form; also verify the Meta pixel and GA4 tag fire correctly on the intended landing page. Success is confirmed when at least one test lead submits and appears in both GA4 and GHL (or equivalent CRM) before the campaign is re-enabled. Re-check by 2026-08-01 once the fix is deployed."
+        "monday_item_name": "Fix Algeria lead capture",
+        "monday_update": "The Algeria - Sales Campaign has spent $117.26 and generated 199 clicks with zero leads — the conversion step (lead form or landing page) is not working. GA4 also shows zero sessions, suggesting the destination URL may be wrong or untracked. Check the Meta lead form submission flow and/or landing page link today; if no fix is confirmed by 2026-08-01, pause the campaign to stop further spend against a broken funnel. Success is confirmed when at least 1 lead is captured and appears in GHL within 48 hours of the fix."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch IG reach (1,498 over 28 days) as the only working signal; re-check if it correlates with any site traffic once tracking is repaired.",
+        "text": "Watch CPL for 3 days post-fix before any budget decision; current $16.75/day spend is the baseline to defend.",
         "cites": [
-          "F4"
+          "F2",
+          "F3"
         ],
-        "monday_item_name": "Watch IG Reach vs Traffic",
-        "monday_update": "IG organic reach reached 1,498 over the 28-day window but generated zero GBP actions and zero GA4 sessions — there is no confirmed traffic path from any channel right now. Once the landing page and pixel fix (S1) is live, monitor whether IG reach begins driving GA4 sessions. Flag for review on 2026-08-05 with at least 5 days of post-fix data."
+        "monday_item_name": "Watch CPL post-fix",
+        "monday_update": "Once the conversion fix is live, do not scale or shift budget yet. Monitor CPL against the first emerging baseline — current spend is $16.75/day. Re-check on 2026-08-02 to see if 3 days of post-fix data show leads flowing. Only then should a scale or budget decision be made."
       }
     ],
-    "next_check": "2026-08-01"
+    "next_check": "2026-08-02"
   }
 }
