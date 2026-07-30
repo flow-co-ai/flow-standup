@@ -15,14 +15,19 @@ const PULSE_SLUG = {
   'Liferun':               'liferun',
   'Maadi Law':             'maadi-law',
   'Maadi Law, LLC':        'maadi-law',
-  'Steel Round Bars':      'steel-round-bars',
+  'Steel Round Bars':      'steel-ohare',   // legacy standup name; ohare is the umbrella slug
+  'Forte Metals':          'steel-forte',
+  'Advance Grinding':      'steel-advance',
+  "O'Hare Precision":      'steel-ohare',
 };
 
 // Pulse-only clients that may not appear in the standup (inactive excluded).
 const PULSE_ONLY = [
-  { client: 'Maadi Law, LLC',     slug: 'maadi-law' },
-  { client: 'Healing Helps',      slug: 'healing-helps' },
-  { client: 'Steel Round Bars',   slug: 'steel-round-bars' },
+  { client: 'Maadi Law, LLC',   slug: 'maadi-law' },
+  { client: 'Healing Helps',    slug: 'healing-helps' },
+  { client: 'Forte Metals',     slug: 'steel-forte' },
+  { client: 'Advance Grinding', slug: 'steel-advance' },
+  { client: "O'Hare Precision", slug: 'steel-ohare' },
 ];
 
 // ── DOM builder (same pattern as app.js) ──────────────────────────
