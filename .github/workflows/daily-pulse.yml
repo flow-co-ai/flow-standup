@@ -54,13 +54,11 @@ jobs:
       - name: Apply performance lens
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          FORCE_PERFORMANCE: '1'
         run: node apply_performance.js
 
       - name: Apply reporter lens
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          FORCE_REPORTER: '1'
         run: node apply_reporter.js
 
       - name: Build timeline
