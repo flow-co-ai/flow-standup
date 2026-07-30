@@ -209,6 +209,7 @@ async function main() {
   let generated = 0, carried = 0, skipped = 0;
 
   for (const client of CLIENTS) {
+    if (client.active === false) { console.log(`  ${client.slug}: skipped (inactive)`); continue; }
     const pulsePath = `pulse/${client.slug}.json`;
     if (!existsSync(pulsePath)) { skipped++; continue; }
     const pulse = JSON.parse(readFileSync(pulsePath, 'utf8'));

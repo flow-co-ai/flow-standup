@@ -3,10 +3,9 @@
 const PULSE_BASE = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/refs/heads/main/pulse';
 
 // Maps standup client display names → pulse slug (covers known aliases).
+// Inactive clients (active: false in clients.json) are omitted.
 const PULSE_SLUG = {
   'Billy Doe Meats':       'billy-doe',
-  'Cotton Collections':    'cotton-collections',
-  'Flow Company':          'flow-company',
   'Full Smile':            'full-smile',
   'Healing Helps':         'healing-helps',
   'HVAC':                  'hvac',
@@ -17,15 +16,11 @@ const PULSE_SLUG = {
   'Maadi Law':             'maadi-law',
   'Maadi Law, LLC':        'maadi-law',
   'Steel Round Bars':      'steel-round-bars',
-  'Vous Physique':         'vous-physique',
 };
 
-// Pulse-only clients that may not appear in the standup.
+// Pulse-only clients that may not appear in the standup (inactive excluded).
 const PULSE_ONLY = [
-  { client: 'Vous Physique',      slug: 'vous-physique' },
   { client: 'Maadi Law, LLC',     slug: 'maadi-law' },
-  { client: 'Flow Company',       slug: 'flow-company' },
-  { client: 'Cotton Collections', slug: 'cotton-collections' },
   { client: 'Healing Helps',      slug: 'healing-helps' },
   { client: 'Steel Round Bars',   slug: 'steel-round-bars' },
 ];

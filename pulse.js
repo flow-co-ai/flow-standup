@@ -389,6 +389,10 @@ async function main() {
   const failed  = [];
 
   for (const client of CLIENTS) {
+    if (client.active === false) {
+      console.log(`\nSkipping ${client.slug} (inactive)`);
+      continue;
+    }
     try {
       await processClient(client);
       succeeded++;
