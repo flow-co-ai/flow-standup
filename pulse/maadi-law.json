@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-30T16:51:11.256Z",
+  "generated_at": "2026-07-30T19:20:15.802Z",
   "date": "2026-07-30",
   "slug": "maadi-law",
   "name": "Maadi Law, LLC",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "With zero spend across Meta and Google Ads in the last 28 days, all 89 GBP actions (including 20 calls and 39 direction requests) are coming entirely from organic sources. GBP engagement is down 12.5% week-over-week, making it worth auditing the profile for any recent changes that could be suppressing visibility.",
+  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, so all 91 GBP actions (21 calls, 39 directions, 31 web clicks) represent the entirety of lead activity for Maadi Law. The biggest movement is a 105.64% spike in Instagram engagement over the last 7 days, likely driven by a recent organic post or reel gaining traction, though with no paid spend behind it this has not yet translated into tracked leads.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,23 +25,23 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 89,
-          "calls": 20,
+          "actions": 91,
+          "calls": 21,
           "directions": 39,
-          "web_clicks": 30
+          "web_clicks": 31
         }
       }
     },
     "organic": {
-      "gbp_actions": 89,
-      "ig_reach": 31866
+      "gbp_actions": 91,
+      "ig_reach": 31868
     },
     "top_campaign": null,
     "social": {
-      "followers": 0,
-      "reach": 31866,
+      "followers": 3,
+      "reach": 31868,
       "impressions": 0,
-      "engagement": 962
+      "engagement": 968
     },
     "latest_day": {
       "date": "2026-07-29",
@@ -50,7 +50,7 @@
       "meta_spend": 0,
       "google_spend": 0,
       "gbp_actions": 0,
-      "ig_reach": 1875,
+      "ig_reach": 1877,
       "sc_clicks": 0,
       "ga4_sessions": 0,
       "purchases": 0,
@@ -62,10 +62,10 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -12.5,
+      "gbp_7d_pct": -4.17,
       "sc_7d_pct": null,
       "ga4_7d_pct": null,
-      "ig_7d_pct": 105.6,
+      "ig_7d_pct": 105.64,
       "spend_per_day_7d": 0
     },
     "flags": [],
@@ -246,7 +246,7 @@
         4,
         1,
         0,
-        8,
+        10,
         0,
         0
       ],
@@ -278,7 +278,7 @@
         547,
         596,
         1796,
-        1875
+        1877
       ],
       "sc_clicks": [
         0,
@@ -403,7 +403,7 @@
     }
   },
   "ghl": {
-    "contacts": 135,
+    "contacts": 416,
     "opportunities": {
       "created": {
         "count": 0,
@@ -424,72 +424,62 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-07-26T11:59:39.798Z",
+    "generated_at": "2026-07-30T19:23:10.706Z",
     "cadence": "scheduled_3d",
-    "stale": true,
-    "verdict": "Paid channels fully dark 28 days; organic GBP now fading too.",
+    "stale": false,
+    "verdict": "Organic GBP carries all activity; paid silence is the real story.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend, zero leads, zero clicks across all paid channels for all 28 days in window — CPL is undefined and lead gen is fully off.",
+        "text": "Zero paid spend across all 28 days — Meta and Google Ads both completely dark; $0 CPL is meaningless with no traffic being bought.",
         "confidence": "confirmed",
-        "channel": "meta, google_ads"
+        "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3-day GBP signal (Jul 23–25): 8, 0, 0 actions vs prior 3 days (Jul 20–22): 1, 4, 5 — last 2 days are dead, accelerating the 7d -41.94% drop.",
+        "text": "GBP is the sole lead engine: 91 actions (21 calls, 39 directions, 31 web clicks) in 28 days with no paid amplification behind it.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "GBP"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GHL holds 124 contacts and 0 opportunities created — with paid dark 28 days, 124 contacts have no follow-up pipeline pathway; intake infrastructure is unverified.",
+        "text": "IG reach spiked 105.64% last 7 days (series shows 1,796–1,877 on Jul 28–29 vs lows of 126–301 mid-month), but 0 tracked leads followed.",
         "confidence": "probable",
-        "channel": "ghl"
+        "channel": "instagram"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "IG reach fell 8.27% week-over-week; last 3 days (Jul 23–25) averaged 1,648 vs prior 3 (Jul 20–22) averaging 452 — short spike, no sustained lift, no leads produced.",
-        "confidence": "hypothesis",
-        "channel": "instagram"
+        "text": "GHL shows 416 contacts and 0 opportunities created in 28 days — pipeline intake is completely disconnected from GBP activity.",
+        "confidence": "confirmed",
+        "channel": "GHL"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Confirm why paid accounts are dark — billing, policy, or client pause — before any budget move. Urgency: 28 days elapsed.",
+        "text": "Audit GHL intake workflow: 416 contacts exist but 0 opps created — fix the contact-to-opportunity trigger immediately.",
         "cites": [
-          "F1"
+          "F4"
         ],
-        "monday_item_name": "Diagnose paid channel outage",
-        "monday_update": "Meta and Google Ads have recorded $0 spend and 0 leads across the full 28-day window with no campaign activity visible. Immediately verify account billing status, any policy holds, and whether the client intentionally paused. Success check: paid spend confirmed active or a client-approved pause reason documented — resolve by 2026-07-28."
+        "monday_item_name": "Fix GHL Opp Intake Trigger",
+        "monday_update": "GHL shows 416 contacts but 0 opportunities created and 0 appointments in the 28-day window, meaning leads are entering the CRM but never advancing to pipeline. Audit the automation or manual step that should convert a new contact into an opportunity — identify where the handoff is breaking. Success is confirmed when new contacts from GBP (21 calls, 39 directions, 31 web clicks) begin generating corresponding opportunity records. Re-check by 2026-08-06."
       },
       {
         "id": "S2",
-        "type": "fix",
-        "text": "Audit GHL pipeline: 124 contacts, 0 opportunities created — confirm intake automation is routing leads correctly before paid reactivation.",
+        "type": "watch",
+        "text": "Watch IG reach trend (1,796–1,877 last 2 days) for 3 more days to confirm sustained lift before any paid amplification decision.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "GHL pipeline intake audit",
-        "monday_update": "GHL shows 124 contacts but 0 opportunities created and 0 appointments — this means if paid campaigns reactivate and leads arrive, none will enter the pipeline. Audit automation workflows to confirm contact-to-opportunity routing is live. Success check: at least one test lead flows through to an opportunity in GHL — resolve by 2026-07-29."
-      },
-      {
-        "id": "S3",
-        "type": "watch",
-        "text": "Watch GBP daily actions; if 3 consecutive days remain at 0, escalate GBP profile review — last 2 days already zero.",
-        "cites": [
-          "F2"
-        ],
-        "monday_item_name": "GBP action drop watch",
-        "monday_update": "GBP actions were the only lead-adjacent activity (103 over 28 days), but the last 2 days recorded 0 actions and the 7-day delta is -41.94%. Monitor daily through 2026-07-29. If 3 consecutive zero-action days are confirmed, escalate to a GBP profile audit (suspension check, listing edits, review recency)."
+        "monday_item_name": "Watch IG Reach Lift",
+        "monday_update": "Instagram reach jumped 105.64% over the last 7 days, with the series showing 1,796 and 1,877 on Jul 28–29 after a mid-month trough of 126–301. This is a 2-day signal, not yet a confirmed trend. Monitor daily reach through 2026-08-02; if the 3-day average stays above 1,500, surface a paid boosting recommendation at that point. No action this cycle."
       }
     ],
-    "next_check": "2026-07-29"
+    "next_check": "2026-08-02"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-30T16:51:21.312Z",
+  "generated_at": "2026-07-30T19:20:23.566Z",
   "date": "2026-07-30",
   "slug": "steel-advance",
   "name": "Advance Grinding",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Google Business Profile is the standout mover this period, with GBP actions surging 300% week-over-week and driving 99 total actions over 28 days (including 65 direction requests and 4 calls), all with zero paid spend. Paid channels (Meta and Google Ads) recorded no spend, leads, or clicks, so organic GBP activity is carrying all lead-gen momentum right now.",
+  "verdict": "Paid channels (Meta and Google Ads) recorded zero spend, leads, and clicks over the past 28 days, so all engagement activity came entirely from Google Business Profile, which drove 99 total actions including 4 calls, 65 direction requests, and 30 website clicks. The biggest movement is GBP activity surging 300% over the last 7 days versus the prior 7 days, likely driven by increased local search demand or a recent profile optimization.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -402,5 +402,57 @@
     "sources": [
       "google_my_business"
     ]
+  },
+  "performance": {
+    "generated_at": "2026-07-30T19:23:40.160Z",
+    "cadence": "scheduled_3d",
+    "stale": false,
+    "verdict": "Paid channels fully dark; only GBP organic sustaining any presence.",
+    "findings": [
+      {
+        "id": "F1",
+        "priority": 1,
+        "text": "Zero paid spend, zero leads, zero clicks across Meta and Google Ads for all 28 days in the window — no paid activity whatsoever.",
+        "confidence": "confirmed",
+        "channel": "meta/google_ads"
+      },
+      {
+        "id": "F2",
+        "priority": 2,
+        "text": "GBP 3-day signal (Jul 27–29) shows 0+0+0 actions vs prior 3 days (Jul 24–26) of 2+2+0 — GBP momentum that drove the 300% weekly surge has stalled in the last 3 days.",
+        "confidence": "confirmed",
+        "channel": "gbp"
+      },
+      {
+        "id": "F3",
+        "priority": 3,
+        "text": "GA4 sessions and Search Console clicks read zero for all 28 days — website tracking appears non-functional or the site receives no traffic without paid support.",
+        "confidence": "probable",
+        "channel": "ga4/organic"
+      }
+    ],
+    "suggestions": [
+      {
+        "id": "S1",
+        "type": "watch",
+        "text": "Watch GBP daily actions; re-check 2026-08-02 to confirm whether 3-day stall extends to a full-week drop.",
+        "cites": [
+          "F2"
+        ],
+        "monday_item_name": "Watch GBP Action Stall",
+        "monday_update": "GBP actions dropped to 0 on Jul 27, 28, and 29 after a spike that drove 300% weekly growth — a confirmed 3-day stall. No paid activity exists to buffer this drop. Re-check on 2026-08-02: if the 7-day total falls below 10 actions, escalate to a profile-optimization review. No spend action is possible until paid channels are reactivated."
+      },
+      {
+        "id": "S2",
+        "type": "fix",
+        "text": "Investigate GA4 and Search Console zero-read; confirm whether tracking is broken or site is truly dark.",
+        "cites": [
+          "F3"
+        ],
+        "monday_item_name": "Fix GA4/SC Tracking Verify",
+        "monday_update": "GA4 sessions and Search Console clicks have read zero for all 28 days in the series — this is either a broken pixel/property connection or the site receives no traffic at all without paid media running. Ask client to confirm GA4 property ID and verify the tracking tag is firing. Success check: at least 1 recorded session by 2026-08-02 confirms the fix is live."
+      }
+    ],
+    "next_check": "2026-08-02"
   }
 }

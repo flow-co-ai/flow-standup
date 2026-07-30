@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-30T16:51:15.280Z",
+  "generated_at": "2026-07-30T19:20:19.656Z",
   "date": "2026-07-30",
   "slug": "steel-forte",
   "name": "Forte Metals",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Forte Metals had zero paid spend and zero leads across Meta and Google Ads in the last 28 days, making GBP the sole source of engagement with 105 total actions (8 calls, 66 directions, 31 web clicks). The biggest movement is a 76.74% drop in GBP actions over the last 7 days versus the prior 7 days, likely driven by reduced organic search visibility or seasonal slowdown in local demand.",
+  "verdict": "Forte Metals' biggest movement is a 76.74% drop in GBP actions over the last 7 days compared to the prior 7 days, likely driven by reduced organic search visibility or seasonal dip in local intent. Paid channels (Meta and Google Ads) show zero spend and zero leads over the 28-day window, meaning all 105 GBP actions, 8 calls, 66 direction requests, and 31 web clicks are the sole source of lead activity.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -407,5 +407,55 @@
       "searchconsole",
       "google_my_business"
     ]
+  },
+  "performance": {
+    "generated_at": "2026-07-30T19:23:25.746Z",
+    "cadence": "scheduled_3d",
+    "stale": false,
+    "verdict": "Paid channels fully dark; GBP the only activity and now collapsing.",
+    "findings": [
+      {
+        "id": "F1",
+        "priority": 1,
+        "text": "Zero paid spend and zero leads across all 28 days. No Meta, no Google Ads — CPL is undefined and entirely moot.",
+        "confidence": "confirmed",
+        "channel": "meta/google"
+      },
+      {
+        "id": "F2",
+        "priority": 2,
+        "text": "GBP actions fell 76.74% in the last 7 days vs prior 7. Last 3 days (Jul 27-29) total 6 actions vs 14 in the prior 3 (Jul 24-26) — confirmed accelerating decline.",
+        "confidence": "confirmed",
+        "channel": "gbp"
+      },
+      {
+        "id": "F3",
+        "priority": 3,
+        "text": "GBP Jul 17 spiked to 22 actions — a single-day outlier that inflates the prior-7d baseline, making the -76.74% drop look sharper than the steady-state trend.",
+        "confidence": "probable",
+        "channel": "gbp"
+      },
+      {
+        "id": "F4",
+        "priority": 4,
+        "text": "Search clicks rose 40% (7d delta) with 3 clicks on Jul 27 vs near-zero most days, but 28-day total is only 24 clicks — organic intent exists but at negligible volume.",
+        "confidence": "hypothesis",
+        "channel": "search"
+      }
+    ],
+    "suggestions": [
+      {
+        "id": "S1",
+        "type": "watch",
+        "text": "Watch GBP actions daily for 3 more days; 0 actions on Jul 28-29 must not extend to a 5-day drought before escalating.",
+        "cites": [
+          "F2",
+          "F3"
+        ],
+        "monday_item_name": "Watch GBP action drought",
+        "monday_update": "GBP actions hit 0 on Jul 28 and Jul 29, following a spike to 22 on Jul 17 that distorted the prior-period baseline. The confirmed 3-day signal (6 actions Jul 27-29 vs 14 Jul 24-26) shows real deceleration, not just baseline noise. Success check: if daily GBP actions recover to 3+ by 2026-08-02, no escalation needed. If zero persists through Aug 2, flag for GBP profile audit and local SEO review before any paid reactivation decision."
+      }
+    ],
+    "next_check": "2026-08-02"
   }
 }
