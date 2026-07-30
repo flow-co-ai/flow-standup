@@ -38,6 +38,11 @@ jobs:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
         run: python sync_playbooks.py
 
+      - name: Extract timeline plans
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node extract_timeline.js
+
       - name: Run daily pulse
         env:
           WINDSOR_API_KEY:  ${{ secrets.WINDSOR_API_KEY }}
