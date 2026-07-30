@@ -61,6 +61,11 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node apply_reporter.js
 
+      - name: Build timeline
+        env:
+          STATE_BRANCH: state
+        run: node build_timeline.js
+
       - name: Commit pulse and history
         run: |
           git config user.name "github-actions[bot]"
