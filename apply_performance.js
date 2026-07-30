@@ -33,6 +33,23 @@ const FORCE        = process.env.FORCE_PERFORMANCE === '1';
 const STATE_BRANCH = process.env.STATE_BRANCH || 'state';
 const MODEL        = 'claude-sonnet-4-6';
 
+// ── steel canonical slug mapping ──────────────────────────────────
+// All three steel sub-slugs share one playbook and one timeline entry.
+const STEEL_CANONICAL = 'steel-round-bars';
+const STEEL_SUBS = new Set(['steel-forte', 'steel-advance', 'steel-ohare']);
+function playbookSlug(slug) {
+  return STEEL_SUBS.has(slug) ? STEEL_CANONICAL : slug;
+}
+
+// ── file helpers ───────────────────────────────────────────────────
+function readFile(path) {
+  try { return readFileSync(path, 'utf8'); } catch { return null; }
+}
+
+function readJSON(path) {
+  try { return JSON.parse(readFileSync(path, 'utf8')); } catch { return null; }
+}
+
 // ── cadence ────────────────────────────────────────────────────────
 
 function slugOffset(slug) {
@@ -142,6 +159,34 @@ function buildPrompt(lens, pulse, decisions) {
 
   const w = pulse.windsor || {};
   const parts = [filled];
+
+  // ── SOW & ENGAGEMENT PLAN (from playbook + timeline plan) ──
+  const pSlug    = playbookSlug(pulse.slug);
+  const playbook = readFile(`playbooks/${pSlug}.md`);
+  const plan     = readJSON(`timeline/${pSlug}.plan.json`);
+  const timeline = readJSON(`timeline/${pSlug}.json`);
+
+  if (playbook) {
+    parts.push('\n## SOW & ENGAGEMENT PLAN\n');
+    // Truncate to keep prompt size bounded; 3 000 chars covers any real playbook.
+    parts.push(playbook.slice(0, 3000));
+  }
+
+  if (plan?.milestones?.length) {
+    const completedEvents = (timeline?.events || []).filter(e => e.kind === 'completed');
+    // Duplicate the substring matching used in build_timeline.js exactly.
+    const overdue = plan.milestones.filter(m => {
+      if (m.date >= today) return false;
+      const mLabel = m.label.toLowerCase();
+      return !completedEvents.some(e =>
+        e.label.toLowerCase().includes(mLabel) || mLabel.includes(e.label.toLowerCase())
+      );
+    });
+    if (overdue.length) {
+      parts.push('\n## OVERDUE MILESTONES (no completed event matches — each is a required priority-2 finding)\n');
+      parts.push(JSON.stringify(overdue, null, 1));
+    }
+  }
 
   parts.push('\n## TRIAGE (machine-computed this morning)\n');
   parts.push(JSON.stringify({
