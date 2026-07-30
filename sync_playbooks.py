@@ -40,6 +40,22 @@ STEEL_SLUGS = {"steel-forte", "steel-advance", "steel-ohare", "steel-round-bars"
 
 # ── slug matching ─────────────────────────────────────────────────────────────
 
+# Checked before fuzzy clients.json matching.
+# Value is the canonical slug to write, or None to skip silently.
+ALIASES: dict[str, str | None] = {
+    "jcl":          "jcl",
+    "steel-group":  "steel-round-bars",
+    "medstation":   None,   # pending client — skip silently
+}
+
+
+def _normalize_stem(stem: str) -> str:
+    """Lowercase and strip the '-department-playbooks' boilerplate suffix."""
+    s = stem.lower().strip()
+    s = re.sub(r"\s*[-–]\s*department\s*playbooks?\s*$", "", s, flags=re.IGNORECASE)
+    return s.strip()
+
+
 def _norm(s: str) -> str:
     """Lowercase, strip non-alphanumeric — used for fuzzy comparison."""
     return re.sub(r"[^a-z0-9]", "", s.lower())
@@ -161,20 +177,28 @@ def sync_playbooks() -> None:
         if not (is_gdoc or is_text):
             continue
 
-        # Strip extension to get stem for matching.
+        # Strip extension then normalise stem.
         stem = name
         for ext in (".md", ".txt", ".markdown"):
             if name.lower().endswith(ext):
                 stem = name[: -len(ext)]
                 break
+        norm_stem = _normalize_stem(stem)
 
-        slug = _stem_to_slug(stem, clients)
-        if slug is None:
-            print(f"  ⚠️  '{name}': no client match — skipped")
-            warned += 1
-            continue
-
-        slug = _apply_alias(slug)
+        # ALIASES checked first (exact normalised key match).
+        if norm_stem in ALIASES:
+            alias_val = ALIASES[norm_stem]
+            if alias_val is None:
+                skipped += 1   # silent — pending client
+                continue
+            slug = alias_val
+        else:
+            slug = _stem_to_slug(norm_stem, clients) or _stem_to_slug(stem, clients)
+            if slug is None:
+                print(f"  ⚠️  '{name}': no client match — skipped")
+                warned += 1
+                continue
+            slug = _apply_alias(slug)
         out_path = PLAYBOOKS_DIR / f"{slug}.md"
 
         # Fetch content.
