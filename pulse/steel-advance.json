@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-07-30T19:20:23.566Z",
-  "date": "2026-07-30",
+  "generated_at": "2026-07-31T12:53:28.674Z",
+  "date": "2026-07-31",
   "slug": "steel-advance",
   "name": "Advance Grinding",
   "type": "leadgen",
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) recorded zero spend, leads, and clicks over the past 28 days, so all engagement activity came entirely from Google Business Profile, which drove 99 total actions including 4 calls, 65 direction requests, and 30 website clicks. The biggest movement is GBP activity surging 300% over the last 7 days versus the prior 7 days, likely driven by increased local search demand or a recent profile optimization.",
+  "verdict": "Paid channels (Meta and Google Ads) recorded zero spend, clicks, and leads over the past 28 days, meaning all 98 GBP actions (including 4 calls, 66 direction requests, and 28 website clicks) came entirely from organic local presence. Activating paid campaigns would be the highest-leverage next step to generate trackable leads.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,20 +25,20 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 99,
+          "actions": 98,
           "calls": 4,
-          "directions": 65,
-          "web_clicks": 30
+          "directions": 66,
+          "web_clicks": 28
         }
       }
     },
     "organic": {
-      "gbp_actions": 99,
+      "gbp_actions": 98,
       "ig_reach": 0
     },
     "top_campaign": null,
     "latest_day": {
-      "date": "2026-07-29",
+      "date": "2026-07-30",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -56,7 +56,7 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": 300,
+      "gbp_7d_pct": 0,
       "sc_7d_pct": null,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
@@ -65,7 +65,6 @@
     "flags": [],
     "series": {
       "dates": [
-        "2026-07-02",
         "2026-07-03",
         "2026-07-04",
         "2026-07-05",
@@ -92,7 +91,8 @@
         "2026-07-26",
         "2026-07-27",
         "2026-07-28",
-        "2026-07-29"
+        "2026-07-29",
+        "2026-07-30"
       ],
       "spend": [
         0,
@@ -215,7 +215,6 @@
         0
       ],
       "gbp_actions": [
-        4,
         0,
         1,
         9,
@@ -241,6 +240,7 @@
         0,
         2,
         2,
+        3,
         0,
         0
       ],
@@ -404,55 +404,45 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-07-30T19:23:40.160Z",
+    "generated_at": "2026-07-31T12:56:57.599Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid channels fully dark; only GBP organic sustaining any presence.",
+    "verdict": "GBP proves local demand exists; paid activation is the only missing lever.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend, zero leads, zero clicks across Meta and Google Ads for all 28 days in the window — no paid activity whatsoever.",
+        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google Ads — means CPL and ROAS are structurally undefined; no efficiency to measure.",
         "confidence": "confirmed",
-        "channel": "meta/google_ads"
+        "channel": "meta/google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP 3-day signal (Jul 27–29) shows 0+0+0 actions vs prior 3 days (Jul 24–26) of 2+2+0 — GBP momentum that drove the 300% weekly surge has stalled in the last 3 days.",
-        "confidence": "confirmed",
+        "text": "3-day GBP signal (Jul 28–30): 3, 0, 0 actions vs prior 3-day avg of ~2.3 — GBP activity decelerating after a mid-July peak of 9 actions on Jul 23.",
+        "confidence": "probable",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GA4 sessions and Search Console clicks read zero for all 28 days — website tracking appears non-functional or the site receives no traffic without paid support.",
-        "confidence": "probable",
-        "channel": "ga4/organic"
+        "text": "98 GBP actions over 28 days (4 calls, 66 directions, 28 web clicks) confirm local organic intent with zero paid amplification capturing it.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "watch",
-        "text": "Watch GBP daily actions; re-check 2026-08-02 to confirm whether 3-day stall extends to a full-week drop.",
+        "text": "No paid campaigns active — watch for launch confirmation before any budget or creative action can be taken.",
         "cites": [
-          "F2"
+          "F1"
         ],
-        "monday_item_name": "Watch GBP Action Stall",
-        "monday_update": "GBP actions dropped to 0 on Jul 27, 28, and 29 after a spike that drove 300% weekly growth — a confirmed 3-day stall. No paid activity exists to buffer this drop. Re-check on 2026-08-02: if the 7-day total falls below 10 actions, escalate to a profile-optimization review. No spend action is possible until paid channels are reactivated."
-      },
-      {
-        "id": "S2",
-        "type": "fix",
-        "text": "Investigate GA4 and Search Console zero-read; confirm whether tracking is broken or site is truly dark.",
-        "cites": [
-          "F3"
-        ],
-        "monday_item_name": "Fix GA4/SC Tracking Verify",
-        "monday_update": "GA4 sessions and Search Console clicks have read zero for all 28 days in the series — this is either a broken pixel/property connection or the site receives no traffic at all without paid media running. Ask client to confirm GA4 property ID and verify the tracking tag is firing. Success check: at least 1 recorded session by 2026-08-02 confirms the fix is live."
+        "monday_item_name": "Confirm Paid Launch Status",
+        "monday_update": "Zero spend has been recorded across Meta and Google Ads for the full 28-day window through 2026-07-30, so no efficiency, scaling, or kill decisions are possible yet. The 98 GBP actions (including 4 calls and 66 direction requests) confirm local intent exists and is currently unserved by paid channels. Confirm with the client whether campaigns have been built and simply not launched, or whether launch is still pending. Re-check on 2026-08-03 — if spend is still $0, escalate as a blocking issue."
       }
     ],
-    "next_check": "2026-08-02"
+    "next_check": "2026-08-03"
   }
 }

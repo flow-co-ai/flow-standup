@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-07-30T19:20:19.656Z",
-  "date": "2026-07-30",
+  "generated_at": "2026-07-31T12:53:23.598Z",
+  "date": "2026-07-31",
   "slug": "steel-forte",
   "name": "Forte Metals",
   "type": "leadgen",
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Forte Metals' biggest movement is a 76.74% drop in GBP actions over the last 7 days compared to the prior 7 days, likely driven by reduced organic search visibility or seasonal dip in local intent. Paid channels (Meta and Google Ads) show zero spend and zero leads over the 28-day window, meaning all 105 GBP actions, 8 calls, 66 direction requests, and 31 web clicks are the sole source of lead activity.",
+  "verdict": "Forte Metals saw zero paid activity across Meta and Google Ads in the last 28 days, making Google Business Profile the sole source of engagement with 99 total actions (60 directions, 31 web clicks, 8 calls). The biggest movement is a 76.74% drop in GBP actions over the last 7 days versus the prior 7 days, likely driven by reduced search demand or a lapse in profile activity, though the 125% spike in Search Console clicks suggests some organic visibility is building.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,24 +25,24 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 105,
+          "actions": 99,
           "calls": 8,
-          "directions": 66,
+          "directions": 60,
           "web_clicks": 31
         }
       }
     },
     "organic": {
-      "gbp_actions": 105,
+      "gbp_actions": 99,
       "ig_reach": 0
     },
     "top_campaign": null,
     "search": {
-      "clicks": 24,
-      "impressions": 2056
+      "clicks": 26,
+      "impressions": 2050
     },
     "latest_day": {
-      "date": "2026-07-29",
+      "date": "2026-07-30",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -61,7 +61,7 @@
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
       "gbp_7d_pct": -76.74,
-      "sc_7d_pct": 40,
+      "sc_7d_pct": 125,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
       "spend_per_day_7d": 0
@@ -69,7 +69,6 @@
     "flags": [],
     "series": {
       "dates": [
-        "2026-07-02",
         "2026-07-03",
         "2026-07-04",
         "2026-07-05",
@@ -96,7 +95,8 @@
         "2026-07-26",
         "2026-07-27",
         "2026-07-28",
-        "2026-07-29"
+        "2026-07-29",
+        "2026-07-30"
       ],
       "spend": [
         0,
@@ -219,7 +219,6 @@
         0
       ],
       "gbp_actions": [
-        7,
         5,
         0,
         3,
@@ -245,6 +244,7 @@
         1,
         0,
         6,
+        1,
         0,
         0
       ],
@@ -282,7 +282,6 @@
         0,
         0,
         0,
-        0,
         1,
         2,
         2,
@@ -306,6 +305,7 @@
         0,
         3,
         3,
+        2,
         0
       ],
       "ga4_sessions": [
@@ -409,53 +409,73 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-07-30T19:23:25.746Z",
+    "generated_at": "2026-07-31T12:56:44.805Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid channels fully dark; GBP the only activity and now collapsing.",
+    "verdict": "Paid is fully dark; GBP collapse confirms organic-only risk growing.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend and zero leads across all 28 days. No Meta, no Google Ads — CPL is undefined and entirely moot.",
+        "text": "Zero paid spend across Meta and Google Ads for the full 28-day window; $0 CPL is meaningless — there are simply no leads being generated.",
         "confidence": "confirmed",
-        "channel": "meta/google"
+        "channel": "meta, google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions fell 76.74% in the last 7 days vs prior 7. Last 3 days (Jul 27-29) total 6 actions vs 14 in the prior 3 (Jul 24-26) — confirmed accelerating decline.",
+        "text": "GBP actions collapsed 76.74% last 7d vs prior 7d; last 3 days (Jul 28–30) show 1, 0, 0 actions vs prior 3 days (Jul 25–27) averaging 2.3 — confirmed sharp drop.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GBP Jul 17 spiked to 22 actions — a single-day outlier that inflates the prior-7d baseline, making the -76.74% drop look sharper than the steady-state trend.",
+        "text": "Search Console clicks rose 125% 7d vs prior 7d, with sc_clicks averaging 2.7/day (Jul 25–27) vs 0.3/day (Jul 11–13) — organic visibility building but disconnected from GBP traction.",
         "confidence": "probable",
-        "channel": "gbp"
+        "channel": "organic"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "Search clicks rose 40% (7d delta) with 3 clicks on Jul 27 vs near-zero most days, but 28-day total is only 24 clicks — organic intent exists but at negligible volume.",
-        "confidence": "hypothesis",
-        "channel": "search"
+        "text": "GA4 sessions are zero for the entire 45-day series — either tracking is broken or sessions are not being captured, making web conversion data unreliable.",
+        "confidence": "confirmed",
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Watch GBP actions daily for 3 more days; 0 actions on Jul 28-29 must not extend to a 5-day drought before escalating.",
+        "type": "fix",
+        "text": "Audit GA4 tracking immediately — 45 consecutive days of zero sessions with 26 Search Console clicks is a confirmed tracking break.",
         "cites": [
-          "F2",
+          "F4",
           "F3"
         ],
-        "monday_item_name": "Watch GBP action drought",
-        "monday_update": "GBP actions hit 0 on Jul 28 and Jul 29, following a spike to 22 on Jul 17 that distorted the prior-period baseline. The confirmed 3-day signal (6 actions Jul 27-29 vs 14 Jul 24-26) shows real deceleration, not just baseline noise. Success check: if daily GBP actions recover to 3+ by 2026-08-02, no escalation needed. If zero persists through Aug 2, flag for GBP profile audit and local SEO review before any paid reactivation decision."
+        "monday_item_name": "Fix GA4 Tracking Forte",
+        "monday_update": "GA4 has recorded zero sessions for the entire 45-day series despite 26 Search Console clicks in the 28-day window, confirming a tracking failure not a traffic failure. Verify GA4 tag fires correctly on all site pages and that the correct property is connected. Success is confirmed when GA4 sessions appear daily within 3 days of the fix. Re-check by 2026-08-03."
+      },
+      {
+        "id": "S2",
+        "type": "watch",
+        "text": "Watch GBP actions for 3 more days — last 3 days are 1, 0, 0; if zero continues through Aug 3, escalate to profile audit.",
+        "cites": [
+          "F2"
+        ],
+        "monday_item_name": "Watch GBP Actions Drop",
+        "monday_update": "GBP actions dropped 76.74% over the last 7 days vs prior 7 days, with the last two days logging zero activity. This may reflect seasonal demand softness or a profile suppression issue. If the zero streak continues through 2026-08-03, conduct a full GBP profile audit for policy flags or listing changes. Re-check on 2026-08-03."
+      },
+      {
+        "id": "S3",
+        "type": "watch",
+        "text": "Paid channel reactivation cannot be evaluated until client intent is confirmed — $0 spend for 28 days is either paused by choice or an account issue.",
+        "cites": [
+          "F1"
+        ],
+        "monday_item_name": "Confirm Paid Channel Status",
+        "monday_update": "Meta and Google Ads show $0 spend for the full 28-day window with no flags indicating a budget or policy error in the data. Before any paid reactivation or budget recommendation can be made, confirm whether campaigns are intentionally paused or if there is an account access or billing issue. Success check: paid status confirmed with Forte Metals by 2026-08-03. Re-check on 2026-08-03."
       }
     ],
-    "next_check": "2026-08-02"
+    "next_check": "2026-08-03"
   }
 }
