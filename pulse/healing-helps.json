@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-07-31T12:51:53.134Z",
-  "date": "2026-07-31",
+  "generated_at": "2026-08-01T11:56:08.721Z",
+  "date": "2026-08-01",
   "slug": "healing-helps",
   "name": "Healing Helps",
   "type": "leadgen",
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "With zero spend and zero leads from paid channels, all 28-day activity is organic, led by 65 GBP actions (39 directions, 25 web clicks, 1 call). The biggest movement is a +18.18% week-over-week lift in GBP engagement, likely driven by increased local search visibility or seasonal demand, while GA4 sessions dipped 13.33%.",
+  "verdict": "GBP was the standout mover this period, with 66 total actions (39 directions, 26 web clicks, 1 call) and a 27.27% week-over-week increase, likely driven by stronger local search visibility or seasonal demand. Paid channels (Meta and Google Ads) show zero spend and zero leads, so all lead-gen activity is currently organic.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,25 +25,25 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 65,
+          "actions": 66,
           "calls": 1,
           "directions": 39,
-          "web_clicks": 25
+          "web_clicks": 26
         }
       }
     },
     "organic": {
-      "gbp_actions": 65,
+      "gbp_actions": 66,
       "ig_reach": 0
     },
     "top_campaign": null,
     "analytics": {
-      "sessions": 167,
-      "users": 134,
+      "sessions": 174,
+      "users": 137,
       "conversions": 0
     },
     "latest_day": {
-      "date": "2026-07-30",
+      "date": "2026-07-31",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -51,7 +51,7 @@
       "gbp_actions": 0,
       "ig_reach": 0,
       "sc_clicks": 0,
-      "ga4_sessions": 6,
+      "ga4_sessions": 9,
       "purchases": 0,
       "revenue": 0
     },
@@ -61,16 +61,15 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": 18.18,
+      "gbp_7d_pct": 27.27,
       "sc_7d_pct": null,
-      "ga4_7d_pct": -13.33,
+      "ga4_7d_pct": 6.98,
       "ig_7d_pct": null,
       "spend_per_day_7d": 0
     },
     "flags": [],
     "series": {
       "dates": [
-        "2026-07-03",
         "2026-07-04",
         "2026-07-05",
         "2026-07-06",
@@ -97,7 +96,8 @@
         "2026-07-27",
         "2026-07-28",
         "2026-07-29",
-        "2026-07-30"
+        "2026-07-30",
+        "2026-07-31"
       ],
       "spend": [
         0,
@@ -220,7 +220,6 @@
         0
       ],
       "gbp_actions": [
-        0,
         8,
         2,
         3,
@@ -245,7 +244,8 @@
         5,
         0,
         2,
-        6,
+        7,
+        0,
         0,
         0
       ],
@@ -310,7 +310,6 @@
         0
       ],
       "ga4_sessions": [
-        2,
         4,
         4,
         7,
@@ -337,7 +336,8 @@
         11,
         6,
         8,
-        6
+        6,
+        9
       ],
       "purchases": [
         0,
@@ -410,62 +410,62 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-07-31T12:54:51.028Z",
+    "generated_at": "2026-08-01T11:58:39.310Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Organic-only account is alive but no paid engine exists to scale.",
+    "verdict": "Organic-only mode holding; GBP up 27% but paid engine is fully dark.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — CPL is undefined because no paid leads exist. This is a structural absence, not a decline.",
+        "text": "Zero paid spend across all 28 days — Meta and Google Ads both dark. CPL is undefined; all lead-gen is organic-only.",
         "confidence": "confirmed",
-        "channel": "meta/google"
+        "channel": "meta,google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions rose +18.18% week-over-week to 65 total (39 directions, 25 web clicks, 1 call), the sole demand signal in the account.",
+        "text": "GBP generated 66 actions in 28 days (+27.27% WoW) with zero paid support — directions (39) dominate, suggesting local intent is live.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "3-day GA4 signal (Jul 28–30: 6, 8, 6 sessions) vs prior 3 days (Jul 25–27: 4, 11, 6) is flat — no organic traffic growth trend.",
-        "confidence": "confirmed",
+        "text": "3-day GA4 signal (Jul 29–31): 8, 6, 9 sessions vs prior 3 (Jul 26–28): 2, 4, 11 — flat to marginal, no momentum building from organic.",
+        "confidence": "probable",
         "channel": "ga4"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GA4 records 167 sessions and 0 conversions in 28 days — either conversion tracking is broken or the site produces zero form submissions.",
+        "text": "GBP last 3 days (Jul 29–31) show 0, 0, 0 actions — the 27% WoW gain was front-loaded earlier in the week, momentum may be stalling.",
         "confidence": "probable",
-        "channel": "ga4"
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Audit GA4 conversion events: 167 sessions, 0 conversions in 28 days strongly suggests broken tracking.",
+        "type": "watch",
+        "text": "Monitor GBP actions daily; if 3-day total stays at 0, escalate to channel reactivation review.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Fix GA4 Conversion Tracking",
-        "monday_update": "GA4 recorded 167 sessions and 134 users over 28 days but logged exactly 0 conversions, which is implausible for an active leadgen site. Audit the GA4 goal/event configuration and confirm form-submit events are firing correctly. Success is confirmed when at least one conversion event is recorded within the next 3 days of a form test. Complete by 2026-08-03."
+        "monday_item_name": "Watch GBP Action Stall",
+        "monday_update": "GBP actions for Jul 29–31 came in at 0, 0, 0 after a strong 27.27% WoW gain earlier in the period. Watch whether actions recover to at least 5 over the next 3 days (by Aug 4). If the stall holds, flag to Sohib for a GBP profile audit or post cadence review. No paid budget is at risk; this is purely an organic health check."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GBP: +18.18% WoW lift is promising but 1 call from 65 actions signals low intent conversion — re-check 2026-08-07.",
+        "text": "Watch for any paid channel reactivation signal; 28 days of zero spend is outside normal ops.",
         "cites": [
-          "F2"
+          "F1"
         ],
-        "monday_item_name": "Watch GBP Intent Conversion",
-        "monday_update": "GBP generated 65 actions this 28-day window (+18.18% WoW) but only 1 phone call, meaning direction and web-click actions are not converting to contact. Monitor whether calls increase proportionally as GBP engagement continues to rise. Re-check on 2026-08-07; if calls remain at 1 or fewer while actions grow, a GBP profile optimisation (CTA, hours, photos) should be considered."
+        "monday_item_name": "Paid Channel Dark — Watch",
+        "monday_update": "Meta and Google Ads have recorded $0 spend across all 28 days in the window, confirmed by daily series. This is either a deliberate pause or an account issue — clarify with client whether paid is intentionally off. Success check: confirm paid status in writing by Aug 4. No budget action is taken here; Sohib must approve any reactivation."
       }
     ],
-    "next_check": "2026-08-07"
+    "next_check": "2026-08-04"
   }
 }
