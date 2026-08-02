@@ -3,10 +3,9 @@
 const PULSE_BASE = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/refs/heads/main/pulse';
 
 // Maps standup client display names → pulse slug (covers known aliases).
+// Inactive clients (active: false in clients.json) are omitted.
 const PULSE_SLUG = {
   'Billy Doe Meats':       'billy-doe',
-  'Cotton Collections':    'cotton-collections',
-  'Flow Company':          'flow-company',
   'Full Smile':            'full-smile',
   'Healing Helps':         'healing-helps',
   'HVAC':                  'hvac',
@@ -16,19 +15,27 @@ const PULSE_SLUG = {
   'Liferun':               'liferun',
   'Maadi Law':             'maadi-law',
   'Maadi Law, LLC':        'maadi-law',
-  'Steel Round Bars':      'steel-round-bars',
-  'Vous Physique':         'vous-physique',
+  'Steel Round Bars':      'steel-ohare',   // legacy standup name; ohare is the umbrella slug
+  'Forte Metals':          'steel-forte',
+  'Advance Grinding':      'steel-advance',
+  "O'Hare Precision":      'steel-ohare',
 };
 
-// Pulse-only clients that may not appear in the standup.
+// Pulse-only clients that may not appear in the standup (inactive excluded).
 const PULSE_ONLY = [
-  { client: 'Vous Physique',      slug: 'vous-physique' },
-  { client: 'Maadi Law, LLC',     slug: 'maadi-law' },
-  { client: 'Flow Company',       slug: 'flow-company' },
-  { client: 'Cotton Collections', slug: 'cotton-collections' },
-  { client: 'Healing Helps',      slug: 'healing-helps' },
-  { client: 'Steel Round Bars',   slug: 'steel-round-bars' },
+  { client: 'Maadi Law, LLC',   slug: 'maadi-law' },
+  { client: 'Healing Helps',    slug: 'healing-helps' },
+  { client: 'Forte Metals',     slug: 'steel-forte' },
+  { client: 'Advance Grinding', slug: 'steel-advance' },
+  { client: "O'Hare Precision", slug: 'steel-ohare' },
 ];
+
+// Short labels for steel sub-clients in the scan strip.
+const STEEL_CHIP_LABEL = {
+  'steel-forte':   "STEEL · FORTE",
+  'steel-advance': "STEEL · ADVANCE",
+  'steel-ohare':   "STEEL · O'HARE",
+};
 
 // ── DOM builder (same pattern as app.js) ──────────────────────────
 
@@ -217,6 +224,20 @@ function statusDot(score, size = 7) {
   });
 }
 
+// ── Client switcher ───────────────────────────────────────────────
+// Hides every perf-card and shows only the one matching slug.
+
+function showClient(slug) {
+  document.querySelectorAll('#perf-app .perf-card').forEach(c => {
+    c.style.display = 'none';
+  });
+  const target = document.getElementById(`perf-card-${slug}`);
+  if (target) target.style.display = '';
+  document.querySelectorAll('.perf-scan-chip[data-slug]').forEach(c => {
+    c.classList.toggle('active', c.dataset.slug === slug);
+  });
+}
+
 // ── Scan strip ────────────────────────────────────────────────────
 
 function buildScanStrip(entries) {
@@ -227,17 +248,18 @@ function buildScanStrip(entries) {
     const deltas  = pulse?.windsor?.deltas;
     const type    = pulse?.type || 'leadgen';
     const bd      = hasFeed ? biggestScanDelta(deltas, type) : null;
+    const chipName = STEEL_CHIP_LABEL[cardId] || name;
 
     const chip = el('div', {
       class: 'perf-scan-chip' + (hasFeed ? '' : ' no-feed'),
-      onclick() {
-        document.getElementById(`card-${cardId}`)
-          ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      },
+      'data-slug': cardId,
+      ...(hasFeed ? {
+        onclick() { showClient(pulse?.slug || cardId); },
+      } : {}),
     });
 
     chip.append(statusDot(score, 6));
-    chip.append(el('span', { class: 'perf-scan-name', text: name }));
+    chip.append(el('span', { class: 'perf-scan-name', text: chipName }));
 
     if (hasFeed && score != null) {
       chip.append(el('span', {
@@ -376,7 +398,12 @@ function buildSuggestionPill(s, slug, clientName) {
     el('span', { class: 'perf-sug-type', text: s.type.replace('_', ' ') }),
     el('span', { class: 'perf-sug-text', text: s.text }),
   ));
-  if (s.monday_update) pill.append(el('div', { class: 'perf-sug-update', text: s.monday_update }));
+  if (s.monday_update) {
+    const det = el('details', { class: 'perf-details' });
+    det.append(el('summary', { class: 'perf-details-summary', text: 'MONDAY UPDATE' }));
+    det.append(el('div', { class: 'perf-sug-update', text: s.monday_update }));
+    pill.append(det);
+  }
 
   const status     = el('span', { class: 'perf-sug-status' });
   const approveBtn = el('button', { class: 'perf-btn perf-btn-approve', text: 'Approve → Monday',
@@ -414,12 +441,17 @@ function buildLensBlock(perf, slug, clientName, decidedIds) {
 
   const findings = perf.findings || [];
   if (findings.length) {
+    const mkFinding = f => el('div', { class: 'perf-finding' },
+      el('span', { class: `perf-conf perf-conf-${f.confidence}`, text: f.confidence }),
+      el('span', { text: f.text }),
+    );
     const list = el('div', { class: 'perf-findings' });
-    for (const f of findings) {
-      list.append(el('div', { class: 'perf-finding' },
-        el('span', { class: `perf-conf perf-conf-${f.confidence}`, text: f.confidence }),
-        el('span', { text: f.text }),
-      ));
+    findings.slice(0, 3).forEach(f => list.append(mkFinding(f)));
+    if (findings.length > 3) {
+      const det = el('details', { class: 'perf-details' });
+      det.append(el('summary', { class: 'perf-details-summary', text: `+${findings.length - 3} more` }));
+      findings.slice(3).forEach(f => det.append(mkFinding(f)));
+      list.append(det);
     }
     block.append(list);
   }
@@ -437,9 +469,10 @@ function buildLensBlock(perf, slug, clientName, decidedIds) {
 
 function buildCard(entry, decidedIds = new Set()) {
   const { name, cardId, hasFeed, pulse } = entry;
+  const slug = pulse?.slug || cardId;
   const card = el('article', {
     class: 'perf-card' + (hasFeed ? '' : ' perf-card--nofeed'),
-    id: `card-${cardId}`,
+    id: `perf-card-${slug}`,
   });
 
   if (!hasFeed) {
@@ -470,26 +503,31 @@ function buildCard(entry, decidedIds = new Set()) {
   const dateStr = fmtDate(pulse.date);
   const stamp   = (dateStr ? dateStr + ' · ' : '') + '7D VS PRIOR 7D';
 
-  card.append(
-    el('div', { class: 'perf-card-header' },
-      el('div', { class: 'perf-card-header-left' },
-        statusDot(score, 8),
-        el('span', { class: 'perf-client-name', text: name })
-      ),
-      el('div', { class: 'perf-card-header-right' },
-        score != null
-          ? el('span', { class: 'perf-score', style: { color: statusColor(score) }, text: `${score}/100` })
-          : null,
-        el('span', { class: 'perf-stamp', text: stamp })
-      )
+  const header = el('div', { class: 'perf-card-header' },
+    el('div', { class: 'perf-card-header-left' },
+      statusDot(score, 8),
+      el('span', { class: 'perf-client-name', text: name })
+    ),
+    el('div', { class: 'perf-card-header-right' },
+      score != null
+        ? el('span', { class: 'perf-score', style: { color: statusColor(score) }, text: `${score}/100` })
+        : null,
+      el('span', { class: 'perf-stamp', text: stamp }),
     )
   );
+  card.append(header);
+
+  // ── Body (collapses) ──
+  const body = el('div', { class: 'perf-card-body' });
 
   // ── Verdict ──
   const verdictText = pulse.verdict || buildVerdictFallback(name, deltas, flags);
-  if (verdictText) card.append(el('p', { class: 'perf-verdict', text: verdictText }));
+  if (verdictText) body.append(el('p', { class: 'perf-verdict', text: verdictText }));
 
   // ── Hero grid + channel rows (only when Windsor data is present) ──
+  let chWrap = null;
+  let anyChannel = false;
+
   if (!windsor.error) {
     const heroGrid = el('div', { class: 'perf-hero-grid' });
 
@@ -536,11 +574,10 @@ function buildCard(entry, decidedIds = new Set()) {
         { onPaceWhen: true }
       ));
     }
-    card.append(heroGrid);
+    body.append(heroGrid);
 
-    // ── Channel rows ──
-    const chWrap = el('div', { class: 'perf-channels' });
-    let anyChannel = false;
+    // ── Channel rows (collected for DETAILS toggle below) ──
+    chWrap = el('div', { class: 'perf-channels' });
 
     const meta = totals.byChannel?.meta;
     if (meta && (meta.leads > 0 || meta.spend > 0)) {
@@ -575,26 +612,31 @@ function buildCard(entry, decidedIds = new Set()) {
       chWrap.append(buildChannelRow('IG', series.ig_reach, fmtNum(igReach), deltas.ig_7d_pct));
       anyChannel = true;
     }
-
-    if (anyChannel) card.append(chWrap);
   }
 
-  // ── GHL ──
+  // ── DETAILS toggle: channels + GHL, collapsed by default ──
   const ghlRow = buildGhlRow(ghl);
-  if (ghlRow) card.append(ghlRow);
+  if (anyChannel || ghlRow) {
+    const det = el('details', { class: 'perf-details' });
+    det.append(el('summary', { class: 'perf-details-summary', text: 'DETAILS' }));
+    if (chWrap && anyChannel) det.append(chWrap);
+    if (ghlRow) det.append(ghlRow);
+    body.append(det);
+  }
 
   // ── Flags ──
   if (flags.length) {
     const flagsEl = el('div', { class: 'perf-flags-row' });
     for (const f of flags) flagsEl.append(el('span', { class: 'perf-flag-chip', text: flagLabel(f) }));
-    card.append(flagsEl);
+    body.append(flagsEl);
   }
 
   // ── Analyst + Buyer (performance lens) ──
   if (pulse.performance) {
-    card.append(buildLensBlock(pulse.performance, pulse.slug, name, decidedIds));
+    body.append(buildLensBlock(pulse.performance, pulse.slug, name, decidedIds));
   }
 
+  card.append(body);
   return card;
 }
 
@@ -672,8 +714,19 @@ async function init() {
   const noFeed = entries.filter(e => !e.hasFeed);
 
   const cardList = el('div', { class: 'perf-list' });
-  for (const e of [...withFeed, ...noFeed]) cardList.append(buildCard(e, decidedIds));
+
+  for (const e of [...withFeed, ...noFeed]) {
+    const card = buildCard(e, decidedIds);
+    card.style.display = 'none';   // hidden until showClient is called
+    cardList.append(card);
+  }
+
   app.append(cardList);
+
+  // Show the worst-score card (first in withFeed) via showClient.
+  if (withFeed.length) {
+    showClient(withFeed[0].pulse?.slug || withFeed[0].cardId);
+  }
 
   const ts = document.getElementById('perf-footer-ts');
   if (ts) ts.textContent = 'Performance data updated daily at 11:00 UTC from Windsor (paid media) and GHL (CRM).';
