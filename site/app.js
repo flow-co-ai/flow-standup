@@ -1356,31 +1356,90 @@ function buildCard(entry, priorities, displayName) {
 // ── Inbox pane (right side of the split detail view) ──────────────────────────
 // Reads inboxData (site/inbox.json, written by generate.py's inbox_state.py).
 // States are 100% Monday-derived (viewers/creator_id) -- never invented here.
+// Badge COLOR signals staleness (urgency tier, computed client-side from
+// latest_update.created_at so it stays accurate between daily regenerations);
+// badge TEXT signals the state itself plus elapsed time.
 
-const INBOX_STATE_META = {
-  unread_team_replied:   { label: 'Not read — team replied',  cls: 'inbox-state-team-replied' },
-  unread_not_replied:    { label: 'Not read, not replied',    cls: 'inbox-state-unread' },
-  read_not_replied:      { label: 'Read, not replied',        cls: 'inbox-state-read' },
-  replied_awaiting_team: { label: 'Replied, awaiting team',   cls: 'inbox-state-replied' },
+const INBOX_STATE_FILTER_LABELS = {
+  unread_team_replied:   'Team replied (unread)',
+  unread_not_replied:    'Unread, no reply',
+  read_not_replied:      'Read, not replied',
+  replied_awaiting_team: 'Replied, awaiting team',
 };
-// Rows needing our attention first (unread team activity), quiet ones last.
-const INBOX_STATE_ORDER = { unread_team_replied: 0, unread_not_replied: 1, read_not_replied: 2, replied_awaiting_team: 3 };
 
+function _daysSince(iso) {
+  if (!iso) return null;
+  return Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 86_400_000));
+}
+
+// Naz's confirmed bands (2026-08-02): 0-3d fresh, 4-13d aging, 14d+ stale.
+function _urgencyTier(days) {
+  if (days == null) return 'fresh';
+  if (days >= 14) return 'stale';
+  if (days >= 4) return 'aging';
+  return 'fresh';
+}
+
+function _agoPhrase(d) {
+  if (d == null) return 'recently';
+  if (d === 0) return 'today';
+  if (d === 1) return '1 day ago';
+  return `${d}d ago`;
+}
+function _forPhrase(d) {
+  if (d == null) return '';
+  if (d === 0) return 'today';
+  if (d === 1) return '1 day';
+  return `${d}d`;
+}
+
+const STATE_LABEL_FN = {
+  unread_team_replied:   d => `Team replied ${_agoPhrase(d)} — unread`,
+  unread_not_replied:    d => `Unread ${_forPhrase(d)}`.trim(),
+  read_not_replied:      d => `Read, not replied (${_forPhrase(d)})`,
+  replied_awaiting_team: d => `Replied ${_agoPhrase(d)}, awaiting team`,
+};
+
+// Persists across renders/clients for this page session (not saved anywhere).
+let inboxStateFilter = 'all';
+
+// Default sort: most overdue (oldest latest_update) first, across all states.
 function _inboxSort(a, b) {
-  return (INBOX_STATE_ORDER[a.state] ?? 9) - (INBOX_STATE_ORDER[b.state] ?? 9)
-    || (b.latest_update?.created_at || '').localeCompare(a.latest_update?.created_at || '');
+  const da = _daysSince(a.latest_update?.created_at) ?? -1;
+  const db = _daysSince(b.latest_update?.created_at) ?? -1;
+  return db - da;
+}
+
+function buildInboxFilterSelect() {
+  const select = el('select', {
+    class: 'inbox-filter-select',
+    onchange: (e) => { inboxStateFilter = e.target.value; render(); },
+  });
+  select.append(el('option', { value: 'all', text: 'All states' }));
+  Object.entries(INBOX_STATE_FILTER_LABELS).forEach(([val, label]) => {
+    select.append(el('option', { value: val, text: label }));
+  });
+  select.value = inboxStateFilter;
+  return select;
 }
 
 function buildInboxPane(clientName) {
   const wrap = el('div', { class: 'inbox-pane' });
   wrap.append(el('div', { class: 'card-header inbox-pane-header' },
     el('span', { class: 'client-name', text: 'Inbox' }),
+    buildInboxFilterSelect(),
   ));
 
-  const items = (inboxData.by_client || {})[clientName] || [];
-  if (!items.length) {
+  const allItems = (inboxData.by_client || {})[clientName] || [];
+  if (!allItems.length) {
     wrap.append(el('div', { class: 'inbox-empty' },
       inboxData.generated_at ? 'Nothing to triage.' : 'Inbox data not available yet.'));
+    return wrap;
+  }
+
+  const items = inboxStateFilter === 'all' ? allItems : allItems.filter(it => it.state === inboxStateFilter);
+  if (!items.length) {
+    wrap.append(el('div', { class: 'inbox-empty' }, 'No items match this filter.'));
     return wrap;
   }
 
@@ -1412,29 +1471,21 @@ function buildInboxPane(clientName) {
 }
 
 function buildInboxRow(it, isSub) {
-  const meta = INBOX_STATE_META[it.state] || { label: it.state_label || it.state, cls: '' };
-  const row = el('div', { class: `inbox-row ${meta.cls}${isSub ? ' inbox-row-sub' : ''}` });
+  const days = _daysSince(it.latest_update?.created_at);
+  const tier = _urgencyTier(days);
+  const labelFn = STATE_LABEL_FN[it.state];
+  const label = labelFn ? labelFn(days) : (it.state_label || it.state);
+  const row = el('div', { class: `inbox-row inbox-urgency-${tier}${isSub ? ' inbox-row-sub' : ''}` });
 
   row.append(el('div', { class: 'inbox-row-main' },
     el('a', { class: 'inbox-row-name', href: it.url || '#', target: '_blank', rel: 'noopener', text: it.item_name || 'Untitled' }),
-    el('span', { class: 'inbox-state-chip', text: meta.label }),
+    el('span', { class: 'inbox-state-chip', text: label }),
   ));
 
   const lu = it.latest_update || {};
   if (lu.created_at) {
     const who = lu.is_ours ? 'us' : (lu.creator_name || 'them');
     row.append(el('div', { class: 'inbox-row-detail', text: `Last update by ${who} — ${fmtDate((lu.created_at || '').slice(0, 10))}` }));
-  }
-
-  if ((it.external_mentions || []).length) {
-    const mentions = el('div', { class: 'inbox-mentions' });
-    it.external_mentions.forEach(m => {
-      mentions.append(el('div', { class: 'inbox-mention' },
-        el('span', { class: 'inbox-mention-source', text: m.source === 'fireflies' ? '🎙' : '💬' }),
-        el('span', { class: 'inbox-mention-text', text: `${m.ref || ''}${m.date ? ' — ' + m.date : ''}` }),
-      ));
-    });
-    row.append(mentions);
   }
 
   return row;

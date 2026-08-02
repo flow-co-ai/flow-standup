@@ -1,13 +1,11 @@
 """
 inbox_state.py — Consolidated Inbox: per Monday item/subitem, one of four
 deterministic read/reply states, derived purely from Monday's own
-update creator_id/viewers (no LLM, no fuzzy matching for the state itself).
+update creator_id/viewers (no LLM, no fuzzy matching).
 
-Fireflies meetings and WhatsApp chats are attached as best-effort enrichment
-(external_mentions) via a plain substring match on the item's name -- this is
-supporting context shown in the UI, and never overrides or determines state.
-
-Writes site/inbox.json, read by site/app.js.
+Writes site/inbox.json, read by site/app.js. Staleness/urgency display
+(elapsed time, badge color tiers) is computed client-side in app.js from
+latest_update.created_at, not baked in here.
 """
 
 OUR_MONDAY_USER_IDS = {"70062990", "69662034"}  # Nacer Amrouch, Sohib Boundaoui
@@ -44,43 +42,7 @@ def _thread_state(updates_full: list) -> tuple:
     return STATE_UNREAD_NOT_REPLIED, latest
 
 
-def _external_mentions(item_name: str, meetings: list, chats: list) -> list:
-    """Cheap substring match, client-scoped lists already handed in by
-    generate.py's own meeting/chat-to-client matching. Enrichment only."""
-    needle = (item_name or "").strip().lower()
-    if len(needle) < 4:
-        return []
-    out = []
-    for mt in meetings or []:
-        summary = mt.get("summary") or {}
-        haystack = " ".join([
-            mt.get("title") or "",
-            str(summary.get("overview") or ""),
-            str(summary.get("action_items") or ""),
-        ]).lower()
-        if needle in haystack:
-            out.append({
-                "source": "fireflies",
-                "date": mt.get("date"),
-                "ref": mt.get("title") or "Untitled meeting",
-            })
-    for chat_name, msgs in chats or []:
-        if not isinstance(msgs, list):
-            continue
-        for msg in msgs:
-            text = msg.get("text") or ""
-            if needle in text.lower():
-                out.append({
-                    "source": "whatsapp",
-                    "date": (msg.get("datetime") or "")[:16],
-                    "ref": chat_name,
-                    "snippet": text[:160],
-                })
-    out.sort(key=lambda s: s.get("date") or "", reverse=True)
-    return out[:3]
-
-
-def _build_entry(item: dict, board: str, parent_item_id, meetings: list, chats: list):
+def _build_entry(item: dict, board: str, parent_item_id):
     result = _thread_state(item.get("updates_full") or [])
     if result is None:
         return None
@@ -99,11 +61,10 @@ def _build_entry(item: dict, board: str, parent_item_id, meetings: list, chats: 
             "creator_name": latest.get("creator_name"),
             "is_ours": latest.get("creator_id") in OUR_MONDAY_USER_IDS,
         },
-        "external_mentions": _external_mentions(item.get("name") or "", meetings, chats),
     }
 
 
-def build_inbox(grouped: dict, meetings_by_client: dict, chats_by_client: dict, today: str) -> dict:
+def build_inbox(grouped: dict, today: str) -> dict:
     """grouped: generate.py's group_items_by_client() output, {client: {dept: [items]}}.
     Returns the full site/inbox.json payload -- items/subitems with zero updates
     ever are excluded (nothing to triage)."""
@@ -111,16 +72,14 @@ def build_inbox(grouped: dict, meetings_by_client: dict, chats_by_client: dict, 
     for client, departments in grouped.items():
         if client == "Unmapped":
             continue
-        meetings = meetings_by_client.get(client, [])
-        chats = chats_by_client.get(client, [])
         entries = []
         for dept, items in departments.items():
             for item in items:
-                entry = _build_entry(item, dept, None, meetings, chats)
+                entry = _build_entry(item, dept, None)
                 if entry:
                     entries.append(entry)
                 for sub in item.get("subitems") or []:
-                    sub_entry = _build_entry(sub, dept, item.get("item_id"), meetings, chats)
+                    sub_entry = _build_entry(sub, dept, item.get("item_id"))
                     if sub_entry:
                         entries.append(sub_entry)
         if entries:

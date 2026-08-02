@@ -1089,9 +1089,24 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .client-detail-pane { min-width: 0; flex: 1 1 50%; }
 
+/* Left (summary) pane stays pinned in view; right (Inbox) pane scrolls on
+   its own within a bounded height, instead of the whole page scrolling
+   together. */
+.client-detail-pane-summary {
+  position: sticky;
+  top: 16px;
+  align-self: flex-start;
+}
+.client-detail-pane-inbox {
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+}
+
 @media (max-width: 860px) {
   .page > .client-detail { max-width: 680px; }
   .client-detail-split { flex-direction: column; }
+  .client-detail-pane-summary { position: static; }
+  .client-detail-pane-inbox { max-height: none; overflow-y: visible; }
 }
 
 .inbox-pane {
@@ -1100,7 +1115,18 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   border-radius: 16px;
   padding: 18px 16px 16px;
 }
-.inbox-pane-header { margin-bottom: 4px; }
+.inbox-pane-header { flex-wrap: wrap; gap: 8px; }
+
+.inbox-filter-select {
+  background: #0C100C;
+  color: rgba(220,216,200,0.75);
+  border: 1px solid rgba(237,233,220,0.15);
+  border-radius: 8px;
+  padding: 5px 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+}
 
 .inbox-list { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
 
@@ -1119,29 +1145,24 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .inbox-state-chip {
   font-family: 'JetBrains Mono', monospace;
   font-size: 9px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 3px 8px;
   border-radius: 999px;
-  white-space: nowrap;
   border: 1px solid;
 }
-/* Same color vocabulary as the rest of the page: DE6E4C = urgent (stalled),
-   DCA746 = warn, 8CBE6E = good (completed/on_track), dim = quiet/neutral. */
-.inbox-state-team-replied                    { border-left-color: #DE6E4C; }
-.inbox-state-team-replied .inbox-state-chip  { color: #DE6E4C; border-color: rgba(222,110,76,0.4); background: rgba(222,110,76,0.08); }
-.inbox-state-unread                          { border-left-color: #DCA746; }
-.inbox-state-unread .inbox-state-chip        { color: #DCA746; border-color: rgba(220,167,70,0.4); background: rgba(220,167,70,0.08); }
-.inbox-state-read                            { border-left-color: rgba(237,233,220,0.25); }
-.inbox-state-read .inbox-state-chip          { color: rgba(220,216,200,0.65); border-color: rgba(237,233,220,0.2); background: rgba(237,233,220,0.05); }
-.inbox-state-replied                         { border-left-color: #8CBE6E; }
-.inbox-state-replied .inbox-state-chip       { color: #8CBE6E; border-color: rgba(140,190,110,0.35); background: rgba(140,190,110,0.08); }
+
+/* Badge color = staleness tier (urgency), same across all four states --
+   category is carried by the text, not the color. Same vocabulary as the
+   rest of the page: DE6E4C = urgent, DCA746 = warn, dim = calm/fresh. */
+.inbox-urgency-fresh                         { border-left-color: rgba(237,233,220,0.25); }
+.inbox-urgency-fresh .inbox-state-chip       { color: rgba(220,216,200,0.65); border-color: rgba(237,233,220,0.2); background: rgba(237,233,220,0.05); }
+.inbox-urgency-aging                         { border-left-color: #DCA746; }
+.inbox-urgency-aging .inbox-state-chip       { color: #DCA746; border-color: rgba(220,167,70,0.4); background: rgba(220,167,70,0.08); }
+.inbox-urgency-stale                         { border-left-color: #DE6E4C; }
+.inbox-urgency-stale .inbox-state-chip       { color: #DE6E4C; border-color: rgba(222,110,76,0.45); background: rgba(222,110,76,0.1); }
 
 .inbox-row-detail { margin-top: 5px; font-size: 11.5px; color: rgba(220,216,200,0.55); }
-
-.inbox-mentions { margin-top: 6px; display: flex; flex-direction: column; gap: 3px; }
-.inbox-mention { font-size: 11px; color: rgba(220,216,200,0.55); display: flex; gap: 5px; }
-.inbox-mention-source { flex-shrink: 0; }
 
 .inbox-empty { color: rgba(220,216,200,0.4); font-size: 13px; margin-top: 14px; }
 
