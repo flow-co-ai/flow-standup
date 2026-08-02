@@ -1910,6 +1910,37 @@ def main():
         print(f"  chat '{chat_name}' ({n} msgs) → {c}")
         chats_by_client.setdefault(c, []).append((chat_name, msgs))
 
+    # ── wider lookback for Inbox enrichment ONLY -- the pulse narrative above
+    # stays on days_back (7d, tuned for "this week"); the Inbox's
+    # external_mentions need to reach further back (2-3 weeks) since a
+    # Monday item can sit unread/unreplied well past a week. Separate fetch
+    # so this never changes the weekly pulse's own window semantics.
+    inbox_lookback_days = config.get("inbox_lookback_days", 21)
+    inbox_meetings_by_client, inbox_chats_by_client = meetings_by_client, chats_by_client
+    if inbox_lookback_days > days_back:
+        print(f"\n  Fetching {inbox_lookback_days}-day window for Inbox enrichment...")
+        try:
+            inbox_fireflies_data = fetch_transcripts(inbox_lookback_days)
+            inbox_meetings_by_client = {}
+            if isinstance(inbox_fireflies_data, list):
+                for mt in inbox_fireflies_data:
+                    matched = match_meeting_clients(mt, clients_config, active_clients_set)
+                    for c in (matched or ["General comms"]):
+                        inbox_meetings_by_client.setdefault(c, []).append(mt)
+            print(f"  ✓ {len(inbox_fireflies_data)} meetings for enrichment")
+        except Exception as exc:
+            print(f"  ⚠️  Inbox meetings fetch failed (non-blocking, falling back to {days_back}d): {exc}")
+        try:
+            inbox_whatsapp_data = fetch_whatsapp(inbox_lookback_days, config=config)
+            inbox_chats_by_client = {}
+            for chat_name, msgs in (inbox_whatsapp_data or {}).items():
+                c = _match_comms_to_client(chat_name, clients_config, active_clients_set)
+                inbox_chats_by_client.setdefault(c, []).append((chat_name, msgs))
+            n_msgs = sum(len(v) for v in inbox_whatsapp_data.values() if isinstance(v, list)) if inbox_whatsapp_data else 0
+            print(f"  ✓ {len(inbox_whatsapp_data or {})} chats, {n_msgs} messages for enrichment")
+        except Exception as exc:
+            print(f"  ⚠️  Inbox WhatsApp fetch failed (non-blocking, falling back to {days_back}d): {exc}")
+
     # Clients with any signal this week (Monday items OR meetings OR chats),
     # in config order. Unmapped Monday groups and unmatched meetings/chats no
     # longer get force-merged into a signed client's card or a full pulse call
@@ -2228,7 +2259,7 @@ def main():
     copy_to_site(json_path)
 
     try:
-        inbox = inbox_state.build_inbox(grouped, meetings_by_client, chats_by_client, today)
+        inbox = inbox_state.build_inbox(grouped, inbox_meetings_by_client, inbox_chats_by_client, today)
         inbox_path = Path("site") / "inbox.json"
         inbox_path.write_text(json.dumps(inbox, indent=2, ensure_ascii=False), encoding="utf-8")
         n_items = sum(len(v) for v in inbox["by_client"].values())
