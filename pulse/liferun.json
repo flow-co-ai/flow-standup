@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-08-01T11:57:00.293Z",
-  "date": "2026-08-01",
+  "generated_at": "2026-08-02T11:55:10.600Z",
+  "date": "2026-08-02",
   "slug": "liferun",
   "name": "Liferun",
   "type": "leadgen",
   "window_days": 28,
-  "score": 80,
-  "status": "green",
-  "verdict": "Leads surged 290% week-over-week while CPL dropped 70.94%, driven almost entirely by Meta delivering all 86 leads on $801.88 in spend. Google Ads remains a concern, pulling $2,332.84 (led by \"BWS - Search Campaign - Calls\" at $1,449.73) with zero recorded conversions over the 28-day window.",
+  "score": 60,
+  "status": "amber",
+  "verdict": "Leads surged 290% week-over-week while CPL dropped 70.94%, signaling a strong efficiency gain likely driven by Meta's recent activity (86 leads on $801.88 spend), though Google Ads remains a concern with $2,271.12 spent over 28 days and zero recorded conversions.",
   "windsor": {
     "totals": {
-      "spend": 3134.72,
+      "spend": 3073,
       "leads": 86,
-      "cpl": 36.45,
+      "cpl": 35.73,
       "byChannel": {
         "meta": {
           "spend": 801.88,
@@ -20,9 +20,9 @@
           "clicks": 617
         },
         "google_ads": {
-          "spend": 2332.84,
+          "spend": 2271.12,
           "conversions": 0,
-          "clicks": 369
+          "clicks": 351
         },
         "gbp": {
           "actions": 38,
@@ -41,16 +41,16 @@
       "spend": 1449.73
     },
     "analytics": {
-      "sessions": 1006,
-      "users": 955,
+      "sessions": 987,
+      "users": 937,
       "conversions": 0
     },
     "search": {
       "clicks": 71,
-      "impressions": 14458
+      "impressions": 15403
     },
     "latest_day": {
-      "date": "2026-07-31",
+      "date": "2026-08-01",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -58,7 +58,7 @@
       "gbp_actions": 0,
       "ig_reach": 0,
       "sc_clicks": 0,
-      "ga4_sessions": 18,
+      "ga4_sessions": 24,
       "purchases": 0,
       "revenue": 0
     },
@@ -69,17 +69,18 @@
       "meta_leads_7d_pct": 290,
       "google_spend_7d_pct": -12.77,
       "gbp_7d_pct": -82.35,
-      "sc_7d_pct": -50,
-      "ga4_7d_pct": -9.95,
+      "sc_7d_pct": -36.84,
+      "ga4_7d_pct": -6.22,
       "ig_7d_pct": null,
       "spend_per_day_7d": 122.24
     },
     "flags": [
-      "zero_spend_day"
+      "zero_spend_day",
+      "channel_dark:meta",
+      "channel_dark:google"
     ],
     "series": {
       "dates": [
-        "2026-07-04",
         "2026-07-05",
         "2026-07-06",
         "2026-07-07",
@@ -106,10 +107,10 @@
         "2026-07-28",
         "2026-07-29",
         "2026-07-30",
-        "2026-07-31"
+        "2026-07-31",
+        "2026-08-01"
       ],
       "spend": [
-        61.72,
         62.62,
         145.81,
         146.01,
@@ -136,10 +137,10 @@
         196.63,
         245.85,
         188.91,
+        0,
         0
       ],
       "leads": [
-        0,
         0,
         5,
         2,
@@ -166,10 +167,10 @@
         9,
         12,
         13,
+        0,
         0
       ],
       "meta_spend": [
-        0,
         0,
         34.54,
         34.2,
@@ -196,10 +197,10 @@
         94.75,
         94.17,
         85.62,
+        0,
         0
       ],
       "google_spend": [
-        61.72,
         62.62,
         111.27,
         111.81,
@@ -226,10 +227,10 @@
         101.88,
         151.68,
         103.29,
+        0,
         0
       ],
       "gbp_actions": [
-        0,
         1,
         2,
         0,
@@ -254,6 +255,7 @@
         0,
         1,
         2,
+        0,
         0,
         0,
         0
@@ -289,7 +291,6 @@
         0
       ],
       "sc_clicks": [
-        4,
         0,
         3,
         8,
@@ -315,11 +316,11 @@
         4,
         2,
         2,
+        4,
         0,
         0
       ],
       "ga4_sessions": [
-        46,
         53,
         43,
         55,
@@ -346,7 +347,8 @@
         54,
         20,
         22,
-        18
+        21,
+        24
       ],
       "purchases": [
         0,
@@ -411,7 +413,7 @@
     }
   },
   "ghl": {
-    "contacts": 129,
+    "contacts": 130,
     "opportunities": {
       "created": {
         "count": 107,
@@ -435,77 +437,77 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-01T11:59:52.772Z",
+    "generated_at": "2026-08-02T11:57:58.846Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Meta working hard; Google burning $2,333 with zero conversions confirmed.",
+    "verdict": "Google burning $2,271 with zero conversions; Meta working but both channels dark now.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Google Ads spent $2,332.84 over 28 days with 0 recorded conversions — confirmed pixel/tracking failure, not a campaign performance issue.",
+        "text": "Both channels dark Jul 27–Aug 1: zero spend on 4 of last 6 days, killing all lead flow confirmed in series.",
         "confidence": "confirmed",
-        "channel": "google_ads"
+        "channel": "meta+google"
       },
       {
         "id": "F2",
         "priority": 1,
-        "text": "Meta delivered all 86 leads at $36.45 CPL on $801.88 spend; 3-day lead signal (Jul 28–30: 9,12,13) vs prior 3 (Jul 25–27: 0,0,5) confirms strong acceleration.",
+        "text": "Google Ads spent $2,271.12 over 28 days with zero recorded conversions; top campaign alone burned $1,449.73 with no output.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "google"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "OVERDUE: Stripe products QA (Jul 20) and GHL build complete (Jul 31) both flagged done in SOW but no completed event is recorded — verification outstanding.",
-        "confidence": "probable",
+        "text": "OVERDUE: Stripe products QA (Jul 20) and GHL build sign-off (Jul 31) have no completed event logged — money paths unverified per SOW.",
+        "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 2,
-        "text": "OVERDUE: GBP item opened Jul 15 with no completion event; GBP actions also collapsed -82.35% week-over-week to near zero — task and channel both stalled.",
+        "text": "OVERDUE: GBP item opened milestone (Jul 15) has no completed event; GBP actions collapsed 82.35% week-over-week to near zero.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F5",
-        "priority": 4,
-        "text": "GHL shows 107 opportunities created but 0 won and 0 appointments — 86 Meta leads arriving but no pipeline progression suggests an intake or follow-up leak, not an ads problem.",
+        "priority": 3,
+        "text": "107 GHL opportunities created but 0 won and 0 appointments; 130 contacts vs 86 leads suggests intake leak — leads arriving but not converting to pipeline.",
         "confidence": "probable",
-        "channel": "CRM"
+        "channel": "GHL"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Fix Google Ads conversion tracking immediately — $2,332.84 spent with 0 conversions is a confirmed pixel failure, not performance.",
+        "text": "Investigate and restore both Meta and Google spend — 4 of last 6 days at $0 is a confirmed blackout.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Fix Google Ads conversion pixel",
-        "monday_update": "Google Ads has spent $2,332.84 over 28 days recording zero conversions — confirmed tracking failure on the client-side pixel, not a campaign issue. Audit the conversion tag on the thank-you/confirmation page and verify it fires on a test conversion. Success is confirmed when at least one conversion registers in Google Ads within 48 hours of the fix. Complete by 2026-08-04."
+        "monday_item_name": "Restore Meta + Google spend",
+        "monday_update": "Both Meta and Google show zero spend on 4 of the last 6 days (Jul 27–Aug 1), confirmed in the daily series. Check budget exhaustion, billing holds, or campaign pauses in both ad accounts and restore to at least prior daily pace (~$122/day). Success is confirmed when both channels show non-zero spend on Aug 3 and Aug 4."
       },
       {
         "id": "S2",
-        "type": "scale",
-        "text": "Scale Meta daily budget +20% — 3-day lead surge (9,12,13 leads) at $36.45 CPL is a confirmed win.",
+        "type": "kill",
+        "text": "Pause or redirect Google Ads budget — $2,271.12 spent over 28 days with zero conversions confirmed.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Scale Meta budget +20%",
-        "monday_update": "Meta delivered 86 leads at $36.45 CPL with a clear 3-day acceleration (Jul 28–30: 9, 12, 13 leads vs near-zero the prior 3 days). Raise the Meta daily budget by 20% from current levels. Success check: CPL stays at or below $45 and lead volume holds above 8/day over the following 3 days. Re-check by 2026-08-05."
+        "monday_item_name": "Pause Google zero-conversion spend",
+        "monday_update": "Google Ads has spent $2,271.12 over 28 days including $1,449.73 in the top search campaign with zero recorded conversions; this is not a pixel gap note — it is a confirmed 28-day zero output. Pause Google campaigns and shift the daily Google budget to Meta, where 86 leads were generated at $9.32 CPL (Meta-only CPL implied from $801.88 / 86 leads). Confirm the redirect is live by Aug 4 and re-evaluate Google only after conversion tracking is verified end-to-end."
       },
       {
         "id": "S3",
         "type": "fix",
-        "text": "Fix GHL intake leak — 107 opportunities created, 0 appointments, 0 won; leads arriving but pipeline is stalled.",
+        "text": "Audit GHL intake: 107 opportunities created, 0 won, 0 appointments — confirm leads are reaching and being worked by CS.",
         "cites": [
           "F5"
         ],
-        "monday_item_name": "Fix GHL pipeline intake leak",
-        "monday_update": "GHL shows 107 opportunities created from 86 Meta leads but zero appointments booked and zero won — leads are entering the CRM but not progressing, indicating a follow-up automation or CS response failure. Audit the post-lead automation sequence in GHL and confirm the Cebu team is receiving and actioning new contacts. Success is at least 10 appointments booked within 7 days of the fix. Re-check 2026-08-08."
+        "monday_item_name": "GHL intake leak audit",
+        "monday_update": "GHL shows 107 opportunities created and 130 contacts but zero won deals and zero appointments booked, meaning leads are entering the pipeline but stalling completely. Review the Device Fulfilment pipeline stages and CS follow-up sequences to identify where contacts are dropping — likely the handoff between lead capture and outbound call or Text-to-Pay flow. Success is a non-zero appointment count within 7 days of the fix being deployed; re-check Aug 9."
       }
     ],
     "next_check": "2026-08-05"
