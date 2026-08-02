@@ -33,6 +33,7 @@ from fetch_whatsapp import fetch_whatsapp
 from send_email import send_standup_email, markdown_to_simple_html
 import archive_monday
 import pulse_story
+import inbox_state
 import drive_pulse
 import scoring
 
@@ -2225,6 +2226,15 @@ def main():
     print(f"  Wrote {dated_path}")
 
     copy_to_site(json_path)
+
+    try:
+        inbox = inbox_state.build_inbox(grouped, meetings_by_client, chats_by_client, today)
+        inbox_path = Path("site") / "inbox.json"
+        inbox_path.write_text(json.dumps(inbox, indent=2, ensure_ascii=False), encoding="utf-8")
+        n_items = sum(len(v) for v in inbox["by_client"].values())
+        print(f"  Wrote {inbox_path} ({len(inbox['by_client'])} clients, {n_items} items)")
+    except Exception as exc:
+        print(f"  ⚠️  Inbox state computation failed (non-blocking): {exc}")
 
     if score_rows:
         scoring.append_scores_history(score_rows)

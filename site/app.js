@@ -97,6 +97,7 @@ const KEY_DISMISSED_ALERTS = 'flowops-dismissed-alerts';
 
 let standup      = null;
 let scoresHistory = []; // scores-history.json — flat rows, {date, client, composite_health, composite_label, sub_scores}
+let inboxData    = { generated_at: null, by_client: {} }; // inbox.json — per-client Monday item read/reply state
 let handled   = {};       // { rowId: true }  — only checked rows stored
 let copiedId  = null;
 let copyTimer = null;
@@ -1352,6 +1353,93 @@ function buildCard(entry, priorities, displayName) {
   return card;
 }
 
+// ── Inbox pane (right side of the split detail view) ──────────────────────────
+// Reads inboxData (site/inbox.json, written by generate.py's inbox_state.py).
+// States are 100% Monday-derived (viewers/creator_id) -- never invented here.
+
+const INBOX_STATE_META = {
+  unread_team_replied:   { label: 'Not read — team replied',  cls: 'inbox-state-team-replied' },
+  unread_not_replied:    { label: 'Not read, not replied',    cls: 'inbox-state-unread' },
+  read_not_replied:      { label: 'Read, not replied',        cls: 'inbox-state-read' },
+  replied_awaiting_team: { label: 'Replied, awaiting team',   cls: 'inbox-state-replied' },
+};
+// Rows needing our attention first (unread team activity), quiet ones last.
+const INBOX_STATE_ORDER = { unread_team_replied: 0, unread_not_replied: 1, read_not_replied: 2, replied_awaiting_team: 3 };
+
+function _inboxSort(a, b) {
+  return (INBOX_STATE_ORDER[a.state] ?? 9) - (INBOX_STATE_ORDER[b.state] ?? 9)
+    || (b.latest_update?.created_at || '').localeCompare(a.latest_update?.created_at || '');
+}
+
+function buildInboxPane(clientName) {
+  const wrap = el('div', { class: 'inbox-pane' });
+  wrap.append(el('div', { class: 'card-header inbox-pane-header' },
+    el('span', { class: 'client-name', text: 'Inbox' }),
+  ));
+
+  const items = (inboxData.by_client || {})[clientName] || [];
+  if (!items.length) {
+    wrap.append(el('div', { class: 'inbox-empty' },
+      inboxData.generated_at ? 'Nothing to triage.' : 'Inbox data not available yet.'));
+    return wrap;
+  }
+
+  const byParent = {};
+  const topLevel = [];
+  items.forEach(it => {
+    if (it.parent_item_id) (byParent[it.parent_item_id] = byParent[it.parent_item_id] || []).push(it);
+    else topLevel.push(it);
+  });
+  topLevel.sort(_inboxSort);
+
+  const list = el('div', { class: 'inbox-list' });
+  const renderedParents = new Set();
+  topLevel.forEach(it => {
+    renderedParents.add(it.monday_item_id);
+    list.append(buildInboxRow(it, false));
+    (byParent[it.monday_item_id] || []).sort(_inboxSort).forEach(sub => list.append(buildInboxRow(sub, true)));
+  });
+  // Subitems whose own parent carries no updates (so it never made it into
+  // `items` at all) still need to surface -- append any not already rendered.
+  Object.keys(byParent).forEach(parentId => {
+    if (!renderedParents.has(parentId)) {
+      byParent[parentId].sort(_inboxSort).forEach(sub => list.append(buildInboxRow(sub, true)));
+    }
+  });
+
+  wrap.append(list);
+  return wrap;
+}
+
+function buildInboxRow(it, isSub) {
+  const meta = INBOX_STATE_META[it.state] || { label: it.state_label || it.state, cls: '' };
+  const row = el('div', { class: `inbox-row ${meta.cls}${isSub ? ' inbox-row-sub' : ''}` });
+
+  row.append(el('div', { class: 'inbox-row-main' },
+    el('a', { class: 'inbox-row-name', href: it.url || '#', target: '_blank', rel: 'noopener', text: it.item_name || 'Untitled' }),
+    el('span', { class: 'inbox-state-chip', text: meta.label }),
+  ));
+
+  const lu = it.latest_update || {};
+  if (lu.created_at) {
+    const who = lu.is_ours ? 'us' : (lu.creator_name || 'them');
+    row.append(el('div', { class: 'inbox-row-detail', text: `Last update by ${who} — ${fmtDate((lu.created_at || '').slice(0, 10))}` }));
+  }
+
+  if ((it.external_mentions || []).length) {
+    const mentions = el('div', { class: 'inbox-mentions' });
+    it.external_mentions.forEach(m => {
+      mentions.append(el('div', { class: 'inbox-mention' },
+        el('span', { class: 'inbox-mention-source', text: m.source === 'fireflies' ? '🎙' : '💬' }),
+        el('span', { class: 'inbox-mention-text', text: `${m.ref || ''}${m.date ? ' — ' + m.date : ''}` }),
+      ));
+    });
+    row.append(mentions);
+  }
+
+  return row;
+}
+
 // ── footer renderer ───────────────────────────────────────────────────────────
 
 function renderFooter() {
@@ -1572,7 +1660,14 @@ function render() {
     // Display name only -- buildCard still receives the real entry (client
     // routing/priority-matching there is keyed off entry.client untouched).
     const displayName = (standupOverrides.overrides || {})[clientKey(viewClient)]?.name;
-    if (entry) app.append(buildCard(entry, priorities, displayName));
+    if (entry) {
+      const split = el('div', { class: 'client-detail-split' });
+      split.append(el('div', { class: 'client-detail-pane client-detail-pane-summary' },
+        buildCard(entry, priorities, displayName)));
+      split.append(el('div', { class: 'client-detail-pane client-detail-pane-inbox' },
+        buildInboxPane(viewClient)));
+      app.append(split);
+    }
     return;
   }
 
@@ -1746,6 +1841,17 @@ async function init() {
       const data = await res.json();
       return Array.isArray(data) ? data : [];
     } catch { return []; }
+  })();
+
+  // 1c. Inbox state (Monday item read/reply status) -- optional, same
+  // no-flicker/optional pattern as scores-history above.
+  inboxData = await (async () => {
+    try {
+      const res = await fetch(`inbox.json?t=${Date.now()}`, { cache: 'no-store' });
+      if (!res.ok) return { generated_at: null, by_client: {} };
+      const data = await res.json();
+      return data && data.by_client ? data : { generated_at: null, by_client: {} };
+    } catch { return { generated_at: null, by_client: {} }; }
   })();
 
   // 2. Load local mirror first (instant, no flicker)

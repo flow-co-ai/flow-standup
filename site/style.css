@@ -1075,6 +1075,76 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .back-link:active { background: rgba(146,155,105,0.16); }
 .back-link:focus-visible { outline: 2px solid #A9B478; outline-offset: 2px; }
 
+/* ── Inbox split-pane detail view ─────────────────────────────────────────── */
+/* Everything else on this page is capped at 680px (mobile-first single
+   column) -- the detail view alone widens to fit two side-by-side panes,
+   collapsing back to a stacked single column under 860px so it never gets
+   cramped on a phone. */
+.page > .client-detail { max-width: 1100px; }
+
+.client-detail-split {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+.client-detail-pane { min-width: 0; flex: 1 1 50%; }
+
+@media (max-width: 860px) {
+  .page > .client-detail { max-width: 680px; }
+  .client-detail-split { flex-direction: column; }
+}
+
+.inbox-pane {
+  background: #141A14;
+  border: 1px solid rgba(237,233,220,0.08);
+  border-radius: 16px;
+  padding: 18px 16px 16px;
+}
+.inbox-pane-header { margin-bottom: 4px; }
+
+.inbox-list { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+
+.inbox-row {
+  border: 1px solid rgba(237,233,220,0.08);
+  border-left: 3px solid rgba(237,233,220,0.15);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.inbox-row-sub { margin-left: 18px; opacity: 0.92; }
+
+.inbox-row-main { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.inbox-row-name { font-size: 13.5px; font-weight: 600; color: #EDE9DA; }
+.inbox-row-name:hover { color: #C6D093; }
+
+.inbox-state-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+  border: 1px solid;
+}
+/* Same color vocabulary as the rest of the page: DE6E4C = urgent (stalled),
+   DCA746 = warn, 8CBE6E = good (completed/on_track), dim = quiet/neutral. */
+.inbox-state-team-replied                    { border-left-color: #DE6E4C; }
+.inbox-state-team-replied .inbox-state-chip  { color: #DE6E4C; border-color: rgba(222,110,76,0.4); background: rgba(222,110,76,0.08); }
+.inbox-state-unread                          { border-left-color: #DCA746; }
+.inbox-state-unread .inbox-state-chip        { color: #DCA746; border-color: rgba(220,167,70,0.4); background: rgba(220,167,70,0.08); }
+.inbox-state-read                            { border-left-color: rgba(237,233,220,0.25); }
+.inbox-state-read .inbox-state-chip          { color: rgba(220,216,200,0.65); border-color: rgba(237,233,220,0.2); background: rgba(237,233,220,0.05); }
+.inbox-state-replied                         { border-left-color: #8CBE6E; }
+.inbox-state-replied .inbox-state-chip       { color: #8CBE6E; border-color: rgba(140,190,110,0.35); background: rgba(140,190,110,0.08); }
+
+.inbox-row-detail { margin-top: 5px; font-size: 11.5px; color: rgba(220,216,200,0.55); }
+
+.inbox-mentions { margin-top: 6px; display: flex; flex-direction: column; gap: 3px; }
+.inbox-mention { font-size: 11px; color: rgba(220,216,200,0.55); display: flex; gap: 5px; }
+.inbox-mention-source { flex-shrink: 0; }
+
+.inbox-empty { color: rgba(220,216,200,0.4); font-size: 13px; margin-top: 14px; }
+
 
 .row-wrapper.no-checkbox { padding-left: 0; }
 .row-link { text-decoration: none; cursor: pointer; border-radius: 8px; padding: 4px 6px; margin: -4px -6px; }

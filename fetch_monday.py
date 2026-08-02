@@ -81,6 +81,24 @@ def _status_column(column_values: list | None) -> tuple[str | None, str | None]:
     return None, None
 
 
+def _extract_updates_full(raw_updates: list) -> list[dict]:
+    """Unfiltered (no days_back cutoff) update list carrying creator_id/viewers,
+    for inbox_state.py's read/reply thread logic -- separate from recent_updates,
+    which stays cutoff-filtered for the existing pulse-text prompt."""
+    out = []
+    for upd in raw_updates or []:
+        out.append({
+            "update_id": str(upd.get("id", "")) or None,
+            "body": upd.get("body", ""),
+            "created_at": upd.get("created_at") or "",
+            "creator_id": str(upd.get("creator_id") or "") or None,
+            "creator_name": (upd.get("creator") or {}).get("name", "Unknown"),
+            "viewer_ids": [str(v.get("user_id")) for v in (upd.get("viewers") or []) if v.get("user_id")],
+        })
+    out.sort(key=lambda u: u["created_at"], reverse=True)
+    return out
+
+
 def set_monday_status_done(board_id: str, item_id: str, status_column_id: str) -> None:
     """Sets one item/subitem's status column to "Done". This is the ONLY write
     generate.py is allowed to make to Monday -- mirrors the same rule already
@@ -160,12 +178,22 @@ def fetch_board(
                 value
                 type
               }
+              updates(limit: 25) {
+                id
+                body
+                created_at
+                creator_id
+                creator { name }
+                viewers { user_id }
+              }
             }
             updates(limit: 25) {
               id
               body
               created_at
+              creator_id
               creator { name }
+              viewers { user_id }
             }
           }
         }
@@ -227,6 +255,7 @@ def fetch_board(
                 "status_column_id": sub_status_col_id,
                 "board_id": sub_board_id or None,
                 "monday_url": sub_url,
+                "updates_full": _extract_updates_full(sub.get("updates", [])),
             })
 
         item_id = str(item.get("id", ""))
@@ -267,6 +296,7 @@ def fetch_board(
                 "board_id": str(board_id),
                 "monday_url": monday_url,
                 "last_updated": last_updated_dt.date().isoformat() if last_updated_dt else None,
+                "updates_full": _extract_updates_full(item.get("updates", [])),
                 "group": group_title,
                 "client": client,
                 "columns": columns,
