@@ -1403,6 +1403,69 @@ const STATE_LABEL_FN = {
 // Persists across renders/clients for this page session (not saved anywhere).
 let inboxStateFilter = 'all';
 
+// ── live Monday query (staged rollout) ─────────────────────────────────────
+// Only these clients hit /.netlify/functions/inbox-live for fresh Monday
+// data on open/refresh; everyone else keeps reading the static
+// site/inbox.json exactly as before, unchanged. Widen once Maadi Law is
+// confirmed working well live.
+const INBOX_LIVE_CLIENTS = ['Maadi Law'];
+
+let inboxLiveState = {}; // client -> { status: 'loading'|'live'|'error', fetchedAt }
+
+// Fire-and-forget: fetches live Monday state for one allowlisted client and
+// replaces inboxData.by_client[clientName] on success, re-rendering if still
+// viewing that client. On any failure (network, Monday API, missing
+// passcode), silently leaves whatever's already in inboxData -- the static
+// site/inbox.json fallback, loaded once at init() -- untouched. Never
+// prompts for a passcode; only fetches live if one is already stored.
+async function fetchLiveInboxForClient(clientName, { force = false } = {}) {
+  if (!INBOX_LIVE_CLIENTS.includes(clientName)) return;
+  const existing = inboxLiveState[clientName];
+  if (!force && existing && (existing.status === 'loading' || existing.status === 'live')) return;
+
+  const passcode = getPasscode();
+  if (!passcode) return;
+
+  inboxLiveState[clientName] = { status: 'loading' };
+
+  try {
+    const res = await fetch(`/.netlify/functions/inbox-live?client=${encodeURIComponent(clientName)}`, {
+      headers: { 'X-Ops-Key': passcode },
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || data.error) throw new Error(data.error || `HTTP ${res.status}`);
+
+    inboxData.by_client = { ...(inboxData.by_client || {}), [clientName]: data.items || [] };
+    inboxLiveState[clientName] = { status: 'live', fetchedAt: Date.now() };
+  } catch (err) {
+    console.warn(`live inbox fetch failed for ${clientName}:`, err);
+    inboxLiveState[clientName] = { status: 'error', fetchedAt: Date.now() };
+  }
+  if (currentClientView() === clientName) render();
+}
+
+function buildInboxLiveIndicator(clientName) {
+  const state = inboxLiveState[clientName] || { status: 'idle' };
+  let text = 'Live (idle)';
+  let cls = 'inbox-live-idle';
+  if (state.status === 'loading') { text = 'Fetching live…'; cls = 'inbox-live-loading'; }
+  else if (state.status === 'live') { text = 'Live just now'; cls = 'inbox-live-ok'; }
+  else if (state.status === 'error') { text = 'Live fetch failed — showing daily snapshot'; cls = 'inbox-live-error'; }
+  else if (!getPasscode()) { text = 'Live (needs passcode)'; }
+
+  return el('span', { class: 'inbox-live-indicator' },
+    el('span', { class: `inbox-live-dot ${cls}` }),
+    el('span', { class: 'inbox-live-text', text }),
+    el('button', {
+      type: 'button',
+      class: 'inbox-live-refresh',
+      title: 'Refresh live Monday data',
+      onclick: () => fetchLiveInboxForClient(clientName, { force: true }),
+      text: '⟳',
+    }),
+  );
+}
+
 // Default sort: most overdue (oldest latest_update) first, across all states.
 function _inboxSort(a, b) {
   const da = _daysSince(a.latest_update?.created_at) ?? -1;
@@ -1425,10 +1488,12 @@ function buildInboxFilterSelect() {
 
 function buildInboxPane(clientName) {
   const wrap = el('div', { class: 'inbox-pane' });
-  wrap.append(el('div', { class: 'card-header inbox-pane-header' },
-    el('span', { class: 'client-name', text: 'Inbox' }),
-    buildInboxFilterSelect(),
-  ));
+  const headerChildren = [el('span', { class: 'client-name', text: 'Inbox' })];
+  if (INBOX_LIVE_CLIENTS.includes(clientName)) {
+    headerChildren.push(buildInboxLiveIndicator(clientName));
+  }
+  headerChildren.push(buildInboxFilterSelect());
+  wrap.append(el('div', { class: 'card-header inbox-pane-header' }, ...headerChildren));
 
   const allItems = (inboxData.by_client || {})[clientName] || [];
   if (!allItems.length) {
@@ -1712,6 +1777,7 @@ function render() {
     // routing/priority-matching there is keyed off entry.client untouched).
     const displayName = (standupOverrides.overrides || {})[clientKey(viewClient)]?.name;
     if (entry) {
+      fetchLiveInboxForClient(viewClient); // fire-and-forget; re-renders itself on completion if still viewing this client
       const split = el('div', { class: 'client-detail-split' });
       split.append(el('div', { class: 'client-detail-pane client-detail-pane-summary' },
         buildCard(entry, priorities, displayName)));

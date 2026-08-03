@@ -1117,6 +1117,35 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .inbox-pane-header { flex-wrap: wrap; gap: 8px; }
 
+/* Live-Monday-query indicator, shown only for clients on the staged
+   INBOX_LIVE_CLIENTS rollout list -- everyone else's Inbox pane header is
+   unchanged. */
+.inbox-live-indicator {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  color: rgba(220,216,200,0.5);
+  margin-right: auto;
+}
+.inbox-live-dot { width: 7px; height: 7px; border-radius: 999px; background: rgba(237,233,220,0.25); flex-shrink: 0; }
+.inbox-live-dot.inbox-live-ok { background: #8CBE6E; }
+.inbox-live-dot.inbox-live-loading { background: #DCA746; animation: fo-pulse 1.4s ease-in-out infinite; }
+.inbox-live-dot.inbox-live-error { background: #DE6E4C; }
+.inbox-live-refresh {
+  background: none;
+  border: 1px solid rgba(237,233,220,0.15);
+  border-radius: 6px;
+  color: rgba(220,216,200,0.65);
+  font-size: 12px;
+  line-height: 1;
+  padding: 2px 6px;
+  cursor: pointer;
+}
+.inbox-live-refresh:hover { color: #C6D093; border-color: rgba(146,155,105,0.4); }
+
 .inbox-filter-select {
   background: #0C100C;
   color: rgba(220,216,200,0.75);

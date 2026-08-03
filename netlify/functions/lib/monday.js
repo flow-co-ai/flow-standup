@@ -81,6 +81,9 @@ async function mondayLookup(input) {
 // same plain items(ids:) shape (subitems are themselves real items with
 // their own ids) rather than assuming updates nests cleanly inside a
 // subitems selection -- always a live call, same as mondayLookup.
+// creator_id/viewers on updates and board{id} on subitems (2026-08-03) are
+// additive fields for inbox-live.js's read/reply state -- nothing else here
+// reads them, existing consumers (ops-chat.js) are unaffected.
 async function mondayItemDetail(itemId) {
   if (!itemId) throw new Error("monday_item_detail needs itemId");
   const data = await mondayGraphQL(
@@ -89,8 +92,8 @@ async function mondayItemDetail(itemId) {
          id
          name
          column_values { id text }
-         updates(limit: 25) { id body creator { name } created_at }
-         subitems { id name column_values { id text } }
+         updates(limit: 25) { id body creator { name } creator_id created_at viewers { user_id } }
+         subitems { id name board { id } column_values { id text } }
        }
      }`,
     { itemIds: [itemId] }
@@ -101,7 +104,7 @@ async function mondayItemDetail(itemId) {
   const subitemIds = (item.subitems || []).map((s) => s.id);
   if (subitemIds.length) {
     const subData = await mondayGraphQL(
-      `query($itemIds: [ID!]) { items(ids: $itemIds) { id updates(limit: 25) { id body creator { name } created_at } } }`,
+      `query($itemIds: [ID!]) { items(ids: $itemIds) { id updates(limit: 25) { id body creator { name } creator_id created_at viewers { user_id } } } }`,
       { itemIds: subitemIds }
     );
     const updatesById = new Map((subData?.items || []).map((s) => [s.id, s.updates || []]));

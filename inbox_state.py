@@ -6,6 +6,11 @@ update creator_id/viewers (no LLM, no fuzzy matching).
 Writes site/inbox.json, read by site/app.js. Staleness/urgency display
 (elapsed time, badge color tiers) is computed client-side in app.js from
 latest_update.created_at, not baked in here.
+
+_thread_state below is mirrored (2026-08-03) in
+netlify/functions/lib/inbox-state.js's threadState, for inbox-live.js's live
+per-client query path. No shared build step across the Python/Node boundary --
+KEEP THESE TWO IN SYNC BY HAND if the state derivation ever changes.
 """
 
 OUR_MONDAY_USER_IDS = {"70062990", "69662034"}  # Nacer Amrouch, Sohib Boundaoui
