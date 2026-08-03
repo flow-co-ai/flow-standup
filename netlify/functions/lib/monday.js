@@ -391,6 +391,68 @@ function buildColumnValues(boardId, blocked, needsNaz) {
   };
 }
 
+// A subitem is a real item living on a SEPARATE board Monday auto-creates
+// per parent board (e.g. Web+SEO's own subitems board, confirmed live
+// 2026-08-04: 18099807884, "Subitems of Web + SEO") -- its status/people
+// column ids are NOT the same as STATUS_COLUMN/PEOPLE_COLUMN above, which
+// belong to the PARENT board. Sending those parent-board ids in a
+// create_subitem's column_values doesn't apply to the right board at all --
+// root cause of a live 403 USER_UNAUTHORIZED. Discovered by finding the
+// parent board's own "subtasks"-type column (its settings_str.boardIds
+// names the linked subitems board), then reading THAT board's own columns.
+// Cached in-memory per parent board id (schema doesn't change at runtime,
+// no TTL needed) -- same per-warm-container caching pattern as
+// inbox-live.js's 45s cache, just without an expiry since there's nothing
+// here that goes stale.
+const _subitemsColumnCache = new Map(); // parentBoardId -> { subitemsBoardId, statusColumnId, peopleColumnId }
+
+async function getSubitemsColumnIds(parentBoardId) {
+  if (_subitemsColumnCache.has(parentBoardId)) return _subitemsColumnCache.get(parentBoardId);
+
+  const boardData = await mondayGraphQL(
+    `query($boardId: [ID!]) { boards(ids: $boardId) { columns { id type settings_str } } }`,
+    { boardId: [parentBoardId] }
+  );
+  const subtasksCol = (boardData?.boards?.[0]?.columns || []).find((c) => c.type === "subtasks");
+  if (!subtasksCol) throw new Error(`board ${parentBoardId} has no subitems ("subtasks") column -- can't resolve its subitems board`);
+
+  let subitemsBoardId;
+  try {
+    subitemsBoardId = String(JSON.parse(subtasksCol.settings_str).boardIds[0]);
+  } catch (err) {
+    throw new Error(`board ${parentBoardId}'s subitems column settings couldn't be parsed: ${err}`);
+  }
+
+  const subBoardData = await mondayGraphQL(
+    `query($boardId: [ID!]) { boards(ids: $boardId) { columns { id type } } }`,
+    { boardId: [subitemsBoardId] }
+  );
+  const subColumns = subBoardData?.boards?.[0]?.columns || [];
+  // Not every subitems board has both -- e.g. Video's ("Subitems of Video",
+  // 18100257245) has no status-type column at all. null here means "skip
+  // setting this column," not an error.
+  const statusColumnId = (subColumns.find((c) => c.type === "status") || {}).id || null;
+  const peopleColumnId = (subColumns.find((c) => c.type === "people") || {}).id || null;
+
+  const result = { subitemsBoardId, statusColumnId, peopleColumnId };
+  _subitemsColumnCache.set(parentBoardId, result);
+  return result;
+}
+
+// Mirrors buildColumnValues' shape/label logic but targets the REAL subitems
+// board's discovered column ids instead of the parent board's -- omits any
+// column that board doesn't have (see getSubitemsColumnIds' Video note).
+function buildSubitemColumnValues(personsAndTeams, blocked, subitemsColumnIds) {
+  const cols = {};
+  if (subitemsColumnIds.statusColumnId) {
+    cols[subitemsColumnIds.statusColumnId] = { label: blocked ? "Stuck" : "Start" };
+  }
+  if (subitemsColumnIds.peopleColumnId) {
+    cols[subitemsColumnIds.peopleColumnId] = { personsAndTeams };
+  }
+  return cols;
+}
+
 function assignedToLine(personsAndTeams) {
   return `Assigned to: ${personsAndTeams.map((p) => USER_NAMES[p.id] || `user ${p.id}`).join(", ")}`;
 }
@@ -601,13 +663,32 @@ async function sendQueueItemToMonday(id) {
         if (!payload.parentItemId || !payload.itemName) {
           return { error: "create_subitem payload missing parentItemId/itemName" };
         }
+        // NOT the parent-board columnValues computed above -- a subitem
+        // lives on a separate linked board with its own column ids (see
+        // getSubitemsColumnIds). Create bare, then push status/people via a
+        // follow-up column update once the subitem's real board is known.
+        // Confirmed live 2026-08-04: passing the parent board's column ids
+        // here caused a 403 USER_UNAUTHORIZED on create_subitem.
         const created = await mondayGraphQL(
-          `mutation($parent: ID!, $name: String!, $cols: JSON) {
-             create_subitem(parent_item_id: $parent, item_name: $name, column_values: $cols) { id }
-           }`,
-          { parent: payload.parentItemId, name: payload.itemName, cols: JSON.stringify(columnValues) }
+          `mutation($parent: ID!, $name: String!) { create_subitem(parent_item_id: $parent, item_name: $name) { id } }`,
+          { parent: payload.parentItemId, name: payload.itemName }
         );
         resultItemId = created.create_subitem.id;
+
+        try {
+          const subitemsColumnIds = await getSubitemsColumnIds(boardId);
+          const subitemColumnValues = buildSubitemColumnValues(columnValues[PEOPLE_COLUMN].personsAndTeams, blocked, subitemsColumnIds);
+          if (Object.keys(subitemColumnValues).length) {
+            await updateMondayColumns(subitemsColumnIds.subitemsBoardId, resultItemId, subitemColumnValues);
+          }
+        } catch (err) {
+          // The subitem already exists for real at this point -- a failed
+          // status/people push is a separate, non-fatal problem (surfaced in
+          // logs, not failed back to the caller), not a reason to treat the
+          // whole send as failed (that would risk a retry creating a
+          // genuine duplicate subitem).
+          console.error(`sendQueueItemToMonday: subitem ${resultItemId} created but status/people push failed:`, err);
+        }
       }
     } else if (mode === "update_only") {
       if (!payload.existingItemId) {
@@ -681,6 +762,8 @@ module.exports = {
   boardLabelForId,
   CLIENT_GROUPS,
   buildColumnValues,
+  getSubitemsColumnIds,
+  buildSubitemColumnValues,
   assignedToLine,
   swapUpdateBodyMentions,
   resolvePayloadFlags,

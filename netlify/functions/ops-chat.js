@@ -515,7 +515,7 @@ function filterQueueItems(items, searchTerm) {
 // works unmodified for drafting a brand-new card. Writes straight into
 // checks/draft-queue.json in the exact same schema every other card uses.
 async function draftNewItem(input) {
-  const built = buildResolvedFields({}, input);
+  const built = await buildResolvedFields({}, input);
   if (built.error) return { error: built.error };
 
   const boardLabel = input.boardId ? boardLabelForId(input.boardId) || "n/a" : "n/a";

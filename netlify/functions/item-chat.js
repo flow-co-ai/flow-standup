@@ -16,6 +16,7 @@
 const { getJSON, updateJSON } = require("./lib/github");
 const {
   mondayLookup,
+  mondayItemNameAndParent,
   updateMondayColumns,
   STATUS_COLUMN,
   PEOPLE_COLUMN,
@@ -354,9 +355,33 @@ function htmlToPlainText(html) {
 // for a "draft" resolution. Returns { error } on validation/lookup failure, or
 // { payload, titleUpdate } on success -- status/people are always computed
 // here, never trusted from the model's tool call.
-function buildResolvedFields(item, input) {
+async function buildResolvedFields(item, input) {
   const validationError = validatePayload(input.mode, input);
   if (validationError) return { error: validationError };
+
+  // Monday doesn't support subitems of subitems. Confirmed live 2026-08-04:
+  // the model correctly noted this limitation in its own reply, then set
+  // parentItemId to a subitem's id anyway and reported success -- the
+  // invalid payload only surfaced later as a 403 USER_UNAUTHORIZED at actual
+  // send time. Check live, once, here -- the one place both item-chat.js's
+  // resolve_item and ops-chat.js's draft_new_item build a create_subitem
+  // payload -- so this can't be silently skipped by either caller.
+  if (input.mode === "create_subitem" && input.parentItemId) {
+    try {
+      const parentInfo = await mondayItemNameAndParent(input.parentItemId);
+      if (parentInfo.parentItem) {
+        return {
+          error: `"${parentInfo.name}" (id ${input.parentItemId}) is itself a subitem of "${parentInfo.parentItem.name}" -- Monday doesn't support subitems of subitems. Draft this as a top-level item instead (mode: "create_item"), or as a subitem of "${parentInfo.parentItem.name}" (id ${parentInfo.parentItem.id}) if that fits the workstream better.`,
+        };
+      }
+    } catch (err) {
+      // Live lookup failed (bad id, transient network issue) -- don't block
+      // an otherwise-valid draft on an unrelated Monday hiccup. If
+      // parentItemId is genuinely wrong, sendQueueItemToMonday's own
+      // create_subitem call still surfaces that clearly at send time.
+      console.error(`buildResolvedFields: couldn't verify parentItemId ${input.parentItemId} isn't itself a subitem:`, err);
+    }
+  }
 
   // Same hard gate sendQueueItemToMonday enforces right before it actually
   // fires anything -- checked here too so a thin draft gets rejected back
@@ -608,14 +633,14 @@ ${item.clarification ? `Naz previously told you: "${item.clarification}"` : ""}`
             // so a "no longer exists" / build error found on the LATEST read
             // is what actually aborts the tool call, not a stale first read.
             try {
-              const written = await updateJSON(QUEUE_PATH, (data) => {
+              const written = await updateJSON(QUEUE_PATH, async (data) => {
                 const idx = data.items.findIndex((it) => it.id === id);
                 if (idx === -1) throw new ToolAbort(`item ${id} no longer exists`);
                 if (tu.input.action === "ignore") {
                   const priority = tu.input.priority !== undefined ? clampPriority(tu.input.priority) : (Number.isFinite(data.items[idx].priority) ? data.items[idx].priority : 3);
                   data.items[idx] = { ...data.items[idx], status: "ignored", priority, updatedAt: new Date().toISOString() };
                 } else {
-                  const built = buildResolvedFields(data.items[idx], tu.input);
+                  const built = await buildResolvedFields(data.items[idx], tu.input);
                   if (built.error) throw new ToolAbort(built.error);
                   data.items[idx] = { ...data.items[idx], ...built.titleUpdate, status: "ready", payload: built.payload, updatedAt: new Date().toISOString() };
                 }
