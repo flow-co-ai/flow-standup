@@ -192,8 +192,9 @@ function buildProgressPanel(data) {
 // ── Bar sub-row stacking ──────────────────────────────────────────────────────
 // Assigns overlapping bars to sub-rows so they never paint on top of each other.
 function assignSubRows(bars, engStart, engEnd) {
+  if (!bars.length) return { placed: [], rowCount: 0 };
   const sorted     = [...bars].sort((a, b) => a.start.localeCompare(b.start));
-  const rowEndPcts = [];   // last bar's right-pct for each sub-row
+  const rowEndPcts = [];
   const placed     = [];
 
   for (const bar of sorted) {
@@ -205,7 +206,31 @@ function assignSubRows(bars, engStart, engEnd) {
     placed.push({ bar, rowIdx, l, r });
   }
 
-  return { placed, rowCount: Math.max(1, rowEndPcts.length) };
+  return { placed, rowCount: rowEndPcts.length };
+}
+
+// ── Dot clustering ────────────────────────────────────────────────────────────
+// Groups events within 1.5% of each other on the x-axis into one dot.
+function clusterDots(items) {
+  if (!items.length) return [];
+  const sorted   = [...items].sort((a, b) => a.pct - b.pct);
+  const clusters = [];
+
+  for (const item of sorted) {
+    const existing = clusters.find(c => Math.abs(c.pct - item.pct) <= 1.5);
+    if (existing) {
+      existing.items.push(item);
+    } else {
+      clusters.push({ pct: item.pct, items: [item] });
+    }
+  }
+
+  // Recompute position as average of member pcts for stable centering.
+  for (const c of clusters) {
+    c.pct = c.items.reduce((s, i) => s + i.pct, 0) / c.items.length;
+  }
+
+  return clusters;
 }
 
 // ── Gantt ─────────────────────────────────────────────────────────────────────
@@ -247,23 +272,31 @@ function buildGantt(data) {
   }
   gantt.append(monthRow);
 
-  // Dept rows
+  // Dept rows — skip entirely if lane has nothing to show
+  const PRIORITY = { flag: 0, completed: 1, action: 2, milestone: 3 };
+  const BAR_H = 24, DOT_H = 20, ROW_H = 28;
+
   for (const dept of deptOrder) {
     const deptData   = departments.find(d => d.dept === dept);
     const bars       = deptData?.bars || [];
     const deptEvents = events.filter(e => e.dept === dept);
     const deptMiles  = milestones.filter(m => m.dept === dept);
-    const itemCount  = deptEvents.length + deptMiles.length;
 
-    // Left: dept label
-    const labelEl = el('div', { class: 'tl-dept-label' },
+    if (!bars.length && !deptEvents.length && !deptMiles.length) continue;
+
+    // Left: dept label — microline shows bar count.
+    const barCount = bars.length;
+    const labelEl  = el('div', { class: 'tl-dept-label' },
       el('span', { text: dept.toUpperCase() }),
-      el('span', { class: 'tl-dept-count', text: itemCount ? `${itemCount} item${itemCount !== 1 ? 's' : ''}` : '' })
+      el('span', { class: 'tl-dept-count',
+        text: barCount ? `${barCount} bar${barCount !== 1 ? 's' : ''}` : '' })
     );
     gantt.append(labelEl);
 
-    // Right: track
+    // Right: track — height = BAR_H * subRows + DOT_H dot row.
     const track = el('div', { class: 'tl-track' });
+    const { placed, rowCount } = assignSubRows(bars, start, end);
+    track.style.height = (BAR_H * rowCount + DOT_H) + 'px';
 
     // Month gridlines
     for (const { pct } of months) {
@@ -273,17 +306,11 @@ function buildGantt(data) {
       track.append(gl);
     }
 
-    // Planned bars — stacked into sub-rows to avoid label collision
-    const BASE_H = 44;
-    const ROW_H  = 28;
-    const { placed, rowCount } = assignSubRows(bars, start, end);
-    track.style.height = (BASE_H + (rowCount - 1) * ROW_H) + 'px';
-
+    // Planned bars — label hidden when bar is too narrow to fit text
     for (const { bar, rowIdx, l, r } of placed) {
       const w = Math.max(r - l, 0.5);
-      const barEl = el('div', { class: 'tl-bar' },
-        el('span', { class: 'tl-bar-lbl', text: bar.label })
-      );
+      const barEl = el('div', { class: 'tl-bar' });
+      if (w >= 5) barEl.append(el('span', { class: 'tl-bar-lbl', text: bar.label }));
       barEl.style.left  = l + '%';
       barEl.style.width = w + '%';
       barEl.style.top   = (rowIdx * ROW_H) + 'px';
@@ -298,35 +325,51 @@ function buildGantt(data) {
       track.append(tl);
     }
 
-    // Event dots (completed, action, flag)
-    for (const evt of deptEvents) {
-      const pct    = datePct(evt.date, start, end);
-      const color  = DOT_COLOR[evt.kind] || '#A9B478';
-      const isPast = evt.date <= today;
-      const dot    = el('div', { class: 'tl-dot' + (isPast ? '' : ' hollow') });
-      dot.style.left = pct + '%';
-      if (isPast) {
-        dot.style.background = color;
-      } else {
-        dot.style.border = '2px solid ' + color;
-      }
-      dot.addEventListener('click', () => selectEvt(evt, color));
-      track.append(dot);
-    }
+    // Collect all dots, cluster by proximity, render with cycle-click
+    const allDotItems = [
+      ...deptEvents.map(evt => ({
+        pct:    datePct(evt.date, start, end),
+        evt,
+        color:  DOT_COLOR[evt.kind] || '#A9B478',
+        isPast: evt.date <= today,
+      })),
+      ...deptMiles.map(m => ({
+        pct:    datePct(m.date, start, end),
+        evt:    { ...m, kind: 'milestone' },
+        color:  DOT_COLOR.milestone,
+        isPast: m.date <= today,
+      })),
+    ];
 
-    // Milestone dots
-    for (const m of deptMiles) {
-      const pct    = datePct(m.date, start, end);
-      const color  = DOT_COLOR.milestone;
-      const isPast = m.date <= today;
-      const dot    = el('div', { class: 'tl-dot' + (isPast ? '' : ' hollow') });
-      dot.style.left = pct + '%';
+    for (const cluster of clusterDots(allDotItems)) {
+      const { items } = cluster;
+      const top = items.slice().sort((a, b) =>
+        (PRIORITY[a.evt.kind] ?? 9) - (PRIORITY[b.evt.kind] ?? 9)
+      )[0];
+      const isPast = items.every(i => i.isPast);
+      const color  = top.color;
+
+      const dot = el('div', { class: 'tl-dot' + (isPast ? '' : ' hollow') });
+      dot.style.left = cluster.pct + '%';
       if (isPast) {
         dot.style.background = color;
       } else {
         dot.style.border = '2px solid ' + color;
       }
-      dot.addEventListener('click', () => selectEvt({ ...m, kind: 'milestone' }, color));
+
+      if (items.length > 1) {
+        dot.append(el('span', { class: 'tl-dot-badge', text: String(items.length) }));
+      }
+
+      let cycleIdx = 0;
+      dot.addEventListener('click', () => {
+        const item = items[cycleIdx % items.length];
+        selectEvt(item.evt, item.color);
+        cycleIdx++;
+        document.querySelectorAll('.tl-dot.selected').forEach(d => d.classList.remove('selected'));
+        dot.classList.add('selected');
+      });
+
       track.append(dot);
     }
 

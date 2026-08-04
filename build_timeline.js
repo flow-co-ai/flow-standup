@@ -44,6 +44,35 @@ const PACE = {
   BEHIND: { label: 'BEHIND PLAN',   color: '#DE6E4C' },
 };
 
+// ── dept normalization ────────────────────────────────────────────────────────
+// Applied to both plan bars and actual events so they share the same lane keys.
+const DEPT_CANON = {
+  ads:      ['ads', 'meta ads', 'google ads', 'paid', 'paid media'],
+  web:      ['web', 'web + seo', 'seo', 'website'],
+  crm:      ['crm', 'ghl', 'email'],
+  creative: ['creative', 'video', 'content'],
+  ops:      ['ops', 'admin', 'reporting'],
+};
+const DEPT_LOOKUP = {};
+for (const [canon, aliases] of Object.entries(DEPT_CANON)) {
+  for (const alias of aliases) DEPT_LOOKUP[alias.toLowerCase().trim()] = canon;
+}
+
+function normalizeDept(s) {
+  return DEPT_LOOKUP[s?.toLowerCase().trim()] ?? 'ops';
+}
+
+// Merges plan departments that normalize to the same canonical name.
+function normalizeDepts(rawDepts) {
+  const merged = new Map();
+  for (const d of rawDepts) {
+    const canon = normalizeDept(d.dept);
+    if (!merged.has(canon)) merged.set(canon, { dept: canon, bars: [] });
+    for (const bar of d.bars || []) merged.get(canon).bars.push(bar);
+  }
+  return [...merged.values()];
+}
+
 // ── helpers ───────────────────────────────────────────────────────────────────
 
 function readJSON(path) {
@@ -296,12 +325,12 @@ async function main() {
     const out = {
       generated_at: new Date().toISOString(),
       slug,
-      // Plan track
-      departments:  plan.departments  || [],
-      milestones:   plan.milestones   || [],
+      // Plan track (depts and milestones normalized to canonical names)
+      departments:  normalizeDepts(plan.departments || []),
+      milestones:   (plan.milestones || []).map(m => ({ ...m, dept: normalizeDept(m.dept) })),
       engagement:   plan.engagement   || {},
-      // Actual track
-      events:       allEvents,
+      // Actual track (event depts normalized)
+      events:       allEvents.map(e => ({ ...e, dept: normalizeDept(e.dept) })),
       // Computed
       actualPct,
       plannedPct,
