@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-03T23:24:44.308Z",
+  "updatedAt": "2026-08-04T15:12:13.835Z",
   "items": [
     {
       "id": "websEo-pricing-question",
@@ -318,7 +318,7 @@
     {
       "id": "fullsmile-patient-workflows",
       "title": "Patient Workflows",
-      "note": "Reactivate instant form-reply/follow-up SMS, build appointment confirmation texts (2-day/2-hour reminders, C/X reply logic replicating Flex Dental), add a review-request trigger to the GHL opportunity pipeline (target 30+ reviews/mo), and route Google/LSA lead calls into GHL Opportunities. Assigned to: Sohib Boundaoui (transcript names him directly as builder, deviates from CRM board's default Ahmed/Ali ownership, flag for Naz to confirm).",
+      "note": "Salam, / Context: Full Smile Dental meeting 7 / 30 identified multiple patient communication workflow gaps. Current GHL setup lacks instant form-reply SMS, appointment confirmation / reminder automation, review request triggers, and proper lead routing from Google / LSA into Opportunities. They also use Open Dental with specific status indicator conventions (Green = confirmed appointment, Yellow = sent) that need to sync back from GHL confirmation workflows. / Deliverable 1 – Instant Form Reply: Reactivate immediate SMS response when patient submits a form (was previously active, now disabled or broken). Trigger should fire instantly on form submission, welcoming the patient and setting follow-up expectations. / Deliverable 2 – Appointment Confirmation SMS: Build two-stage reminder system: 2-day advance reminder and 2-hour day-of reminder. Both must accept reply logic for confirm (C) or cancel (X), replicating the exact behavior Full Smile had with Flex Dental. Confirmed appointments need to mark the patient record accordingly. / Deliverable 3 – Review Request Automation: Add a trigger to the GHL Opportunity pipeline that sends a review request post-appointment. Target outcome is 30+ reviews per month. Trigger point and messaging TBD (likely after appointment marked complete or won). / Deliverable 4 – Lead Call Routing: Route inbound calls from Google and LSA lead campaigns directly into GHL Opportunities (not just contacts). Ensures proper pipeline tracking and follow-up automation from first touch. / Deliverable 5 – Open Dental Status Sync: Figure out how to sync GHL appointment confirmation status back to Open Dental's color-coded status indicators: Green = confirmed appointment, Yellow = sent (reminder sent, not yet confirmed). This likely requires API integration or webhook between GHL and Open Dental to update appointment status fields in real time. / Dependencies: Confirm Full Smile's existing GHL account structure, Opportunity pipeline stages, and Open Dental API access / credentials before starting the status sync work. Form-reply and appointment reminders can proceed immediately if GHL infrastructure is already live. / Done: Instant form-reply fires on every form submission, 2-day and 2-hour appointment reminders send with working C / X reply logic, review requests trigger automatically post-appointment and generate 30+ reviews / month, Google / LSA calls create Opportunities in GHL, and confirmed appointments in GHL update Open Dental status to Green (Yellow for sent-but-not-confirmed). / Assignment note: Transcript named Sohib Boundaoui directly as the builder for this workflow suite. CRM board defaults to Ahmed Memon + Ali Shaheer. Naz tagged to confirm whether Sohib should be explicitly assigned or if this stays with the CRM team. / @Ahmed Memon @Ali Shaheer @Nacer Amrouch / Assigned to: Ahmed Memon, Ali Shaheer, Nacer Amrouch",
       "status": "ready",
       "board": "CRM",
       "group": "Full Smile",
@@ -327,9 +327,10 @@
       "sourceLabel": "Meeting with Full Smile Dental, 7/30",
       "payload": {
         "mode": "create_item",
-        "boardId": "18418241405",
-        "groupId": "group_mkxdmhbz",
         "itemName": "Patient Workflows",
+        "boardId": "18418241405",
+        "blocked": false,
+        "needsNaz": true,
         "columnValues": {
           "color_mkwb1trm": {
             "label": "Start"
@@ -337,17 +338,26 @@
           "multiple_person_mkwb5f2e": {
             "personsAndTeams": [
               {
-                "id": 69662034,
+                "id": 108080159,
+                "kind": "person"
+              },
+              {
+                "id": 108080161,
+                "kind": "person"
+              },
+              {
+                "id": 70062990,
                 "kind": "person"
               }
             ]
           }
         },
-        "updateBody": "<p>Salam,</p><ul><li><strong>Reactivate the instant form-reply and follow-up SMS workflows</strong> in GHL for leads who haven't responded, picking back up where these paused.</li><li>Build an <strong>appointment confirmation text automation</strong> triggered off Open Dental's calendar: fire reminders at <strong>2 days and 2 hours</strong> before the appointment, replicating Flex Dental's \"C\" (confirm) / \"X\" (reschedule) reply logic. Full Smile front desk still confirms manually in Open Dental when a patient replies or calls back, this automation just gets the message out.</li><li>Add a <strong>review request trigger</strong> to the GHL opportunity pipeline: manually fireable post-checkout so front desk can selectively send review links to satisfied patients only. Target is <strong>30+ high-quality reviews a month</strong>.</li><li>Route <strong>Google Ads and LSA lead calls into the GHL opportunities pipeline</strong> alongside existing lead sources, so all lead tracking lives in one place as ad budget shifts toward Google/LSA (see the linked Budget Shift item on Ads).</li><li>Full Smile keeps using the existing QR code for in-office review requests and trains front desk to prompt post-checkout, that's separate from the automated trigger above, not a replacement for it.</li><li><strong>Notify Full Smile once the review request workflow is live</strong> so they know to start using it.</li></ul><p><a class=\"mention\" data-mention-id=\"69662034\" data-mention-type=\"User\">@Sohib Boundaoui</a></p>"
+        "updateBody": "<p>Salam,</p>\n<ul>\n<li><strong>Context</strong>: Full Smile Dental meeting 7/30 identified multiple patient communication workflow gaps. Current GHL setup lacks instant form-reply SMS, appointment confirmation/reminder automation, review request triggers, and proper lead routing from Google/LSA into Opportunities. They also use Open Dental with specific status indicator conventions (Green = confirmed appointment, Yellow = sent) that need to sync back from GHL confirmation workflows.</li>\n<li><strong>Deliverable 1 – Instant Form Reply</strong>: Reactivate immediate SMS response when patient submits a form (was previously active, now disabled or broken). Trigger should fire instantly on form submission, welcoming the patient and setting follow-up expectations.</li>\n<li><strong>Deliverable 2 – Appointment Confirmation SMS</strong>: Build two-stage reminder system: <strong>2-day</strong> advance reminder and <strong>2-hour</strong> day-of reminder. Both must accept reply logic for confirm (C) or cancel (X), replicating the exact behavior Full Smile had with Flex Dental. Confirmed appointments need to mark the patient record accordingly.</li>\n<li><strong>Deliverable 3 – Review Request Automation</strong>: Add a trigger to the GHL Opportunity pipeline that sends a review request post-appointment. Target outcome is <strong>30+ reviews per month</strong>. Trigger point and messaging TBD (likely after appointment marked complete or won).</li>\n<li><strong>Deliverable 4 – Lead Call Routing</strong>: Route inbound calls from Google and LSA lead campaigns directly into GHL Opportunities (not just contacts). Ensures proper pipeline tracking and follow-up automation from first touch.</li>\n<li><strong>Deliverable 5 – Open Dental Status Sync</strong>: Figure out how to sync GHL appointment confirmation status back to Open Dental's color-coded status indicators: <strong>Green</strong> = confirmed appointment, <strong>Yellow</strong> = sent (reminder sent, not yet confirmed). This likely requires API integration or webhook between GHL and Open Dental to update appointment status fields in real time.</li>\n<li><strong>Dependencies</strong>: Confirm Full Smile's existing GHL account structure, Opportunity pipeline stages, and Open Dental API access/credentials before starting the status sync work. Form-reply and appointment reminders can proceed immediately if GHL infrastructure is already live.</li>\n<li><strong>Done</strong>: Instant form-reply fires on every form submission, 2-day and 2-hour appointment reminders send with working C/X reply logic, review requests trigger automatically post-appointment and generate 30+ reviews/month, Google/LSA calls create Opportunities in GHL, and confirmed appointments in GHL update Open Dental status to Green (Yellow for sent-but-not-confirmed).</li>\n<li><strong>Assignment note</strong>: Transcript named Sohib Boundaoui directly as the builder for this workflow suite. CRM board defaults to Ahmed Memon + Ali Shaheer. Naz tagged to confirm whether Sohib should be explicitly assigned or if this stays with the CRM team.</li>\n</ul>\n<p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
+        "groupId": "group_mkxdmhbz"
       },
       "nullReason": null,
       "priority": 2,
-      "updatedAt": "2026-07-30T18:20:00.000Z"
+      "updatedAt": "2026-08-04T15:12:13.834Z"
     },
     {
       "id": "fullsmile-marketing-dashboard-update",
