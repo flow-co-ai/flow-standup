@@ -1,0 +1,189 @@
+/* site/flow-ui.css — design system overlay, loaded last.
+   Reverts by deleting this file + the 4 <link> lines added to each HTML. */
+
+/* ── tokens ─────────────────────────────────────────────────────────────── */
+:root {
+  --bg:           #0C100C;
+  --surface:      #141A14;
+  --cream:        #EDE9DA;
+  --cream-dim:    rgba(237,233,218,0.55);
+  --cream-faint:  rgba(237,233,218,0.35);
+  --olive:        #A9B478;
+  --olive-bright: #C6D093;
+  --olive-deep:   #929B69;
+  --green:        #8CBE6E;
+  --amber:        #DCA746;
+  --coral:        #DE6E4C;
+  --hairline:     rgba(237,233,218,0.08);
+  --mono:         'JetBrains Mono', monospace;
+  --sans:         'Space Grotesk', sans-serif;
+  --serif:        'Source Serif 4', serif;
+  --pad-x:        clamp(16px, 3vw, 44px);
+}
+
+/* ── page shell: full-bleed up to 1440px ────────────────────────────────── */
+.page {
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: var(--pad-x);
+  align-items: stretch;
+}
+
+/* remove the 680px column constraint from style.css */
+.page > * {
+  max-width: none;
+}
+
+/* ── site-header ─────────────────────────────────────────────────────────── */
+.week-label {
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  color: var(--cream-faint);
+}
+
+.live-pill {
+  border-color: rgba(169,180,120,0.3);
+}
+
+.live-text {
+  color: var(--olive);
+}
+
+/* ── tab bar ─────────────────────────────────────────────────────────────── */
+.tab {
+  font-size: 10.5px;
+  color: var(--cream-dim);
+}
+
+.tab.active {
+  color: var(--olive-bright);
+  border-bottom-color: var(--olive-bright);
+  border-bottom-width: 1px;
+}
+
+/* ── chip grammar — shared by Timeline and Performance ───────────────────── */
+.fui-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 8px 15px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border: 1px solid var(--hairline);
+  background: transparent;
+  color: var(--cream-dim);
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.12s, border-color 0.12s, background 0.12s;
+}
+
+.fui-chip.active {
+  color: var(--olive-bright);
+  border-color: rgba(169,180,120,0.6);
+  background: rgba(146,155,105,0.12);
+}
+
+.fui-chip.disabled {
+  opacity: 0.4;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* ── site-footer ─────────────────────────────────────────────────────────── */
+.site-footer {
+  margin-top: 32px;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  color: var(--cream-faint);
+}
+
+/* ── Phase 5: standup tab overrides (targets app.js-emitted classes) ─────── */
+
+/* Card shell — tighter radius, explicit tokens */
+.client-card {
+  border-radius: 14px;
+  background: var(--surface);
+  border-color: var(--hairline);
+}
+
+/* Headline — lighter weight, smaller size */
+.headline {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* Section labels — token color, tighter size */
+.section-label {
+  font-size: 9px;
+  color: var(--cream-faint);
+}
+.section-label.stalled-label   { color: var(--coral); }
+.section-label.completed-label { color: var(--green); }
+
+/* Highlight rows — 7px olive dot as first flex child */
+.highlight-row::before {
+  content: '';
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--olive);
+  flex-shrink: 0;
+  align-self: center;
+}
+
+/* Stalled rows — 7px coral dot */
+.stalled-row::before {
+  content: '';
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--coral);
+  flex-shrink: 0;
+  align-self: center;
+}
+
+/* Next/upcoming rows — 7px olive-bright dot */
+.next-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.next-content::before {
+  content: '';
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--olive-bright);
+  flex-shrink: 0;
+  margin-top: 7px;
+}
+.next-text { flex: 1; min-width: 0; }
+/* pill already inline-flex — remove the margin that was for non-flex context */
+.next-content .pill { margin-left: 0; }
+
+/* Banners — mono font, token colors, pill-adjacent grammar */
+#banner-missing,
+#banner-stale {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  border-radius: 999px;
+  padding: 9px 18px;
+}
+#banner-missing {
+  border-color: rgba(169,180,120,0.25);
+  background: rgba(169,180,120,0.06);
+  color: var(--olive);
+}
+#banner-stale {
+  border-color: rgba(220,167,70,0.25);
+  background: rgba(220,167,70,0.06);
+  color: var(--amber);
+}

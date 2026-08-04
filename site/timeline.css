@@ -1,5 +1,4 @@
 /* ── timeline.css — Timeline tab styles ────────────────────────────────────── */
-/* Self-contained: no imports from app.js, ops-widget.js, or ops-widget.css     */
 
 /* ── Full-bleed breakout ────────────────────────────────────────────────────── */
 #tl-app {
@@ -27,39 +26,12 @@
   padding: 48px 0;
 }
 
-/* ── Client chip bar ────────────────────────────────────────────────────────── */
+/* ── Client chip bar — chips use .fui-chip from flow-ui.css ─────────────────── */
 .tl-chip-bar {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   padding: 20px 0 18px;
-}
-
-.tl-chip {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  border-radius: 999px;
-  padding: 8px 15px;
-  cursor: pointer;
-  border: 1px solid rgba(237, 233, 220, 0.12);
-  background: transparent;
-  color: rgba(237, 233, 220, 0.55);
-  user-select: none;
-  transition: border-color 0.12s, color 0.12s, background 0.12s;
-}
-
-.tl-chip.active {
-  color: #C6D093;
-  border-color: rgba(169, 180, 120, 0.6);
-  background: rgba(146, 155, 105, 0.12);
-}
-
-.tl-chip.disabled {
-  cursor: default;
-  opacity: 0.4;
-  pointer-events: none;
 }
 
 .tl-chip-nofeed {
@@ -255,16 +227,27 @@
   white-space: nowrap;
 }
 
-/* ── Gantt ──────────────────────────────────────────────────────────────────── */
+/* ── Gantt — rolling window, single track ───────────────────────────────────── */
 .tl-gantt {
-  display: grid;
-  grid-template-columns: minmax(120px, 168px) minmax(0, 1fr);
-  row-gap: 9px;
+  position: relative;
   margin-bottom: 24px;
 }
 
-.tl-gantt-header-spacer {
-  /* left cell of header row — empty */
+/* TODAY row — separate row above month labels to avoid collision */
+.tl-today-row {
+  position: relative;
+  height: 18px;
+}
+
+.tl-today-label {
+  position: absolute;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: #C6D093;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: translateX(-50%);
 }
 
 .tl-gantt-month-row {
@@ -283,36 +266,40 @@
   transform: translateX(-50%);
 }
 
-.tl-today-label {
+/* Engagement start/end rules — span the full height below the month row */
+.tl-eng-rule {
   position: absolute;
+  top: 40px; /* today-row(18) + month-row(22) */
+  bottom: 0;
+  width: 1px;
+  border-left: 1px dashed rgba(169, 180, 120, 0.4);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tl-eng-label {
+  position: absolute;
+  top: 4px;
+  left: 4px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 9px;
-  color: #C6D093;
+  font-size: 7.5px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: rgba(169, 180, 120, 0.65);
   white-space: nowrap;
-  transform: translateX(-100%);
 }
 
-.tl-dept-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9px;
-  text-transform: uppercase;
-  color: rgba(237, 233, 218, 0.75);
-  padding-right: 12px;
-  padding-top: 17px;
-  line-height: 1.3;
-}
-
-.tl-dept-count {
-  display: block;
-  font-size: 8px;
-  color: rgba(237, 233, 218, 0.35);
-  margin-top: 2px;
-}
-
-.tl-track {
+/* Phase band track — plan bars, all depts merged */
+.tl-phase-track {
   position: relative;
+  width: 100%;
+  margin-bottom: 6px;
+}
+
+/* Event track — milestones, flag bands, actions */
+.tl-event-track {
+  position: relative;
+  width: 100%;
   height: 44px;
 }
 
@@ -325,6 +312,7 @@
   pointer-events: none;
 }
 
+/* Plan bar */
 .tl-bar {
   position: absolute;
   height: 24px;
@@ -347,6 +335,27 @@
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
+}
+
+/* Flag band — coral bar in the event track */
+.tl-flag-band {
+  position: absolute;
+  height: 14px;
+  top: 15px;
+  border-radius: 4px;
+  background: rgba(222, 110, 76, 0.20);
+  border: 1px solid rgba(222, 110, 76, 0.45);
+  display: flex;
+  align-items: center;
+  padding: 0 5px;
+  overflow: hidden;
+  min-width: 2px;
+  cursor: pointer;
+}
+
+.tl-flag-band .tl-bar-lbl {
+  font-size: 9px;
+  color: rgba(222, 110, 76, 0.9);
 }
 
 .tl-today-line {
@@ -376,6 +385,21 @@
   /* border set inline — 2px solid <color> */
 }
 
+.tl-dot-badge {
+  position: absolute;
+  top: -5px;
+  right: -6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7px;
+  font-weight: 700;
+  color: #0C100C;
+  background: #C6D093;
+  border-radius: 99px;
+  padding: 1px 3px;
+  line-height: 1.2;
+  pointer-events: none;
+}
+
 .tl-dot.selected {
   box-shadow: 0 0 0 5px rgba(198, 208, 147, 0.22);
 }
@@ -385,7 +409,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
-  padding: 12px 0 20px;
+  padding: 12px 0 10px;
 }
 
 .tl-leg-item {
@@ -415,7 +439,7 @@
   border: 1px solid rgba(146, 155, 105, 0.3); /* color overridden inline */
   border-radius: 14px;
   padding: 14px 16px;
-  margin-bottom: 28px;
+  margin-bottom: 0;
 }
 
 .tl-detail.empty {

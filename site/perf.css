@@ -2,12 +2,9 @@
    Tokens: Space Grotesk body · JetBrains Mono numbers/labels/chips · Source Serif 4 italic verdicts
    bg #0C100C · cards #10150f · cream #EDE9DA · olive #A9B478 · amber #d9a441 · orange #d96c4a · muted #6b7060 */
 
-/* ── Full-bleed breakout (mirrors timeline.css) ─────────────────── */
+/* ── Bottom spacing only — horizontal padding from .page in flow-ui.css ─── */
 #perf-app {
-  max-width: none;
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  padding: 0 clamp(16px, 3vw, 44px) 56px;
+  padding-bottom: 56px;
 }
 
 /* ── Loading placeholder ─────────────────────────────────────────── */
@@ -27,45 +24,12 @@
   flex-shrink: 0;
 }
 
-/* ── Scan strip (Phase D chip grammar) ───────────────────────────── */
+/* ── Scan strip — chips use .fui-chip from flow-ui.css ──────────── */
 .perf-scan-strip {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   padding: 20px 0 18px;
-}
-
-.perf-scan-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  border-radius: 999px;
-  padding: 7px 14px 7px 10px;
-  cursor: pointer;
-  border: 1px solid rgba(237,233,220,0.12);
-  background: transparent;
-  color: rgba(237,233,220,0.55);
-  user-select: none;
-  transition: border-color 0.12s, color 0.12s;
-}
-.perf-scan-chip:hover {
-  border-color: rgba(237,233,220,0.28);
-  color: rgba(237,233,220,0.85);
-}
-.perf-scan-chip.no-feed {
-  opacity: 0.4;
-  cursor: default;
-  pointer-events: none;
-}
-
-.perf-scan-chip.active {
-  color: #C6D093;
-  border-color: rgba(169, 180, 120, 0.6);
-  background: rgba(146, 155, 105, 0.12);
 }
 
 .perf-scan-name {
@@ -107,7 +71,6 @@
   border: 1px solid rgba(237,233,220,0.07);
   border-radius: 16px;
   padding: 18px 18px 16px;
-  scroll-margin-top: 16px;
 }
 
 .perf-card--nofeed {

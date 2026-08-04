@@ -233,7 +233,7 @@ function showClient(slug) {
   });
   const target = document.getElementById(`perf-card-${slug}`);
   if (target) target.style.display = '';
-  document.querySelectorAll('.perf-scan-chip[data-slug]').forEach(c => {
+  document.querySelectorAll('.fui-chip[data-slug]').forEach(c => {
     c.classList.toggle('active', c.dataset.slug === slug);
   });
 }
@@ -251,7 +251,7 @@ function buildScanStrip(entries) {
     const chipName = STEEL_CHIP_LABEL[cardId] || name;
 
     const chip = el('div', {
-      class: 'perf-scan-chip' + (hasFeed ? '' : ' no-feed'),
+      class: 'fui-chip' + (hasFeed ? '' : ' disabled'),
       'data-slug': cardId,
       ...(hasFeed ? {
         onclick() { showClient(pulse?.slug || cardId); },
