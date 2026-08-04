@@ -100,3 +100,90 @@
   font-size: 8.5px;
   color: var(--cream-faint);
 }
+
+/* ── Phase 5: standup tab overrides (targets app.js-emitted classes) ─────── */
+
+/* Card shell — tighter radius, explicit tokens */
+.client-card {
+  border-radius: 14px;
+  background: var(--surface);
+  border-color: var(--hairline);
+}
+
+/* Headline — lighter weight, smaller size */
+.headline {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* Section labels — token color, tighter size */
+.section-label {
+  font-size: 9px;
+  color: var(--cream-faint);
+}
+.section-label.stalled-label   { color: var(--coral); }
+.section-label.completed-label { color: var(--green); }
+
+/* Highlight rows — 7px olive dot as first flex child */
+.highlight-row::before {
+  content: '';
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--olive);
+  flex-shrink: 0;
+  align-self: center;
+}
+
+/* Stalled rows — 7px coral dot */
+.stalled-row::before {
+  content: '';
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--coral);
+  flex-shrink: 0;
+  align-self: center;
+}
+
+/* Next/upcoming rows — 7px olive-bright dot */
+.next-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.next-content::before {
+  content: '';
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--olive-bright);
+  flex-shrink: 0;
+  margin-top: 7px;
+}
+.next-text { flex: 1; min-width: 0; }
+/* pill already inline-flex — remove the margin that was for non-flex context */
+.next-content .pill { margin-left: 0; }
+
+/* Banners — mono font, token colors, pill-adjacent grammar */
+#banner-missing,
+#banner-stale {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  border-radius: 999px;
+  padding: 9px 18px;
+}
+#banner-missing {
+  border-color: rgba(169,180,120,0.25);
+  background: rgba(169,180,120,0.06);
+  color: var(--olive);
+}
+#banner-stale {
+  border-color: rgba(220,167,70,0.25);
+  background: rgba(220,167,70,0.06);
+  color: var(--amber);
+}
