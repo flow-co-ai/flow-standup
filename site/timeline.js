@@ -1,4 +1,4 @@
-// timeline.js — Timeline tab. Fully self-contained, no imports from app.js.
+// timeline.js — Timeline tab v2. Pace-first renderer. Vanilla DOM only.
 
 const TIMELINE_BASE = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/refs/heads/main/timeline';
 
@@ -13,14 +13,7 @@ const TIMELINE_CLIENTS = [
   { name: 'Steel Round Bars',      slug: 'steel-round-bars' },
 ];
 
-const DOT_COLOR = {
-  completed: '#8CBE6E',
-  action:    '#A9B478',
-  flag:      '#DE6E4C',
-  milestone: '#C6D093',
-};
-
-// ── DOM builder (self-contained copy) ────────────────────────────────────────
+// ── DOM builder ───────────────────────────────────────────────────────────────
 function el(tag, props, ...children) {
   const e = document.createElement(tag);
   for (const [k, v] of Object.entries(props || {})) {
@@ -39,64 +32,32 @@ function el(tag, props, ...children) {
   return e;
 }
 
-// ── Date helpers ──────────────────────────────────────────────────────────────
-function isoToday() {
-  return new Date().toISOString().slice(0, 10);
-}
+// ── Constants ─────────────────────────────────────────────────────────────────
+const DAY        = 864e5;
+const LANE_ORDER = ['crm', 'ops', 'ads', 'creative', 'web'];
+const MON        = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
 
-function dateOffset(isoDate, days) {
-  const d = new Date(isoDate + 'T00:00:00Z');
-  d.setUTCDate(d.getUTCDate() + days);
-  return d.toISOString().slice(0, 10);
-}
+// Bead colors — hex required for inline styles (CSS vars don't work there)
+const C = {
+  shipped:  '#929B69',
+  active:   '#C6D093',
+  planned:  'transparent',
+  logged:   '#A9B478',
+  ms:       '#8CBE6E',
+  msFuture: 'transparent',
+};
 
-function datePct(dateStr, startStr, endStr) {
-  const s = +new Date(startStr);
-  const e = +new Date(endStr);
-  const d = +new Date(dateStr);
-  if (e <= s) return 0;
-  return Math.max(0, Math.min(100, (d - s) / (e - s) * 100));
-}
-
-function monthHeaders(startStr, endStr) {
-  const MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-  const results = [];
-  const s = new Date(startStr + 'T00:00:00Z');
-  const e = new Date(endStr   + 'T00:00:00Z');
-  const startYear = s.getUTCFullYear();
-  let yr  = startYear;
-  let mon = s.getUTCMonth();
-  while (true) {
-    const d = new Date(Date.UTC(yr, mon, 1));
-    if (d > e) break;
-    const iso = d.toISOString().slice(0, 10);
-    const pct = datePct(iso, startStr, endStr);
-    const label = yr !== startYear
-      ? `${MONTHS[mon]} '${String(yr).slice(2)}`
-      : MONTHS[mon];
-    results.push({ label, pct });
-    mon++;
-    if (mon > 11) { mon = 0; yr++; }
-  }
-  return results;
-}
-
-function fmtDate(iso) {
-  if (!iso) return '';
-  const d = new Date(iso + 'T00:00:00Z');
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
-}
-
-function fmtShortDate(iso) {
-  if (!iso) return '';
-  const d = new Date(iso + 'T00:00:00Z');
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
-}
+// ── Helpers ───────────────────────────────────────────────────────────────────
+const clamp  = (v, a, b) => Math.max(a, Math.min(b, v));
+const D      = s => new Date(s + 'T12:00:00');
+const dLabel = d => MON[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+const dShort = d => MON[d.getMonth()].charAt(0) + MON[d.getMonth()].slice(1,3).toLowerCase() + ' ' + d.getDate();
+const yy     = d => "'" + String(d.getFullYear()).slice(2);
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let activeSlug = null;
-let selectedEvt = null;
 const dataCache = {};
+let tlState = { detail: null, collapse: true };
 
 // ── Chip bar ──────────────────────────────────────────────────────────────────
 function buildChipBar() {
@@ -115,380 +76,571 @@ function buildChipBar() {
   return bar;
 }
 
-// ── Client header ─────────────────────────────────────────────────────────────
-function buildClientHeader(data) {
-  const completedCount = data.completedCount ?? (data.events || []).filter(e => e.kind === 'completed').length;
-  return el('div', { class: 'tl-client-header' },
-    el('div', { class: 'tl-header-left' },
-      el('div', { class: 'tl-window-label', text: data.window || 'ENGAGEMENT' }),
-      el('p', { class: 'tl-insight', text: data.insight || '' })
-    ),
-    el('div', { class: 'tl-fact-chips' },
-      factChip('MILESTONES', String(data.milestones?.length || 0)),
-      factChip('COMPLETED',  String(completedCount)),
-      factChip('PACE', data.paceLabel?.split(' ')[0] || '—'),
-    )
-  );
-}
+// ── Core computations — ported from design's renderVals() ─────────────────────
+function computeVals(data, recentDays) {
+  recentDays = recentDays || 30;
+  const TODAY = data.generated_at ? D(data.generated_at.slice(0, 10)) : new Date();
+  TODAY.setHours(12, 0, 0, 0);
 
-function factChip(label, value) {
-  return el('div', { class: 'tl-fact-chip' },
-    el('span', { class: 'tl-fact-label', text: label }),
-    el('span', { class: 'tl-fact-value', text: value })
-  );
-}
+  const cs         = D(data.engagement.start);
+  const ce         = D(data.engagement.end);
+  const totalDays  = Math.max(1, Math.round((ce - cs) / DAY));
+  const elapsed    = clamp(Math.round((TODAY - cs) / DAY), 0, totalDays);
+  const promisedPct  = Math.round(elapsed / totalDays * 100);
+  const dRaw         = parseFloat(String(data.actualPct || '0').replace(/[^0-9.]/g, ''));
+  const deliveredPct = isFinite(dRaw) ? clamp(Math.round(dRaw), 0, 100) : 0;
+  const gapRaw       = promisedPct - deliveredPct;
+  const gapPct       = Math.abs(gapRaw);
+  const daysLeft     = totalDays - elapsed;
+  const contractMonths = Math.round(totalDays / 30.44);
 
-// ── Progress panel ────────────────────────────────────────────────────────────
-function buildProgressPanel(data) {
-  const today      = isoToday();
-  const notStarted = !!data.engagement?.start && today < data.engagement.start;
-  const total      = data.milestones?.length || 0;
-  const completed  = data.completedCount ?? (data.events || []).filter(e => e.kind === 'completed').length;
+  // ── Build flat items list ──────────────────────────────────────────────────
+  const allItems = [];
+  (data.departments || []).forEach(d => (d.bars || []).forEach(b => {
+    const s = D(b.start), e = D(b.end);
+    allItems.push({ lane: d.dept, name: b.label, s, e: e < s ? s : e, type: 'plan' });
+  }));
+  (data.milestones || []).forEach(m =>
+    allItems.push({ lane: m.dept, name: m.label, s: D(m.date), e: D(m.date), type: 'ms' }));
+  (data.events || []).forEach(ev =>
+    allItems.push({ lane: ev.dept, name: ev.label, s: D(ev.date), e: D(ev.date), type: 'event' }));
 
-  const barTrack = el('div', { class: 'tl-bar-track' });
-  const fill = el('div', { class: 'tl-bar-fill' });
-  fill.style.width = data.actualPct || '0%';
-  barTrack.append(fill);
-  if (!notStarted) {
-    const tick = el('div', { class: 'tl-planned-tick' });
-    tick.style.left = (data.plannedPct || 0) + '%';
-    barTrack.append(tick);
-  }
-
-  const paceEl = el('div', {
-    class: 'tl-pace-label',
-    text:  notStarted ? 'NOT STARTED' : (data.paceLabel || ''),
+  allItems.forEach(it => {
+    if (it.type === 'event')      it.kind = 'logged';
+    else if (it.type === 'ms')    it.kind = it.s <= TODAY ? 'ms' : 'msFuture';
+    else if (it.e < TODAY)        it.kind = 'shipped';
+    else if (it.s <= TODAY)       it.kind = 'active';
+    else                          it.kind = 'planned';
   });
-  paceEl.style.color = notStarted
-    ? 'rgba(237,233,218,0.35)'
-    : (data.paceColor || '#C6D093');
 
-  const left = el('div', { class: 'tl-progress-left' },
-    el('div', { class: 'tl-scope-num', text: data.actualPct || '0%' }),
-    el('div', { class: 'tl-scope-label', text: `${completed} OF ${total} MILESTONES` }),
-    barTrack,
-    paceEl
-  );
+  // ── Lane order ────────────────────────────────────────────────────────────
+  const laneSet = new Set();
+  LANE_ORDER.forEach(l => { if (allItems.some(i => i.lane === l)) laneSet.add(l); });
+  allItems.forEach(i => { if (i.lane && !laneSet.has(i.lane)) laneSet.add(i.lane); });
+  const lanes = [...laneSet];
 
-  const pills = el('div', { class: 'tl-up-pills' });
-  for (const m of data.nextUp || []) {
-    const pill = el('div', { class: 'tl-up-pill' },
-      el('span', { class: 'tl-up-pill-dot' }),
-      el('span', { class: 'tl-up-pill-date', text: fmtShortDate(m.date) }),
-      el('span', { class: 'tl-up-pill-name', text: m.label })
-    );
-    pill.addEventListener('click', () => selectEvt({ ...m, kind: 'milestone' }, DOT_COLOR.milestone));
-    pills.append(pill);
+  // ── Month buckets ─────────────────────────────────────────────────────────
+  let lo = allItems.reduce((a, i) => i.s < a ? i.s : a, cs);
+  let hi = allItems.reduce((a, i) => i.e > a ? i.e : a, ce);
+  if (TODAY > hi) hi = TODAY;
+  const months = [];
+  let y = lo.getFullYear(), m = lo.getMonth();
+  while (y < hi.getFullYear() || (y === hi.getFullYear() && m <= hi.getMonth())) {
+    months.push({ y, m, s: new Date(y, m, 1, 12), e: new Date(y, m + 1, 0, 12) });
+    m++; if (m > 11) { m = 0; y++; }
   }
+  const counts = months.map(mo => allItems.filter(i => i.e >= mo.s && i.s <= mo.e).length);
 
-  const right = el('div', { class: 'tl-progress-right' },
-    el('div', { class: 'tl-next-up-head', text: 'UP NEXT' }),
-    pills
-  );
-
-  return el('div', { class: 'tl-progress' }, left, right);
-}
-
-// ── Bar sub-row stacking ──────────────────────────────────────────────────────
-function assignSubRows(bars, winStart, winEnd) {
-  if (!bars.length) return { placed: [], rowCount: 0 };
-  const sorted     = [...bars].sort((a, b) => (a.start || '').localeCompare(b.start || ''));
-  const rowEndPcts = [];
-  const placed     = [];
-
-  for (const bar of sorted) {
-    const l = datePct(bar.start, winStart, winEnd);
-    const r = datePct(bar.end,   winStart, winEnd);
-    let rowIdx = rowEndPcts.findIndex(endPct => endPct <= l);
-    if (rowIdx === -1) { rowIdx = rowEndPcts.length; rowEndPcts.push(r); }
-    else               { rowEndPcts[rowIdx] = r; }
-    placed.push({ bar, rowIdx, l, r });
-  }
-
-  return { placed, rowCount: rowEndPcts.length };
-}
-
-// ── Dot clustering ────────────────────────────────────────────────────────────
-function clusterDots(items) {
-  if (!items.length) return [];
-  const sorted   = [...items].sort((a, b) => a.pct - b.pct);
-  const clusters = [];
-
-  for (const item of sorted) {
-    const existing = clusters.find(c => Math.abs(c.pct - item.pct) <= 1.5);
-    if (existing) {
-      existing.items.push(item);
+  // ── Chapter builder (collapse or linear) ─────────────────────────────────
+  function buildChapters(collapse) {
+    let groups = [];
+    if (!collapse) {
+      groups = months.map((_, i) => ({ idx: [i] }));
     } else {
-      clusters.push({ pct: item.pct, items: [item] });
-    }
-  }
-
-  for (const c of clusters) {
-    c.pct = c.items.reduce((s, i) => s + i.pct, 0) / c.items.length;
-  }
-
-  return clusters;
-}
-
-// ── Gantt — data-driven axis, department lanes, no overlap ───────────────────
-function buildGantt(data) {
-  const { departments = [], milestones = [], events = [], engagement = {} } = data;
-  const today = isoToday();
-
-  // Axis bounds from actual data, ±14 days — no empty leading months
-  const allDates = [
-    ...departments.flatMap(d => (d.bars || []).flatMap(b => [b.start, b.end].filter(Boolean))),
-    ...milestones.map(m => m.date).filter(Boolean),
-    ...events.map(e => e.date).filter(Boolean),
-    today,
-  ];
-  const dataMin  = allDates.reduce((a, b) => (a < b ? a : b));
-  const dataMax  = allDates.reduce((a, b) => (a > b ? a : b));
-  const winStart = dateOffset(dataMin, -14);
-  const winEnd   = dateOffset(dataMax,  14);
-  const todayPct = datePct(today, winStart, winEnd);
-  const months   = monthHeaders(winStart, winEnd);
-
-  const LABEL_W = 72; // px — left column for lane labels
-  const BAR_H   = 24;
-  const ROW_GAP = 4;
-  const PAD_T   = 5;
-  const PAD_B   = 5;
-  const M_ROW_H = 16; // height reserved at bottom of lane for milestone diamonds
-
-  // Shared helper: populate gridlines + today line into any relative container
-  function addGrid(container) {
-    for (const { pct } of months) {
-      if (pct <= 0 || pct >= 100) continue;
-      const gl = el('div', { class: 'tl-gridline' });
-      gl.style.left = pct + '%';
-      container.append(gl);
-    }
-    const tl = el('div', { class: 'tl-today-line' });
-    tl.style.left = todayPct + '%';
-    container.append(tl);
-  }
-
-  // Infer bar status from dates
-  function barStatus(bar) {
-    if (bar.end   && bar.end   <  today) return 'completed';
-    if (bar.start && bar.start <= today) return 'in-progress';
-    return 'future';
-  }
-
-  const gantt = el('div', { class: 'tl-gantt' });
-
-  // ── Header: today label + month row, offset by LABEL_W ──────────────────────
-  const headerEl     = el('div', { class: 'tl-gantt-header' });
-  const headerSpacer = el('div', { class: 'tl-header-spacer' });
-  headerSpacer.style.width = LABEL_W + 'px';
-  headerEl.append(headerSpacer);
-
-  const axisCol  = el('div', { class: 'tl-axis-col' });
-  const todayRow = el('div', { class: 'tl-today-row' });
-  const todayLbl = el('span', { class: 'tl-today-label', text: 'TODAY' });
-  todayLbl.style.left = todayPct + '%';
-  todayRow.append(todayLbl);
-  axisCol.append(todayRow);
-
-  const monthRow = el('div', { class: 'tl-gantt-month-row' });
-  for (const { label, pct } of months) {
-    const lbl = el('span', { class: 'tl-month-label', text: label });
-    lbl.style.left = pct + '%';
-    monthRow.append(lbl);
-  }
-  axisCol.append(monthRow);
-  headerEl.append(axisCol);
-  gantt.append(headerEl);
-
-  // ── One lane per department ──────────────────────────────────────────────────
-  for (const dept of departments) {
-    const bars    = dept.bars || [];
-    const deptKey = (dept.dept || '').toLowerCase();
-    const deptMs  = milestones.filter(m => (m.dept || '').toLowerCase() === deptKey);
-
-    const { placed, rowCount } = assignSubRows(bars, winStart, winEnd);
-    const barAreaH   = rowCount > 0 ? (BAR_H + ROW_GAP) * rowCount - ROW_GAP : BAR_H;
-    const hasMsRows  = deptMs.length > 0;
-    const laneBodyH  = PAD_T + barAreaH + PAD_B + (hasMsRows ? M_ROW_H : 0);
-
-    const lane      = el('div', { class: 'tl-lane' });
-    const laneLabel = el('div', { class: 'tl-lane-label' });
-    laneLabel.style.width    = LABEL_W + 'px';
-    laneLabel.textContent    = (dept.dept || '').toUpperCase();
-    lane.append(laneLabel);
-
-    const laneBody = el('div', { class: 'tl-lane-body' });
-    laneBody.style.height = laneBodyH + 'px';
-    addGrid(laneBody);
-
-    // Bars — colored by status
-    for (const { bar, rowIdx, l, r } of placed) {
-      const w     = Math.max(r - l, 0.5);
-      const barEl = el('div', { class: 'tl-bar ' + barStatus(bar) });
-      if (w >= 4) barEl.append(el('span', { class: 'tl-bar-lbl', text: bar.label }));
-      barEl.style.left  = l + '%';
-      barEl.style.width = w + '%';
-      barEl.style.top   = PAD_T + rowIdx * (BAR_H + ROW_GAP) + 'px';
-      barEl.title = bar.label;
-      laneBody.append(barEl);
-    }
-
-    // Milestones — diamonds at bottom of lane
-    for (const m of deptMs) {
-      const pct = datePct(m.date, winStart, winEnd);
-      if (pct < 0 || pct > 100) continue;
-      const isDone   = !!m.completedAt || m.date < today;
-      const diamond  = el('div', {
-        class: 'tl-milestone' + (isDone ? ' completed' : ''),
-        title: fmtShortDate(m.date) + ' · ' + m.label,
+      const runs = [];
+      months.forEach((_, i) => {
+        const act = counts[i] > 0, last = runs[runs.length - 1];
+        if (last && last.act === act) last.idx.push(i); else runs.push({ act, idx: [i] });
       });
-      diamond.style.left = pct + '%';
-      diamond.addEventListener('click', () =>
-        selectEvt({ ...m, kind: 'milestone' }, isDone ? DOT_COLOR.completed : DOT_COLOR.milestone)
+      runs.forEach(run => {
+        if (!run.act) { groups.push({ idx: run.idx, quiet: true }); return; }
+        const sorted = run.idx.map(i => counts[i]).sort((a, b) => a - b);
+        const med = sorted[Math.floor(sorted.length / 2)] || 1;
+        let buf = [];
+        const flush = () => { while (buf.length) groups.push({ idx: buf.splice(0, 3) }); };
+        run.idx.forEach(i => {
+          if (run.idx.length > 1 && counts[i] >= 2 * med) { flush(); groups.push({ idx: [i], peak: true }); }
+          else buf.push(i);
+        });
+        flush();
+      });
+    }
+
+    return groups.map(g => {
+      const a = months[g.idx[0]], b = months[g.idx[g.idx.length - 1]];
+      const span = Math.max(1, b.e - a.s);
+      const list = allItems.filter(i => i.e >= a.s && i.s <= b.e);
+      const hasToday   = TODAY >= a.s && TODAY <= b.e;
+      const preContract = b.e < cs;
+      let label;
+      if (g.idx.length === 1)    label = MON[a.m] + ' ' + yy(a.s);
+      else if (a.y === b.y)      label = MON[a.m] + '–' + MON[b.m] + ' ' + yy(b.e);
+      else                       label = MON[a.m] + ' ' + yy(a.s) + '–' + MON[b.m] + ' ' + yy(b.e);
+      let sub;
+      if (g.quiet)          sub = g.idx.length + ' MO · ' + (hasToday ? 'RUNWAY' : 'NO ACTIVITY');
+      else if (preContract) sub = list.length + ' · PRE-CONTRACT';
+      else                  sub = list.length + ' ITEMS';
+      let flex = g.quiet ? 0.55 : 1 + list.length * 0.045;
+      if (hasToday) flex = Math.max(flex, 1.55);
+      if (!collapse) flex = 1;
+
+      const marks = [];
+      if (g.quiet && !hasToday) {
+        marks.push({ l: 50, text: '· · ·', color: 'rgba(237,233,218,0.18)' });
+      } else if (g.idx.length <= 3) {
+        g.idx.forEach(i => {
+          const mo = months[i];
+          marks.push({ l: clamp(((mo.s - a.s) + (mo.e - mo.s) / 2) / span * 100, 6, 94), text: MON[mo.m], color: 'rgba(237,233,218,0.25)' });
+        });
+      }
+      if (cs >= a.s && cs <= b.e) marks.push({ l: clamp((cs - a.s) / span * 100, 8, 92),  text: '▏ START', color: 'rgba(169,180,120,0.65)' });
+      if (ce >= a.s && ce <= b.e) marks.push({ l: clamp((ce - a.s) / span * 100, 8, 88),  text: 'END ▕', color: 'rgba(169,180,120,0.65)' });
+      if (hasToday)                marks.push({ l: clamp((TODAY - a.s) / span * 100, 8, 92), text: 'TODAY', color: 'rgba(237,233,218,0.85)' });
+
+      return { g, a, b, span, list, label, sub, hasToday, preContract, quiet: !!g.quiet, flex, nMonths: g.idx.length, s: a.s, e: b.e, marks };
+    });
+  }
+
+  // ── Recent / today / next ─────────────────────────────────────────────────
+  const eventItems = allItems.filter(i => i.type === 'event').sort((a, b) => b.s - a.s);
+  const lastLog    = eventItems[0];
+  const cutoff     = new Date(TODAY - recentDays * DAY);
+  const recent     = eventItems.filter(e => e.s >= cutoff);
+  const seen = {}; const recentUnique = [];
+  recent.forEach(ev => {
+    const k = ev.lane + '|' + ev.name;
+    if (seen[k]) { seen[k].n++; return; }
+    seen[k] = { day: dShort(ev.s).toUpperCase(), name: ev.name, lane: ev.lane, n: 1, s: ev.s };
+    recentUnique.push(seen[k]);
+  });
+
+  const activeItems = allItems.filter(i => i.type === 'plan' && i.s <= TODAY && i.e >= TODAY);
+  const future      = allItems.filter(i => i.s > TODAY).sort((a, b) => a.s - b.s);
+  const lastPlanned = allItems.filter(i => i.type !== 'event').reduce((a, i) => i.e > a ? i.e : a, cs);
+
+  const msTotal  = (data.milestones || []).length;
+  const msPassed = Math.min(msTotal, (data.milestones || []).filter(x => D(x.date) <= TODAY).length);
+
+  const preCount  = allItems.filter(i => i.type === 'plan' && i.s < cs).length;
+  const planCount = allItems.filter(i => i.type === 'plan').length;
+
+  const checks = [];
+  if (!future.length) checks.push(daysLeft + ' days of runway left; nothing is scheduled after ' + dLabel(lastPlanned) + '.');
+  if (preCount)       checks.push(preCount + ' of ' + planCount + ' plan items pre-date the contract window (' + dLabel(cs) + ').');
+  if (recent.length !== recentUnique.length) checks.push(recent.length + ' logged events in ' + recentDays + 'd resolve to ' + recentUnique.length + ' unique labels.');
+
+  return {
+    TODAY, cs, ce, totalDays, elapsed, daysLeft, contractMonths,
+    promisedPct, deliveredPct, gapRaw, gapPct,
+    gapLabel:     gapPct + (gapRaw >= 0 ? ' PTS BEHIND' : ' PTS AHEAD'),
+    gapLabelLeft: clamp(deliveredPct + gapPct / 2, 14, 86),
+    paceColor:    gapRaw >= 0 ? (data.paceColor || '#DE6E4C') : '#8CBE6E',
+    paceLabel:    data.paceLabel || '—',
+    msPassed, msTotal, recentDays, recentTotal: recent.length,
+    allItems, lanes, months, counts, buildChapters,
+    eventItems, lastLog, recent, recentUnique,
+    activeItems, future, lastPlanned,
+    checks,
+  };
+}
+
+// ── Build beads for one cell ──────────────────────────────────────────────────
+function buildBeads(list, ch) {
+  const packed = [], rowEnds = [];
+  list.slice().sort((x, z) => x.s - z.s).forEach(it => {
+    const l = clamp((it.s - ch.s) / ch.span * 100, 0, 100);
+    const w = clamp((Math.min(it.e, ch.e) - Math.max(it.s, ch.s)) / ch.span * 100, 0.6, 100 - l);
+    let r = 0;
+    while (r < 3 && rowEnds[r] != null && rowEnds[r] > l - 1.5) r++;
+    if (r > 2) r = 2;
+    rowEnds[r] = l + w;
+    const isMs = it.type === 'ms';
+    const hollow = it.kind === 'planned' || it.kind === 'msFuture';
+    packed.push({
+      l, w: isMs ? 0 : w, top: 8 + r * 11, h: 7, min: isMs ? 7 : 4,
+      bg:     hollow ? 'transparent' : (C[it.kind] || C.shipped),
+      border: hollow ? '1px solid rgba(198,208,147,0.42)' : 'none',
+      radius: isMs ? '1px' : '2px',
+      xform:  isMs ? 'rotate(45deg)' : 'none',
+    });
+  });
+  return packed;
+}
+
+// ── Sidebar ───────────────────────────────────────────────────────────────────
+function buildSidebar(v, reopen) {
+  const sidebar = el('div', { class: 'tl-sidebar' });
+
+  // ── Detail mode ──────────────────────────────────────────────────────────
+  if (tlState.detail) {
+    const d   = tlState.detail;
+    const box = el('div', { class: 'tl-panel tl-detail-panel' });
+    const hd  = el('div', { class: 'tl-panel-head' });
+    const hdL = el('div', { class: 'tl-det-head-left' });
+    hdL.append(
+      el('div', { class: 'tl-det-kicker', text: d.kicker }),
+      el('div', { class: 'tl-det-title',  text: d.title  }),
+    );
+    const closeBtn = el('div', { class: 'tl-close-btn', text: 'CLOSE',
+      onclick() { tlState.detail = null; reopen(); },
+    });
+    hd.append(hdL, closeBtn);
+    box.append(hd);
+
+    const scroll = el('div', { class: 'tl-det-scroll' });
+    (d.items || []).forEach(it => {
+      const row = el('div', { class: 'tl-det-item' });
+      row.style.borderLeftColor = it.accent;
+      row.append(
+        el('div', { class: 'tl-det-name', text: it.name }),
+        el('div', { class: 'tl-det-meta', text: it.meta }),
       );
-      laneBody.append(diamond);
-    }
-
-    lane.append(laneBody);
-    gantt.append(lane);
+      scroll.append(row);
+    });
+    box.append(scroll);
+    sidebar.append(box);
+    return sidebar;
   }
 
-  // ── Flag event track ─────────────────────────────────────────────────────────
-  const flagEvents = events.filter(e => e.kind === 'flag');
-  if (flagEvents.length) {
-    const evtWrapper = el('div', { class: 'tl-event-wrapper' });
-    const evtSpacer  = el('div', {});
-    evtSpacer.style.width     = LABEL_W + 'px';
-    evtSpacer.style.flexShrink = '0';
-    evtWrapper.append(evtSpacer);
+  // ── Today panel ──────────────────────────────────────────────────────────
+  const todayPanel = el('div', { class: 'tl-panel tl-today-panel' });
+  todayPanel.append(el('div', { class: 'tl-panel-kicker', text: 'TODAY · ' + dLabel(v.TODAY) }));
 
-    const eventTrack = el('div', { class: 'tl-event-track' });
-    addGrid(eventTrack);
+  const activeRow = el('div', { class: 'tl-today-active' });
+  const activeNum = el('span', { class: 'tl-active-num', text: String(v.activeItems.length) });
+  activeNum.style.color = v.activeItems.length ? 'var(--olive-bright)' : 'var(--olive-deep)';
+  activeRow.append(activeNum, el('span', { class: 'tl-active-note', text: v.activeItems.length ? 'RUNNING NOW' : 'ITEMS SPAN TODAY' }));
+  todayPanel.append(activeRow);
 
-    for (const evt of flagEvents) {
-      const l = datePct(evt.date,               winStart, winEnd);
-      const r = datePct(evt.endDate || evt.date, winStart, winEnd);
-      if (r < 0 || l > 100) continue;
-      const w    = Math.max(r - l, 0.5);
-      const band = el('div', { class: 'tl-flag-band' });
-      band.style.left  = l + '%';
-      band.style.width = w + '%';
-      if (w >= 5 && evt.label) band.append(el('span', { class: 'tl-bar-lbl', text: evt.label }));
-      band.addEventListener('click', () => selectEvt(evt, DOT_COLOR.flag));
-      eventTrack.append(band);
-    }
-
-    evtWrapper.append(eventTrack);
-    gantt.append(evtWrapper);
-  }
-
-  return gantt;
-}
-
-// ── Legend ────────────────────────────────────────────────────────────────────
-function buildLegend() {
-  const legend = el('div', { class: 'tl-legend' });
-
-  const barItems = [
-    { color: DOT_COLOR.completed, label: 'COMPLETED' },
-    { color: DOT_COLOR.action,    label: 'IN PROGRESS' },
-    { color: DOT_COLOR.flag,      label: 'FLAG' },
-  ];
-  for (const { color, label } of barItems) {
-    const dot = el('span', { class: 'tl-leg-dot' });
-    dot.style.background = color;
-    legend.append(el('span', { class: 'tl-leg-item' }, dot, el('span', { class: 'tl-leg-lbl', text: label })));
-  }
-
-  // Diamond for milestone
-  const mItem    = el('span', { class: 'tl-leg-item' });
-  const mDiamond = el('span', { class: 'tl-leg-diamond' });
-  mDiamond.style.background   = '#8CBE6E';
-  mDiamond.style.borderColor  = '#8CBE6E';
-  mItem.append(mDiamond, el('span', { class: 'tl-leg-lbl', text: 'MILESTONE' }));
-  legend.append(mItem);
-
-  // Hollow = future
-  const hollow = el('span', { class: 'tl-leg-item' });
-  const hDot   = el('span', { class: 'tl-leg-dot' });
-  hDot.style.cssText = 'background:#141A14;border:2px solid rgba(237,233,218,0.45);';
-  hollow.append(hDot, el('span', { class: 'tl-leg-lbl', text: 'HOLLOW = STILL AHEAD' }));
-  legend.append(hollow);
-
-  return legend;
-}
-
-// ── Detail panel ──────────────────────────────────────────────────────────────
-let detailEl = null;
-
-function buildDetailPanel() {
-  detailEl = el('div', { class: 'tl-detail empty' });
-  return detailEl;
-}
-
-function selectEvt(evt, color) {
-  selectedEvt = evt;
-  if (!detailEl) return;
-  detailEl.className = 'tl-detail';
-  detailEl.style.borderColor = color;
-  detailEl.innerHTML = '';
-
-  const dateEl = el('div', { class: 'tl-det-date', text: fmtDate(evt.date) });
-  dateEl.style.color = color;
-
-  const meta = [evt.dept, evt.kind].filter(Boolean).join(' · ').toUpperCase();
-  detailEl.append(
-    dateEl,
-    el('div', { class: 'tl-det-meta', text: meta }),
-    el('div', { class: 'tl-det-label', text: evt.label || '' }),
+  const llRow = el('div', { class: 'tl-today-subrow tl-divider' });
+  llRow.append(
+    el('span', { class: 'tl-subrow-lbl', text: 'LAST LOG' }),
+    el('span', { class: 'tl-subrow-val', text: v.lastLog ? dLabel(v.lastLog.s) + ' · ' + Math.round((v.TODAY - v.lastLog.s) / DAY) + 'D AGO' : '—' }),
   );
+  todayPanel.append(llRow);
 
-  if (evt.completedAt) {
-    detailEl.append(el('div', { class: 'tl-det-meta', text: `COMPLETED · ${fmtDate(evt.completedAt)}` }));
-    if (evt.completedNote) {
-      detailEl.append(el('p', { class: 'tl-det-note', text: evt.completedNote }));
-    }
-  } else if (evt.note) {
-    detailEl.append(el('p', { class: 'tl-det-note', text: evt.note }));
+  const nextRow = el('div', { class: 'tl-today-subrow' });
+  nextRow.append(el('span', { class: 'tl-subrow-lbl', text: 'NEXT' }));
+  const nextR = el('div', { class: 'tl-next-right' });
+  nextR.append(
+    el('div', { class: 'tl-next-name', text: v.future.length ? v.future[0].name : 'Nothing scheduled after ' + dLabel(v.lastPlanned) + '.' }),
+    el('div', { class: 'tl-subrow-meta', text: v.future.length ? v.future[0].lane.toUpperCase() + ' · ' + dLabel(v.future[0].s) : v.daysLeft + ' DAYS REMAIN IN CONTRACT' }),
+  );
+  nextRow.append(nextR);
+  todayPanel.append(nextRow);
+  sidebar.append(todayPanel);
+
+  // ── Recent log panel ──────────────────────────────────────────────────────
+  if (v.recentUnique.length) {
+    const recentPanel = el('div', { class: 'tl-panel tl-recent-panel' });
+    const rHead = el('div', { class: 'tl-panel-head' });
+    rHead.append(
+      el('span', { class: 'tl-panel-kicker', text: 'LAST ' + v.recentDays + ' DAYS' }),
+      el('span', { class: 'tl-all-btn', text: v.recentTotal + ' LOGGED · ALL',
+        onclick() {
+          tlState.detail = {
+            kicker: 'LOGGED · LAST ' + v.recentDays + ' DAYS',
+            title:  v.recent.length + ' EVENTS · ' + v.recentUnique.length + ' UNIQUE',
+            items: v.recentUnique.map(r => ({
+              name: r.name, accent: C.logged,
+              meta: r.lane.toUpperCase() + ' · ' + dShort(r.s).toUpperCase() + (r.n > 1 ? ' · ×' + r.n : ''),
+            })),
+          };
+          reopen();
+        },
+      }),
+    );
+    const rList = el('div', { class: 'tl-recent-list' });
+    v.recentUnique.slice(0, 5).forEach(r => {
+      const row = el('div', { class: 'tl-recent-row' });
+      row.append(
+        el('span', { class: 'tl-recent-day', text: r.day }),
+        el('div', { class: 'tl-recent-right' },
+          el('div', { class: 'tl-recent-name', text: r.name }),
+          el('div', { class: 'tl-recent-meta', text: r.lane.toUpperCase() + (r.n > 1 ? ' · ×' + r.n : '') }),
+        ),
+      );
+      rList.append(row);
+    });
+    recentPanel.append(rHead, rList);
+    sidebar.append(recentPanel);
   }
 
-  if (evt.days && evt.days > 1) {
-    detailEl.append(el('div', { class: 'tl-det-meta', text: `${evt.days} DAYS` }));
+  // ── Checks panel ─────────────────────────────────────────────────────────
+  if (v.checks.length) {
+    const chkPanel = el('div', { class: 'tl-panel tl-checks-panel' });
+    const chkHead  = el('div', { class: 'tl-checks-head' });
+    const dot = el('span', { class: 'tl-checks-dot' });
+    dot.style.background = v.paceColor;
+    chkHead.append(dot, el('span', { class: 'tl-panel-kicker', text: 'NEEDS A LOOK · ' + v.checks.length }));
+    chkPanel.append(chkHead);
+    v.checks.forEach(txt => chkPanel.append(el('div', { class: 'tl-check-item', text: txt })));
+    sidebar.append(chkPanel);
   }
 
-  document.querySelectorAll('.tl-dot.selected').forEach(d => d.classList.remove('selected'));
+  return sidebar;
 }
 
-// ── Client render ─────────────────────────────────────────────────────────────
-function activateClient(slug) {
-  activeSlug  = slug;
-  selectedEvt = null;
-  detailEl    = null;
+// ── Lane matrix ───────────────────────────────────────────────────────────────
+function buildMatrix(v, chapters, cols, reopen) {
+  const matrix = el('div', { class: 'tl-matrix' });
 
-  const app = document.getElementById('tl-app');
-  if (!app) return;
+  // Column header row
+  const hRow  = el('div', { class: 'tl-mrow tl-mrow-header' });
+  const hLane = el('div', { class: 'tl-lane-cell tl-lane-hdr', text: 'LANE' });
+  hRow.append(hLane);
+  const hGrid = el('div', { class: 'tl-cgrid' });
+  hGrid.style.gridTemplateColumns = cols;
+  chapters.forEach(ch => {
+    const cell = el('div', { class: 'tl-col-hdr' + (ch.quiet ? ' quiet' : '') + (ch.hasToday ? ' is-today' : '') });
+    cell.append(
+      el('div', { class: 'tl-col-label', text: ch.label }),
+      el('div', { class: 'tl-col-sub',   text: ch.sub   }),
+    );
+    hGrid.append(cell);
+  });
+  hRow.append(hGrid);
+  matrix.append(hRow);
 
-  const chipBar = app.querySelector('.tl-chip-bar');
-  if (chipBar) chipBar.replaceWith(buildChipBar());
+  // Lane rows
+  const body = el('div', { class: 'tl-matrix-body' });
+  v.lanes.forEach(lane => {
+    const laneItems = v.allItems.filter(i => i.lane === lane);
+    const row = el('div', { class: 'tl-mrow tl-mrow-lane' });
 
+    const lCell = el('div', { class: 'tl-lane-cell' });
+    lCell.append(
+      el('span', { class: 'tl-lane-name',  text: lane.toUpperCase()        }),
+      el('span', { class: 'tl-lane-total', text: String(laneItems.length)  }),
+    );
+    row.append(lCell);
+
+    const cGrid = el('div', { class: 'tl-cgrid' });
+    cGrid.style.gridTemplateColumns = cols;
+
+    chapters.forEach(ch => {
+      const list  = laneItems.filter(i => i.e >= ch.s && i.s <= ch.e);
+      const beads = buildBeads(list, ch);
+      const tdPct = clamp((v.TODAY - ch.s) / ch.span * 100, 0, 100).toFixed(2);
+
+      const cell = el('div', { class: 'tl-cell' + (ch.quiet ? ' quiet' : '') + (list.length ? ' clickable' : '') });
+
+      if (list.length) {
+        cell.onclick = () => {
+          tlState.detail = {
+            kicker: lane.toUpperCase() + ' · ' + ch.label,
+            title:  list.length + (list.length === 1 ? ' ITEM' : ' ITEMS'),
+            items: list.slice().sort((x, z) => x.s - z.s).map(it => ({
+              name: it.name,
+              accent: C[it.kind] || C.shipped,
+              meta: (it.type === 'ms' ? 'MILESTONE · ' : it.type === 'event' ? 'LOGGED · ' : 'PLAN · ')
+                + (it.s - it.e === 0
+                  ? dShort(it.s) + ', ' + it.s.getFullYear()
+                  : dShort(it.s) + ' → ' + dShort(it.e) + ', ' + it.e.getFullYear()),
+            })),
+          };
+          reopen();
+        };
+      }
+
+      beads.forEach(b => {
+        const bead = el('div', { class: 'tl-bead' });
+        bead.style.left        = b.l + '%';
+        bead.style.width       = b.w ? b.w + '%' : '0';
+        bead.style.top         = b.top + 'px';
+        bead.style.height      = b.h + 'px';
+        bead.style.minWidth    = b.min + 'px';
+        bead.style.background  = b.bg;
+        bead.style.border      = b.border;
+        bead.style.borderRadius = b.radius;
+        bead.style.transform   = b.xform;
+        cell.append(bead);
+      });
+
+      if (list.length) {
+        const cnt = el('div', { class: 'tl-cell-count', text: String(list.length) });
+        cnt.style.color = ch.hasToday ? 'rgba(169,180,120,0.75)' : 'rgba(237,233,218,0.2)';
+        cell.append(cnt);
+      }
+
+      if (ch.hasToday) {
+        const tl = el('div', { class: 'tl-cell-today' });
+        tl.style.left = tdPct + '%';
+        cell.append(tl);
+      }
+
+      cGrid.append(cell);
+    });
+
+    row.append(cGrid);
+    body.append(row);
+  });
+  matrix.append(body);
+
+  // Axis marks row
+  const axRow  = el('div', { class: 'tl-mrow tl-mrow-axis' });
+  axRow.append(el('div', { class: 'tl-lane-cell' }));
+  const axGrid = el('div', { class: 'tl-cgrid' });
+  axGrid.style.gridTemplateColumns = cols;
+  chapters.forEach(ch => {
+    const axCell = el('div', { class: 'tl-axis-cell' });
+    ch.marks.forEach(m => {
+      const lbl = el('div', { class: 'tl-axis-mark', text: m.text });
+      lbl.style.left  = m.l + '%';
+      lbl.style.color = m.color;
+      axCell.append(lbl);
+    });
+    axGrid.append(axCell);
+  });
+  axRow.append(axGrid);
+  matrix.append(axRow);
+
+  // Legend + axis note row
+  const lgRow   = el('div', { class: 'tl-mrow tl-mrow-legend' });
+  lgRow.append(el('div', { class: 'tl-lane-cell' }));
+  const lgInner = el('div', { class: 'tl-legend-inner' });
+
+  [
+    { text: 'SHIPPED',   bg: C.shipped,  border: 'none',                            radius: '2px', xform: 'none' },
+    { text: 'ACTIVE',    bg: C.active,   border: 'none',                            radius: '2px', xform: 'none' },
+    { text: 'PLANNED',   bg: 'transparent', border: '1px solid rgba(198,208,147,.42)', radius: '2px', xform: 'none' },
+    { text: 'LOGGED',    bg: C.logged,   border: 'none',                            radius: '2px', xform: 'none' },
+    { text: 'MILESTONE', bg: C.ms,       border: 'none',                            radius: '1px', xform: 'rotate(45deg)' },
+  ].forEach(lg => {
+    const sw = el('span', { class: 'tl-legend-swatch' });
+    Object.assign(sw.style, { background: lg.bg, border: lg.border, borderRadius: lg.radius, transform: lg.xform });
+    lgInner.append(el('div', { class: 'tl-legend-item' }, sw, el('span', { class: 'tl-legend-text', text: lg.text })));
+  });
+
+  const axNote = el('div', { class: 'tl-axis-note' });
+  lgInner.append(axNote);
+  lgRow.append(lgInner);
+  matrix.append(lgRow);
+
+  return { matrix, axNote };
+}
+
+// ── Full client render ─────────────────────────────────────────────────────────
+function renderContent(slug) {
   const content = document.getElementById('tl-content');
   if (!content) return;
   content.innerHTML = '';
 
   const data = dataCache[slug];
   if (!data) {
-    content.innerHTML = '<p class="tl-empty">No timeline data for this client yet.</p>';
+    content.append(el('p', { class: 'tl-empty', text: 'No timeline data for this client yet.' }));
     return;
   }
 
-  content.append(
-    buildClientHeader(data),
-    buildProgressPanel(data),
-    buildGantt(data),
-    buildLegend(),
-    buildDetailPanel(),
+  const v      = computeVals(data);
+  const reopen = () => renderContent(slug);
+
+  // ── Header ────────────────────────────────────────────────────────────────
+  const header = el('div', { class: 'tl-header' });
+  const hLeft  = el('div', { class: 'tl-header-left' });
+  hLeft.append(
+    el('div', { class: 'tl-eng-label', text: 'ENGAGEMENT · ' + data.engagement.start + ' → ' + data.engagement.end + ' · ' + v.contractMonths + ' MONTHS' }),
+    el('p',   { class: 'tl-insight',   text: data.insight || '' }),
   );
+
+  const factRail = el('div', { class: 'tl-fact-rail' });
+  [
+    { label: 'MILESTONES',              value: v.msPassed + '/' + v.msTotal },
+    { label: 'LOGGED ' + v.recentDays + 'D', value: String(v.recentTotal) },
+    { label: 'PACE',                    value: v.paceLabel, color: v.paceColor },
+  ].forEach(f => {
+    const lbl = el('div', { class: 'tl-fact-lbl', text: f.label });
+    const val = el('div', { class: 'tl-fact-val', text: f.value });
+    if (f.color) val.style.color = f.color;
+    factRail.append(el('div', { class: 'tl-fact' }, lbl, val));
+  });
+  header.append(hLeft, factRail);
+
+  // ── Pace bar ──────────────────────────────────────────────────────────────
+  const paceBox = el('div', { class: 'tl-pace-box' });
+
+  // DELIVERED
+  const delTrack = el('div', { class: 'tl-pace-track' });
+  const delFill  = el('div', { class: 'tl-pace-fill tl-del-fill' });
+  delFill.style.width = v.deliveredPct + '%';
+  delTrack.append(delFill);
+  paceBox.append(
+    el('div', { class: 'tl-pace-row' },
+      el('div', { class: 'tl-pace-lbl', text: 'DELIVERED' }),
+      delTrack,
+      el('div', { class: 'tl-pace-num tl-del-num', text: v.deliveredPct + '%' }),
+    )
+  );
+
+  // Gap bridge
+  if (v.gapPct > 0) {
+    const gapTrack  = el('div', { class: 'tl-gap-track' });
+    const bridge    = el('div', { class: 'tl-gap-bridge' });
+    bridge.style.left        = Math.min(v.deliveredPct, v.promisedPct) + '%';
+    bridge.style.width       = v.gapPct + '%';
+    bridge.style.borderColor = v.paceColor;
+    const gapLbl = el('div', { class: 'tl-gap-label', text: v.gapLabel });
+    gapLbl.style.left  = v.gapLabelLeft + '%';
+    gapLbl.style.color = v.paceColor;
+    gapTrack.append(bridge, gapLbl);
+    paceBox.append(el('div', { class: 'tl-pace-row tl-gap-row' },
+      el('div', { class: 'tl-pace-lbl' }), gapTrack, el('div', { class: 'tl-pace-lbl' })));
+  }
+
+  // PROMISED
+  const promTrack = el('div', { class: 'tl-pace-track' });
+  const promFill  = el('div', { class: 'tl-pace-fill tl-prom-fill' });
+  promFill.style.width = v.promisedPct + '%';
+  const promTick  = el('div', { class: 'tl-prom-tick' });
+  promTick.style.left  = v.promisedPct + '%';
+  promTrack.append(promFill, promTick);
+  paceBox.append(
+    el('div', { class: 'tl-pace-row' },
+      el('div', { class: 'tl-pace-lbl', text: 'PROMISED' }),
+      promTrack,
+      el('div', { class: 'tl-pace-num tl-prom-num', text: v.promisedPct + '%' }),
+    )
+  );
+
+  // Anchors
+  const anchorTrack = el('div', { class: 'tl-anchor-track' });
+  anchorTrack.append(
+    el('span', { class: 'tl-anchor', text: 'START ' + data.engagement.start }),
+    el('span', { class: 'tl-anchor tl-anchor-today', text: 'TODAY ' + dLabel(v.TODAY) + ' · ' + v.daysLeft + ' DAYS LEFT' }),
+    el('span', { class: 'tl-anchor', text: 'END ' + data.engagement.end }),
+  );
+  paceBox.append(el('div', { class: 'tl-pace-row tl-anchors-row' },
+    el('div', { class: 'tl-pace-lbl' }), anchorTrack, el('div', { class: 'tl-pace-lbl' })));
+
+  // ── Main column ───────────────────────────────────────────────────────────
+  const mainCol = el('div', { class: 'tl-main' });
+  mainCol.append(header, paceBox);
+
+  // Collapse toggle
+  const colBar    = el('div', { class: 'tl-collapse-bar' });
+  const colToggle = el('div', { class: 'tl-collapse-toggle',
+    text: tlState.collapse ? 'LINEAR MONTHS' : 'COLLAPSE QUIET',
+    onclick() { tlState.collapse = !tlState.collapse; reopen(); },
+  });
+  colBar.append(colToggle);
+  mainCol.append(colBar);
+
+  const chapters = v.buildChapters(tlState.collapse);
+  const cols     = chapters.map(c => c.flex.toFixed(3) + 'fr').join(' ');
+  const { matrix, axNote } = buildMatrix(v, chapters, cols, reopen);
+  axNote.textContent = tlState.collapse
+    ? 'COLUMN WIDTH ∝ ACTIVITY · QUIET MONTHS COLLAPSED'
+    : 'LINEAR MONTHS';
+  mainCol.append(matrix);
+
+  // ── Assemble body grid ────────────────────────────────────────────────────
+  const body    = el('div', { class: 'tl-body' });
+  const sidebar = buildSidebar(v, reopen);
+  body.append(mainCol, sidebar);
+  content.append(body);
+}
+
+// ── Activate client ───────────────────────────────────────────────────────────
+function activateClient(slug) {
+  activeSlug = slug;
+  tlState    = { detail: null, collapse: true };
+
+  const app = document.getElementById('tl-app');
+  if (!app) return;
+  const chipBar = app.querySelector('.tl-chip-bar');
+  if (chipBar) chipBar.replaceWith(buildChipBar());
+
+  renderContent(slug);
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
@@ -508,11 +660,8 @@ async function init() {
   app.append(el('div', { id: 'tl-content' }));
 
   const first = TIMELINE_CLIENTS.find(c => dataCache[c.slug]);
-  if (first) {
-    activateClient(first.slug);
-  } else {
-    document.getElementById('tl-content').innerHTML = '<p class="tl-empty">No timeline data available yet. Add playbooks to the Drive folder.</p>';
-  }
+  if (first) activateClient(first.slug);
+  else document.getElementById('tl-content').innerHTML = '<p class="tl-empty">No timeline data available yet. Add playbooks to the Drive folder.</p>';
 }
 
 document.addEventListener('DOMContentLoaded', init);
