@@ -44,6 +44,12 @@ function isoToday() {
   return new Date().toISOString().slice(0, 10);
 }
 
+function dateOffset(isoDate, days) {
+  const d = new Date(isoDate + 'T00:00:00Z');
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
 function datePct(dateStr, startStr, endStr) {
   const s = +new Date(startStr);
   const e = +new Date(endStr);
@@ -53,17 +59,13 @@ function datePct(dateStr, startStr, endStr) {
 }
 
 function monthHeaders(startStr, endStr) {
-  // Steps month-by-month from floor(start) to end; labels year crossings 'JAN '27'.
   const MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
   const results = [];
-
   const s = new Date(startStr + 'T00:00:00Z');
   const e = new Date(endStr   + 'T00:00:00Z');
   const startYear = s.getUTCFullYear();
-
   let yr  = startYear;
-  let mon = s.getUTCMonth();  // floor to start month
-
+  let mon = s.getUTCMonth();
   while (true) {
     const d = new Date(Date.UTC(yr, mon, 1));
     if (d > e) break;
@@ -76,7 +78,6 @@ function monthHeaders(startStr, endStr) {
     mon++;
     if (mon > 11) { mon = 0; yr++; }
   }
-
   return results;
 }
 
@@ -95,19 +96,17 @@ function fmtShortDate(iso) {
 // ── State ─────────────────────────────────────────────────────────────────────
 let activeSlug = null;
 let selectedEvt = null;
-const dataCache = {};  // slug → timeline JSON
+const dataCache = {};
 
 // ── Chip bar ──────────────────────────────────────────────────────────────────
 function buildChipBar() {
   const bar = el('div', { class: 'tl-chip-bar' });
   for (const { name, slug } of TIMELINE_CLIENTS) {
-    const hasData = !!dataCache[slug];
+    const hasData  = !!dataCache[slug];
     const isActive = slug === activeSlug;
     const chip = el('div', {
-      class: 'tl-chip' + (isActive ? ' active' : '') + (!hasData ? ' disabled' : ''),
-      ...(hasData ? {
-        onclick() { if (slug !== activeSlug) activateClient(slug); },
-      } : {}),
+      class: 'fui-chip' + (isActive ? ' active' : '') + (!hasData ? ' disabled' : ''),
+      ...(hasData ? { onclick() { if (slug !== activeSlug) activateClient(slug); } } : {}),
     });
     chip.append(el('span', { text: name.toUpperCase() }));
     if (!hasData) chip.append(el('span', { class: 'tl-chip-nofeed', text: ' · NO PLAYBOOK' }));
@@ -118,7 +117,7 @@ function buildChipBar() {
 
 // ── Client header ─────────────────────────────────────────────────────────────
 function buildClientHeader(data) {
-  const completedCount = (data.events || []).filter(e => e.kind === 'completed').length;
+  const completedCount = data.completedCount ?? (data.events || []).filter(e => e.kind === 'completed').length;
   return el('div', { class: 'tl-client-header' },
     el('div', { class: 'tl-header-left' },
       el('div', { class: 'tl-window-label', text: data.window || 'ENGAGEMENT' }),
@@ -143,6 +142,8 @@ function factChip(label, value) {
 function buildProgressPanel(data) {
   const today      = isoToday();
   const notStarted = !!data.engagement?.start && today < data.engagement.start;
+  const total      = data.milestones?.length || 0;
+  const completed  = data.completedCount ?? (data.events || []).filter(e => e.kind === 'completed').length;
 
   const barTrack = el('div', { class: 'tl-bar-track' });
   const fill = el('div', { class: 'tl-bar-fill' });
@@ -164,12 +165,11 @@ function buildProgressPanel(data) {
 
   const left = el('div', { class: 'tl-progress-left' },
     el('div', { class: 'tl-scope-num', text: data.actualPct || '0%' }),
-    el('div', { class: 'tl-scope-label', text: 'SCOPE BUILT' }),
+    el('div', { class: 'tl-scope-label', text: `${completed} OF ${total} MILESTONES` }),
     barTrack,
     paceEl
   );
 
-  // UP NEXT pills
   const pills = el('div', { class: 'tl-up-pills' });
   for (const m of data.nextUp || []) {
     const pill = el('div', { class: 'tl-up-pill' },
@@ -190,16 +190,15 @@ function buildProgressPanel(data) {
 }
 
 // ── Bar sub-row stacking ──────────────────────────────────────────────────────
-// Assigns overlapping bars to sub-rows so they never paint on top of each other.
-function assignSubRows(bars, engStart, engEnd) {
+function assignSubRows(bars, winStart, winEnd) {
   if (!bars.length) return { placed: [], rowCount: 0 };
-  const sorted     = [...bars].sort((a, b) => a.start.localeCompare(b.start));
+  const sorted     = [...bars].sort((a, b) => (a.start || '').localeCompare(b.start || ''));
   const rowEndPcts = [];
   const placed     = [];
 
   for (const bar of sorted) {
-    const l = datePct(bar.start, engStart, engEnd);
-    const r = datePct(bar.end,   engStart, engEnd);
+    const l = datePct(bar.start, winStart, winEnd);
+    const r = datePct(bar.end,   winStart, winEnd);
     let rowIdx = rowEndPcts.findIndex(endPct => endPct <= l);
     if (rowIdx === -1) { rowIdx = rowEndPcts.length; rowEndPcts.push(r); }
     else               { rowEndPcts[rowIdx] = r; }
@@ -210,7 +209,6 @@ function assignSubRows(bars, engStart, engEnd) {
 }
 
 // ── Dot clustering ────────────────────────────────────────────────────────────
-// Groups events within 1.5% of each other on the x-axis into one dot.
 function clusterDots(items) {
   if (!items.length) return [];
   const sorted   = [...items].sort((a, b) => a.pct - b.pct);
@@ -225,7 +223,6 @@ function clusterDots(items) {
     }
   }
 
-  // Recompute position as average of member pcts for stable centering.
   for (const c of clusters) {
     c.pct = c.items.reduce((s, i) => s + i.pct, 0) / c.items.length;
   }
@@ -233,149 +230,147 @@ function clusterDots(items) {
   return clusters;
 }
 
-// ── Gantt ─────────────────────────────────────────────────────────────────────
+// ── Gantt — rolling 6-month window, today at 50%, single track ───────────────
 function buildGantt(data) {
   const { departments = [], milestones = [], events = [], engagement = {} } = data;
-  const start = engagement.start || isoToday();
-  const end   = engagement.end   || (() => {
-    const d = new Date(start + 'T00:00:00Z');
-    d.setUTCMonth(d.getUTCMonth() + 6);
-    return d.toISOString().slice(0, 10);
-  })();
-  const today = isoToday();
-
-  // Collect all unique depts in order: plan first, then event-only depts
-  const deptOrder = [...new Set([
-    ...departments.map(d => d.dept),
-    ...events.map(e => e.dept),
-    ...milestones.map(m => m.dept),
-  ])];
+  const today    = isoToday();
+  const winStart = dateOffset(today, -91);
+  const winEnd   = dateOffset(today,  91);
 
   const gantt = el('div', { class: 'tl-gantt' });
 
-  // Month header row
-  const months = monthHeaders(start, end);
-  const todayPct = datePct(today, start, end);
+  // TODAY row — above month row so the label never collides with month names
+  const todayRow = el('div', { class: 'tl-today-row' });
+  const todayLbl = el('span', { class: 'tl-today-label', text: 'TODAY' });
+  todayLbl.style.left = '50%';
+  todayRow.append(todayLbl);
+  gantt.append(todayRow);
 
-  // Left spacer + month row
-  gantt.append(el('div', { class: 'tl-gantt-header-spacer' }));
+  // Month header
+  const months = monthHeaders(winStart, winEnd);
   const monthRow = el('div', { class: 'tl-gantt-month-row' });
   for (const { label, pct } of months) {
     const lbl = el('span', { class: 'tl-month-label', text: label });
     lbl.style.left = pct + '%';
     monthRow.append(lbl);
   }
-  if (today >= start && today <= end) {
-    const todayLbl = el('span', { class: 'tl-today-label', text: 'TODAY' });
-    todayLbl.style.left = todayPct + '%';
-    monthRow.append(todayLbl);
-  }
   gantt.append(monthRow);
 
-  // Dept rows — skip entirely if lane has nothing to show
+  // Engagement start/end rules — absolute in gantt, span all tracks below month row
+  function addEngRule(dateStr, label) {
+    if (!dateStr || dateStr < winStart || dateStr > winEnd) return;
+    const pct  = datePct(dateStr, winStart, winEnd);
+    const rule = el('div', { class: 'tl-eng-rule' });
+    rule.style.left = pct + '%';
+    rule.append(el('span', { class: 'tl-eng-label', text: label }));
+    gantt.append(rule);
+  }
+  addEngRule(engagement.start, 'ENG START');
+  addEngRule(engagement.end,   'ENG END');
+
+  // Phase band track — all dept bars merged into one horizontal strip
+  const allBars = departments.flatMap(d => (d.bars || []).map(b => ({ ...b, dept: d.dept })));
+  const { placed, rowCount } = assignSubRows(allBars, winStart, winEnd);
+  const BAR_H = 24, ROW_H = 28;
+  const phaseTrack = el('div', { class: 'tl-phase-track' });
+  phaseTrack.style.height = (BAR_H * Math.max(1, rowCount)) + 'px';
+
+  for (const { pct } of months) {
+    if (pct <= 0 || pct >= 100) continue;
+    const gl = el('div', { class: 'tl-gridline' });
+    gl.style.left = pct + '%';
+    phaseTrack.append(gl);
+  }
+  const todayLine1 = el('div', { class: 'tl-today-line' });
+  todayLine1.style.left = '50%';
+  phaseTrack.append(todayLine1);
+
+  for (const { bar, rowIdx, l, r } of placed) {
+    const w = Math.max(r - l, 0.5);
+    const barEl = el('div', { class: 'tl-bar' });
+    if (w >= 5) barEl.append(el('span', { class: 'tl-bar-lbl', text: bar.label }));
+    barEl.style.left  = l + '%';
+    barEl.style.width = w + '%';
+    barEl.style.top   = (rowIdx * ROW_H) + 'px';
+    if (bar.inferred) barEl.style.opacity = '0.6';
+    phaseTrack.append(barEl);
+  }
+  gantt.append(phaseTrack);
+
+  // Event track — milestones, flag bands, actions
   const PRIORITY = { flag: 0, completed: 1, action: 2, milestone: 3 };
-  const BAR_H = 24, DOT_H = 20, ROW_H = 28;
+  const eventTrack = el('div', { class: 'tl-event-track' });
 
-  for (const dept of deptOrder) {
-    const deptData   = departments.find(d => d.dept === dept);
-    const bars       = deptData?.bars || [];
-    const deptEvents = events.filter(e => e.dept === dept);
-    const deptMiles  = milestones.filter(m => m.dept === dept);
+  for (const { pct } of months) {
+    if (pct <= 0 || pct >= 100) continue;
+    const gl = el('div', { class: 'tl-gridline' });
+    gl.style.left = pct + '%';
+    eventTrack.append(gl);
+  }
+  const todayLine2 = el('div', { class: 'tl-today-line' });
+  todayLine2.style.left = '50%';
+  eventTrack.append(todayLine2);
 
-    if (!bars.length && !deptEvents.length && !deptMiles.length) continue;
-
-    // Left: dept label — microline shows bar count.
-    const barCount = bars.length;
-    const labelEl  = el('div', { class: 'tl-dept-label' },
-      el('span', { text: dept.toUpperCase() }),
-      el('span', { class: 'tl-dept-count',
-        text: barCount ? `${barCount} bar${barCount !== 1 ? 's' : ''}` : '' })
-    );
-    gantt.append(labelEl);
-
-    // Right: track — height = BAR_H * subRows + DOT_H dot row.
-    const track = el('div', { class: 'tl-track' });
-    const { placed, rowCount } = assignSubRows(bars, start, end);
-    track.style.height = (BAR_H * rowCount + DOT_H) + 'px';
-
-    // Month gridlines
-    for (const { pct } of months) {
-      if (pct <= 0 || pct >= 100) continue;
-      const gl = el('div', { class: 'tl-gridline' });
-      gl.style.left = pct + '%';
-      track.append(gl);
-    }
-
-    // Planned bars — label hidden when bar is too narrow to fit text
-    for (const { bar, rowIdx, l, r } of placed) {
-      const w = Math.max(r - l, 0.5);
-      const barEl = el('div', { class: 'tl-bar' });
-      if (w >= 5) barEl.append(el('span', { class: 'tl-bar-lbl', text: bar.label }));
-      barEl.style.left  = l + '%';
-      barEl.style.width = w + '%';
-      barEl.style.top   = (rowIdx * ROW_H) + 'px';
-      if (bar.inferred) barEl.style.opacity = '0.6';
-      track.append(barEl);
-    }
-
-    // Today line
-    if (today >= start && today <= end) {
-      const tl = el('div', { class: 'tl-today-line' });
-      tl.style.left = todayPct + '%';
-      track.append(tl);
-    }
-
-    // Collect all dots, cluster by proximity, render with cycle-click
-    const allDotItems = [
-      ...deptEvents.map(evt => ({
-        pct:    datePct(evt.date, start, end),
-        evt,
-        color:  DOT_COLOR[evt.kind] || '#A9B478',
-        isPast: evt.date <= today,
-      })),
-      ...deptMiles.map(m => ({
-        pct:    datePct(m.date, start, end),
-        evt:    { ...m, kind: 'milestone' },
-        color:  DOT_COLOR.milestone,
-        isPast: m.date <= today,
-      })),
-    ];
-
-    for (const cluster of clusterDots(allDotItems)) {
-      const { items } = cluster;
-      const top = items.slice().sort((a, b) =>
-        (PRIORITY[a.evt.kind] ?? 9) - (PRIORITY[b.evt.kind] ?? 9)
-      )[0];
-      const isPast = items.every(i => i.isPast);
-      const color  = top.color;
-
-      const dot = el('div', { class: 'tl-dot' + (isPast ? '' : ' hollow') });
-      dot.style.left = cluster.pct + '%';
-      if (isPast) {
-        dot.style.background = color;
-      } else {
-        dot.style.border = '2px solid ' + color;
-      }
-
-      if (items.length > 1) {
-        dot.append(el('span', { class: 'tl-dot-badge', text: String(items.length) }));
-      }
-
-      let cycleIdx = 0;
-      dot.addEventListener('click', () => {
-        const item = items[cycleIdx % items.length];
-        selectEvt(item.evt, item.color);
-        cycleIdx++;
-        document.querySelectorAll('.tl-dot.selected').forEach(d => d.classList.remove('selected'));
-        dot.classList.add('selected');
-      });
-
-      track.append(dot);
-    }
-
-    gantt.append(track);
+  // Flag bands — rendered as coral bars (may span multiple days after deduplication)
+  for (const evt of events.filter(e => e.kind === 'flag')) {
+    const l = datePct(evt.date,               winStart, winEnd);
+    const r = datePct(evt.endDate || evt.date, winStart, winEnd);
+    if (r < 0 || l > 100) continue;
+    const w = Math.max(r - l, 0.5);
+    const band = el('div', { class: 'tl-flag-band' });
+    band.style.left  = l + '%';
+    band.style.width = w + '%';
+    if (w >= 5 && evt.label) band.append(el('span', { class: 'tl-bar-lbl', text: evt.label }));
+    band.addEventListener('click', () => selectEvt(evt, DOT_COLOR.flag));
+    eventTrack.append(band);
   }
 
+  // Dot items — milestones + approved actions (no raw completions)
+  const dotItems = [
+    ...events.filter(e => e.kind !== 'flag').map(evt => ({
+      pct:    datePct(evt.date, winStart, winEnd),
+      evt,
+      color:  DOT_COLOR[evt.kind] || '#A9B478',
+      isPast: evt.date <= today,
+    })),
+    ...milestones.map(m => ({
+      pct:    datePct(m.date, winStart, winEnd),
+      evt:    { ...m, kind: 'milestone' },
+      color:  m.completedAt ? DOT_COLOR.completed : DOT_COLOR.milestone,
+      isPast: m.date <= today || !!m.completedAt,
+    })),
+  ].filter(i => i.pct >= 0 && i.pct <= 100);
+
+  for (const cluster of clusterDots(dotItems)) {
+    const { items } = cluster;
+    const top = items.slice().sort((a, b) =>
+      (PRIORITY[a.evt.kind] ?? 9) - (PRIORITY[b.evt.kind] ?? 9)
+    )[0];
+    const isPast = items.every(i => i.isPast);
+    const color  = top.color;
+
+    const dot = el('div', { class: 'tl-dot' + (isPast ? '' : ' hollow') });
+    dot.style.left = cluster.pct + '%';
+    if (isPast) dot.style.background = color;
+    else        dot.style.border = '2px solid ' + color;
+
+    if (items.length > 1) {
+      dot.append(el('span', { class: 'tl-dot-badge', text: String(items.length) }));
+    }
+
+    let cycleIdx = 0;
+    dot.addEventListener('click', () => {
+      const item = items[cycleIdx % items.length];
+      selectEvt(item.evt, item.color);
+      cycleIdx++;
+      document.querySelectorAll('.tl-dot.selected').forEach(d => d.classList.remove('selected'));
+      dot.classList.add('selected');
+    });
+
+    eventTrack.append(dot);
+  }
+
+  gantt.append(eventTrack);
   return gantt;
 }
 
@@ -402,7 +397,6 @@ function buildLegend() {
 }
 
 // ── Detail panel ──────────────────────────────────────────────────────────────
-// The detail panel is a persistent DOM element; selectEvt() populates it.
 let detailEl = null;
 
 function buildDetailPanel() {
@@ -426,28 +420,34 @@ function selectEvt(evt, color) {
     el('div', { class: 'tl-det-meta', text: meta }),
     el('div', { class: 'tl-det-label', text: evt.label || '' }),
   );
-  if (evt.note) {
+
+  if (evt.completedAt) {
+    detailEl.append(el('div', { class: 'tl-det-meta', text: `COMPLETED · ${fmtDate(evt.completedAt)}` }));
+    if (evt.completedNote) {
+      detailEl.append(el('p', { class: 'tl-det-note', text: evt.completedNote }));
+    }
+  } else if (evt.note) {
     detailEl.append(el('p', { class: 'tl-det-note', text: evt.note }));
   }
 
-  // Update dot selection rings
+  if (evt.days && evt.days > 1) {
+    detailEl.append(el('div', { class: 'tl-det-meta', text: `${evt.days} DAYS` }));
+  }
+
   document.querySelectorAll('.tl-dot.selected').forEach(d => d.classList.remove('selected'));
 }
 
 // ── Client render ─────────────────────────────────────────────────────────────
 function activateClient(slug) {
-  activeSlug = slug;
+  activeSlug  = slug;
   selectedEvt = null;
-  detailEl = null;
+  detailEl    = null;
 
   const app = document.getElementById('tl-app');
   if (!app) return;
 
-  // Rebuild the full chip bar with updated active state
-  let chipBar = app.querySelector('.tl-chip-bar');
-  if (chipBar) {
-    chipBar.replaceWith(buildChipBar());
-  }
+  const chipBar = app.querySelector('.tl-chip-bar');
+  if (chipBar) chipBar.replaceWith(buildChipBar());
 
   const content = document.getElementById('tl-content');
   if (!content) return;
