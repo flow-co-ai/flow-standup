@@ -230,169 +230,192 @@ function clusterDots(items) {
   return clusters;
 }
 
-// ── Gantt — rolling 6-month window, today at 50%, single track ───────────────
+// ── Gantt — data-driven axis, department lanes, no overlap ───────────────────
 function buildGantt(data) {
   const { departments = [], milestones = [], events = [], engagement = {} } = data;
-  const today    = isoToday();
-  const winStart = dateOffset(today, -91);
-  const winEnd   = dateOffset(today,  91);
+  const today = isoToday();
+
+  // Axis bounds from actual data, ±14 days — no empty leading months
+  const allDates = [
+    ...departments.flatMap(d => (d.bars || []).flatMap(b => [b.start, b.end].filter(Boolean))),
+    ...milestones.map(m => m.date).filter(Boolean),
+    ...events.map(e => e.date).filter(Boolean),
+    today,
+  ];
+  const dataMin  = allDates.reduce((a, b) => (a < b ? a : b));
+  const dataMax  = allDates.reduce((a, b) => (a > b ? a : b));
+  const winStart = dateOffset(dataMin, -14);
+  const winEnd   = dateOffset(dataMax,  14);
+  const todayPct = datePct(today, winStart, winEnd);
+  const months   = monthHeaders(winStart, winEnd);
+
+  const LABEL_W = 72; // px — left column for lane labels
+  const BAR_H   = 24;
+  const ROW_GAP = 4;
+  const PAD_T   = 5;
+  const PAD_B   = 5;
+  const M_ROW_H = 16; // height reserved at bottom of lane for milestone diamonds
+
+  // Shared helper: populate gridlines + today line into any relative container
+  function addGrid(container) {
+    for (const { pct } of months) {
+      if (pct <= 0 || pct >= 100) continue;
+      const gl = el('div', { class: 'tl-gridline' });
+      gl.style.left = pct + '%';
+      container.append(gl);
+    }
+    const tl = el('div', { class: 'tl-today-line' });
+    tl.style.left = todayPct + '%';
+    container.append(tl);
+  }
+
+  // Infer bar status from dates
+  function barStatus(bar) {
+    if (bar.end   && bar.end   <  today) return 'completed';
+    if (bar.start && bar.start <= today) return 'in-progress';
+    return 'future';
+  }
 
   const gantt = el('div', { class: 'tl-gantt' });
 
-  // TODAY row — above month row so the label never collides with month names
+  // ── Header: today label + month row, offset by LABEL_W ──────────────────────
+  const headerEl     = el('div', { class: 'tl-gantt-header' });
+  const headerSpacer = el('div', { class: 'tl-header-spacer' });
+  headerSpacer.style.width = LABEL_W + 'px';
+  headerEl.append(headerSpacer);
+
+  const axisCol  = el('div', { class: 'tl-axis-col' });
   const todayRow = el('div', { class: 'tl-today-row' });
   const todayLbl = el('span', { class: 'tl-today-label', text: 'TODAY' });
-  todayLbl.style.left = '50%';
+  todayLbl.style.left = todayPct + '%';
   todayRow.append(todayLbl);
-  gantt.append(todayRow);
+  axisCol.append(todayRow);
 
-  // Month header
-  const months = monthHeaders(winStart, winEnd);
   const monthRow = el('div', { class: 'tl-gantt-month-row' });
   for (const { label, pct } of months) {
     const lbl = el('span', { class: 'tl-month-label', text: label });
     lbl.style.left = pct + '%';
     monthRow.append(lbl);
   }
-  gantt.append(monthRow);
+  axisCol.append(monthRow);
+  headerEl.append(axisCol);
+  gantt.append(headerEl);
 
-  // Engagement start/end rules — absolute in gantt, span all tracks below month row
-  function addEngRule(dateStr, label) {
-    if (!dateStr || dateStr < winStart || dateStr > winEnd) return;
-    const pct  = datePct(dateStr, winStart, winEnd);
-    const rule = el('div', { class: 'tl-eng-rule' });
-    rule.style.left = pct + '%';
-    rule.append(el('span', { class: 'tl-eng-label', text: label }));
-    gantt.append(rule);
-  }
-  addEngRule(engagement.start, 'ENG START');
-  addEngRule(engagement.end,   'ENG END');
+  // ── One lane per department ──────────────────────────────────────────────────
+  for (const dept of departments) {
+    const bars    = dept.bars || [];
+    const deptKey = (dept.dept || '').toLowerCase();
+    const deptMs  = milestones.filter(m => (m.dept || '').toLowerCase() === deptKey);
 
-  // Phase band track — all dept bars merged into one horizontal strip
-  const allBars = departments.flatMap(d => (d.bars || []).map(b => ({ ...b, dept: d.dept })));
-  const { placed, rowCount } = assignSubRows(allBars, winStart, winEnd);
-  const BAR_H = 24, ROW_H = 28;
-  const phaseTrack = el('div', { class: 'tl-phase-track' });
-  phaseTrack.style.height = (BAR_H * Math.max(1, rowCount)) + 'px';
+    const { placed, rowCount } = assignSubRows(bars, winStart, winEnd);
+    const barAreaH   = rowCount > 0 ? (BAR_H + ROW_GAP) * rowCount - ROW_GAP : BAR_H;
+    const hasMsRows  = deptMs.length > 0;
+    const laneBodyH  = PAD_T + barAreaH + PAD_B + (hasMsRows ? M_ROW_H : 0);
 
-  for (const { pct } of months) {
-    if (pct <= 0 || pct >= 100) continue;
-    const gl = el('div', { class: 'tl-gridline' });
-    gl.style.left = pct + '%';
-    phaseTrack.append(gl);
-  }
-  const todayLine1 = el('div', { class: 'tl-today-line' });
-  todayLine1.style.left = '50%';
-  phaseTrack.append(todayLine1);
+    const lane      = el('div', { class: 'tl-lane' });
+    const laneLabel = el('div', { class: 'tl-lane-label' });
+    laneLabel.style.width    = LABEL_W + 'px';
+    laneLabel.textContent    = (dept.dept || '').toUpperCase();
+    lane.append(laneLabel);
 
-  for (const { bar, rowIdx, l, r } of placed) {
-    const w = Math.max(r - l, 0.5);
-    const barEl = el('div', { class: 'tl-bar' });
-    if (w >= 5) barEl.append(el('span', { class: 'tl-bar-lbl', text: bar.label }));
-    barEl.style.left  = l + '%';
-    barEl.style.width = w + '%';
-    barEl.style.top   = (rowIdx * ROW_H) + 'px';
-    if (bar.inferred) barEl.style.opacity = '0.6';
-    phaseTrack.append(barEl);
-  }
-  gantt.append(phaseTrack);
+    const laneBody = el('div', { class: 'tl-lane-body' });
+    laneBody.style.height = laneBodyH + 'px';
+    addGrid(laneBody);
 
-  // Event track — milestones, flag bands, actions
-  const PRIORITY = { flag: 0, completed: 1, action: 2, milestone: 3 };
-  const eventTrack = el('div', { class: 'tl-event-track' });
-
-  for (const { pct } of months) {
-    if (pct <= 0 || pct >= 100) continue;
-    const gl = el('div', { class: 'tl-gridline' });
-    gl.style.left = pct + '%';
-    eventTrack.append(gl);
-  }
-  const todayLine2 = el('div', { class: 'tl-today-line' });
-  todayLine2.style.left = '50%';
-  eventTrack.append(todayLine2);
-
-  // Flag bands — rendered as coral bars (may span multiple days after deduplication)
-  for (const evt of events.filter(e => e.kind === 'flag')) {
-    const l = datePct(evt.date,               winStart, winEnd);
-    const r = datePct(evt.endDate || evt.date, winStart, winEnd);
-    if (r < 0 || l > 100) continue;
-    const w = Math.max(r - l, 0.5);
-    const band = el('div', { class: 'tl-flag-band' });
-    band.style.left  = l + '%';
-    band.style.width = w + '%';
-    if (w >= 5 && evt.label) band.append(el('span', { class: 'tl-bar-lbl', text: evt.label }));
-    band.addEventListener('click', () => selectEvt(evt, DOT_COLOR.flag));
-    eventTrack.append(band);
-  }
-
-  // Dot items — milestones + approved actions (no raw completions)
-  const dotItems = [
-    ...events.filter(e => e.kind !== 'flag').map(evt => ({
-      pct:    datePct(evt.date, winStart, winEnd),
-      evt,
-      color:  DOT_COLOR[evt.kind] || '#A9B478',
-      isPast: evt.date <= today,
-    })),
-    ...milestones.map(m => ({
-      pct:    datePct(m.date, winStart, winEnd),
-      evt:    { ...m, kind: 'milestone' },
-      color:  m.completedAt ? DOT_COLOR.completed : DOT_COLOR.milestone,
-      isPast: m.date <= today || !!m.completedAt,
-    })),
-  ].filter(i => i.pct >= 0 && i.pct <= 100);
-
-  for (const cluster of clusterDots(dotItems)) {
-    const { items } = cluster;
-    const top = items.slice().sort((a, b) =>
-      (PRIORITY[a.evt.kind] ?? 9) - (PRIORITY[b.evt.kind] ?? 9)
-    )[0];
-    const isPast = items.every(i => i.isPast);
-    const color  = top.color;
-
-    const dot = el('div', { class: 'tl-dot' + (isPast ? '' : ' hollow') });
-    dot.style.left = cluster.pct + '%';
-    if (isPast) dot.style.background = color;
-    else        dot.style.border = '2px solid ' + color;
-
-    if (items.length > 1) {
-      dot.append(el('span', { class: 'tl-dot-badge', text: String(items.length) }));
+    // Bars — colored by status
+    for (const { bar, rowIdx, l, r } of placed) {
+      const w     = Math.max(r - l, 0.5);
+      const barEl = el('div', { class: 'tl-bar ' + barStatus(bar) });
+      if (w >= 4) barEl.append(el('span', { class: 'tl-bar-lbl', text: bar.label }));
+      barEl.style.left  = l + '%';
+      barEl.style.width = w + '%';
+      barEl.style.top   = PAD_T + rowIdx * (BAR_H + ROW_GAP) + 'px';
+      barEl.title = bar.label;
+      laneBody.append(barEl);
     }
 
-    let cycleIdx = 0;
-    dot.addEventListener('click', () => {
-      const item = items[cycleIdx % items.length];
-      selectEvt(item.evt, item.color);
-      cycleIdx++;
-      document.querySelectorAll('.tl-dot.selected').forEach(d => d.classList.remove('selected'));
-      dot.classList.add('selected');
-    });
+    // Milestones — diamonds at bottom of lane
+    for (const m of deptMs) {
+      const pct = datePct(m.date, winStart, winEnd);
+      if (pct < 0 || pct > 100) continue;
+      const isDone   = !!m.completedAt || m.date < today;
+      const diamond  = el('div', {
+        class: 'tl-milestone' + (isDone ? ' completed' : ''),
+        title: fmtShortDate(m.date) + ' · ' + m.label,
+      });
+      diamond.style.left = pct + '%';
+      diamond.addEventListener('click', () =>
+        selectEvt({ ...m, kind: 'milestone' }, isDone ? DOT_COLOR.completed : DOT_COLOR.milestone)
+      );
+      laneBody.append(diamond);
+    }
 
-    eventTrack.append(dot);
+    lane.append(laneBody);
+    gantt.append(lane);
   }
 
-  gantt.append(eventTrack);
+  // ── Flag event track ─────────────────────────────────────────────────────────
+  const flagEvents = events.filter(e => e.kind === 'flag');
+  if (flagEvents.length) {
+    const evtWrapper = el('div', { class: 'tl-event-wrapper' });
+    const evtSpacer  = el('div', {});
+    evtSpacer.style.width     = LABEL_W + 'px';
+    evtSpacer.style.flexShrink = '0';
+    evtWrapper.append(evtSpacer);
+
+    const eventTrack = el('div', { class: 'tl-event-track' });
+    addGrid(eventTrack);
+
+    for (const evt of flagEvents) {
+      const l = datePct(evt.date,               winStart, winEnd);
+      const r = datePct(evt.endDate || evt.date, winStart, winEnd);
+      if (r < 0 || l > 100) continue;
+      const w    = Math.max(r - l, 0.5);
+      const band = el('div', { class: 'tl-flag-band' });
+      band.style.left  = l + '%';
+      band.style.width = w + '%';
+      if (w >= 5 && evt.label) band.append(el('span', { class: 'tl-bar-lbl', text: evt.label }));
+      band.addEventListener('click', () => selectEvt(evt, DOT_COLOR.flag));
+      eventTrack.append(band);
+    }
+
+    evtWrapper.append(eventTrack);
+    gantt.append(evtWrapper);
+  }
+
   return gantt;
 }
 
 // ── Legend ────────────────────────────────────────────────────────────────────
 function buildLegend() {
-  const items = [
-    { color: DOT_COLOR.completed, label: 'COMPLETED' },
-    { color: DOT_COLOR.action,    label: 'ACTION TAKEN' },
-    { color: DOT_COLOR.flag,      label: 'FLAG' },
-    { color: DOT_COLOR.milestone, label: 'MILESTONE' },
-  ];
   const legend = el('div', { class: 'tl-legend' });
-  for (const { color, label } of items) {
+
+  const barItems = [
+    { color: DOT_COLOR.completed, label: 'COMPLETED' },
+    { color: DOT_COLOR.action,    label: 'IN PROGRESS' },
+    { color: DOT_COLOR.flag,      label: 'FLAG' },
+  ];
+  for (const { color, label } of barItems) {
     const dot = el('span', { class: 'tl-leg-dot' });
     dot.style.background = color;
     legend.append(el('span', { class: 'tl-leg-item' }, dot, el('span', { class: 'tl-leg-lbl', text: label })));
   }
+
+  // Diamond for milestone
+  const mItem    = el('span', { class: 'tl-leg-item' });
+  const mDiamond = el('span', { class: 'tl-leg-diamond' });
+  mDiamond.style.background   = '#8CBE6E';
+  mDiamond.style.borderColor  = '#8CBE6E';
+  mItem.append(mDiamond, el('span', { class: 'tl-leg-lbl', text: 'MILESTONE' }));
+  legend.append(mItem);
+
+  // Hollow = future
   const hollow = el('span', { class: 'tl-leg-item' });
-  const hDot = el('span', { class: 'tl-leg-dot' });
+  const hDot   = el('span', { class: 'tl-leg-dot' });
   hDot.style.cssText = 'background:#141A14;border:2px solid rgba(237,233,218,0.45);';
   hollow.append(hDot, el('span', { class: 'tl-leg-lbl', text: 'HOLLOW = STILL AHEAD' }));
   legend.append(hollow);
+
   return legend;
 }
 

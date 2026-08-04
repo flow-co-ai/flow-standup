@@ -227,13 +227,26 @@
   white-space: nowrap;
 }
 
-/* ── Gantt — rolling window, single track ───────────────────────────────────── */
+/* ── Gantt flex layout ──────────────────────────────────────────────────────── */
 .tl-gantt {
-  position: relative;
   margin-bottom: 24px;
 }
 
-/* TODAY row — separate row above month labels to avoid collision */
+.tl-gantt-header {
+  display: flex;
+  align-items: flex-end;
+}
+
+.tl-header-spacer {
+  flex-shrink: 0;
+}
+
+.tl-axis-col {
+  flex: 1;
+  min-width: 0;
+}
+
+/* TODAY row — above month labels */
 .tl-today-row {
   position: relative;
   height: 18px;
@@ -266,41 +279,49 @@
   transform: translateX(-50%);
 }
 
-/* Engagement start/end rules — span the full height below the month row */
-.tl-eng-rule {
-  position: absolute;
-  top: 40px; /* today-row(18) + month-row(22) */
-  bottom: 0;
-  width: 1px;
-  border-left: 1px dashed rgba(169, 180, 120, 0.4);
-  pointer-events: none;
-  z-index: 1;
+/* ── Lane layout ────────────────────────────────────────────────────────────── */
+.tl-lane {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid rgba(237, 233, 220, 0.04);
 }
 
-.tl-eng-label {
-  position: absolute;
-  top: 4px;
-  left: 4px;
+.tl-lane:last-of-type {
+  border-bottom: none;
+}
+
+.tl-lane-label {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 7.5px;
-  letter-spacing: 0.08em;
+  font-size: 8px;
+  letter-spacing: 0.10em;
   text-transform: uppercase;
-  color: rgba(169, 180, 120, 0.65);
+  color: rgba(237, 233, 218, 0.30);
   white-space: nowrap;
 }
 
-/* Phase band track — plan bars, all depts merged */
-.tl-phase-track {
+.tl-lane-body {
+  flex: 1;
+  min-width: 0;
   position: relative;
-  width: 100%;
-  margin-bottom: 6px;
+  overflow: visible;
 }
 
-/* Event track — milestones, flag bands, actions */
+/* ── Event wrapper (flags row) ──────────────────────────────────────────────── */
+.tl-event-wrapper {
+  display: flex;
+  margin-top: 4px;
+}
+
+/* Event track — flag bands only */
 .tl-event-track {
   position: relative;
-  width: 100%;
-  height: 44px;
+  flex: 1;
+  height: 28px;
 }
 
 .tl-gridline {
@@ -312,19 +333,56 @@
   pointer-events: none;
 }
 
-/* Plan bar */
+/* ── Plan bars — status fills ───────────────────────────────────────────────── */
 .tl-bar {
   position: absolute;
   height: 24px;
   top: 0;
   border-radius: 7px;
-  background: rgba(146, 155, 105, 0.14);
-  border: 1px solid rgba(146, 155, 105, 0.4);
   display: flex;
   align-items: center;
   padding: 0 7px;
   overflow: hidden;
   min-width: 2px;
+  /* future / default: hollow, dimmed */
+  background: rgba(146, 155, 105, 0.07);
+  border: 1px solid rgba(146, 155, 105, 0.25);
+  opacity: 0.7;
+}
+
+.tl-bar.in-progress {
+  background: rgba(169, 180, 120, 0.50);
+  border-color: #A9B478;
+  opacity: 1;
+}
+
+.tl-bar.completed {
+  background: rgba(140, 190, 110, 0.50);
+  border-color: #8CBE6E;
+  opacity: 1;
+}
+
+/* ── Milestone diamonds ─────────────────────────────────────────────────────── */
+.tl-milestone {
+  position: absolute;
+  bottom: 4px;
+  width: 9px;
+  height: 9px;
+  transform: translateX(-50%) rotate(45deg);
+  cursor: pointer;
+  background: #141A14;
+  border: 1.5px solid #C6D093;
+  z-index: 3;
+  transition: box-shadow 0.12s;
+}
+
+.tl-milestone.completed {
+  background: #8CBE6E;
+  border-color: #8CBE6E;
+}
+
+.tl-milestone:hover {
+  box-shadow: 0 0 0 4px rgba(198, 208, 147, 0.18);
 }
 
 .tl-bar-lbl {
@@ -360,10 +418,10 @@
 
 .tl-today-line {
   position: absolute;
-  top: -5px;
-  bottom: -5px;
-  width: 1px;
-  background: rgba(198, 208, 147, 0.45);
+  top: 0;
+  bottom: 0;
+  width: 1.5px;
+  background: rgba(198, 208, 147, 0.85);
   pointer-events: none;
   z-index: 2;
 }
@@ -423,6 +481,14 @@
   height: 7px;
   border-radius: 50%;
   flex-shrink: 0;
+}
+
+.tl-leg-diamond {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  transform: rotate(45deg);
+  border: 1.5px solid #C6D093;
 }
 
 .tl-leg-lbl {
