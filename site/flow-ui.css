@@ -1,0 +1,102 @@
+/* site/flow-ui.css — design system overlay, loaded last.
+   Reverts by deleting this file + the 4 <link> lines added to each HTML. */
+
+/* ── tokens ─────────────────────────────────────────────────────────────── */
+:root {
+  --bg:           #0C100C;
+  --surface:      #141A14;
+  --cream:        #EDE9DA;
+  --cream-dim:    rgba(237,233,218,0.55);
+  --cream-faint:  rgba(237,233,218,0.35);
+  --olive:        #A9B478;
+  --olive-bright: #C6D093;
+  --olive-deep:   #929B69;
+  --green:        #8CBE6E;
+  --amber:        #DCA746;
+  --coral:        #DE6E4C;
+  --hairline:     rgba(237,233,218,0.08);
+  --mono:         'JetBrains Mono', monospace;
+  --sans:         'Space Grotesk', sans-serif;
+  --serif:        'Source Serif 4', serif;
+  --pad-x:        clamp(16px, 3vw, 44px);
+}
+
+/* ── page shell: full-bleed up to 1440px ────────────────────────────────── */
+.page {
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: var(--pad-x);
+  align-items: stretch;
+}
+
+/* remove the 680px column constraint from style.css */
+.page > * {
+  max-width: none;
+}
+
+/* ── site-header ─────────────────────────────────────────────────────────── */
+.week-label {
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  color: var(--cream-faint);
+}
+
+.live-pill {
+  border-color: rgba(169,180,120,0.3);
+}
+
+.live-text {
+  color: var(--olive);
+}
+
+/* ── tab bar ─────────────────────────────────────────────────────────────── */
+.tab {
+  font-size: 10.5px;
+  color: var(--cream-dim);
+}
+
+.tab.active {
+  color: var(--olive-bright);
+  border-bottom-color: var(--olive-bright);
+  border-bottom-width: 1px;
+}
+
+/* ── chip grammar — shared by Timeline and Performance ───────────────────── */
+.fui-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 8px 15px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border: 1px solid var(--hairline);
+  background: transparent;
+  color: var(--cream-dim);
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.12s, border-color 0.12s, background 0.12s;
+}
+
+.fui-chip.active {
+  color: var(--olive-bright);
+  border-color: rgba(169,180,120,0.6);
+  background: rgba(146,155,105,0.12);
+}
+
+.fui-chip.disabled {
+  opacity: 0.4;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* ── site-footer ─────────────────────────────────────────────────────────── */
+.site-footer {
+  margin-top: 32px;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  color: var(--cream-faint);
+}
