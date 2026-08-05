@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-04T12:55:56.167Z",
-  "date": "2026-08-04",
+  "generated_at": "2026-08-05T12:49:34.617Z",
+  "date": "2026-08-05",
   "slug": "steel-ohare",
   "name": "O'Hare Precision",
   "type": "leadgen",
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "The biggest movement is a 78.69% drop in Google Business Profile engagement over the last 7 days, likely driven by reduced search visibility or a seasonal dip in local demand. Paid channels (Meta and Google Ads) show zero spend and zero leads over the full 28-day window, suggesting campaigns are paused and all lead activity is currently dependent on organic GBP traffic.",
+  "verdict": "The biggest movement is a sharp 85.25% drop in Google Business Profile activity over the last 7 days, likely driven by reduced search visibility or a listing issue rather than paid media, since Meta and Google Ads had zero spend and zero leads over the full 28-day window. GBP still generated 186 total actions in the period (including 7 calls and 137 direction requests), making its recent decline the primary concern to investigate.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -27,8 +27,8 @@
         "gbp": {
           "actions": 186,
           "calls": 7,
-          "directions": 136,
-          "web_clicks": 43
+          "directions": 137,
+          "web_clicks": 42
         }
       }
     },
@@ -38,11 +38,11 @@
     },
     "top_campaign": null,
     "search": {
-      "clicks": 428,
-      "impressions": 67244
+      "clicks": 424,
+      "impressions": 66936
     },
     "latest_day": {
-      "date": "2026-08-03",
+      "date": "2026-08-04",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -60,8 +60,8 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -78.69,
-      "sc_7d_pct": -15.32,
+      "gbp_7d_pct": -85.25,
+      "sc_7d_pct": -11.43,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
       "spend_per_day_7d": 0
@@ -69,7 +69,6 @@
     "flags": [],
     "series": {
       "dates": [
-        "2026-07-07",
         "2026-07-08",
         "2026-07-09",
         "2026-07-10",
@@ -96,7 +95,8 @@
         "2026-07-31",
         "2026-08-01",
         "2026-08-02",
-        "2026-08-03"
+        "2026-08-03",
+        "2026-08-04"
       ],
       "spend": [
         0,
@@ -219,7 +219,6 @@
         0
       ],
       "gbp_actions": [
-        3,
         7,
         18,
         5,
@@ -243,7 +242,8 @@
         7,
         6,
         0,
-        0,
+        1,
+        2,
         0,
         0,
         0
@@ -279,7 +279,6 @@
         0
       ],
       "sc_clicks": [
-        23,
         29,
         21,
         12,
@@ -306,6 +305,7 @@
         15,
         6,
         7,
+        19,
         0
       ],
       "ga4_sessions": [
@@ -409,64 +409,63 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-04T12:59:36.557Z",
+    "generated_at": "2026-08-05T12:53:19.051Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid channels fully dark; organic GBP cliff-edge demands human review.",
+    "verdict": "GBP collapse is real and worsening; paid media entirely absent.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google Ads — means CPL is incalculable and all lead generation has halted.",
+        "text": "Zero paid spend across all 28 days — Meta and Google Ads both $0 — means no efficiency data exists and the account generates no paid leads.",
         "confidence": "confirmed",
-        "channel": "paid"
+        "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions collapsed to 0 for the last 5 consecutive days (Jul 30–Aug 3) vs. a prior peak of 22 on Jul 24, a confirmed 3-day signal, not noise.",
+        "text": "GBP actions collapsed to 0 for the last 3 days (Aug 2–4), down from a 45-day daily average of ~8 actions; -85.25% vs prior 7d confirms a listing-level event.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "Search clicks dropped to 0 on Aug 3, following a 3-day run of 6, 7, 0 vs. prior 3-day average of 20.3 — a confirmed downward signal.",
-        "confidence": "confirmed",
+        "text": "Search clicks (sc) averaged 8.7/day over last 3 days (Aug 2–4: 7, 19, 0) vs 16.8 prior 3 days, a 48% 3-day drop co-incident with GBP collapse, suggesting shared organic visibility cause.",
+        "confidence": "probable",
         "channel": "search"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GBP recorded 186 actions (136 directions, 7 calls) over 28 days with zero paid support — organic is the sole traffic engine and it is now stalling.",
-        "confidence": "probable",
-        "channel": "GBP"
+        "text": "GBP delivered 137 direction requests and 7 calls over 28 days with $0 paid support — organic is the sole lead-generation mechanism and it is now failing.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Watch GBP actions and search clicks for 3 more days; if both remain at 0, escalate to client immediately.",
-        "cites": [
-          "F2",
-          "F3"
-        ],
-        "monday_item_name": "GBP & Search Zero Watch",
-        "monday_update": "GBP actions have been 0 for 5 consecutive days (Jul 30–Aug 3) and search clicks hit 0 on Aug 3, down from a 3-day average of 20.3. No paid campaigns are running to compensate, making organic the only lead source. Re-check on 2026-08-07: if GBP actions and search clicks remain at or near 0, flag to client for urgent review of GBP listing status (suspension, edits under review, or profile change). Success check: at least one non-zero GBP action day recorded by Aug 7."
-      },
-      {
-        "id": "S2",
         "type": "fix",
-        "text": "Verify GBP listing is live and not suspended — 5 zero-action days following a 22-action peak is atypical and warrants an immediate listing audit.",
+        "text": "Audit GBP listing immediately for suspension, ownership, or category change causing 3-day zero-action streak.",
         "cites": [
           "F2",
           "F4"
         ],
-        "monday_item_name": "Audit GBP Listing Status",
-        "monday_update": "GBP actions peaked at 22 on Jul 24 then dropped to 0 for 5 straight days through Aug 3, accounting for 186 total 28-day actions with zero paid backup. Log into Google Business Profile and confirm the listing is published, not under review, and that no recent edits triggered a re-verification hold. Success check: listing confirmed active and actions resume above 5/day within 3 days of any fix applied, by 2026-08-07."
+        "monday_item_name": "Fix GBP listing outage",
+        "monday_update": "GBP actions have been zero for 3 consecutive days (Aug 2–4) against a 45-day average of ~8/day, and the 7-day delta is -85.25%. Check the Google Business Profile dashboard for suspension notices, ownership conflicts, or category edits, and restore the listing to active status. Success is confirmed when daily GBP actions return above 5/day for 3 consecutive days. Re-check by 2026-08-08."
+      },
+      {
+        "id": "S2",
+        "type": "watch",
+        "text": "Watch sc_clicks for 3 more days; if daily clicks stay below 10, escalate to Google Search Console for manual action or indexing issue.",
+        "cites": [
+          "F3"
+        ],
+        "monday_item_name": "Watch Search Clicks Recovery",
+        "monday_update": "Search clicks dropped to an average of 8.7/day over Aug 2–4, down from 16.8 in the prior 3 days. Monitor sc_clicks daily through Aug 8; if the metric does not recover above 12/day, open Google Search Console for crawl errors or manual penalties that may share a cause with the GBP outage. No action is taken before the 3-day window closes."
       }
     ],
-    "next_check": "2026-08-07"
+    "next_check": "2026-08-08"
   }
 }
