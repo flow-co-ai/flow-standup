@@ -483,5 +483,58 @@
       }
     ],
     "next_check": "2026-08-02"
+  },
+  "brief": {
+    "date": "2026-08-05",
+    "headlines": [
+      {
+        "text": "No movement this week; access issue persists",
+        "tone": "info"
+      },
+      {
+        "text": "Meta Ads Pixel setup blocked 21 days",
+        "tone": "info"
+      }
+    ],
+    "workstreams": [
+      {
+        "title": "Cotton Collections - Ads",
+        "badge": {
+          "label": "P1 - blocked",
+          "tone": "red"
+        },
+        "items": [
+          {
+            "state": "blocked",
+            "text": "Meta Ads access needed for Pixel setup — blocked on client (21 days)"
+          },
+          {
+            "state": "next",
+            "text": "(inferred) Chase client for Meta Ads access to unblock Pixel"
+          }
+        ]
+      }
+    ],
+    "waiting_on_client": [
+      {
+        "item": "Meta Ads account access required for Pixel setup",
+        "who": "<UNKNOWN>",
+        "since": "7/15"
+      }
+    ],
+    "launch_gate": {
+      "title": "Launch gate - clear before Ads go live",
+      "items": [
+        {
+          "text": "Meta Ads access granted to Flow team",
+          "done": false
+        },
+        {
+          "text": "Pixel installed and verified",
+          "done": false
+        }
+      ],
+      "note": "Nothing can launch until access is provided by client."
+    }
   }
 }
