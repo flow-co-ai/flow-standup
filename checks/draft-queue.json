@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-04T18:57:24.321Z",
+  "updatedAt": "2026-08-06T11:20:00Z",
   "items": [
     {
       "id": "websEo-pricing-question",
@@ -318,7 +318,7 @@
     {
       "id": "fullsmile-patient-workflows",
       "title": "Patient Workflows",
-      "note": "Salam, / Context: Full Smile Dental meeting 7 / 30 identified multiple patient communication workflow gaps. Current GHL setup lacks instant form-reply SMS, appointment confirmation / reminder automation, review request triggers, and proper lead routing from Google / LSA into Opportunities. They also use Open Dental with specific status indicator conventions (Green = confirmed appointment, Yellow = sent) that need to sync back from GHL confirmation workflows. / Deliverable 1 – Instant Form Reply: Reactivate immediate SMS response when patient submits a form (was previously active, now disabled or broken). Trigger should fire instantly on form submission, welcoming the patient and setting follow-up expectations. / Deliverable 2 – Appointment Confirmation SMS: Build two-stage reminder system: 2-day advance reminder and 2-hour day-of reminder. Both must accept reply logic for confirm (C) or cancel (X), replicating the exact behavior Full Smile had with Flex Dental. Confirmed appointments need to mark the patient record accordingly. / Deliverable 3 – Review Request Automation: Add a trigger to the GHL Opportunity pipeline that sends a review request post-appointment. Target outcome is 30+ reviews per month. Trigger point and messaging TBD (likely after appointment marked complete or won). / Deliverable 4 – Lead Call Routing: Route inbound calls from Google and LSA lead campaigns directly into GHL Opportunities (not just contacts). Ensures proper pipeline tracking and follow-up automation from first touch. / Deliverable 5 – Open Dental Status Sync: Figure out how to sync GHL appointment confirmation status back to Open Dental's color-coded status indicators: Green = confirmed appointment, Yellow = sent (reminder sent, not yet confirmed). This likely requires API integration or webhook between GHL and Open Dental to update appointment status fields in real time. / Dependencies: Confirm Full Smile's existing GHL account structure, Opportunity pipeline stages, and Open Dental API access / credentials before starting the status sync work. Form-reply and appointment reminders can proceed immediately if GHL infrastructure is already live. / Done: Instant form-reply fires on every form submission, 2-day and 2-hour appointment reminders send with working C / X reply logic, review requests trigger automatically post-appointment and generate 30+ reviews / month, Google / LSA calls create Opportunities in GHL, and confirmed appointments in GHL update Open Dental status to Green (Yellow for sent-but-not-confirmed). / Assignment note: Transcript named Sohib Boundaoui directly as the builder for this workflow suite. CRM board defaults to Ahmed Memon + Ali Shaheer. Naz tagged to confirm whether Sohib should be explicitly assigned or if this stays with the CRM team. / @Ahmed Memon @Ali Shaheer @Nacer Amrouch / Assigned to: Ahmed Memon, Ali Shaheer, Nacer Amrouch",
+      "note": "Salam, / Context: Full Smile Dental meeting 7 / 30 identified multiple patient communication workflow gaps. Current GHL setup lacks instant form-reply SMS, appointment confirmation / reminder automation, review request triggers, and proper lead routing from Google / LSA into Opportunities. They also use Open Dental with specific status indicator conventions (Green = confirmed appointment, Yellow = sent) that need to sync back from GHL confirmation workflows. / Deliverable 1 \u2013 Instant Form Reply: Reactivate immediate SMS response when patient submits a form (was previously active, now disabled or broken). Trigger should fire instantly on form submission, welcoming the patient and setting follow-up expectations. / Deliverable 2 \u2013 Appointment Confirmation SMS: Build two-stage reminder system: 2-day advance reminder and 2-hour day-of reminder. Both must accept reply logic for confirm (C) or cancel (X), replicating the exact behavior Full Smile had with Flex Dental. Confirmed appointments need to mark the patient record accordingly. / Deliverable 3 \u2013 Review Request Automation: Add a trigger to the GHL Opportunity pipeline that sends a review request post-appointment. Target outcome is 30+ reviews per month. Trigger point and messaging TBD (likely after appointment marked complete or won). / Deliverable 4 \u2013 Lead Call Routing: Route inbound calls from Google and LSA lead campaigns directly into GHL Opportunities (not just contacts). Ensures proper pipeline tracking and follow-up automation from first touch. / Deliverable 5 \u2013 Open Dental Status Sync: Figure out how to sync GHL appointment confirmation status back to Open Dental's color-coded status indicators: Green = confirmed appointment, Yellow = sent (reminder sent, not yet confirmed). This likely requires API integration or webhook between GHL and Open Dental to update appointment status fields in real time. / Dependencies: Confirm Full Smile's existing GHL account structure, Opportunity pipeline stages, and Open Dental API access / credentials before starting the status sync work. Form-reply and appointment reminders can proceed immediately if GHL infrastructure is already live. / Done: Instant form-reply fires on every form submission, 2-day and 2-hour appointment reminders send with working C / X reply logic, review requests trigger automatically post-appointment and generate 30+ reviews / month, Google / LSA calls create Opportunities in GHL, and confirmed appointments in GHL update Open Dental status to Green (Yellow for sent-but-not-confirmed). / Assignment note: Transcript named Sohib Boundaoui directly as the builder for this workflow suite. CRM board defaults to Ahmed Memon + Ali Shaheer. Naz tagged to confirm whether Sohib should be explicitly assigned or if this stays with the CRM team. / @Ahmed Memon @Ali Shaheer @Nacer Amrouch / Assigned to: Ahmed Memon, Ali Shaheer, Nacer Amrouch",
       "status": "sent",
       "board": "CRM",
       "group": "Full Smile",
@@ -820,6 +820,47 @@
       "nullReason": null,
       "priority": 2,
       "updatedAt": "2026-08-04T15:30:00.000Z"
+    },
+    {
+      "id": "qhvac-meeting-prep",
+      "title": "Meeting Prep",
+      "note": "Finish end-to-end testing on the GHL build (Full GHL Build Audit, Technician Calendar Routing) before the 9:30am CST client call today (2026-08-06). Prepare and post a prioritized HVAC agenda on Monday ahead of the pre-call walkthrough (30 min before). Join the client call for Q&A support if needed. Assigned to: Ahmed Memon, Ali Shaheer",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Quality HVAC by Fibid",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Internal HVAC/MedStation check-in, 8/5",
+      "payload": {
+        "mode": "create_item",
+        "boardId": 18418241405,
+        "groupId": "group_mm231wbb",
+        "itemName": "Meeting Prep",
+        "columnValues": {
+          "color_mkwb1trm": {
+            "label": "Start"
+          },
+          "multiple_person_mkwb5f2e": {
+            "personsAndTeams": [
+              {
+                "id": 108080159,
+                "kind": "person"
+              },
+              {
+                "id": 108080161,
+                "kind": "person"
+              }
+            ]
+          },
+          "timerange_mkwbhk0v": {
+            "from": "2026-08-06",
+            "to": "2026-08-06"
+          }
+        },
+        "updateBody": "<p>Salam,</p><ul><li><strong>Finish end-to-end testing</strong> on the GHL build (Full GHL Build Audit, Technician Calendar Routing) before the <strong>9:30am CST client call today</strong>.</li><li><strong>Prepare and post a prioritized HVAC agenda</strong> on Monday ahead of the pre-call walkthrough (30 minutes before the client call).</li><li>Join the client call for Q&amp;A support if needed.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
+      },
+      "nullReason": null,
+      "priority": 1
     }
   ]
 }
