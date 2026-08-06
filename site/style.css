@@ -1076,11 +1076,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .back-link:focus-visible { outline: 2px solid #A9B478; outline-offset: 2px; }
 
 /* ── Inbox split-pane detail view ─────────────────────────────────────────── */
-/* Everything else on this page is capped at 680px (mobile-first single
-   column) -- the detail view alone widens to fit two side-by-side panes,
-   collapsing back to a stacked single column under 860px so it never gets
-   cramped on a phone. */
-.page > .client-detail { max-width: 1100px; }
+/* Originally widened past this page's old sitewide 680px cap to fit two
+   side-by-side panes. flow-ui.css (2026-08-0x) since made the whole page
+   full-bleed by default (.page > * { max-width: none }), so there's no
+   longer a narrower default to widen past here -- removed the now-stale
+   max-width override entirely rather than leaving a cap that (via higher
+   selector specificity) would otherwise make this view narrower than the
+   grid it's opened from. Still collapses to a stacked single column under
+   860px so it never gets cramped on a phone. */
 
 .client-detail-split {
   display: flex;
@@ -1103,7 +1106,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 
 @media (max-width: 860px) {
-  .page > .client-detail { max-width: 680px; }
   .client-detail-split { flex-direction: column; }
   .client-detail-pane-summary { position: static; }
   .client-detail-pane-inbox { max-height: none; overflow-y: visible; }
