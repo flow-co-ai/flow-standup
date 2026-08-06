@@ -174,9 +174,10 @@ exports.handler = async (event) => {
 
     const ev = body.event;
     if (!ev) return json(200, { ok: true, skipped: "no event payload" });
+    console.log("monday webhook event:", JSON.stringify({ pulseId: ev.pulseId, columnType: ev.columnType, label: ev.value?.label?.text }));
 
     const newLabel = ev.value?.label?.text;
-    if (ev.columnType !== "color" || newLabel !== "Done") {
+    if (!["color", "status"].includes(ev.columnType) || newLabel !== "Done") {
       return json(200, { ok: true, skipped: `not a Done transition (columnType=${ev.columnType}, label=${newLabel})` });
     }
 
