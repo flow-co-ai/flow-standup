@@ -1376,7 +1376,18 @@ def apply_weekly_reset(acc: dict, current_iso_week: str) -> dict:
     if acc.get("isoWeek") != current_iso_week:
         history = acc.setdefault("history", [])
         if acc.get("isoWeek"):
-            history.insert(0, {"isoWeek": acc.get("isoWeek"), "items": acc.get("items", [])})
+            # monday_ids_seen carried into the history entry too (2026-08-06)
+            # -- netlify/functions/monday-done-webhook.js's own all-time
+            # dedup check reads this from past weeks; dropping it here made
+            # that check only reliable for weeks the webhook itself rolled
+            # over, which in practice is almost never (this daily cron
+            # usually wins that race). Purely additive -- nothing else reads
+            # history entries and expects this key to be absent.
+            history.insert(0, {
+                "isoWeek": acc.get("isoWeek"),
+                "items": acc.get("items", []),
+                "monday_ids_seen": acc.get("monday_ids_seen", []),
+            })
         while len(history) > HISTORY_WINDOW_WEEKS:
             _archive_completed_week(history.pop())
         acc["isoWeek"] = current_iso_week
