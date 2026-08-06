@@ -2,13 +2,7 @@
 // checkmark feature — swap FO_PASSCODE() for however that value is already
 // available in your existing app.js instead of prompting a second time.
 function FO_PASSCODE() {
-  // Same passcode the checkmark sync uses — stored once, shared by both features.
-  let p = localStorage.getItem("flowops-passcode");
-  if (!p) {
-    p = prompt("Ops passcode");
-    if (p) localStorage.setItem("flowops-passcode", p);
-  }
-  return p || "";
+  return localStorage.getItem("flowops-passcode") || "";
 }
 function foHeaders() {
   return { "content-type": "application/json", "X-Ops-Key": FO_PASSCODE() };
@@ -31,6 +25,7 @@ const foSectionExpanded = { handled: false, mondayed: false };
 // changes. Every mutation below patches this in place, re-renders straight
 // away, then reconciles with whatever the server actually persisted.
 let foItems = [];
+let foSelectedId = null;
 
 // Board/group dropdown options -- same source of truth the pipeline itself
 // routes with (lib/monday.js's BOARD_LABEL_IDS/CLIENT_GROUPS), returned
@@ -46,17 +41,241 @@ let foRouting = { boards: [], boardIds: {}, groupsByClient: {} };
 const foPending = new Set();
 
 function foRenderFromItems(items) {
-  // Standing invariant: a real Monday item existing (mondayItemId set)
-  // always wins over whatever the stored status field says -- so section
-  // placement itself can never show a Mondayed item as active or Handled,
-  // even if some bug upstream left the status field inconsistent.
-  const active = items.filter(it => !it.mondayItemId && ACTIVE_STATUSES.includes(it.status));
+  const active  = items.filter(it => !it.mondayItemId && ACTIVE_STATUSES.includes(it.status));
   const handled = items.filter(it => !it.mondayItemId && HANDLED_STATUSES.includes(it.status));
   const mondayed = items.filter(it => it.mondayItemId || MONDAYED_STATUSES.includes(it.status));
-  document.getElementById("fo-queue-cards").innerHTML = foRenderQueue(active, handled, mondayed);
+
+  if (foSelectedId && !items.find(it => it.id === foSelectedId)) foSelectedId = null;
+
+  const selectedItem = items.find(it => it.id === foSelectedId) || null;
+  const detailHtml = selectedItem ? foRenderDetailPane(selectedItem) : foDetailEmpty();
+
+  document.getElementById("fo-queue-cards").innerHTML = `
+    <div class="fo-shell${foSelectedId ? ' fo-detail-visible' : ''}">
+      <div class="fo-list">${foRenderListPane(active, handled, mondayed)}</div>
+      <div class="fo-detail">${detailHtml}</div>
+    </div>`;
+}
+
+function foSelectItem(id) {
+  foSelectedId = id || null;
+  foRenderFromItems(foItems);
+}
+
+// ── passcode gate ─────────────────────────────────────────────────────────────
+
+function foRenderPasscodeGate() {
+  return `<div class="fo-passcode-gate">
+    <div class="fo-passcode-card">
+      <p class="fo-passcode-msg">the draft queue writes to Monday.<br>enter the ops passcode to continue.</p>
+      <div class="fo-passcode-row">
+        <input type="password" class="fo-passcode-input" id="fo-gate-input" placeholder="passcode"
+          onkeydown="if(event.key==='Enter')foGateUnlock()">
+        <button class="fo-primary" onclick="foGateUnlock()">unlock</button>
+      </div>
+      <p class="fo-passcode-error" id="fo-gate-error" hidden></p>
+    </div>
+  </div>`;
+}
+
+function foGateUnlock() {
+  const input = document.getElementById("fo-gate-input");
+  const val = input?.value.trim();
+  if (!val) return;
+  localStorage.setItem("flowops-passcode", val);
+  foLoadQueue();
+}
+
+// ── skeleton + error ──────────────────────────────────────────────────────────
+
+function foRenderSkeleton() {
+  const row = '<div class="fo-skel-row"><div class="fo-skel-chip"></div><div class="fo-skel-title"></div><div class="fo-skel-badge"></div></div>';
+  return `<div class="fo-shell">
+    <div class="fo-list">
+      <div class="fo-list-group"><div class="fo-skel-header"></div>${row.repeat(3)}</div>
+      <div class="fo-list-group"><div class="fo-skel-header"></div>${row.repeat(2)}</div>
+    </div>
+    <div class="fo-detail fo-detail-skeleton">
+      <div class="fo-skel-det-title"></div>
+      <div class="fo-skel-det-body"></div>
+    </div>
+  </div>`;
+}
+
+// ── list pane rendering ───────────────────────────────────────────────────────
+
+function foRenderListPane(active, handled, mondayed) {
+  const activeReal      = active.filter(it => !!it.group);
+  const activeProspects = active.filter(it => !it.group);
+
+  let html = '';
+
+  if (activeReal.length) {
+    for (const [client, items] of foGroupByClient(activeReal)) {
+      const hasHot = items.some(it => foPriority(it) <= 2);
+      html += `<div class="fo-list-group">
+        <div class="fo-list-group-header">
+          <span class="fo-list-client">${foEscape(client)}</span>
+          <span class="fo-list-count">${items.length}</span>
+          ${hasHot ? '<span class="fo-hot-pill">HOT</span>' : ''}
+        </div>
+        ${items.map(it => foListRow(it, 'active')).join('')}
+      </div>`;
+    }
+  }
+
+  if (activeProspects.length) {
+    html += `<div class="fo-list-group fo-list-prospects">
+      <div class="fo-list-group-header"><span class="fo-list-client">Potential clients</span></div>
+      ${foGroupByProspect(activeProspects).map(([name, items]) =>
+        `<div class="fo-list-prospect-group">
+          <div class="fo-list-prospect-label">${foEscape(name)} <span class="fo-list-count">${items.length}</span></div>
+          ${items.map(it => foListRow(it, 'active')).join('')}
+        </div>`
+      ).join('')}
+    </div>`;
+  }
+
+  if (!activeReal.length && !activeProspects.length) {
+    html += `<div class="fo-list-empty">nothing waiting on you.<br>
+      <span class="fo-list-empty-sub">${handled.length} handled · ${mondayed.length} mondayed</span>
+    </div>`;
+  }
+
+  html += foRenderListSection('handled', 'handled', handled);
+  html += foRenderListSection('mondayed', 'mondayed', mondayed);
+
+  return html;
+}
+
+function foRenderListSection(key, label, items) {
+  const expanded = foSectionExpanded[key];
+  return `<div class="fo-list-section">
+    <button class="fo-list-section-toggle" onclick="foToggleSection('${key}')">
+      ${expanded ? '▾' : '▸'} ${label} (${items.length})
+    </button>
+    <div class="fo-list-section-body" ${expanded ? '' : 'hidden'}>
+      ${items.map(it => foListRow(it, key)).join('')}
+    </div>
+  </div>`;
+}
+
+function foListRow(item, section) {
+  const isSelected = item.id === foSelectedId;
+  const p = foPriority(item);
+  const nameRow = item.payload ? foMondayNameRow(item.payload) : null;
+  const title = nameRow ? nameRow.value : (item.sourceLabel || '(untitled)');
+  const statusKey = item.status || 'confirm';
+
+  const cls = [
+    'fo-list-row',
+    isSelected ? 'selected' : '',
+    section === 'handled' ? 'fo-row-handled' : '',
+    item.isSub ? 'fo-row-sub' : '',
+  ].filter(Boolean).join(' ');
+
+  const boardLabel = item.board
+    ? `<span class="fo-row-board">${foEscape(item.board)}</span>` : '';
+  const unreadDot = item.unread
+    ? '<span class="fo-unread-dot" aria-label="unread"></span>' : '';
+  const subMarker = item.isSub
+    ? '<span class="fo-sub-marker">↳</span>' : '';
+
+  return `<div class="${cls}" data-id="${foEscape(item.id)}" onclick="foSelectItem('${foEscape(item.id)}')">
+    <div class="fo-row-left">
+      ${subMarker}
+      <span class="fo-priority fo-priority-${p}">P${p}</span>
+      <span class="fo-row-title">${foEscape(title)}</span>
+    </div>
+    <div class="fo-row-right">
+      ${boardLabel}
+      <span class="fo-row-status fo-b-${foEscape(statusKey)}">${foEscape(statusKey)}</span>
+      ${unreadDot}
+    </div>
+  </div>`;
+}
+
+// ── detail pane rendering ─────────────────────────────────────────────────────
+
+function foDetailEmpty() {
+  return `<div class="fo-detail-empty">no draft selected<br>
+    <span>pick an item from the queue to review it</span>
+  </div>`;
+}
+
+function foRenderDetailPane(item) {
+  const pending   = foPending.has(item.id);
+  const p         = foPriority(item);
+  const statusKey = item.status || 'confirm';
+  const nameRow   = item.payload ? foMondayNameRow(item.payload) : null;
+  const title     = nameRow ? nameRow.value : (item.sourceLabel || '(untitled)');
+  const section   = item.mondayItemId ? 'mondayed'
+    : HANDLED_STATUSES.includes(item.status) ? 'handled' : 'active';
+
+  const origin = item.sourceLabel
+    ? `<div class="fo-det-origin">${foEscape(item.sourceLabel)}</div>` : '';
+
+  const sendControl = item._sending
+    ? `<button class="fo-primary" disabled>sending to monday…</button>`
+    : item.mondayItemId
+    ? `<span class="fo-muted-label">already sent (item ${foEscape(item.mondayItemId)})</span>`
+    : item.payload
+    ? `<button class="fo-primary" onclick="foOpenSendPreview('${item.id}')">send to monday</button>`
+    : '';
+
+  let actionsHtml;
+  if (section === 'mondayed') {
+    actionsHtml = `<span class="fo-muted-label">sent to Monday${item.mondayItemId ? ` (item ${foEscape(item.mondayItemId)})` : ''}</span>`;
+  } else if (section === 'handled') {
+    actionsHtml = `${sendControl}
+      <button onclick="foPatch('${item.id}', {status:'confirm'})" ${pending ? 'disabled' : ''}>undo</button>`;
+  } else {
+    actionsHtml = `${sendControl}
+      <button onclick="foPatch('${item.id}', {status:'done'})" ${pending ? 'disabled' : ''}>mark done</button>
+      <button onclick="foPatch('${item.id}', {status:'ignored'})" ${pending ? 'disabled' : ''}>ignore</button>`;
+  }
+
+  const priorityBlock = section === 'active' ? `
+    <div class="fo-det-priority">
+      <button class="fo-priority-btn" title="Raise priority" onclick="foBumpPriority('${item.id}',-1)" ${p<=1||pending?'disabled':''}>&#9650;</button>
+      <span class="fo-priority fo-priority-${p}">P${p}</span>
+      <button class="fo-priority-btn" title="Lower priority" onclick="foBumpPriority('${item.id}',1)" ${p>=5||pending?'disabled':''}>&#9660;</button>
+    </div>` : '';
+
+  const chatMsgCount = (foItemChat[item.id] || []).length;
+  const chatLog = foRenderChatMessages(item.id);
+
+  return `
+    <button class="fo-det-back" onclick="foSelectItem(null)">← back</button>
+    <div class="fo-det-header">
+      ${origin}
+      <div class="fo-det-header-row">
+        <span class="fo-badge fo-b-${foEscape(statusKey)}">${foEscape(statusKey)}</span>
+        ${priorityBlock}
+      </div>
+      <div class="fo-det-title">${foEscape(title)}</div>
+    </div>
+    ${foBuildMondayDetails(item)}
+    <div class="fo-actions fo-det-actions">${actionsHtml}</div>
+    <details class="fo-det-chat">
+      <summary class="fo-det-chat-toggle">Chat${chatMsgCount ? ` · ${chatMsgCount} msg${chatMsgCount!==1?'s':''}` : ''}</summary>
+      <div class="fo-itemchat">
+        <div class="fo-itemchat-log" id="fo-chat-log-${item.id}">${chatLog}</div>
+        <form class="fo-itemchat-form" onsubmit="return foSendItemChat(event,'${item.id}')">
+          <input type="text" placeholder="Ask, edit, reassign, or resolve…">
+          <button type="submit">Send</button>
+        </form>
+      </div>
+    </details>`;
 }
 
 async function foLoadQueue() {
+  const container = document.getElementById("fo-queue-cards");
+  if (!localStorage.getItem("flowops-passcode")) {
+    container.innerHTML = foRenderPasscodeGate();
+    return;
+  }
+  container.innerHTML = foRenderSkeleton();
   try {
     const res = await fetch("/.netlify/functions/queue", { headers: foHeaders() });
     const data = await res.json();
@@ -65,7 +284,10 @@ async function foLoadQueue() {
     if (data.routing) foRouting = data.routing;
     foRenderFromItems(foItems);
   } catch (e) {
-    document.getElementById("fo-queue-cards").innerHTML = `<div class="fo-empty">couldn't reach the draft queue${e && e.message ? ": " + foEscape(e.message) : ""}</div>`;
+    container.innerHTML = `<div class="fo-error-state">
+      <div class="fo-error-msg">couldn't reach the draft queue${e?.message ? ": " + foEscape(e.message) : ""}</div>
+      <button class="fo-retry-btn" onclick="foLoadQueue()">retry</button>
+    </div>`;
   }
 }
 
@@ -118,57 +340,7 @@ function foGroupByProspect(items) {
   return [...groups.entries()].sort((a, b) => a[0].localeCompare(b[0]));
 }
 
-function foRenderCollapsibleSection(key, label, items, emptyText) {
-  const expanded = foSectionExpanded[key];
-  return `
-    <div class="fo-handled">
-      <button class="fo-handled-toggle" onclick="foToggleSection('${key}')">
-        ${expanded ? "▾" : "▸"} ${label} (${items.length})
-      </button>
-      <div class="fo-handled-list fo-card-grid" ${expanded ? "" : "hidden"}>
-        ${items.length ? items.map(item => foQueueCard(item, key)).join("") : `<div class="fo-empty">${emptyText}</div>`}
-      </div>
-    </div>`;
-}
 
-function foRenderQueue(active, handled, mondayed) {
-  // Structural rule, not a special case for any particular flag: anything
-  // without a real, resolvable Monday group ALWAYS renders in Potential
-  // Clients, never as its own client group and never under a raw "n/a"/
-  // "Unknown" catch-all. This holds regardless of WHY the group is missing
-  // -- explicitly flagged potentialClient by the automation, or any other
-  // reason a group never got set -- so there is no path left for a
-  // groupless card to render silently under a fallback label.
-  const activeReal      = active.filter(it => !!it.group);
-  const activeProspects = active.filter(it => !it.group);
-
-  const activeHtml = activeReal.length
-    ? foGroupByClient(activeReal).map(([client, items]) => `
-      <div class="fo-group">
-        <div class="fo-group-header">${foEscape(client)} <span class="fo-group-count">(${items.length})</span></div>
-        <div class="fo-card-grid">
-          ${items.map(item => foQueueCard(item, "active")).join("")}
-        </div>
-      </div>`).join("")
-    : (activeProspects.length ? "" : `<div class="fo-empty">queue is empty</div>`);
-
-  const prospectsHtml = activeProspects.length ? `
-    <div class="fo-prospects">
-      <div class="fo-label">Potential clients</div>
-      ${foGroupByProspect(activeProspects).map(([name, items]) => `
-        <div class="fo-group fo-group-prospect">
-          <div class="fo-group-header">${foEscape(name)} <span class="fo-group-count">(${items.length})</span></div>
-          <div class="fo-card-grid">
-            ${items.map(item => foQueueCard(item, "active")).join("")}
-          </div>
-        </div>`).join("")}
-    </div>` : "";
-
-  const handledHtml = foRenderCollapsibleSection("handled", "handled", handled, "nothing handled yet");
-  const mondayedHtml = foRenderCollapsibleSection("mondayed", "mondayed", mondayed, "nothing sent to monday yet");
-
-  return activeHtml + prospectsHtml + handledHtml + mondayedHtml;
-}
 
 function foToggleSection(key) {
   // Purely local UI state -- no need to round-trip the network just to
@@ -415,96 +587,6 @@ document.addEventListener("click", (e) => {
   }
 });
 
-// section is "active" | "handled" | "mondayed".
-function foQueueCard(item, section) {
-  const cls = { ready: "fo-b-ready", confirm: "fo-b-confirm", sent: "fo-b-sent", done: "fo-b-done", ignored: "fo-b-done" }[item.status] || "fo-b-confirm";
-  const p = foPriority(item);
-  const pending = foPending.has(item.id);
-
-  // mondayItemId means a real Monday item already exists for this card --
-  // clicking send-to-monday again would create a genuine duplicate on the
-  // board. _sending is a local-only optimistic flag (see foSendToMonday) --
-  // the real Monday API round trip takes 5-10s, so this shows immediately
-  // rather than leaving the button looking clickable/frozen for that stretch.
-  // No-payload case renders nothing here (was a duplicate, sometimes
-  // mislabeled -- see foBuildMondayDetails) -- the Monday-details block
-  // above the actions row is now the one place that explains why there's
-  // no send button.
-  const sendControl = item._sending
-    ? `<button class="fo-primary" disabled>sending to monday…</button>`
-    : item.mondayItemId
-    ? `<span class="fo-muted-label">already sent to Monday (item ${foEscape(item.mondayItemId)})</span>`
-    : item.payload
-    ? `<button class="fo-primary" onclick="foOpenSendPreview('${item.id}')">send to monday</button>`
-    : "";
-
-  // Mondayed cards get no "undo" -- a real Monday item exists permanently,
-  // there's nothing local left to revert (see the standing sent-invariant:
-  // mondayItemId always wins over status, so a fake "undo" would just get
-  // silently corrected back on the next write anyway).
-  const actions = section === "mondayed"
-    ? `<div class="fo-actions">
-        <span class="fo-muted-label">sent to Monday${item.mondayItemId ? ` (item ${foEscape(item.mondayItemId)})` : ""}</span>
-      </div>`
-    : section === "handled"
-    ? `<div class="fo-actions">
-        <button onclick="foPatch('${item.id}', {status:'confirm'})" ${pending ? "disabled" : ""}>undo</button>
-      </div>`
-    : `<div class="fo-actions">
-        ${sendControl}
-        <button onclick="foPatch('${item.id}', {status:'done'})" ${pending ? "disabled" : ""}>mark done</button>
-        <button onclick="foPatch('${item.id}', {status:'ignored'})" ${pending ? "disabled" : ""}>ignore</button>
-      </div>`;
-
-  const mondayDetails = foBuildMondayDetails(item);
-
-  // Every card gets a thread now -- item-chat.js is a general edit assistant
-  // for the whole card (reply, edit title/note/payload, change status or
-  // priority, reassign), not just a missing-payload resolver, so this is no
-  // longer gated on status === "confirm".
-  const itemChatBox = `
-    <div class="fo-itemchat">
-      <div class="fo-itemchat-log" id="fo-chat-log-${item.id}">${foRenderChatMessages(item.id)}</div>
-      <form class="fo-itemchat-form" onsubmit="return foSendItemChat(event, '${item.id}')">
-        <input type="text" placeholder="Ask, edit, reassign, or resolve..." />
-        <button type="submit">Send</button>
-      </form>
-    </div>`;
-
-  // Priority (1 most urgent, 5 least) drives sort order within a client
-  // group (foGroupByClient) -- these buttons are the "reorder" affordance
-  // for that: raise/lower priority instead of a free drag, since order
-  // isn't independently stored anywhere today, only derived from this
-  // number. Same foPatch() write path as everything else here.
-  const priorityControls = section === "active" ? `
-      <button type="button" class="fo-priority-btn" title="Raise priority" aria-label="Raise priority"
-        onclick="foBumpPriority('${item.id}', -1)" ${p <= 1 || pending ? "disabled" : ""}>&#9650;</button>
-      <span class="fo-priority fo-priority-${p}">P${p}</span>
-      <button type="button" class="fo-priority-btn" title="Lower priority" aria-label="Lower priority"
-        onclick="foBumpPriority('${item.id}', 1)" ${p >= 5 || pending ? "disabled" : ""}>&#9660;</button>`
-    : `<span class="fo-priority fo-priority-${p}">P${p}</span>`;
-
-  // The paraphrased title/note are gone -- the Monday-details block below
-  // (real item/subitem name, board, group, actual update text) replaced
-  // them entirely. The source/provenance line is the one thing from that
-  // old header worth keeping (still useful context: which meeting/message
-  // this came from), promoted to sit right above the item name now.
-  return `
-    <div class="fo-card">
-      <div class="fo-row">
-        <div>
-          ${item.sourceLabel ? `<p class="fo-source fo-source-primary">${foEscape(item.sourceLabel)}</p>` : ""}
-        </div>
-        <div class="fo-badges">
-          ${priorityControls}
-          <span class="fo-badge ${cls}">${foEscape(item.status || "confirm")}</span>
-        </div>
-      </div>
-      ${mondayDetails}
-      ${actions}
-      ${itemChatBox}
-    </div>`;
-}
 
 function foBumpPriority(id, delta) {
   const item = foItems.find((it) => it.id === id);

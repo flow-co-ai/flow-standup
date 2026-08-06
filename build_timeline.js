@@ -44,6 +44,35 @@ const PACE = {
   BEHIND: { label: 'BEHIND PLAN',   color: '#DE6E4C' },
 };
 
+// ── dept normalization ────────────────────────────────────────────────────────
+// Applied to both plan bars and actual events so they share the same lane keys.
+const DEPT_CANON = {
+  ads:      ['ads', 'meta ads', 'google ads', 'paid', 'paid media'],
+  web:      ['web', 'web + seo', 'seo', 'website'],
+  crm:      ['crm', 'ghl', 'email'],
+  creative: ['creative', 'video', 'content'],
+  ops:      ['ops', 'admin', 'reporting'],
+};
+const DEPT_LOOKUP = {};
+for (const [canon, aliases] of Object.entries(DEPT_CANON)) {
+  for (const alias of aliases) DEPT_LOOKUP[alias.toLowerCase().trim()] = canon;
+}
+
+function normalizeDept(s) {
+  return DEPT_LOOKUP[s?.toLowerCase().trim()] ?? 'ops';
+}
+
+// Merges plan departments that normalize to the same canonical name.
+function normalizeDepts(rawDepts) {
+  const merged = new Map();
+  for (const d of rawDepts) {
+    const canon = normalizeDept(d.dept);
+    if (!merged.has(canon)) merged.set(canon, { dept: canon, bars: [] });
+    for (const bar of d.bars || []) merged.get(canon).bars.push(bar);
+  }
+  return [...merged.values()];
+}
+
 // ── helpers ───────────────────────────────────────────────────────────────────
 
 function readJSON(path) {
@@ -182,15 +211,51 @@ function mergeEvents(prev, completed, actions, newFlags) {
 
 // ── computed metrics ──────────────────────────────────────────────────────────
 
-function computeActualPct(milestones, events) {
+function computeActualPct(milestones, completedEvents) {
   if (!milestones?.length) return '0%';
-  const completedLabels = events
-    .filter(e => e.kind === 'completed')
-    .map(e => e.label.toLowerCase());
+  const completedLabels = completedEvents.map(e => e.label.toLowerCase());
   const matched = milestones.filter(m =>
     completedLabels.some(cl => cl.includes(m.label.toLowerCase()) || m.label.toLowerCase().includes(cl))
   );
   return Math.round(matched.length / milestones.length * 100) + '%';
+}
+
+// Annotate milestones with completion info when a standup item fuzzy-matches.
+function annotateMilestones(milestones, completedEvents) {
+  return milestones.map(m => {
+    const match = completedEvents.find(c =>
+      c.label.toLowerCase().includes(m.label.toLowerCase()) ||
+      m.label.toLowerCase().includes(c.label.toLowerCase())
+    );
+    const base = { ...m, dept: normalizeDept(m.dept) };
+    return match ? { ...base, completedAt: match.date, completedNote: match.label } : base;
+  });
+}
+
+// Collapse consecutive same-label/dept flags (gap < 3 days) into one band.
+function dedupeFlags(events) {
+  const flags  = events.filter(e => e.kind === 'flag');
+  const others = events.filter(e => e.kind !== 'flag');
+
+  const normalized = flags.map(f => ({ ...f, endDate: f.endDate || f.date }));
+  normalized.sort((a, b) => {
+    const keyDiff = (a.label + '|' + a.dept).localeCompare(b.label + '|' + b.dept);
+    return keyDiff || a.date.localeCompare(b.date);
+  });
+
+  const bands = [];
+  for (const f of normalized) {
+    const last = bands[bands.length - 1];
+    if (last && last.label === f.label && last.dept === f.dept &&
+        daysBetween(last.endDate, f.date) < 3) {
+      if (f.endDate > last.endDate) last.endDate = f.endDate;
+      last.days = Math.round(daysBetween(last.date, last.endDate)) + 1;
+    } else {
+      bands.push({ ...f, days: Math.round(daysBetween(f.date, f.endDate)) + 1 });
+    }
+  }
+
+  return [...others, ...bands].sort((a, b) => a.date.localeCompare(b.date));
 }
 
 function computePlannedPct(engagement, today) {
@@ -276,16 +341,24 @@ async function main() {
     const actionEvents    = approvedEvents(decisions, pulseSlugs);
     const newFlagEvents   = todayFlagEvents(pulseSlugs);
 
-    // Merge with previous.
+    // Merge with previous — strip legacy completed events (completions annotate milestones, not dots).
     const prev       = readJSON(`timeline/${slug}.json`);
-    const allEvents  = mergeEvents(prev?.events || [], completedEvents, actionEvents, newFlagEvents);
+    const prevEvents = (prev?.events || []).filter(e => e.kind !== 'completed');
+    const allEvents  = mergeEvents(prevEvents, [], actionEvents, newFlagEvents);
 
-    // Compute metrics.
-    const actualPct  = computeActualPct(plan.milestones, allEvents);
+    // Apply flag deduplication.
+    const dedupedEvents = dedupeFlags(allEvents);
+
+    // Compute metrics (actualPct uses standup completions to match milestones).
+    const completedCount = (plan.milestones || []).filter(m => {
+      const labels = completedEvents.map(e => e.label.toLowerCase());
+      return labels.some(l => l.includes(m.label.toLowerCase()) || m.label.toLowerCase().includes(l));
+    }).length;
+    const actualPct  = computeActualPct(plan.milestones, completedEvents);
     const plannedPct = computePlannedPct(plan.engagement, today);
     const pace       = computePace(actualPct, plannedPct);
     const nextUp     = nextUpMilestones(plan.milestones, today);
-    const insight    = computeInsight(pulseSlugs, pace.label, plan.milestones, allEvents);
+    const insight    = computeInsight(pulseSlugs, pace.label, plan.milestones, completedEvents);
 
     const engStart = plan.engagement?.start || '';
     const engEnd   = plan.engagement?.end   || '';
@@ -296,13 +369,14 @@ async function main() {
     const out = {
       generated_at: new Date().toISOString(),
       slug,
-      // Plan track
-      departments:  plan.departments  || [],
-      milestones:   plan.milestones   || [],
+      // Plan track (depts and milestones normalized to canonical names)
+      departments:  normalizeDepts(plan.departments || []),
+      milestones:   annotateMilestones(plan.milestones || [], completedEvents),
       engagement:   plan.engagement   || {},
-      // Actual track
-      events:       allEvents,
+      // Actual track — flags + actions only (completions live in milestone annotations).
+      events:       dedupedEvents.map(e => ({ ...e, dept: normalizeDept(e.dept) })),
       // Computed
+      completedCount,
       actualPct,
       plannedPct,
       paceLabel:    pace.label,
@@ -313,7 +387,7 @@ async function main() {
     };
 
     writeFileSync(`timeline/${slug}.json`, JSON.stringify(out, null, 2));
-    console.log(`  ${slug}: ✓ ${allEvents.length} events, ${actualPct} actual, planned ${plannedPct}%, ${pace.label}`);
+    console.log(`  ${slug}: ✓ ${dedupedEvents.length} events, ${completedCount}/${plan.milestones?.length || 0} milestones, ${pace.label}`);
     built++;
   }
 

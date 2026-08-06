@@ -1,0 +1,180 @@
+/* standup-brief.css — brief block rendered below .client-card in detail view */
+
+/* ── Section wrapper ── */
+
+.sb-brief {
+  margin-top: 16px;
+}
+
+/* ── Headline chips ── */
+
+.sb-headlines {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.sb-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 11px;
+  border-radius: 99px;
+  border: 1px solid;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+}
+
+/* ── 2-col card grid ── */
+
+.sb-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 640px) {
+  .sb-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Card ── */
+
+.sb-card {
+  background: #141A14;
+  border: 1px solid rgba(237,233,220,0.08);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.sb-card--full {
+  grid-column: 1 / -1;
+}
+
+/* ── Card header: icon + title + right-aligned badge ── */
+
+.sb-card-hdr {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 10px;
+}
+
+.sb-track-icon {
+  font-size: 13px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.sb-card-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #EDE9DA;
+  flex: 1;
+  min-width: 0;
+}
+
+.sb-badge {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border-radius: 99px;
+  border: 1px solid;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ── Line items: icon column + wrapped text ── */
+
+.sb-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sb-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+}
+
+.sb-item-icon {
+  flex-shrink: 0;
+  width: 14px;
+  font-size: 11px;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.sb-item-text {
+  font-size: 12px;
+  color: rgba(237,233,220,0.82);
+  line-height: 1.55;
+}
+
+/* ── Owners footer ── */
+
+.sb-owners {
+  margin-top: 9px;
+  font-size: 11px;
+  color: rgba(237,233,220,0.38);
+  letter-spacing: 0.01em;
+}
+
+/* ── Waiting-on-client card ── */
+
+.sb-item--woc {
+  align-items: baseline;
+}
+
+.sb-woc-item {
+  font-size: 12px;
+  font-weight: 600;
+  color: #EDE9DA;
+}
+
+.sb-woc-meta {
+  font-size: 11px;
+  color: rgba(237,233,220,0.4);
+}
+
+/* ── Launch gate card ── */
+
+.sb-gate-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px 14px;
+}
+
+@media (max-width: 640px) {
+  .sb-gate-grid { grid-template-columns: 1fr; }
+}
+
+.sb-gate-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(237,233,220,0.72);
+  cursor: default;
+  line-height: 1.45;
+}
+
+.sb-gate-item input[type="checkbox"] {
+  margin-top: 2px;
+  accent-color: #8CBE6E;
+  flex-shrink: 0;
+}
+
+.sb-gate-note {
+  margin-top: 10px;
+  font-size: 11px;
+  color: rgba(237,233,220,0.38);
+  font-style: italic;
+}

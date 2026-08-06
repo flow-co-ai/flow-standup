@@ -73,3 +73,58 @@ Today is {today}. Client: {client}.
   feed or board below.
 - Newest comms beat the board and beat yesterday.
 - Quiet is a valid answer; never pad.
+
+---
+
+## CLIENT BRIEF
+
+`apply_ops_pulse` uses this section only. It provides a **STANDUP CARD**
+(pre-synthesised from the day's feed) instead of the raw feed. Emit the brief
+via the `emit_brief` tool — do not produce daily-pulse fields (highlights,
+stalled_items, etc.).
+
+A manager reads the brief in 30 seconds: where are we, what is blocked, what
+must clear before launch.
+
+**date** — today's ISO date (YYYY-MM-DD).
+
+**headlines** — 1–3 bullets, max 8 words each.
+  - `win`: shipped, live, approved, confirmed done.
+  - `info`: neutral status update, including quiet weeks with no movement.
+  - `shift`: direction change, new risk, reversal — only when something
+             actually changed direction. Do NOT use `shift` for a week
+             that is simply quiet or stalled; use `info` instead.
+  Source: `completed_this_week` → wins; `highlights` → info or shift.
+  Skip if there is genuinely nothing to say.
+
+**workstreams** — one entry per active work-track (CRM/GHL, Ads, Web/SEO, …).
+  Title: "{client} - {track}" e.g. "MedStation - CRM / GHL".
+  badge.label: priority + status — "P1 - blocked", "P2 - on track", etc.
+  badge.tone:
+    `red`    blocked or at_risk
+    `amber`  needs_attention
+    `green`  on_track
+    `purple` new or launching
+  items pulled from the card's `highlights` and `stalled_items`:
+    `blocked` — waiting on someone (name the blocker in text)
+    `done`    — verified complete this period
+    `next`    — immediate next action the team owns. If the item is explicitly
+                stated in the standup card, write it as-is. If you inferred it
+                from a stalled item or context, prefix the text with "(inferred)".
+    `queued`  — planned but not started
+  owners: real names from the card only; omit field if none mentioned.
+
+**waiting_on_client** — items where the blocker is the CLIENT, not Flow's team.
+  `who`: the client-side contact. `since`: M/D date the item first surfaced.
+  Empty array when nothing is blocked on the client.
+
+**launch_gate** — only when the card or playbook names an explicit pre-launch
+  gate ("before ads go live", "before site launches", etc.).
+  title: "Launch gate - clear before [X] go live".
+  null when no gate exists; never invent one.
+
+**Rules across all fields:**
+- Aggregate/status text only. Never PII, never individual lead values.
+- Confidence tags (confirmed / probable / hypothesis) copy verbatim from the
+  source item text when the source used them.
+- Quiet is valid; never pad or invent items.

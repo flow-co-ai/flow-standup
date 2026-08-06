@@ -1,394 +1,403 @@
-/* ── Ops add-on (draft queue) — dark Flow Ops tokens ─────────────────────── */
-.fo-section { margin-top: 34px; }
+/* addon.css — Daily Ops master-detail layout.
+   All rules scoped to #ops-addon or .fo-* (unique namespace).
+   Overlay rules (.fo-preview-*) are intentionally global — appended to body. */
 
-/* Daily Ops is the only page that loads this stylesheet, so it's safe to
-   override the shared `.page > * { max-width: 680px }` rule (style.css)
-   here without touching the Standup page. Desktop-only: on a wide viewport
-   there's no reason to cap the queue to a phone-width column when the grid
-   (.fo-card-grid, minmax(300px, 1fr)) could show many more cards at once. */
-@media (min-width: 900px) {
-  #ops-addon { max-width: none; }
-}
+/* ── section wrapper ─────────────────────────────────────────────────────── */
+.fo-section { margin-top: 24px; }
 .fo-label {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono, 'JetBrains Mono', monospace);
   font-size: 10.5px; font-weight: 500;
   text-transform: uppercase; letter-spacing: 0.12em;
-  color: #A9B478; margin-bottom: 10px;
+  color: var(--olive, #A9B478); margin-bottom: 14px;
 }
-.fo-card {
-  background: #141A14;
-  border: 1px solid rgba(237,233,220,0.08);
-  border-radius: 12px;
-  padding: 13px 14px;
-  display: flex; flex-direction: column;
-}
-.fo-card-grid {
+
+/* ── master-detail shell ─────────────────────────────────────────────────── */
+.fo-shell {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 12px;
+  grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+  gap: 18px;
   align-items: start;
 }
-.fo-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
-.fo-badges { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
-.fo-title { font-size: 13.5px; font-weight: 600; color: #EDE9DA; margin: 0; }
-.fo-sub { font-size: 12px; color: rgba(220,216,200,0.62); margin: 3px 0 0; }
 
-/* Direct edit affordance: same text, just a hover/focus cue that it's
-   editable in place -- no separate "edit" button/icon needed. */
-.fo-title[contenteditable], .fo-sub[contenteditable] {
-  border-radius: 4px;
-  padding: 1px 4px;
-  margin-left: -4px;
-  cursor: text;
-  outline: none;
-  transition: background 0.12s, box-shadow 0.12s;
-}
-.fo-title[contenteditable]:hover, .fo-sub[contenteditable]:hover {
-  background: rgba(237,233,220,0.05);
-}
-.fo-title[contenteditable]:focus, .fo-sub[contenteditable]:focus {
-  background: rgba(146,155,105,0.1);
-  box-shadow: 0 0 0 1px rgba(169,180,120,0.5);
+/* ── list pane ───────────────────────────────────────────────────────────── */
+.fo-list {
+  position: sticky;
+  top: 20px;
+  max-height: calc(100vh - 260px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--surface, #141A14);
+  border: 1px solid var(--hairline, rgba(237,233,218,0.08));
+  border-radius: 12px;
+  padding: 8px 6px;
 }
 
-.fo-priority-btn {
-  background: transparent;
-  border: 1px solid rgba(237,233,220,0.14);
-  color: rgba(220,216,200,0.55);
-  width: 18px; height: 18px;
-  border-radius: 5px;
-  font-size: 8px;
-  line-height: 1;
-  display: inline-flex; align-items: center; justify-content: center;
+.fo-list-group { margin-bottom: 10px; }
+.fo-list-group:last-child { margin-bottom: 0; }
+
+.fo-list-group-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px 6px;
+}
+.fo-list-client {
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--cream-dim, rgba(237,233,218,0.55));
+  flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.fo-list-count {
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 9.5px; color: rgba(220,216,200,0.35);
+}
+.fo-hot-pill {
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 8.5px; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(222,110,76,0.18); color: #DE6E4C;
+  border-radius: 999px; padding: 1px 6px;
+}
+
+/* ── list row ────────────────────────────────────────────────────────────── */
+.fo-list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 7px;
   cursor: pointer;
-  padding: 0;
-  transition: background 0.12s, border-color 0.12s, color 0.12s;
+  border-left: 2px solid transparent;
+  transition: background 0.1s, border-color 0.1s;
+  min-width: 0;
 }
-.fo-priority-btn:hover:not(:disabled) {
-  background: rgba(146,155,105,0.14);
-  border-color: rgba(169,180,120,0.5);
-  color: #C6D093;
+.fo-list-row:hover { background: rgba(237,233,218,0.04); }
+.fo-list-row.selected {
+  border-left-color: var(--olive-bright, #C6D093);
+  background: rgba(146,155,105,0.10);
 }
-.fo-priority-btn:disabled { opacity: 0.25; cursor: default; }
-.fo-source {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px; color: rgba(220,216,200,0.4);
-  margin: 5px 0 0; text-transform: uppercase; letter-spacing: 0.04em;
+.fo-list-row.fo-row-handled .fo-row-title { text-decoration: line-through; opacity: 0.5; }
+.fo-list-row.fo-row-sub { padding-left: 18px; }
+
+.fo-row-left {
+  display: flex; align-items: center; gap: 5px;
+  min-width: 0; flex: 1;
 }
-/* Now the card's one surviving header line (title/note removed) -- brighter
-   and un-margined so it reads as the card's label, not a footnote. */
-.fo-source-primary {
-  margin: 0;
-  font-size: 11px;
-  color: #A9B478;
+.fo-sub-marker {
+  font-size: 10px; color: rgba(220,216,200,0.35); flex-shrink: 0;
 }
+.fo-row-title {
+  font-size: 12.5px; color: rgba(220,216,200,0.85);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  min-width: 0;
+}
+.fo-row-right {
+  display: flex; align-items: center; gap: 5px; flex-shrink: 0;
+}
+.fo-row-board {
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 9px; color: rgba(220,216,200,0.3);
+  white-space: nowrap;
+}
+.fo-row-status {
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em;
+  padding: 2px 6px; border-radius: 4px; white-space: nowrap;
+}
+.fo-unread-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--olive-bright, #C6D093); flex-shrink: 0;
+}
+
+/* ── list sections (handled / mondayed) ──────────────────────────────────── */
+.fo-list-section { margin-top: 8px; }
+.fo-list-section-toggle {
+  background: transparent; border: none;
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: rgba(220,216,200,0.4); cursor: pointer;
+  padding: 4px 8px; width: 100%; text-align: left;
+  border-radius: 6px; transition: color 0.12s;
+}
+.fo-list-section-toggle:hover { color: var(--olive-bright, #C6D093); }
+.fo-list-section-body[hidden] { display: none; }
+
+/* ── prospects ───────────────────────────────────────────────────────────── */
+.fo-list-prospects { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--hairline, rgba(237,233,218,0.08)); }
+.fo-list-prospect-label {
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: rgba(220,216,200,0.35); padding: 3px 8px;
+}
+.fo-list-prospect-group { margin-bottom: 6px; }
+
+/* ── empty + error + skeleton ────────────────────────────────────────────── */
+.fo-list-empty {
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 11.5px; color: rgba(220,216,200,0.45);
+  padding: 18px 10px; text-align: center; line-height: 1.7;
+}
+.fo-list-empty-sub { font-size: 10px; color: rgba(220,216,200,0.28); }
+
+.fo-error-state {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 12px; padding: 32px 16px; text-align: center;
+}
+.fo-error-msg { font-size: 13px; color: rgba(220,216,200,0.55); }
+.fo-retry-btn {
+  background: transparent;
+  border: 1px solid rgba(169,180,120,0.4);
+  color: var(--olive-bright, #C6D093);
+  padding: 7px 18px; border-radius: 999px;
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+  cursor: pointer; transition: background 0.12s, border-color 0.12s;
+}
+.fo-retry-btn:hover { background: rgba(146,155,105,0.12); border-color: rgba(169,180,120,0.7); }
+
+/* skeleton shimmer */
+@keyframes fo-shimmer {
+  from { background-position: -200% 0; }
+  to   { background-position:  200% 0; }
+}
+.fo-skel-header, .fo-skel-chip, .fo-skel-title, .fo-skel-badge,
+.fo-skel-det-title, .fo-skel-det-body {
+  background: linear-gradient(90deg, rgba(237,233,218,0.05) 25%, rgba(237,233,218,0.1) 50%, rgba(237,233,218,0.05) 75%);
+  background-size: 200% 100%;
+  animation: fo-shimmer 1.4s linear infinite;
+  border-radius: 5px;
+}
+.fo-skel-row { display: flex; align-items: center; gap: 6px; padding: 5px 8px; }
+.fo-skel-header { height: 10px; width: 60%; margin: 6px 8px 8px; }
+.fo-skel-chip   { height: 16px; width: 28px; flex-shrink: 0; }
+.fo-skel-title  { height: 12px; flex: 1; }
+.fo-skel-badge  { height: 14px; width: 40px; flex-shrink: 0; }
+.fo-skel-det-title { height: 18px; width: 55%; margin-bottom: 14px; }
+.fo-skel-det-body  { height: 90px; width: 100%; }
+.fo-detail-skeleton { padding: 20px; }
+
+/* ── passcode gate ───────────────────────────────────────────────────────── */
+.fo-passcode-gate {
+  display: flex; justify-content: center; align-items: flex-start;
+  padding: 48px 16px;
+}
+.fo-passcode-card {
+  background: var(--surface, #141A14);
+  border: 1px solid var(--hairline, rgba(237,233,218,0.08));
+  border-radius: 14px; padding: 28px 24px;
+  max-width: 360px; width: 100%;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.fo-passcode-msg {
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 12px; letter-spacing: 0.04em;
+  color: rgba(220,216,200,0.65); line-height: 1.7; margin: 0;
+  text-align: center;
+}
+.fo-passcode-row { display: flex; gap: 8px; }
+.fo-passcode-input {
+  flex: 1; min-width: 0;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(169,180,120,0.3); border-radius: 8px;
+  padding: 9px 12px; color: var(--cream, #EDE9DA);
+  font-family: var(--mono, 'JetBrains Mono', monospace); font-size: 13px;
+  outline: none; transition: border-color 0.12s;
+}
+.fo-passcode-input::placeholder { color: rgba(237,233,218,0.2); }
+.fo-passcode-input:focus { border-color: rgba(169,180,120,0.65); }
+.fo-passcode-error {
+  font-size: 12px; color: #E8657D; text-align: center; margin: 0;
+}
+
+/* ── detail pane ─────────────────────────────────────────────────────────── */
+.fo-detail {
+  background: var(--surface, #141A14);
+  border: 1px solid var(--hairline, rgba(237,233,218,0.08));
+  border-radius: 12px;
+  padding: 18px 18px 22px;
+  display: flex; flex-direction: column; gap: 12px;
+  min-height: 300px;
+}
+.fo-detail-empty {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; flex: 1;
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 12px; letter-spacing: 0.04em;
+  color: rgba(220,216,200,0.35); text-align: center; line-height: 1.9;
+  min-height: 200px;
+}
+.fo-detail-empty span { font-size: 10.5px; color: rgba(220,216,200,0.22); }
+
+.fo-det-back {
+  display: none; /* shown on mobile only */
+  background: transparent; border: none;
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--olive, #A9B478); cursor: pointer;
+  padding: 0 0 4px; align-self: flex-start;
+  transition: color 0.12s;
+}
+.fo-det-back:hover { color: var(--olive-bright, #C6D093); }
+
+.fo-det-header { display: flex; flex-direction: column; gap: 6px; }
+.fo-det-origin {
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--cream-faint, rgba(237,233,218,0.35));
+}
+.fo-det-header-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.fo-det-title {
+  font-size: 15px; font-weight: 500; color: var(--cream, #EDE9DA); line-height: 1.4;
+}
+
+.fo-det-priority {
+  display: flex; align-items: center; gap: 6px;
+}
+
+.fo-det-actions { margin-top: 2px; }
+.fo-det-actions button:disabled { opacity: 0.45; cursor: default; }
+
+/* ── chat (collapsed by default) ─────────────────────────────────────────── */
+.fo-det-chat { border-top: 1px solid var(--hairline, rgba(237,233,218,0.08)); padding-top: 10px; }
+.fo-det-chat-toggle {
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: rgba(220,216,200,0.4); cursor: pointer; list-style: none;
+  transition: color 0.12s;
+}
+.fo-det-chat-toggle::-webkit-details-marker { display: none; }
+.fo-det-chat-toggle:hover { color: var(--olive, #A9B478); }
+.fo-det-chat .fo-itemchat { margin-top: 10px; }
+
+/* ── shared badge/priority/action tokens ─────────────────────────────────── */
 .fo-badge {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono, 'JetBrains Mono', monospace);
   font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
   padding: 3px 9px; border-radius: 6px; white-space: nowrap;
 }
 .fo-b-ready   { background: rgba(140,190,110,0.14); color: #8CBE6E; }
 .fo-b-confirm { background: rgba(220,167,70,0.14);  color: #DCA746; }
-.fo-b-sent, .fo-b-done { background: rgba(237,233,220,0.07); color: rgba(220,216,200,0.55); }
+.fo-b-sent, .fo-b-done, .fo-b-ignored {
+  background: rgba(237,233,220,0.07); color: rgba(220,216,200,0.55);
+}
+
 .fo-priority {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono, 'JetBrains Mono', monospace);
   font-size: 10px; font-weight: 600; letter-spacing: 0.04em;
   padding: 3px 8px; border-radius: 6px; white-space: nowrap;
 }
 .fo-priority-1, .fo-priority-2 { background: rgba(223,47,74,0.16); color: #E8657D; }
 .fo-priority-3 { background: rgba(237,233,220,0.07); color: rgba(220,216,200,0.5); }
 .fo-priority-4, .fo-priority-5 { background: rgba(237,233,220,0.04); color: rgba(220,216,200,0.32); }
-.fo-actions { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+
+.fo-priority-btn {
+  background: transparent;
+  border: 1px solid rgba(237,233,220,0.14);
+  color: rgba(220,216,200,0.55);
+  width: 18px; height: 18px; border-radius: 5px;
+  font-size: 8px; line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; padding: 0;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+.fo-priority-btn:hover:not(:disabled) {
+  background: rgba(146,155,105,0.14);
+  border-color: rgba(169,180,120,0.5); color: #C6D093;
+}
+.fo-priority-btn:disabled { opacity: 0.25; cursor: default; }
+
+.fo-actions {
+  display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+}
 .fo-actions button {
   background: transparent; border: 1px solid rgba(169,180,120,0.4);
-  color: #C6D093; padding: 6px 11px; border-radius: 999px;
-  font-family: 'Space Grotesk', sans-serif; font-size: 12px; cursor: pointer;
-  transition: background 0.12s, border-color 0.12s;
+  color: var(--olive-bright, #C6D093); padding: 7px 13px; border-radius: 999px;
+  font-family: var(--sans, 'Space Grotesk', sans-serif); font-size: 12px;
+  cursor: pointer; transition: background 0.12s, border-color 0.12s;
 }
 .fo-actions button:hover { background: rgba(146,155,105,0.12); border-color: rgba(169,180,120,0.7); }
-.fo-actions button.fo-primary { background: #929B69; border-color: #929B69; color: #0C100C; font-weight: 600; }
-.fo-actions button.fo-primary:hover { background: #A9B478; }
+.fo-actions button.fo-primary {
+  background: var(--olive, #A9B478); border-color: var(--olive, #A9B478);
+  color: #0C100C; font-weight: 600;
+}
+.fo-actions button.fo-primary:hover { background: var(--olive-bright, #C6D093); border-color: var(--olive-bright, #C6D093); }
 .fo-muted-label {
-  font-family: 'Space Grotesk', sans-serif; font-size: 12px;
+  font-family: var(--sans, 'Space Grotesk', sans-serif); font-size: 12px;
   color: rgba(220,216,200,0.4); padding: 6px 0;
 }
-.fo-empty { color: rgba(220,216,200,0.45); font-size: 13px; }
-.fo-card-grid > .fo-empty { grid-column: 1 / -1; }
 
-.fo-group { margin-bottom: 22px; }
-.fo-group-header {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px; font-weight: 600; color: #C6D093;
-  padding-bottom: 6px; margin-bottom: 8px;
-  border-bottom: 1px solid rgba(237,233,220,0.08);
-}
-.fo-group-count { font-weight: 400; color: rgba(220,216,200,0.4); }
-
-/* ── potential clients (unmapped-client cards, kept out of real client groups) ── */
-.fo-prospects { margin-top: 30px; padding-top: 18px; border-top: 1px solid rgba(237,233,220,0.08); }
-.fo-group-prospect .fo-group-header { color: rgba(220,216,200,0.7); }
-.fo-group-prospect .fo-card { border-style: dashed; border-color: rgba(237,233,220,0.16); }
-
-.fo-handled { margin-top: 14px; }
-.fo-handled-toggle {
-  background: transparent; border: none; color: rgba(220,216,200,0.55);
-  font-family: 'JetBrains Mono', monospace; font-size: 11px;
-  letter-spacing: 0.06em; text-transform: uppercase;
-  cursor: pointer; padding: 6px 0;
-}
-.fo-handled-toggle:hover { color: #C6D093; }
-.fo-handled-list { margin-top: 6px; }
-/* Author-origin CSS beats the UA [hidden] rule at equal specificity, so the
-   .fo-card-grid class's "display: grid" was silently winning over [hidden]'s
-   "display: none" -- the toggle updated its arrow/count but the list never
-   actually hid. This rule outranks .fo-card-grid on specificity to fix that. */
-.fo-handled-list[hidden] { display: none; }
-
-.fo-itemchat { background: #101510; border: 1px solid rgba(237,233,220,0.06); border-radius: 10px; padding: 10px; margin-top: 10px; }
-.fo-itemchat-log { display: flex; flex-direction: column; gap: 6px; max-height: 220px; overflow-y: auto; }
-.fo-itemchat-log:not(:empty) { margin-bottom: 8px; }
-.fo-itemchat-msg { padding: 6px 10px; border-radius: 8px; font-size: 12.5px; max-width: 88%; line-height: 1.5; white-space: pre-wrap; }
-.fo-itemchat-msg.user { align-self: flex-end; background: #141A14; border: 1px solid rgba(237,233,220,0.1); color: #EDE9DA; }
-.fo-itemchat-msg.assistant { align-self: flex-start; background: rgba(146,155,105,0.12); color: #DCD8C8; }
-.fo-itemchat-msg.fo-thinking { opacity: 0.6; font-style: italic; }
-.fo-itemchat-form { display: flex; gap: 6px; }
-.fo-itemchat-form input {
-  flex: 1; background: #0C100C; border: 1px solid rgba(237,233,220,0.12);
-  border-radius: 8px; padding: 6px 10px; font-size: 12.5px; color: #EDE9DA;
-  font-family: 'Space Grotesk', sans-serif;
-}
-.fo-itemchat-form input::placeholder { color: rgba(220,216,200,0.35); }
-.fo-itemchat-form input:focus { outline: none; border-color: rgba(169,180,120,0.5); }
-.fo-itemchat-form input:disabled { opacity: 0.5; }
-.fo-itemchat-form button {
-  border: none; background: #929B69; color: #0C100C; border-radius: 8px;
-  padding: 6px 12px; font-size: 12.5px; font-weight: 600; cursor: pointer;
-  font-family: 'Space Grotesk', sans-serif;
-}
-.fo-itemchat-form button:hover { background: #A9B478; }
-.fo-itemchat-form button:disabled { opacity: 0.5; cursor: default; }
-
-/* ── send-to-monday preview overlay ──────────────────────────────────────── */
-.fo-preview-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(4,6,4,0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  z-index: 100;
-}
-.fo-preview-card {
-  width: 100%;
-  max-width: 560px;
-  max-height: 88vh;
-  overflow-y: auto;
-  background: #141A14;
-  border: 1px solid rgba(237,233,220,0.12);
-  border-radius: 16px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.fo-preview-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.fo-preview-eyebrow {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #DCA746;
-}
-.fo-preview-target {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.04em;
-  color: rgba(220,216,200,0.55);
-  padding: 3px 9px;
-  border-radius: 6px;
-  background: rgba(237,233,220,0.06);
-}
-.fo-preview-note {
-  font-size: 12.5px;
-  color: rgba(220,216,200,0.55);
-  margin: 0;
-}
-.fo-preview-field { display: flex; flex-direction: column; gap: 6px; }
-.fo-preview-field-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(220,216,200,0.45);
-}
-.fo-preview-title, .fo-preview-body {
-  background: #0C100C;
-  border: 1px solid rgba(237,233,220,0.14);
-  border-radius: 10px;
-  padding: 10px 12px;
-  color: #EDE9DA;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 13.5px;
-  line-height: 1.55;
-}
-.fo-preview-title { font-weight: 600; }
-.fo-preview-body { min-height: 90px; white-space: pre-wrap; }
-.fo-preview-title:focus, .fo-preview-body:focus {
-  outline: none;
-  border-color: rgba(169,180,120,0.55);
-}
-.fo-preview-error {
-  font-size: 12.5px;
-  color: #E8657D;
-  margin: 0;
-}
-/* .fo-actions is reused here (not just .fo-preview-actions) specifically to
-   inherit the existing button/.fo-primary styling verbatim -- one button
-   look across the whole dashboard, not a second near-identical copy. */
-.fo-preview-actions { justify-content: flex-end; margin-top: 4px; }
-.fo-preview-cancel {
-  background: transparent;
-  border: 1px solid rgba(237,233,220,0.16);
-  color: rgba(220,216,200,0.7);
-  padding: 6px 11px;
-  border-radius: 999px;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px;
-  cursor: pointer;
-  transition: background 0.12s, border-color 0.12s;
-}
-.fo-preview-cancel:hover { background: rgba(237,233,220,0.06); border-color: rgba(237,233,220,0.3); }
-.fo-preview-cancel:disabled { opacity: 0.5; cursor: default; }
-
-/* ── Monday details (real item/subitem name, board, group, update text) ──── */
+/* ── Monday details block ────────────────────────────────────────────────── */
 .fo-monday-details {
-  margin-top: 10px;
-  padding: 9px 10px;
-  border-radius: 8px;
-  background: #101510;
-  border: 1px solid rgba(237,233,220,0.06);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  padding: 10px 12px; border-radius: 8px;
+  background: #101510; border: 1px solid rgba(237,233,220,0.06);
+  display: flex; flex-direction: column; gap: 8px;
 }
 .fo-monday-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 5px 8px; }
 .fo-monday-key {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9.5px; font-weight: 500;
-  text-transform: uppercase; letter-spacing: 0.08em;
-  color: rgba(220,216,200,0.4);
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 8.5px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em;
+  color: rgba(220,216,200,0.35);
 }
 .fo-monday-val {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 12.5px; font-weight: 600;
-  color: #DCD8C8;
+  font-family: var(--sans, 'Space Grotesk', sans-serif);
+  font-size: 12.5px; font-weight: 600; color: #DCD8C8;
 }
 .fo-monday-select {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px; font-weight: 600;
-  color: #DCD8C8;
-  background: #0C100C;
-  border: 1px solid rgba(237,233,220,0.14);
-  border-radius: 6px;
-  padding: 2px 6px;
-  cursor: pointer;
+  font-family: var(--sans, 'Space Grotesk', sans-serif);
+  font-size: 12px; font-weight: 600; color: #DCD8C8;
+  background: #0C100C; border: 1px solid rgba(237,233,220,0.14);
+  border-radius: 6px; padding: 2px 6px; cursor: pointer;
 }
 .fo-monday-select:hover { border-color: rgba(169,180,120,0.5); }
 .fo-monday-select:focus { outline: none; border-color: rgba(169,180,120,0.6); }
 .fo-monday-select:disabled { opacity: 0.5; cursor: default; }
 
-/* "@" mention picker -- inserts a real <a class="mention"> chip at the
-   cursor instead of letting someone type "@Name" as plain text (which
-   Monday won't render as a chip or notify anyone from). */
-.fo-mention-wrap { position: relative; display: inline-flex; }
-.fo-mention-btn {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px; font-weight: 700;
-  color: rgba(220,216,200,0.6);
-  background: #0C100C;
-  border: 1px solid rgba(237,233,220,0.14);
-  border-radius: 5px;
-  width: 20px; height: 20px;
-  line-height: 1;
-  cursor: pointer;
-  transition: background 0.12s, border-color 0.12s, color 0.12s;
-}
-.fo-mention-btn:hover { border-color: rgba(169,180,120,0.5); color: #DCD8C8; }
-.fo-mention-picker {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  z-index: 20;
-  min-width: 170px;
-  max-height: 220px;
-  overflow-y: auto;
-  background: #141A14;
-  border: 1px solid rgba(237,233,220,0.16);
-  border-radius: 8px;
-  padding: 4px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-.fo-mention-picker button {
-  display: block;
-  width: 100%;
-  text-align: left;
-  background: transparent;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 8px;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px;
-  color: #DCD8C8;
-  cursor: pointer;
-}
-.fo-mention-picker button:hover { background: rgba(169,180,120,0.14); }
-.fo-mention-picker[hidden] {
-  /* Bug fix 2026-07-21: .fo-mention-picker's own `display: flex` had equal
-     CSS specificity to the browser's default `[hidden] { display: none }`,
-     so author CSS won and the picker never actually hid after a selection
-     or an outside click, even though addon.js's hidden=true logic was
-     correct all along. This rule's higher specificity (class + attribute)
-     forces it closed whenever the hidden attribute is set. */
-  display: none;
-}
 .fo-monday-details.fo-monday-blocked {
-  background: rgba(220,167,70,0.06);
-  border-color: rgba(220,167,70,0.2);
+  background: rgba(220,167,70,0.06); border-color: rgba(220,167,70,0.2);
   flex-direction: row;
 }
 .fo-monday-blocked-label {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 12.5px;
-  color: #DCA746;
+  font-family: var(--sans, 'Space Grotesk', sans-serif);
+  font-size: 12.5px; color: #DCA746;
 }
 
-/* The real HTML that'll actually post to Monday (or already did) -- same
-   trusted-content rendering foOpenSendPreview already uses for this exact
-   field, editable in place here the same way as the rest of the dashboard's
-   manual controls (click in, edit, blur to save). */
+/* ── mention picker ──────────────────────────────────────────────────────── */
+.fo-mention-wrap { position: relative; display: inline-flex; }
+.fo-mention-btn {
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 11px; font-weight: 700; color: rgba(220,216,200,0.6);
+  background: #0C100C; border: 1px solid rgba(237,233,220,0.14);
+  border-radius: 5px; width: 20px; height: 20px; line-height: 1;
+  cursor: pointer; transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+.fo-mention-btn:hover { border-color: rgba(169,180,120,0.5); color: #DCD8C8; }
+.fo-mention-picker {
+  position: absolute; top: calc(100% + 4px); left: 0; z-index: 20;
+  min-width: 170px; max-height: 220px; overflow-y: auto;
+  background: #141A14; border: 1px solid rgba(237,233,220,0.16);
+  border-radius: 8px; padding: 4px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  display: flex; flex-direction: column; gap: 1px;
+}
+.fo-mention-picker button {
+  display: block; width: 100%; text-align: left;
+  background: transparent; border: none; border-radius: 5px;
+  padding: 5px 8px; font-family: var(--sans, 'Space Grotesk', sans-serif);
+  font-size: 12px; color: #DCD8C8; cursor: pointer;
+}
+.fo-mention-picker button:hover { background: rgba(169,180,120,0.14); }
+.fo-mention-picker[hidden] { display: none; }
+
+/* ── update body ─────────────────────────────────────────────────────────── */
 .fo-update-body {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 12.5px;
-  line-height: 1.55;
-  color: rgba(220,216,200,0.78);
-  border-radius: 6px;
-  padding: 3px 6px;
-  margin: 0 -6px;
-  cursor: text;
-  outline: none;
-  transition: background 0.12s, box-shadow 0.12s;
+  font-family: var(--sans, 'Space Grotesk', sans-serif);
+  font-size: 12.5px; line-height: 1.55; color: rgba(220,216,200,0.78);
+  border-radius: 6px; padding: 3px 6px; margin: 0 -6px;
+  cursor: text; outline: none; transition: background 0.12s, box-shadow 0.12s;
 }
 .fo-update-body:hover { background: rgba(237,233,220,0.05); }
 .fo-update-body:focus { background: rgba(146,155,105,0.08); box-shadow: 0 0 0 1px rgba(169,180,120,0.4); }
@@ -398,26 +407,117 @@
 .fo-update-body ul:last-child { margin-bottom: 0; }
 .fo-update-body li { margin: 3px 0; }
 .fo-update-body strong { color: #EDE9DA; font-weight: 700; }
-/* Genuinely empty (no draft captured yet), NOT placeholder text sitting in
-   the DOM -- otherwise an untouched blur would save the placeholder itself
-   as if it were real update content. Purely a CSS illusion, gone the
-   moment there's real text (:empty no longer matches). */
 .fo-update-body-missing:empty::before {
-  content: 'No full update draft was captured for this item yet -- click to write one.';
-  font-style: italic;
-  color: rgba(220,216,200,0.4);
+  content: 'No update draft yet — click to write one.';
+  font-style: italic; color: rgba(220,216,200,0.35);
+}
+.mention {
+  display: inline-flex; background: rgba(146,155,105,0.16);
+  color: #C6D093 !important; border-radius: 999px; padding: 1px 8px;
+  font-weight: 600; text-decoration: none !important; cursor: default;
 }
 
-/* Monday mention chips (<a class="mention">) -- rendered inert here (no
-   real href), styled as a pill instead of a default blue underlined link
-   so this actually looks like what Monday itself will render. */
-.mention {
-  display: inline-flex;
-  background: rgba(146,155,105,0.16);
-  color: #C6D093 !important;
-  border-radius: 999px;
-  padding: 1px 8px;
-  font-weight: 600;
-  text-decoration: none !important;
-  cursor: default;
+/* ── chat log ────────────────────────────────────────────────────────────── */
+.fo-itemchat {
+  background: #101510; border: 1px solid rgba(237,233,220,0.06);
+  border-radius: 10px; padding: 10px;
+}
+.fo-itemchat-log {
+  display: flex; flex-direction: column; gap: 6px;
+  max-height: 220px; overflow-y: auto;
+}
+.fo-itemchat-log:not(:empty) { margin-bottom: 8px; }
+.fo-itemchat-msg {
+  padding: 6px 10px; border-radius: 8px;
+  font-size: 12.5px; max-width: 88%; line-height: 1.5; white-space: pre-wrap;
+}
+.fo-itemchat-msg.user { align-self: flex-end; background: #141A14; border: 1px solid rgba(237,233,220,0.1); color: #EDE9DA; }
+.fo-itemchat-msg.assistant { align-self: flex-start; background: rgba(146,155,105,0.12); color: #DCD8C8; }
+.fo-itemchat-msg.fo-thinking { opacity: 0.6; font-style: italic; }
+.fo-itemchat-form { display: flex; gap: 6px; }
+.fo-itemchat-form input {
+  flex: 1; background: #0C100C;
+  border: 1px solid rgba(237,233,220,0.12); border-radius: 8px;
+  padding: 6px 10px; font-size: 12.5px; color: #EDE9DA;
+  font-family: var(--sans, 'Space Grotesk', sans-serif);
+}
+.fo-itemchat-form input::placeholder { color: rgba(220,216,200,0.35); }
+.fo-itemchat-form input:focus { outline: none; border-color: rgba(169,180,120,0.5); }
+.fo-itemchat-form input:disabled { opacity: 0.5; }
+.fo-itemchat-form button {
+  border: none; background: #929B69; color: #0C100C;
+  border-radius: 8px; padding: 6px 12px;
+  font-size: 12.5px; font-weight: 600; cursor: pointer;
+  font-family: var(--sans, 'Space Grotesk', sans-serif);
+}
+.fo-itemchat-form button:hover { background: #A9B478; }
+.fo-itemchat-form button:disabled { opacity: 0.5; cursor: default; }
+
+/* ── send-to-monday preview overlay ──────────────────────────────────────── */
+.fo-preview-overlay {
+  position: fixed; inset: 0; background: rgba(4,6,4,0.7);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; z-index: 100;
+}
+.fo-preview-card {
+  width: 100%; max-width: 560px; max-height: 88vh; overflow-y: auto;
+  background: #141A14; border: 1px solid rgba(237,233,220,0.12);
+  border-radius: 16px; padding: 20px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.fo-preview-header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; flex-wrap: wrap;
+}
+.fo-preview-eyebrow {
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 10.5px; font-weight: 500; letter-spacing: 0.1em;
+  text-transform: uppercase; color: #DCA746;
+}
+.fo-preview-target {
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 10.5px; letter-spacing: 0.04em;
+  color: rgba(220,216,200,0.55); padding: 3px 9px;
+  border-radius: 6px; background: rgba(237,233,220,0.06);
+}
+.fo-preview-note { font-size: 12.5px; color: rgba(220,216,200,0.55); margin: 0; }
+.fo-preview-field { display: flex; flex-direction: column; gap: 6px; }
+.fo-preview-field-label {
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+  text-transform: uppercase; color: rgba(220,216,200,0.45);
+}
+.fo-preview-title, .fo-preview-body {
+  background: #0C100C; border: 1px solid rgba(237,233,220,0.14);
+  border-radius: 10px; padding: 10px 12px;
+  color: #EDE9DA; font-family: var(--sans, 'Space Grotesk', sans-serif);
+  font-size: 13.5px; line-height: 1.55;
+}
+.fo-preview-title { font-weight: 600; }
+.fo-preview-body { min-height: 90px; white-space: pre-wrap; }
+.fo-preview-title:focus, .fo-preview-body:focus { outline: none; border-color: rgba(169,180,120,0.55); }
+.fo-preview-error { font-size: 12.5px; color: #E8657D; margin: 0; }
+.fo-preview-actions { justify-content: flex-end; margin-top: 4px; }
+.fo-preview-cancel {
+  background: transparent; border: 1px solid rgba(237,233,220,0.16);
+  color: rgba(220,216,200,0.7); padding: 6px 11px; border-radius: 999px;
+  font-family: var(--sans, 'Space Grotesk', sans-serif); font-size: 12px;
+  cursor: pointer; transition: background 0.12s, border-color 0.12s;
+}
+.fo-preview-cancel:hover { background: rgba(237,233,220,0.06); border-color: rgba(237,233,220,0.3); }
+.fo-preview-cancel:disabled { opacity: 0.5; cursor: default; }
+
+/* ── responsive: single-column below 900px ───────────────────────────────── */
+@media (max-width: 900px) {
+  .fo-shell {
+    grid-template-columns: 1fr;
+  }
+  .fo-list {
+    position: static;
+    max-height: none;
+  }
+  /* on mobile: show list OR detail, not both */
+  .fo-shell.fo-detail-visible .fo-list  { display: none; }
+  .fo-shell:not(.fo-detail-visible) .fo-detail { display: none; }
+  .fo-det-back { display: inline-block; }
 }
