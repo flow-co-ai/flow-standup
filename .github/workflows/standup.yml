@@ -35,13 +35,27 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          # generate.py now syncs standups/completed-accumulator.json via the
+          # GitHub API directly (same credential monday-done-webhook.js uses)
+          # instead of the local write + this step's own git commit below --
+          # see sync_accumulator_via_github's docstring.
+          GH_STATE_TOKEN: ${{ secrets.GH_STATE_TOKEN }}
         run: python generate.py
 
       - name: Commit standup file to main
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add standups/ site/latest.json site/inbox.json archive/ alerts/
+          # standups/completed-accumulator.json is excluded here on purpose
+          # (Naz, 2026-08-06): it's now synced via the GitHub API directly by
+          # generate.py itself (see sync_accumulator_via_github), decoupled
+          # from this commit entirely. It used to be bundled in via the plain
+          # `standups/` glob -- netlify/functions/monday-done-webhook.js
+          # writes that SAME file in real time, and a webhook write landing
+          # mid-run used to make THIS step's own rebase-on-conflict logic
+          # below drop the ENTIRE day's commit on a conflict there, not just
+          # that file's diff.
+          git add standups/ ':!standups/completed-accumulator.json' site/latest.json site/inbox.json archive/ alerts/
           # history/ doesn't exist until a week ages out of the rolling
           # 12-week window and gets archived for the first time, and
           # scores-history.json (root + site copy) only gets written when at

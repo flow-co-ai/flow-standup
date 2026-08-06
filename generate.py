@@ -9,6 +9,7 @@ Python. Mirrors the proven flow-analyst per-client pattern.
 Run: python generate.py
 """
 
+import base64
 import difflib
 import hashlib
 import html
@@ -18,11 +19,13 @@ import os
 import re
 import shutil
 import sys
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 
 import anthropic
+import requests
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -1308,6 +1311,7 @@ ACCUMULATOR_PATH = Path("standups") / "completed-accumulator.json"
 ALERTS_PATH = Path("alerts") / "auto-completed.json"
 COMPLETED_ARCHIVE_DIR = Path("history") / "completed-archive"
 HISTORY_WINDOW_WEEKS = 11  # + the current week = 12 rolling weeks shown live
+GITHUB_REPO = "flow-co-ai/flow-standup"
 
 
 def _iso_week(d: datetime) -> str:
@@ -1319,6 +1323,100 @@ def _completion_id(client: str, text: str) -> str:
     """Internal bookkeeping label only (logs/debugging) -- NOT the dedup key.
     See _is_duplicate_completion for how duplicates are actually decided."""
     return hashlib.sha1(f"{client}:{text}".encode()).hexdigest()[:12]
+
+
+# ── completed-accumulator.json: synced via the GitHub Contents API directly,
+# NOT the local file + standup.yml's own git add/commit (Naz, 2026-08-06).
+# netlify/functions/monday-done-webhook.js writes this SAME file in real time
+# the instant a Monday status flips to Done. While it was part of
+# standup.yml's one big bundled commit (git add standups/ site/latest.json
+# ...), a webhook write landing mid-Action-run made that commit's own
+# rebase-on-conflict logic drop the ENTIRE day's standup on a conflict here --
+# not just this file's diff. Decoupled: this reads the file fresh, re-checks
+# dedup against whatever's actually there (a concurrent webhook write since
+# this run started may already cover one of these), merges in, and PUTs with
+# retry-on-409 -- same read/merge/write/retry shape as that webhook's own
+# getFile/putFile.
+def _gh_headers(token: str) -> dict:
+    return {"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json"}
+
+
+def _gh_get_json(repo: str, path: str, token: str, branch: str = "main") -> tuple[dict, str | None]:
+    """Returns (content, sha). sha is None if the file doesn't exist yet."""
+    res = requests.get(
+        f"https://api.github.com/repos/{repo}/contents/{path}",
+        headers=_gh_headers(token),
+        params={"ref": branch},
+        timeout=30,
+    )
+    if res.status_code == 404:
+        return {}, None
+    res.raise_for_status()
+    payload = res.json()
+    content = base64.b64decode(payload["content"]).decode("utf-8")
+    return json.loads(content), payload["sha"]
+
+
+def _gh_put_json(repo: str, path: str, data: dict, sha: str | None, token: str, message: str, branch: str = "main") -> tuple[bool, bool]:
+    """Returns (ok, conflict). Raises on any other HTTP error."""
+    body = (json.dumps(data, indent=2, ensure_ascii=False) + "\n").encode("utf-8")
+    payload = {
+        "message": message,
+        "content": base64.b64encode(body).decode("ascii"),
+        "branch": branch,
+    }
+    if sha:
+        payload["sha"] = sha
+    res = requests.put(
+        f"https://api.github.com/repos/{repo}/contents/{path}",
+        headers=_gh_headers(token),
+        json=payload,
+        timeout=30,
+    )
+    if res.status_code == 409:
+        return False, True
+    res.raise_for_status()
+    return True, False
+
+
+def sync_accumulator_via_github(
+    deduped_new: list[dict],
+    newly_seen_monday_ids: set[str],
+    current_iso_week: str,
+    repo: str = GITHUB_REPO,
+) -> dict:
+    """Merges this run's newly-detected completions into
+    standups/completed-accumulator.json via the GitHub API and returns the
+    final, actually-persisted dict (so the caller's in-memory accumulator
+    reflects reality -- including anything the webhook added -- rather than
+    just this run's own local view)."""
+    token = os.environ.get("GH_STATE_TOKEN")
+    if not token:
+        raise RuntimeError("GH_STATE_TOKEN is not set -- can't sync completed-accumulator.json")
+
+    path = str(ACCUMULATOR_PATH).replace("\\", "/")  # posix-style regardless of OS
+    for attempt in range(1, 6):
+        fresh, sha = _gh_get_json(repo, path, token)
+        fresh.setdefault("isoWeek", None)
+        fresh.setdefault("items", [])
+        fresh.setdefault("history", [])
+        fresh.setdefault("monday_ids_seen", [])
+        apply_weekly_reset(fresh, current_iso_week)
+
+        still_new = [c for c in deduped_new if not _is_duplicate_completion(c, fresh["items"])]
+        fresh["items"].extend(still_new)
+        fresh["monday_ids_seen"] = sorted(set(fresh["monday_ids_seen"]) | newly_seen_monday_ids)
+
+        ok, conflict = _gh_put_json(
+            repo, path, fresh, sha, token,
+            f"generate.py: {len(still_new)} new completion(s), {current_iso_week}",
+        )
+        if ok:
+            return fresh
+        if not conflict:
+            raise RuntimeError(f"unexpected failure writing {path}")
+        time.sleep(0.5 * attempt)
+    raise RuntimeError(f"Gave up after 5 conflicting writes to {path}")
 
 
 def load_accumulator(path: Path = ACCUMULATOR_PATH) -> dict:
@@ -2047,11 +2145,24 @@ def main():
         except Exception as exc:
             print(f"  ✗ Failed to auto-mark Done for {mid}: {exc}")
 
-    accumulator["items"].extend(deduped_new)
-    accumulator["monday_ids_seen"] = sorted(seen_monday_ids | newly_seen_monday_ids)
-    ACCUMULATOR_PATH.parent.mkdir(exist_ok=True)
-    ACCUMULATOR_PATH.write_text(json.dumps(accumulator, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(f"  Wrote {ACCUMULATOR_PATH}")
+    # Synced via the GitHub API directly, not a local write + standup.yml's
+    # own git add/commit -- see sync_accumulator_via_github's docstring.
+    # Reassigns accumulator to the actual final persisted state (which may
+    # include completions netlify/functions/monday-done-webhook.js recorded
+    # since this run started) so completed_this_week/completed_history below
+    # reflect reality, not just this run's own local view. Non-blocking, same
+    # as every other secondary write in this run (Drive, scoring, archive) --
+    # a GitHub API hiccup (rate limit, missing GH_STATE_TOKEN, network) here
+    # must not crash the entire standup. Falls back to this run's own local
+    # view (not persisted -- unsaved completions just get re-detected next
+    # run, since monday_ids_seen wouldn't have been updated remotely either).
+    try:
+        accumulator = sync_accumulator_via_github(deduped_new, newly_seen_monday_ids, current_iso_week)
+        print(f"  Synced {ACCUMULATOR_PATH} via GitHub API ({len(deduped_new)} new completion(s) this run)")
+    except Exception as exc:
+        print(f"  ⚠️  Accumulator sync failed (non-blocking, not persisted this run): {exc}")
+        accumulator["items"].extend(deduped_new)
+        accumulator["monday_ids_seen"] = sorted(seen_monday_ids | newly_seen_monday_ids)
 
     ALERTS_PATH.parent.mkdir(exist_ok=True)
     ALERTS_PATH.write_text(json.dumps(alerts, indent=2, ensure_ascii=False), encoding="utf-8")
