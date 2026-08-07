@@ -22,7 +22,7 @@ GITHUB_REPO = "flow-co-ai/flow-standup"
 ACCUMULATOR_PATH = "standups/completed-accumulator.json"
 
 # <-- EDIT THIS: add every test item's monday_item_id here
-IDS_TO_REMOVE = ["12741555170"]
+IDS_TO_REMOVE = ["12741783775", "12741900125"]
 
 
 def _gh_headers():
