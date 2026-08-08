@@ -99,6 +99,111 @@ def _extract_updates_full(raw_updates: list) -> list[dict]:
     return out
 
 
+# Paginated items_page fetch (scripts/fetch_monday_pagination_patch.py,
+# applied 2026-08-08) -- items_page was limit:100 with no cursor loop, so any
+# board over 100 active items silently lost everything past #100 (standup
+# text, performance snapshot, completion detection). Does NOT fix the
+# separate archived-items gap (items_page never returns archived items at
+# all, regardless of pagination -- that's what monday-done-webhook.js is
+# for); this only fixes the more-than-100-items gap.
+_BOARD_FRAGMENT = """
+    cursor
+    items {
+      id
+      name
+      created_at
+      group { id title }
+      column_values {
+        id
+        text
+        value
+        type
+      }
+      subitems {
+        id
+        name
+        board { id }
+        column_values {
+          id
+          text
+          value
+          type
+        }
+        updates(limit: 25) {
+          id
+          body
+          created_at
+          creator_id
+          creator { name }
+          viewers { user_id }
+        }
+      }
+      updates(limit: 25) {
+        id
+        body
+        created_at
+        creator_id
+        creator { name }
+        viewers { user_id }
+      }
+    }
+"""
+
+_QUERY_FIRST_PAGE = """
+    query GetBoard($ids: [ID!]!) {
+      boards(ids: $ids) {
+        id
+        name
+        groups { id title }
+        items_page(limit: 100) {
+""" + _BOARD_FRAGMENT + """
+        }
+      }
+    }
+    """
+
+_QUERY_NEXT_PAGE = """
+    query GetBoardPage($ids: [ID!]!, $cursor: String!) {
+      boards(ids: $ids) {
+        id
+        name
+        items_page(limit: 100, cursor: $cursor) {
+""" + _BOARD_FRAGMENT + """
+        }
+      }
+    }
+    """
+
+
+def _fetch_all_items_paginated(board_id: str, headers: dict) -> list:
+    """Loops items_page with cursor until exhausted. Replaces the single
+    limit:100-and-done call -- boards with >100 active items were silently
+    truncating before this."""
+    all_items = []
+    cursor = None
+    while True:
+        if cursor:
+            body = {"query": _QUERY_NEXT_PAGE, "variables": {"ids": [str(board_id)], "cursor": cursor}}
+        else:
+            body = {"query": _QUERY_FIRST_PAGE, "variables": {"ids": [str(board_id)]}}
+
+        resp = requests.post(MONDAY_API_URL, headers=headers, json=body, timeout=30)
+        resp.raise_for_status()
+        payload = resp.json()
+        if "errors" in payload:
+            raise ValueError(f"Monday API errors: {payload['errors']}")
+
+        page = payload["data"]["boards"][0]["items_page"]
+        items = page.get("items") or []
+        all_items.extend(items)
+
+        cursor = page.get("cursor")
+        if not cursor or not items:
+            break
+
+    return all_items
+
+
 def set_monday_status_done(board_id: str, item_id: str, status_column_id: str) -> None:
     """Sets one item/subitem's status column to "Done". This is the ONLY write
     generate.py is allowed to make to Monday -- mirrors the same rule already
@@ -150,70 +255,7 @@ def fetch_board(
         "API-Version": "2023-10",
     }
 
-    query = """
-    query GetBoard($ids: [ID!]!) {
-      boards(ids: $ids) {
-        id
-        name
-        groups { id title }
-        items_page(limit: 100) {
-          items {
-            id
-            name
-            created_at
-            group { id title }
-            column_values {
-              id
-              text
-              value
-              type
-            }
-            subitems {
-              id
-              name
-              board { id }
-              column_values {
-                id
-                text
-                value
-                type
-              }
-              updates(limit: 25) {
-                id
-                body
-                created_at
-                creator_id
-                creator { name }
-                viewers { user_id }
-              }
-            }
-            updates(limit: 25) {
-              id
-              body
-              created_at
-              creator_id
-              creator { name }
-              viewers { user_id }
-            }
-          }
-        }
-      }
-    }
-    """
-
-    resp = requests.post(
-        MONDAY_API_URL,
-        headers=headers,
-        json={"query": query, "variables": {"ids": [str(board_id)]}},
-        timeout=30,
-    )
-    resp.raise_for_status()
-    payload = resp.json()
-
-    if "errors" in payload:
-        raise ValueError(f"Monday API errors: {payload['errors']}")
-
-    raw_items = payload["data"]["boards"][0]["items_page"]["items"]
+    raw_items = _fetch_all_items_paginated(board_id, headers)
     processed = []
 
     for item in raw_items:
