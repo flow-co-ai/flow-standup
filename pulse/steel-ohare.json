@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T21:41:29.727Z",
+  "generated_at": "2026-08-08T22:44:29.077Z",
   "date": "2026-08-08",
   "slug": "steel-ohare",
   "name": "O'Hare Precision",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "GBP activity is the standout story this period, driving 184 total actions (135 directions, 42 web clicks, 7 calls) over 28 days, though momentum is softening with GBP down 31.58% in the last 7 days versus the prior 7, likely reflecting seasonal slowdown or reduced search demand. Paid channels (Meta and Google Ads) show zero spend and zero leads, so all lead-gen activity is currently organic.",
+  "verdict": "For O'Hare Precision, the biggest movement is a 31.58% drop in Google Business Profile actions over the last 7 days, likely driven by reduced search visibility or seasonal softening in local intent. Paid channels (Meta and Google Ads) show zero spend and zero leads over the 28-day window, so all lead activity remains dependent on organic GBP traffic, which recorded 184 total actions including 7 calls and 135 direction requests.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,60 +409,61 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-08T21:45:01.329Z",
+    "generated_at": "2026-08-08T22:48:06.994Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Organic-only account; GBP softening and SC dipping are the only live risks.",
+    "verdict": "GBP erosion is the only active revenue signal; paid is entirely absent.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend and zero leads across all 28 days — account is running entirely on organic with no paid efficiency to measure.",
+        "text": "Zero paid spend and zero leads across all 28 days — no CPL to optimize; the entire client is running on organic GBP only.",
         "confidence": "confirmed",
-        "channel": "meta/google"
+        "channel": "meta+google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions fell 31.58% last 7d vs prior 7d; last 3 days (Aug 5–7) logged only 2, 0, 0 — a confirmed 3-day signal of GBP momentum loss.",
+        "text": "GBP actions fell 31.58% week-over-week; last 3 days (Aug 5–7) show 2, 0, 0 actions vs prior 3 days (Aug 2–4) averaging 8 — a confirmed 3-day signal, not noise.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "Search clicks down 13.21% (7d delta); last 3 days Aug 5–7 averaged 11 vs prior 3 days (Aug 2–4) average of 14 — mild but consistent dip.",
+        "priority": 3,
+        "text": "Search clicks dropped 13.21% week-over-week; Aug 7 recorded 0 sc_clicks, the second zero in 3 days, suggesting weakening search visibility.",
         "confidence": "probable",
-        "channel": "search"
+        "channel": "search_console"
       },
       {
         "id": "F4",
-        "priority": 3,
-        "text": "GA4 sessions read zero for all 45 days — tracking is either broken or unconnected; no website behavior data is available to validate GBP web-click quality.",
-        "confidence": "confirmed",
-        "channel": "ga4"
+        "priority": 4,
+        "text": "GBP calls total only 7 over 28 days against 135 direction requests — direction-to-call conversion is extremely low, suggesting an intent or listing quality gap.",
+        "confidence": "hypothesis",
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Audit GA4 connection — 45 days of zero sessions with 42 GBP web-clicks confirms a broken or missing tracking install.",
-        "cites": [
-          "F4"
-        ],
-        "monday_item_name": "Fix GA4 Tracking Install",
-        "monday_update": "GA4 has reported zero sessions for every day in the 45-day series despite 42 GBP web-clicks recorded in the same window, which is not plausible without a tracking failure. Confirm the GA4 property is correctly linked and the measurement tag is firing on the live site. Success is confirmed when GA4 sessions appear within 48 hours of the fix and align directionally with SC click volume. Resolve by 2026-08-11."
-      },
-      {
-        "id": "S2",
         "type": "watch",
-        "text": "Watch GBP actions: 3 consecutive zero/near-zero days (Aug 5–7). Re-check Aug 11 for recovery before any action.",
+        "text": "Monitor GBP daily actions for 3 more days; re-check Aug 11 to confirm whether the 0-action streak extends beyond 2 days.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Watch GBP Action Drop",
-        "monday_update": "GBP actions hit 2, 0, 0 on Aug 5–6–7, following a 31.58% 7-day decline — a confirmed 3-day signal. No paid lever is available to compensate while spend remains at zero. Monitor through Aug 11; if the 3-day average remains below 3 actions per day, escalate to a GBP profile audit (photos, post cadence, category check). No action taken until then."
+        "monday_item_name": "Watch GBP action drop",
+        "monday_update": "GBP actions hit 0 on Aug 6 and Aug 7 after averaging 8/day the prior 3 days — a confirmed 3-day signal of decline (F2). No paid activity exists to compensate, so this is the client's only lead-generation channel. Success check: if daily GBP actions return above 5 by Aug 11, the drop was transient and no further action is needed. If the streak continues through Aug 11, escalate to a GBP listing audit."
+      },
+      {
+        "id": "S2",
+        "type": "fix",
+        "text": "Audit GBP listing for suppression, category changes, or review flags that could explain the 31.58% action drop.",
+        "cites": [
+          "F2",
+          "F3"
+        ],
+        "monday_item_name": "GBP listing audit fix",
+        "monday_update": "GBP actions dropped 31.58% week-over-week and search clicks fell 13.21% in the same window, with 2 consecutive zero-action days on Aug 6–7 (F2, F3). Check for listing suspensions, category edits, or a review flag in Google Business Manager. Confirm the listing is fully verified and all NAP details are intact. Resolution target: listing confirmed clean or issue identified by Aug 11 next check."
       }
     ],
     "next_check": "2026-08-11"

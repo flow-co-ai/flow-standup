@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T21:39:34.848Z",
+  "generated_at": "2026-08-08T22:43:48.981Z",
   "date": "2026-08-08",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Healing Helps saw zero paid activity across Meta and Google Ads in the last 28 days, so all engagement came from Google Business Profile, which generated 52 total actions (36 directions, 16 web clicks, 0 calls). The biggest movement is a 35.29% drop in GBP actions over the last 7 days versus the prior 7 days, likely driven by reduced search demand or a dip in profile visibility with no paid support to supplement organic traffic.",
+  "verdict": "Healing Helps had zero paid activity across Meta and Google Ads in the last 28 days, so all engagement came from Google Business Profile, which generated 52 total actions (36 directions, 16 web clicks, 0 calls). The biggest movement is a 35.29% drop in GBP actions over the last 7 days versus the prior 7 days, likely driven by reduced organic search demand or a dip in profile visibility with no paid support to supplement traffic.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -410,37 +410,37 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-08T21:42:33.104Z",
+    "generated_at": "2026-08-08T22:45:39.880Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "No paid activity in 28 days; GBP is the only traffic source and it's fading.",
+    "verdict": "No paid activity in 28 days; organic-only traffic is now fading too.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across Meta and Google Ads for the full 45-day series — $0 in, $0 out, 0 leads generated.",
+        "text": "Zero paid spend across Meta and Google for the full 28-day window; CPL is undefined because 0 leads were generated.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "meta/google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions fell 35.29% week-over-week (prior 7d vs last 7d); last 3 days (Aug 5–7) show 0 actions vs 9 in prior 3 days (Aug 2–4).",
+        "text": "GBP actions dropped 35.29% last 7d vs prior 7d (recent 7d ≈ 8 actions vs prior 7d ≈ 12), with last 3 days at 0 actions — a confirmed 3-day signal.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GA4 sessions down 4.35% week-over-week; last 3 days averaged 5 sessions vs 8.3 prior 3 days — soft downward drift.",
+        "text": "GA4 sessions down 4.35% week-over-week; last 3 days averaged 5 sessions vs prior 3-day average of 8 — soft directional decline, no paid support to offset.",
         "confidence": "probable",
         "channel": "ga4"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GBP logged 0 calls across 52 total 28-day actions; all engagement is directions (36) and web clicks (16) — no phone conversion intent captured.",
-        "confidence": "confirmed",
+        "text": "28-day GBP logged 0 calls from 52 total actions (36 directions, 16 web clicks); zero call conversions despite profile activity suggests CTA or phone listing gap.",
+        "confidence": "hypothesis",
         "channel": "gbp"
       }
     ],
@@ -448,12 +448,24 @@
       {
         "id": "S1",
         "type": "watch",
-        "text": "Monitor GBP actions daily; if 3-day total stays at 0, escalate to paid reactivation conversation.",
+        "text": "No paid budget to move. Watch GBP actions and GA4 sessions for 3 more days before any paid reactivation decision.",
         "cites": [
-          "F2"
+          "F1",
+          "F2",
+          "F3"
         ],
-        "monday_item_name": "Watch GBP action recovery",
-        "monday_update": "GBP actions hit 0 for the 3-day window ending Aug 7, down from 9 actions in the prior 3 days — a confirmed 3-day signal. No paid spend is active to compensate. Watch whether Aug 8–10 recovers above 5 total actions. If the 3-day total remains at or near 0 by Aug 11, escalate to Sohib for a paid reactivation discussion on the appropriate channel."
+        "monday_item_name": "Watch GBP & GA4 Trend",
+        "monday_update": "No paid spend exists on Meta or Google to act on. GBP actions are at 0 for the last 3 days (down 35.29% week-over-week) and GA4 sessions averaged 5 over the same window vs 8 prior. Success check: if GBP actions remain at 0 and sessions continue declining through 2026-08-11, escalate to Sohib for paid reactivation discussion. Re-check on 2026-08-11."
+      },
+      {
+        "id": "S2",
+        "type": "fix",
+        "text": "Audit GBP phone listing and call CTA — 0 calls from 52 actions over 28 days indicates a probable profile or CTA gap.",
+        "cites": [
+          "F4"
+        ],
+        "monday_item_name": "Fix GBP Call CTA Gap",
+        "monday_update": "The GBP profile generated 52 actions over 28 days (36 directions, 16 web clicks) but recorded 0 calls. Verify the phone number is correctly listed, click-to-call is enabled, and the primary CTA on the profile is set to 'Call'. Success check: at least 1 call action recorded within 7 days of the fix. Review on 2026-08-15."
       }
     ],
     "next_check": "2026-08-11"
