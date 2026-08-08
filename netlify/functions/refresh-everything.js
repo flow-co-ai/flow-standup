@@ -24,8 +24,8 @@ exports.handler = async (event) => {
     const key = event.headers["x-ops-key"];
     if (!key || key !== process.env.OPS_PASSCODE) return json(401, { ok: false, error: "unauthorized" });
 
-    const token = process.env.GITHUB_WORKFLOW_TOKEN;
-    if (!token) throw new Error("GITHUB_WORKFLOW_TOKEN is not set");
+    const token = process.env.GH_STATE_TOKEN;
+    if (!token) throw new Error("GH_STATE_TOKEN is not set");
 
     await dispatchWorkflow("daily-pulse.yml", token);
     await dispatchWorkflow("standup.yml", token);
