@@ -70,16 +70,36 @@ fully work yet regardless since `refresh-everything.js` needs
 `GITHUB_WORKFLOW_TOKEN` (File 2, above). `refresh-standup.js` stays in
 place as a working fallback until both are resolved.
 
+## Update (same night, later): GH_STATE_TOKEN got Actions scope, no new token needed
+
+Naz added Actions permission to the existing `GH_STATE_TOKEN` directly —
+no separate `GITHUB_WORKFLOW_TOKEN` after all. Changed
+`refresh-everything.js` to use `GH_STATE_TOKEN` instead (`932d28d`).
+
+Retested `workflow_dispatch` directly against GitHub's API with the
+current token — **204 No Content** (success), where it 403'd before.
+That call itself triggered a real `standup.yml` run (`31279607858`,
+`workflow_dispatch`), which completed successfully. Pulled its actual job
+logs and confirmed the real signal, not just the overall conclusion:
+
+```
+Synced standups/completed-accumulator.json via GitHub API (0 new completion(s) this run)
+```
+
+That's the success message, not the "Accumulator sync failed" fallback —
+**this is the definitive answer to Task 1's original question**, using
+the real GitHub Actions secret in its real execution context, not a
+substitute test with a chat-shared token value.
+
 ## Still needs Naz
 
-- Generate a fine-grained PAT (Contents: Read/write + Actions: Read/write)
-  and add it to Netlify as `GITHUB_WORKFLOW_TOKEN`.
-- Once that's done: click the new "Refresh Everything" button live to
-  confirm it actually triggers both workflows, then say the word and
-  `refresh-standup.js` can come out.
-- Task 1's original ask (confirm the Actions secret matches) still needs a
-  real `workflow_dispatch` run from the GitHub UI — my token can't trigger
-  it either.
+- Click the new "Refresh Everything" button live (or share the ops
+  passcode so it can be curl-tested server-side) for a true UI-level
+  confirmation that it actually triggers both workflows end to end.
+- Once confirmed working: say the word and `refresh-standup.js` can come
+  out.
+- Send the backfill script (`scripts/backfill_done_archived_last_30d.py`)
+  when ready — still hasn't arrived.
 
 ---
 
