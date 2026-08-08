@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T21:39:29.937Z",
+  "generated_at": "2026-08-08T22:50:28.417Z",
   "date": "2026-08-08",
   "slug": "full-smile",
   "name": "Full Smile",
@@ -439,78 +439,78 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-08T21:42:21.486Z",
+    "generated_at": "2026-08-08T22:52:01.806Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Meta CPL stable but spend scale not buying more leads; SOW blockers urgent.",
+    "verdict": "Meta CPL holding but scale stalled; SOW overdue items threaten August scoreboard.",
     "findings": [
       {
         "id": "F1",
-        "priority": 1,
-        "text": "CPL rose 6.59% to ~$11.02 as spend increased 6.59% but leads held flat at 0% growth — budget scale is not converting to volume.",
+        "priority": 2,
+        "text": "5 SOW milestones overdue (LSA over-counting, phone-match attribution, credentials rotation, caption style guide, Aug 7 items) — none show a completed event, risking August scoreboard trust.",
         "confidence": "confirmed",
-        "channel": "Meta"
+        "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "5 overdue SOW milestones past due by 8/8 (LSA over-counting, phone-match attribution, credentials rotation, caption style guide, Saturday sync sign-off) — August scoreboard at risk.",
+        "text": "3 more SOW items due Aug 14–31 (OD patient groups, doctor hours in GHL, dashboard, stay/walk decision) — no completion signal yet; Aug 31 deadline is the client's renewal gate.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "Search clicks dropped -57.14% week-over-week (63 clicks in 28d, 0 Google Ads spend) — organic search the only discovery path and it is weakening.",
+        "priority": 1,
+        "text": "CPL rose 6.59% week-over-week to ~$11.02 while leads held flat at 0% change — spend increase absorbed with zero volume lift over 7 days.",
         "confidence": "confirmed",
-        "channel": "Search"
+        "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "3-day lead signal (Aug 5–7): 4, 4, 4 leads vs prior 3 days (Aug 2–4): 5, 5, 5 — a small but consistent step-down at higher spend (~$57.80/day avg vs ~$68.7/day).",
+        "text": "3-day signal (Aug 5–7): leads average 4.0/day vs prior 3-day (Aug 2–4) average 5.0/day — minor softening; spend held ~$57/day, so CPL trending toward $14+ in this window.",
         "confidence": "probable",
-        "channel": "Meta"
+        "channel": "meta"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 104 opportunities created vs 130 Meta leads and 0 appointments won — 26-lead gap and zero-won pipeline suggests intake leak, not an ads problem.",
+        "text": "GHL shows 104 opportunities created vs 130 Meta leads (28d) and 0 appointments logged — 20% of leads not entering pipeline; 0 won opps suggests intake, not ads, is the conversion gap.",
         "confidence": "probable",
-        "channel": "CRM"
+        "channel": "GHL"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Hold Meta budget flat; watch if 4-lead/day floor holds for 3 more days before any scale.",
+        "type": "fix",
+        "text": "Audit GHL intake: 26 leads missing from pipeline (130 leads vs 104 opps); trace source and repair contact-creation path.",
         "cites": [
-          "F1",
-          "F4"
+          "F5"
         ],
-        "monday_item_name": "Meta CPL watch — hold flat",
-        "monday_update": "Spend scaled +6.59% last week but leads did not follow (0% lift, CPL now $11.02). The 3-day signal shows a step-down to 4 leads/day at higher spend, confirming efficiency is slipping. Hold daily budget at ~$57–60 and re-check on 2026-08-11; if leads recover to 5+/day CPL falls back below $11, a modest +15% scale is defensible."
+        "monday_item_name": "Fix GHL Lead Intake Gap",
+        "monday_update": "GHL shows 104 opportunities created against 130 Meta leads in the 28-day window — 26 leads (20%) are not entering the pipeline at all, and 0 appointments are logged. Ahmed/Ali to pull the raw contact log, identify the 26 missing records by source, and confirm whether the contact-lookup upsert path is silently dropping them. Success check: opportunities created ≥ leads within 5% by 2026-08-13."
       },
       {
         "id": "S2",
-        "type": "fix",
-        "text": "Clear 5 overdue SOW milestones by 2026-08-14 to protect August stay/walk decision.",
+        "type": "watch",
+        "text": "Hold Meta budget flat at ~$60/day; watch CPL for 3 more days before any scale — last 3 days CPL trending toward $14.",
         "cites": [
-          "F2"
+          "F3",
+          "F4"
         ],
-        "monday_item_name": "Clear overdue SOW blockers",
-        "monday_update": "Five milestones are past due as of 2026-08-08: LSA over-counting investigation, phone-match attribution, credentials rotation, caption style guide, and Saturday sync sign-off. These directly block the client's August scoreboard (lead → schedule → show → patient chain) and their stay/walk decision on 2026-08-31. Each owning department (Google LSA, Attribution, Ops, Video, CRM) must mark complete or escalate by 2026-08-14. Success check: all 5 items flipped to done in Monday before the next biweekly Lily sync."
+        "monday_item_name": "Watch Meta CPL 3-Day",
+        "monday_update": "CPL rose 6.59% week-over-week to $11.02 and the 3-day signal (Aug 5–7) shows leads softening to 4.0/day vs 5.0/day prior, pushing implied CPL toward $14. No budget change is warranted until a full 3-day window confirms direction. Re-check on 2026-08-11: if CPL returns below $11.50, scale BWS campaign +15%; if it holds above $14, flag for creative refresh."
       },
       {
         "id": "S3",
         "type": "fix",
-        "text": "Audit 26-lead gap between Meta (130) and GHL opportunities (104); confirm intake process, not ads, is the leak.",
+        "text": "Close 5 overdue Aug 7 SOW items (LSA over-counting, phone attribution, credentials) — each day open erodes August scoreboard credibility.",
         "cites": [
-          "F5"
+          "F1"
         ],
-        "monday_item_name": "GHL intake gap audit",
-        "monday_update": "130 Meta leads were delivered over 28 days but only 104 GHL opportunities were created and 0 were won, with 0 appointments logged. The 26-lead gap and zero-appointment pipeline points to an intake process failure, not an ads delivery problem. Ahmed/Ali to cross-reference GHL contact creation timestamps against Meta lead timestamps and confirm Flex Dental handoff is working for all new leads. Success check: gap ≤5 and at least 1 appointment logged in GHL by 2026-08-14."
+        "monday_item_name": "Close Aug 7 SOW Blockers",
+        "monday_update": "Five milestones past their due date with no completed event recorded: LSA over-counting investigation (due 7/27), caption style guide (due 7/28), phone-match attribution (due 8/7), and credentials rotation (due 8/7). Nacer to assign owners and mark each done or escalate by 2026-08-09. Success check: all 5 items show a completed status in Monday before the next biweekly Lily sync."
       }
     ],
     "next_check": "2026-08-11"

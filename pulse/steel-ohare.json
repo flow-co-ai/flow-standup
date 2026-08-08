@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T21:41:29.727Z",
+  "generated_at": "2026-08-08T22:51:10.071Z",
   "date": "2026-08-08",
   "slug": "steel-ohare",
   "name": "O'Hare Precision",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "GBP activity is the standout story this period, driving 184 total actions (135 directions, 42 web clicks, 7 calls) over 28 days, though momentum is softening with GBP down 31.58% in the last 7 days versus the prior 7, likely reflecting seasonal slowdown or reduced search demand. Paid channels (Meta and Google Ads) show zero spend and zero leads, so all lead-gen activity is currently organic.",
+  "verdict": "For O'Hare Precision, the biggest movement is a 31.58% drop in Google Business Profile actions over the last 7 days, likely driven by reduced search visibility or seasonal dip in local intent. Paid channels (Meta and Google Ads) show zero spend and zero leads over the 28-day window, so all lead activity is currently dependent on organic GBP traffic, making that decline the top priority to investigate.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,62 +409,63 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-08T21:45:01.329Z",
+    "generated_at": "2026-08-08T22:54:51.794Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Organic-only account; GBP softening and SC dipping are the only live risks.",
+    "verdict": "No paid activity; GBP and search both weakening in tandem.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend and zero leads across all 28 days — account is running entirely on organic with no paid efficiency to measure.",
+        "text": "Zero paid spend and zero paid leads across all 28 days — O'Hare runs entirely on organic; no CPL can be measured.",
         "confidence": "confirmed",
-        "channel": "meta/google"
+        "channel": "meta, google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions fell 31.58% last 7d vs prior 7d; last 3 days (Aug 5–7) logged only 2, 0, 0 — a confirmed 3-day signal of GBP momentum loss.",
+        "text": "GBP actions fell 31.58% week-over-week; last 3 days (Aug 5-7) logged 2, 0, 0 vs prior 3 days (Aug 2-4) of 3, 11, 10 — a confirmed 3-day collapse.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Search clicks down 13.21% (7d delta); last 3 days Aug 5–7 averaged 11 vs prior 3 days (Aug 2–4) average of 14 — mild but consistent dip.",
+        "text": "Search clicks dropped 13.21% week-over-week; Aug 7 shows 0 clicks, the first zero in 28 days, suggesting indexing or listing issue rather than pure seasonality.",
         "confidence": "probable",
-        "channel": "search"
+        "channel": "organic"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GA4 sessions read zero for all 45 days — tracking is either broken or unconnected; no website behavior data is available to validate GBP web-click quality.",
-        "confidence": "confirmed",
-        "channel": "ga4"
+        "text": "GBP calls total only 7 over 28 days against 184 total actions — a 3.8% call-conversion rate signals the listing may lack a strong call-to-action or phone prominence.",
+        "confidence": "hypothesis",
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit GA4 connection — 45 days of zero sessions with 42 GBP web-clicks confirms a broken or missing tracking install.",
+        "text": "Audit GBP listing immediately — check for suspension, suppressed edits, or category changes causing the 3-day zero-action drop.",
         "cites": [
-          "F4"
+          "F2",
+          "F3"
         ],
-        "monday_item_name": "Fix GA4 Tracking Install",
-        "monday_update": "GA4 has reported zero sessions for every day in the 45-day series despite 42 GBP web-clicks recorded in the same window, which is not plausible without a tracking failure. Confirm the GA4 property is correctly linked and the measurement tag is firing on the live site. Success is confirmed when GA4 sessions appear within 48 hours of the fix and align directionally with SC click volume. Resolve by 2026-08-11."
+        "monday_item_name": "Fix GBP listing drop",
+        "monday_update": "GBP actions hit 0 on Aug 6 and Aug 7 (down from 10–11 on Aug 3–4), and search clicks also logged 0 on Aug 7 — both channels collapsing together points to a listing-level issue, not seasonality. Log into Google Business Profile and verify the listing is published, not suspended, and that no recent edits triggered a review hold. Success check: GBP actions return to a daily average above 6 (the prior 28-day floor) by 2026-08-12."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GBP actions: 3 consecutive zero/near-zero days (Aug 5–7). Re-check Aug 11 for recovery before any action.",
+        "text": "Watch GBP call volume — at 3.8% of actions over 28 days, reassess listing CTA after listing health is confirmed stable.",
         "cites": [
-          "F2"
+          "F4"
         ],
-        "monday_item_name": "Watch GBP Action Drop",
-        "monday_update": "GBP actions hit 2, 0, 0 on Aug 5–6–7, following a 31.58% 7-day decline — a confirmed 3-day signal. No paid lever is available to compensate while spend remains at zero. Monitor through Aug 11; if the 3-day average remains below 3 actions per day, escalate to a GBP profile audit (photos, post cadence, category check). No action taken until then."
+        "monday_item_name": "Watch GBP call rate",
+        "monday_update": "Over the last 28 days, only 7 of 184 GBP actions were calls (3.8%), with 135 direction requests dominating. This is a hypothesis-grade signal — do not act on it until the listing health issue (S1) is resolved. Re-check call volume on 2026-08-15: if actions recover but calls remain below 5% of actions, escalate to a listing CTA review."
       }
     ],
-    "next_check": "2026-08-11"
+    "next_check": "2026-08-12"
   }
 }

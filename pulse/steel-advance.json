@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T21:41:24.955Z",
+  "generated_at": "2026-08-08T22:51:06.709Z",
   "date": "2026-08-08",
   "slug": "steel-advance",
   "name": "Advance Grinding",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, so all engagement is coming entirely from Google Business Profile, which drove 102 total actions including 2 calls, 68 direction requests, and 32 website clicks. The biggest movement is GBP activity surging 52.17% in the last 7 days versus the prior 7 days, likely driven by increased local search demand or improved profile visibility rather than any paid effort.",
+  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, so all engagement is coming entirely from Google Business Profile, which drove 102 total actions including 2 calls, 68 direction requests, and 32 website clicks. The biggest movement is GBP activity surging 52% week over week, likely driven by increased local search demand or improved profile visibility.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -404,36 +404,36 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-08T21:44:43.567Z",
+    "generated_at": "2026-08-08T22:54:33.399Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Zero paid activity; GBP alone is carrying all client touchpoints.",
+    "verdict": "GBP is the only active channel; paid ads have been dark 45+ days.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Paid channels are fully dark: $0 spend, 0 leads, 0 clicks across Meta and Google Ads over the entire 28-day window.",
+        "text": "Zero paid spend across all 28 days (Meta $0, Google $0); no leads generated from any paid channel in the entire 45-day series.",
         "confidence": "confirmed",
-        "channel": "meta, google_ads"
+        "channel": "meta+google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP is the sole active channel: 102 actions in 28 days, up 52.17% last 7d, driven by 68 direction requests and 32 web clicks.",
+        "text": "GBP drove all 102 actions in 28 days (2 calls, 68 directions, 32 web clicks) — paid dark means this is the entire lead engine right now.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "3-day GBP signal (Aug 5–7): last 3 days summed 12 actions vs prior 3 days (Aug 2–4) summing 11 — momentum is flat after a Jul 22–Aug 5 spike (12, 3, 7, 1, 12).",
+        "text": "3-day GBP signal (Aug 5–7): 12+0+0 = 12 actions vs prior 3 days (Aug 2–4): 3+7+1 = 11 — essentially flat after a volatile week; no acceleration.",
         "confidence": "probable",
         "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GBP calls total only 2 over 28 days despite 102 profile actions, suggesting most local interest is not converting to phone contact.",
+        "text": "GBP calls total only 2 over 28 days; 68 direction requests suggest local intent exists but is not converting to inbound — a known GBP-to-lead gap.",
         "confidence": "probable",
         "channel": "gbp"
       }
@@ -442,15 +442,15 @@
       {
         "id": "S1",
         "type": "watch",
-        "text": "Monitor GBP 3-day call rate (currently 2 calls/28 days) before any paid reactivation decision.",
+        "text": "Watch GBP call volume daily; re-check on 2026-08-11 — 2 calls in 28 days is the baseline to beat before any paid reactivation is justified.",
         "cites": [
           "F1",
           "F4"
         ],
-        "monday_item_name": "Watch GBP call conversion rate",
-        "monday_update": "All paid channels show $0 spend and 0 leads for 28 days; GBP is carrying 100% of client activity with 102 actions but only 2 phone calls. Watch whether the GBP call count improves from its current 2/28-day baseline as the 52.17% weekly action surge continues. If calls remain at or near 2 by 2026-08-15, escalate to Sohib to discuss paid reactivation or GBP CTA optimisation."
+        "monday_item_name": "Watch GBP Call Volume",
+        "monday_update": "Paid channels (Meta and Google) have been at $0 spend for the full 45-day series, leaving GBP as the sole active channel. GBP produced only 2 calls from 102 total actions over 28 days, meaning direction clicks are not converting to inbound contact. Monitor daily call count through 2026-08-11; success threshold is 3+ calls in the next 7 days as a signal that local intent is reaching the business. If calls remain near zero, a paid reactivation conversation with the client is warranted."
       }
     ],
-    "next_check": "2026-08-15"
+    "next_check": "2026-08-11"
   }
 }

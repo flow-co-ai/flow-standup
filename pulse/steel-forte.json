@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T21:41:20.149Z",
+  "generated_at": "2026-08-08T22:51:03.102Z",
   "date": "2026-08-08",
   "slug": "steel-forte",
   "name": "Forte Metals",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "The biggest movement is a 62.86% drop in Google Business Profile actions over the last 7 days, likely driven by reduced local search visibility or seasonal demand softening. Paid channels (Meta and Google Ads) recorded zero spend, leads, and clicks over the full 28-day window, suggesting campaigns are paused and all lead activity is currently dependent on organic GBP traffic.",
+  "verdict": "The biggest movement is a 62.86% drop in GBP actions over the last 7 days, likely driven by reduced local search visibility or seasonal demand softening. Paid channels (Meta and Google Ads) show zero spend and zero leads over the past 28 days, meaning all engagement is organic and any dip in GBP performance has an outsized impact on overall lead flow.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,72 +409,64 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-08T21:44:29.646Z",
+    "generated_at": "2026-08-08T22:54:13.967Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid channels dead 28+ days; organic GBP collapsing with no safety net.",
+    "verdict": "Paid is fully dark; organic GBP collapse is the only active risk.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — Meta and Google Ads both fully dark — means $0 CPL is an absence of leads, not efficiency.",
+        "text": "Zero paid spend and zero leads across all 28 days — no CPL to evaluate; this account is running 100% organic.",
         "confidence": "confirmed",
-        "channel": "meta, google_ads"
+        "channel": "meta,google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions collapsed 62.86% week-over-week; last 3 days (Aug 5–7) totalled 1 action vs 17 in prior 3 days (Aug 2–4) — a confirmed 3-day downtrend.",
+        "text": "GBP actions fell 62.86% week-over-week; last 3 days (Aug 5–7) total 1 action vs prior 3 days (Aug 2–4) total 12 — confirmed sharp drop.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Search clicks fell 90.91% week-over-week; last 3 days show 1 click total vs 8 in the prior 3 days — organic search visibility sharply reduced.",
+        "text": "Search clicks collapsed 90.91% week-over-week; last 3 days show 1 click vs prior 3 days showing 0 — but 28-day total is only 22, signaling structural low visibility.",
         "confidence": "confirmed",
         "channel": "organic"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GA4 sessions are zero for all 45 days in series — either tracking is broken or sessions are genuinely unreported; cannot validate web traffic at all.",
-        "confidence": "confirmed",
-        "channel": "ga4"
+        "text": "GBP actions are spiky, not trending: 22 on Jul 17, then near-zero for several days, suggesting event-driven or listing-quality issues rather than seasonal decay.",
+        "confidence": "probable",
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit and repair GA4 tracking — 45 consecutive zero-session days confirms a broken implementation, not zero traffic.",
+        "text": "Audit GBP listing for suppression, duplicate, or category change — actions dropped to 1 over last 3 days from 12.",
         "cites": [
+          "F2",
           "F4"
         ],
-        "monday_item_name": "Fix GA4 Tracking Forte Metals",
-        "monday_update": "GA4 has reported exactly 0 sessions every day for the full 45-day series, which is not credible given 22 search clicks and 106 GBP actions in the same window. Audit the GA4 property tag, confirm it is firing on the live site, and verify the correct property ID is connected. Success check: at least 1 verified session recorded in GA4 within 3 days of fix — confirm by 2026-08-11."
+        "monday_item_name": "GBP Listing Health Audit",
+        "monday_update": "GBP actions dropped from 12 over Aug 2–4 to just 1 over Aug 5–7 — a confirmed sharp decline, not seasonal noise. Check the Google Business Profile dashboard for listing suppression, ownership flags, duplicate listings, or a recent category/description change that may have triggered a demotion. Success check: GBP actions return to a 7-day rolling average of ≥8 (matching the mid-July baseline). Re-evaluate by 2026-08-15."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GBP trend: if Aug 8–10 actions remain near zero (last 3 days = 1), escalate to client for account/listing review.",
+        "text": "Watch GBP and search clicks together for 7 days before any paid reactivation decision is made.",
         "cites": [
-          "F2"
+          "F1",
+          "F3"
         ],
-        "monday_item_name": "Watch GBP Action Drop",
-        "monday_update": "GBP actions dropped 62.86% week-over-week and the last 3 days (Aug 5–7) produced only 1 action combined, down from 17 in the prior 3 days. This is the only active lead-generation channel while paid is dark, making this decline critical. Monitor through Aug 10 — if daily actions remain at or near zero, escalate to client for Google Business Profile listing audit and potential suspension check. Re-check date: 2026-08-11."
-      },
-      {
-        "id": "S3",
-        "type": "watch",
-        "text": "Confirm paid campaign pause is intentional; if unplanned, flag immediately — client has zero paid lead coverage for 28+ days.",
-        "cites": [
-          "F1"
-        ],
-        "monday_item_name": "Confirm Paid Pause Intent",
-        "monday_update": "Meta and Google Ads have recorded $0 spend for all 28 days in the window and all 45 days in the daily series. No leads have been generated through paid channels in this entire period. Confirm with client whether campaigns are intentionally paused (e.g. seasonal hold or budget decision). If the pause is unplanned, this is a critical gap requiring immediate reactivation. Confirm status by 2026-08-09."
+        "monday_item_name": "Paid Reactivation Watch",
+        "monday_update": "With paid spend at $0 for the full 28-day window and search clicks at only 22 total, there is no paid baseline to act on. No paid channel action is warranted this cycle. Monitor whether the GBP fix (S1) restores organic signals — specifically GBP actions recovering above 8/week and search clicks above 3/week. Re-check on 2026-08-15 before any budget discussion."
       }
     ],
-    "next_check": "2026-08-11"
+    "next_check": "2026-08-15"
   }
 }
