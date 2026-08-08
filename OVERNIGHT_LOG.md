@@ -91,6 +91,34 @@ That's the success message, not the "Accumulator sync failed" fallback —
 the real GitHub Actions secret in its real execution context, not a
 substitute test with a chat-shared token value.
 
+## File 4: scripts/backfill_done_archived_last_30d.py — fixed, dry-run verified, run for real
+
+Found a real bug before running, evidenced directly rather than assumed:
+queried the Ads board's own activity log for a real item and watched the
+SAME status column (`color_mkwb1trm`) show `"column_title":"Current
+Status"` on older entries and `"column_title":"Status"` on newer ones —
+that column got renamed mid-window. Monday's activity log preserves the
+HISTORICAL title as of each event, not the current one, so the script's
+hardcoded `column_title == "Status"` check (in two places) would silently
+miss every Done transition from before the rename — still well within
+the 100-day lookback. `column_type == "color"`/`"status"` is stable
+across the rename (same type-not-title philosophy `fetch_monday.py`'s
+`_status_column` already uses, and `monday-done-webhook.js`'s
+`columnType` check). Fixed both spots. Also applied the same
+word-boundary fix to `resolve_client` that `monday-done-webhook.js`'s
+`resolveClient` already got — identical substring-match bug class.
+
+Refactored the detection logic into its own `find_candidates()` so it
+could be dry-run in isolation before touching the shared accumulator —
+same safety pattern as `remove_test_completions.py`'s required dry-run.
+Dry run found 25 candidates, none matching any of tonight's test items
+(confirms the earlier fix — keeping ids in `monday_ids_seen` even after
+removing their display entries — correctly suppresses them here too).
+Ran the real script: wrote exactly the same 25, no surprises. Real,
+legitimate historical work across Full Smile, Healing Helps, Liferun,
+Vous Physique, Billy Doe Meats, Flow Company, Steel Round Bars, Quality
+HVAC, plus a few genuinely Unmapped group titles. Commit `dceb203`.
+
 ## Still needs Naz
 
 - Click the new "Refresh Everything" button live (or share the ops
@@ -98,8 +126,6 @@ substitute test with a chat-shared token value.
   confirmation that it actually triggers both workflows end to end.
 - Once confirmed working: say the word and `refresh-standup.js` can come
   out.
-- Send the backfill script (`scripts/backfill_done_archived_last_30d.py`)
-  when ready — still hasn't arrived.
 
 ---
 
