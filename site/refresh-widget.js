@@ -64,6 +64,36 @@
     setTimeout(() => document.getElementById('refresh-passcode-input')?.focus(), 80);
   }
 
+  async function pollUntilDone(since, labelEl, btn) {
+    const POLL_INTERVAL_MS = 8000;
+    const MAX_WAIT_MS = 10 * 60 * 1000;
+    const startedAt = Date.now();
+
+    async function poll() {
+      if (Date.now() - startedAt > MAX_WAIT_MS) {
+        btn.disabled = false;
+        if (labelEl) labelEl.textContent = 'Refresh Everything';
+        return;
+      }
+      try {
+        const res = await fetch(`/.netlify/functions/refresh-status?since=${encodeURIComponent(since)}`, {
+          headers: { 'X-Ops-Key': getPasscode() || '' },
+        });
+        const data = await res.json();
+        if (data.ok && data.done) {
+          btn.disabled = false;
+          if (labelEl) labelEl.textContent = data.failed ? 'Done (check for errors)' : 'Refresh Everything';
+          return;
+        }
+      } catch (err) {
+        // network hiccup mid-poll — keep trying
+      }
+      setTimeout(poll, POLL_INTERVAL_MS);
+    }
+
+    poll();
+  }
+
   function init() {
     const btn = mountButton();
     if (!btn) return;
@@ -114,12 +144,9 @@
         return;
       }
 
-      if (labelEl) labelEl.textContent = 'Triggered — takes ~2-3 min, refresh the page after';
+      if (labelEl) labelEl.textContent = 'Triggering...';
       debounceUntil = Date.now() + REFRESH_DEBOUNCE_MS;
-      setTimeout(() => {
-        btn.disabled = false;
-        if (labelEl) labelEl.textContent = 'Refresh Everything';
-      }, 5000);
+      pollUntilDone(data.triggeredAt, labelEl, btn);
     }
 
     btn.addEventListener('click', trigger);

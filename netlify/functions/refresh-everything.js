@@ -30,7 +30,7 @@ exports.handler = async (event) => {
     await dispatchWorkflow("daily-pulse.yml", token);
     await dispatchWorkflow("standup.yml", token);
 
-    return json(200, { ok: true, triggered: ["daily-pulse.yml", "standup.yml"] });
+    return json(200, { ok: true, triggered: ["daily-pulse.yml", "standup.yml"], triggeredAt: new Date().toISOString() });
   } catch (err) {
     console.error("refresh-everything error:", err);
     return json(500, { ok: false, error: String((err && err.message) || err) });
