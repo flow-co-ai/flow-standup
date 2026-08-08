@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T22:44:21.149Z",
+  "generated_at": "2026-08-08T22:51:03.102Z",
   "date": "2026-08-08",
   "slug": "steel-forte",
   "name": "Forte Metals",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "The biggest movement this period is a 62.86% drop in GBP actions over the last 7 days, likely driven by reduced organic search visibility or seasonal dip in local intent. Paid channels (Meta and Google Ads) show zero spend and zero leads over the full 28 days, meaning all 106 GBP actions, 10 calls, 64 direction requests, and 32 web clicks are the only measurable activity for Forte Metals.",
+  "verdict": "The biggest movement is a 62.86% drop in GBP actions over the last 7 days, likely driven by reduced local search visibility or seasonal demand softening. Paid channels (Meta and Google Ads) show zero spend and zero leads over the past 28 days, meaning all engagement is organic and any dip in GBP performance has an outsized impact on overall lead flow.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,63 +409,64 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-08T22:47:31.166Z",
+    "generated_at": "2026-08-08T22:54:13.967Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "No paid activity; GBP is the only live signal and it's fading.",
+    "verdict": "Paid is fully dark; organic GBP collapse is the only active risk.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — Meta and Google both show $0 — so CPL is undefined and all performance is organic-only.",
+        "text": "Zero paid spend and zero leads across all 28 days — no CPL to evaluate; this account is running 100% organic.",
         "confidence": "confirmed",
-        "channel": "meta+google"
+        "channel": "meta,google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions collapsed 62.86% week-over-week; last 3 days (Aug 5–7) recorded just 1, 0, 0 vs prior 3 days (Aug 2–4) averaging 4.0.",
+        "text": "GBP actions fell 62.86% week-over-week; last 3 days (Aug 5–7) total 1 action vs prior 3 days (Aug 2–4) total 12 — confirmed sharp drop.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Search clicks dropped 90.91% week-over-week; last 3 days show 1, 0, 0 clicks vs prior 3-day average of ~0.7 — near-total organic search loss.",
+        "text": "Search clicks collapsed 90.91% week-over-week; last 3 days show 1 click vs prior 3 days showing 0 — but 28-day total is only 22, signaling structural low visibility.",
         "confidence": "confirmed",
         "channel": "organic"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GHL pipeline data is null — no intake data available to assess whether prior GBP-sourced leads were converting to opportunities.",
-        "confidence": "confirmed",
-        "channel": "ghl"
+        "text": "GBP actions are spiky, not trending: 22 on Jul 17, then near-zero for several days, suggesting event-driven or listing-quality issues rather than seasonal decay.",
+        "confidence": "probable",
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Monitor GBP actions daily; if 3-day average stays at or below 1 action/day through Aug 11, escalate to Sohib for Google Ads activation.",
+        "type": "fix",
+        "text": "Audit GBP listing for suppression, duplicate, or category change — actions dropped to 1 over last 3 days from 12.",
         "cites": [
           "F2",
-          "F3"
+          "F4"
         ],
-        "monday_item_name": "Watch GBP Collapse Aug 11",
-        "monday_update": "GBP actions are in confirmed decline: last 3 days averaged 0.33 actions/day vs a prior 3-day average of 4.0, and search clicks are down 90.91% week-over-week. No paid channels are live to compensate. If the 3-day GBP average does not recover to at least 2 actions/day by 2026-08-11, this becomes a trigger conversation with the client about activating paid search. Re-check on 2026-08-11."
+        "monday_item_name": "GBP Listing Health Audit",
+        "monday_update": "GBP actions dropped from 12 over Aug 2–4 to just 1 over Aug 5–7 — a confirmed sharp decline, not seasonal noise. Check the Google Business Profile dashboard for listing suppression, ownership flags, duplicate listings, or a recent category/description change that may have triggered a demotion. Success check: GBP actions return to a 7-day rolling average of ≥8 (matching the mid-July baseline). Re-evaluate by 2026-08-15."
       },
       {
         "id": "S2",
-        "type": "fix",
-        "text": "Confirm GHL pipeline is connected and receiving data; null pipeline blocks intake leak diagnosis entirely.",
+        "type": "watch",
+        "text": "Watch GBP and search clicks together for 7 days before any paid reactivation decision is made.",
         "cites": [
-          "F4"
+          "F1",
+          "F3"
         ],
-        "monday_item_name": "Fix GHL Pipeline Connection",
-        "monday_update": "GHL returned null for Forte Metals this cycle — pipeline data is either disconnected or not being passed through. With zero paid spend and declining GBP actions (106 actions over 28 days, now trending to 0), we cannot assess whether any prior leads converted to opportunities. Action: verify GHL sub-account connection and confirm data is flowing. Success check: GHL pipeline shows a non-null value by next review on 2026-08-11."
+        "monday_item_name": "Paid Reactivation Watch",
+        "monday_update": "With paid spend at $0 for the full 28-day window and search clicks at only 22 total, there is no paid baseline to act on. No paid channel action is warranted this cycle. Monitor whether the GBP fix (S1) restores organic signals — specifically GBP actions recovering above 8/week and search clicks above 3/week. Re-check on 2026-08-15 before any budget discussion."
       }
     ],
-    "next_check": "2026-08-11"
+    "next_check": "2026-08-15"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T22:43:37.356Z",
+  "generated_at": "2026-08-08T22:50:22.521Z",
   "date": "2026-08-08",
   "slug": "billy-doe",
   "name": "Billy Doe Meats",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 57,
   "status": "amber",
-  "verdict": "Meta is driving all $1,483.14 in spend with a solid 4.8 ROAS over 28 days, and purchases jumped 50% week-over-week, likely fueled by the top campaign \"BWS - Muslim Subscription Box - 17/06/26\" ($840.46 spend). However, GBP engagement dropped sharply by 55.48% week-over-week, suggesting reduced local visibility that warrants attention.",
+  "verdict": "Meta is carrying all $1,483.14 in spend with a solid 4.8 ROAS over 28 days, and purchases jumped 50% week-over-week driven largely by the top \"BWS - Muslim Subscription Box\" campaign at $840.46 spend. The biggest concern is GBP engagement cratering 55.48% week-over-week, likely signaling reduced local visibility or a drop in profile activity that could soften future top-of-funnel traffic.",
   "windsor": {
     "totals": {
       "spend": 1483.14,
@@ -433,79 +433,78 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-08T22:44:58.193Z",
+    "generated_at": "2026-08-08T22:51:35.444Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Purchases spiked but ROAS fell 42% — volume without margin efficiency.",
+    "verdict": "Purchases up 50% but ROAS halved; revenue is lumpy, not structural.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "ROAS dropped 42.35% week-over-week despite 28-day average of 4.8x; revenue is lumpy (7 zero-purchase days in last 14) signalling inconsistent conversion, not a stable floor.",
+        "text": "ROAS dropped 42.35% week-over-week despite 50% more purchases; 28-day 4.8x is held up by July 18 single-day $1,897 revenue spike distorting the baseline.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
-        "priority": 1,
-        "text": "Purchases up 50% WoW but 3-day signal (Aug 5–7) shows 1 purchase vs 5 in prior 3 days (Aug 2–4); the WoW surge is already reversing.",
-        "confidence": "confirmed",
+        "priority": 2,
+        "text": "3-day purchase signal: Aug 5–7 yielded 1 purchase on $137.23 spend vs Aug 2–4 yielding 5 purchases on $190.54 — a 5-day soft trend worth watching.",
+        "confidence": "probable",
         "channel": "meta"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GBP actions hit 0 on Aug 6–7 (prior 45-day average ~19/day); two consecutive zero days after a 34-action high on Jul 31 suggests a listing issue, not organic decay.",
-        "confidence": "probable",
+        "text": "GBP actions hit 0 on Aug 6 and Aug 7 — two consecutive zero days after averaging 18 actions/day across the prior 26 days; channel_dark risk is real.",
+        "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "IG reach declined 16.43% WoW and trended from ~1,200 in mid-July to 642 on Aug 7 — 45-day low — while spend held flat around $44–52/day; classic creative fatigue signal.",
+        "text": "IG reach fell from ~1,100/day average in July to 642 on Aug 7 — a 42% drop over the last 3 days vs prior 3 (avg 853 vs avg 737); creative fatigue probable given spend is flat.",
         "confidence": "probable",
         "channel": "meta"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "Top campaign 'BWS - Muslim Subscription Box' consumed $840.46 of $1,483.14 (57%) in 28 days; single-campaign concentration means one fatiguing creative collapses overall account performance.",
-        "confidence": "confirmed",
-        "channel": "meta"
+        "text": "GA4 sessions held steady (~232/day last 3 days) while purchases dropped to near-zero — funnel leak between session and checkout remains open, consistent with known /halal-subscribe add-to-cart zero problem.",
+        "confidence": "hypothesis",
+        "channel": "web"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit GBP listing immediately; 2 consecutive zero-action days after 34-action peak is an integrity flag, not a trend.",
+        "text": "Investigate GBP immediately — 2 consecutive zero-action days; confirm profile is live and no suspension or listing error occurred.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Fix GBP Listing Audit",
-        "monday_update": "GBP actions hit 0 on Aug 6 and Aug 7 against a 45-day average of ~19 actions/day — this is abrupt enough to indicate a listing suspension, edit-lock, or verification lapse rather than organic softness. Check GBP dashboard for alerts, pending verifications, or a recent admin edit that may have triggered a review hold. Success check: GBP actions return above 10/day within 3 days of the fix. Deadline: confirm listing status by Aug 9."
+        "monday_item_name": "Fix GBP Dark — Aug 6-7",
+        "monday_update": "GBP actions hit 0 on both Aug 6 and Aug 7 after averaging 18/day for the prior 26 days. Log into Google Business Profile today to confirm the listing is active, not suspended, and that phone/hours/photos are intact. Success check: GBP actions return above 10/day by Aug 11. Re-check Aug 11."
       },
       {
         "id": "S2",
-        "type": "creative_refresh",
-        "text": "Inject new real-footage creatives into BWS Subscription Box campaign; IG reach at 45-day low of 642, fatigue probable.",
-        "cites": [
-          "F4",
-          "F5"
-        ],
-        "monday_item_name": "Refresh BWS Subscription Creative",
-        "monday_update": "IG reach has fallen from a mid-July high of ~1,231 to 642 on Aug 7, the lowest point in the 45-day series, while spend remained flat — a textbook fatigue pattern. The BWS Muslim Subscription Box campaign alone holds 57% of 28-day spend ($840.46), so fatigue here collapses account-level results. Pull from Haney's Jul 21 facility footage (real footage, no AI video per client rules) and rotate at least 2 new creatives into the top ad set. Success check: IG reach recovers above 900/day and purchase rate stabilises above 1/day within 7 days of launch. Re-check Aug 15."
-      },
-      {
-        "id": "S3",
         "type": "watch",
-        "text": "Watch ROAS recovery over next 3 days before any budget move; 3-day purchase signal (1 purchase Aug 5–7) must stabilise.",
+        "text": "Hold BWS Muslim Subscription Box spend flat; watch purchases Aug 8–10 before any scale — current 3-day signal is 1 purchase on $137 spend.",
         "cites": [
           "F1",
           "F2"
         ],
-        "monday_item_name": "Watch ROAS 3-Day Signal",
-        "monday_update": "ROAS fell 42.35% WoW and the 3-day purchase count (Aug 5–7) dropped to 1 vs 5 in the prior 3 days (Aug 2–4). This is not enough data to confirm a structural break versus a weekend/timing dip, so no budget move is warranted today. Hold current spend (~$52/day) and track daily purchases and revenue through Aug 11. If purchases remain below 1/day for 3 consecutive days, escalate to a budget_shift away from the underperforming period; if they recover to 2+/day, revisit scaling the top campaign. Re-check Aug 11."
+        "monday_item_name": "Watch BWS Campaign Aug 8-10",
+        "monday_update": "ROAS dropped 42.35% week-over-week and the last 3 days produced only 1 purchase on $137.23 spend versus 5 purchases on $190.54 in the prior 3-day window. Do not scale or kill yet — the July 18 revenue spike ($1,897) is inflating the 28-day 4.8x and masking true trend. Confirm success threshold: 3+ purchases over Aug 8–10 before any budget move. Re-check Aug 11."
+      },
+      {
+        "id": "S3",
+        "type": "creative_refresh",
+        "text": "Queue one new real-footage product creative into BWS ad set; IG reach down 42% over last 3 days — fatigue is probable at flat spend.",
+        "cites": [
+          "F4"
+        ],
+        "monday_item_name": "Creative Refresh BWS — Reach Drop",
+        "monday_update": "IG reach averaged 853/day in the prior 3-day window and fell to 737/day in the last 3 days, with Aug 7 at 642 — a 42% drop from the July daily average while spend held flat, indicating fatigue not budget. Pull one approved real-facility or product clip from the Haney July 21 Drive folder and introduce it to the BWS ad set. Success check: IG reach recovers above 900/day within 4 days of launch. Re-check Aug 13."
       }
     ],
     "next_check": "2026-08-11"

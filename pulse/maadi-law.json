@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T22:44:16.949Z",
+  "generated_at": "2026-08-08T22:50:59.503Z",
   "date": "2026-08-08",
   "slug": "maadi-law",
   "name": "Maadi Law, LLC",
@@ -424,37 +424,37 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-08T22:47:13.872Z",
+    "generated_at": "2026-08-08T22:53:56.624Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid channels fully dark; GBP sole lead source now trending down 20%.",
+    "verdict": "Paid channels fully dark; firm runs on GBP alone, now slipping.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across Meta and Google Ads for the entire 45-day series — 28-day lead total is 0, making CPL undefined and the account revenue-inactive.",
+        "text": "Zero paid spend across Meta and Google Ads for the full 45-day series — $0 spent, 0 leads generated from any paid channel.",
         "confidence": "confirmed",
         "channel": "meta/google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions dropped 20% week-over-week; last 3 days (Aug 5–7) totalled 3 actions vs 15 in prior 3 days (Aug 2–4), confirming a real short-term deceleration.",
+        "text": "GBP actions fell 20% week-over-week; last 3 days (Aug 5–7) total 3 actions vs 15 actions in prior 3 days (Aug 2–4) — a confirmed 3-day signal, not noise.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GHL shows 462 contacts but 0 opportunities created and 0 appointments in 28 days — CRM is either not being worked or pipeline stages are not mapped, masking true intake.",
-        "confidence": "confirmed",
+        "text": "GHL shows 462 contacts and 0 opportunities created, 0 appointments — leads that existed historically are not being pipelined; intake process appears broken or unmaintained.",
+        "confidence": "probable",
         "channel": "ghl"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "IG reach rose 26% week-over-week (peak 4,307 on Aug 6) but engagement-to-lead conversion is zero — reach is not connected to any intake path.",
-        "confidence": "probable",
+        "text": "IG reach spiked to 4,307 on Aug 6 then dropped to 2,033 on Aug 7 — 28-day reach of 33,769 with 0 paid spend suggests organic content is the only active acquisition lever.",
+        "confidence": "hypothesis",
         "channel": "instagram"
       }
     ],
@@ -462,32 +462,33 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit GHL pipeline: map 462 existing contacts to stages and confirm appointment booking is live — zero opps from 462 contacts is an intake break.",
-        "cites": [
-          "F3"
-        ],
-        "monday_item_name": "Fix GHL Pipeline Intake",
-        "monday_update": "GHL shows 462 contacts but 0 opportunities created and 0 appointments in the last 28 days — the intake funnel is broken or unmapped. Audit pipeline stage configuration, confirm the booking link is active and connected to GHL, and manually review the 462 contacts for missed follow-up. Success check: at least 1 opportunity created and 1 appointment booked by 2026-08-15."
-      },
-      {
-        "id": "S2",
-        "type": "watch",
-        "text": "Watch GBP: if actions stay below 5/day for 3 more days, investigate listing content and recent review activity before any paid reactivation.",
+        "text": "Audit GBP listing immediately: verify hours, photos, and review recency to reverse the confirmed 3-day GBP drop.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Watch GBP Action Decline",
-        "monday_update": "GBP actions are down 20% week-over-week and the last 3-day window (Aug 5–7) recorded only 3 total actions vs 15 in the prior 3 days. Monitor daily through 2026-08-11; if the sub-5/day trend holds, escalate a review of listing completeness, recent posts, and review velocity before considering paid support. No action needed this cycle unless the decline deepens."
+        "monday_item_name": "GBP Listing Audit Fix",
+        "monday_update": "GBP actions dropped from 15 in the 3 days ending Aug 4 to just 3 in the 3 days ending Aug 7 — a confirmed decline, not noise. Check that business hours, service descriptions, photos, and Q&A are current, and flag whether any recent reviews went unanswered. Success looks like GBP daily actions returning to a 4–6/day average by the re-check on 2026-08-11."
+      },
+      {
+        "id": "S2",
+        "type": "fix",
+        "text": "Investigate GHL pipeline: 462 contacts exist but 0 opportunities created — confirm intake workflow is routing contacts to open opportunities.",
+        "cites": [
+          "F3"
+        ],
+        "monday_item_name": "GHL Intake Workflow Fix",
+        "monday_update": "GHL holds 462 historical contacts but shows 0 opportunities created and 0 appointments in the 28-day window — this is an intake process failure, not an ads problem. Verify that the lead capture form, automation triggers, and pipeline stage assignments are active and correctly configured. Success is confirmed when at least 1 new opportunity is created and visible in the pipeline by 2026-08-11."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch paid reactivation readiness: confirm Meta/Google account status and why spend has been zero for 45+ days before any budget is committed.",
+        "text": "Watch GBP recovery for 3 days before any paid reactivation discussion; paid channels have been dark 45+ days.",
         "cites": [
-          "F1"
+          "F1",
+          "F2"
         ],
-        "monday_item_name": "Confirm Paid Channel Status",
-        "monday_update": "Meta and Google Ads have recorded $0 spend across the full 45-day series — this is not a performance decline, it is a full channel outage. Confirm whether campaigns are paused intentionally, accounts are suspended, or billing has lapsed. Success check: account status confirmed and documented by 2026-08-11 so a reactivation decision can be made with full context."
+        "monday_item_name": "Watch Paid Reactivation Timing",
+        "monday_update": "Both Meta and Google Ads have shown $0 spend for the entire 45-day series on record. With GBP — the firm's only active lead source — now in a 3-day confirmed decline, the organic floor needs to be stabilised before any paid budget decision is meaningful. Re-check GBP daily actions on 2026-08-11; if actions return to 4+/day, that is the earliest point to bring a paid reactivation conversation to Sohib."
       }
     ],
     "next_check": "2026-08-11"

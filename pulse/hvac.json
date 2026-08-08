@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T22:43:59.216Z",
+  "generated_at": "2026-08-08T22:50:42.551Z",
   "date": "2026-08-08",
   "slug": "hvac",
   "name": "Quality HVAC by Fibid",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 45,
   "status": "orange",
-  "verdict": "Google Ads spend dropped 63.45% week-over-week, dragging total leads down 50% over the same period and triggering a lead drought despite the top Local Services campaign absorbing $1,536.68 of the $1,847.70 Google budget. The likely driver is a significant budget pullback or campaign pause on the Google side, as Meta held steady with all 11 tracked leads while GBP activity remained relatively stable at only a 3.57% dip.",
+  "verdict": "Google Ads spend dropped 63.45% week-over-week, dragging total leads down 50% over the same period and triggering a lead drought despite the top Local Services campaign absorbing $1,536.68 of the $1,847.70 Google budget. The likely driver is budget throttling or a bid strategy shift on Google, as Meta held its 11 leads for the 28-day window while GBP actions remained relatively stable at only -3.57%.",
   "windsor": {
     "totals": {
       "spend": 2395.61,
@@ -436,78 +436,80 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-08T22:46:04.974Z",
+    "generated_at": "2026-08-08T22:52:46.807Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Throttled Google spend explains drought; intake gap blocks any scale.",
+    "verdict": "Throttle is intentional but intake vacuum now risks wasting any restart.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "lead_drought confirmed: 0 leads last 7 days vs 2 prior week; Google spend fell to $0 on Aug 2–4 and Aug 6, collapsing volume.",
-        "confidence": "confirmed",
-        "channel": "google"
-      },
-      {
-        "id": "F2",
-        "priority": 1,
-        "text": "CPL delta is -0.72% — effectively flat — masking that 11 of 11 tracked leads came entirely from Meta at $547.91 spend; Google conversions unverified.",
-        "confidence": "confirmed",
-        "channel": "meta"
-      },
-      {
-        "id": "F3",
-        "priority": 2,
-        "text": "3-day signal (Aug 5–7): total spend averaged $65.45/day vs $61.04 prior 3 days — marginal recovery, but leads remained 0 across all 6 days.",
+        "text": "lead_drought confirmed: only 1 lead in last 7 days vs 2 prior 7d; 3-day signal (Aug 5–7) shows 0 leads on $176.36 combined spend.",
         "confidence": "confirmed",
         "channel": "cross"
       },
       {
+        "id": "F2",
+        "priority": 1,
+        "text": "Google spend collapsed to $0 on Aug 3, 4, 6 and only $18.29 on Aug 7 — 4 of last 5 days near-dark, explaining the 63.45% Google spend drop.",
+        "confidence": "confirmed",
+        "channel": "google"
+      },
+      {
+        "id": "F3",
+        "priority": 2,
+        "text": "SOW blocker unresolved: Vivian (dispatch) left 7/7 — intake owner, GHL login, and after-hours coverage unconfirmed for 32 days; speed-to-lead automations may be pointing at an empty seat.",
+        "confidence": "confirmed",
+        "channel": "SOW"
+      },
+      {
         "id": "F4",
         "priority": 3,
-        "text": "GHL shows 76 opportunities created but 0 won and 0 appointments — with Vivian (dispatch) gone since 7/7, intake seat is likely unmanned; leads arriving but not converting is an intake leak, not an ads problem.",
+        "text": "GHL pipeline shows 76 opportunities created but 0 won and 0 appointments in 28 days — leads arriving but no booked jobs signals an intake processing failure, not an ads problem.",
         "confidence": "probable",
         "channel": "GHL"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GBP actions hit 0 on Aug 6–7 vs a 45-day average of ~4.9/day; last 2–3 days carry Windsor data lag per SOW — watch, do not act.",
-        "confidence": "hypothesis",
-        "channel": "gbp"
+        "text": "Meta spend held steady at ~$21/day but Meta leads fell 50% 7d vs prior 7d; CPL impact muted (-0.72%) only because Google volume also fell, masking Meta's declining yield.",
+        "confidence": "probable",
+        "channel": "meta"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Confirm new intake owner, GHL login, and after-hours coverage before any budget is restored — SOW gate is active.",
+        "text": "Confirm intake owner, GHL login, and after-hours coverage before any budget is restored — SOW gate blocks all scaling.",
         "cites": [
+          "F3",
           "F4"
         ],
         "monday_item_name": "Confirm Intake Owner GHL",
-        "monday_update": "Vivian left dispatch on 7/7 and the SOW explicitly blocks budget restoration until an intake owner is confirmed. With 76 GHL opportunities created and 0 won, speed-to-lead automations are pointing at an empty seat. Escalate to Nacer (Ops) and Xavier (office) to name the replacement and verify their GHL login and after-hours coverage. Success check: confirmed intake owner with active GHL login on record by 2026-08-11."
+        "monday_update": "Vivian left on 7/7 and the intake seat has been unconfirmed for 32 days; speed-to-lead automations in GHL may be routing to nobody. Contact Xavier or Nader to name the replacement, verify their GHL login is active, and confirm after-hours coverage. Success check: intake owner named, GHL login confirmed, and after-hours flow tested — complete by 2026-08-11. No budget restoration or LSA un-pause until this is cleared per the SOW scale-back-up gate."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch Google spend and lead volume for 3 more days; do not restore budget until intake gate (S1) is cleared.",
+        "text": "Watch Google spend recovery: confirm whether Aug 3–6 near-zero days were deliberate throttle or a campaign pause error.",
         "cites": [
-          "F1",
-          "F3"
+          "F2",
+          "F1"
         ],
-        "monday_item_name": "Watch Google Spend Aug 11",
-        "monday_update": "Google spend dropped to $0 on three separate days (Aug 2, 3, 4, and Aug 6) and leads have been 0 for the full last 6-day window. The 3-day spend signal shows only a marginal recovery to ~$65/day with no lead output. Per SOW, budgets must not be raised until the intake owner is confirmed. Re-check on 2026-08-11 to assess whether spend has stabilised and the intake gate has cleared before any scale action."
+        "monday_item_name": "Google Spend Dark Days Check",
+        "monday_update": "Google spend ran at $0 on Aug 3, Aug 4, and Aug 6, and only $18.29 on Aug 7 — 4 of the last 5 days effectively dark. Verify in Google Ads whether this was an intentional budget hold or an accidental pause on the LocalServicesCampaign ($1,536.68 of the 28-day budget). Success check: campaign status and daily budget confirmed in-platform by 2026-08-09. Do not restore budget until F3 intake gate is cleared."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions after Aug 9 to rule out Windsor lag before treating 0-action days as a real signal.",
+        "text": "Watch Meta lead yield: 0 Meta leads last 3 days on ~$70 spend; re-evaluate creative if drought persists past Aug 11.",
         "cites": [
-          "F5"
+          "F5",
+          "F1"
         ],
-        "monday_item_name": "Watch GBP Data Lag Aug 11",
-        "monday_update": "GBP actions read 0 on Aug 6–7, but the SOW flags the last 2–3 days of any GBP reporting window as Windsor data lag. Do not treat this as a confirmed GBP drop yet. Check native GBP Insights directly after Aug 9 when lag resolves. Success check: confirmed action count for Aug 6–7 available and reviewed by 2026-08-11."
+        "monday_item_name": "Meta Lead Yield Watch",
+        "monday_update": "Meta has held ~$21/day in spend but delivered 0 leads over the last 3 days (Aug 5–7, ~$70 spent) and Meta leads are down 50% week-over-week. This may reflect audience saturation or creative fatigue given flat spend and falling results. Re-check Meta lead count on 2026-08-11; if still 0 over a 6-day window, escalate to a creative_refresh suggestion for Sohib's approval."
       }
     ],
     "next_check": "2026-08-11"

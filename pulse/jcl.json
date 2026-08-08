@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T22:44:03.454Z",
+  "generated_at": "2026-08-08T22:50:46.500Z",
   "date": "2026-08-08",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 48,
   "status": "orange",
-  "verdict": "Leads dropped 48% week-over-week while CPL spiked 37.64%, likely driven by a Meta reporting outage (channel_dark:meta flag) and at least one zero-spend day disrupting delivery on the top campaign \"CROA || CBO - 3/17/26,\" which alone accounted for $1,032.91 of the $1,942.62 28-day spend.",
+  "verdict": "Leads dropped 48% week-over-week while CPL spiked 37.64%, likely driven by a Meta reporting outage (channel_dark:meta) that also coincided with at least one zero-spend day, disrupting delivery on the top campaign \"CROA || CBO - 3/17/26\" which alone accounted for $1,032.91 of the $1,942.62 28-day spend.",
   "windsor": {
     "totals": {
       "spend": 1942.62,
@@ -442,79 +442,78 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-08T22:46:28.575Z",
+    "generated_at": "2026-08-08T22:53:10.681Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Meta dark + zero-spend days explain the drop; GHL pipeline is a separate structural leak.",
+    "verdict": "Meta dark + zero-spend kills context; GHL pipeline hole is the deeper problem.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Meta went dark Aug 6–7 (zero spend both days), causing 2 consecutive zero-lead days and driving the 37.64% CPL spike this 7d window.",
+        "text": "channel_dark:meta + zero_spend_day: Aug 6–7 show $0 spend and 0 leads; 2 consecutive dead days, not noise.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 1,
-        "text": "3-day signal (Aug 5–7): avg spend $46.34 vs prior 3-day avg $82.42 — a 44% drop; leads avg 1.33 vs 2.67 prior. Confirmed delivery collapse, not noise.",
+        "text": "CPL spiked 37.64% WoW to ~$24.28 blended; 3-day lead total (Aug 5–7) = 4 vs prior 3-day (Aug 2–4) = 8 — confirmed halving.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GHL shows 62 contacts and 80 leads over 28 days, yet 0 opportunities created, 0 appointments, 0 pipeline value — leads are arriving but intake is not converting them.",
+        "text": "GHL shows 80 leads arrived in 28 days but 0 opportunities created and 0 appointments — every lead is falling into a black hole at intake.",
         "confidence": "confirmed",
         "channel": "GHL"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions fell 48.98% 7d vs prior 7d (including 2 zero-action days Aug 6–7), mirroring Meta dark days — organic signal also suppressed, not independently declining.",
+        "text": "GBP actions down 48.98% WoW (0 on Aug 6–7 in series) — parallels Meta dark, suggesting organic surface also went quiet simultaneously.",
         "confidence": "probable",
         "channel": "GBP"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "IG reach dropped 30.52% 7d and hit 0 on Aug 6–7, consistent with a Meta-side outage or account-level delivery pause rather than creative fatigue.",
-        "confidence": "probable",
-        "channel": "meta"
+        "text": "SC clicks held at 21 on Aug 6 before dropping to 0 Aug 7; GA4 sessions at 52 on both Aug 6–7 — web traffic alive while paid/GBP dark, confirming paid-side outage not site issue.",
+        "confidence": "confirmed",
+        "channel": "search"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Restore Meta delivery immediately; confirm campaign 'CROA || CBO - 3/17/26' is active and spending — zero spend 2 consecutive days is confirmed.",
+        "text": "Restore Meta delivery immediately: diagnose account-level payment or policy hold causing 2-day $0 spend.",
         "cites": [
           "F1",
           "F2"
         ],
-        "monday_item_name": "Restore Meta delivery pause",
-        "monday_update": "Meta spend hit $0 on Aug 6 and Aug 7, confirmed by series data, causing 0 leads both days and a 37.64% CPL spike this week. Check campaign 'CROA || CBO - 3/17/26' (28d spend: $1,032.91) for payment holds, ad disapprovals, or account flags and restore delivery today. Success check: non-zero spend and at least 1 lead recorded by Aug 9. Re-check Aug 11 for 3-day post-restoration signal."
+        "monday_item_name": "Fix Meta Dark Days",
+        "monday_update": "Meta spend hit $0 on Aug 6 and Aug 7, dropping leads to 0 both days and spiking CPL +37.64% WoW. Check Meta Business Manager for payment failure, policy flag, or campaign-level error and restore delivery to the prior ~$69–$75/day baseline. Success is confirmed when spend resumes above $60/day and at least 2 leads register within 48 hours of fix. Re-check by 2026-08-10."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GHL intake workflow: 62 contacts, 80 leads, 0 opportunities created — leads are arriving but not entering the pipeline.",
+        "text": "Audit GHL intake pipeline: 80 leads over 28 days produced 0 opportunities — repair automation or assignment workflow.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Fix GHL intake pipeline zero",
-        "monday_update": "Over the 28-day window, 80 Meta leads and 62 GHL contacts were recorded, yet opportunities created = 0, appointments = 0, and pipeline value = $0. This is an intake/CRM configuration problem, not an ads problem — leads are being lost before they are worked. Audit the GHL workflow for broken automation, missing stage triggers, or lead routing errors. Success check: opportunity creation rate > 0 within 7 days of fix. Re-check Aug 15."
+        "monday_item_name": "Fix GHL Lead Intake",
+        "monday_update": "GHL recorded 62 contacts but 0 opportunities created and 0 appointments booked against 80 Meta leads in the 28-day window — this is an intake failure, not an ads problem. Audit the GHL workflow for broken automations, unassigned lead routing, or missing opportunity-creation triggers. Success is confirmed when new inbound leads auto-create opportunities at a rate of ≥50% within one week of the fix. Re-check by 2026-08-15."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch CPL recovery over next 3 days post-restoration; baseline 28d CPL is $24.28 — flag if it stays above $33 after delivery resumes.",
+        "text": "Watch GBP recovery: 0 actions Aug 6–7; confirm rebound within 3 days before treating as structural drop.",
         "cites": [
-          "F1",
-          "F2"
+          "F4"
         ],
-        "monday_item_name": "Watch CPL post-restoration",
-        "monday_update": "The 7d CPL spike to ~$33+ was driven by the Meta dark period, not underlying inefficiency. Once delivery is restored, monitor the 3-day CPL against the 28d baseline of $24.28. If CPL remains elevated above $33 for 3 consecutive days after normal spend resumes, escalate to creative refresh on 'CROA || CBO - 3/17/26'. Re-check Aug 11."
+        "monday_item_name": "Watch GBP Action Recovery",
+        "monday_update": "GBP actions fell 48.98% WoW and registered 0 on Aug 6–7, coinciding with the Meta dark period. This is probable collateral from the same outage window, not yet a confirmed organic decline. Monitor daily GBP actions through Aug 11; if actions do not return to the prior 6–12/day range by then, escalate to a GBP listing audit. No budget action warranted until Meta delivery is restored."
       }
     ],
     "next_check": "2026-08-11"

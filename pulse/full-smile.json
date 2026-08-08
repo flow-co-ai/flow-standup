@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T22:43:43.814Z",
+  "generated_at": "2026-08-08T22:50:28.417Z",
   "date": "2026-08-08",
   "slug": "full-smile",
   "name": "Full Smile",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 89,
   "status": "green",
-  "verdict": "Meta delivered 130 leads at a $11.02 CPL over the last 28 days, with \"BWS - Instant Leads - Awareness\" driving the bulk of spend at $895.86. The biggest movement is a 57.14% drop in Search Console clicks week-over-week, suggesting reduced organic search visibility, while GBP actions also softened 12.2%, though paid lead volume held flat.",
+  "verdict": "Meta delivered 130 leads at a $11.02 CPL over 28 days, with \"BWS - Instant Leads - Awareness\" driving the bulk of spend at $895.86. The biggest movement is a 6.59% rise in CPL week-over-week, likely driven by the matching 6.59% spend increase without a corresponding lift in leads (0% change), suggesting the budget scale-up has not yet converted into additional volume.",
   "windsor": {
     "totals": {
       "spend": 1432.15,
@@ -439,44 +439,44 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-08T22:45:24.059Z",
+    "generated_at": "2026-08-08T22:52:01.806Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Meta CPL holding but SC collapse and GHL pipeline gaps threaten August scoreboard.",
+    "verdict": "Meta CPL holding but scale stalled; SOW overdue items threaten August scoreboard.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "5 overdue SOW milestones past due (earliest 7/23): LSA over-counting, phone-match attribution, credentials rotation, caption style guide, and renewal close all unresolved.",
+        "text": "5 SOW milestones overdue (LSA over-counting, phone-match attribution, credentials rotation, caption style guide, Aug 7 items) — none show a completed event, risking August scoreboard trust.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3 more SOW milestones due 8/14–8/31: OD patient groups merge, doctor hours in GHL, and the August scoreboard dashboard — all unstarted per milestone log.",
+        "text": "3 more SOW items due Aug 14–31 (OD patient groups, doctor hours in GHL, dashboard, stay/walk decision) — no completion signal yet; Aug 31 deadline is the client's renewal gate.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 1,
-        "text": "Meta CPL stable at ~$11.02 (28d); 3-day leads (Aug 5–7: 4,4,4) vs prior 3 (Aug 2–4: 5,5,5) show a slight softening, but spend held at $54–$66/day — efficiency is flat, not broken.",
+        "text": "CPL rose 6.59% week-over-week to ~$11.02 while leads held flat at 0% change — spend increase absorbed with zero volume lift over 7 days.",
         "confidence": "confirmed",
-        "channel": "Meta"
+        "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Search Console clicks collapsed 57% week-over-week (28d total only 63 clicks); last 3 days (Aug 5–7) show 4, 0, 0 — organic search visibility near zero and trending down.",
-        "confidence": "confirmed",
-        "channel": "SEO"
+        "text": "3-day signal (Aug 5–7): leads average 4.0/day vs prior 3-day (Aug 2–4) average 5.0/day — minor softening; spend held ~$57/day, so CPL trending toward $14+ in this window.",
+        "confidence": "probable",
+        "channel": "meta"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "130 Meta leads vs 104 GHL opportunities created (28d) and 0 appointments logged — 26+ leads have no pipeline record; intake leak, not an ads problem.",
-        "confidence": "confirmed",
+        "text": "GHL shows 104 opportunities created vs 130 Meta leads (28d) and 0 appointments logged — 20% of leads not entering pipeline; 0 won opps suggests intake, not ads, is the conversion gap.",
+        "confidence": "probable",
         "channel": "GHL"
       }
     ],
@@ -484,33 +484,33 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Resolve GHL intake leak: 26+ leads missing from pipeline; audit contact-to-opportunity creation step before next Lily sync.",
+        "text": "Audit GHL intake: 26 leads missing from pipeline (130 leads vs 104 opps); trace source and repair contact-creation path.",
         "cites": [
           "F5"
         ],
-        "monday_item_name": "Fix GHL Intake Leak",
-        "monday_update": "130 Meta leads were generated in the 28-day window, but only 104 GHL opportunities were created and 0 appointments are logged — at least 26 leads have no pipeline record. The action is to audit the contact-to-opportunity automation step and the manual intake process with Lily at the next biweekly sync, targeting full reconciliation before August 14. Success is confirmed when opportunities created match leads within a 5% tolerance and at least 1 appointment is logged for every 4 leads by August 14."
+        "monday_item_name": "Fix GHL Lead Intake Gap",
+        "monday_update": "GHL shows 104 opportunities created against 130 Meta leads in the 28-day window — 26 leads (20%) are not entering the pipeline at all, and 0 appointments are logged. Ahmed/Ali to pull the raw contact log, identify the 26 missing records by source, and confirm whether the contact-lookup upsert path is silently dropping them. Success check: opportunities created ≥ leads within 5% by 2026-08-13."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch Meta 3-day lead trend: leads at 4/day for 3 days vs 5/day prior 3 days; re-check August 11 for continued decline before any budget move.",
+        "text": "Hold Meta budget flat at ~$60/day; watch CPL for 3 more days before any scale — last 3 days CPL trending toward $14.",
         "cites": [
-          "F3"
+          "F3",
+          "F4"
         ],
-        "monday_item_name": "Watch Meta Lead Trend",
-        "monday_update": "Meta leads have softened to 4/day over the last 3 days (Aug 5–7) versus 5/day in the prior 3 days (Aug 2–4), while spend held at $54–$66/day — CPL is nudging up but not yet alarming at $11.02 baseline. No budget action is warranted today; the signal needs one more 3-day window to confirm. Re-check on August 11: if leads drop below 3/day for a third consecutive 3-day block, escalate to creative_refresh on BWS - Instant Leads - Awareness."
+        "monday_item_name": "Watch Meta CPL 3-Day",
+        "monday_update": "CPL rose 6.59% week-over-week to $11.02 and the 3-day signal (Aug 5–7) shows leads softening to 4.0/day vs 5.0/day prior, pushing implied CPL toward $14. No budget change is warranted until a full 3-day window confirms direction. Re-check on 2026-08-11: if CPL returns below $11.50, scale BWS campaign +15%; if it holds above $14, flag for creative refresh."
       },
       {
         "id": "S3",
         "type": "fix",
-        "text": "Clear 5 overdue SOW milestones (LSA, attribution, credentials, style guide, renewal doc) — August scoreboard decision is August 31.",
+        "text": "Close 5 overdue Aug 7 SOW items (LSA over-counting, phone attribution, credentials) — each day open erodes August scoreboard credibility.",
         "cites": [
-          "F1",
-          "F2"
+          "F1"
         ],
-        "monday_item_name": "Clear Overdue SOW Milestones",
-        "monday_update": "Five milestones are past due ranging from July 23 to August 7, including LSA over-counting closure, phone-match attribution, credentials rotation, and the caption style guide. With the August 31 stay/walk decision and the client's explicit scoreboard focus, unresolved delivery items are a trust risk that compounds the paid-ads picture. Each milestone owner (Nacer/Ops, Ahmed/Ali CRM, Video dept) should confirm closure in Monday by August 11. Success is all 5 items marked complete with evidence before the August 14 Lily sync."
+        "monday_item_name": "Close Aug 7 SOW Blockers",
+        "monday_update": "Five milestones past their due date with no completed event recorded: LSA over-counting investigation (due 7/27), caption style guide (due 7/28), phone-match attribution (due 8/7), and credentials rotation (due 8/7). Nacer to assign owners and mark each done or escalate by 2026-08-09. Success check: all 5 items show a completed status in Monday before the next biweekly Lily sync."
       }
     ],
     "next_check": "2026-08-11"

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-08T22:44:29.077Z",
+  "generated_at": "2026-08-08T22:51:10.071Z",
   "date": "2026-08-08",
   "slug": "steel-ohare",
   "name": "O'Hare Precision",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "For O'Hare Precision, the biggest movement is a 31.58% drop in Google Business Profile actions over the last 7 days, likely driven by reduced search visibility or seasonal softening in local intent. Paid channels (Meta and Google Ads) show zero spend and zero leads over the 28-day window, so all lead activity remains dependent on organic GBP traffic, which recorded 184 total actions including 7 calls and 135 direction requests.",
+  "verdict": "For O'Hare Precision, the biggest movement is a 31.58% drop in Google Business Profile actions over the last 7 days, likely driven by reduced search visibility or seasonal dip in local intent. Paid channels (Meta and Google Ads) show zero spend and zero leads over the 28-day window, so all lead activity is currently dependent on organic GBP traffic, making that decline the top priority to investigate.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,36 +409,36 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-08T22:48:06.994Z",
+    "generated_at": "2026-08-08T22:54:51.794Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP erosion is the only active revenue signal; paid is entirely absent.",
+    "verdict": "No paid activity; GBP and search both weakening in tandem.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend and zero leads across all 28 days — no CPL to optimize; the entire client is running on organic GBP only.",
+        "text": "Zero paid spend and zero paid leads across all 28 days — O'Hare runs entirely on organic; no CPL can be measured.",
         "confidence": "confirmed",
-        "channel": "meta+google_ads"
+        "channel": "meta, google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions fell 31.58% week-over-week; last 3 days (Aug 5–7) show 2, 0, 0 actions vs prior 3 days (Aug 2–4) averaging 8 — a confirmed 3-day signal, not noise.",
+        "text": "GBP actions fell 31.58% week-over-week; last 3 days (Aug 5-7) logged 2, 0, 0 vs prior 3 days (Aug 2-4) of 3, 11, 10 — a confirmed 3-day collapse.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
-        "priority": 3,
-        "text": "Search clicks dropped 13.21% week-over-week; Aug 7 recorded 0 sc_clicks, the second zero in 3 days, suggesting weakening search visibility.",
+        "priority": 2,
+        "text": "Search clicks dropped 13.21% week-over-week; Aug 7 shows 0 clicks, the first zero in 28 days, suggesting indexing or listing issue rather than pure seasonality.",
         "confidence": "probable",
-        "channel": "search_console"
+        "channel": "organic"
       },
       {
         "id": "F4",
-        "priority": 4,
-        "text": "GBP calls total only 7 over 28 days against 135 direction requests — direction-to-call conversion is extremely low, suggesting an intent or listing quality gap.",
+        "priority": 3,
+        "text": "GBP calls total only 7 over 28 days against 184 total actions — a 3.8% call-conversion rate signals the listing may lack a strong call-to-action or phone prominence.",
         "confidence": "hypothesis",
         "channel": "gbp"
       }
@@ -446,26 +446,26 @@
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Monitor GBP daily actions for 3 more days; re-check Aug 11 to confirm whether the 0-action streak extends beyond 2 days.",
-        "cites": [
-          "F2"
-        ],
-        "monday_item_name": "Watch GBP action drop",
-        "monday_update": "GBP actions hit 0 on Aug 6 and Aug 7 after averaging 8/day the prior 3 days — a confirmed 3-day signal of decline (F2). No paid activity exists to compensate, so this is the client's only lead-generation channel. Success check: if daily GBP actions return above 5 by Aug 11, the drop was transient and no further action is needed. If the streak continues through Aug 11, escalate to a GBP listing audit."
-      },
-      {
-        "id": "S2",
         "type": "fix",
-        "text": "Audit GBP listing for suppression, category changes, or review flags that could explain the 31.58% action drop.",
+        "text": "Audit GBP listing immediately — check for suspension, suppressed edits, or category changes causing the 3-day zero-action drop.",
         "cites": [
           "F2",
           "F3"
         ],
-        "monday_item_name": "GBP listing audit fix",
-        "monday_update": "GBP actions dropped 31.58% week-over-week and search clicks fell 13.21% in the same window, with 2 consecutive zero-action days on Aug 6–7 (F2, F3). Check for listing suspensions, category edits, or a review flag in Google Business Manager. Confirm the listing is fully verified and all NAP details are intact. Resolution target: listing confirmed clean or issue identified by Aug 11 next check."
+        "monday_item_name": "Fix GBP listing drop",
+        "monday_update": "GBP actions hit 0 on Aug 6 and Aug 7 (down from 10–11 on Aug 3–4), and search clicks also logged 0 on Aug 7 — both channels collapsing together points to a listing-level issue, not seasonality. Log into Google Business Profile and verify the listing is published, not suspended, and that no recent edits triggered a review hold. Success check: GBP actions return to a daily average above 6 (the prior 28-day floor) by 2026-08-12."
+      },
+      {
+        "id": "S2",
+        "type": "watch",
+        "text": "Watch GBP call volume — at 3.8% of actions over 28 days, reassess listing CTA after listing health is confirmed stable.",
+        "cites": [
+          "F4"
+        ],
+        "monday_item_name": "Watch GBP call rate",
+        "monday_update": "Over the last 28 days, only 7 of 184 GBP actions were calls (3.8%), with 135 direction requests dominating. This is a hypothesis-grade signal — do not act on it until the listing health issue (S1) is resolved. Re-check call volume on 2026-08-15: if actions recover but calls remain below 5% of actions, escalate to a listing CTA review."
       }
     ],
-    "next_check": "2026-08-11"
+    "next_check": "2026-08-12"
   }
 }
