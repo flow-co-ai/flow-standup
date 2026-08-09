@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-08T22:51:10.071Z",
-  "date": "2026-08-08",
+  "generated_at": "2026-08-09T11:22:21.056Z",
+  "date": "2026-08-09",
   "slug": "steel-ohare",
   "name": "O'Hare Precision",
   "type": "leadgen",
   "window_days": 28,
-  "score": 90,
+  "score": 100,
   "status": "green",
-  "verdict": "For O'Hare Precision, the biggest movement is a 31.58% drop in Google Business Profile actions over the last 7 days, likely driven by reduced search visibility or seasonal dip in local intent. Paid channels (Meta and Google Ads) show zero spend and zero leads over the 28-day window, so all lead activity is currently dependent on organic GBP traffic, making that decline the top priority to investigate.",
+  "verdict": "GBP activity is the only measurable channel this period, logging 177 total actions (128 directions, 42 web clicks, 7 calls) over 28 days, but momentum is softening with GBP actions down 14.81% week-over-week. Paid channels (Meta and Google Ads) show zero spend and zero leads, so scaling any budget into those channels should be the immediate priority to generate trackable lead flow.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,24 +25,24 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 184,
+          "actions": 177,
           "calls": 7,
-          "directions": 135,
+          "directions": 128,
           "web_clicks": 42
         }
       }
     },
     "organic": {
-      "gbp_actions": 184,
+      "gbp_actions": 177,
       "ig_reach": 0
     },
     "top_campaign": null,
     "search": {
-      "clicks": 422,
-      "impressions": 65606
+      "clicks": 431,
+      "impressions": 65620
     },
     "latest_day": {
-      "date": "2026-08-07",
+      "date": "2026-08-08",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -60,8 +60,8 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -31.58,
-      "sc_7d_pct": -13.21,
+      "gbp_7d_pct": -14.81,
+      "sc_7d_pct": -7.27,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
       "spend_per_day_7d": 0
@@ -69,7 +69,6 @@
     "flags": [],
     "series": {
       "dates": [
-        "2026-07-11",
         "2026-07-12",
         "2026-07-13",
         "2026-07-14",
@@ -96,7 +95,8 @@
         "2026-08-04",
         "2026-08-05",
         "2026-08-06",
-        "2026-08-07"
+        "2026-08-07",
+        "2026-08-08"
       ],
       "spend": [
         0,
@@ -219,7 +219,6 @@
         0
       ],
       "gbp_actions": [
-        7,
         10,
         10,
         6,
@@ -245,6 +244,7 @@
         11,
         10,
         2,
+        0,
         0,
         0
       ],
@@ -279,7 +279,6 @@
         0
       ],
       "sc_clicks": [
-        7,
         3,
         20,
         20,
@@ -306,6 +305,7 @@
         27,
         16,
         17,
+        16,
         0
       ],
       "ga4_sessions": [
@@ -409,61 +409,61 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-08T22:54:51.794Z",
+    "generated_at": "2026-08-09T11:25:51.544Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "No paid activity; GBP and search both weakening in tandem.",
+    "verdict": "Paid channels dead 28+ days; organic softening confirms no acquisition engine running.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend and zero paid leads across all 28 days — O'Hare runs entirely on organic; no CPL can be measured.",
+        "text": "Zero paid spend and zero leads for all 28 days in the window — no paid acquisition engine exists to evaluate for efficiency.",
         "confidence": "confirmed",
-        "channel": "meta, google_ads"
+        "channel": "meta"
       },
       {
         "id": "F2",
-        "priority": 2,
-        "text": "GBP actions fell 31.58% week-over-week; last 3 days (Aug 5-7) logged 2, 0, 0 vs prior 3 days (Aug 2-4) of 3, 11, 10 — a confirmed 3-day collapse.",
+        "priority": 1,
+        "text": "Google Ads spend is also $0 across the full 28-day window with 0 conversions — both paid channels are completely dark.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "google_ads"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Search clicks dropped 13.21% week-over-week; Aug 7 shows 0 clicks, the first zero in 28 days, suggesting indexing or listing issue rather than pure seasonality.",
-        "confidence": "probable",
-        "channel": "organic"
+        "text": "GBP actions down 14.81% week-over-week; last 3 days (Aug 6–8) logged 0 actions vs prior 3 days (Aug 3–5) averaging 4.3 — momentum stalling.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       },
       {
         "id": "F4",
-        "priority": 3,
-        "text": "GBP calls total only 7 over 28 days against 184 total actions — a 3.8% call-conversion rate signals the listing may lack a strong call-to-action or phone prominence.",
-        "confidence": "hypothesis",
-        "channel": "gbp"
+        "priority": 2,
+        "text": "Search clicks 0 on Aug 8, with 7-day sc down 7.27%; last 3-day average 11 vs prior 3-day average 17.3 — organic search intent softening.",
+        "confidence": "probable",
+        "channel": "organic"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit GBP listing immediately — check for suspension, suppressed edits, or category changes causing the 3-day zero-action drop.",
+        "text": "Confirm Meta and Google Ads campaign activation status — $0 spend for 28 days signals accounts are paused or billing is broken.",
         "cites": [
-          "F2",
-          "F3"
+          "F1",
+          "F2"
         ],
-        "monday_item_name": "Fix GBP listing drop",
-        "monday_update": "GBP actions hit 0 on Aug 6 and Aug 7 (down from 10–11 on Aug 3–4), and search clicks also logged 0 on Aug 7 — both channels collapsing together points to a listing-level issue, not seasonality. Log into Google Business Profile and verify the listing is published, not suspended, and that no recent edits triggered a review hold. Success check: GBP actions return to a daily average above 6 (the prior 28-day floor) by 2026-08-12."
+        "monday_item_name": "Fix Paid Channel Activation",
+        "monday_update": "Both Meta and Google Ads have recorded $0 spend and 0 leads for the entire 28-day window — this is not a performance issue, it is a structural one. Immediate action: verify campaign pause status, billing/payment method, and account-level flags in both platforms. Success check: at least one platform recording spend >$0 by 2026-08-12. If accounts are intentionally paused, this item should be closed with a note explaining the hold."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GBP call volume — at 3.8% of actions over 28 days, reassess listing CTA after listing health is confirmed stable.",
+        "text": "Watch GBP actions: 0 for 3 consecutive days (Aug 6–8); confirm whether a listing issue or seasonal dip before acting.",
         "cites": [
-          "F4"
+          "F3"
         ],
-        "monday_item_name": "Watch GBP call rate",
-        "monday_update": "Over the last 28 days, only 7 of 184 GBP actions were calls (3.8%), with 135 direction requests dominating. This is a hypothesis-grade signal — do not act on it until the listing health issue (S1) is resolved. Re-check call volume on 2026-08-15: if actions recover but calls remain below 5% of actions, escalate to a listing CTA review."
+        "monday_item_name": "Watch GBP Action Drop",
+        "monday_update": "GBP actions are down 14.81% week-over-week and have logged 0 for the last 3 days (Aug 6–8). This may reflect a listing suspension, a Google update, or weekend seasonality. Check GBP dashboard for any policy flags or listing status changes. Re-check on 2026-08-12: if actions remain at 0 for 6+ consecutive days, escalate to a fix."
       }
     ],
     "next_check": "2026-08-12"
