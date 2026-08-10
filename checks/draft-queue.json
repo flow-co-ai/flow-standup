@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-10T01:14:23.486Z",
+  "updatedAt": "2026-08-10T01:15:49.129Z",
   "items": [
     {
       "id": "websEo-pricing-question",
@@ -363,7 +363,7 @@
     {
       "id": "fullsmile-marketing-dashboard-update",
       "title": "Sync Open Dental claim payments into GHL on \"Received\" status",
-      "note": "Salam, / Context: Full Smile's marketing dashboard needs to distinguish real insurance payments from estimates to calculate accurate ROI. Open Dental does not offer webhooks for claim status changes, so this requires building a custom polling pipeline on the Flow DigitalOcean Droplet that monitors when claims hit \"Received\" status and syncs the actual payment data into GHL. Payment tracking inherently lags Open Dental by approximately 1 month due to insurance processing timelines. / Technical scope: Build a full poll-and-relay integration that (1) polls Open Dental's API for claims marked \"Received,\" (2) fetches detailed claimproc and claimpayment data via the endpoints documented at https: / / www.opendental.com / site / apiclaimprocs.html and https: / / www.opendental.com / site / apiclaimpayments.html, (3) formats and pushes that payment data into GHL to trigger downstream workflows, (4) maintains a \"last checked\" timestamp to avoid duplicate processing, and (5) includes retry logic and logging for reliability. / Execution sequence: (1) Build the poller script on the Droplet, (2) implement fetch logic for claimproc and claimpayment detail from Open Dental's API, (3) format the payload and send to GHL, (4) track \"last checked\" state persistently, (5) add retry / error handling and logging to monitor ongoing syncs. / Dependencies: Requires Open Dental API credentials for Full Smile (confirm these are already available), GHL webhook endpoint or custom field target for receiving payment data (confirm the exact destination in GHL), and Droplet access / deployment permissions. Do not start until API credentials and GHL target endpoint are confirmed. / Done: Real claim payment data flows automatically from Open Dental into GHL when claims reach \"Received\" status, the patient value column in the marketing dashboard reflects accurate payment amounts (not estimates), retry / logging is live and monitoring the pipeline, and the sync runs reliably without manual intervention. / @Ahmed Memon @Ali Shaheer",
+      "note": "Salam, / Context: Full Smile's marketing dashboard needs to distinguish real insurance payments from estimates to calculate accurate ROI. Open Dental does not offer webhooks for claim status changes, so this requires building a custom polling pipeline on the Flow DigitalOcean Droplet that monitors when claims hit \"Received\" status and syncs the actual payment data into GHL. Payment tracking inherently lags Open Dental by approximately 1 month due to insurance processing timelines. / Technical scope: Build a full poll-and-relay integration that (1) polls Open Dental's API for claims marked \"Received,\" (2) fetches detailed claimproc and claimpayment data via the endpoints documented at https: / / www.opendental.com / site / apiclaimprocs.html and https: / / www.opendental.com / site / apiclaimpayments.html, (3) formats and pushes that payment data into GHL to trigger downstream workflows, (4) maintains a \"last checked\" timestamp to avoid duplicate processing, and (5) includes retry logic and logging for reliability. / Execution sequence: (1) Build the poller script on the Droplet, (2) implement fetch logic for claimproc and claimpayment detail from Open Dental's API, (3) format the payload and send to GHL, (4) track \"last checked\" state persistently, (5) add retry / error handling and logging to monitor ongoing syncs. / Dependencies: Requires Open Dental API credentials for Full Smile (confirm these are already available), GHL webhook endpoint or custom field target for receiving payment data (confirm the exact destination in GHL), and Droplet access / deployment permissions. Do not start until API credentials and GHL target endpoint are confirmed. / Done: Real claim payment data flows automatically from Open Dental into GHL when claims reach \"Received\" status, the patient value column in the marketing dashboard reflects accurate payment amounts (not estimates), retry / logging is live and monitoring the pipeline, and the sync runs reliably without manual intervention. / @Ahmed Memon @Ali Shaheer / Assigned to: Ahmed Memon, Ali Shaheer",
       "status": "ready",
       "board": "CRM",
       "group": "Full Smile",
@@ -371,13 +371,34 @@
       "source": "fireflies",
       "sourceLabel": "Meeting with Full Smile Dental, 7/30",
       "payload": {
-        "mode": "update_only",
-        "existingItemId": "fullsmile-marketing-dashboard-update",
-        "updateBody": "<p>Salam,</p>\n<ul>\n<li><strong>Context</strong>: Full Smile's marketing dashboard needs to distinguish real insurance payments from estimates to calculate accurate ROI. Open Dental does not offer webhooks for claim status changes, so this requires building a custom polling pipeline on the Flow DigitalOcean Droplet that monitors when claims hit \"Received\" status and syncs the actual payment data into GHL. Payment tracking inherently lags Open Dental by approximately 1 month due to insurance processing timelines.</li>\n<li><strong>Technical scope</strong>: Build a full poll-and-relay integration that (1) polls Open Dental's API for claims marked \"Received,\" (2) fetches detailed claimproc and claimpayment data via the endpoints documented at https://www.opendental.com/site/apiclaimprocs.html and https://www.opendental.com/site/apiclaimpayments.html, (3) formats and pushes that payment data into GHL to trigger downstream workflows, (4) maintains a \"last checked\" timestamp to avoid duplicate processing, and (5) includes retry logic and logging for reliability.</li>\n<li><strong>Execution sequence</strong>: (1) Build the poller script on the Droplet, (2) implement fetch logic for claimproc and claimpayment detail from Open Dental's API, (3) format the payload and send to GHL, (4) track \"last checked\" state persistently, (5) add retry/error handling and logging to monitor ongoing syncs.</li>\n<li><strong>Dependencies</strong>: Requires Open Dental API credentials for Full Smile (confirm these are already available), GHL webhook endpoint or custom field target for receiving payment data (confirm the exact destination in GHL), and Droplet access/deployment permissions. <strong>Do not start</strong> until API credentials and GHL target endpoint are confirmed.</li>\n<li><strong>Done</strong>: Real claim payment data flows automatically from Open Dental into GHL when claims reach \"Received\" status, the patient value column in the marketing dashboard reflects accurate payment amounts (not estimates), retry/logging is live and monitoring the pipeline, and the sync runs reliably without manual intervention.</li>\n</ul>\n<p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
+        "mode": "create_subitem",
+        "itemName": "Sync Open Dental claim payments into GHL on \"Received\" status",
+        "boardId": "18418241405",
+        "blocked": false,
+        "needsNaz": false,
+        "columnValues": {
+          "color_mkwb1trm": {
+            "label": "Start"
+          },
+          "multiple_person_mkwb5f2e": {
+            "personsAndTeams": [
+              {
+                "id": 108080159,
+                "kind": "person"
+              },
+              {
+                "id": 108080161,
+                "kind": "person"
+              }
+            ]
+          }
+        },
+        "updateBody": "<p>Salam,</p>\n<ul>\n<li><strong>Context:</strong> Full Smile's marketing dashboard needs to distinguish real insurance payments from estimates to calculate accurate ROI. Open Dental does not offer webhooks for claim status changes, so this requires building a custom polling pipeline on the Flow DigitalOcean Droplet that monitors when claims hit \"Received\" status and syncs the actual payment data into GHL. Payment tracking inherently lags Open Dental by approximately 1 month due to insurance processing timelines.</li>\n<li><strong>Technical scope:</strong> Build a full poll-and-relay integration that (1) polls Open Dental's API for claims marked \"Received,\" (2) fetches detailed claimproc and claimpayment data via the endpoints documented at https://www.opendental.com/site/apiclaimprocs.html and https://www.opendental.com/site/apiclaimpayments.html, (3) formats and pushes that payment data into GHL to trigger downstream workflows, (4) maintains a \"last checked\" timestamp to avoid duplicate processing, and (5) includes retry logic and logging for reliability.</li>\n<li><strong>Execution sequence:</strong> (1) Build the poller script on the Droplet, (2) implement fetch logic for claimproc and claimpayment detail from Open Dental's API, (3) format the payload and send to GHL, (4) track \"last checked\" state persistently, (5) add retry/error handling and logging to monitor ongoing syncs.</li>\n<li><strong>Dependencies:</strong> Requires Open Dental API credentials for Full Smile (confirm these are already available), GHL webhook endpoint or custom field target for receiving payment data (confirm the exact destination in GHL), and Droplet access/deployment permissions. <strong>Do not start until API credentials and GHL target endpoint are confirmed.</strong></li>\n<li><strong>Done:</strong> Real claim payment data flows automatically from Open Dental into GHL when claims reach \"Received\" status, the patient value column in the marketing dashboard reflects accurate payment amounts (not estimates), retry/logging is live and monitoring the pipeline, and the sync runs reliably without manual intervention.</li>\n</ul>\n<p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "parentItemId": "12472108604"
       },
       "nullReason": null,
       "priority": 2,
-      "updatedAt": "2026-08-10T01:14:23.486Z"
+      "updatedAt": "2026-08-10T01:15:49.129Z"
     },
     {
       "id": "fullsmile-budget-shift",
