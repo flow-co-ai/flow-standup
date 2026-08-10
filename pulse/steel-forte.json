@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-09T11:22:11.298Z",
-  "date": "2026-08-09",
+  "generated_at": "2026-08-10T11:44:30.359Z",
+  "date": "2026-08-10",
   "slug": "steel-forte",
   "name": "Forte Metals",
   "type": "leadgen",
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "GBP actions dropped 61.76% week-over-week and Search Console clicks fell 81.82%, suggesting a significant pullback in organic and local search visibility, possibly tied to reduced posting activity or a ranking shift. Paid channels (Meta and Google Ads) show zero spend and zero leads over the past 28 days, meaning all pipeline activity is currently dependent on organic sources alone.",
+  "verdict": "GBP actions dropped 68% week-over-week (108 total actions over 28 days), with directions (64) and web clicks (32) likely dragging the recent trend down as organic discovery softened. Paid channels (Meta and Google Ads) show zero spend and zero leads over the full 28-day window, meaning all lead activity is dependent on unpaid sources with no paid safety net in place.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,24 +25,24 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 105,
-          "calls": 10,
+          "actions": 108,
+          "calls": 12,
           "directions": 64,
-          "web_clicks": 31
+          "web_clicks": 32
         }
       }
     },
     "organic": {
-      "gbp_actions": 105,
+      "gbp_actions": 108,
       "ig_reach": 0
     },
     "top_campaign": null,
     "search": {
       "clicks": 22,
-      "impressions": 1979
+      "impressions": 2010
     },
     "latest_day": {
-      "date": "2026-08-08",
+      "date": "2026-08-09",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -60,7 +60,7 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -61.76,
+      "gbp_7d_pct": -68.42,
       "sc_7d_pct": -81.82,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
@@ -69,7 +69,6 @@
     "flags": [],
     "series": {
       "dates": [
-        "2026-07-12",
         "2026-07-13",
         "2026-07-14",
         "2026-07-15",
@@ -96,7 +95,8 @@
         "2026-08-05",
         "2026-08-06",
         "2026-08-07",
-        "2026-08-08"
+        "2026-08-08",
+        "2026-08-09"
       ],
       "spend": [
         0,
@@ -220,7 +220,6 @@
       ],
       "gbp_actions": [
         0,
-        0,
         3,
         8,
         1,
@@ -245,6 +244,7 @@
         8,
         1,
         0,
+        3,
         0,
         0
       ],
@@ -281,7 +281,6 @@
       "sc_clicks": [
         0,
         0,
-        0,
         3,
         1,
         1,
@@ -306,6 +305,7 @@
         1,
         0,
         1,
+        0,
         0
       ],
       "ga4_sessions": [
@@ -409,37 +409,44 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-09T11:25:20.405Z",
+    "generated_at": "2026-08-10T11:47:41.484Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid is fully dark; organic collapse now threatens the only active pipeline.",
+    "verdict": "No paid channels active; organic is sole lead source and decelerating fast.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend and zero leads across all 28 days — Meta and Google Ads are completely dark, making CPL undefined and pipeline fully stalled.",
+        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google Ads. All lead generation is entirely dependent on unpaid discovery with no paid safety net.",
         "confidence": "confirmed",
-        "channel": "meta+google"
+        "channel": "meta"
       },
       {
         "id": "F2",
-        "priority": 2,
-        "text": "GBP actions collapsed 61.76% week-over-week (last 3 days: 0 actions vs prior 3-day avg of ~3), signalling organic local visibility is actively declining.",
+        "priority": 1,
+        "text": "Zero leads recorded over the full 28-day window across every channel. CPL is undefined because there is no lead volume whatsoever.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "google_ads"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Search Console clicks fell 81.82% week-over-week; last 3 days show 1 click vs prior 3-day avg of ~4, confirming organic search reach is compressing.",
+        "text": "GBP actions fell 68% week-over-week to 108 total over 28 days. 3-day signal (Aug 7–9) shows 3, 0, 0 actions vs prior 3 days (Aug 4–6) at 1, 0, 8 — trend collapsing to near-zero.",
         "confidence": "confirmed",
-        "channel": "organic"
+        "channel": "gbp"
       },
       {
         "id": "F4",
-        "priority": 3,
-        "text": "GBP series shows irregular spikes (22 actions on 2026-07-17, 12 on 2026-07-31) with long zero-runs — pattern suggests posting-driven rather than sustained ranking, making any recovery fragile.",
-        "confidence": "probable",
+        "priority": 2,
+        "text": "Search clicks dropped 81.82% week-over-week; last 3 days (Aug 7–9) recorded 1, 0, 0 clicks vs prior 3 days (Aug 4–6) at 0, 1, 0 — organic search intent near-zero.",
+        "confidence": "confirmed",
+        "channel": "search"
+      },
+      {
+        "id": "F5",
+        "priority": 4,
+        "text": "GHL pipeline data is null and IG reach is 0 across all 45 days — both channels are dark, providing no visibility into pipeline health or social audience.",
+        "confidence": "confirmed",
         "channel": "gbp"
       }
     ],
@@ -447,35 +454,16 @@
       {
         "id": "S1",
         "type": "watch",
-        "text": "Monitor GBP actions daily for 3 days; if avg stays at 0, escalate posting cadence review immediately.",
+        "text": "No paid channels active — buyer has nothing to act on. Re-check GBP trend in 3 days; needs 3+ consecutive non-zero days before any paid action is defensible.",
         "cites": [
+          "F1",
           "F2",
-          "F4"
-        ],
-        "monday_item_name": "Watch GBP Actions Drop",
-        "monday_update": "GBP actions hit 0 for 3 consecutive days (Aug 6–8) and are down 61.76% week-over-week. The 90-day series shows actions correlate with posting activity, not stable ranking. If the 3-day avg remains at or near 0 by Aug 12, this must be escalated to a content/GMB posting review. Success check: GBP actions return to a 7-day avg of ≥4 by 2026-08-12."
-      },
-      {
-        "id": "S2",
-        "type": "watch",
-        "text": "Watch Search Console clicks through Aug 12; 3-day avg of 0–1 confirms organic search collapse requiring immediate diagnostic.",
-        "cites": [
           "F3"
         ],
-        "monday_item_name": "Watch SC Click Collapse",
-        "monday_update": "Search Console clicks fell 81.82% week-over-week, with only 1 click recorded across the last 3 days (Aug 6–8) vs a prior 3-day avg of ~4. This may indicate a ranking drop, indexing issue, or reduced query volume. Re-check on 2026-08-12; if clicks remain below 2/day, a technical SEO and index audit is warranted before any paid reactivation."
-      },
-      {
-        "id": "S3",
-        "type": "fix",
-        "text": "Raise the paid reactivation question with client: 28 days of zero spend means pipeline risk is entirely unhedged by any paid channel.",
-        "cites": [
-          "F1"
-        ],
-        "monday_item_name": "Flag Paid Reactivation Risk",
-        "monday_update": "Forte Metals has recorded $0 spend and 0 leads across all paid channels for the full 28-day window. With organic also contracting (GBP -61.76%, SC -81.82%), there is currently no active lead generation mechanism. This is not a budget-shift or scaling decision — it requires a client-level conversation about whether paid reactivation is in scope. Flag to Sohib for client check-in before 2026-08-12."
+        "monday_item_name": "Forte Metals — Paid Status Watch",
+        "monday_update": "No paid spend has run in 28 days ($0 Meta, $0 Google Ads), so there are no budgets to shift, scale, or kill. GBP actions are collapsing (68% WoW drop, last 2 days at zero) and search clicks are down 81.82% WoW — organic is the only lead source and it is decelerating. Re-check on 2026-08-13 to assess whether GBP recovers to 3+ daily actions; until paid campaigns are confirmed active in the data, no buyer action is possible."
       }
     ],
-    "next_check": "2026-08-12"
+    "next_check": "2026-08-13"
   }
 }
