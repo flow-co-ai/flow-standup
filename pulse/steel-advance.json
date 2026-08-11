@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-10T11:44:35.767Z",
-  "date": "2026-08-10",
+  "generated_at": "2026-08-11T11:39:35.187Z",
+  "date": "2026-08-11",
   "slug": "steel-advance",
   "name": "Advance Grinding",
   "type": "leadgen",
   "window_days": 28,
-  "score": 100,
+  "score": 90,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, meaning all 103 GBP actions (including 3 calls, 68 directions, and 32 web clicks) are coming entirely from organic Google Business Profile activity. The biggest movement is a 25% drop in GBP engagement over the last 7 days versus the prior 7 days, likely driven by reduced search demand or a dip in profile visibility without any paid traffic to compensate.",
+  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, suggesting campaigns are paused or inactive. Google Business Profile is the only source of engagement, generating 99 total actions (3 calls, 66 direction requests, 30 website clicks), though GBP activity dropped 46.34% in the last 7 days versus the prior 7 days, likely due to reduced organic search demand or a listing visibility issue.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,20 +25,20 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 103,
+          "actions": 99,
           "calls": 3,
-          "directions": 68,
-          "web_clicks": 32
+          "directions": 66,
+          "web_clicks": 30
         }
       }
     },
     "organic": {
-      "gbp_actions": 103,
+      "gbp_actions": 99,
       "ig_reach": 0
     },
     "top_campaign": null,
     "latest_day": {
-      "date": "2026-08-09",
+      "date": "2026-08-10",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -56,7 +56,7 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -25,
+      "gbp_7d_pct": -46.34,
       "sc_7d_pct": null,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
@@ -65,7 +65,6 @@
     "flags": [],
     "series": {
       "dates": [
-        "2026-07-13",
         "2026-07-14",
         "2026-07-15",
         "2026-07-16",
@@ -92,7 +91,8 @@
         "2026-08-06",
         "2026-08-07",
         "2026-08-08",
-        "2026-08-09"
+        "2026-08-09",
+        "2026-08-10"
       ],
       "spend": [
         0,
@@ -215,7 +215,6 @@
         0
       ],
       "gbp_actions": [
-        6,
         7,
         4,
         0,
@@ -241,6 +240,7 @@
         12,
         7,
         0,
+        2,
         0,
         0
       ],
@@ -404,46 +404,63 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-10T11:47:53.824Z",
+    "generated_at": "2026-08-11T11:43:27.272Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Only organic GBP is active; paid is completely dark across all channels.",
+    "verdict": "Paid media fully dark; only GBP alive and now decelerating.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — Meta and Google Ads are both completely dark, generating $0 and 0 leads.",
+        "text": "Zero paid spend across all 28 days — Meta and Google Ads both show $0 spend, $0 leads; no efficiency metric is computable.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions fell sharply: last 3 days (Aug 7–9) totalled 0 actions vs prior 3 days (Aug 4–6) totalling 19 — a 3-day confirmed collapse.",
+        "text": "GBP is the sole active channel: 99 actions (3 calls, 66 directions, 30 web clicks) over 28 days, but dropped 46.34% in the last 7d vs prior 7d.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
-        "priority": 3,
-        "text": "GBP 7d engagement down 25% with zero paid traffic to compensate; all 103 28-day actions (3 calls, 68 directions, 32 web clicks) are organically sourced.",
+        "priority": 2,
+        "text": "3-day GBP signal (Aug 8–10): 2 actions total vs 19 actions in the prior 3 days (Aug 5–7) — a sharp deceleration, not just weekly noise.",
         "confidence": "confirmed",
         "channel": "gbp"
+      },
+      {
+        "id": "F4",
+        "priority": 3,
+        "text": "GA4 sessions, Search Console clicks, and IG reach are all zero for the full 45-day series — no web or organic social traffic is being tracked.",
+        "confidence": "probable",
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
+        "type": "fix",
+        "text": "Confirm campaign pause status on Meta and Google Ads — zero spend for 28 days requires an account-level explanation before any budget decision.",
+        "cites": [
+          "F1"
+        ],
+        "monday_item_name": "Confirm Paid Campaigns Status",
+        "monday_update": "Meta and Google Ads show $0 spend across all 28 days in the data window (July 14 – Aug 10). Sohib to confirm whether campaigns are intentionally paused, budgets are exhausted, or an account issue is present. Success check: account-level status verified and documented by Aug 13. If paused intentionally, a reactivation plan should be scoped separately."
+      },
+      {
+        "id": "S2",
         "type": "watch",
-        "text": "Watch GBP actions daily; if 3-day total stays at 0, escalate profile visibility check by Aug 13.",
+        "text": "Watch GBP: 3-day actions collapsed from 19 to 2 — confirm no listing suspension or category change before drawing a demand conclusion.",
         "cites": [
           "F2",
           "F3"
         ],
-        "monday_item_name": "Monitor GBP action drop",
-        "monday_update": "GBP actions collapsed to 0 over the last 3 days (Aug 7–9) after averaging ~6.3/day across the prior 45 days. This is the only active channel with any results, so a sustained zero is a real business risk. Check Google Business Profile for suspension flags, profile edits, or category changes that could have suppressed visibility. If the 3-day total remains at 0 by Aug 13, escalate to a full profile audit before considering paid reactivation."
+        "monday_item_name": "Watch GBP Visibility Drop",
+        "monday_update": "GBP actions fell 46.34% week-over-week, and the last 3 days (Aug 8–10) recorded only 2 actions versus 19 in the prior 3 days. Check Google Business Profile dashboard for any listing suspension notices, ownership flags, or recent category edits. Re-check GBP action count on Aug 14 — if the 3-day total remains below 5, escalate as a listing visibility issue."
       }
     ],
-    "next_check": "2026-08-13"
+    "next_check": "2026-08-14"
   }
 }
