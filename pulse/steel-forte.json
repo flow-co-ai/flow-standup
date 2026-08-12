@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12T11:41:21.846Z",
+  "generated_at": "2026-08-12T14:38:39.858Z",
   "date": "2026-08-12",
   "slug": "steel-forte",
   "name": "Forte Metals",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "The biggest movement is a sharp 89% drop in Google Business Profile activity over the last 7 days, likely driven by reduced organic search visibility or a listing issue, though paid channels (Meta and Google Ads) show zero spend and zero leads across the full 28-day window, meaning no paid lead generation is active at all.",
+  "verdict": "Forte Metals saw zero paid activity across Meta and Google Ads in the last 28 days, making GBP the sole source of engagement with 105 total actions (62 directions, 12 calls, 31 web clicks). The biggest concern is the 89.19% drop in GBP actions over the last 7 days versus the prior 7 days, which likely signals a listing visibility issue or a sharp seasonal pullback in local search demand.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,36 +409,36 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-12T11:44:59.612Z",
+    "generated_at": "2026-08-12T14:42:05.441Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "No paid activity exists; only GBP organic is now also collapsing.",
+    "verdict": "GBP collapse and zero paid activity confirm organic-only dependency is failing.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend and zero leads across the full 28-day window — no paid lead generation is active for Forte Metals at all.",
+        "text": "Zero paid spend across Meta and Google for the entire 45-day series; all CPL metrics are null — no paid demand generation exists.",
         "confidence": "confirmed",
-        "channel": "meta+google"
+        "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions crashed to 0 for the last 4 consecutive days (Aug 8–11), down from a prior-7d average of ~11.4 actions/day — a confirmed hard stop, not a gradual fade.",
+        "text": "GBP actions collapsed 89.19% week-over-week; last 3 days (Aug 9–11) show 0 actions each, vs 3–8 in prior 3 days (Aug 6–8).",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "Search clicks dropped 60% week-over-week and hit 0 for the last 4 days (Aug 8–11), reinforcing a broader organic visibility loss not just a GBP issue.",
+        "priority": 3,
+        "text": "Search clicks fell 60% week-over-week; last 3 days show 0 clicks each vs 1 per day prior — organic search demand is also contracting.",
         "confidence": "confirmed",
-        "channel": "organic"
+        "channel": "search"
       },
       {
         "id": "F4",
-        "priority": 3,
-        "text": "The daily verdict attributed GBP drop to 'reduced visibility or listing issue' — the 4-day zero streak and simultaneous search click collapse points more specifically to a listing suspension or critical listing error, not merely lower visibility.",
+        "priority": 4,
+        "text": "Daily verdict attributed GBP drop to listing visibility or seasonality; 3-day series showing 0 actions and 0 sc_clicks simultaneously points more to a listing suspension or penalty than seasonal dip.",
         "confidence": "probable",
         "channel": "gbp"
       }
@@ -447,26 +447,27 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit GBP listing immediately for suspension or critical error — 0 actions for 4 days is an emergency signal.",
+        "text": "Audit GBP listing immediately for suspension, ownership conflict, or policy flag causing 0 actions for 3 consecutive days.",
         "cites": [
           "F2",
           "F4"
         ],
-        "monday_item_name": "Fix GBP listing suspension",
-        "monday_update": "GBP actions have been zero for 4 consecutive days (Aug 8–11), down from ~11.4 actions/day the prior week, with search clicks also at 0 the same period. Log into Google Business Profile today and check for suspension notices, policy violations, or ownership issues. Success is confirmed when daily GBP actions return to ≥4/day — re-check by 2026-08-16."
+        "monday_item_name": "GBP Listing Audit Fix",
+        "monday_update": "GBP actions have been zero for 3 consecutive days (Aug 9–11) and down 89.19% week-over-week, coinciding with a simultaneous 60% drop in search clicks. Log into Google Business Profile to check for suspension notices, ownership conflicts, or policy violations. Success is confirmed when daily GBP actions return to the prior baseline of 3–8 per day. Re-check by 2026-08-15."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Hold all paid channel activation until GBP/organic issue is diagnosed — no spend baseline exists to protect.",
+        "text": "Watch GBP and search clicks daily through Aug 15; if both remain at 0, escalate listing reinstatement before any paid activation.",
         "cites": [
-          "F1",
-          "F3"
+          "F2",
+          "F3",
+          "F4"
         ],
-        "monday_item_name": "Watch: Paid activation hold",
-        "monday_update": "Paid spend is $0 across all channels for the full 28-day window, meaning there is no CPL baseline or campaign history to act from. Launching paid spend into a broken organic/listing environment risks compounding the issue without valid lead attribution. Re-evaluate paid readiness once GBP actions recover above 4/day — target review date 2026-08-19."
+        "monday_item_name": "GBP + Search Watch Aug 15",
+        "monday_update": "Both GBP actions and search clicks have been at zero for the last 3 days, suggesting a structural listing issue rather than a seasonal dip. No paid spend should be activated into a market where organic signals are also dark — reinstatement of the GBP listing takes priority. Monitor daily; if actions and clicks do not recover by Aug 15, treat listing suspension as confirmed and begin formal reinstatement appeal."
       }
     ],
-    "next_check": "2026-08-16"
+    "next_check": "2026-08-15"
   }
 }

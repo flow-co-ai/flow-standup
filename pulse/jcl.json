@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12T11:40:31.103Z",
+  "generated_at": "2026-08-12T14:38:19.665Z",
   "date": "2026-08-12",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 47,
   "status": "orange",
-  "verdict": "Meta spend collapsed 86.35% week-over-week, triggering a zero-spend day and going channel-dark, which drove leads down 76.47% despite the top campaign \"CROA || CBO - 3/17/26\" accounting for $855.64 of the 28-day total spend. The likely driver is a Meta delivery or budget disruption that needs immediate investigation to restore lead flow.",
+  "verdict": "Meta spend collapsed 86.35% week-over-week, triggering a zero-spend day and leaving the channel dark, which drove leads down 76.47% despite the top campaign \"CROA || CBO - 3/17/26\" accounting for $855.64 of the 28-day total spend of $1,617.40. The likely driver is a Meta delivery or budget disruption that needs immediate investigation to restore lead volume.",
   "windsor": {
     "totals": {
       "spend": 1617.4,
@@ -442,78 +442,78 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-12T11:43:44.122Z",
+    "generated_at": "2026-08-12T14:41:01.213Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Meta went dark 6 days ago; GHL intake shows zero opps — two separate crises.",
+    "verdict": "Meta dark 6 days; intake pipeline shows zero opps despite 64 leads.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Meta has been $0 spend for 6 consecutive days (Aug 6–11), triggering zero_spend_day and channel_dark:meta — all 64 28-day leads sourced from Meta have stopped.",
+        "text": "Meta has been $0 spend for 6 consecutive days (Aug 6–11); channel_dark flag confirmed. Zero leads generated in the same window.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GHL shows 0 opportunities created and 0 appointments against 49 contacts in 28 days — leads arriving but intake pipeline is completely unworked.",
-        "confidence": "confirmed",
-        "channel": "GHL"
-      },
-      {
-        "id": "F3",
-        "priority": 2,
-        "text": "3-day signal (Aug 9–11) vs prior 3 (Aug 6–8): spend $0 vs $69.03, leads 0 vs 4 — confirmed deterioration, not a single bad day.",
+        "text": "3-day signal (Aug 9–11) vs prior 3 (Aug 6–8): spend $0 vs $0, leads 0 vs 0 — blackout is total and persisting, not a single bad day.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
+        "id": "F3",
+        "priority": 3,
+        "text": "GHL shows 0 opportunities created and 0 appointments against 64 contacts/leads in 28 days — intake pipeline is not converting arrivals into opps at all.",
+        "confidence": "confirmed",
+        "channel": "GHL"
+      },
+      {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions fell 41.3% week-over-week and search clicks dropped 38.68%; organic visibility declining in parallel with paid — not isolated to Meta.",
+        "text": "CPL improved to $25.27 over 28 days (cpl_7d_pct -41.99%) but this is an artefact of spend collapsing -86.35%; fewer dollars in, fewer leads — not genuine efficiency gain.",
         "confidence": "probable",
-        "channel": "organic"
+        "channel": "meta"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GA4 sessions rose 12.72% week-over-week despite zero paid spend and falling search clicks — directional anomaly likely explained by double-counted GA4 properties; disregard as signal.",
+        "text": "GBP actions fell -41.3% and SC clicks -38.68% week-over-week, suggesting organic/search softness coincides with Meta dark — brand presence thinning across all channels simultaneously.",
         "confidence": "hypothesis",
-        "channel": "ga4"
+        "channel": "organic"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Investigate and restore Meta delivery immediately; account has been $0 spend for 6 days with no approved pause.",
+        "text": "Diagnose and restore Meta delivery immediately; 6 zero-spend days means account-level issue, not budget — check ad account status and payment method.",
         "cites": [
           "F1",
-          "F3"
+          "F2"
         ],
-        "monday_item_name": "Restore Meta delivery now",
-        "monday_update": "Meta spend hit $0 on Aug 6 and has not recovered across 6 consecutive days (Aug 6–11), collapsing leads 76.47% week-over-week. Check for account-level flags, payment failures, campaign disapprovals, or budget exhaustion in Meta Business Manager and resolve before the next billing cycle. Success is confirmed when daily spend returns to the prior baseline of ~$70–$100/day and leads resume within 3 days of restoration. Re-check by Aug 15."
+        "monday_item_name": "Fix Meta Account Dark Issue",
+        "monday_update": "Meta has been completely dark since August 6 — $0 spend and 0 leads across 6 consecutive days (Aug 6–11), confirmed by series data. This is not a budget shortfall; the prior 7-day spend averaged ~$72/day before the drop. Immediately check Meta Business Manager for ad account disabled status, payment method failures, or policy flags, and restore delivery. Success is confirmed when daily spend returns to ≥$60 and leads resume within 48 hours of fix — target restoration by Aug 14."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GHL intake workflow: 49 contacts, 0 opportunities created — confirmed intake leak, not an ads problem.",
+        "text": "Audit GHL pipeline intake: 64 leads arrived in 28 days but 0 opportunities created — leads are not entering the pipeline, fix automation or manual intake process.",
         "cites": [
-          "F2"
+          "F3"
         ],
-        "monday_item_name": "Fix GHL intake pipeline",
-        "monday_update": "GHL shows 49 contacts over 28 days but zero opportunities created and zero appointments booked — leads are arriving but are not being converted into pipeline, which is an intake or automation failure, not an advertising issue. Check GHL workflow triggers, opportunity-creation automations, and whether contacts are being manually qualified. Success is confirmed when new contacts begin generating opportunities at a rate above 0 within 7 days of the fix. Re-check by Aug 19."
+        "monday_item_name": "Fix GHL Lead Intake Pipeline",
+        "monday_update": "GHL shows 64 contacts but 0 opportunities created and 0 appointments in the 28-day window — leads are arriving but not converting into trackable pipeline stages. This is an intake process or automation failure, not an ads problem. Audit the GHL workflow: check lead-to-opportunity automation triggers, form integrations, and whether the intake team is manually qualifying leads. Success is confirmed when new leads from the restored Meta campaign are generating opportunities within 72 hours — check by Aug 17."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP and search clicks over next 7 days; 41.3% and 38.68% drops probable but not yet actionable without paid context.",
+        "text": "Watch GBP actions and SC clicks for further decline; if both remain below prior-7d baseline by Aug 15, investigate organic brand health separately.",
         "cites": [
-          "F4"
+          "F5"
         ],
-        "monday_item_name": "Watch GBP & search decline",
-        "monday_update": "GBP actions fell 41.3% and search clicks dropped 38.68% week-over-week, suggesting organic visibility is eroding alongside the Meta outage. This is probable rather than confirmed — some of the drop may be downstream of the paid traffic collapse reducing brand search volume. Re-check on Aug 19 once Meta is restored; if GBP and search clicks remain depressed after paid returns, escalate to a separate fix recommendation."
+        "monday_item_name": "Watch Organic Channel Softness",
+        "monday_update": "GBP actions fell -41.3% and search clicks fell -38.68% week-over-week, coinciding with the Meta blackout. This may be correlated noise or early brand presence erosion. No action taken yet — hypothesis grade only. Re-check GBP actions and SC clicks on Aug 15; if both remain below the prior-7d baseline at that point, escalate to a separate organic/GBP audit."
       }
     ],
     "next_check": "2026-08-15"

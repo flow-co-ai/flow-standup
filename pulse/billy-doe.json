@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12T11:38:53.870Z",
+  "generated_at": "2026-08-12T14:37:42.358Z",
   "date": "2026-08-12",
   "slug": "billy-doe",
   "name": "Billy Doe Meats",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 70,
   "status": "amber",
-  "verdict": "Purchases jumped 33.33% week-over-week and ROAS surged 56.23%, likely driven by the top Meta campaign \"BWS - Muslim Subscription Box - 17/06/26\" which captured $842.72 of the $1,483.81 in spend and delivered strong conversion efficiency. Spend pulled back 8.84% over the same period, suggesting the improved ROAS came from better targeting efficiency rather than increased budget.",
+  "verdict": "Purchases jumped 33.33% and ROAS surged 56.23% week-over-week, likely driven by the top Meta campaign \"BWS - Muslim Subscription Box - 17/06/26\" which captured $842.72 of the $1,483.81 in spend and delivered strong conversion efficiency. GBP actions dropped 50% week-over-week, worth monitoring to ensure local visibility stays healthy.",
   "windsor": {
     "totals": {
       "spend": 1483.81,
@@ -433,80 +433,78 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-12T11:42:00.630Z",
+    "generated_at": "2026-08-12T14:39:17.289Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "ROAS surge is real but purchase volume is thin and lumpy — efficiency masks fragility.",
+    "verdict": "ROAS surge is real but purchase clustering masks thin daily volume.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "ROAS hit 5.98x over 28 days and surged 56.23% 7d vs prior 7d, but only 35 purchases in 28 days reveals a thin, lumpy revenue base.",
+        "text": "28-day ROAS is 5.98x on $1,483.81 spend; 7d ROAS spiked +56.23% but Aug 11 alone drove $1,661.59 revenue — single-day clustering inflates the signal.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
-        "priority": 2,
-        "text": "3-day purchase signal (Aug 9–11): 0, 0, 6 — prior 3 days (Aug 6–8): 1, 0, 1. The Aug 11 spike of $1,661.59 revenue is a single-day outlier, not a trend recovery.",
-        "confidence": "probable",
+        "priority": 1,
+        "text": "Purchases over last 3 days (Aug 9–11): 0, 0, 6 vs prior 3 (Aug 6–8): 1, 0, 1. The +33.33% weekly gain is entirely one outlier day; underlying purchase rate is near zero.",
+        "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GBP actions dropped 50% 7d vs prior 7d; last 3 series values are 0, 0, 0 — channel_dark signal. Local intent engine may be stalling while paid runs.",
-        "confidence": "confirmed",
+        "text": "GBP actions read 0 for Aug 9, 10, 11 — three consecutive zero days after averaging ~18/day across July; likely a data feed gap, not a true local visibility collapse.",
+        "confidence": "probable",
         "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "IG reach fell 9.65% 7d and has trended from ~1,200+ in mid-July down to ~870 by Aug 11 — organic social reach contracting over 4 weeks.",
-        "confidence": "confirmed",
-        "channel": "organic"
+        "text": "IG reach has declined from ~1,200/day in mid-July to ~870/day in the last 3 days (-28%), while spend held ~$55/day — early creative fatigue signal on current ad set.",
+        "confidence": "probable",
+        "channel": "meta"
       },
       {
         "id": "F5",
-        "priority": 3,
-        "text": "GA4 sessions down 10.94% 7d yet purchases spiked Aug 11 — Shopify/Meta purchase event inconsistency documented; Aug 11's $1,661.59 should be cross-checked in Windsor before treating as confirmed.",
+        "priority": 4,
+        "text": "GA4 sessions -10.94% week-over-week (averaging ~220/day recently vs ~260/day in late July); directional only per known double-count caveat, but directionally soft alongside IG reach decline.",
         "confidence": "hypothesis",
-        "channel": "web"
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "watch",
-        "text": "Hold budget flat; watch purchases Aug 12–14. Confirm if Aug 11's 6-purchase, $1,661.59 day is signal or noise.",
+        "text": "Hold spend flat; re-check purchases Aug 15 to confirm Aug 11's $1,661.59 day is repeatable, not a one-time cluster.",
         "cites": [
           "F1",
-          "F2",
-          "F5"
+          "F2"
         ],
-        "monday_item_name": "Watch Aug 11 Purchase Spike",
-        "monday_update": "Aug 11 produced 6 purchases and $1,661.59 revenue after two zero-purchase days — the 3-day window is too noisy to scale on. Cross-check this day's orders in Windsor against Shopify to validate the Meta purchase event (known inconsistency). If Windsor confirms 4+ purchases on Aug 11 and the pattern holds through Aug 14, escalate to a scale recommendation. Re-check Aug 15."
+        "monday_item_name": "Watch Purchase Cluster Aug 15",
+        "monday_update": "Aug 11 produced $1,661.59 in revenue (6 purchases) after 4 consecutive zero-purchase days, inflating the 7d ROAS to +56.23%. Do not scale spend until we see whether the next 3-day window (Aug 12–14) delivers at least 2–3 purchases per day at or above the 5.98x 28-day ROAS floor. Re-check Aug 15 before any budget move."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Investigate GBP 3-day zero readings; restore or flag as data gap before local intent erodes further.",
+        "text": "Verify GBP data feed for Aug 9–11 three-zero-day gap; confirm local visibility is intact before treating as a real drop.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Fix GBP Dark Signal",
-        "monday_update": "GBP actions have read zero for the last 3 days (Aug 9–11) after averaging 18–24 actions/day through late July — a 50% weekly drop confirmed. Check Google Business Profile for suspension, listing edits pending review, or a tracking connector outage. Success check: GBP actions return to ≥15/day within 5 business days. If no data issue is found, flag to Nacer for client-side investigation by Aug 17."
+        "monday_item_name": "Fix GBP Feed Gap Check",
+        "monday_update": "GBP actions reported 0 for three consecutive days (Aug 9–11) after averaging ~18 actions/day through July. Pull GBP dashboard directly and compare to Windsor feed to confirm whether this is a reporting gap or a genuine local visibility drop. Success check: confirmed data source by Aug 14."
       },
       {
         "id": "S3",
         "type": "creative_refresh",
-        "text": "Queue one new real-footage ad variant into BWS Muslim Subscription Box campaign; frequency risk on a 56% ROAS gain with thin purchase volume.",
+        "text": "Queue one new real-footage ad creative into the Muslim Subscription Box campaign; IG reach fell ~28% from July peak while spend held steady.",
         "cites": [
-          "F1",
           "F4"
         ],
-        "monday_item_name": "Creative Refresh BWS Sub Box",
-        "monday_update": "The top campaign (BWS - Muslim Subscription Box - 17/06/26) holds $842.72 of $1,483.81 in 28-day spend — heavy concentration on one creative pool that historically burned out at high frequency. IG organic reach is contracting (~870 vs 1,200+ in mid-July), a leading indicator of audience fatigue. Pull one new real facility footage clip (Haney's July 21 Drive delivery) and launch a variant ad. Success check: purchases-per-day average ≥1.5 over the following 7 days without CPM increase. Review by Aug 19."
+        "monday_item_name": "Creative Refresh Sub Box Campaign",
+        "monday_update": "IG reach declined from ~1,200/day in mid-July to ~870/day in the last 3 days while daily spend held near $55 — a probable fatigue pattern on the current creative. Pull one real-facility or product footage asset from Haney's July 21 Drive folder and introduce it into the BWS Muslim Subscription Box campaign. Success check: IG reach recovers above 1,000/day and purchases do not drop below the 28-day average by Aug 22."
       }
     ],
     "next_check": "2026-08-15"

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12T11:41:32.160Z",
+  "generated_at": "2026-08-12T14:38:52.190Z",
   "date": "2026-08-12",
   "slug": "steel-ohare",
   "name": "O'Hare Precision",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "GBP activity is the only active channel this period, generating 178 total actions (122 directions, 48 web clicks, 8 calls) with zero paid spend on Meta or Google Ads. The biggest concern is a 50.83% drop in Search Console clicks over the last 7 days versus the prior 7, alongside a 17.14% decline in GBP actions, likely driven by reduced organic search visibility or seasonal softness.",
+  "verdict": "GBP activity is the only active channel this period, generating 178 total actions (122 directions, 48 web clicks, 8 calls) with zero paid spend on Meta or Google Ads. The biggest concern is a 50.83% drop in Search Console clicks over the last 7 days versus the prior 7, alongside a 17.14% decline in GBP actions, suggesting organic visibility is softening and warrants a content or listing audit.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,61 +409,61 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-12T11:45:51.061Z",
+    "generated_at": "2026-08-12T14:42:42.897Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Zero paid activity; organic erosion is now the only risk to watch.",
+    "verdict": "Organic-only account; paid is absent, not underperforming — reframe urgency.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero spend across all 28 days — Meta and Google Ads both completely dark. No CPL to evaluate; leadgen engine is fully offline.",
+        "text": "Zero paid spend across all 28 days — CPL and ROAS are undefined because no campaigns are active, not because they failed.",
         "confidence": "confirmed",
         "channel": "meta/google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Search Console clicks dropped 50.83% over the last 7 days vs prior 7. 3-day signal (Aug 9-11) shows 7, 0, 0 clicks — a hard stall, not noise.",
+        "text": "Search Console clicks fell 50.83% (7d vs prior 7d); 3-day signal (Aug 9–11) shows 7, 0, 0 clicks vs prior 3 (Aug 6–8) at 17, 16, 3 — sustained, not noise.",
         "confidence": "confirmed",
         "channel": "organic"
       },
       {
         "id": "F3",
-        "priority": 3,
-        "text": "GBP actions fell 17.14% week-over-week. Last 3 days (Aug 9-11) logged 0 actions each — the weakest consecutive stretch in the 45-day series.",
+        "priority": 2,
+        "text": "GBP actions dropped 17.14% (7d vs prior 7d); last 3 days (Aug 9–11) show 0, 0, 0 actions vs prior 3 (Aug 6–8) at 11, 7, 0 — a 3-day dark streak.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F4",
-        "priority": 4,
-        "text": "GA4 sessions are zero for all 45 days. Either tracking is broken or the property is not connected — directional data is entirely absent.",
-        "confidence": "confirmed",
-        "channel": "ga4"
+        "priority": 3,
+        "text": "SC clicks show a volatile but declining envelope: peak of 29 on Jul 30 has not been approached since; Aug avg is roughly 9 clicks/day vs Jul avg of ~17.",
+        "confidence": "probable",
+        "channel": "organic"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "watch",
-        "text": "Monitor SC clicks and GBP actions daily; if both stay at 0 through Aug 15, escalate to organic/GMB audit.",
+        "text": "Monitor SC clicks and GBP actions daily for 3 more days; both hit 0 on Aug 10–11 — confirm data gap or real drop.",
         "cites": [
           "F2",
           "F3"
         ],
-        "monday_item_name": "Watch SC + GBP drop",
-        "monday_update": "Search Console clicks hit 0 on Aug 10 and Aug 11, down 50.83% for the week, and GBP actions have also read 0 for three consecutive days. No paid activity is live to compensate for this organic erosion. If both metrics remain at or near 0 through Aug 15, escalate to a Google Business Profile and Search Console audit before the next review. Re-check Aug 15."
+        "monday_item_name": "Watch SC + GBP dark streak",
+        "monday_update": "Search Console clicks and GBP actions both read 0 on Aug 10 and Aug 11, following a 50.83% SC 7d decline and a 17.14% GBP drop. This could be a data-pipeline lag or a genuine visibility collapse — do not act until three days of confirmed real-data are available. Success check: if clicks and GBP actions resume above 7/day by Aug 15, treat as a lag artifact. If still 0 by Aug 15, escalate to a GBP listing audit and Search Console coverage report."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Verify GA4 tracking connection — 45 consecutive zero-session days confirms a broken or missing property link.",
+        "text": "Audit GBP listing for suspension or ownership issues causing the 3-day zero-action streak since Aug 9.",
         "cites": [
-          "F4"
+          "F3"
         ],
-        "monday_item_name": "Fix GA4 tracking connection",
-        "monday_update": "GA4 sessions have read zero for every day in the 45-day series, indicating the property is either disconnected or firing to a wrong data stream. Confirm the GA4 measurement ID is correctly placed on the live site and that the property is linked to the correct account. Success is confirmed when at least 3 consecutive days of non-zero sessions appear. Target resolution by Aug 15."
+        "monday_item_name": "GBP listing audit O'Hare",
+        "monday_update": "GBP actions registered 0 for three consecutive days (Aug 9, 10, 11) after averaging roughly 6–11 actions/day earlier in the window. A suspended or penalised listing would produce exactly this pattern. Check Google Business Profile dashboard for any suspension notices, ownership conflicts, or policy flags. Confirm resolution by Aug 15: GBP actions should return to ≥5/day within 48 hours of any fix applied."
       }
     ],
     "next_check": "2026-08-15"

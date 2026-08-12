@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12T11:39:56.475Z",
+  "generated_at": "2026-08-12T14:38:15.105Z",
   "date": "2026-08-12",
   "slug": "hvac",
   "name": "Quality HVAC by Fibid",
@@ -412,7 +412,7 @@
     }
   },
   "ghl": {
-    "contacts": 91,
+    "contacts": 92,
     "opportunities": {
       "created": {
         "count": 62,
@@ -436,79 +436,81 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-12T11:43:20.065Z",
+    "generated_at": "2026-08-12T14:40:33.281Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Zero leads for 11 days — tracking is broken, not demand.",
+    "verdict": "Spend is live but lead capture is fully broken — not a demand problem.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Lead drought confirmed: 0 leads across all 11 days Aug 1–11 despite $494.32 spend in that window. CPL is mathematically undefined — no conversion event fired.",
+        "text": "lead_drought confirmed: 0 leads in last 7 days despite $494.77 spent in that window — CPL is undefined, efficiency is zero.",
         "confidence": "confirmed",
         "channel": "cross-channel"
       },
       {
         "id": "F2",
         "priority": 1,
-        "text": "Google Ads top campaign spent $1,699.49 in 28 days with 0 tracked leads in recent window; google_spend spiked 78.69% this 7d — spend accelerating into a broken conversion funnel.",
+        "text": "Google Ads top campaign spent $1,699.49 of 28-day budget with 18 conversions logged historically, but 0 leads in recent 7d — conversion tracking or form is broken, not demand.",
         "confidence": "confirmed",
-        "channel": "google"
+        "channel": "google_ads"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "SOW blocker active: Vivian (dispatch) left 7/7 — intake owner, GHL login, and after-hours coverage unconfirmed. Speed-to-lead automations point at an empty seat; scaling is gated on this.",
+        "text": "3-day signal (Aug 9–11): spend $214.70, leads 0; prior 3 days (Aug 6–8): spend $196.18, leads 0 — drought is persistent, not a single bad day.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "cross-channel"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "3-day signal (Aug 9–11): GBP actions = 0, 0, 0 vs prior 3-day avg of 3.7 — organic engagement also collapsed, suggesting either a GBP listing issue or Windsor data lag, not purely paid.",
+        "text": "GHL shows 62 opportunities created but 0 won and 0 appointments — intake owner Vivian left 7/7; speed-to-lead automations may be routing to an empty seat, masking any leads that do arrive.",
         "confidence": "probable",
-        "channel": "gbp"
+        "channel": "GHL"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 62 opportunities created but 0 won and 0 appointments in 28 days — pipeline is not converting, compounding the intake-owner gap flagged in F3.",
-        "confidence": "probable",
-        "channel": "ghl"
+        "text": "GBP actions dropped to 0 for Aug 9–11 (from a 28-day average of ~4.6/day) — possible data lag per SOW note, but worth flagging alongside the paid drought.",
+        "confidence": "hypothesis",
+        "channel": "GBP"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit Google Ads conversion tracking immediately — 0 leads on $494 spend over 11 days confirms a pixel or form break, not a demand problem.",
+        "text": "Audit Google Ads conversion tracking and landing page/form end-to-end; spend is live at ~$70/day with 0 leads for 7+ days.",
         "cites": [
           "F1",
-          "F2"
+          "F2",
+          "F3"
         ],
-        "monday_item_name": "Fix Google conversion tracking",
-        "monday_update": "Pull the Google Ads conversion tag firing log and test the lead form end-to-end today — the last confirmed lead fired before Aug 1 and $494.32 has spent since with zero conversions recorded. Success is confirmed when at least 1 test conversion fires in the tag assistant and the campaign dashboard reflects it. Resolve by Aug 14; do not raise budgets until this clears."
+        "monday_item_name": "Fix Google Ads conversion tracking",
+        "monday_update": "Google Ads has spent approximately $494.77 over the last 7 days with zero tracked leads — the top campaign alone consumed $1,699.49 of the 28-day budget. The immediate action is to test the conversion path end-to-end: submit a live test lead from the landing page, confirm the thank-you page fires the Google tag, and check for tag errors in Google Tag Manager or Ads diagnostics. Success is confirmed when at least one test conversion registers in Google Ads within 24 hours. Complete by 2026-08-13."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Confirm intake owner replacing Vivian before any budget increase — SOW scale-back-up gate is explicitly blocked on this person and their GHL login.",
+        "text": "Confirm intake owner post-Vivian and verify GHL speed-to-lead automations route to an active seat before any budget is restored.",
         "cites": [
-          "F3",
-          "F5"
+          "F4"
         ],
-        "monday_item_name": "Confirm intake owner Aug",
-        "monday_update": "Contact Xavier or Nader to name the replacement for Vivian (left 7/7) and verify their GHL login and after-hours coverage is active. GHL shows 62 opportunities created and 0 appointments in the last 28 days — speed-to-lead automations may be routing to an empty seat. Success is a named owner with a verified GHL login confirmed in writing by Aug 15. Budgets and LSA remain paused until this is resolved per the SOW gate."
+        "monday_item_name": "Confirm intake owner post-Vivian",
+        "monday_update": "Vivian (dispatch) left on 7/7 and GHL shows 62 opportunities created but 0 appointments and 0 won — speed-to-lead automations may be pointing at an empty seat. Confirm with Xavier or Nader who now owns intake, ensure that person has an active GHL login, and re-test the automation sequence by submitting a test lead. Per the SOW scale-back-up gate, budgets cannot be raised until this is resolved. Confirm ownership and test by 2026-08-14."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions: 3-day total is 0 (Aug 9–11) vs 3.7/day prior — confirm Windsor lag before treating as a live listing problem. Re-check Aug 15.",
+        "text": "Do not raise Google or Meta budgets until tracking fix (S1) and intake owner (S2) are both confirmed; re-check 2026-08-15.",
         "cites": [
+          "F1",
+          "F2",
           "F4"
         ],
-        "monday_item_name": "Watch GBP actions Aug 15",
-        "monday_update": "GBP actions dropped to 0 across Aug 9–11, compared to a 3-day prior average of 3.7 actions per day. SOW notes that the last 2–3 days of any GBP window carry Windsor data lag, so this may be an artifact rather than a real drop. Check native GBP Insights directly on Aug 15; if actions are still 0 with lag ruled out, escalate as a listing health issue."
+        "monday_item_name": "Hold budgets — re-check Aug 15",
+        "monday_update": "Current daily spend is approximately $70.72 with zero attributable leads for at least 7 consecutive days. Raising budgets now would accelerate wasted spend into a broken conversion path and an unstaffed intake seat. Hold all budgets at current levels. Re-check on 2026-08-15 — if tracking is confirmed firing and an intake owner is in place, a scale decision can be made at that point with real CPL data."
       }
     ],
     "next_check": "2026-08-15"

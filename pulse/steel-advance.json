@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12T11:41:27.283Z",
+  "generated_at": "2026-08-12T14:38:46.814Z",
   "date": "2026-08-12",
   "slug": "steel-advance",
   "name": "Advance Grinding",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, so all engagement is coming entirely from Google Business Profile, which generated 93 total actions (60 directions, 30 web clicks, 3 calls). The biggest movement is a 38.89% drop in GBP activity over the last 7 days versus the prior 7 days, likely driven by reduced search demand or a dip in profile visibility rather than any paid support.",
+  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, so all engagement is coming from Google Business Profile, which drove 93 total actions (60 directions, 30 web clicks, 3 calls). The biggest movement is a 38.89% drop in GBP actions over the last 7 days versus the prior 7 days, likely driven by reduced organic search demand or a dip in profile visibility without any paid support.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -404,71 +404,53 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-12T11:45:27.585Z",
+    "generated_at": "2026-08-12T14:42:21.143Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid is fully dark; GBP-only lifeline now declining 39%.",
+    "verdict": "GBP is the only active channel; 3-day signal is flatlined.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — Meta and Google Ads both completely dark, producing 0 leads and 0 clicks.",
+        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google Ads — so there is no CPL to evaluate; efficiency is structurally absent.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "meta/google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP is the sole lead source at 93 actions (28d), but the 3-day signal (Aug 9–11) shows 0 actions vs 10 in the prior 3 days (Aug 6–8), extending the -38.89% weekly drop.",
+        "text": "GBP actions dropped 38.89% in the last 7 days vs prior 7; last 3 days (Aug 9–11) show 0 actions vs 3 per day in the prior 3 (Aug 6–8).",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GBP actions are erratic — bursts of 12 on Aug 1 and Aug 5, then 3 consecutive zero days through Aug 9–11 — suggesting demand or visibility volatility with no paid floor.",
+        "text": "GA4 sessions, Search Console clicks, and IG reach are all zero across the full 45-day series — tracking appears dark or channels genuinely inactive.",
         "confidence": "probable",
-        "channel": "gbp"
-      },
-      {
-        "id": "F4",
-        "priority": 4,
-        "text": "GA4 sessions, Search Console clicks, and IG reach are all 0 for 45 consecutive days — tracking may be broken or channels are entirely inactive.",
-        "confidence": "confirmed",
-        "channel": "google_ads"
+        "channel": "ga4/sc/ig"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Verify why Meta and Google Ads show $0 spend for 45+ days — confirm account status, billing, and campaign pause state.",
+        "type": "watch",
+        "text": "Watch GBP daily actions; if 0-action streak extends past Aug 15, escalate profile visibility check.",
         "cites": [
-          "F1"
+          "F2"
         ],
-        "monday_item_name": "Confirm paid channel status",
-        "monday_update": "Meta and Google Ads have recorded $0 spend across all 28 tracked days with 0 leads and 0 clicks (F1). Confirm whether campaigns are intentionally paused, billing has lapsed, or accounts are suspended. Success check: at least one channel confirmed active or a clear pause reason documented by 2026-08-14."
+        "monday_item_name": "GBP Drop Watch Aug 15",
+        "monday_update": "GBP actions fell 38.89% week-over-week and have read zero for the last 3 days (Aug 9–11). No paid channels are active to offset this decline. Success check: at least 2 actions/day returning by Aug 15. If still zero on Aug 15, pull GBP Insights to diagnose a visibility or suspension issue before next cycle."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GA4 and Search Console tracking — 45 consecutive zero-session days strongly indicates broken implementation, not true zero traffic.",
+        "text": "Audit GA4, Search Console, and IG tracking — all read zero for 45 days; confirm whether dark or misconfigured.",
         "cites": [
-          "F4"
-        ],
-        "monday_item_name": "Fix GA4 / SC tracking",
-        "monday_update": "GA4 sessions and Search Console clicks have been zero for all 45 days in the series, which is implausible if the GBP web clicks (30 in 28 days) are real (F4). Check GA4 property ID, tag firing, and Search Console domain verification. Success check: sessions and SC clicks recording non-zero values within 3 days of fix deployment by 2026-08-15."
-      },
-      {
-        "id": "S3",
-        "type": "watch",
-        "text": "Watch GBP daily actions — 3 consecutive zero days through Aug 11; if zeros extend to Aug 15, escalate profile visibility review.",
-        "cites": [
-          "F2",
           "F3"
         ],
-        "monday_item_name": "Watch GBP action trend",
-        "monday_update": "GBP is the only active channel and has hit 0 actions for the last 3 tracked days (Aug 9–11), continuing a -38.89% 7-day decline (F2, F3). No paid support exists to compensate if organic visibility drops further. Re-check on 2026-08-15: if the zero streak reaches 6 days, escalate to a GBP profile audit (category relevance, photo freshness, review recency)."
+        "monday_item_name": "Fix Dark Channel Tracking",
+        "monday_update": "GA4 sessions, SC clicks, and IG reach have all returned zero for the entire 45-day series, which is atypical even for a paused paid account. Confirm whether tracking pixels are installed and firing, or whether these channels are genuinely off-scope. Success check: at least one channel returning non-zero data by next review on Aug 15."
       }
     ],
     "next_check": "2026-08-15"
