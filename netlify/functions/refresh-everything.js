@@ -16,6 +16,8 @@ async function dispatchWorkflow(workflowFile, token) {
   if (!res.ok) throw new Error(`dispatch ${workflowFile} failed: ${res.status} ${await res.text()}`);
 }
 
+exports.dispatchWorkflow = dispatchWorkflow;
+
 exports.handler = async (event) => {
   const json = (statusCode, obj) => ({ statusCode, headers: { "content-type": "application/json" }, body: JSON.stringify(obj) });
   try {

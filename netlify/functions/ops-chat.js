@@ -27,7 +27,7 @@ const {
   OVERRIDES_PATH,
   EMPTY: EMPTY_OVERRIDES,
 } = require("./standup-overrides");
-const { triggerStandupWorkflow } = require("./refresh-standup");
+const { dispatchWorkflow } = require("./refresh-everything");
 
 const ANTHROPIC_MODEL = "claude-sonnet-4-5"; // check docs.claude.com/en/docs/about-claude/models if this starts erroring
 const QUEUE_PATH = "checks/draft-queue.json";
@@ -679,7 +679,14 @@ exports.handler = async (event) => {
           } else if (tu.name === "fireflies_search") {
             result = await firefliesSearch(tu.input.keyword, tu.input.limit);
           } else if (tu.name === "trigger_standup_refresh") {
-            result = await triggerStandupWorkflow();
+            try {
+              const token = process.env.GH_STATE_TOKEN;
+              if (!token) throw new Error("GH_STATE_TOKEN is not set");
+              await dispatchWorkflow("standup.yml", token);
+              result = { ok: true };
+            } catch (err) {
+              result = { error: String((err && err.message) || err) };
+            }
           } else {
             result = { error: `unknown tool ${tu.name}` };
           }
