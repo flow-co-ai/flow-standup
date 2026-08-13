@@ -33,6 +33,70 @@ let foSelectedId = null;
 // manage. Empty until the first successful foLoadQueue().
 let foRouting = { boards: [], boardIds: {}, groupsByClient: {} };
 
+// Pickable Monday targets for the "Subitem of.../Update on..." destination
+// picker, keyed by "boardId::groupId" -- fetched lazily (only once a mode
+// that needs them is active) and cached client-side so flipping the Send-as
+// selector back and forth doesn't refetch. foTargetsCache holds the settled
+// result ({targets:[...]} or {error}); foTargetsInFlight holds the in-flight
+// promise for a combo that's currently loading, so concurrent renders don't
+// fire duplicate requests. A failed fetch is cached too, so a broken combo
+// doesn't get hammered on every re-render -- foRetryTargets is the explicit
+// way out of that (see foEnsureTargetsFetched).
+const foTargetsCache = new Map();
+const foTargetsInFlight = new Map();
+
+function foTargetsKey(boardId, groupId) {
+  return `${boardId}::${groupId}`;
+}
+
+// Same resolution foPatchBoardGroup needs for the routing write -- pulled out
+// once so the picker's fetch-scope and the actual routing write can never
+// drift into using two different lookups for the same board+group pair.
+function foResolveBoardGroupIds(boardName, groupName) {
+  const boardId = (foRouting.boardIds || {})[boardName];
+  const groupId = ((foRouting.groupsByClient || {})[groupName] || {})[boardName];
+  if (!boardId || !groupId) return null;
+  return { boardId, groupId };
+}
+
+function foGetTargetsSync(boardId, groupId) {
+  return foTargetsCache.get(foTargetsKey(boardId, groupId));
+}
+
+// A failed fetch is cached too (as {error}), same as a success -- otherwise
+// every re-render (foEnsureTargetsFetched runs again on each one, since
+// there'd be nothing in either map to short-circuit it) would refire the
+// request against Monday immediately, forever, for a combo that keeps
+// failing. foRetryTargets is the deliberate way out of that: clears this one
+// combo's cache entry and re-fetches, wired to a "retry" link in the error
+// state (see foBuildMondayDetails).
+function foEnsureTargetsFetched(boardId, groupId) {
+  const key = foTargetsKey(boardId, groupId);
+  if (foTargetsCache.has(key) || foTargetsInFlight.has(key)) return;
+  const promise = fetch(`/.netlify/functions/queue?action=targets&boardId=${encodeURIComponent(boardId)}&groupId=${encodeURIComponent(groupId)}`, { headers: foHeaders() })
+    .then(async (res) => {
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+      return { targets: data.targets || [] };
+    })
+    .catch((err) => ({ error: err && err.message ? err.message : String(err) }))
+    .then((result) => {
+      foTargetsInFlight.delete(key);
+      foTargetsCache.set(key, result);
+      // Re-render now that this combo has resolved -- a no-op if the user
+      // has since selected a different card or changed mode/board/group.
+      foRenderFromItems(foItems);
+      return result;
+    });
+  foTargetsInFlight.set(key, promise);
+}
+
+function foRetryTargets(boardId, groupId) {
+  foTargetsCache.delete(foTargetsKey(boardId, groupId));
+  foEnsureTargetsFetched(boardId, groupId);
+  foRenderFromItems(foItems);
+}
+
 // ids currently mid-foPatch(). Rapid clicks on the same card's buttons (e.g.
 // mashing a priority arrow) used to fire several overlapping POSTs -- each
 // read the same GitHub sha, so every one after the first landed as a 409 and
@@ -163,7 +227,7 @@ function foRenderListSection(key, label, items) {
 function foListRow(item, section) {
   const isSelected = item.id === foSelectedId;
   const p = foPriority(item);
-  const nameRow = item.payload ? foMondayNameRow(item.payload) : null;
+  const nameRow = item.payload ? foMondayNameRow(item) : null;
   const title = nameRow ? nameRow.value : (item.sourceLabel || '(untitled)');
   const statusKey = item.status || 'confirm';
 
@@ -207,7 +271,7 @@ function foRenderDetailPane(item) {
   const pending   = foPending.has(item.id);
   const p         = foPriority(item);
   const statusKey = item.status || 'confirm';
-  const nameRow   = item.payload ? foMondayNameRow(item.payload) : null;
+  const nameRow   = item.payload ? foMondayNameRow(item) : null;
   const title     = nameRow ? nameRow.value : (item.sourceLabel || '(untitled)');
   const section   = item.mondayItemId ? 'mondayed'
     : HANDLED_STATUSES.includes(item.status) ? 'handled' : 'active';
@@ -367,18 +431,19 @@ const NULL_REASON_LABELS = {
 // parentItemId -- resolved live from Monday once, then cached, so this
 // never has to fall back to a bare id except in the brief window before
 // that resolution has run.
-function foMondayNameRow(p) {
+function foMondayNameRow(item) {
+  const p = item.payload;
   const parentLabel = p.parentItemName || (p.parentItemId ? `#${p.parentItemId}` : null);
   if (p.mode === "create_subitem") {
     return { label: parentLabel ? `Subitem of ${parentLabel}` : "Subitem", value: p.itemName || "(untitled)" };
   }
-  if (p.mode === "create_item") return { label: "Item", value: p.itemName || "(untitled)" };
+  if (p.mode === "create_item") {
+    return { label: item.group ? `New item in ${item.group}` : "New item", value: p.itemName || "(untitled)" };
+  }
   // update_only: nothing new is named -- itemName here (when present) just
   // echoes what the EXISTING item is called, it's not a rename.
-  return {
-    label: parentLabel ? `Updating subitem of ${parentLabel}` : "Updating item",
-    value: p.itemName || `#${p.existingItemId || "?"}`,
-  };
+  const existingLabel = p.itemName || `#${p.existingItemId || "?"}`;
+  return { label: `Update on ${existingLabel}`, value: existingLabel };
 }
 
 // Always includes the item's CURRENT value even if it's not in the known
@@ -412,7 +477,13 @@ function foBuildMondayDetails(item) {
 
   const p = item.payload;
   const pending = foPending.has(item.id);
-  const nameRow = foMondayNameRow(p);
+  const nameRow = foMondayNameRow(item);
+
+  const sendAsSelect = `<select class="fo-monday-select" id="fo-sendas-${item.id}" onchange="foSendAsChanged('${item.id}')" ${pending ? "disabled" : ""}>
+      <option value="create_item" ${p.mode === "create_item" ? "selected" : ""}>New item</option>
+      <option value="create_subitem" ${p.mode === "create_subitem" ? "selected" : ""}>Subitem of...</option>
+      <option value="update_only" ${p.mode === "update_only" ? "selected" : ""}>Update on...</option>
+    </select>`;
 
   const boardSelect = `<select class="fo-monday-select" id="fo-board-${item.id}" onchange="foBoardGroupChanged('${item.id}')" ${pending ? "disabled" : ""}>
       ${foSelectOptions(foRouting.boards || [], item.board)}
@@ -420,6 +491,8 @@ function foBuildMondayDetails(item) {
   const groupSelect = `<select class="fo-monday-select" id="fo-group-${item.id}" onchange="foBoardGroupChanged('${item.id}')" ${pending ? "disabled" : ""}>
       ${foSelectOptions(Object.keys(foRouting.groupsByClient || {}), item.group)}
     </select>`;
+
+  const targetRow = foBuildTargetRow(item, p, pending);
 
   // Directly editable, same click-into-place pattern as the rest of the
   // dashboard's manual controls -- saves on blur via foPatch(), same write
@@ -453,9 +526,13 @@ function foBuildMondayDetails(item) {
         <span class="fo-monday-val">${foEscape(nameRow.value)}</span>
       </div>
       <div class="fo-monday-row">
+        <span class="fo-monday-key">Send as</span>${sendAsSelect}
+      </div>
+      <div class="fo-monday-row">
         <span class="fo-monday-key">Board</span>${boardSelect}
         <span class="fo-monday-key">Group</span>${groupSelect}
       </div>
+      ${targetRow}
       <div class="fo-monday-row">
         <span class="fo-monday-key">Update text</span>${mentionPicker}
       </div>
@@ -463,12 +540,77 @@ function foBuildMondayDetails(item) {
     </div>`;
 }
 
-// Board/group are only ever a display correction for update_only (no
-// boardId/groupId in that payload shape to begin with -- it targets a
-// specific existingItemId, nothing to route). For create_item/create_
-// subitem, this IS the routing decision, so payload.boardId/groupId get
-// updated too -- otherwise the dropdown would show one thing and Monday
-// would receive another.
+// The "Subitem of..."/"Update on..." target dropdown -- populated from the
+// board+group currently selected above (not necessarily payload.boardId/
+// groupId, which for update_only may not even exist), fetched lazily via
+// foEnsureTargetsFetched/foTargetsCache. create_item needs none of this.
+// For "Update on...", both top-level items AND their subitems are offered
+// (indented) -- Monday treats a subitem as a real item, so posting an
+// update to one works exactly the same way as to a top-level item. For
+// "Subitem of...", only top-level items are offered as parents -- Monday
+// doesn't support subitems of subitems (see item-chat.js's DRAFTING_RULES),
+// so a subitem is never a valid parent choice here either.
+function foBuildTargetRow(item, p, pending) {
+  if (p.mode === "create_item") return "";
+
+  const isSubitemMode = p.mode === "create_subitem";
+  const label = isSubitemMode ? "Parent item" : "Existing item";
+  const ids = foResolveBoardGroupIds(item.board, item.group);
+  if (!ids) {
+    return `<div class="fo-monday-row">
+        <span class="fo-monday-key">${label}</span>
+        <span class="fo-muted-label">pick a board/group above first</span>
+      </div>`;
+  }
+
+  const cached = foGetTargetsSync(ids.boardId, ids.groupId);
+  if (!cached) {
+    foEnsureTargetsFetched(ids.boardId, ids.groupId); // fires once; re-renders on completion
+    return `<div class="fo-monday-row">
+        <span class="fo-monday-key">${label}</span>
+        <select class="fo-monday-select" disabled><option>Loading...</option></select>
+      </div>`;
+  }
+  if (cached.error) {
+    return `<div class="fo-monday-row">
+        <span class="fo-monday-key">${label}</span>
+        <span class="fo-error-msg">couldn't load items: ${foEscape(cached.error)}
+          <button type="button" onclick="foRetryTargets('${ids.boardId}','${ids.groupId}')">retry</button>
+        </span>
+      </div>`;
+  }
+
+  const selectedId = isSubitemMode ? p.parentItemId : p.existingItemId;
+  let options = `<option value="">-- choose --</option>`;
+  for (const t of cached.targets) {
+    options += `<option value="${foEscape(t.id)}" ${String(selectedId) === String(t.id) ? "selected" : ""}>${foEscape(t.name)}</option>`;
+    if (!isSubitemMode) {
+      for (const s of t.subitems || []) {
+        options += `<option value="${foEscape(s.id)}" ${String(selectedId) === String(s.id) ? "selected" : ""}>&nbsp;&nbsp;&nbsp;&nbsp;↳ ${foEscape(s.name)}</option>`;
+      }
+    }
+  }
+  return `<div class="fo-monday-row">
+      <span class="fo-monday-key">${label}</span>
+      <select class="fo-monday-select" id="fo-target-${item.id}" onchange="foTargetChanged('${item.id}')" ${pending ? "disabled" : ""}>
+        ${options}
+      </select>
+    </div>`;
+}
+
+// Board/group mean something different per Send-as mode: for create_item
+// it's the actual routing decision (payload.boardId/groupId), for
+// create_subitem it's the board half of that (payload.boardId, needed for
+// default assignees -- groupId isn't used by a subitem create at all) PLUS
+// the search scope for the parent-item picker, and for update_only it's
+// ONLY a search scope (update_only never carries boardId/groupId as a
+// routing decision -- it targets a fixed existingItemId, nothing to route).
+// In every mode, whatever target (parentItemId/existingItemId) was already
+// picked belongs to the OLD board+group -- changing either one here makes
+// that target stale, so it's cleared and Naz has to re-pick from the new
+// scope's list rather than silently sending to something that used to make
+// sense. Never leave board and parentItemId disagreeing (see item-chat.js's
+// DRAFTING_RULES) -- this is the one place that could otherwise happen.
 function foBoardGroupChanged(id) {
   const boardSel = document.getElementById(`fo-board-${id}`);
   const groupSel = document.getElementById(`fo-group-${id}`);
@@ -480,16 +622,119 @@ function foPatchBoardGroup(id, newBoard, newGroup) {
   const item = foItems.find((it) => it.id === id);
   if (!item) return;
   const patch = { board: newBoard, group: newGroup };
-  if (item.payload && (item.payload.mode === "create_item" || item.payload.mode === "create_subitem")) {
-    const boardId = (foRouting.boardIds || {})[newBoard];
-    const groupId = ((foRouting.groupsByClient || {})[newGroup] || {})[newBoard];
-    if (!boardId || !groupId) {
+  const mode = item.payload && item.payload.mode;
+
+  if (mode === "create_item") {
+    const ids = foResolveBoardGroupIds(newBoard, newGroup);
+    if (!ids) {
       alert(`No known Monday group for "${newGroup}" on the ${newBoard} board. The label updated, but the actual Monday routing did not change -- fix this combination (or resolve it via the card's chat) before sending to Monday.`);
     } else {
-      patch.payload = { ...item.payload, boardId, groupId };
+      patch.payload = { ...item.payload, boardId: ids.boardId, groupId: ids.groupId };
     }
+  } else if (mode === "create_subitem") {
+    const ids = foResolveBoardGroupIds(newBoard, newGroup);
+    const nextPayload = { ...item.payload };
+    if (ids) nextPayload.boardId = ids.boardId;
+    if (nextPayload.parentItemId) {
+      delete nextPayload.parentItemId;
+      delete nextPayload.parentItemName;
+    }
+    patch.payload = nextPayload;
+  } else if (mode === "update_only" && item.payload.existingItemId) {
+    const nextPayload = { ...item.payload };
+    delete nextPayload.existingItemId;
+    delete nextPayload.itemName;
+    delete nextPayload.parentItemId;
+    delete nextPayload.parentItemName;
+    patch.payload = nextPayload;
   }
+
   foPatch(id, patch);
+}
+
+// The three Send-as modes clear whatever the OTHER modes' target fields
+// left behind -- a stale parentItemId/existingItemId/itemName is exactly
+// how a send ends up targeting the wrong thing. boardId is (re)resolved
+// from whatever board/group are ALREADY showing, so switching modes never
+// leaves a routing-relevant mode without one just because the user hasn't
+// touched the board/group dropdowns yet this visit.
+function foSendAsChanged(id) {
+  const item = foItems.find((it) => it.id === id);
+  const sel = document.getElementById(`fo-sendas-${id}`);
+  if (!item || !item.payload || !sel) return;
+  const nextMode = sel.value;
+  if (nextMode === item.payload.mode) return;
+
+  const payload = { ...item.payload, mode: nextMode };
+  const ids = foResolveBoardGroupIds(item.board, item.group);
+
+  if (nextMode === "create_item") {
+    delete payload.parentItemId;
+    delete payload.parentItemName;
+    delete payload.existingItemId;
+    delete payload.itemName; // always lookup/target-derived coming from the other two modes, never authored here
+    if (ids) {
+      payload.boardId = ids.boardId;
+      payload.groupId = ids.groupId;
+    }
+  } else if (nextMode === "create_subitem") {
+    delete payload.existingItemId;
+    if (ids) payload.boardId = ids.boardId;
+  } else if (nextMode === "update_only") {
+    // Whatever parentItemId was here belonged to create_subitem's OWN
+    // semantics (the parent of a not-yet-created item) -- only valid again
+    // once foTargetChanged resolves it FROM the picked existing item.
+    delete payload.parentItemId;
+    delete payload.parentItemName;
+  }
+
+  foPatch(id, { payload });
+}
+
+// Picking a target sets exactly what that mode sends to Monday with --
+// parentItemId for a new subitem, existingItemId for an update. For
+// update_only, picking a target that's itself a subitem also resolves
+// parentItemId/parentItemName from it (same as buildResolvedFields does
+// server-side for an update_only draft authored via chat), so the card's
+// label can say "subitem of X" without a second lookup.
+function foTargetChanged(id) {
+  const item = foItems.find((it) => it.id === id);
+  const sel = document.getElementById(`fo-target-${id}`);
+  if (!item || !item.payload || !sel || !sel.value) return;
+
+  const ids = foResolveBoardGroupIds(item.board, item.group);
+  const cached = ids && foGetTargetsSync(ids.boardId, ids.groupId);
+  const targets = (cached && cached.targets) || [];
+  const chosenId = sel.value;
+
+  const payload = { ...item.payload };
+  if (payload.mode === "create_subitem") {
+    const target = targets.find((t) => String(t.id) === chosenId);
+    if (!target) return;
+    payload.parentItemId = target.id;
+    payload.parentItemName = target.name;
+    delete payload.existingItemId;
+  } else if (payload.mode === "update_only") {
+    const topLevel = targets.find((t) => String(t.id) === chosenId);
+    if (topLevel) {
+      payload.existingItemId = topLevel.id;
+      payload.itemName = topLevel.name;
+      delete payload.parentItemId;
+      delete payload.parentItemName;
+    } else {
+      const parent = targets.find((t) => (t.subitems || []).some((s) => String(s.id) === chosenId));
+      const sub = parent && parent.subitems.find((s) => String(s.id) === chosenId);
+      if (!sub) return;
+      payload.existingItemId = sub.id;
+      payload.itemName = sub.name;
+      payload.parentItemId = parent.id;
+      payload.parentItemName = parent.name;
+    }
+  } else {
+    return;
+  }
+
+  foPatch(id, { payload });
 }
 
 // Enter is left alone here (unlike the single-line fields elsewhere on this

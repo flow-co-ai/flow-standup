@@ -1,5 +1,7 @@
 // GET  -> the live draft queue (drafted daily by Naz's fireflies-monday-watch
 //         Cowork automation, written to checks/draft-queue.json on the state branch).
+// GET  ?action=targets&boardId=X&groupId=Y -> pickable Monday targets (items
+//         + their subitems) for the Draft Queue's per-card destination picker.
 // POST -> patch one item by id: { id, patch: { status: "done" } } etc.
 //         Uses the same OPS_PASSCODE gate as the existing checkmark endpoint.
 
@@ -7,6 +9,7 @@ const { getJSON, updateJSON } = require("./lib/github");
 const {
   enforceSentInvariant,
   mondayItemNameAndParent,
+  mondayGroupItemsWithSubitems,
   BOARD_LABEL_IDS,
   CLIENT_GROUPS,
   USER_NAMES,
@@ -44,10 +47,13 @@ function routingOptions() {
 // that bypassed it, since it only patched the display label + payload.
 // boardId/groupId, never payload.columnValues. Same rule, same function,
 // applied here too: a board change always recomputes the tagged team,
-// never just relabels the card. update_only payloads never carry
-// columnValues at all (they post an update to an existing item, no
-// assignee column to set) -- skipped the same way buildEditFields already
-// skips it for that mode.
+// never just relabels the card. update_only skipped here for a different
+// reason: it doesn't ROUTE on board/group at all (posts an update to a
+// fixed existingItemId, no assignee column mutation ever happens for it) --
+// its board/group are just a display correction, and since 2026-08-13 it
+// may carry its OWN columnValues (item-chat.js's buildResolvedFields), set
+// independently of whatever board/group the dashboard shows. Same skip
+// buildEditFields already applies for this mode.
 function applyBoardReassignment(existingItem, patch) {
   const newPayload = patch.payload;
   const oldPayload = existingItem.payload;
@@ -159,6 +165,18 @@ exports.handler = async (event) => {
     const passcode = event.headers["x-ops-key"] || event.headers["x-ops-passcode"] || JSON.parse(event.body || "{}").passcode;
     if (passcode !== process.env.OPS_PASSCODE) {
       return json(401, { error: "unauthorized" });
+    }
+
+    if (event.httpMethod === "GET" && (event.queryStringParameters || {}).action === "targets") {
+      const { boardId, groupId } = event.queryStringParameters || {};
+      if (!boardId || !groupId) return json(400, { error: "targets needs boardId and groupId" });
+      try {
+        const targets = await mondayGroupItemsWithSubitems(boardId, groupId);
+        return json(200, { targets });
+      } catch (err) {
+        console.error("queue.js: targets lookup failed:", err);
+        return json(500, { error: String((err && err.message) || err) });
+      }
     }
 
     if (event.httpMethod === "GET") {

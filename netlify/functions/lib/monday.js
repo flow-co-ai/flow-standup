@@ -75,6 +75,38 @@ async function mondayLookup(input) {
     : items;
 }
 
+// Powers the Draft Queue's per-card destination picker (site/addon.js) --
+// the top-level items in a board+group, each with its own subitems'
+// id/name, so the UI can offer both levels as a "Subitem of..."/"Update
+// on..." target without a second round trip per item. Deliberately NOT
+// mondayItemDetail's shape (updates + full column_values per item AND per
+// subitem) -- that's a real cost across a whole group's worth of items when
+// all this needs is id+name two levels deep. Same board+group query shape
+// as mondayLookup, just a lighter selection.
+async function mondayGroupItemsWithSubitems(boardId, groupId) {
+  if (!boardId || !groupId) throw new Error("mondayGroupItemsWithSubitems needs boardId and groupId");
+  const data = await mondayGraphQL(
+    `query($boardId: [ID!], $groupId: [String]) {
+       boards(ids: $boardId) {
+         groups(ids: $groupId) {
+           items_page(limit: 100) { items { id name subitems { id name } } }
+         }
+       }
+     }`,
+    { boardId: [boardId], groupId: [groupId] }
+  );
+  const board = data?.boards?.[0];
+  if (!board) throw new Error(`mondayGroupItemsWithSubitems: no board found for boardId ${boardId} -- double check the id`);
+  const group = board.groups?.[0];
+  if (!group) throw new Error(`mondayGroupItemsWithSubitems: no group found for groupId ${groupId} on board ${boardId} -- the id may be wrong or have changed`);
+  const items = group.items_page?.items || [];
+  return items.map((it) => ({
+    id: it.id,
+    name: it.name,
+    subitems: (it.subitems || []).map((s) => ({ id: s.id, name: s.name })),
+  }));
+}
+
 // Drills into ONE item for full detail monday_lookup doesn't carry: its own
 // posted updates, AND (critically) each of its subitems' OWN updates too --
 // a parent item's status often looks stale/unstarted while the real recent
@@ -824,6 +856,7 @@ async function updateMondayColumns(boardId, itemId, columnValues) {
 module.exports = {
   mondayGraphQL,
   mondayLookup,
+  mondayGroupItemsWithSubitems,
   mondayItemDetail,
   mondayItemNameAndParent,
   mondayClientOverview,
