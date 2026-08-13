@@ -1,5 +1,5 @@
 {
-  "_readme": "Expected check-in meeting cadence per client, used by scoring.py's meeting-cadence sub-score (docs/scoring-spec-draft.md section 1.4). Valid values: \"weekly\", \"biweekly\", \"monthly\", or null. null means the cadence sub-score is skipped (score: null) for that client until you fill this in -- scoring.py will not guess. Keys are the canonical client names from config.json's \"clients\" map, not display aliases (e.g. \"Full Smile\", not \"Full Smile Dental\"). Flow Company and Vous Physique are excluded from Layer 1 scoring entirely (see EXCLUDED_CLIENTS in scoring.py), so their values here are moot.",
+  "_readme": "Expected check-in meeting cadence per client, used by scoring.py's meeting-cadence sub-score (docs/scoring-spec-draft.md section 1.4). Valid values: \"weekly\", \"biweekly\", \"monthly\", or null. null means the cadence sub-score is skipped (score: null) for that client until you fill this in -- scoring.py will not guess. Keys are the canonical client names from config.json's \"clients\" map, not display aliases (e.g. \"Full Smile\", not \"Full Smile Dental\"). Flow Company is excluded from Layer 1 scoring entirely (see EXCLUDED_CLIENTS in scoring.py), so its value here is moot.",
   "clients": {
     "Billy Doe Meats": "biweekly",
     "Full Smile": "biweekly",
@@ -11,7 +11,6 @@
     "Flow Company": null,
     "MedStation": "biweekly",
     "Maadi Law": "biweekly",
-    "Steel Round Bars": null,
-    "Vous Physique": null
+    "Steel Round Bars": null
   }
 }

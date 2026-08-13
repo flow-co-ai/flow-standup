@@ -29,7 +29,6 @@
     'MedStation':            'medstation',
     'Flow Company':          'flow-company',
     'Cotton Collections':    'cotton-collections',
-    'Vous Physique':         'vous-physique',
   };
 
   function slugFor(name) {

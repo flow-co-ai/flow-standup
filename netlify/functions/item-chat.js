@@ -84,7 +84,6 @@ Full audit 2026-07-22 -- every client below now has a real, live-confirmed group
 - Justice Consumer Law: group_mkqxyga2 / group_mkqxyga2 / group_mm5gdrn3 / group_mkqxyga2
 - Liferun: group_mkwj8zze / group_mkwj9a1c / group_mkwj9a1c / group_mkwj5qjb (CRM and Web+SEO share an id -- confirmed coincidental)
 - Billy Doe Meats: group_mm2dt8f / group_mm2dqm7n / group_mm5gt78e / group_mm2ddrwm
-- Vous Physique: group_mm22cd1z / group_mm231372 / group_mm5gyktb / group_mm2pyqs3
 - Steel Round Bars: group_mm5gmpwf / group_mkqxskcn / group_mkqxskcn / group_mkqxskcn (Ads group recreated 2026-07-22, its old one had vanished from the live board)
 - Flow Company (internal): group_mkwjedjg / group_mkwjem1v / group_mm5g4pdh / group_mkwj30hd
 If the client or its group id isn't listed here or you're unsure it's current, look it up on Monday rather than guessing -- group IDs can change, and this table has gone stale before (missed two board additions in a row -- always cross-check lib/monday.js's CLIENT_GROUPS, the real source of truth, if anything here looks off).
@@ -410,6 +409,26 @@ async function buildResolvedFields(item, input) {
     } catch (err) {
       console.error(`buildResolvedFields: couldn't resolve Monday name for existingItemId ${input.existingItemId}:`, err);
     }
+
+    // Carries its own assignee data explicitly, same as create_item/
+    // create_subitem below -- update_only still only ever posts a comment at
+    // send time (no column mutation), this is just so nothing downstream has
+    // to reverse-derive assignees from updateBody's plain-text/mention line
+    // the way the 2026-08-13 mention-chip backfill had to.
+    const boardId = input.boardId || (item.payload && item.payload.boardId) || BOARD_LABEL_IDS[item.board];
+    if (boardId) {
+      try {
+        const blocked = !!input.blocked;
+        const needsNaz = !!input.needsNaz;
+        payload.boardId = boardId;
+        payload.blocked = blocked;
+        payload.needsNaz = needsNaz;
+        payload.columnValues = buildColumnValues(boardId, blocked, needsNaz);
+      } catch (err) {
+        console.error(`buildResolvedFields: couldn't build columnValues for update_only existingItemId ${input.existingItemId}:`, err);
+      }
+    }
+
     return {
       payload,
       titleUpdate: { note: htmlToPlainText(input.updateBody), priority },

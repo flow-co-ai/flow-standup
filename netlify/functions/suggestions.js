@@ -31,7 +31,6 @@ const SLUG_TO_MONDAY = {
   "jcl":               "Justice Consumer Law",
   "liferun":           "Liferun",
   "maadi-law":         "Maadi Law",
-  "vous-physique":     "Vous Physique",
   "steel-round-bars":  "Steel Round Bars",
   "flow-company":      "Flow Company",
   // cotton-collections / healing-helps: no Monday group mapped yet —

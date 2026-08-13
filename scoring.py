@@ -476,8 +476,8 @@ def _derive_flags(entry: dict, sub_scores: dict) -> list:
 # set, and app.js already renders that as "no score section" rather than a
 # red/zero score.
 #   - Flow Company: internal pseudo-client, not a real client.
-#   - Vous Physique: paused account, not actively worked -- cadence/task-
-#     stalling scoring would be misleading noise, not a real signal.
+#   - Vous Physique: offboarded 2026-08-13, no longer a client -- kept in
+#     this set (not deleted) so historical scoring stays consistent.
 EXCLUDED_CLIENTS = {"Flow Company", "Vous Physique"}
 
 

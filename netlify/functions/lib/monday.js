@@ -12,7 +12,9 @@
 // same board-scoped default assignees and Start/Stuck status, with no way to
 // silently end up empty.
 
-const { getJSON, putJSON } = require("./github");
+const { getJSON, putJSON, updateJSON } = require("./github");
+
+const ANTHROPIC_MODEL = "claude-sonnet-4-5"; // check docs.claude.com/en/docs/about-claude/models if this starts erroring
 
 const QUEUE_PATH = "checks/draft-queue.json";
 
@@ -227,7 +229,6 @@ const CLIENT_GROUPS = {
   "Justice Consumer Law": { Ads: "group_mkqxyga2", "Web+SEO": "group_mkqxyga2", CRM: "group_mm5gdrn3", Video: "group_mkqxyga2" }, // CRM group existed live, never recorded until 2026-07-22
   Liferun: { Ads: "group_mkwj8zze", "Web+SEO": "group_mkwj9a1c", CRM: "group_mkwj9a1c", Video: "group_mkwj5qjb" },
   "Billy Doe Meats": { Ads: "group_mm2dt8f", "Web+SEO": "group_mm2dqm7n", CRM: "group_mm5gt78e", Video: "group_mm2ddrwm" }, // key renamed 2026-07-22 from "BillyDoe Meats" (no space) -- that never matched the real Monday group title or what fireflies-monday-watch actually writes to item.group ("Billy Doe Meats", with space), so every lookup for this client silently failed. Root cause of the live "no known group" alert Naz hit.
-  "Vous Physique": { Ads: "group_mm22cd1z", "Web+SEO": "group_mm231372", CRM: "group_mm5gyktb", Video: "group_mm2pyqs3" }, // CRM group created 2026-07-22
   "Steel Round Bars": { Ads: "group_mm5gmpwf", "Web+SEO": "group_mkqxskcn", CRM: "group_mkqxskcn", Video: "group_mkqxskcn" }, // Ads group recreated 2026-07-22, old one had vanished
   "Flow Company": { Ads: "group_mkwjedjg", "Web+SEO": "group_mkwjem1v", CRM: "group_mm5g4pdh", Video: "group_mkwj30hd" }, // CRM group created 2026-07-22
 };
@@ -600,6 +601,48 @@ function enforceSentInvariant(item) {
   return item;
 }
 
+// Expands a too-thin updateBody using only what's already on the card --
+// itemName, note, sourceLabel, board, group, and the current updateBody
+// itself -- never inventing new facts. Existing mention chips (if any) are
+// preserved verbatim; the model is told not to touch them. One attempt,
+// called once from sendQueueItemToMonday right where the hard content gate
+// would otherwise be a dead end -- the caller re-runs checkUpdateBodySubstance
+// on the result and falls back to the original error if it's still thin, or
+// if this call itself throws.
+async function repairUpdateBody(item) {
+  const payload = item.payload;
+  const system = `You expand a too-thin Monday.com update draft into a real one, using ONLY the context given -- never inventing facts, deadlines, names, or people that aren't already present.
+Rules for the output:
+1. Open with "<p>Salam,</p>" -- nothing else, no @-tag at the start.
+2. Body as "<ul><li>...</li></ul>" bullets, organized, one clear thought per bullet, covering at minimum: context (what happened and why this is being drafted), the actual deliverable/step, dependencies/constraints (say "No dependencies -- can start immediately" if genuinely none), and a done/success criterion.
+3. If the current updateBody ends with a mention-chip line (one or more <a class="mention" ...>@Name</a> tags inside a <p>), copy that line EXACTLY as-is, unchanged, to the end of your output. Do not add, remove, reword, or re-tag anything in it.
+4. Never use em dashes (—) or en dashes (–).
+5. HTML only, no markdown.
+Return ONLY the finished updateBody HTML -- no preamble, no explanation, no code fences.`;
+  const user = `itemName: ${payload.itemName || item.title || "(untitled)"}
+board: ${item.board || "n/a"}
+client group: ${item.group || "n/a"}
+source: ${item.sourceLabel || item.source || "n/a"}
+note: ${item.note || ""}
+current updateBody (too thin -- expand it, don't invent new substance):
+${payload.updateBody || ""}`;
+
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "x-api-key": process.env.ANTHROPIC_API_KEY,
+      "anthropic-version": "2023-06-01",
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({ model: ANTHROPIC_MODEL, max_tokens: 1024, system, messages: [{ role: "user", content: user }] }),
+  });
+  const msg = await res.json();
+  if (!res.ok || msg.type === "error") throw new Error(`repairUpdateBody: Anthropic error: ${JSON.stringify(msg.error || msg)}`);
+  const text = (msg.content || []).filter((b) => b.type === "text").map((b) => b.text).join("\n").trim();
+  if (!text) throw new Error("repairUpdateBody: empty response");
+  return text;
+}
+
 // Shared by send-to-monday.js -- the real network fire behind the send-to-
 // Monday button (and its preview confirmation step in addon.js).
 async function sendQueueItemToMonday(id) {
@@ -622,8 +665,41 @@ async function sendQueueItemToMonday(id) {
   // The hard content gate: nothing fires to Monday -- no item, no update --
   // until updateBody clears the substance bar. Runs here unconditionally, on
   // every mode, regardless of whether the payload came from item-chat.js's
-  // own (already-checked) resolve_item or from anywhere else.
-  const substanceError = checkUpdateBodySubstance(payload.updateBody);
+  // own (already-checked) resolve_item or from anywhere else. A failure here
+  // used to be a dead end; now it's one repair attempt (never looped) before
+  // giving up with the original error.
+  let substanceError = checkUpdateBodySubstance(payload.updateBody);
+  if (substanceError) {
+    let repairedBody = null;
+    try {
+      repairedBody = await repairUpdateBody(item);
+    } catch (err) {
+      console.error(`sendQueueItemToMonday: repairUpdateBody failed for ${id}:`, err);
+    }
+    if (repairedBody && !checkUpdateBodySubstance(repairedBody)) {
+      payload.updateBody = repairedBody;
+      substanceError = null;
+      // Persisted so the expanded body shows on the card afterward instead
+      // of only living in-memory for this one send -- a separate write from
+      // the "mark as sent" write below, since that one only fires once the
+      // real Monday item/update actually exists.
+      try {
+        await updateJSON(QUEUE_PATH, (fresh) => {
+          const i = fresh.items.findIndex((it) => it.id === id);
+          if (i !== -1 && fresh.items[i].payload) {
+            fresh.items[i] = {
+              ...fresh.items[i],
+              payload: { ...fresh.items[i].payload, updateBody: repairedBody },
+              updatedAt: new Date().toISOString(),
+            };
+          }
+          return fresh;
+        }, `auto-repair thin updateBody for ${id}`, { fallback: { updatedAt: null, items: [] } });
+      } catch (err) {
+        console.error(`sendQueueItemToMonday: failed to persist repaired updateBody for ${id}:`, err);
+      }
+    }
+  }
   if (substanceError) return { error: substanceError };
   const mentionError = checkMentionsAreReal(payload.updateBody);
   if (mentionError) return { error: mentionError };
