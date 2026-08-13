@@ -1,6 +1,6 @@
 # Flow Standup
 
-Every Monday at 5 AM Chicago time, this tool automatically:
+Every day at 7 AM Chicago time, this tool automatically:
 
 1. Pulls your 4 Monday.com boards (CRM, Ads, Video, Web + SEO)
 2. Pulls the last 7 days of Fireflies meeting transcripts
@@ -154,9 +154,9 @@ Watch the run — each step should show a green checkmark. The standup file will
 
 ## Schedule
 
-The workflow runs automatically every **Monday at 10:00 UTC**, which is:
-- 5:00 AM Chicago time (CDT, April–November)
-- 4:00 AM Chicago time (CST, November–April)
+The workflow runs automatically every **day at 12:00 UTC**, which is:
+- 7:00 AM Chicago time (CDT, April–November)
+- 6:00 AM Chicago time (CST, November–April)
 
 You can always trigger a manual run any time using the **Run workflow** button.
 

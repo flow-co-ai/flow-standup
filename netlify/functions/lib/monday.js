@@ -485,6 +485,7 @@ function swapUpdateBodyMentions(updateBody, personsAndTeams) {
   if (!updateBody) return updateBody;
   const stripped = updateBody
     .replace(/<a[^>]*class="mention"[^>]*>[\s\S]*?<\/a>/gi, "")
+    .replace(/Assigned to:\s*[^<]*/gi, "")
     .replace(/<p>\s*<\/p>/gi, "")
     .replace(/(\s*&nbsp;\s*)+$/gi, "")
     .trimEnd();
