@@ -296,7 +296,7 @@ function foRenderDetailPane(item) {
   } else {
     actionsHtml = `${sendControl}
       <button onclick="foPatch('${item.id}', {status:'done'})" ${pending ? 'disabled' : ''}>mark done</button>
-      <button onclick="foPatch('${item.id}', {status:'ignored'})" ${pending ? 'disabled' : ''}>ignore</button>`;
+      <button onclick="foOpenIgnorePrompt('${item.id}')" ${pending ? 'disabled' : ''}>ignore</button>`;
   }
 
   const priorityBlock = section === 'active' ? `
@@ -305,6 +305,10 @@ function foRenderDetailPane(item) {
       <span class="fo-priority fo-priority-${p}">P${p}</span>
       <button class="fo-priority-btn" title="Lower priority" onclick="foBumpPriority('${item.id}',1)" ${p>=5||pending?'disabled':''}>&#9660;</button>
     </div>` : '';
+
+  const ageDays = foItemAgeDays(item);
+  const ageBadge = ageDays !== null
+    ? `<span class="fo-muted-label" title="Drafted ${foEscape(item.createdAt)}">${ageDays} days old</span>` : '';
 
   const chatMsgCount = (foItemChat[item.id] || []).length;
   const chatLog = foRenderChatMessages(item.id);
@@ -315,6 +319,7 @@ function foRenderDetailPane(item) {
       ${origin}
       <div class="fo-det-header-row">
         <span class="fo-badge fo-b-${foEscape(statusKey)}">${foEscape(statusKey)}</span>
+        ${ageBadge}
         ${priorityBlock}
       </div>
       <div class="fo-det-title">${foEscape(title)}</div>
@@ -360,6 +365,17 @@ async function foLoadQueue() {
 function foPriority(item) {
   const p = Number(item.priority);
   return Number.isFinite(p) && p >= 1 && p <= 5 ? p : 3;
+}
+
+// null if createdAt is missing/unparseable (queue.js backfills it lazily on
+// GET, so a card can briefly lack one right after this repo first sees it)
+// or the item just isn't old enough yet to be worth flagging.
+const FO_STALE_DAYS = 3;
+function foItemAgeDays(item) {
+  const created = item.createdAt ? new Date(item.createdAt).getTime() : NaN;
+  if (!Number.isFinite(created)) return null;
+  const days = Math.floor((Date.now() - created) / 86400000);
+  return days > FO_STALE_DAYS ? days : null;
 }
 
 function foGroupByClient(items) {
@@ -963,7 +979,8 @@ async function foPatch(id, patch) {
 // that calls this, not in a native confirm() here -- there's no caller left
 // that should invoke this without the human having already seen an editable
 // preview of exactly what's about to fire.
-async function foSendToMonday(id) {
+async function foSendToMonday(id, opts = {}) {
+  const force = !!opts.force;
   const idx = foItems.findIndex(it => it.id === id);
   const previous = idx !== -1 ? foItems[idx] : null;
   if (idx !== -1) {
@@ -976,20 +993,115 @@ async function foSendToMonday(id) {
     foRenderFromItems(foItems);
   }
 
-  const res = await fetch("/.netlify/functions/send-to-monday", { method: "POST", headers: foHeaders(), body: JSON.stringify({ id }) });
+  const res = await fetch("/.netlify/functions/send-to-monday", { method: "POST", headers: foHeaders(), body: JSON.stringify({ id, force }) });
   const data = await res.json().catch(() => ({}));
   if (!res.ok || data.error) {
     if (idx !== -1) {
       foItems[idx] = previous;
       foRenderFromItems(foItems);
     }
-    alert("Couldn't send it: " + (data.error || `HTTP ${res.status}`));
+    // A likely-duplicate hit is a warning, not a hard failure -- offer the
+    // "send anyway" escape hatch instead of just alert()-ing the error text
+    // and leaving no way past it for the false-positive case.
+    if (data.duplicate) {
+      foShowDuplicateWarning(id, data.duplicate);
+    } else {
+      alert("Couldn't send it: " + (data.error || `HTTP ${res.status}`));
+    }
     return;
   }
   if (idx !== -1) {
     foItems[idx] = { ...previous, status: "sent", mondayItemId: data.mondayItemId };
   }
   foRenderFromItems(foItems);
+}
+
+// lib/monday.js's findLikelyDuplicate found a live Monday item/subitem that
+// looks like it already covers this draft (by name, or by an existing
+// update's text) -- its own overlay (not a native confirm()) so the match
+// details are actually readable, reusing the send-preview's CSS rather than
+// a parallel style.
+function foShowDuplicateWarning(id, duplicate) {
+  document.getElementById("fo-dup-warning-overlay")?.remove();
+  const overlay = document.createElement("div");
+  overlay.id = "fo-dup-warning-overlay";
+  overlay.className = "fo-preview-overlay";
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) overlay.remove(); });
+
+  const pct = Math.round((duplicate.score || 0) * 100);
+  overlay.innerHTML = `
+    <div class="fo-preview-card" role="dialog" aria-modal="true" aria-label="Possible duplicate">
+      <div class="fo-preview-header">
+        <span class="fo-preview-eyebrow">Possible duplicate -- nothing sent yet</span>
+      </div>
+      <p class="fo-preview-note">"${foEscape(duplicate.name)}" (Monday ${duplicate.isSubitem ? "subitem" : "item"} ${foEscape(duplicate.id)}) looks ${pct}% similar, matched on ${foEscape(duplicate.matchedOn || "")}.</p>
+      <div class="fo-preview-actions fo-actions">
+        <button type="button" class="fo-preview-cancel" id="fo-dup-cancel-btn">Cancel</button>
+        <button type="button" class="fo-primary" id="fo-dup-send-anyway-btn">Send anyway</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.getElementById("fo-dup-cancel-btn").addEventListener("click", () => overlay.remove());
+  document.getElementById("fo-dup-send-anyway-btn").addEventListener("click", () => {
+    overlay.remove();
+    foSendToMonday(id, { force: true });
+  });
+}
+
+// ── ignore-reason prompt ──────────────────────────────────────────────────
+//
+// Mirrors the performance lens's own rule (suggestions.js: a dismiss needs a
+// reason because that reason is what the lens learns from) -- same idea
+// here, just with quick presets on top of free text since most ignores are
+// one of a handful of shapes (never a real task, already done, a dup of
+// something else already queued/sent, misrouted client). Stored on the item
+// as {ignoreReason, ignoredAt} so item-chat.js/ops-chat.js's drafting rules
+// and monday-automation.md's Job A can both read what Naz has repeatedly
+// rejected and steer away from redrafting the same kind of non-task.
+
+const FO_IGNORE_PRESETS = ["not a task", "already handled", "duplicate", "wrong client"];
+
+function foOpenIgnorePrompt(id) {
+  document.getElementById("fo-ignore-overlay")?.remove();
+  const overlay = document.createElement("div");
+  overlay.id = "fo-ignore-overlay";
+  overlay.className = "fo-preview-overlay";
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) overlay.remove(); });
+
+  overlay.innerHTML = `
+    <div class="fo-preview-card" role="dialog" aria-modal="true" aria-label="Why ignore this?">
+      <div class="fo-preview-header">
+        <span class="fo-preview-eyebrow">Why ignore this?</span>
+      </div>
+      <p class="fo-preview-note">Feeds back into what gets drafted next time -- a reason Naz keeps giving for the same kind of card steers the automation away from redrafting it.</p>
+      <div class="fo-ignore-presets">
+        ${FO_IGNORE_PRESETS.map((r) => `<button type="button" class="fo-ignore-preset" data-reason="${foEscape(r)}">${foEscape(r)}</button>`).join("")}
+      </div>
+      <input type="text" class="fo-ignore-input" id="fo-ignore-input" placeholder="Or type a reason...">
+      <div class="fo-preview-actions fo-actions">
+        <button type="button" class="fo-preview-cancel" id="fo-ignore-cancel-btn">Cancel</button>
+        <button type="button" class="fo-primary" id="fo-ignore-confirm-btn">Ignore</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  const input = document.getElementById("fo-ignore-input");
+  overlay.querySelectorAll(".fo-ignore-preset").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      overlay.querySelectorAll(".fo-ignore-preset").forEach((b) => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      input.value = btn.dataset.reason;
+      input.focus();
+    });
+  });
+  document.getElementById("fo-ignore-cancel-btn").addEventListener("click", () => overlay.remove());
+  document.getElementById("fo-ignore-confirm-btn").addEventListener("click", () => {
+    const reason = input.value.trim();
+    if (!reason) { input.focus(); return; }
+    overlay.remove();
+    foPatch(id, { status: "ignored", ignoreReason: reason, ignoredAt: new Date().toISOString() });
+  });
+  input.focus();
 }
 
 // ── send-to-monday preview (editable, confirm-before-fire) ───────────────────

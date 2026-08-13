@@ -11,11 +11,11 @@ exports.handler = async (event) => {
   }
   if (event.httpMethod !== "POST") return { statusCode: 405, body: "method not allowed" };
 
-  const { id } = JSON.parse(event.body || "{}");
+  const { id, force } = JSON.parse(event.body || "{}");
   if (!id) return { statusCode: 400, body: JSON.stringify({ error: "need id" }) };
 
   try {
-    const result = await sendQueueItemToMonday(id);
+    const result = await sendQueueItemToMonday(id, { force: !!force });
     if (result.error) return { statusCode: 400, body: JSON.stringify(result) };
     return { statusCode: 200, headers: { "content-type": "application/json" }, body: JSON.stringify(result) };
   } catch (err) {

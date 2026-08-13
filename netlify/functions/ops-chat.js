@@ -12,6 +12,7 @@
 // (applyStandupOverrideAction) rather than a second copy of either.
 
 const { getJSON, updateJSON } = require("./lib/github");
+const { formatPastDecisionsBlock } = require("./lib/pastDecisions");
 const {
   mondayLookup,
   mondayItemDetail,
@@ -525,6 +526,7 @@ async function draftNewItem(input) {
   // uniqueness against whatever the other writer actually left behind.
   await updateJSON(QUEUE_PATH, (data) => {
     const id = uniqueId(input.client, input.itemName, data.items);
+    const now = new Date().toISOString();
     newItem = {
       id,
       title: built.titleUpdate.title || `[${input.client}] ${input.itemName}`,
@@ -536,7 +538,8 @@ async function draftNewItem(input) {
       sourceLabel: input.sourceLabel || `Ops chat: Naz request, ${shortDate(new Date())}`,
       payload: built.payload,
       priority: built.titleUpdate.priority,
-      updatedAt: new Date().toISOString(),
+      createdAt: now,
+      updatedAt: now,
     };
     data.items.push(newItem);
     data.updatedAt = new Date().toISOString();
@@ -597,7 +600,8 @@ exports.handler = async (event) => {
     const { message, history, context } = JSON.parse(event.body || "{}");
     if (!message) return json(400, { error: "need message" });
 
-    const system = SYSTEM_RULES + describePageContext(context);
+    const { data: queueData } = await getJSON(QUEUE_PATH, EMPTY);
+    const system = SYSTEM_RULES + describePageContext(context) + formatPastDecisionsBlock(queueData.items);
     let convo = [...(history || []), { role: "user", content: message }];
     let finalText = "";
 

@@ -2,10 +2,14 @@
 //         Cowork automation, written to checks/draft-queue.json on the state branch).
 // GET  ?action=targets&boardId=X&groupId=Y -> pickable Monday targets (items
 //         + their subitems) for the Draft Queue's per-card destination picker.
+// GET  ?action=ignore-reasons -> recent {title,client,board,reason,ignoredAt}
+//         for ignored items -- same extraction item-chat.js/ops-chat.js fold
+//         into their own drafting system prompt as a PAST DECISIONS block.
 // POST -> patch one item by id: { id, patch: { status: "done" } } etc.
 //         Uses the same OPS_PASSCODE gate as the existing checkmark endpoint.
 
 const { getJSON, updateJSON } = require("./lib/github");
+const { recentIgnoreDecisions } = require("./lib/pastDecisions");
 const {
   enforceSentInvariant,
   mondayItemNameAndParent,
@@ -158,6 +162,19 @@ function applyResolvedNames(items, resolved) {
   });
 }
 
+// Draft age is unknowable without this -- most items still reach the queue
+// via the external fireflies-monday-watch automation, which this repo can't
+// reach in to fix at the source, so this backfills it the first time any
+// such item passes through a GET here instead. Pure function of whatever
+// state is passed in (never a stale precomputed patch) so it stays correct
+// under updateJSON's read-mutate-retry loop on a 409. Falls back to the
+// item's own updatedAt (a real, if imperfect, lower bound) rather than "now"
+// whenever that's available, so an old card doesn't suddenly read as brand
+// new just because this is the first time it's been backfilled.
+function applyCreatedAtBackfill(items) {
+  return items.map((it) => (it.createdAt ? it : { ...it, createdAt: it.updatedAt || new Date().toISOString() }));
+}
+
 exports.handler = async (event) => {
   const json = (statusCode, obj) => ({ statusCode, headers: { "content-type": "application/json" }, body: JSON.stringify(obj) });
 
@@ -179,15 +196,21 @@ exports.handler = async (event) => {
       }
     }
 
+    if (event.httpMethod === "GET" && (event.queryStringParameters || {}).action === "ignore-reasons") {
+      const { data } = await getJSON(QUEUE_PATH, EMPTY);
+      return json(200, { reasons: recentIgnoreDecisions(data.items || []) });
+    }
+
     if (event.httpMethod === "GET") {
       const { data } = await getJSON(QUEUE_PATH, EMPTY);
       const resolved = await resolveMissingMondayNames(data.items || []);
-      if (Object.keys(resolved).length) {
+      const needsCreatedAtBackfill = (data.items || []).some((it) => !it.createdAt);
+      if (Object.keys(resolved).length || needsCreatedAtBackfill) {
         try {
           const written = await updateJSON(QUEUE_PATH, (fresh) => {
-            fresh.items = applyResolvedNames(fresh.items || [], resolved);
+            fresh.items = applyCreatedAtBackfill(applyResolvedNames(fresh.items || [], resolved));
             return fresh;
-          }, "queue: backfill resolved Monday item/parent names", { fallback: EMPTY });
+          }, "queue: backfill resolved Monday item/parent names + createdAt", { fallback: EMPTY });
           return json(200, { ...written, routing: routingOptions() });
         } catch (err) {
           // The write failed (rare -- e.g. exhausted 409 retries) but the
@@ -195,7 +218,7 @@ exports.handler = async (event) => {
           // load rather than showing bare ids again; it'll just re-resolve
           // and retry the write on the next GET.
           console.error("queue.js: resolved Monday names but failed to persist them:", err);
-          data.items = applyResolvedNames(data.items || [], resolved);
+          data.items = applyCreatedAtBackfill(applyResolvedNames(data.items || [], resolved));
         }
       }
       return json(200, { ...data, routing: routingOptions() });
@@ -212,7 +235,8 @@ exports.handler = async (event) => {
           // enforceSentInvariant: a real Monday item existing always wins over
           // whatever this patch asked for -- e.g. "undo" on a Mondayed card
           // can't silently claim a real send never happened.
-          data.items[idx] = enforceSentInvariant({ ...data.items[idx], ...effectivePatch, updatedAt: new Date().toISOString() });
+          const merged = enforceSentInvariant({ ...data.items[idx], ...effectivePatch, updatedAt: new Date().toISOString() });
+          data.items[idx] = merged.createdAt ? merged : { ...merged, createdAt: data.items[idx].updatedAt || merged.updatedAt };
           data.updatedAt = new Date().toISOString();
           return data;
         }, `dashboard: update ${id}`, { fallback: EMPTY });

@@ -13,6 +13,7 @@
 // silently end up empty.
 
 const { getJSON, putJSON, updateJSON } = require("./github");
+const { textSimilarity, SIMILARITY_DUP_THRESHOLD, COMPLETION_CORROBORATED_SIMILARITY_THRESHOLD } = require("./textSimilarity");
 
 const ANTHROPIC_MODEL = "claude-sonnet-4-5"; // check docs.claude.com/en/docs/about-claude/models if this starts erroring
 
@@ -83,13 +84,22 @@ async function mondayLookup(input) {
 // subitem) -- that's a real cost across a whole group's worth of items when
 // all this needs is id+name two levels deep. Same board+group query shape
 // as mondayLookup, just a lighter selection.
-async function mondayGroupItemsWithSubitems(boardId, groupId) {
+// includeUpdates is opt-in (default false, what the destination picker
+// uses) -- the dedup-audit caller (findLikelyDuplicate) is the only one
+// that needs comment text, and asking Monday for it unconditionally would
+// cost every picker fetch a field it never reads. Subitems' OWN updates
+// need a SEPARATE batched query (same reason mondayItemDetail below
+// doesn't nest updates inside its own subitems selection -- not assumed to
+// nest cleanly), but it's still just one extra call for the WHOLE group,
+// not per item.
+async function mondayGroupItemsWithSubitems(boardId, groupId, { includeUpdates = false } = {}) {
   if (!boardId || !groupId) throw new Error("mondayGroupItemsWithSubitems needs boardId and groupId");
+  const updatesField = includeUpdates ? "updates(limit: 5) { body }" : "";
   const data = await mondayGraphQL(
     `query($boardId: [ID!], $groupId: [String]) {
        boards(ids: $boardId) {
          groups(ids: $groupId) {
-           items_page(limit: 100) { items { id name subitems { id name } } }
+           items_page(limit: 100) { items { id name ${updatesField} subitems { id name } } }
          }
        }
      }`,
@@ -99,12 +109,30 @@ async function mondayGroupItemsWithSubitems(boardId, groupId) {
   if (!board) throw new Error(`mondayGroupItemsWithSubitems: no board found for boardId ${boardId} -- double check the id`);
   const group = board.groups?.[0];
   if (!group) throw new Error(`mondayGroupItemsWithSubitems: no group found for groupId ${groupId} on board ${boardId} -- the id may be wrong or have changed`);
-  const items = group.items_page?.items || [];
-  return items.map((it) => ({
+  const rawItems = group.items_page?.items || [];
+  let items = rawItems.map((it) => ({
     id: it.id,
     name: it.name,
+    updates: it.updates || [],
     subitems: (it.subitems || []).map((s) => ({ id: s.id, name: s.name })),
   }));
+
+  if (includeUpdates) {
+    const subitemIds = items.flatMap((it) => it.subitems.map((s) => s.id));
+    if (subitemIds.length) {
+      const subData = await mondayGraphQL(
+        `query($itemIds: [ID!]) { items(ids: $itemIds) { id updates(limit: 5) { body } } }`,
+        { itemIds: subitemIds }
+      );
+      const updatesById = new Map((subData?.items || []).map((s) => [s.id, s.updates || []]));
+      items = items.map((it) => ({
+        ...it,
+        subitems: it.subitems.map((s) => ({ ...s, updates: updatesById.get(s.id) || [] })),
+      }));
+    }
+  }
+
+  return items;
 }
 
 // Drills into ONE item for full detail monday_lookup doesn't carry: its own
@@ -675,9 +703,123 @@ ${payload.updateBody || ""}`;
   return text;
 }
 
+// Plain-text for a fuzzy-match comparison, not a display preview (that's
+// item-chat.js's htmlToPlainText, which keeps block-boundary " / "
+// separators) -- a mention anchor's visible @Name text is kept (it's real
+// content for similarity purposes), everything else is just tag noise.
+function stripHtmlToText(html) {
+  if (!html) return "";
+  return String(html)
+    .replace(/<a[^>]*class="mention"[^>]*>([\s\S]*?)<\/a>/gi, "$1")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+// The pre-send dedup audit. item.mondayItemId (checked above, in
+// sendQueueItemToMonday) only catches OUR OWN prior send -- it says nothing
+// about work Sohib or Naz created by hand on Monday after this card was
+// drafted (drafts can sit for days), and the one-time board audit at draft
+// time only ever compared item NAMES, never update/comment text, so work
+// logged as a comment on an existing item was invisible to it. This re-
+// checks live, right before firing, and looks at both dimensions.
+//
+// Returns null (nothing found, or the audit itself couldn't run -- an audit
+// failure is never a reason to block a real send) or
+// { id, name, isSubitem, score, matchedOn } naming the single best-scoring
+// live match.
+//
+// Threshold choice mirrors generate.py's own corroboration logic (see
+// textSimilarity.js): SIMILARITY_DUP_THRESHOLD (0.6) is the bar for a plain
+// name-vs-name comparison, same as generate.py's default "same client,
+// compare text" path. COMPLETION_CORROBORATED_SIMILARITY_THRESHOLD (0.45,
+// the lower floor generate.py reserves for comparisons with independent
+// corroborating evidence beyond text alone) applies whenever the drafted
+// content is being matched against a LIVE UPDATE's text rather than a bare
+// name -- finding your own drafted substance already echoed in an existing
+// comment (on the exact item for update_only, or anywhere in the scoped
+// group for create_item/create_subitem) is itself that independent
+// evidence, the same role generate.py's source+date+who triple plays.
+async function findLikelyDuplicate(item, payload) {
+  try {
+    const mode = payload.mode || "create_item";
+    const draftedBody = stripHtmlToText(payload.updateBody);
+
+    if (mode === "update_only") {
+      if (!payload.existingItemId) return null;
+      let detail;
+      try {
+        detail = await mondayItemDetail(payload.existingItemId);
+      } catch {
+        // Not a duplicate-warning case -- the mode dispatch below still
+        // tries the real send and surfaces a normal error if the id is
+        // genuinely gone.
+        return null;
+      }
+      if (!draftedBody) return null;
+      let best = null;
+      for (const u of detail.updates || []) {
+        const score = textSimilarity(draftedBody, stripHtmlToText(u.body));
+        if (score >= COMPLETION_CORROBORATED_SIMILARITY_THRESHOLD && (!best || score > best.score)) {
+          best = { id: detail.id, name: detail.name, isSubitem: false, score, matchedOn: "an existing update on this item" };
+        }
+      }
+      return best;
+    }
+
+    // create_item / create_subitem
+    const boardId = payload.boardId || BOARD_LABEL_IDS[item.board];
+    if (!boardId) return null;
+    const boardLabel = boardLabelForId(boardId);
+    const groupId = boardLabel ? (CLIENT_GROUPS[item.group] || {})[boardLabel] : null;
+    if (!groupId) return null; // can't scope the audit -- not a reason to block the send
+
+    let candidates;
+    try {
+      candidates = await mondayGroupItemsWithSubitems(boardId, groupId, { includeUpdates: true });
+    } catch (err) {
+      console.error(`sendQueueItemToMonday: duplicate audit lookup failed for ${item.id}:`, err);
+      return null;
+    }
+
+    const draftedName = payload.itemName || "";
+    let best = null;
+    const consider = (c, isSubitem) => {
+      if (draftedName) {
+        const score = textSimilarity(draftedName, c.name);
+        if (score >= SIMILARITY_DUP_THRESHOLD && (!best || score > best.score)) {
+          best = { id: c.id, name: c.name, isSubitem, score, matchedOn: "its name" };
+        }
+      }
+      if (draftedBody) {
+        for (const u of c.updates || []) {
+          const score = textSimilarity(draftedBody, stripHtmlToText(u.body));
+          if (score >= COMPLETION_CORROBORATED_SIMILARITY_THRESHOLD && (!best || score > best.score)) {
+            best = { id: c.id, name: c.name, isSubitem, score, matchedOn: "an existing update" };
+          }
+        }
+      }
+    };
+    for (const c of candidates) {
+      consider(c, false);
+      for (const s of c.subitems || []) consider(s, true);
+    }
+    return best;
+  } catch (err) {
+    console.error(`sendQueueItemToMonday: duplicate audit failed for ${item.id}:`, err);
+    return null;
+  }
+}
+
 // Shared by send-to-monday.js -- the real network fire behind the send-to-
 // Monday button (and its preview confirmation step in addon.js).
-async function sendQueueItemToMonday(id) {
+async function sendQueueItemToMonday(id, { force = false } = {}) {
   const { data } = await getJSON(QUEUE_PATH, { updatedAt: null, items: [] });
   const idx = data.items.findIndex((it) => it.id === id);
   if (idx === -1) return { error: `no item with id ${id}` };
@@ -735,6 +877,21 @@ async function sendQueueItemToMonday(id) {
   if (substanceError) return { error: substanceError };
   const mentionError = checkMentionsAreReal(payload.updateBody);
   if (mentionError) return { error: mentionError };
+
+  // Warning gate, not a hard block like the mondayItemId guard above --
+  // `force` (from the preview modal's "send anyway") skips straight past
+  // this for the false-positive case, same as every other check up here
+  // still applies either way.
+  if (!force) {
+    const duplicate = await findLikelyDuplicate(item, payload);
+    if (duplicate) {
+      const pct = Math.round(duplicate.score * 100);
+      return {
+        error: `possible duplicate: "${duplicate.name}" (Monday ${duplicate.isSubitem ? "subitem" : "item"} ${duplicate.id}) looks ${pct}% similar, matched on ${duplicate.matchedOn} -- if this is a false positive, send anyway from the preview.`,
+        duplicate,
+      };
+    }
+  }
 
   const mode = payload.mode || "create_item"; // default for any older payloads without a mode field
   let resultItemId;

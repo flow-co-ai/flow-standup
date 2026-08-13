@@ -14,6 +14,7 @@
 // deployed function, so keep this in sync by hand if the canonical doc changes.
 
 const { getJSON, updateJSON } = require("./lib/github");
+const { formatPastDecisionsBlock } = require("./lib/pastDecisions");
 const {
   mondayLookup,
   mondayItemNameAndParent,
@@ -105,6 +106,16 @@ Prefer folding new information into an EXISTING item over creating a new one:
    with no existing parent on the board.
 Less is more -- one sequenced workflow is one item with steps in the update,
 not several items.
+
+**Counter-rule: same team + same timeline is NOT sufficient grounds to
+merge.** Merging also requires a shared workflow or a real dependency
+between the pieces -- one being a prerequisite for the other, or both being
+steps in one deliverable. Explicitly do NOT merge when the pieces are
+different kinds of work (e.g. a listing/profile correction vs. a net-new
+build), or when one piece is substantially larger than the others (a
+multi-week build should not ride along inside a one-line fix). When
+candidates fail this test, draft them as separate items rather than
+numbered steps in one. (Kept in sync with monday-automation.md §16.)
 
 ## Prerequisite check before drafting (Naz, 2026-07-22)
 Before drafting or editing a task, ask whether it silently assumes
@@ -628,7 +639,7 @@ has a drafted Monday payload: ${item.payload ? `yes (mode: ${item.payload.mode |
 already sent to a real Monday item: ${item.mondayItemId ? `yes (item id ${item.mondayItemId})` : "no"}
 ${item.clarification ? `Naz previously told you: "${item.clarification}"` : ""}`;
 
-    const system = SYSTEM_RULES + "\n" + itemContext;
+    const system = SYSTEM_RULES + "\n" + itemContext + formatPastDecisionsBlock(data.items);
 
     let convo = [...(history || []), { role: "user", content: message }];
     let finalText = "";
