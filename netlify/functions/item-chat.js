@@ -395,8 +395,23 @@ async function buildResolvedFields(item, input) {
     : (Number.isFinite(item.priority) ? item.priority : 3);
 
   if (input.mode === "update_only") {
+    const payload = { mode: "update_only", existingItemId: input.existingItemId, updateBody: input.updateBody };
+    // Same live lookup queue.js's resolveMissingMondayNames does for
+    // backfill -- needed here too since that backfill only runs on a full
+    // page GET, and the frontend patches the card straight from this
+    // response, not from a subsequent queue reload.
+    try {
+      const info = await mondayItemNameAndParent(input.existingItemId);
+      payload.itemName = info.name;
+      if (info.parentItem) {
+        payload.parentItemId = info.parentItem.id;
+        payload.parentItemName = info.parentItem.name;
+      }
+    } catch (err) {
+      console.error(`buildResolvedFields: couldn't resolve Monday name for existingItemId ${input.existingItemId}:`, err);
+    }
     return {
-      payload: { mode: "update_only", existingItemId: input.existingItemId, updateBody: input.updateBody },
+      payload,
       titleUpdate: { note: htmlToPlainText(input.updateBody), priority },
     };
   }

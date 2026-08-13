@@ -220,7 +220,7 @@ function foRenderDetailPane(item) {
     : item.mondayItemId
     ? `<span class="fo-muted-label">already sent (item ${foEscape(item.mondayItemId)})</span>`
     : item.payload
-    ? `<button class="fo-primary" onclick="foOpenSendPreview('${item.id}')">send to monday</button>`
+    ? `<button class="fo-primary" onmousedown="event.preventDefault()" onclick="foOpenSendPreview('${item.id}')">send to monday</button>`
     : '';
 
   let actionsHtml;
