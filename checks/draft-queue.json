@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-13T21:42:19.115Z",
+  "updatedAt": "2026-08-14T03:40:00.338Z",
   "items": [
     {
       "id": "websEo-pricing-question",
@@ -452,7 +452,7 @@
         "boardId": 18418241405,
         "existingItemId": 12471721212,
         "updateBody": "<p>Salam,</p><ul><li>Add <strong>Meta conversions API</strong> setup to this item's scope, based on the pipeline stages already defined.</li><li>Needs website and GHL credentials from Sohib to proceed.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
-        "itemName": "Tracking Compliance ⛔",
+        "itemName": "Tracking Compliance \u26d4",
         "blocked": false,
         "needsNaz": false,
         "columnValues": {
@@ -719,6 +719,66 @@
       "priority": 2,
       "mondayItemId": 12472427099,
       "updatedAt": "2026-08-13T21:07:40.431Z"
+    },
+    {
+      "id": "maadilaw-ghl-sprint-update",
+      "title": "Clio Migration",
+      "note": "Clio integration: native sync moving toward final verification. Confirm the native Clio Manage sync handles everything needed; only fall back to Zapier if a real gap shows up in testing.\nDocument handling shifting off DocuSign onto GHL's native document templates. Build out the multi-file upload flow, reminders, and automatic pipeline stage moves triggered by a signed document. Set up branching logic so document completion notifications go out correctly, and confirm with Tracy whether she wants a text or an internal notification when documents come in.\nCall routing decision locked: forward to the assigned case owner first, then Tracy, then the business line as final fallback. Test with the real forwarding numbers before this goes live.\nAdd a duplicate-message guard so missed-call and after-hours auto-replies never both fire on the same lead.\nAutomate intake form link delivery with contact info pre-filled, so leads don't have to re-enter details to upload documents/photos.\nLead source tagging: loop in the Ads team on instant form questions so Meta and Google Ads lead source data ties back cleanly into GHL for reporting.\nDeadline: this build needs to be live by August 24, alongside the coordinated Meta + Google + GHL go-live already on the calendar for Maadi Law.\nAssigned to: Ahmed Memon, Ali Shaheer",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Maadi Law, 8/13",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": 12471734017,
+        "board": "CRM",
+        "group": "Maadi Law",
+        "itemName": "Clio Migration"
+      },
+      "nullReason": null,
+      "priority": 1
+    },
+    {
+      "id": "medstation-ghl-followup-call",
+      "title": "GHL Setup",
+      "note": "Today's Maadi Law GHL review flagged that MedStation needs its own dedicated follow-up walkthrough call on integration status and next steps, separate from the Maadi Law build.\nGet this on the calendar soon, before the multi-location/WhatsApp sub-account work drifts further without a checkpoint.\nAssigned to: Ahmed Memon, Ali Shaheer",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Flow GHL Sync, 8/13",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": 12665521507,
+        "board": "CRM",
+        "group": "MedStation",
+        "itemName": "GHL Setup"
+      },
+      "nullReason": null,
+      "priority": 2
+    },
+    {
+      "id": "steelroundbars-sugarcrm-sync",
+      "title": "Data/Status Updates",
+      "note": "A Loom walkthrough of the Sugar CRM migration is planned to help the team stay aligned on where that build stands.\nStill pending: a sync with TCP on the Epicor to Sugar data mapping for Steel Round Bars, plus a review of the current task list before the next sprint planning session.\nAssigned to: Ahmed Memon, Ali Shaheer",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Steel Round Bars",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Flow GHL Sync, 8/13",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": 12767476167,
+        "board": "CRM",
+        "group": "Steel Round Bars",
+        "itemName": "Data/Status Updates"
+      },
+      "nullReason": null,
+      "priority": 3
     }
   ]
 }
