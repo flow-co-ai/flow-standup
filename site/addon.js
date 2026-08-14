@@ -493,6 +493,7 @@ const NULL_REASON_LABELS = {
   "multi-item": "needs /monday-task (multi-item)",
   "content-conflict": "needs your input before this can be drafted",
   "unmapped-client": "unrecognized client -- confirm before this gets drafted",
+  "parse-error": "drafted payload didn't parse cleanly -- check the note for what's missing before drafting this by hand",
 };
 
 // Every field here already exists in the pipeline's own payload schema
@@ -546,8 +547,13 @@ function foBuildMondayDetails(item) {
   // payload structure yet for a board/group/update edit to write into.
   if (!item.payload) {
     const reason = NULL_REASON_LABELS[item.nullReason] || NULL_REASON_LABELS["multi-item"];
+    // note carries the specific detail for some nullReasons (e.g. parse-error
+    // names exactly which field(s) failed and which source file) -- nowhere
+    // else on a null-payload card shows it, so it'd otherwise be invisible.
+    const noteLine = item.note ? `<p class="fo-preview-note">${foEscape(item.note)}</p>` : "";
     return `<div class="fo-monday-details fo-monday-blocked">
       <span class="fo-monday-blocked-label">${foEscape(reason)}</span>
+      ${noteLine}
     </div>`;
   }
 

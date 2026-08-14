@@ -824,6 +824,28 @@ async function findLikelyDuplicate(item, payload) {
   }
 }
 
+// §22c, never actually implemented until now (found 2026-08-14 auditing
+// DRAFTING_RULES against monday-automation.md): a parent item with subitems
+// is a workstream container, not a discrete deliverable -- it never
+// "completes," individual subitems do -- so it should read Ongoing, not
+// Start. buildColumnValues has only ever set Start/Stuck; this is the one
+// place a subitem actually gets created for real, so it's the one place
+// this can be enforced without guessing later whether some other item
+// already has subitems. Skips a parent that's Done (matches §22c) or Stuck
+// (§22c's own explicit exception -- a parent Stuck because the whole
+// workstream is genuinely blocked shouldn't silently un-stick just because
+// one more subitem showed up). Never fatal to the send -- the subitem
+// already exists for real by the time this runs.
+async function ensureParentOngoing(parentItemId, boardId) {
+  const data = await mondayGraphQL(
+    `query($itemIds: [ID!]) { items(ids: $itemIds) { id column_values(ids: ["${STATUS_COLUMN}"]) { text } } }`,
+    { itemIds: [parentItemId] }
+  );
+  const current = data?.items?.[0]?.column_values?.[0]?.text;
+  if (current === "Done" || current === "Stuck") return;
+  await updateMondayColumns(boardId, parentItemId, { [STATUS_COLUMN]: { label: "Ongoing" } });
+}
+
 // Shared by send-to-monday.js -- the real network fire behind the send-to-
 // Monday button (and its preview confirmation step in addon.js).
 async function sendQueueItemToMonday(id, { force = false } = {}) {
@@ -961,6 +983,12 @@ async function sendQueueItemToMonday(id, { force = false } = {}) {
           // whole send as failed (that would risk a retry creating a
           // genuine duplicate subitem).
           console.error(`sendQueueItemToMonday: subitem ${resultItemId} created but status/people push failed:`, err);
+        }
+
+        try {
+          await ensureParentOngoing(payload.parentItemId, boardId);
+        } catch (err) {
+          console.error(`sendQueueItemToMonday: failed to set parent ${payload.parentItemId} to Ongoing:`, err);
         }
       }
     } else if (mode === "update_only") {
