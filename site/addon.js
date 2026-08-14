@@ -97,6 +97,57 @@ function foRetryTargets(boardId, groupId) {
   foRenderFromItems(foItems);
 }
 
+// Same lazy-fetch + client-cache pattern as the targets cache above, keyed
+// by itemId instead of boardId+groupId -- powers "Update on..."'s optional
+// second step (reply to a specific existing update instead of a new
+// top-level comment).
+const foUpdatesCache = new Map();
+const foUpdatesInFlight = new Map();
+
+function foGetUpdatesSync(itemId) {
+  return foUpdatesCache.get(itemId);
+}
+
+function foEnsureUpdatesFetched(itemId) {
+  if (foUpdatesCache.has(itemId) || foUpdatesInFlight.has(itemId)) return;
+  const promise = fetch(`/.netlify/functions/queue?action=item-updates&itemId=${encodeURIComponent(itemId)}`, { headers: foHeaders() })
+    .then(async (res) => {
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+      return { updates: data.updates || [] };
+    })
+    .catch((err) => ({ error: err && err.message ? err.message : String(err) }))
+    .then((result) => {
+      foUpdatesInFlight.delete(itemId);
+      foUpdatesCache.set(itemId, result);
+      foRenderFromItems(foItems);
+      return result;
+    });
+  foUpdatesInFlight.set(itemId, promise);
+}
+
+function foRetryUpdates(itemId) {
+  foUpdatesCache.delete(itemId);
+  foEnsureUpdatesFetched(itemId);
+  foRenderFromItems(foItems);
+}
+
+// Author + first line + date, so otherwise-similar updates on a busy item
+// are actually distinguishable in a plain <option> (no HTML allowed inside
+// one, so this has to be one flat string).
+function foUpdatePreview(u) {
+  const author = (u.creator && u.creator.name) || "someone";
+  const text = String(u.body || "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/\s+/g, " ")
+    .trim();
+  const firstLine = text.length > 50 ? text.slice(0, 50) + "…" : text;
+  const date = u.created_at ? new Date(u.created_at).toLocaleDateString() : "";
+  return `${author}: ${firstLine || "(empty)"}${date ? " -- " + date : ""}`;
+}
+
 // ids currently mid-foPatch(). Rapid clicks on the same card's buttons (e.g.
 // mashing a priority arrow) used to fire several overlapping POSTs -- each
 // read the same GitHub sha, so every one after the first landed as a 409 and
@@ -351,6 +402,15 @@ async function foLoadQueue() {
     if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
     foItems = data.items || [];
     if (data.routing) foRouting = data.routing;
+    // Seed each card's chat log from what item-chat.js persisted server-side
+    // -- but ONLY the first time this session sees that id. An in-progress
+    // client-side thread (already typing, or already got a reply this
+    // session) must never be clobbered by a periodic re-load's server copy.
+    for (const it of foItems) {
+      if (foItemChat[it.id] === undefined && Array.isArray(it.chatHistory) && it.chatHistory.length) {
+        foItemChat[it.id] = it.chatHistory;
+      }
+    }
     foRenderFromItems(foItems);
   } catch (e) {
     container.innerHTML = `<div class="fo-error-state">
@@ -509,6 +569,7 @@ function foBuildMondayDetails(item) {
     </select>`;
 
   const targetRow = foBuildTargetRow(item, p, pending);
+  const replyToRow = foBuildReplyToRow(item, p, pending);
 
   // Directly editable, same click-into-place pattern as the rest of the
   // dashboard's manual controls -- saves on blur via foPatch(), same write
@@ -549,6 +610,7 @@ function foBuildMondayDetails(item) {
         <span class="fo-monday-key">Group</span>${groupSelect}
       </div>
       ${targetRow}
+      ${replyToRow}
       <div class="fo-monday-row">
         <span class="fo-monday-key">Update text</span>${mentionPicker}
       </div>
@@ -614,6 +676,50 @@ function foBuildTargetRow(item, p, pending) {
     </div>`;
 }
 
+// Optional second step for "Update on...", once a target is actually
+// chosen: reply to one of that item's existing updates instead of posting
+// a new top-level comment. Fetched lazily via foEnsureUpdatesFetched/
+// foUpdatesCache, same pattern as the target dropdown above. Blank stays a
+// new top-level comment (parentUpdateId absent) -- this is genuinely
+// optional, not a second required pick.
+function foBuildReplyToRow(item, p, pending) {
+  if (p.mode !== "update_only" || !p.existingItemId) return "";
+
+  const cached = foGetUpdatesSync(p.existingItemId);
+  if (!cached) {
+    foEnsureUpdatesFetched(p.existingItemId); // fires once; re-renders on completion
+    return `<div class="fo-monday-row">
+        <span class="fo-monday-key">Reply to</span>
+        <select class="fo-monday-select" disabled><option>Loading...</option></select>
+      </div>`;
+  }
+  if (cached.error) {
+    return `<div class="fo-monday-row">
+        <span class="fo-monday-key">Reply to</span>
+        <span class="fo-error-msg">couldn't load updates: ${foEscape(cached.error)}
+          <button type="button" onclick="foRetryUpdates('${p.existingItemId}')">retry</button>
+        </span>
+      </div>`;
+  }
+  if (!cached.updates.length) {
+    return `<div class="fo-monday-row">
+        <span class="fo-monday-key">Reply to</span>
+        <span class="fo-muted-label">no existing updates on this item yet -- will post as a new comment</span>
+      </div>`;
+  }
+
+  let options = `<option value="">-- new comment (default) --</option>`;
+  for (const u of cached.updates) {
+    options += `<option value="${foEscape(u.id)}" ${String(p.parentUpdateId) === String(u.id) ? "selected" : ""}>${foEscape(foUpdatePreview(u))}</option>`;
+  }
+  return `<div class="fo-monday-row">
+      <span class="fo-monday-key">Reply to</span>
+      <select class="fo-monday-select" id="fo-replyto-${item.id}" onchange="foReplyToChanged('${item.id}')" ${pending ? "disabled" : ""}>
+        ${options}
+      </select>
+    </div>`;
+}
+
 // Board/group mean something different per Send-as mode: for create_item
 // it's the actual routing decision (payload.boardId/groupId), for
 // create_subitem it's the board half of that (payload.boardId, needed for
@@ -662,6 +768,7 @@ function foPatchBoardGroup(id, newBoard, newGroup) {
     delete nextPayload.itemName;
     delete nextPayload.parentItemId;
     delete nextPayload.parentItemName;
+    delete nextPayload.parentUpdateId;
     patch.payload = nextPayload;
   }
 
@@ -689,12 +796,14 @@ function foSendAsChanged(id) {
     delete payload.parentItemName;
     delete payload.existingItemId;
     delete payload.itemName; // always lookup/target-derived coming from the other two modes, never authored here
+    delete payload.parentUpdateId; // only ever meaningful for update_only
     if (ids) {
       payload.boardId = ids.boardId;
       payload.groupId = ids.groupId;
     }
   } else if (nextMode === "create_subitem") {
     delete payload.existingItemId;
+    delete payload.parentUpdateId;
     if (ids) payload.boardId = ids.boardId;
   } else if (nextMode === "update_only") {
     // Whatever parentItemId was here belonged to create_subitem's OWN
@@ -702,6 +811,7 @@ function foSendAsChanged(id) {
     // once foTargetChanged resolves it FROM the picked existing item.
     delete payload.parentItemId;
     delete payload.parentItemName;
+    delete payload.parentUpdateId; // no target chosen yet in this fresh switch
   }
 
   foPatch(id, { payload });
@@ -746,9 +856,26 @@ function foTargetChanged(id) {
       payload.parentItemId = parent.id;
       payload.parentItemName = parent.name;
     }
+    // A previously picked reply-to update belonged to the OLD target --
+    // meaningless (and potentially wrong) once the target itself changes.
+    delete payload.parentUpdateId;
   } else {
     return;
   }
+
+  foPatch(id, { payload });
+}
+
+// Picking (or clearing) which existing update to reply to -- blank means a
+// new top-level comment, same as never having set parentUpdateId at all.
+function foReplyToChanged(id) {
+  const item = foItems.find((it) => it.id === id);
+  const sel = document.getElementById(`fo-replyto-${id}`);
+  if (!item || !item.payload || !sel) return;
+
+  const payload = { ...item.payload };
+  if (sel.value) payload.parentUpdateId = sel.value;
+  else delete payload.parentUpdateId;
 
   foPatch(id, { payload });
 }

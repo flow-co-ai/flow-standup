@@ -18,6 +18,7 @@ const { formatPastDecisionsBlock } = require("./lib/pastDecisions");
 const {
   mondayLookup,
   mondayItemNameAndParent,
+  mondayItemDetail,
   updateMondayColumns,
   STATUS_COLUMN,
   PEOPLE_COLUMN,
@@ -215,11 +216,18 @@ missing facts. Based on whatever Naz types, you can:
 - reassign people or change which board's team owns this (edit_item, still
   bounded by the board-scoped rules below -- you don't get to hand-pick an
   arbitrary person)
-- look things up on Monday first (monday_lookup) whenever you need context,
-  regardless of the card's current status
+- look things up on Monday first (monday_lookup, monday_item_detail) whenever
+  you need context, regardless of the card's current status
 
-Never guess: use monday_lookup or ask a specific follow-up question rather than
-resolving or editing on a guess.
+Never guess: use monday_lookup/monday_item_detail or ask a specific follow-up
+question rather than resolving or editing on a guess. In particular, before
+telling Naz something already exists on Monday, is already handled, or isn't
+logged anywhere -- call monday_item_detail on the specific item first.
+monday_lookup only returns item NAMES and column values; the real answer to
+"is this already there" is very often sitting in an update or a reply on an
+existing thread, which monday_lookup cannot see at all. Answering from names
+alone is exactly how this has argued with Naz over something that was, in
+fact, already logged as a comment.
 
 ${DRAFTING_RULES}
 
@@ -233,6 +241,12 @@ ${DRAFTING_RULES}
   don't treat an error as "the board is empty," fix the id or ask Naz. Usable
   regardless of the card's current status -- e.g. to confirm a team roster
   before reassigning something already sent.
+- monday_item_detail(itemId): full detail on ONE item by id -- its own posted
+  updates (with reply threads), its subitems, and each subitem's own updates.
+  This is the tool that actually answers "does this already exist" or "is
+  this already logged" -- monday_lookup cannot see updates or replies at all.
+  Call it on the specific item (this card's existingItemId/mondayItemId, or
+  whatever monday_lookup surfaced) before asserting either way.
 - resolve_item(...): call this to draft a NEW Monday payload, or fully rewrite
   an existing one (new itemName/updateBody/mode/etc). Two shapes:
   - action: "ignore" -- no Monday action needed (duplicate, informational only,
@@ -240,7 +254,10 @@ ${DRAFTING_RULES}
   - action: "draft" -- provide mode (create_item | create_subitem | update_only),
     the fields that mode needs, updateBody in the §7 format above (almost
     always include one), priority (rubric above), and blocked/needsNaz if
-    either genuinely applies.
+    either genuinely applies. For update_only specifically, if Naz wants this
+    posted as a reply on a specific existing update (found via
+    monday_item_detail) rather than a new top-level comment, pass its id as
+    parentUpdateId.
   If you don't have enough yet (ambiguous target, missing confirmation,
   unclear scope), do NOT call resolve_item. Just ask one specific question.
 - edit_item(...): lightweight patch for a card that doesn't need its Monday
@@ -268,6 +285,16 @@ const TOOLS = [
     },
   },
   {
+    name: "monday_item_detail",
+    description:
+      "Full detail on one Monday item by id: its column values, its own posted updates (including reply threads on each), its subitems, AND each subitem's own posted updates. Call this BEFORE claiming something does or doesn't already exist on Monday, or that work is or isn't already logged -- monday_lookup's item names alone are not enough to answer that; the real answer is often in an update or a reply, not the item name or status column. Always a fresh, live call.",
+    input_schema: {
+      type: "object",
+      properties: { itemId: { type: "string" } },
+      required: ["itemId"],
+    },
+  },
+  {
     name: "resolve_item",
     description:
       "Draft a new Monday payload, or fully rewrite an existing one. Call this once you have enough to either draft the real Monday payload or determine no action is needed. Status and people columns are set automatically from boardId -- you don't provide columnValues yourself, just blocked/needsNaz if either genuinely applies.",
@@ -281,6 +308,7 @@ const TOOLS = [
         itemName: { type: "string" },
         parentItemId: { type: "string" },
         existingItemId: { type: "string" },
+        parentUpdateId: { type: "string", description: "update_only only. Post updateBody as a reply on this existing update's thread (found via monday_item_detail) instead of a new top-level comment. Omit for a new top-level comment." },
         updateBody: { type: "string" },
         priority: { type: "integer", minimum: 1, maximum: 5, description: "1 (blocker/long lead time) to 5 (FYI only) -- see the priority rubric. Defaults to 3 if omitted." },
         blocked: { type: "boolean", description: "True only if genuinely blocked on a client/3rd party -- sets status Stuck instead of the Start default." },
@@ -406,6 +434,11 @@ async function buildResolvedFields(item, input) {
 
   if (input.mode === "update_only") {
     const payload = { mode: "update_only", existingItemId: input.existingItemId, updateBody: input.updateBody };
+    // Reply-to-an-existing-thread instead of a new top-level comment -- set
+    // by the destination picker's "reply to" step, or by the model itself
+    // when Naz points it at a specific existing update via monday_item_detail.
+    // Honored by sendQueueItemToMonday's create_update call (parent_id).
+    if (input.parentUpdateId) payload.parentUpdateId = input.parentUpdateId;
     // Same live lookup queue.js's resolveMissingMondayNames does for
     // backfill -- needed here too since that backfill only runs on a full
     // page GET, and the frontend patches the card straight from this
@@ -672,6 +705,8 @@ ${item.clarification ? `Naz previously told you: "${item.clarification}"` : ""}`
         try {
           if (tu.name === "monday_lookup") {
             result = await mondayLookup(tu.input);
+          } else if (tu.name === "monday_item_detail") {
+            result = await mondayItemDetail(tu.input.itemId);
           } else if (tu.name === "resolve_item") {
             // updateJSON re-reads fresh and re-runs this on a 409 (another
             // card's edit, or the automation, colliding on the same sha) --
@@ -710,6 +745,27 @@ ${item.clarification ? `Naz previously told you: "${item.clarification}"` : ""}`
         toolResults.push({ type: "tool_result", tool_use_id: tu.id, content: JSON.stringify(result) });
       }
       convo.push({ role: "user", content: toolResults });
+    }
+
+    // Persisted so a card's conversation survives a page reload -- the
+    // frontend only ever kept this in memory before. Separate write from
+    // whatever resolve_item/edit_item already did this turn (or nothing, on
+    // a plain Q&A turn), since it needs to happen on every message
+    // regardless. Capped so a very chatty card can't grow
+    // checks/draft-queue.json without bound.
+    const chatHistory = [
+      ...(history || []),
+      { role: "user", content: message },
+      { role: "assistant", content: finalText || "(no reply)" },
+    ].slice(-40);
+    try {
+      await updateJSON(QUEUE_PATH, (fresh) => {
+        const i = fresh.items.findIndex((it) => it.id === id);
+        if (i !== -1) fresh.items[i] = { ...fresh.items[i], chatHistory, updatedAt: new Date().toISOString() };
+        return fresh;
+      }, `item-chat: persist chat history for ${id}`, { fallback: EMPTY });
+    } catch (err) {
+      console.error(`item-chat: failed to persist chat history for ${id}:`, err);
     }
 
     return json(200, { reply: finalText, changed, item: changedItem });

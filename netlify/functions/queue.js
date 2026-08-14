@@ -5,6 +5,9 @@
 // GET  ?action=ignore-reasons -> recent {title,client,board,reason,ignoredAt}
 //         for ignored items -- same extraction item-chat.js/ops-chat.js fold
 //         into their own drafting system prompt as a PAST DECISIONS block.
+// GET  ?action=item-updates&itemId=X -> one item's own posted updates (with
+//         reply threads) -- powers the destination picker's "reply to an
+//         existing update" step for update_only.
 // POST -> patch one item by id: { id, patch: { status: "done" } } etc.
 //         Uses the same OPS_PASSCODE gate as the existing checkmark endpoint.
 
@@ -13,6 +16,7 @@ const { recentIgnoreDecisions } = require("./lib/pastDecisions");
 const {
   enforceSentInvariant,
   mondayItemNameAndParent,
+  mondayItemDetail,
   mondayGroupItemsWithSubitems,
   BOARD_LABEL_IDS,
   CLIENT_GROUPS,
@@ -199,6 +203,18 @@ exports.handler = async (event) => {
     if (event.httpMethod === "GET" && (event.queryStringParameters || {}).action === "ignore-reasons") {
       const { data } = await getJSON(QUEUE_PATH, EMPTY);
       return json(200, { reasons: recentIgnoreDecisions(data.items || []) });
+    }
+
+    if (event.httpMethod === "GET" && (event.queryStringParameters || {}).action === "item-updates") {
+      const { itemId } = event.queryStringParameters || {};
+      if (!itemId) return json(400, { error: "item-updates needs itemId" });
+      try {
+        const detail = await mondayItemDetail(itemId);
+        return json(200, { updates: detail.updates || [] });
+      } catch (err) {
+        console.error("queue.js: item-updates lookup failed:", err);
+        return json(500, { error: String((err && err.message) || err) });
+      }
     }
 
     if (event.httpMethod === "GET") {

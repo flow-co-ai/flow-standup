@@ -146,6 +146,13 @@ async function mondayGroupItemsWithSubitems(boardId, groupId, { includeUpdates =
 // creator_id/viewers on updates and board{id} on subitems (2026-08-03) are
 // additive fields for inbox-live.js's read/reply state -- nothing else here
 // reads them, existing consumers (ops-chat.js) are unaffected.
+// replies (2026-08-15): the whole repo used to never request them, so an
+// existing reply thread was invisible everywhere this pulls updates --
+// including to the item-chat.js assistant, which is exactly why it could
+// only ever post a brand-new top-level comment instead of answering inside
+// an existing thread.
+const UPDATE_FIELDS = "id body creator { name } creator_id created_at viewers { user_id } replies { id body creator { name } created_at }";
+
 async function mondayItemDetail(itemId) {
   if (!itemId) throw new Error("monday_item_detail needs itemId");
   const data = await mondayGraphQL(
@@ -154,7 +161,7 @@ async function mondayItemDetail(itemId) {
          id
          name
          column_values { id text }
-         updates(limit: 25) { id body creator { name } creator_id created_at viewers { user_id } }
+         updates(limit: 25) { ${UPDATE_FIELDS} }
          subitems { id name board { id } column_values { id text } }
        }
      }`,
@@ -166,7 +173,7 @@ async function mondayItemDetail(itemId) {
   const subitemIds = (item.subitems || []).map((s) => s.id);
   if (subitemIds.length) {
     const subData = await mondayGraphQL(
-      `query($itemIds: [ID!]) { items(ids: $itemIds) { id updates(limit: 25) { id body creator { name } creator_id created_at viewers { user_id } } } }`,
+      `query($itemIds: [ID!]) { items(ids: $itemIds) { id updates(limit: 25) { ${UPDATE_FIELDS} } } }`,
       { itemIds: subitemIds }
     );
     const updatesById = new Map((subData?.items || []).map((s) => [s.id, s.updates || []]));
@@ -966,10 +973,15 @@ async function sendQueueItemToMonday(id, { force = false } = {}) {
     }
 
     if (payload.updateBody) {
-      await mondayGraphQL(`mutation($item: ID!, $body: String!) { create_update(item_id: $item, body: $body) { id } }`, {
-        item: resultItemId,
-        body: payload.updateBody,
-      });
+      // parentUpdateId (only ever set on an update_only payload, via
+      // buildResolvedFields/the destination picker's reply-to-update step)
+      // posts this as a reply on an existing thread instead of a new
+      // top-level comment -- Monday's own parent_id argument on the same
+      // mutation, nothing update_only-specific about the call itself.
+      await mondayGraphQL(
+        `mutation($item: ID!, $body: String!, $parentId: ID) { create_update(item_id: $item, body: $body, parent_id: $parentId) { id } }`,
+        { item: resultItemId, body: payload.updateBody, parentId: payload.parentUpdateId || null }
+      );
     }
 
     // Re-fetch fresh right before writing the "sent" flag. The create/update
