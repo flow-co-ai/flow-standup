@@ -17,7 +17,7 @@ const ACTIVE_STATUSES = ["ready", "confirm"];
 // visually distinct even though both sections are handled-and-collapsed.
 const HANDLED_STATUSES = ["done", "ignored"];
 const MONDAYED_STATUSES = ["sent"];
-const foSectionExpanded = { handled: false, mondayed: false };
+const foSectionExpanded = { handled: false, mondayed: false, dismissed: false };
 
 // Last-known full queue, kept client-side so button clicks can re-render
 // immediately from a local optimistic guess instead of waiting 5-10s on a
@@ -156,9 +156,13 @@ function foUpdatePreview(u) {
 const foPending = new Set();
 
 function foRenderFromItems(items) {
-  const active  = items.filter(it => !it.mondayItemId && ACTIVE_STATUSES.includes(it.status));
-  const handled = items.filter(it => !it.mondayItemId && HANDLED_STATUSES.includes(it.status));
+  // A dismissed prospect keeps whatever status it already had (still
+  // 'confirm', typically) -- dismissed is checked FIRST so it never also
+  // counts as active just because its status hasn't changed.
+  const active  = items.filter(it => !it.mondayItemId && !it.dismissed && ACTIVE_STATUSES.includes(it.status));
+  const handled = items.filter(it => !it.mondayItemId && !it.dismissed && HANDLED_STATUSES.includes(it.status));
   const mondayed = items.filter(it => it.mondayItemId || MONDAYED_STATUSES.includes(it.status));
+  const dismissed = items.filter(it => it.dismissed && !it.mondayItemId);
 
   if (foSelectedId && !items.find(it => it.id === foSelectedId)) foSelectedId = null;
 
@@ -167,7 +171,7 @@ function foRenderFromItems(items) {
 
   document.getElementById("fo-queue-cards").innerHTML = `
     <div class="fo-shell${foSelectedId ? ' fo-detail-visible' : ''}">
-      <div class="fo-list">${foRenderListPane(active, handled, mondayed)}</div>
+      <div class="fo-list">${foRenderListPane(active, handled, mondayed, dismissed)}</div>
       <div class="fo-detail">${detailHtml}</div>
     </div>`;
 }
@@ -219,7 +223,7 @@ function foRenderSkeleton() {
 
 // ── list pane rendering ───────────────────────────────────────────────────────
 
-function foRenderListPane(active, handled, mondayed) {
+function foRenderListPane(active, handled, mondayed, dismissed) {
   const activeReal      = active.filter(it => !!it.group);
   const activeProspects = active.filter(it => !it.group);
 
@@ -259,6 +263,7 @@ function foRenderListPane(active, handled, mondayed) {
 
   html += foRenderListSection('handled', 'handled', handled);
   html += foRenderListSection('mondayed', 'mondayed', mondayed);
+  html += foRenderListSection('dismissed', 'hidden prospects', dismissed || []);
 
   return html;
 }
@@ -325,6 +330,7 @@ function foRenderDetailPane(item) {
   const nameRow   = item.payload ? foMondayNameRow(item) : null;
   const title     = nameRow ? nameRow.value : (item.sourceLabel || '(untitled)');
   const section   = item.mondayItemId ? 'mondayed'
+    : item.dismissed ? 'dismissed'
     : HANDLED_STATUSES.includes(item.status) ? 'handled' : 'active';
 
   const origin = item.sourceLabel
@@ -341,13 +347,28 @@ function foRenderDetailPane(item) {
   let actionsHtml;
   if (section === 'mondayed') {
     actionsHtml = `<span class="fo-muted-label">sent to Monday${item.mondayItemId ? ` (item ${foEscape(item.mondayItemId)})` : ''}</span>`;
+  } else if (section === 'dismissed') {
+    // Parked, not rejected -- a prospect can still convert later, so this is
+    // a one-click restore back to the normal Potential Clients list, not an
+    // "undo a mistake" action the way Handled's undo is.
+    actionsHtml = `<span class="fo-muted-label">hidden from Potential Clients</span>
+      <button onclick="foPatch('${item.id}', {dismissed: false, dismissedAt: null})" ${pending ? 'disabled' : ''}>unhide</button>`;
   } else if (section === 'handled') {
     actionsHtml = `${sendControl}
       <button onclick="foPatch('${item.id}', {status:'confirm'})" ${pending ? 'disabled' : ''}>undo</button>`;
   } else {
+    // Hiding is only offered for a prospect card (potentialClient set) --
+    // ignore/done both carry a real judgment ("not a task" / "handled")
+    // that doesn't fit "this business isn't worth a card every week, park
+    // it" the way a plain dismiss does, and ignore now requires a reason
+    // per the same-shape prompt real drafts use.
+    const hideControl = item.potentialClient
+      ? `<button onclick="foPatch('${item.id}', {dismissed: true, dismissedAt: new Date().toISOString()})" ${pending ? 'disabled' : ''}>hide prospect</button>`
+      : '';
     actionsHtml = `${sendControl}
       <button onclick="foPatch('${item.id}', {status:'done'})" ${pending ? 'disabled' : ''}>mark done</button>
-      <button onclick="foOpenIgnorePrompt('${item.id}')" ${pending ? 'disabled' : ''}>ignore</button>`;
+      <button onclick="foOpenIgnorePrompt('${item.id}')" ${pending ? 'disabled' : ''}>ignore</button>
+      ${hideControl}`;
   }
 
   const priorityBlock = section === 'active' ? `
