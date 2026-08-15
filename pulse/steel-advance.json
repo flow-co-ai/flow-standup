@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-14T11:38:48.533Z",
-  "date": "2026-08-14",
+  "generated_at": "2026-08-15T11:12:25.624Z",
+  "date": "2026-08-15",
   "slug": "steel-advance",
   "name": "Advance Grinding",
   "type": "leadgen",
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, suggesting campaigns are paused or inactive. GBP drove all engagement with 95 total actions (65 directions, 28 web clicks, 2 calls), though GBP activity dropped 79.55% in the last 7 days versus the prior 7 days, likely reflecting reduced organic search demand or a listing issue worth investigating.",
+  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, meaning all engagement is coming exclusively from Google Business Profile, which itself dropped 54.76% in the last 7 days versus the prior 7 days. This sharp GBP decline, with no paid activity to offset it, is the primary concern and likely reflects reduced organic search demand or a drop in profile visibility.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,20 +25,20 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 95,
-          "calls": 2,
-          "directions": 65,
-          "web_clicks": 28
+          "actions": 105,
+          "calls": 3,
+          "directions": 70,
+          "web_clicks": 32
         }
       }
     },
     "organic": {
-      "gbp_actions": 95,
+      "gbp_actions": 105,
       "ig_reach": 0
     },
     "top_campaign": null,
     "latest_day": {
-      "date": "2026-08-13",
+      "date": "2026-08-14",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -56,7 +56,7 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -79.55,
+      "gbp_7d_pct": -54.76,
       "sc_7d_pct": null,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
@@ -65,7 +65,6 @@
     "flags": [],
     "series": {
       "dates": [
-        "2026-07-17",
         "2026-07-18",
         "2026-07-19",
         "2026-07-20",
@@ -92,7 +91,8 @@
         "2026-08-10",
         "2026-08-11",
         "2026-08-12",
-        "2026-08-13"
+        "2026-08-13",
+        "2026-08-14"
       ],
       "spend": [
         0,
@@ -217,7 +217,6 @@
       "gbp_actions": [
         0,
         0,
-        0,
         2,
         0,
         3,
@@ -240,6 +239,7 @@
         3,
         0,
         1,
+        10,
         5,
         0,
         0
@@ -404,55 +404,55 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-14T11:42:48.454Z",
+    "generated_at": "2026-08-15T11:15:51.186Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid channels fully dark; only GBP alive and now fading fast.",
+    "verdict": "GBP-only engagement collapsing; no paid channel exists to offset it.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend, zero leads, zero clicks across all channels for the full 45-day series — no Meta, Google, or Search Console activity at any point.",
+        "text": "Zero paid spend across all 28 days — Meta $0, Google Ads $0 — means CPL is undefined and the business has no active lead-generation engine.",
         "confidence": "confirmed",
-        "channel": "all"
+        "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions collapsed -79.55% last 7 days vs prior 7. 3-day signal confirms it: Aug 11-13 totals 5 actions vs Jul 31-Aug 02 total of 16 — a real drop, not noise.",
+        "text": "GBP actions dropped 54.76% last 7d vs prior 7d; last 3 days (Aug 12–14) total 5 actions vs 13 in the prior 3 days (Aug 9–11) — a confirmed declining 3-day signal.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "28-day GBP drove only 2 calls from 95 total actions — a 2.1% call-conversion rate, meaning directions and web-clicks are not converting to inbound contact.",
-        "confidence": "probable",
-        "channel": "GBP"
+        "text": "GA4 sessions, Search Console clicks, and IG reach are all zero for the full 45-day series — no organic web or social signal exists alongside the GBP decline to diagnose cause.",
+        "confidence": "confirmed",
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Audit GBP listing immediately: verify it is verified, active, and categories/hours are correct — 0 paid backup means GBP is the only lead source.",
+        "type": "watch",
+        "text": "Watch GBP actions daily for 3 more days; if sub-5/day trend holds by Aug 18, escalate to client for profile audit.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "GBP Listing Health Audit",
-        "monday_update": "GBP actions dropped -79.55% in the last 7 days (5 actions Aug 11-13 vs 16 actions Jul 31-Aug 02) and it is the sole active channel with zero paid spend. Check that the listing is verified, not suspended, categories are correct, and hours are current. Success check: GBP weekly actions return to 10+ within 7 days of any fix applied. Re-check by 2026-08-21."
+        "monday_item_name": "Watch GBP Action Decline",
+        "monday_update": "GBP actions dropped 54.76% week-over-week and the last 3 days (Aug 12–14) produced only 5 actions vs 13 in the prior 3 days. No paid activity exists to compensate for this organic decline. Monitor daily through Aug 18; if the 3-day rolling total stays below 5 actions, flag immediately to Sohib for a Google Business Profile visibility audit (category, photos, review recency)."
       },
       {
         "id": "S2",
-        "type": "watch",
-        "text": "Watch for paid campaign reactivation signal — confirm with Sohib whether pause is intentional before any budget is committed.",
+        "type": "fix",
+        "text": "Confirm with client whether paid campaigns are intentionally paused or a tracking/billing break caused the 45-day zero-spend reading.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Confirm Paid Pause Intent",
-        "monday_update": "All paid channels (Meta, Google Ads, Search Console) show $0 spend across the full 45-day series with zero leads. This may be an intentional pause or an account/billing issue. Confirm with client or account lead whether campaigns should be live. If reactivation is approved, a fresh budget and campaign plan will be needed. Re-check by 2026-08-21."
+        "monday_item_name": "Verify Zero Spend Status",
+        "monday_update": "Meta and Google Ads show $0 spend for all 45 days in the series with zero leads and zero clicks — this is either a deliberate pause or a billing/access break that the data cannot distinguish. Sohib should confirm account status with the client before any paid action is taken. Resolution needed by Aug 18 to determine next steps."
       }
     ],
-    "next_check": "2026-08-21"
+    "next_check": "2026-08-18"
   }
 }

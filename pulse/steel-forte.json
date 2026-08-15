@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-14T11:38:44.399Z",
-  "date": "2026-08-14",
+  "generated_at": "2026-08-15T11:12:21.077Z",
+  "date": "2026-08-15",
   "slug": "steel-forte",
   "name": "Forte Metals",
   "type": "leadgen",
   "window_days": 28,
-  "score": 90,
+  "score": 100,
   "status": "green",
-  "verdict": "Forte Metals saw zero paid spend and leads across Meta and Google Ads in the last 28 days, making GBP the sole source of engagement with 100 total actions (62 directions, 11 calls, 27 web clicks). The biggest movement is a 350% spike in Search Console clicks over the past 7 days, likely driven by organic search momentum, though this is offset by a 72% drop in GBP actions week-over-week suggesting inconsistent local visibility.",
+  "verdict": "Forte Metals had zero paid spend and zero leads across Meta and Google Ads in the last 28 days, making GBP the sole source of engagement with 87 total actions (11 calls, 47 directions, 29 web clicks). The biggest movement is a 350% spike in Search Console clicks over the past 7 days, likely driven by improved organic visibility, though GBP actions dipped 18.75% week-over-week, suggesting some softening in local intent traffic.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,24 +25,24 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 100,
+          "actions": 87,
           "calls": 11,
-          "directions": 62,
-          "web_clicks": 27
+          "directions": 47,
+          "web_clicks": 29
         }
       }
     },
     "organic": {
-      "gbp_actions": 100,
+      "gbp_actions": 87,
       "ig_reach": 0
     },
     "top_campaign": null,
     "search": {
       "clicks": 26,
-      "impressions": 1870
+      "impressions": 1837
     },
     "latest_day": {
-      "date": "2026-08-13",
+      "date": "2026-08-14",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -60,7 +60,7 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -72,
+      "gbp_7d_pct": -18.75,
       "sc_7d_pct": 350,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
@@ -69,7 +69,6 @@
     "flags": [],
     "series": {
       "dates": [
-        "2026-07-17",
         "2026-07-18",
         "2026-07-19",
         "2026-07-20",
@@ -96,7 +95,8 @@
         "2026-08-10",
         "2026-08-11",
         "2026-08-12",
-        "2026-08-13"
+        "2026-08-13",
+        "2026-08-14"
       ],
       "spend": [
         0,
@@ -219,7 +219,6 @@
         0
       ],
       "gbp_actions": [
-        22,
         4,
         0,
         4,
@@ -244,7 +243,8 @@
         0,
         0,
         1,
-        3,
+        7,
+        5,
         0,
         0
       ],
@@ -280,7 +280,6 @@
       ],
       "sc_clicks": [
         1,
-        1,
         0,
         2,
         0,
@@ -306,6 +305,7 @@
         1,
         4,
         3,
+        1,
         0
       ],
       "ga4_sessions": [
@@ -409,62 +409,62 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-14T11:42:32.018Z",
+    "generated_at": "2026-08-15T11:15:35.870Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "No paid activity exists; organic signals diverge and need human triage.",
+    "verdict": "Organic signals are live; no paid engine exists to convert them.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero spend and zero leads across Meta and Google Ads for all 28 days — no paid channel is active or generating CPL data.",
+        "text": "Zero paid spend and zero leads across all 28 days — CPL is undefined because no paid engine is running.",
         "confidence": "confirmed",
-        "channel": "meta, google_ads"
+        "channel": "meta/google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions dropped 72% week-over-week; last 3 days (Aug 11–13) averaged 1 action vs 3.7 the prior 3 days (Aug 8–10) — local visibility fading.",
+        "text": "Search Console clicks spiked 350% (7d vs prior 7d), hitting 8 clicks in last 3 days (Aug 12–14: 3+1+0 vs Aug 9–11: 0+0+1). Organic visibility is rising with no paid amplification capturing it.",
         "confidence": "confirmed",
-        "channel": "gbp"
-      },
-      {
-        "id": "F3",
-        "priority": 2,
-        "text": "Search Console clicks spiked 350% in 7 days; series shows Aug 11–12 at 4 and 3 clicks vs near-zero prior weeks — organic momentum real but narrow in volume (26 clicks, 28 days).",
-        "confidence": "probable",
         "channel": "organic"
       },
       {
-        "id": "F4",
+        "id": "F3",
         "priority": 3,
-        "text": "GA4 sessions are zero for all 45 days in series — tracking is either uninstalled or broken, making web conversion measurement impossible.",
+        "text": "GBP actions fell 18.75% week-over-week; last 3 days (Aug 12–14) produced 5+0+0 = 5 actions vs prior 3 days (Aug 9–11) of 7+5+0 = 12. Local intent is softening while search clicks rise — source mismatch.",
+        "confidence": "probable",
+        "channel": "gbp"
+      },
+      {
+        "id": "F4",
+        "priority": 4,
+        "text": "GA4 sessions are zero across all 45 days despite 26 Search Console clicks in the 28-day window — tracking is almost certainly broken or GA4 is not installed.",
         "confidence": "confirmed",
-        "channel": "ga4"
+        "channel": "organic"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Diagnose and restore GA4 tracking — 45 consecutive zero-session days confirm a broken or missing pixel.",
+        "text": "Audit and restore GA4 tracking — 26 SC clicks produced 0 recorded sessions, confirming a broken or missing tag.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Fix GA4 Tracking Install",
-        "monday_update": "GA4 has reported zero sessions for every day in the 45-day series, confirming the tracking tag is broken or absent on the Forte Metals site. Audit the GA4 property and tag installation this week and restore data flow. Success check: GA4 sessions match Search Console click volumes (currently 26 clicks/28 days) within 7 days, by 2026-08-21. No paid campaigns should be considered until measurement is restored."
+        "monday_item_name": "Fix GA4 tracking tag",
+        "monday_update": "GA4 has recorded zero sessions across 45 days despite 26 Search Console clicks being confirmed in the same window, indicating the tag is missing or misfiring. Task: verify GA4 property connection and GTM/tag implementation on the Forte Metals site this week. Success check: GA4 sessions > 0 within 48 hours of the fix going live, confirmed by 2026-08-18."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GBP trend for 3 more days — 72% WoW drop needs to confirm before any local action is taken.",
+        "text": "Watch SC click trend for 3 more days — sustained rise above 4 clicks/day would justify a paid search conversation.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Watch GBP Actions Drop",
-        "monday_update": "GBP actions fell 72% week-over-week, and the last 3-day average (Aug 11–13) was just 1 action per day versus 3.7 the prior 3 days. This is a potential signal of local visibility loss but is not yet conclusive given daily volatility (22 actions on Jul 17, then zero the next day). Re-check on 2026-08-17; if the 3-day average remains below 2 actions/day, escalate for GBP profile audit."
+        "monday_item_name": "Watch SC click trend",
+        "monday_update": "Search Console clicks are up 350% week-over-week with 8 clicks in the last 3 confirmed days. No paid campaigns are live to capture this intent. Monitor daily SC clicks through 2026-08-18; if the 3-day average holds above 4 clicks/day, flag to Sohib for a paid search scoping discussion. No budget action until then."
       }
     ],
-    "next_check": "2026-08-17"
+    "next_check": "2026-08-18"
   }
 }
