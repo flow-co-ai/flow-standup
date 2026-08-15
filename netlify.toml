@@ -4,6 +4,12 @@
 
 [functions]
   directory = "netlify/functions"
+  # item-chat.js reads rules/drafting-rules.md via fs.readFileSync at cold
+  # start (the single source for drafting conventions, shared with the
+  # scheduled automation's own live GitHub fetch of the same file) -- without
+  # this, Netlify doesn't bundle it and readFileSync throws at cold start
+  # (deliberately loud, not a silent empty-rules fallback).
+  included_files = ["rules/drafting-rules.md"]
 
 [[headers]]
   for = "/*"
