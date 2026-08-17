@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-17T19:53:25.940Z",
+  "generated_at": "2026-08-17T22:13:02.674Z",
   "date": "2026-08-17",
   "slug": "steel-ohare",
   "name": "O'Hare Precision",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "O'Hare Precision's biggest movement this period is a +42% week-over-week surge in Google Business Profile engagement, driven by 214 total actions (147 directions, 56 web clicks, 11 calls) over 28 days, likely reflecting stronger local search visibility or a recent profile update. Paid channels (Meta and Google Ads) show zero spend and zero leads, so activating at least one paid channel should be the immediate priority to generate trackable pipeline.",
+  "verdict": "O'Hare Precision's biggest movement this period is a 42% week-over-week surge in Google Business Profile engagement, driven by 214 total actions including 147 direction requests and 11 calls, likely reflecting stronger local search visibility or a recent spike in branded searches. Paid channels (Meta and Google Ads) show zero spend and zero leads, so all lead activity is currently organic via GBP.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,63 +409,53 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-17T19:57:06.689Z",
+    "generated_at": "2026-08-17T22:16:42.206Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "No paid spend in 45 days; only organic signals confirm market demand.",
+    "verdict": "GBP organic is the only active channel; paid is fully dark.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days ($0 Meta, $0 Google Ads); CPL is undefined because no paid leads exist.",
+        "text": "Zero paid spend across all 28 days — Meta and Google Ads both completely dark, producing 0 leads and $0 CPL data.",
         "confidence": "confirmed",
-        "channel": "meta+google_ads"
+        "channel": "meta/google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP generated 214 actions (147 directions, 56 web clicks, 11 calls) in 28 days — +42% WoW — proving local intent exists unpaid.",
+        "text": "GBP is the sole lead-generating surface: 214 actions (147 directions, 11 calls, 56 web clicks) over 28 days with no paid support.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "Search clicks fell 7.62% WoW to 0 on 2026-08-16, and last-3-day avg (6.7 clicks) is down vs prior-3-day avg (14.7); organic reach softening.",
+        "text": "3-day GBP signal (Aug 14–16): 16 + 0 + 0 = 16 actions vs prior 3 days (Aug 11–13): 12 + 7 + 21 = 40. Short-term GBP momentum is stalling.",
         "confidence": "probable",
-        "channel": "search"
+        "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GA4 sessions are 0 for all 45 days — tracking is either uninstalled or broken; website conversion data is entirely absent.",
-        "confidence": "confirmed",
-        "channel": "ga4"
+        "text": "Search clicks fell 7.62% week-over-week; last 2 days show 6 and 0 clicks vs a 45-day average of ~15/day — branded/organic pull weakening.",
+        "confidence": "probable",
+        "channel": "search"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Audit and reinstall GA4 tracking tag — 45 consecutive zero-session days confirm a broken implementation, not zero traffic.",
+        "type": "watch",
+        "text": "Watch GBP actions and search clicks for 3 more days before any paid reactivation decision.",
         "cites": [
+          "F3",
           "F4"
         ],
-        "monday_item_name": "Fix GA4 Tracking Tag",
-        "monday_update": "GA4 has recorded 0 sessions every single day for 45 days (2026-07-20 through 2026-08-16), which is a confirmed tracking failure, not zero website traffic. Action: audit GTM or native GA4 tag installation and verify data stream is firing. Success is confirmed when GA4 sessions align directionally with the 433 search clicks recorded in the same 28-day window. Target resolution by 2026-08-21."
-      },
-      {
-        "id": "S2",
-        "type": "watch",
-        "text": "Watch GBP trend for 7 more days — 214 actions and +42% WoW signal readiness; confirm sustainability before launching paid.",
-        "cites": [
-          "F2",
-          "F1"
-        ],
-        "monday_item_name": "Watch GBP Demand Signal",
-        "monday_update": "GBP delivered 214 actions (+42% WoW) with 0 paid support, confirming real local intent for O'Hare Precision. Before recommending a paid launch, we need to confirm this trend holds for another 7 days and that the GA4 fix (S1) is live so we can measure landing page behavior from any paid traffic. Re-check on 2026-08-24 to assess whether paid activation is warranted."
+        "monday_item_name": "Watch GBP & Search Clicks",
+        "monday_update": "GBP actions dropped to 0 on both Aug 15 and 16, and the 3-day total (16) is less than half the prior 3-day total (40). Search clicks are also down 7.62% week-over-week with 0 clicks recorded on Aug 16. No paid spend is active, so these organic signals are the only performance data available. Re-check on 2026-08-20 — if GBP actions remain below 10/day for a third consecutive day, escalate to paid reactivation discussion with Sohib."
       }
     ],
-    "next_check": "2026-08-24"
+    "next_check": "2026-08-20"
   }
 }

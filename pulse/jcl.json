@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-17T19:53:01.256Z",
+  "generated_at": "2026-08-17T22:12:39.522Z",
   "date": "2026-08-17",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 60,
   "status": "amber",
-  "verdict": "Paid activity has fully stalled in the last 7 days, with spend, leads, and CPL each down 100% versus the prior period, suggesting Meta campaigns (the sole paid channel at $1,267.48 and 50 leads over 28 days) were paused or exhausted budget. Organic GBP engagement is softening too (down 12.5%), though GA4 sessions are up 84.12%, pointing to residual site interest that currently has no paid funnel to capture it.",
+  "verdict": "Paid activity has fully paused in the last 7 days, with spend, leads, and CPL each down 100% week-over-week, suggesting Meta campaigns (the sole paid channel at $1,267.48 and 50 leads over 28 days) were turned off. Organic signals are partially offsetting this, with GA4 sessions up 84.12% and Search Console clicks up 14.29%, though GBP actions dipped 12.5%.",
   "windsor": {
     "totals": {
       "spend": 1267.48,
@@ -439,79 +439,78 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-17T19:55:23.650Z",
+    "generated_at": "2026-08-17T22:15:05.874Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Campaigns hard-stopped Aug 6; organic holding but funnel is dark.",
+    "verdict": "Campaigns went dark 11 days ago; organic holds but cannot replace paid volume.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Meta spend hit $0 on Aug 6 and has stayed dark for 11 consecutive days — $0 spend, 0 leads; the entire paid funnel is off.",
+        "text": "All paid spend hit $0 on 2026-08-06 and has stayed zero for 11 consecutive days — 50 leads and $1,267.48 in Meta spend now entirely in the prior window.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Pre-pause CPL was $25.35 over 28 days (50 leads, $1,267.48); 3-day signal Aug 3-5 vs Jul 31-Aug 2 shows spend 215/day vs 73/day — campaigns were accelerating before cutoff, not fatiguing.",
+        "text": "3-day lead signal (Aug 14–16): 0 leads vs prior 3-day avg of ~2.7/day — a confirmed zero-output state, not a dip.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "GHL shows 36 contacts but 0 opportunities created and 0 appointments — leads arriving pre-pause were not converting to pipeline, signalling an intake or CRM workflow gap.",
-        "confidence": "confirmed",
-        "channel": "GHL"
+        "priority": 3,
+        "text": "GHL shows 36 contacts but 0 opportunities created and 0 appointments over 28 days — pipeline intake is not processing leads from the active spend period.",
+        "confidence": "probable",
+        "channel": "ghl"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GA4 sessions spiked to 206 on Aug 13 with zero paid activity — organic or direct source unknown; directional only per JCL double-count caveat, but residual intent is real.",
+        "text": "GA4 sessions spiked to 206 on 2026-08-13 — 3.8× the series median — with no paid spend active; likely organic or direct anomaly, directional only per known GA4 double-count issue.",
         "confidence": "hypothesis",
         "channel": "ga4"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GBP held 168 actions over 28 days (57 calls, 111 web clicks) and SC clicks rose 14.29% 7d — organic demand exists but has no paid funnel to amplify it.",
+        "text": "Search Console clicks held at 14–25/day through the paid blackout (avg 17/day Aug 6–15), confirming organic search is intact but insufficient to replace 50 paid leads.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "organic"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Investigate and resolve Meta campaign pause; reactivate CROA || CBO - 3/17/26 at prior $69–75/day spend level.",
+        "text": "Confirm deliberate pause or reinstate Meta campaigns at prior $69–$102/day spend rate immediately.",
         "cites": [
           "F1",
           "F2"
         ],
-        "monday_item_name": "Reactivate CROA Meta Campaign",
-        "monday_update": "Meta spend has been $0 since Aug 6 — 11 days dark with no budget or paid leads. The CROA || CBO - 3/17/26 campaign was the top spender at $673.62/28d and CPL was $25.35 before the pause. Reactivate at the last confirmed daily spend of ~$69–75/day. Success check: spend resumes and leads return within 3 days (by Aug 20)."
+        "monday_item_name": "Reinstate Meta Campaigns JCL",
+        "monday_update": "Meta spend dropped to $0 on 2026-08-06 and has not resumed — 11 days of zero leads confirmed. If this pause was not intentional, reinstate campaigns at the prior daily rate of $69–$102/day (matching the CROA || CBO - 3/17/26 campaign that drove $673.62 of the 28-day total). Success check: at least 2 leads/day within 3 days of reactivation, CPL back below the 28-day baseline of $25.35. Confirm intent with client by 2026-08-18."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GHL workflow: 36 contacts, 0 opportunities created — repair intake automation before campaigns relaunch.",
+        "text": "Audit GHL pipeline: 36 contacts with 0 opportunities created signals an intake routing failure, not an ads problem.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Fix GHL Intake Pipeline Gap",
-        "monday_update": "GHL shows 36 contacts in the 28-day window but 0 opportunities created and 0 appointments booked — leads are entering GHL but not advancing to pipeline. This is an intake or automation failure, not an ads problem. Audit lead routing, trigger conditions, and opportunity-creation workflows before paid spend resumes so no new leads are lost. Confirm at least 1 opportunity created per 5 contacts within 7 days of fix (by Aug 24)."
+        "monday_item_name": "Fix GHL Intake Routing JCL",
+        "monday_update": "GHL shows 36 contacts over 28 days but zero opportunities created and zero appointments booked — leads from the paid period did not convert into pipeline. Check workflow triggers, lead assignment rules, and stage automations in GHL. Success check: new contacts from any reinstated paid activity appear as opportunities within 24 hours of form submission. Resolve by 2026-08-20."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Monitor GA4 sessions and SC clicks for 3 days post-reactivation to confirm paid relaunch captures organic demand spike.",
+        "text": "Watch GA4 session spike of 206 on Aug 13 — re-check source/medium breakdown before attributing to any channel.",
         "cites": [
-          "F4",
-          "F5"
+          "F4"
         ],
-        "monday_item_name": "Watch Organic Demand Post-Relaunch",
-        "monday_update": "GA4 hit 206 sessions on Aug 13 with zero paid activity, and SC clicks rose 14.29% week-over-week — organic demand is present. Once Meta campaigns reactivate, watch whether sessions and leads move together over the next 3 days. If sessions stay elevated but leads do not recover, flag for landing page or offer review. Re-check Aug 20."
+        "monday_item_name": "Watch GA4 Aug 13 Spike JCL",
+        "monday_update": "GA4 recorded 206 sessions on 2026-08-13 against a series median of ~38, with zero paid spend active — source is unknown and the GA4 double-count issue means this is directional only. Pull source/medium report for that date to rule out bot traffic or misconfigured property. Re-check on 2026-08-20 once paid activity (if reinstated) gives a clean baseline for comparison."
       }
     ],
     "next_check": "2026-08-20"
