@@ -104,6 +104,7 @@ def sync_playbooks() -> None:
     try:
         from google.oauth2 import service_account
         from googleapiclient.discovery import build
+        from googleapiclient.http import MediaIoBaseDownload
 
         creds = service_account.Credentials.from_service_account_info(
             json.loads(sa_json_str),
@@ -133,9 +134,14 @@ def sync_playbooks() -> None:
         modified_time = file.get("modifiedTime", "")
 
         is_gdoc = mime == "application/vnd.google-apps.document"
+        is_md   = mime == "text/markdown" or name.lower().endswith((".md", ".markdown"))
+        is_pdf  = mime == "application/pdf" or name.lower().endswith(".pdf")
 
-        if not is_gdoc:
-            print(f"  note: '{name}' is not a Google Doc ({mime}) — skipped")
+        if is_pdf:
+            print(f"  ⚠️  '{name}': PDF — skipped")
+            continue
+        if not (is_gdoc or is_md):
+            print(f"  note: '{name}' ({mime}) — skipped")
             continue
 
         # Strip any extension, then normalise stem.
@@ -174,14 +180,26 @@ def sync_playbooks() -> None:
             skipped += 1
             continue
 
-        # Export as markdown.
+        # Fetch content: export Google Docs as markdown, download uploaded files directly.
         try:
-            raw = service.files().export(
-                fileId=file_id, mimeType="text/markdown"
-            ).execute()
-            content = raw.decode("utf-8", errors="replace").strip()
+            if is_gdoc:
+                raw = service.files().export(
+                    fileId=file_id, mimeType="text/markdown"
+                ).execute()
+                content = raw.decode("utf-8", errors="replace").strip()
+            else:
+                import io
+                buf = io.BytesIO()
+                downloader = MediaIoBaseDownload(
+                    buf,
+                    service.files().get_media(fileId=file_id, supportsAllDrives=True),
+                )
+                done = False
+                while not done:
+                    _, done = downloader.next_chunk()
+                content = buf.getvalue().decode("utf-8", errors="replace").strip()
         except Exception as exc:
-            print(f"  ⚠️  '{name}': export failed — {exc}")
+            print(f"  ⚠️  '{name}': fetch failed — {exc}")
             continue
 
         if not content:
