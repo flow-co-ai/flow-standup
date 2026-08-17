@@ -21,6 +21,21 @@ const GHL_TOKENS      = (() => {
 function round2(n) { return Math.round(n * 100) / 100; }
 function dateStr(d) { return d.toISOString().slice(0, 10); }
 
+// Reads the existing pulse file (if any) and returns just the keys we want to
+// preserve across runs. pulse.js writes each pulse from scratch and used to
+// wipe the brief written by apply_ops_pulse.js. Nothing else is carried over.
+function carryOverBrief(slug) {
+  const path = `pulse/${slug}.json`;
+  if (!existsSync(path)) return {};
+  try {
+    const prev = JSON.parse(readFileSync(path, 'utf8'));
+    const out = {};
+    if (prev.brief    !== undefined) out.brief    = prev.brief;
+    if (prev.brief_v2 !== undefined) out.brief_v2 = prev.brief_v2;
+    return out;
+  } catch { return {}; }
+}
+
 // --- History management (unchanged) ---
 
 function updateHistory(slug, newRow) {
@@ -366,6 +381,7 @@ async function processClient(client) {
       source:  'windsor_api',
       sources,
     },
+    ...carryOverBrief(client.slug),
   };
 
   writeFileSync(`pulse/${client.slug}.json`, JSON.stringify(pulse, null, 2));
@@ -410,6 +426,7 @@ async function main() {
         windsor:      { error: err.message },
         ghl:          null,
         _meta:        { source: 'windsor_api', sources: [] },
+        ...carryOverBrief(client.slug),
       };
       if (!existsSync('pulse')) mkdirSync('pulse');
       writeFileSync(`pulse/${client.slug}.json`, JSON.stringify(failPulse, null, 2));
