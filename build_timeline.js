@@ -105,6 +105,241 @@ function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
 
 function isoToday() { return new Date().toISOString().slice(0, 10); }
 
+// ── Monday data loading ───────────────────────────────────────────────────────
+
+function extractMondayId(raw) {
+  if (!raw) return null;
+  if (typeof raw === 'number') return String(raw);
+  const m = String(raw).match(/\[id:\s*(\d+)\]/);
+  return m ? m[1] : (String(raw).match(/^\d+$/) ? String(raw) : null);
+}
+
+// Bidirectional partial name match: "Quality HVAC" ↔ "Quality HVAC by Fibid".
+function clientMatches(clientName, standupNames) {
+  const cn = clientName.toLowerCase();
+  return standupNames.some(n => {
+    const sn = n.toLowerCase();
+    return cn.includes(sn) || sn.includes(cn);
+  });
+}
+
+function loadMondayItems(standupNames) {
+  const latest = readJSON('standups/latest.json');
+  if (!latest) return [];
+
+  const items = [];
+  for (const c of latest.by_client || []) {
+    if (!clientMatches(c.client || '', standupNames)) continue;
+    for (const d of c.work_by_department || []) {
+      const deptName = d.department || 'Ops';
+      for (const item of [...(d.highlights || []), ...(d.stalled_items || [])]) {
+        items.push({
+          item_name:      item.item_name || item.text || '',
+          department:     deptName,
+          days_stalled:   item.days_stalled || 0,
+          monday_item_id: extractMondayId(item.monday_item_id),
+          monday_url:     item.monday_url || null,
+          is_subitem:     false,
+        });
+      }
+    }
+  }
+
+  const seen = new Set();
+  return items.filter(item => {
+    const k = item.monday_item_id || (item.item_name.toLowerCase() + '|' + item.department);
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+}
+
+// Loads ALL inbox items for the client (parents + subitems).
+function loadInboxItems(standupNames) {
+  const inbox = readJSON('site/inbox.json');
+  if (!inbox?.by_client) return [];
+
+  const items = [];
+  for (const [clientName, clientItems] of Object.entries(inbox.by_client)) {
+    if (!clientMatches(clientName, standupNames)) continue;
+    if (Array.isArray(clientItems)) items.push(...clientItems);
+  }
+  return items;
+}
+
+// ── Token-overlap matching ────────────────────────────────────────────────────
+
+const STOPWORDS = new Set([
+  'a','an','the','is','in','of','to','for','with','and','or','on','at','by',
+  'from','as','it','its','be','was','are','this','that','has','have','had',
+  'all','new','one','no','so','up','out','via','vs','per','pre','each','both',
+  'end','off','day','days','month','months','week','go','back','open','full',
+  'live','fix','get','set','keep','take','run',
+]);
+
+function meaningfulTokens(s) {
+  return s.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/)
+    .filter(w => w.length >= 3 && !STOPWORDS.has(w));
+}
+
+// Tokens match if identical OR share a 5-char prefix (handles retarget/retargetting, keyword/keywords).
+function tokensSimilar(a, b) {
+  if (a === b) return true;
+  if (a.length < 5 || b.length < 5) return false;
+  return a.slice(0, 5) === b.slice(0, 5);
+}
+
+function sharedTokenCount(tokensA, tokensB) {
+  return tokensA.filter(a => tokensB.some(b => tokensSimilar(a, b))).length;
+}
+
+// ── Match plan tasks → Monday items + subitems ────────────────────────────────
+// Requires 2+ shared meaningful tokens (or 1 if task has only 1 meaningful token).
+
+function matchPlanTasks(planDepts, milestones, mondayItems, inboxItems) {
+  // Flatten plan tasks, dedupe by dept+label.
+  const planTasks = [];
+  const taskSeen  = new Set();
+
+  for (const d of planDepts) {
+    for (const bar of d.bars || []) {
+      const dept = normalizeDept(d.dept);
+      const key  = dept + '|' + bar.label.toLowerCase();
+      if (!taskSeen.has(key)) {
+        taskSeen.add(key);
+        planTasks.push({ label: bar.label, dept, source: 'bar' });
+      }
+    }
+  }
+  for (const m of milestones) {
+    const dept = normalizeDept(m.dept);
+    const key  = dept + '|' + m.label.toLowerCase();
+    if (!taskSeen.has(key)) {
+      taskSeen.add(key);
+      planTasks.push({ label: m.label, dept, source: 'milestone', date: m.date });
+    }
+  }
+
+  // Inbox lookup: monday_item_id → full inbox item.
+  const inboxById = new Map();
+  for (const ix of inboxItems) {
+    const id = String(ix.monday_item_id || '');
+    if (id) inboxById.set(id, ix);
+  }
+
+  // Subitem counts (for the parent's display).
+  const subCounts = new Map();
+  for (const ix of inboxItems) {
+    const pid = String(ix.parent_item_id || '');
+    if (pid) subCounts.set(pid, (subCounts.get(pid) || 0) + 1);
+  }
+
+  // Build ALL candidates: standup work items + all inbox items (parents + subitems).
+  // Subitems use their `board` field as department; parents already have board.
+  const inboxCandidates = inboxItems.map(ix => ({
+    item_name:      ix.item_name || '',
+    department:     ix.board || 'Ops',
+    days_stalled:   0,
+    monday_item_id: String(ix.monday_item_id || ''),
+    monday_url:     ix.url || null,
+    is_subitem:     !!(ix.parent_item_id),
+    parent_id:      ix.parent_item_id ? String(ix.parent_item_id) : null,
+  }));
+
+  // Merge: standup items first (they carry days_stalled), then inbox items not already present.
+  const seenCandidateIds = new Set(mondayItems.map(m => m.monday_item_id).filter(Boolean));
+  const extraCandidates  = inboxCandidates.filter(c => !seenCandidateIds.has(c.monday_item_id));
+
+  const allCandidates = [...mondayItems, ...extraCandidates];
+
+  const matchedIds    = new Set();
+  const matched_tasks = [];
+
+  for (const task of planTasks) {
+    const taskTokens = meaningfulTokens(task.label);
+    const minShared  = taskTokens.length >= 2 ? 2 : 1;
+
+    // Filter candidates to same canonical dept.
+    const deptCandidates = allCandidates.filter(c =>
+      normalizeDept(c.department) === task.dept
+    );
+
+    let best = null, bestShared = 0;
+    for (const c of deptCandidates) {
+      const cTokens = meaningfulTokens(c.item_name);
+      const shared  = sharedTokenCount(taskTokens, cTokens);
+      if (shared >= minShared && shared > bestShared) {
+        bestShared = shared;
+        best = c;
+      }
+    }
+
+    const result = { label: task.label, dept: task.dept, source: task.source };
+    if (task.date) result.date = task.date;
+
+    if (best) {
+      const id = best.monday_item_id;
+      if (id) matchedIds.add(id);
+      if (best.is_subitem && best.parent_id) matchedIds.add(best.parent_id);
+
+      const ix       = id ? inboxById.get(id) : null;
+      const subCount = id ? (subCounts.get(id) || 0) : 0;
+
+      let daysSinceUpdate = null;
+      if (ix?.latest_update?.created_at) {
+        daysSinceUpdate = Math.floor((Date.now() - new Date(ix.latest_update.created_at)) / 86400000);
+      }
+
+      let state = 'in-progress';
+      if (best.days_stalled > 0) state = 'stalled';
+      if (ix?.state === 'done' || ix?.state_label?.toLowerCase() === 'done') state = 'done';
+
+      Object.assign(result, {
+        not_on_monday:     false,
+        monday_item_id:    id,
+        monday_item_name:  best.item_name,
+        monday_url:        ix?.url || best.monday_url || null,
+        days_stalled:      best.days_stalled || 0,
+        days_since_update: daysSinceUpdate,
+        subitem_count:     subCount,
+        state,
+        state_label:       ix?.state_label || null,
+        match_score:       Math.round(bestShared * 100 / Math.max(taskTokens.length, meaningfulTokens(best.item_name).length)),
+        matched_via:       best.is_subitem ? 'subitem' : 'item',
+      });
+    } else {
+      result.not_on_monday = true;
+    }
+
+    matched_tasks.push(result);
+  }
+
+  // Monday-only: standup work items not matched to any plan task.
+  const monday_only = mondayItems
+    .filter(mi => mi.monday_item_id && !matchedIds.has(mi.monday_item_id))
+    .map(mi => {
+      const id  = mi.monday_item_id;
+      const ix  = id ? inboxById.get(id) : null;
+      let daysSinceUpdate = null;
+      if (ix?.latest_update?.created_at) {
+        daysSinceUpdate = Math.floor((Date.now() - new Date(ix.latest_update.created_at)) / 86400000);
+      }
+      return {
+        monday_item_id:    id,
+        item_name:         mi.item_name,
+        dept:              normalizeDept(mi.department),
+        days_stalled:      mi.days_stalled || 0,
+        days_since_update: daysSinceUpdate,
+        subitem_count:     id ? (subCounts.get(id) || 0) : 0,
+        state:             ix?.state || (mi.days_stalled > 0 ? 'stalled' : 'in-progress'),
+        state_label:       ix?.state_label || null,
+        monday_url:        ix?.url || mi.monday_url || null,
+      };
+    });
+
+  return { matched_tasks, monday_only, planTaskCount: planTasks.length };
+}
+
 // ── standup events ────────────────────────────────────────────────────────────
 
 function loadStandupEvents(standupNames) {
@@ -339,6 +574,8 @@ async function main() {
     // Build actual event streams.
     const completedEvents = loadStandupEvents(standupNames);
     const actionEvents    = approvedEvents(decisions, pulseSlugs);
+    const mondayItems     = loadMondayItems(standupNames);
+    const inboxItems      = loadInboxItems(standupNames);
     const newFlagEvents   = todayFlagEvents(pulseSlugs);
 
     // Merge with previous — strip legacy completed events (completions annotate milestones, not dots).
@@ -366,6 +603,14 @@ async function main() {
       ? `ENGAGEMENT · ${engStart} → ${engEnd}`
       : 'ENGAGEMENT · dates unknown';
 
+    // Match plan tasks to current Monday items.
+    const { matched_tasks, monday_only, planTaskCount } = matchPlanTasks(
+      plan.departments || [], plan.milestones || [], mondayItems, inboxItems
+    );
+    const matchedCount   = matched_tasks.filter(t => !t.not_on_monday).length;
+    const unmatchedCount = matched_tasks.filter(t =>  t.not_on_monday).length;
+    const matchRatio     = planTaskCount > 0 ? Math.round(matchedCount / planTaskCount * 100) / 100 : 0;
+
     const out = {
       generated_at: new Date().toISOString(),
       slug,
@@ -384,10 +629,14 @@ async function main() {
       nextUp,
       window:       window_,
       insight,
+      // Monday matching
+      match_ratio:  matchRatio,
+      matched_tasks,
+      monday_only,
     };
 
     writeFileSync(`timeline/${slug}.json`, JSON.stringify(out, null, 2));
-    console.log(`  ${slug}: ✓ ${dedupedEvents.length} events, ${completedCount}/${plan.milestones?.length || 0} milestones, ${pace.label}`);
+    console.log(`  ${slug}: ✓ ${planTaskCount} plan tasks — ${matchedCount} matched, ${unmatchedCount} unmatched | ${dedupedEvents.length} events, ${pace.label}`);
     built++;
   }
 

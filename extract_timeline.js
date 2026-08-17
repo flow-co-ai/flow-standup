@@ -100,12 +100,22 @@ function buildPrompt(slug, playbook) {
 Client slug: ${slug}
 Today: ${today}
 
+## Notation guide (used in these playbooks)
+- ✓  = completed. STILL extract as a plan bar — it shows when that work phase happened.
+- ●  = in flight / open. Extract as a current or upcoming plan bar.
+- ⛔ = blocker. Extract as a plan bar; note it is blocked in the label if space allows.
+- "▸ Name · Month N–M" or "▸ Name · Months N–M (MonAbbr)" are work tracks = bars.
+  Convert month numbers to ISO dates using the engagement window at the top of the playbook.
+  E.g. engagement May–Oct 2026 → Month 5 = 2026-08-01, Month 7 = 2026-10-31.
+- "## Department" or bold "**Department**" lines define dept names.
+- A "Sequence at a glance" table at the bottom is authoritative for milestone dates.
+
 Rules:
-- Extract ONLY items that are dated or clearly sequenced in the playbook. Never invent dates or milestones that are not in the document.
-- Undated phases that fall inside a known engagement window should be spread evenly across that window with inferred: true.
-- Departments come from the playbook's own department/section headers (e.g. Ads, Web, SEO, CRM, Video). If no clear departments, use "Ops".
-- engagement.start and engagement.end are the overall contract/engagement start and end dates. If only one is stated, infer the other from surrounding context; if neither is stated, use the earliest and latest dated items.
-- Milestones are named deliverables with a specific due date (launch, go-live, review, etc.).
+- Extract EVERY named ▸ work track as a bar, whether marked ✓, ●, or ⛔. Do not skip completed tracks — they belong on the timeline.
+- Derive bar start/end from the month range in the track header line. Use inferred: true when the dates are derived rather than explicitly stated.
+- Never invent items not in the document.
+- engagement.start and engagement.end are the overall engagement dates stated at the top of the playbook.
+- Milestones are named deliverables with a specific due date (launch, go-live, approval). Pull from the "Sequence at a glance" table or explicit deadline text.
 - Keep labels concise (≤8 words).
 - If the playbook contains no usable date information at all, return empty arrays and set engagement to today ± 90 days.
 
