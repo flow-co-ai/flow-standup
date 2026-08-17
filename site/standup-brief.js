@@ -136,6 +136,7 @@
   let clientsEnsured = false;
 
   async function ensureClientsVisible() {
+    if (v3State.mounted) return;
     if (clientsEnsured) return;
     clientsEnsured = true;
 
@@ -637,32 +638,548 @@
     if (freshSplit) freshSplit.after(detail);
   }
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // V3 — full-surface Standup rebuild (grid + rail).
+  //
+  // v3 owns the Standup home grid; v2 continues to own per-client drill-in
+  // (.client-detail-split). Everything below is namespaced sb3-.
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  const SUMMARY_URL = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/refs/heads/main/standups/standup-summary.json';
+
+  // Monday board id → stream lane, mirrors config.json boards.
+  const BOARD_LANE = {
+    '18418241405': 'CRM',
+    '18405754310': 'ADS',
+    '18100257069': 'VIDEO',
+    '18099807701': 'WEB-SEO',
+  };
+
+  // Lane definitions with the dept-name aliases used in latest.json.
+  const STREAM_LANES = [
+    { key: 'CRM',     aliases: ['crm', 'ghl', 'email', 'attribution'] },
+    { key: 'ADS',     aliases: ['ads', 'meta ads', 'google ads', 'paid', 'paid media'] },
+    { key: 'VIDEO',   aliases: ['video', 'creative', 'content'] },
+    { key: 'WEB-SEO', aliases: ['web + seo', 'web', 'seo', 'website'] },
+  ];
+
+  const STATUS_MAP = {
+    green:  { label: 'ON TRACK',        color: '#7da05c' },
+    amber:  { label: 'NEEDS ATTENTION', color: '#c9a13b' },
+    orange: { label: 'AT RISK',         color: '#a8563f' },
+    red:    { label: 'AT RISK',         color: '#a8563f' },
+  };
+  const STATUS_UNKNOWN = { label: 'NO DATA', color: '#9ea295' };
+
+  // Card sort rank: at-risk < needs-attention < on-track < unknown.
+  const STATUS_RANK = { orange: 0, red: 0, amber: 1, green: 2 };
+
+  // ── v3 state ─────────────────────────────────────────────────────────────────
+
+  const v3State = {
+    mounted:  false,
+    filter:   null,   // slug or null
+    openCard: null,   // slug or null
+  };
+
+  const v3Data = {
+    loaded:  false,
+    entries: [],      // [{ slug, name, pulse, timeline, latestEntry }]
+    summary: null,
+  };
+
+  let summaryCache = null;
+
+  // ── v3 helpers ───────────────────────────────────────────────────────────────
+
+  function statusFor(pulse) {
+    if (!pulse) return STATUS_UNKNOWN;
+    return STATUS_MAP[pulse.status] || STATUS_UNKNOWN;
+  }
+
+  function briefV2Of(pulse) {
+    return pulse?.brief_v2 || pulse?.brief?.brief_v2 || null;
+  }
+
+  function blocksFor(pulse) {
+    return briefV2Of(pulse)?.blocks || [];
+  }
+
+  function moveLine(blocks) {
+    const c = { you: 0, team: 0, client: 0 };
+    for (const b of blocks) if (c[b.side] !== undefined) c[b.side]++;
+    const total = c.you + c.team + c.client;
+    if (!total) return 'Nothing open';
+    const parts = [];
+    if (c.you)    parts.push(`You ${c.you}`);
+    if (c.team)   parts.push(`Team ${c.team}`);
+    if (c.client) parts.push(`Client ${c.client}`);
+    return parts.join(' · ');
+  }
+
+  function sortEntries(entries) {
+    return [...entries].sort((a, b) => {
+      const ra = STATUS_RANK[a.pulse?.status] ?? 3;
+      const rb = STATUS_RANK[b.pulse?.status] ?? 3;
+      if (ra !== rb) return ra - rb;
+      return a.name.localeCompare(b.name);
+    });
+  }
+
+  function laneFromUrl(url) {
+    const m = (url || '').match(/boards\/(\d+)/);
+    return m ? BOARD_LANE[m[1]] : null;
+  }
+
+  function findLaneDept(latestEntry, aliases) {
+    const depts = latestEntry?.work_by_department || [];
+    return depts.find(d => {
+      const n = (d.department || '').toLowerCase().trim();
+      return aliases.some(a => n === a || n.includes(a) || a.includes(n));
+    });
+  }
+
+  function todayDateLine(clientCount, blocksCount) {
+    const opts = { weekday: 'long', month: 'long', day: 'numeric' };
+    const s = new Date().toLocaleDateString('en-US', opts).toUpperCase();
+    return `${s} · ${clientCount} CLIENTS · ${blocksCount} BLOCKS OPEN`;
+  }
+
+  // ── v3 fetchers ──────────────────────────────────────────────────────────────
+
+  async function fetchSummary() {
+    if (summaryCache) return summaryCache;
+    try {
+      const res = await fetch(`${SUMMARY_URL}?t=${Date.now()}`, { cache: 'no-store' });
+      if (!res.ok) return null;
+      summaryCache = await res.json();
+      return summaryCache;
+    } catch { return null; }
+  }
+
+  async function loadV3Data() {
+    const latest = await fetchLatest();
+    v3Data.summary = await fetchSummary();
+
+    const clients = (latest?.by_client || []).filter(c => c.client && c.client !== 'Unmapped');
+
+    const entries = await Promise.all(clients.map(async (c) => {
+      const slug = slugFor(c.client);
+      const [pulse, timeline] = await Promise.all([
+        fetchPulse(slug),
+        fetchTimeline(slug),
+      ]);
+      return { slug, name: c.client, pulse, timeline, latestEntry: c };
+    }));
+
+    v3Data.entries = entries;
+    v3Data.loaded  = true;
+  }
+
+  // ── v3 renderers: header + pills + grid ─────────────────────────────────────
+
+  function renderHeader(summary, entries) {
+    const header = el('div', 'sb3-header');
+    const totalBlocks = entries.reduce((s, e) => s + blocksFor(e.pulse).length, 0);
+    header.append(el('div', 'sb3-date-line', todayDateLine(entries.length, totalBlocks)));
+    if (summary?.hero) {
+      header.append(el('div', 'sb3-hero', summary.hero));
+      if (summary.subline) header.append(el('div', 'sb3-subline', summary.subline));
+    }
+    return header;
+  }
+
+  function renderPills(entries) {
+    const pills = el('div', 'sb3-pills');
+
+    const allPill = el('button',
+      `sb3-pill${!v3State.filter ? ' active' : ''}`,
+      `All ${entries.length} clients`);
+    allPill.addEventListener('click', () => {
+      v3State.filter = null;
+      v3State.openCard = null;
+      renderRoot();
+    });
+    pills.append(allPill);
+
+    for (const e of entries) {
+      const status = statusFor(e.pulse);
+      const pill = el('button', `sb3-pill${v3State.filter === e.slug ? ' active' : ''}`);
+      const dot = el('span', 'sb3-pill-dot');
+      dot.style.background = status.color;
+      pill.append(dot, document.createTextNode(e.name));
+      pill.addEventListener('click', () => {
+        v3State.filter = v3State.filter === e.slug ? null : e.slug;
+        v3State.openCard = null;
+        renderRoot();
+      });
+      pills.append(pill);
+    }
+    return pills;
+  }
+
+  function renderGrid(entries) {
+    const visible = v3State.filter
+      ? entries.filter(e => e.slug === v3State.filter)
+      : entries;
+    const sorted = sortEntries(visible);
+    const grid = el('div', 'sb3-grid');
+    for (const e of sorted) grid.append(renderCardV3(e));
+    return grid;
+  }
+
+  // ── v3 renderers: card ───────────────────────────────────────────────────────
+
+  function renderCardV3(entry) {
+    const { name, slug, pulse } = entry;
+    const status = statusFor(pulse);
+    const v2  = briefV2Of(pulse);
+    const isOpen = v3State.openCard === slug;
+
+    const card = el('div', `sb3-card${isOpen ? ' open' : ''}`);
+
+    // Top row: dot + state label / ops score
+    const top = el('div', 'sb3-card-top');
+    const statusWrap = el('span', 'sb3-card-status');
+    const dot = el('span', 'sb3-dot');
+    dot.style.background = status.color;
+    statusWrap.append(dot, el('span', 'sb3-state-label', status.label));
+
+    const scoreEl = el('span', 'sb3-card-score', pulse?.score != null ? String(pulse.score) : '—');
+    if (pulse?.score != null) scoreEl.style.color = status.color;
+
+    top.append(statusWrap, scoreEl);
+    card.append(top);
+
+    // Name + sub
+    card.append(el('div', 'sb3-card-name', name));
+    if (pulse?.type) card.append(el('div', 'sb3-card-sub', pulse.type));
+
+    // Verdict
+    const verdict = v2?.verdict;
+    card.append(el('div', verdict ? 'sb3-card-verdict' : 'sb3-card-verdict muted',
+      verdict || 'No brief generated yet'));
+
+    // Footer: move line + toggle
+    const footer = el('div', 'sb3-card-footer');
+    footer.append(el('span', 'sb3-move-line', moveLine(blocksFor(pulse))));
+    const toggle = el('button', 'sb3-toggle', isOpen ? 'Close' : 'Open');
+    toggle.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      v3State.openCard = isOpen ? null : slug;
+      renderRoot();
+    });
+    footer.append(toggle);
+    card.append(footer);
+
+    // Detail
+    if (isOpen) card.append(renderCardDetailV3(entry));
+
+    return card;
+  }
+
+  // ── v3 renderers: card detail (snapshot / streams / contract / history) ─────
+
+  function renderCardDetailV3(entry) {
+    const { pulse, latestEntry, timeline } = entry;
+    const v2 = briefV2Of(pulse);
+
+    const detail = el('div', 'sb3-detail');
+
+    // SNAPSHOT — render only if source array has rows
+    const snap = v2?.snapshot || [];
+    if (snap.length) detail.append(renderSnapshotSection(snap));
+
+    // STREAMS — always render section; individual lanes fall back to "Not in scope."
+    detail.append(renderStreamsSection(latestEntry));
+
+    // AGAINST THE CONTRACT
+    detail.append(renderContractSection(timeline));
+
+    // history_line footer (spans full detail row)
+    const hl = v2?.history_line;
+    if (hl) detail.append(el('div', 'sb3-detail-history', hl));
+
+    return detail;
+  }
+
+  function renderSnapshotSection(rows) {
+    const sec = el('div', 'sb3-section');
+    sec.append(el('div', 'sb3-section-label', 'SNAPSHOT'));
+    const body = el('div', 'sb3-section-body');
+    for (const r of rows) {
+      const row = el('div', 'sb3-snap-row');
+      row.append(el('div', 'sb3-snap-label', r.label || ''));
+      row.append(el('div', `sb3-snap-value tone-${r.tone || 'plain'}`, r.value || ''));
+      body.append(row);
+    }
+    sec.append(body);
+    return sec;
+  }
+
+  function renderStreamsSection(latestEntry) {
+    const sec = el('div', 'sb3-section');
+    sec.append(el('div', 'sb3-section-label', 'STREAMS'));
+    const body = el('div', 'sb3-section-body');
+
+    const completed = latestEntry?.completed_this_week || [];
+
+    for (const lane of STREAM_LANES) {
+      const dept       = findLaneDept(latestEntry, lane.aliases);
+      const highlights = dept?.highlights || [];
+      const stalled    = dept?.stalled_items || [];
+      const active     = (highlights.length + stalled.length) > 0;
+      const shipped    = completed.some(c => laneFromUrl(c.monday_url) === lane.key);
+      const clean      = active && stalled.length === 0;
+
+      const laneRow = el('div', 'sb3-lane');
+      laneRow.append(el('span', 'sb3-lane-name', lane.key));
+
+      const dots = el('span', 'sb3-lane-dots');
+      const dotStates = [
+        { on: active,  stalled: !!(stalled.length && !highlights.length) },
+        { on: highlights.length > 0 },
+        { on: shipped },
+        { on: clean },
+      ];
+      for (const s of dotStates) {
+        const d = el('span', `sb3-lane-dot${s.on ? ' on' : ''}${s.stalled ? ' stalled' : ''}`);
+        dots.append(d);
+      }
+      laneRow.append(dots);
+
+      // Note: stalest stalled item + days, else first highlight, else Not in scope.
+      let note = '', muted = false;
+      if (stalled.length) {
+        const s = [...stalled].sort((a, b) => (b.days_stalled || 0) - (a.days_stalled || 0))[0];
+        note = `${s.item_name || s.text || ''} · ${s.days_stalled || 0}d`;
+      } else if (highlights.length) {
+        const h = highlights[0];
+        note = h.item_name || h.text || '';
+      } else if (!dept) {
+        note = 'Not in scope.';
+        muted = true;
+      }
+      laneRow.append(el('span', `sb3-lane-note${muted ? ' muted' : ''}`, note));
+      body.append(laneRow);
+    }
+    sec.append(body);
+    return sec;
+  }
+
+  function renderContractSection(timeline) {
+    const sec = el('div', 'sb3-section');
+    sec.append(el('div', 'sb3-section-label', 'AGAINST THE CONTRACT'));
+    const body = el('div', 'sb3-section-body');
+
+    if (!timeline) {
+      body.append(el('div', 'sb3-contract-empty',
+        'No playbook on file for this client, so there is nothing to measure delivery against.'));
+      sec.append(body);
+      return sec;
+    }
+
+    const tasks = timeline.matched_tasks || [];
+    if (!tasks.length) {
+      body.append(el('div', 'sb3-contract-empty', 'No tasks found.'));
+      sec.append(body);
+      return sec;
+    }
+
+    // Rank order: stalled → in-progress → done → gap
+    const rank = (t) => {
+      if (t.not_on_monday) return 3;
+      if (t.state === 'stalled')     return 0;
+      if (t.state === 'in-progress') return 1;
+      if (t.state === 'done')        return 2;
+      return 4;
+    };
+    const sorted = [...tasks].sort((a, b) => rank(a) - rank(b));
+    const CAP = 12;
+    const visible = sorted.slice(0, CAP);
+
+    for (const t of visible) {
+      const row = el('div', 'sb3-contract-row');
+      if (t.not_on_monday) {
+        row.append(el('span', 'sb3-contract-dot gap'));
+        row.append(el('span', 'sb3-contract-label', t.label));
+        row.append(el('span', 'sb3-contract-tag', 'no task exists'));
+      } else if (t.state === 'done') {
+        row.append(el('span', 'sb3-contract-dot done', ''));
+        row.append(el('span', 'sb3-contract-label done', t.label));
+      } else if (t.state === 'stalled') {
+        row.append(el('span', 'sb3-contract-dot stalled'));
+        row.append(el('span', 'sb3-contract-label', t.label));
+        row.append(el('span', 'sb3-contract-days', `${t.days_stalled || 0}d stalled`));
+      } else {
+        row.append(el('span', 'sb3-contract-dot live'));
+        row.append(el('span', 'sb3-contract-label', t.label));
+      }
+      body.append(row);
+    }
+    if (sorted.length > CAP) {
+      body.append(el('div', 'sb3-contract-more', `${sorted.length - CAP} more`));
+    }
+    sec.append(body);
+    return sec;
+  }
+
+  // ── v3 renderers: rail + footnotes ──────────────────────────────────────────
+
+  function railScope() {
+    // openCard wins over filter (last user click owns the scope).
+    return v3State.openCard || v3State.filter || null;
+  }
+
+  function renderRail(entries) {
+    const rail = el('div', 'sb3-rail');
+
+    const scopedSlug = railScope();
+    const scoped = scopedSlug ? entries.find(e => e.slug === scopedSlug) : null;
+    const source = scoped ? [scoped] : entries;
+
+    const allBlocks = [];
+    for (const e of source) {
+      for (const b of blocksFor(e.pulse)) allBlocks.push({ ...b, client: e.name });
+    }
+
+    const header = el('div', 'sb3-rail-header');
+    header.append(
+      el('span', 'sb3-rail-title', scoped ? `BLOCKS · ${scoped.name.toUpperCase()}` : 'BLOCKS'),
+      el('span', 'sb3-rail-count', `${allBlocks.length} OPEN`),
+    );
+    rail.append(header);
+
+    const groups = [
+      { key: 'you',    label: 'Yours to clear',       accent: '#c9a13b' },
+      { key: 'team',   label: 'Your team',            accent: '#a8563f' },
+      { key: 'client', label: 'Sitting with clients', accent: '#c3cbb4' },
+    ];
+
+    for (const g of groups) {
+      const rows = allBlocks
+        .filter(b => b.side === g.key)
+        .sort((a, b) => (b.hot ? 1 : 0) - (a.hot ? 1 : 0) || (b.age_days || 0) - (a.age_days || 0));
+      if (!rows.length) continue;
+
+      const group = el('div', 'sb3-block-group');
+      group.style.setProperty('--sb3-group-accent', g.accent);
+      group.append(el('div', 'sb3-group-label', g.label));
+
+      for (const r of rows) {
+        const row = el('div', 'sb3-block-row');
+        row.append(el('div', 'sb3-block-client', r.client));
+        row.append(el('div', 'sb3-block-item', r.item || ''));
+        const meta = el('div', 'sb3-block-meta');
+        meta.append(
+          el('span', 'sb3-block-who', r.who || ''),
+          el('span', `sb3-block-age${r.hot ? ' hot' : ''}`, `${r.age_days || 0}d`),
+        );
+        row.append(meta);
+        group.append(row);
+      }
+      rail.append(group);
+    }
+
+    rail.append(renderFootnote(entries));
+    return rail;
+  }
+
+  function renderFootnote(entries) {
+    const foot = el('div', 'sb3-footnote');
+    foot.append(el('div', null, 'Ops score = task movement, reply latency and playbook coverage.'));
+    const missing = entries.filter(e => !e.timeline).length;
+    if (missing > 0) {
+      const word = missing === 1 ? 'client has' : 'clients have';
+      foot.append(el('div', null, `${missing} ${word} no playbook on file.`));
+    }
+    return foot;
+  }
+
+  // ── v3 mount + root render ──────────────────────────────────────────────────
+
+  function renderRoot() {
+    const root = document.querySelector('.sb3-root');
+    if (!root) return;
+    root.innerHTML = '';
+
+    const layout = el('div', 'sb3-layout');
+    const main   = el('div', 'sb3-main');
+
+    main.append(renderHeader(v3Data.summary, v3Data.entries));
+    main.append(renderPills(v3Data.entries));
+    main.append(renderGrid(v3Data.entries));
+
+    layout.append(main, renderRail(v3Data.entries));
+    root.append(layout);
+  }
+
+  async function mountV3() {
+    const app = document.getElementById('app');
+    if (!app) return;
+
+    document.body.classList.add('sb3-active');
+
+    let root = app.querySelector('.sb3-root');
+    if (!root) {
+      root = document.createElement('div');
+      root.className = 'sb3-root';
+      app.append(root);
+    }
+    v3State.mounted = true;
+
+    if (!v3Data.loaded) {
+      await loadV3Data();
+      // Guard: user may have navigated away while we were fetching.
+      if (!v3State.mounted) return;
+      if (!document.querySelector('.sb3-root')) return;
+    }
+    renderRoot();
+  }
+
+  function unmountV3() {
+    if (!v3State.mounted) return;
+    document.body.classList.remove('sb3-active');
+    document.querySelector('.sb3-root')?.remove();
+    v3State.mounted = false;
+  }
+
   // ── MutationObserver ─────────────────────────────────────────────────────────
 
   function observe() {
     const app = document.getElementById('app');
     if (!app) return;
 
-    const obs = new MutationObserver(() => {
+    const tick = () => {
+      // Per-client drill-in: v2 owns this.
       if (document.querySelector('.client-detail-split')) {
+        unmountV3();
         injectDetailV2();
-      } else {
+        return;
+      }
+      // Grid home: v3 owns this.
+      if (app.classList.contains('client-grid-page')) {
         if (app.classList.contains('sb-v2')) {
           app.classList.remove('sb-v2');
           document.querySelector('.sb-v2-detail')?.remove();
           injectedFor = null;
         }
-        ensureClientsVisible();
+        mountV3();
+        return;
       }
-    });
-
-    obs.observe(app, { childList: true, subtree: true });
-
-    if (document.querySelector('.client-detail-split')) {
-      injectDetailV2();
-    } else {
+      // Any other view (single-column detail, prospect, etc): neither v2 nor v3.
+      unmountV3();
+      if (app.classList.contains('sb-v2')) {
+        app.classList.remove('sb-v2');
+        document.querySelector('.sb-v2-detail')?.remove();
+        injectedFor = null;
+      }
       ensureClientsVisible();
-    }
+    };
+
+    const obs = new MutationObserver(tick);
+    obs.observe(app, { childList: true, subtree: true });
+    tick();
   }
 
   if (document.readyState === 'loading') {

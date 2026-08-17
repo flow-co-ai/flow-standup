@@ -710,3 +710,578 @@
 .sb-gate-item input[type="checkbox"] { margin-top: 2px; accent-color: #8CBE6E; flex-shrink: 0; }
 
 .sb-gate-note { margin-top: 10px; font-size: 11px; color: rgba(237,233,220,0.38); font-style: italic; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LEVEL 3 — V3 STANDUP SURFACE
+   All rules are scoped by body.sb3-active or the .sb3-root subtree.
+   Namespaced sb3-*. Does not touch v1/v2 selectors above.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Space+Mono&display=swap');
+
+/* Hide app.js's grid-page children while v3 owns the surface. Trick mirrors
+   #app.sb-v2 .client-detail-split { display:none } used by v2 above. */
+body.sb3-active #app > *:not(.sb3-root) {
+  display: none !important;
+}
+body.sb3-active {
+  background: #0d0e0b;
+}
+body.sb3-active #app {
+  background: #0d0e0b;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.sb3-root {
+  --sb3-bg:          #0d0e0b;
+  --sb3-card:        #fbfaf5;
+  --sb3-ink:         #14160f;
+  --sb3-green:       #7da05c;
+  --sb3-amber:       #c9a13b;
+  --sb3-red:         #a8563f;
+  --sb3-grey:        #9ea295;
+  --sb3-mutedgreen:  #c3cbb4;
+
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #fbfaf5;
+  background: var(--sb3-bg);
+  padding: 24px 32px 48px;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* ── Two-column layout with sticky rail ───────────────────────────────────── */
+
+.sb3-layout {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.sb3-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.sb3-rail {
+  width: 320px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 20px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 18px 18px 14px;
+  align-self: flex-start;
+}
+
+@media (max-width: 1100px) {
+  .sb3-layout { flex-direction: column; }
+  .sb3-rail { width: 100%; position: static; }
+}
+
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+
+.sb3-header { margin-bottom: 24px; }
+
+.sb3-date-line {
+  font-family: 'Space Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(251,250,245,0.4);
+  margin-bottom: 12px;
+}
+
+.sb3-hero {
+  font-family: 'Outfit', sans-serif;
+  font-size: 34px;
+  font-weight: 300;
+  color: #fbfaf5;
+  line-height: 1.22;
+  letter-spacing: -0.01em;
+}
+
+.sb3-subline {
+  font-size: 16.5px;
+  color: rgba(251,250,245,0.5);
+  margin-top: 8px;
+  font-weight: 400;
+}
+
+
+/* ── Filter pills ───────────────────────────────────────────────────────── */
+
+.sb3-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 22px 0 20px;
+}
+
+.sb3-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 13px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 99px;
+  color: rgba(251,250,245,0.72);
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+
+.sb3-pill:hover {
+  background: rgba(255,255,255,0.08);
+  color: rgba(251,250,245,0.9);
+}
+
+.sb3-pill.active {
+  background: rgba(251,250,245,0.14);
+  border-color: rgba(251,250,245,0.32);
+  color: #fbfaf5;
+}
+
+.sb3-pill-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+
+/* ── Card grid ──────────────────────────────────────────────────────────── */
+
+.sb3-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 16px;
+}
+
+
+/* ── Card ───────────────────────────────────────────────────────────────── */
+
+.sb3-card {
+  background: var(--sb3-card);
+  color: var(--sb3-ink);
+  border-radius: 14px;
+  padding: 18px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  border: 1px solid transparent;
+  transition: border-color 0.1s, transform 0.05s;
+}
+
+.sb3-card:hover {
+  border-color: rgba(255,255,255,0.1);
+}
+
+.sb3-card.open {
+  grid-column: 1 / -1;
+}
+
+.sb3-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sb3-card-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sb3-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.sb3-state-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: rgba(20,22,15,0.62);
+}
+
+.sb3-card-score {
+  font-family: 'Outfit', sans-serif;
+  font-size: 23px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.sb3-card-name {
+  font-size: 21px;
+  font-weight: 600;
+  color: var(--sb3-ink);
+  line-height: 1.18;
+  margin-top: 2px;
+}
+
+.sb3-card-sub {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(20,22,15,0.38);
+  margin-top: -4px;
+}
+
+.sb3-card-verdict {
+  font-size: 15px;
+  color: rgba(20,22,15,0.85);
+  line-height: 1.45;
+  font-weight: 400;
+}
+
+.sb3-card-verdict.muted {
+  color: rgba(20,22,15,0.35);
+  font-style: italic;
+}
+
+.sb3-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 11px;
+  border-top: 1px solid rgba(20,22,15,0.08);
+  gap: 8px;
+}
+
+.sb3-move-line {
+  font-family: 'Space Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: rgba(20,22,15,0.56);
+}
+
+.sb3-toggle {
+  font-family: 'Space Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 600;
+  background: transparent;
+  border: 1px solid rgba(20,22,15,0.18);
+  border-radius: 4px;
+  padding: 5px 11px;
+  color: rgba(20,22,15,0.65);
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s, color 0.1s;
+}
+
+.sb3-toggle:hover {
+  background: rgba(20,22,15,0.05);
+  border-color: rgba(20,22,15,0.35);
+  color: var(--sb3-ink);
+}
+
+
+/* ── Card detail (expanded) ─────────────────────────────────────────────── */
+
+.sb3-detail {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 30px 34px;
+  padding-top: 20px;
+  margin-top: 6px;
+  border-top: 1px solid rgba(20,22,15,0.08);
+}
+
+.sb3-section-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(20,22,15,0.4);
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.sb3-section-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+/* ── Snapshot rows ──────────────────────────────────────────────────────── */
+
+.sb3-snap-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sb3-snap-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(20,22,15,0.38);
+}
+
+.sb3-snap-value {
+  font-size: 13.5px;
+  line-height: 1.42;
+}
+
+.sb3-snap-value.tone-ok    { color: #4a4e3d; }
+.sb3-snap-value.tone-warn  { color: #8a6a1c; }
+.sb3-snap-value.tone-bad   { color: #a8563f; }
+.sb3-snap-value.tone-plain { color: #2b2d22; }
+.sb3-snap-value.tone-muted { color: #7c8070; }
+
+
+/* ── Streams lanes ──────────────────────────────────────────────────────── */
+
+.sb3-lane {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 5px 0;
+}
+
+.sb3-lane-name {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(20,22,15,0.6);
+  width: 78px;
+  flex-shrink: 0;
+}
+
+.sb3-lane-dots {
+  display: inline-flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.sb3-lane-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(20,22,15,0.14);
+}
+
+.sb3-lane-dot.on { background: var(--sb3-green); }
+.sb3-lane-dot.stalled { background: var(--sb3-red); }
+
+.sb3-lane-note {
+  font-size: 12px;
+  color: rgba(20,22,15,0.62);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sb3-lane-note.muted {
+  color: rgba(20,22,15,0.3);
+  font-style: italic;
+}
+
+
+/* ── Against the Contract ───────────────────────────────────────────────── */
+
+.sb3-contract-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0;
+}
+
+.sb3-contract-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sb3-contract-dot.done    { background: var(--sb3-green); }
+.sb3-contract-dot.stalled { background: var(--sb3-red); }
+.sb3-contract-dot.live    { background: rgba(20,22,15,0.32); }
+.sb3-contract-dot.gap {
+  background: transparent;
+  border: 1px dashed rgba(20,22,15,0.3);
+}
+
+.sb3-contract-label {
+  font-size: 12.5px;
+  color: var(--sb3-ink);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sb3-contract-label.done {
+  color: rgba(20,22,15,0.5);
+}
+
+.sb3-contract-days {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--sb3-red);
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.sb3-contract-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(20,22,15,0.42);
+  flex-shrink: 0;
+}
+
+.sb3-contract-more {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: rgba(20,22,15,0.4);
+  margin-top: 6px;
+  letter-spacing: 0.06em;
+}
+
+.sb3-contract-empty {
+  font-size: 12.5px;
+  color: rgba(20,22,15,0.4);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+
+/* ── History line at bottom of expanded detail ──────────────────────────── */
+
+.sb3-detail-history {
+  grid-column: 1 / -1;
+  font-family: 'Space Mono', monospace;
+  font-size: 10.5px;
+  color: rgba(20,22,15,0.42);
+  letter-spacing: 0.06em;
+  padding-top: 14px;
+  border-top: 1px solid rgba(20,22,15,0.06);
+  line-height: 1.55;
+}
+
+
+/* ── Blocks rail ────────────────────────────────────────────────────────── */
+
+.sb3-rail-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.sb3-rail-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: rgba(251,250,245,0.9);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.sb3-rail-count {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: rgba(251,250,245,0.4);
+}
+
+.sb3-block-group {
+  margin-bottom: 18px;
+  padding-left: 12px;
+  border-left: 2px solid var(--sb3-group-accent, rgba(255,255,255,0.15));
+}
+
+.sb3-group-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sb3-group-accent);
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.sb3-block-row {
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.sb3-block-row:last-child { border-bottom: none; }
+
+.sb3-block-client {
+  font-family: 'Space Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(251,250,245,0.35);
+  margin-bottom: 4px;
+}
+
+.sb3-block-item {
+  font-size: 13px;
+  color: rgba(251,250,245,0.92);
+  line-height: 1.42;
+  margin-bottom: 5px;
+}
+
+.sb3-block-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sb3-block-who {
+  font-size: 11.5px;
+  color: rgba(251,250,245,0.55);
+}
+
+.sb3-block-age {
+  font-family: 'Space Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: rgba(251,250,245,0.42);
+}
+
+.sb3-block-age.hot {
+  color: var(--sb3-red);
+  font-weight: 700;
+}
+
+
+/* ── Footnote under the rail ────────────────────────────────────────────── */
+
+.sb3-footnote {
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: rgba(251,250,245,0.32);
+  line-height: 1.6;
+}
+
+.sb3-footnote > div + div { margin-top: 4px; }
