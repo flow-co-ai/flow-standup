@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-17T11:18:31.824Z",
+  "generated_at": "2026-08-17T19:53:25.940Z",
   "date": "2026-08-17",
   "slug": "steel-ohare",
   "name": "O'Hare Precision",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "GBP was the standout channel this period, driving 214 total actions (147 directions, 11 calls, 56 web clicks) with a strong 42% week-over-week surge, likely fueled by improved local search visibility or a spike in near-me intent. Paid channels (Meta and Google Ads) show zero spend and zero leads, so reactivating those campaigns should be the immediate priority to diversify lead flow.",
+  "verdict": "O'Hare Precision's biggest movement this period is a +42% week-over-week surge in Google Business Profile engagement, driven by 214 total actions (147 directions, 56 web clicks, 11 calls) over 28 days, likely reflecting stronger local search visibility or a recent profile update. Paid channels (Meta and Google Ads) show zero spend and zero leads, so activating at least one paid channel should be the immediate priority to generate trackable pipeline.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,36 +409,36 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-17T11:22:18.523Z",
+    "generated_at": "2026-08-17T19:57:06.689Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid channels fully dark; GBP alone is holding the line.",
+    "verdict": "No paid spend in 45 days; only organic signals confirm market demand.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google Ads — means CPL is undefined and all lead flow is offline.",
+        "text": "Zero paid spend across all 28 days ($0 Meta, $0 Google Ads); CPL is undefined because no paid leads exist.",
         "confidence": "confirmed",
-        "channel": "meta+google"
+        "channel": "meta+google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP delivered 214 actions (147 directions, 11 calls, 56 web clicks) over 28 days but last 2 days show 0 actions — pattern needs watching.",
-        "confidence": "probable",
+        "text": "GBP generated 214 actions (147 directions, 56 web clicks, 11 calls) in 28 days — +42% WoW — proving local intent exists unpaid.",
+        "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "Search clicks dropped 7.62% week-over-week and last recorded day (2026-08-16) shows 0 sc_clicks, suggesting indexing or GSC drop risk.",
-        "confidence": "hypothesis",
+        "text": "Search clicks fell 7.62% WoW to 0 on 2026-08-16, and last-3-day avg (6.7 clicks) is down vs prior-3-day avg (14.7); organic reach softening.",
+        "confidence": "probable",
         "channel": "search"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GA4 sessions are 0 across all 45 days — tracking is not firing; website lead capture is fully blind.",
+        "text": "GA4 sessions are 0 for all 45 days — tracking is either uninstalled or broken; website conversion data is entirely absent.",
         "confidence": "confirmed",
         "channel": "ga4"
       }
@@ -447,34 +447,25 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Investigate and reactivate paid campaigns; $0 spend for 28 days means zero paid lead flow — confirm budget, billing, and campaign status.",
-        "cites": [
-          "F1"
-        ],
-        "monday_item_name": "Reactivate Paid Campaigns",
-        "monday_update": "Both Meta and Google Ads have recorded $0 spend across the full 28-day window — no paid leads have been generated. Sohib should confirm with the client whether campaigns were intentionally paused or if there is a billing/account issue, then reactivate with at least a minimum test budget. Success is confirmed when daily spend registers above $0 and at least one lead is recorded within 7 days of reactivation. Resolve by 2026-08-21."
-      },
-      {
-        "id": "S2",
-        "type": "fix",
-        "text": "Audit and repair GA4 tracking; 0 sessions across all 45 days means the property is misfired or disconnected — website performance is invisible.",
+        "text": "Audit and reinstall GA4 tracking tag — 45 consecutive zero-session days confirm a broken implementation, not zero traffic.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Fix GA4 Tracking",
-        "monday_update": "GA4 sessions have read 0 for every single day in the 45-day series, which means the tag is either misfired, pointing to the wrong property, or the site is not tagged. This is a confirmed blind spot — any website leads or organic traffic are untracked. Success is confirmed when GA4 begins reporting non-zero daily sessions. Resolve and verify by 2026-08-21."
+        "monday_item_name": "Fix GA4 Tracking Tag",
+        "monday_update": "GA4 has recorded 0 sessions every single day for 45 days (2026-07-20 through 2026-08-16), which is a confirmed tracking failure, not zero website traffic. Action: audit GTM or native GA4 tag installation and verify data stream is firing. Success is confirmed when GA4 sessions align directionally with the 433 search clicks recorded in the same 28-day window. Target resolution by 2026-08-21."
       },
       {
-        "id": "S3",
+        "id": "S2",
         "type": "watch",
-        "text": "Watch GBP actions for 3 more days; last 2 days show 0 actions after a 42% weekly surge — confirm whether weekend dip or reversal.",
+        "text": "Watch GBP trend for 7 more days — 214 actions and +42% WoW signal readiness; confirm sustainability before launching paid.",
         "cites": [
-          "F2"
+          "F2",
+          "F1"
         ],
-        "monday_item_name": "Watch GBP Action Drop",
-        "monday_update": "GBP delivered 214 actions over 28 days with a 42% week-over-week surge, but the last 2 recorded days (2026-08-15 and 2026-08-16) both show 0 actions. This may be a weekend pattern given the series shows recurring Sunday zeros, but it should be confirmed. Re-check on 2026-08-20 — if the 3-day average falls below 5 actions/day versus the prior 7-day average of ~10, escalate as a GBP visibility issue."
+        "monday_item_name": "Watch GBP Demand Signal",
+        "monday_update": "GBP delivered 214 actions (+42% WoW) with 0 paid support, confirming real local intent for O'Hare Precision. Before recommending a paid launch, we need to confirm this trend holds for another 7 days and that the GA4 fix (S1) is live so we can measure landing page behavior from any paid traffic. Re-check on 2026-08-24 to assess whether paid activation is warranted."
       }
     ],
-    "next_check": "2026-08-20"
+    "next_check": "2026-08-24"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-17T11:17:37.573Z",
+  "generated_at": "2026-08-17T19:53:08.823Z",
   "date": "2026-08-17",
   "slug": "liferun",
   "name": "Liferun",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 43,
   "status": "orange",
-  "verdict": "Leads dropped 48% week-over-week to a 28-day CPL of $22.23, driven by Meta going dark (flagged: channel_dark) and cutting off all 128 leads that channel was delivering, while Google Ads burned $1,495.13 with zero conversions recorded over the period.",
+  "verdict": "Leads dropped 48% week-over-week to a $63.34% higher CPL of $22.23, driven by Meta going dark (flagged as channel_dark) and Google Ads delivering 0 conversions despite $1,495.13 in spend over the 28-day window. Immediate priorities are restoring Meta tracking visibility and auditing \"BWS - Search Campaign - Calls,\" which consumed $1,172.23 alone with no recorded conversions.",
   "windsor": {
     "totals": {
       "spend": 2844.98,
@@ -411,10 +411,10 @@
     }
   },
   "ghl": {
-    "contacts": 154,
+    "contacts": 157,
     "opportunities": {
       "created": {
-        "count": 133,
+        "count": 135,
         "value": 0
       },
       "won": {
@@ -435,77 +435,80 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-17T11:21:04.149Z",
+    "generated_at": "2026-08-17T19:55:50.495Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Meta dark kills all leads; Google burns $1,495 with zero verified conversions.",
+    "verdict": "Meta dark and Google blind — $2,845 spent with no verified conversion path.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Meta has been dark since Aug 14 (spend $0 last 3 days); it delivered all 128 of the 28-day leads — channel_dark confirmed.",
+        "text": "Meta channel_dark confirmed: $0 spend and 0 leads recorded on Aug 15–16, breaking a run of 4–15 leads/active day.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 1,
-        "text": "Google spent $1,495.13 over 28 days with 0 recorded conversions; 3-day spend avg $11.89 — CPL is infinite, spend is still draining.",
+        "text": "Google Ads: $1,495.13 spent over 28 days with 0 recorded conversions; top campaign 'BWS - Search Campaign - Calls' alone consumed $1,172.23 with no attributable lead.",
         "confidence": "confirmed",
-        "channel": "google_ads"
+        "channel": "google"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "Overdue: Stripe products QA (Jul 20) and GHL build completion (Jul 31) show no completed event — CRM money paths unverified per SOW.",
+        "priority": 1,
+        "text": "CPL spiked 63.34% week-over-week to $22.23 — driven by lead volume collapse (-48%), not spend increase (-15%). Efficiency has broken, not merely softened.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 2,
-        "text": "Overdue: GBP item opened milestone (Jul 15) has no completed event recorded — Web department task remains open 33 days past due.",
-        "confidence": "confirmed",
+        "text": "SOW milestone overdue: Stripe Products QA marked done July 20, but no confirmed completed event in pipeline data. GHL shows 0 won opportunities from 135 created — silent intake leak cannot be ruled out.",
+        "confidence": "probable",
         "channel": "SOW"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 133 opportunities created but 0 won and 0 appointments — pipeline intake appears active but conversion path is stalled.",
-        "confidence": "probable",
-        "channel": "CRM"
+        "text": "3-day signal (Aug 14–16): spend collapsed to $107.09 total, leads = 4 combined, vs prior 3 days (Aug 11–13) of $357.29 spend and 21 leads — confirmed deterioration, not a single bad day.",
+        "confidence": "confirmed",
+        "channel": "cross"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Restore Meta immediately — it was the sole source of all 128 leads; diagnose and reactivate within 24 hours.",
+        "text": "Restore Meta channel immediately: diagnose why spend and leads read $0 on Aug 15–16; check ad account status, payment method, and policy flags.",
         "cites": [
-          "F1"
+          "F1",
+          "F3"
         ],
-        "monday_item_name": "Reactivate Meta Ads Now",
-        "monday_update": "Meta has been dark since Aug 14 and was responsible for 100% of the 28-day lead volume (128 leads at $22.23 CPL). Identify the cause — policy flag, payment issue, or ad disapproval — and reactivate. Success check: Meta spend resumes and at least 5 leads recorded within 3 days of reactivation. Re-check Aug 20."
+        "monday_item_name": "Fix Meta Channel Dark",
+        "monday_update": "Meta went dark on Aug 15–16 with $0 spend and 0 leads recorded, breaking a pattern of 4–15 leads on every active day. Check the Meta ad account for payment failure, account-level policy flag, or campaign pause — restore active status today. Success is confirmed when spend resumes and leads appear within the next 24-hour reporting cycle. Re-check Aug 18."
       },
       {
         "id": "S2",
-        "type": "kill",
-        "text": "Pause Google Ads spend immediately — $1,495.13 burned over 28 days with 0 conversions is a confirmed zero-result leak.",
+        "type": "fix",
+        "text": "Audit Google Ads conversion tracking: $1,495.13 spent with 0 conversions recorded over 28 days is a pixel/tracking failure until proven otherwise.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Pause Google Ads Spend",
-        "monday_update": "Google Ads has spent $1,495.13 over 28 days (top campaign 'BWS - Search Campaign - Calls' alone $1,172.23) with zero recorded conversions — this is a confirmed spend leak, not a pixel gap worth absorbing. Pause all Google campaigns. Before reactivating, confirm whether the conversion pixel is firing; if it is a client-side pixel issue, document it and decide if Google remains in scope. Success check: zero further Google spend until attribution is verified. Re-check Aug 20."
+        "monday_item_name": "Fix Google Conv Tracking",
+        "monday_update": "Google Ads has consumed $1,495.13 — including $1,172.23 in 'BWS - Search Campaign - Calls' — with zero recorded conversions over 28 days. Pull the conversion action in Google Ads UI and confirm the tag is firing on the thank-you or call-complete event; cross-reference against GHL contacts (157 created) to see if calls are landing but not attributing. Success is a non-zero conversion count in Google Ads within 48 hours of the fix. Do not scale Google spend until confirmed. Re-check Aug 19."
       },
       {
         "id": "S3",
-        "type": "fix",
-        "text": "Escalate the two overdue CRM milestones (Jul 20 Stripe QA, Jul 31 GHL build) — unverified money paths silently leak revenue.",
+        "type": "watch",
+        "text": "Hold all budget scaling until F1 and F2 fixes confirmed; re-check Aug 20 when 3-day post-fix signal is readable.",
         "cites": [
-          "F3"
+          "F3",
+          "F4",
+          "F5"
         ],
-        "monday_item_name": "Verify CRM Money Paths",
-        "monday_update": "Stripe products QA (due Jul 20) and GHL build completion (due Jul 31) both show no completed event, meaning Becklar billing drop and BWS duplicate-order paths are unverified. Run the dummy deactivation and dual-path order test as specified in the SOW. Success check: both verification tests pass with documented results by Aug 22. Re-check Aug 22."
+        "monday_item_name": "Watch — Hold Scaling Aug 20",
+        "monday_update": "CPL is up 63.34% and both primary channels have attribution failures. No budget increases are defensible until Meta is back on and Google conversion tracking is verified. Additionally, the Stripe QA milestone (due July 20) has no confirmed completion event in GHL, and 0 of 135 created opportunities have been won — verify the intake path is not leaking activated subscribers before scaling lead volume. Re-evaluate all scaling decisions on Aug 20 using the 3-day post-fix window."
       }
     ],
     "next_check": "2026-08-20"

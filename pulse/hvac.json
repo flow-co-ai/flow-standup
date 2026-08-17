@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-17T11:16:48.992Z",
+  "generated_at": "2026-08-17T19:52:54.633Z",
   "date": "2026-08-17",
   "slug": "hvac",
   "name": "Quality HVAC by Fibid",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 70,
   "status": "amber",
-  "verdict": "Google Ads drove all $1,698.97 in spend over 28 days with 16 conversions, but GBP engagement dropped sharply by 51.61% week-over-week, likely signaling reduced local search visibility or seasonal demand softening that is cutting top-of-funnel activity.",
+  "verdict": "Google Ads drove all $1,698.97 in spend and recorded 16 conversions over 28 days, but GBP engagement dropped sharply by 51.61% week-over-week, which is the biggest movement and likely reflects reduced local search visibility or seasonal demand softening. The lead_drought flag warrants immediate attention, as CRM-tracked leads show zero despite Google Ads conversion activity, suggesting a possible tracking disconnect between ad conversions and actual lead capture.",
   "windsor": {
     "totals": {
       "spend": 1698.97,
@@ -409,7 +409,7 @@
     "contacts": 86,
     "opportunities": {
       "created": {
-        "count": 50,
+        "count": 51,
         "value": 0
       },
       "won": {
@@ -428,82 +428,81 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-17T11:20:14.396Z",
+    "generated_at": "2026-08-17T19:54:58.953Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Spend is live but zero GHL leads in 28 days — intake gap, not ads gap.",
+    "verdict": "Spend is live but leads are invisible — intake gap, not an ads failure.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "lead_drought flag confirmed: 28-day leads = 0 in GHL despite 16 Google Ads conversions and $1,699 spend. Attribution or intake is broken, not the campaigns.",
+        "text": "lead_drought flag: 28-day GHL leads = 0 despite 16 Google Ads conversions recorded. CRM is not receiving leads — intake leak, not an ads problem.",
         "confidence": "confirmed",
         "channel": "GHL"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "SOW blocker: Vivian (dispatch) left 7/7 — intake owner unconfirmed. Speed-to-lead automations point at an empty seat; scale-back-up gate is not cleared.",
+        "text": "Booking-bot battle-test was due 2026-07-31 and shows no completion event. Dispatch seat vacant since 7/7; speed-to-lead automations may be pointing at an empty GHL login.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 3,
-        "text": "GBP actions fell 51.61% week-over-week (last 4 days in series = 0 actions each) — 3-day signal is a confirmed drop, not noise.",
+        "priority": 2,
+        "text": "GBP actions dropped 51.61% week-over-week (last 3 days: 0, 0, 0 vs prior 3: 5, 5, 0). Local visibility signal is deteriorating alongside the paid gap.",
         "confidence": "confirmed",
         "channel": "GBP"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Spend pattern is erratic: 11 of 28 days recorded $0 Google spend, with single-day spikes up to $248.50. Inconsistent pacing, not purposeful throttling.",
+        "text": "Google spend pattern is erratic — 9 of the last 28 days recorded $0 spend. Top campaign (LocalServicesCampaign) consumed $1,392.13 of $1,698.97 with no lead attribution.",
         "confidence": "probable",
         "channel": "Google Ads"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "50 GHL opportunities created vs 0 GHL leads recorded and 0 appointments — pipeline data is internally inconsistent; a data mapping or stage config error is probable.",
-        "confidence": "probable",
-        "channel": "GHL"
+        "text": "Meta spend = $0 across all 45 days in series; $600/mo Meta budget in SOW is entirely undeployed. No Meta leads, no reach data.",
+        "confidence": "confirmed",
+        "channel": "Meta"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit GHL intake: confirm who owns the dispatch seat, their login, and that speed-to-lead automations are routing live.",
+        "text": "Identify who owns intake post-Vivian, verify their GHL login active, and re-point speed-to-lead automations — 0 leads in 28 days confirms the seat is broken.",
         "cites": [
           "F1",
           "F2"
         ],
-        "monday_item_name": "Fix GHL Intake Owner Gap",
-        "monday_update": "Vivian (dispatch) left 7/7 and the intake seat is unconfirmed per SOW. With 16 Google Ads conversions and $1,699 spent but 0 leads recorded in GHL, the automations are likely routing to an unmanned seat. Action: confirm new intake owner, verify GHL login is active, and test the speed-to-lead sequence end-to-end. Success = at least one test lead routes and surfaces correctly in GHL pipeline by 2026-08-21."
+        "monday_item_name": "Fix GHL Intake Ownership",
+        "monday_update": "Vivian (dispatch) left 7/7 and no replacement GHL owner has been confirmed; speed-to-lead automations are pointing at an empty seat. This explains 0 CRM leads against 16 Google Ads conversions over 28 days. Action: confirm new intake owner, verify GHL login, re-point all automations and test end-to-end with a dummy lead by 2026-08-20. Success = at least 1 test opportunity created and assigned in GHL."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GHL pipeline stage config: 50 opps created, 0 leads, 0 appointments — a mapping error is suppressing visibility.",
+        "text": "Complete the overdue booking-bot battle-test (due 2026-07-31); do not raise budgets until both intake owner and bot are confirmed live.",
         "cites": [
-          "F5",
+          "F2",
           "F1"
         ],
-        "monday_item_name": "Fix GHL Pipeline Stage Config",
-        "monday_update": "GHL shows 50 opportunities created and 4 won against 0 recorded leads and 0 appointments — these numbers are internally inconsistent and suggest a stage-mapping or source-attribution misconfiguration. Action: review pipeline stage definitions and confirm that inbound contacts from Google Ads are tagging correctly as leads. Success = leads, opportunities, and appointments all reflect the same inbound volume by 2026-08-21."
+        "monday_item_name": "Booking Bot Battle-Test",
+        "monday_update": "The booking-bot battle-test was due 2026-07-31 and has no completion event recorded. With 0 GHL appointments across the 28-day window and the scale-back-up gate tied directly to this milestone, it must clear before any budget increases. Action: run the full battle-test sequence per the original spec and log a pass/fail result by 2026-08-22. Success = documented pass with at least 1 automated booking routed correctly in GHL."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch Google Ads pacing: 11 zero-spend days in 28 is erratic; do not scale until intake fix (S1) is confirmed.",
+        "text": "Watch GBP actions: 3-day total is 0 vs prior 3-day total of 10. Re-check on 2026-08-20 to determine if Windsor lag or real visibility loss.",
         "cites": [
-          "F4",
-          "F2"
+          "F3"
         ],
-        "monday_item_name": "Watch Google Ads Pacing",
-        "monday_update": "Google Ads recorded $0 spend on 11 of the last 28 days with single-day spikes as high as $248.50, indicating a budget or campaign delivery issue. Per the SOW scale-back-up gate, budgets must not be raised until the intake owner is confirmed (S1). Watch daily spend for 3 consecutive days above $40 as a normalisation signal. Re-check 2026-08-21."
+        "monday_item_name": "Watch GBP Action Drop",
+        "monday_update": "GBP actions hit 0 for the last 3 days (Aug 14–16) against a prior 3-day total of 10 actions, and the 7-day delta is -51.61%. SOW notes the last 2–3 days of any GBP window may reflect Windsor data lag, so this could be an artifact. No paid action warranted yet. Re-check on 2026-08-20; if the 3-day total remains at or near 0 with lag cleared, escalate to a GBP audit."
       }
     ],
-    "next_check": "2026-08-21"
+    "next_check": "2026-08-20"
   }
 }

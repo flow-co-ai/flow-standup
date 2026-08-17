@@ -1,3 +1,4 @@
+<!-- modifiedTime: 2026-07-30T15:04:29.000Z -->
 # Quality HVAC by Fibid — Build Tasks (per department)
 
 **Onboarded April 2026 · This sheet covers Months 2–4 (May–Jul, done/in flight) and Months 5–7 (Aug–Oct).** Ad spend: ~$1,400 Google + ~$600 Meta/mo (direct to platforms), currently throttled on purpose — lead volume outpaced dispatch capacity. LSA runs client-side; we advise, we don't own it.

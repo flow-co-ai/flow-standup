@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-17T11:16:30.792Z",
+  "generated_at": "2026-08-17T19:52:42.345Z",
   "date": "2026-08-17",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "The biggest movement this period is a 74.19% week-over-week increase in GA4 activity, likely driven by stronger organic or direct site engagement. GBP actions totaled 60 over 28 days (including 1 call, 36 directions, and 23 web clicks), though GBP itself dipped 12.5% in the latest 7-day window, and paid channels (Meta and Google Ads) recorded zero spend, leads, or clicks.",
+  "verdict": "With zero spend and zero leads across Meta and Google Ads in the last 28 days, paid channels are completely inactive, making GBP the sole source of engagement with 60 total actions (36 directions, 23 web clicks, 1 call). The biggest movement is a 74.19% week-over-week increase in GA4 activity, likely driven by the 23 GBP web clicks funneling organic traffic to the site, though the 12.5% dip in GBP actions week-over-week suggests that momentum may be softening.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -410,70 +410,51 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-17T11:19:50.357Z",
+    "generated_at": "2026-08-17T19:54:32.075Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid channels fully dark; organic alone sustains minimal site presence.",
+    "verdict": "Paid channels fully dormant; GBP softening is the only live risk.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — Meta and Google Ads both $0 — means CPL is undefined and no leads have been generated through paid channels.",
+        "text": "Zero spend and zero leads across all paid channels for the full 45-day series — no efficiency signal is computable.",
         "confidence": "confirmed",
-        "channel": "meta,google"
+        "channel": "meta/google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GA4 sessions rose 74.19% week-over-week but 3-day signal (Aug 14–16: 4+0+0=4) vs prior 3 days (Aug 11–13: 10+15+9=34) shows a sharp pullback — the weekly lift is fading.",
-        "confidence": "confirmed",
-        "channel": "ga4"
-      },
-      {
-        "id": "F3",
-        "priority": 3,
-        "text": "GBP actions fell 12.5% in the latest 7-day window; last 2 days show 0 actions each, down from a 28-day average of ~2.1 actions/day.",
+        "text": "3-day GBP actions (Aug 14–16) sum to 1, vs prior 3 days (Aug 11–13) summing to 10 — a confirmed 90% drop in organic engagement.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
+        "id": "F3",
+        "priority": 2,
+        "text": "GA4 sessions 3-day signal (Aug 14–16): 11 sessions vs prior 3 (Aug 11–13): 34 sessions — a 68% decline, corroborating GBP softening.",
+        "confidence": "confirmed",
+        "channel": "ga4"
+      },
+      {
         "id": "F4",
-        "priority": 4,
-        "text": "188 GA4 sessions and 60 GBP actions over 28 days produced 0 GHL pipeline entries — if GHL is connected, this is an intake leak, not an ads problem.",
-        "confidence": "hypothesis",
-        "channel": "ghl"
+        "priority": 3,
+        "text": "28-day GBP generated 1 call from 60 actions — a 1.7% call conversion rate suggests the profile or landing experience is not converting intent.",
+        "confidence": "probable",
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "watch",
-        "text": "Confirm whether paid campaigns are intentionally paused; no budget action possible until spend status is clarified.",
+        "text": "Monitor GBP actions daily; if 3-day total stays below 5 by 2026-08-20, escalate GBP profile audit.",
         "cites": [
-          "F1"
+          "F2",
+          "F3"
         ],
-        "monday_item_name": "Clarify Paid Channel Pause Status",
-        "monday_update": "Meta and Google Ads have recorded $0 spend across all 28 days in the data window — this is confirmed, not a tracking gap. Before any budget action can be recommended, the team needs to confirm whether campaigns are intentionally paused (client hold, budget exhausted, account issue). No scale, kill, or shift is appropriate until spend intent is established. Resolve by 2026-08-20 so the next check can act on live data."
-      },
-      {
-        "id": "S2",
-        "type": "watch",
-        "text": "Watch GA4 3-day signal (Aug 14–16 = 4 sessions) — confirm if organic pullback continues before drawing conclusions.",
-        "cites": [
-          "F2"
-        ],
-        "monday_item_name": "Watch GA4 Session Pullback",
-        "monday_update": "The 74.19% weekly GA4 gain is real but the last 3 days (Aug 14–16) totaled only 4 sessions versus 34 in the prior 3 days — a significant reversal. This may be a weekend effect or the end of a short traffic spike. Re-check on 2026-08-20; if 3-day sessions remain below 10, the weekly gain should be treated as a one-off rather than a trend."
-      },
-      {
-        "id": "S3",
-        "type": "fix",
-        "text": "Audit GHL intake connection: 188 sessions and 60 GBP actions produced 0 pipeline entries — verify form/webhook routing.",
-        "cites": [
-          "F4"
-        ],
-        "monday_item_name": "Fix GHL Intake Routing Audit",
-        "monday_update": "Over 28 days, Healing Helps recorded 188 GA4 sessions and 60 GBP actions but zero GHL pipeline entries. If GHL is meant to capture inbound leads, this gap indicates a broken form submission, webhook, or CRM routing — not an absence of interest. The fix is to test the live form-to-GHL path and confirm a test lead appears in the pipeline. Completion check: at least 1 verified test lead in GHL by 2026-08-20."
+        "monday_item_name": "Watch GBP 3-day rebound",
+        "monday_update": "GBP actions collapsed from 10 to 1 over the last 3 days (Aug 14–16), and GA4 sessions dropped in parallel from 34 to 11. No paid channels are active to compensate. Success is confirmed if the 3-day GBP action total returns above 5 by 2026-08-20; if not, escalate to a GBP profile audit before considering any paid reactivation."
       }
     ],
     "next_check": "2026-08-20"

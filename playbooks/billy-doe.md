@@ -1,3 +1,4 @@
+<!-- modifiedTime: 2026-07-30T14:59:04.000Z -->
 # Billy Doe Meats — Build Tasks (per department)
 
 **Renewal start Aug 1 · 6 months · $3,500/mo** (billed weekly $807.69 × 26). Ad spend separate, direct to Meta: ~$1,000–1,500/mo, scaling with performance.

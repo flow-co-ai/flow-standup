@@ -1,3 +1,4 @@
+<!-- modifiedTime: 2026-07-30T15:06:46.000Z -->
 # Full Smile Dental — Build Tasks (per department)
 
 **Original agreement Oct 27, 2025 · $2,200/mo · 6 months (SEO + GBP + web redesign + content + video). Month 10 now · window: May–Jul (done) → Aug–Oct (next).** Ad spend direct to platforms; per the 7/19 call, budget shifts mainly to Google/LSA.
