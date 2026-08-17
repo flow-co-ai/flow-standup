@@ -4,14 +4,10 @@
   "slug": "medstation",
   "name": "MedStation",
   "brief": {
-    "date": "2026-08-05",
+    "date": "2026-08-17",
     "headlines": [
       {
-        "text": "No new activity this week; loops aging",
-        "tone": "info"
-      },
-      {
-        "text": "Two open items stalled 19+ days",
+        "text": "No movement this week — two loops stalled 33d",
         "tone": "info"
       }
     ],
@@ -25,35 +21,86 @@
         "items": [
           {
             "state": "blocked",
-            "text": "Patient demographic report from Paulo / Agencia WeMark — 19 days stalled"
+            "text": "Patient demographic report — waiting on Paulo / Agencia WeMark (33d stalled)"
           },
           {
             "state": "blocked",
-            "text": "Connect Sohib's team with six clinic leaders — 19 days stalled"
+            "text": "Clinic leader introductions — 6 contacts not yet connected to Sohib's team (33d stalled)"
           },
           {
             "state": "next",
-            "text": "(inferred) Chase Paulo / Agencia WeMark for demographic report delivery"
-          },
-          {
-            "state": "next",
-            "text": "(inferred) Facilitate intro between Sohib's team and six clinic leaders"
+            "text": "(inferred) Chase Paulo / Agencia WeMark for demographic report to unblock analysis"
           }
         ]
       }
     ],
-    "waiting_on_client": [
+    "waiting_on_client": [],
+    "launch_gate": null,
+    "brief_v2": {
+      "verdict": "Team's move: two loops — demographic report and clinic intros — stalled 33 days with no update.",
+      "next_move": "Sohib: follow up with Paulo / Agencia WeMark on demographic report — longest-open block at 33 days.",
+      "blocks": [
+        {
+          "item": "Patient demographic report from Paulo/Agencia WeMark",
+          "side": "client",
+          "who": "Paulo / Agencia WeMark",
+          "age_days": 33,
+          "hot": true
+        },
+        {
+          "item": "Connect Sohib's team with six clinic leaders",
+          "side": "client",
+          "who": "Client-side contact (unnamed)",
+          "age_days": 33,
+          "hot": true
+        }
+      ],
+      "snapshot": [
+        {
+          "label": "Open items",
+          "value": "8 open, 2 stalled 33d — all items in working, none in review or done",
+          "tone": "warn"
+        },
+        {
+          "label": "Last client word",
+          "value": "No recent client comms on record this week",
+          "tone": "warn"
+        }
+      ],
+      "history_line": null
+    }
+  },
+  "brief_v2": {
+    "verdict": "Team's move: two loops — demographic report and clinic intros — stalled 33 days with no update.",
+    "next_move": "Sohib: follow up with Paulo / Agencia WeMark on demographic report — longest-open block at 33 days.",
+    "blocks": [
       {
-        "item": "Patient demographic report delivery",
+        "item": "Patient demographic report from Paulo/Agencia WeMark",
+        "side": "client",
         "who": "Paulo / Agencia WeMark",
-        "since": "7/17"
+        "age_days": 33,
+        "hot": true
       },
       {
-        "item": "Clinic leader connections for Sohib's team",
-        "who": "MedStation client-side contact",
-        "since": "7/17"
+        "item": "Connect Sohib's team with six clinic leaders",
+        "side": "client",
+        "who": "Client-side contact (unnamed)",
+        "age_days": 33,
+        "hot": true
       }
     ],
-    "launch_gate": null
+    "snapshot": [
+      {
+        "label": "Open items",
+        "value": "8 open, 2 stalled 33d — all items in working, none in review or done",
+        "tone": "warn"
+      },
+      {
+        "label": "Last client word",
+        "value": "No recent client comms on record this week",
+        "tone": "warn"
+      }
+    ],
+    "history_line": null
   }
 }

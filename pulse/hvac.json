@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-17T22:12:34.214Z",
+  "generated_at": "2026-08-17T22:56:45.374Z",
   "date": "2026-08-17",
   "slug": "hvac",
   "name": "Quality HVAC by Fibid",
   "type": "leadgen",
   "window_days": 28,
-  "score": 65,
+  "score": 70,
   "status": "amber",
-  "verdict": "Google Ads drove all $1,698.97 in spend over 28 days with 16 conversions, but GBP engagement dropped sharply by 51.61% week-over-week, likely signaling reduced local search visibility or seasonal demand softening that is cutting top-of-funnel activity before it reaches the site.",
+  "verdict": "Google Ads drove all $1,698.97 in spend and recorded 16 conversions over 28 days, but GBP engagement dropped sharply by 51.61% week-over-week, which is the biggest movement and likely reflects reduced local search visibility or seasonal demand softening. The lead_drought flag warrants immediate attention, as CRM-tracked leads are showing zero despite Google Ads conversion activity, suggesting a possible tracking disconnect.",
   "windsor": {
     "totals": {
       "spend": 1698.97,
@@ -406,7 +406,18 @@
     }
   },
   "ghl": {
-    "error": "GHL 401: {\"statusCode\":401,\"message\":\"Command timed out\"}"
+    "contacts": 87,
+    "opportunities": {
+      "created": {
+        "count": 52,
+        "value": 0
+      },
+      "won": {
+        "count": 5,
+        "value": 0
+      }
+    },
+    "appointments": 0
   },
   "_meta": {
     "source": "windsor_api",
@@ -416,79 +427,195 @@
       "google_my_business"
     ]
   },
+  "brief": {
+    "date": "2026-08-17",
+    "headlines": [
+      {
+        "text": "No new activity since yesterday",
+        "tone": "info"
+      },
+      {
+        "text": "Two CRM items stalled 19 and 41 days",
+        "tone": "info"
+      },
+      {
+        "text": "Pipeline cleanup completed this week",
+        "tone": "win"
+      }
+    ],
+    "workstreams": [
+      {
+        "title": "Quality HVAC - CRM",
+        "badge": {
+          "label": "P1 - blocked",
+          "tone": "red"
+        },
+        "items": [
+          {
+            "state": "blocked",
+            "text": "Technician Calendar Routing awaits HCP access fix — stalled 19 days"
+          },
+          {
+            "state": "blocked",
+            "text": "Intake Cleanup: owner unconfirmed after Vivian departure — stalled 41 days"
+          },
+          {
+            "state": "done",
+            "text": "Deleted pre-July opportunity records to clean up pipeline (Muhammad Ahmed Memon)"
+          },
+          {
+            "state": "next",
+            "text": "(inferred) Resolve HCP access to unblock Technician Calendar Routing"
+          }
+        ],
+        "owners": [
+          "Muhammad Ahmed Memon"
+        ]
+      }
+    ],
+    "waiting_on_client": [],
+    "launch_gate": null,
+    "brief_v2": {
+      "verdict": "Team's move: two CRM items blocked 19 and 41 days — HCP access and Intake Cleanup need owners now.",
+      "next_move": "Nacer: confirm intake owner and resolve HCP access — unblocks Technician Calendar Routing and Intake Cleanup.",
+      "blocks": [
+        {
+          "item": "Technician Calendar Routing",
+          "side": "team",
+          "who": "Nacer",
+          "age_days": 19,
+          "hot": true
+        },
+        {
+          "item": "Intake Cleanup",
+          "side": "team",
+          "who": "Nacer",
+          "age_days": 41,
+          "hot": true
+        }
+      ],
+      "snapshot": [
+        {
+          "label": "Open items",
+          "value": "18 open, 2 stalled 19d+",
+          "tone": "warn"
+        },
+        {
+          "label": "Last client word",
+          "value": "No client-side comms recorded this period",
+          "tone": "muted"
+        }
+      ],
+      "history_line": "Deleted pre-July opportunity records to clean pipeline"
+    }
+  },
+  "brief_v2": {
+    "verdict": "Team's move: two CRM items blocked 19 and 41 days — HCP access and Intake Cleanup need owners now.",
+    "next_move": "Nacer: confirm intake owner and resolve HCP access — unblocks Technician Calendar Routing and Intake Cleanup.",
+    "blocks": [
+      {
+        "item": "Technician Calendar Routing",
+        "side": "team",
+        "who": "Nacer",
+        "age_days": 19,
+        "hot": true
+      },
+      {
+        "item": "Intake Cleanup",
+        "side": "team",
+        "who": "Nacer",
+        "age_days": 41,
+        "hot": true
+      }
+    ],
+    "snapshot": [
+      {
+        "label": "Open items",
+        "value": "18 open, 2 stalled 19d+",
+        "tone": "warn"
+      },
+      {
+        "label": "Last client word",
+        "value": "No client-side comms recorded this period",
+        "tone": "muted"
+      }
+    ],
+    "history_line": "Deleted pre-July opportunity records to clean pipeline"
+  },
   "performance": {
-    "generated_at": "2026-08-17T22:14:40.827Z",
+    "generated_at": "2026-08-17T23:00:42.103Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Spend is live but zero tracked leads in 45 days — attribution is broken, not demand.",
+    "verdict": "Money spending but zero CRM leads confirmed — intake gap, not ad failure.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "28-day leads = 0 and 45-day series shows all-zero leads daily despite $1,698.97 Google spend — conversion tracking is broken, not demand.",
+        "text": "lead_drought flag: 28-day GHL leads = 0 despite 16 Google Ads conversions and 42 GBP calls. Intake pipe is broken, not the ads.",
         "confidence": "confirmed",
-        "channel": "google_ads"
+        "channel": "GHL"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Booking bot battle-test was due 2026-07-31 and shows no completed event — CRM automation is unvalidated while intake seat is also vacant since 7/7.",
+        "text": "Booking bot battle-test was due 2026-07-31 — 17 days overdue. Vivian (dispatch) left 7/7; intake automation points at an empty seat.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GHL returned a 401 timeout error — pipeline data is unavailable, so intake leak vs. ads failure cannot be distinguished this cycle.",
-        "confidence": "confirmed",
-        "channel": "GHL"
+        "text": "GBP actions fell 51.61% week-over-week; last 3 days (Aug 14–16) show 5, 0, 0 — confirmed 3-day decline vs prior 3 days (5, 2, 0 avg still low).",
+        "confidence": "probable",
+        "channel": "GBP"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions dropped 51.61% week-over-week; last 3 days (Aug 14–16) show 5, 0, 0 — a 3-day confirmed stall after a 5-action day, not noise.",
+        "text": "Google spend is erratic — 10 of 28 days show $0 spend; 3-day signal (Aug 14–16): $14.11, $130.18, $9.12 — volatile, not pacing to ~$47/day target.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "Google"
       },
       {
         "id": "F5",
-        "priority": 3,
-        "text": "Google spend is erratic: 28 of 45 days show spend ≤ $20 or $0, suggesting campaign pacing or budget cap issues rather than a steady $43/day.",
-        "confidence": "probable",
-        "channel": "google_ads"
+        "priority": 4,
+        "text": "Meta spend = $0 across all 28 days and entire 45-day series. ~$600/mo Meta SOW budget is fully dark.",
+        "confidence": "confirmed",
+        "channel": "Meta"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit and repair Google Ads conversion tracking — 45 days, $1,698.97 spent, zero recorded leads is a confirmed pixel/tag failure.",
+        "text": "Identify who owns intake after Vivian's 7/7 exit; confirm GHL login and after-hours coverage before any budget increase.",
         "cites": [
-          "F1"
+          "F1",
+          "F2"
         ],
-        "monday_item_name": "Fix Google Ads conversion tracking",
-        "monday_update": "Conversion tracking has recorded zero leads across all 45 days in the series despite $1,698.97 in Google Ads spend — this is a confirmed tag or pixel failure, not a demand problem. Action: pull Google Tag Assistant and Ads conversion action audit this week; verify that the call/form conversion events are firing on the confirmation page or via call extension. Success check: at least one conversion event confirmed firing in Tag Assistant and appearing in Ads UI by 2026-08-20. Do not raise any budgets until tracking is confirmed clean."
+        "monday_item_name": "Fix Intake Ownership GHL",
+        "monday_update": "Vivian (dispatch) left 7/7 and the intake seat is unconfirmed — GHL shows 0 leads recorded against 16 Google Ads conversions and 42 GBP calls over 28 days. Action: confirm with Xavier or Nader who now owns GHL intake, verify their login is active, and confirm after-hours coverage is live. Success check: GHL contacts and opportunities begin reflecting inbound volume within 3 days of seat confirmation. Re-check 2026-08-20."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Resolve GHL 401 timeout and confirm live intake owner — dispatch seat vacant since 7/7 blocks speed-to-lead and the scale-back-up gate.",
+        "text": "Battle-test booking bot (due 2026-07-31, 17 days overdue); confirm automation routes to active human, not Vivian's vacant seat.",
         "cites": [
           "F2",
-          "F3"
+          "F1"
         ],
-        "monday_item_name": "GHL access + intake owner fix",
-        "monday_update": "GHL is returning a 401 timeout error, making pipeline data completely unavailable, and the dispatch seat (Vivian) has been vacant since 7/7 with no confirmed replacement on record. Action: restore GHL API auth this week and get a named replacement for Vivian with a confirmed GHL login and after-hours coverage plan. Success check: GHL pipeline data pulls cleanly in next performance run and intake owner is documented in the WhatsApp group by 2026-08-22. This is a SOW blocker — budgets cannot scale until both are resolved per the engagement plan."
+        "monday_item_name": "Booking Bot Battle-Test Overdue",
+        "monday_update": "The booking bot battle-test milestone was due 2026-07-31 and has not been completed. With dispatch intake ownership unresolved after Vivian's departure, speed-to-lead automations may be routing to no one. Action: run the full battle-test sequence and update the GHL workflow owner to the confirmed replacement. Success check: test call or form submission routes correctly and creates a GHL opportunity within 5 minutes. Complete by 2026-08-20."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions through 2026-08-20 — 3-day stall (0 actions Aug 14–16) may deepen; no paid lever available until tracking is fixed.",
+        "text": "Watch GBP actions over next 3 days; if 0-action streak extends to 5 days, escalate as local visibility problem.",
         "cites": [
-          "F4"
+          "F3"
         ],
-        "monday_item_name": "Watch GBP action stall",
-        "monday_update": "GBP actions have stalled to zero for the last 3 days (Aug 14–16) after a -51.61% week-over-week drop — this is a confirmed short-term signal, not noise. No paid action is warranted until Google conversion tracking is repaired (S1). Monitor GBP actions daily; if the stall extends beyond 5 consecutive days, investigate listing health (suppression, duplicate flags) and consider a GBP post or Q&A refresh. Re-check on 2026-08-20."
+        "monday_item_name": "Watch GBP Action Decline",
+        "monday_update": "GBP actions dropped 51.61% week-over-week and the last 2 days of the series (Aug 15–16) show 0 actions each. This may be Windsor data lag per SOW guidance, but a 5-day zero streak would indicate a real local visibility issue. Action: monitor native GBP dashboard daily through 2026-08-20 without touching the profile. Success check: actions recover to 3+ per day. Re-check 2026-08-20."
       }
     ],
     "next_check": "2026-08-20"

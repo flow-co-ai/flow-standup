@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-17T22:12:16.582Z",
+  "generated_at": "2026-08-17T22:56:35.448Z",
   "date": "2026-08-17",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "With zero spend and zero leads across Meta and Google Ads in the last 28 days, paid channels are fully inactive, making GBP the sole source of engagement with 60 total actions (36 directions, 23 web clicks, 1 call). The biggest movement is a 74.19% week-over-week increase in GA4 activity, likely driven by the 23 GBP web clicks funneling organic traffic to the site, though the 12.5% dip in GBP actions week-over-week suggests that momentum may be softening.",
+  "verdict": "The biggest movement this period is a 74.19% week-over-week increase in GA4 activity, likely driven by stronger organic or direct website engagement. GBP interactions totaled 60 actions over 28 days (including 1 call, 36 directions, and 23 web clicks), though GBP itself dipped 12.5% in the latest 7-day window, and paid channels recorded zero spend and zero leads.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,37 +409,93 @@
       "google_my_business"
     ]
   },
+  "brief": {
+    "date": "2026-08-17",
+    "headlines": [
+      {
+        "text": "Quiet week — no movement or completions",
+        "tone": "info"
+      }
+    ],
+    "workstreams": [
+      {
+        "title": "Healing Helps - All Tracks",
+        "badge": {
+          "label": "P2 - on track",
+          "tone": "green"
+        },
+        "items": [
+          {
+            "state": "next",
+            "text": "(inferred) Check in with client to confirm any pending priorities"
+          },
+          {
+            "state": "queued",
+            "text": "4 items in working status — no updates this period"
+          }
+        ]
+      }
+    ],
+    "waiting_on_client": [],
+    "launch_gate": null,
+    "brief_v2": {
+      "verdict": "No blockers and no completions — 4 items are in progress with no reported movement.",
+      "next_move": "Team: confirm status of 4 in-progress items — ensures nothing is silently stalled.",
+      "blocks": [],
+      "snapshot": [
+        {
+          "label": "Open items",
+          "value": "4 open, all in working status, 0 stuck",
+          "tone": "ok"
+        }
+      ],
+      "history_line": null
+    }
+  },
+  "brief_v2": {
+    "verdict": "No blockers and no completions — 4 items are in progress with no reported movement.",
+    "next_move": "Team: confirm status of 4 in-progress items — ensures nothing is silently stalled.",
+    "blocks": [],
+    "snapshot": [
+      {
+        "label": "Open items",
+        "value": "4 open, all in working status, 0 stuck",
+        "tone": "ok"
+      }
+    ],
+    "history_line": null
+  },
   "performance": {
-    "generated_at": "2026-08-17T22:14:14.465Z",
+    "generated_at": "2026-08-17T23:00:15.615Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid channels dead; GBP softening is the only live risk.",
+    "verdict": "No paid activity in 45 days; organic holding but softening.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend and zero leads across all 28 days — no CPL exists because no paid channel is active.",
+        "text": "Zero paid spend and zero leads across all 28 days — both Meta and Google Ads are completely dark with $0 recorded.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "meta/google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions fell 12.5% week-over-week (60 total in 28d); last 3 days (Aug 14–16) show 1, 0, 0 — a confirmed deceleration vs prior 3 days (Aug 11–13) averaging 3.3 actions/day.",
+        "text": "3-day GA4 signal (Aug 14-16): 11 sessions vs prior 3-day avg of ~11.3 — sessions have flattened after a mid-period peak of 16 on Aug 12.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "ga4"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GA4 sessions up 74.19% week-over-week but last 3 days (Aug 14–16) averaged 3.7 sessions vs prior 3 days (Aug 11–13) averaging 11.3 — the spike is reversing.",
+        "text": "GBP actions dropped to 0 on Aug 15-16 after averaging ~2.4/day over 45 days; 7d delta is -12.5%, signaling softening organic discovery.",
         "confidence": "probable",
-        "channel": "ga4"
+        "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GBP generated 1 call and 36 directions from 60 actions over 28 days — call conversion rate of 1.7% suggests profile engagement is not translating to direct contact.",
+        "text": "28-day GBP logged only 1 call from 60 total actions — a 1.7% call-conversion rate suggests profile or offer friction limiting real inquiries.",
         "confidence": "hypothesis",
         "channel": "gbp"
       }
@@ -448,23 +504,13 @@
       {
         "id": "S1",
         "type": "watch",
-        "text": "Monitor GBP daily actions; if 3-day average stays at or below 1 action/day, escalate profile review.",
+        "text": "No paid channels active; watch GBP daily actions — if 3-day avg drops below 1.5, escalate to reactivation decision.",
         "cites": [
-          "F2"
+          "F1",
+          "F3"
         ],
-        "monday_item_name": "Watch GBP Action Decline",
-        "monday_update": "GBP actions hit 0 on Aug 15 and Aug 16 after averaging 3.3/day in the prior 3-day window (Aug 11–13), confirming a deceleration. No paid channels are active to buffer this drop. Success check: 3-day average returns to ≥3 actions/day. Re-check 2026-08-20."
-      },
-      {
-        "id": "S2",
-        "type": "watch",
-        "text": "Watch GA4 sessions: 3-day avg dropped from 11.3 to 3.7 — confirm whether GBP softening is the driver.",
-        "cites": [
-          "F3",
-          "F2"
-        ],
-        "monday_item_name": "Watch GA4 Session Reversal",
-        "monday_update": "GA4 sessions averaged 11.3/day Aug 11–13 then fell to 3.7/day Aug 14–16, coinciding with GBP actions going to zero on Aug 15–16. The 74.19% weekly gain is likely unwinding. Success check: daily sessions stabilise above 6 (the 45-day rough median) by 2026-08-20. If not, the GBP profile should be reviewed for completeness and recent post activity."
+        "monday_item_name": "Monitor GBP organic health",
+        "monday_update": "Paid spend has been $0 for the entire 45-day series window; no budget action is possible until campaigns are reactivated. GBP actions averaged 2.4/day across 45 days but hit 0 on Aug 15-16, with the 7-day window already down 12.5%. Watch the 3-day GBP average daily through Aug 20 — if it falls below 1.5 actions/day, flag for a reactivation conversation with Sohib."
       }
     ],
     "next_check": "2026-08-20"

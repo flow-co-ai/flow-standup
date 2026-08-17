@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-17T22:12:12.690Z",
+  "generated_at": "2026-08-17T22:56:31.667Z",
   "date": "2026-08-17",
   "slug": "full-smile",
   "name": "Full Smile",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 94,
   "status": "green",
-  "verdict": "Meta drove all 124 leads over 28 days at a $11.84 CPL, with the top campaign \"BWS - Instant Leads - Awareness\" accounting for $777.65 of the $1,467.77 total spend. The biggest recent movement is a -18.75% drop in leads over the last 7 days, likely tied to the -22.36% pullback in spend rather than any efficiency issue, as CPL only shifted -4.44%.",
+  "verdict": "Meta delivered 124 leads at a $11.84 CPL over the last 28 days, with the top campaign \"BWS - Instant Leads - Awareness\" driving $777.65 of the $1,467.77 in spend. The biggest movement this week is a -22.36% drop in spend paired with a -18.75% drop in leads, suggesting a budget pullback is the likely driver of reduced lead volume, though CPL held relatively steady at just -4.44% change.",
   "windsor": {
     "totals": {
       "spend": 1467.77,
@@ -438,80 +438,223 @@
       "google_my_business"
     ]
   },
+  "brief": {
+    "date": "2026-08-17",
+    "headlines": [
+      {
+        "text": "No completions this week; two items stalled",
+        "tone": "info"
+      },
+      {
+        "text": "Ad Tracking stalled 38 days — prove-it blocker",
+        "tone": "shift"
+      }
+    ],
+    "workstreams": [
+      {
+        "title": "Full Smile - CRM / GHL",
+        "badge": {
+          "label": "P1 - blocked",
+          "tone": "red"
+        },
+        "items": [
+          {
+            "state": "blocked",
+            "text": "Ad Tracking: routing confirmation pending — 38 days stalled (waiting on confirmation)"
+          },
+          {
+            "state": "blocked",
+            "text": "Marketing Dashboard: HIPAA-compliant build stalled — 27 days, no movement"
+          },
+          {
+            "state": "next",
+            "text": "(inferred) Resolve Ad Tracking routing confirmation to unblock scoreboard visibility"
+          }
+        ],
+        "owners": [
+          "Ahmed Memon",
+          "Ali Shaheer"
+        ]
+      }
+    ],
+    "waiting_on_client": [],
+    "launch_gate": {
+      "title": "Launch gate - clear before August scoreboard closes",
+      "items": [
+        {
+          "text": "Ad Tracking routing confirmed",
+          "done": false
+        },
+        {
+          "text": "HIPAA-compliant dashboard live",
+          "done": false
+        }
+      ],
+      "note": "August is a prove-it month — client decides renewal based on visible results. Both items directly feed the scoreboard."
+    },
+    "brief_v2": {
+      "verdict": "Team's move: Ad Tracking (38d) and Marketing Dashboard (27d) are both stalled with no action taken.",
+      "next_move": "Ahmed Memon / Ali Shaheer: resolve Ad Tracking routing confirmation — directly unblocks August scoreboard.",
+      "blocks": [
+        {
+          "item": "Ad Tracking",
+          "side": "team",
+          "who": "Ahmed Memon",
+          "age_days": 38,
+          "hot": true
+        },
+        {
+          "item": "Marketing Dashboard",
+          "side": "team",
+          "who": "Ali Shaheer",
+          "age_days": 27,
+          "hot": true
+        }
+      ],
+      "snapshot": [
+        {
+          "label": "Open items",
+          "value": "16 open, 2 stalled 27d+ — zero completions this week",
+          "tone": "bad"
+        },
+        {
+          "label": "Contract",
+          "value": "Month 10, one-month renewal at $2,200 — client decides continue or walk end of August",
+          "tone": "warn"
+        },
+        {
+          "label": "Last client word",
+          "value": "No client-side comms recorded today",
+          "tone": "plain"
+        },
+        {
+          "label": "Judged on",
+          "value": "Leads → scheduled → shown → new patients → production revenue; baseline <20 new patients in 7–8 months",
+          "tone": "bad"
+        }
+      ],
+      "history_line": null
+    }
+  },
+  "brief_v2": {
+    "verdict": "Team's move: Ad Tracking (38d) and Marketing Dashboard (27d) are both stalled with no action taken.",
+    "next_move": "Ahmed Memon / Ali Shaheer: resolve Ad Tracking routing confirmation — directly unblocks August scoreboard.",
+    "blocks": [
+      {
+        "item": "Ad Tracking",
+        "side": "team",
+        "who": "Ahmed Memon",
+        "age_days": 38,
+        "hot": true
+      },
+      {
+        "item": "Marketing Dashboard",
+        "side": "team",
+        "who": "Ali Shaheer",
+        "age_days": 27,
+        "hot": true
+      }
+    ],
+    "snapshot": [
+      {
+        "label": "Open items",
+        "value": "16 open, 2 stalled 27d+ — zero completions this week",
+        "tone": "bad"
+      },
+      {
+        "label": "Contract",
+        "value": "Month 10, one-month renewal at $2,200 — client decides continue or walk end of August",
+        "tone": "warn"
+      },
+      {
+        "label": "Last client word",
+        "value": "No client-side comms recorded today",
+        "tone": "plain"
+      },
+      {
+        "label": "Judged on",
+        "value": "Leads → scheduled → shown → new patients → production revenue; baseline <20 new patients in 7–8 months",
+        "tone": "bad"
+      }
+    ],
+    "history_line": null
+  },
   "performance": {
-    "generated_at": "2026-08-17T22:13:57.580Z",
+    "generated_at": "2026-08-17T23:00:01.740Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "CPL efficient but 3 overdue SOW blockers threaten August prove-it scorecard.",
+    "verdict": "CPL is fine; pipeline conversion and 3 overdue deliverables threaten August scoreboard.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "Phone-match attribution gap (due 2026-08-07) still open; leads cannot be traced to booked patients, breaking the August scoreboard.",
+        "text": "Phone-match attribution gap (due 2026-08-07) and sync/contact cleanup (due 2026-08-14) both overdue — without these, the lead-to-patient scoreboard cannot be read.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Sync items + contact cleanup (due 2026-08-14) overdue; 262 GHL contacts with 80 opps created but 0 won and 0 appointments recorded — intake integrity unverified.",
+        "text": "Renewal closed 2026-07-23 (due milestone) — August prove-it clock is running; <20 attributable new patients over prior 7 months is the bar to beat.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "Renewal milestone (2026-07-23) logged overdue; client is on a single prove-it month at $2,200 — delivery risk is account-level.",
+        "priority": 1,
+        "text": "CPL held at ~$11.84 over 28 days and dipped only -4.44% this week — efficiency is stable, but spend pulled back -22.36% week-over-week, compressing lead volume to the recent low.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "Meta"
       },
       {
         "id": "F4",
-        "priority": 1,
-        "text": "CPL is $11.84 over 28 days and -4.44% last 7d — efficiency is holding despite -22.36% spend cut; no efficiency crisis, spend is the throttle.",
+        "priority": 3,
+        "text": "3-day signal (Aug 14–16): spend averaged $26.91/day vs $65.85/day the prior 3 days — a sharp spend step-down, not creative fatigue, is driving the 3-day lead collapse to 5 leads vs 16.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "Meta"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "3-day lead signal: Aug 14–16 averaged 1.7 leads/day vs Aug 11–13 avg of 5.3 — driven by spend dropping to $18–21/day, not CPL deterioration.",
-        "confidence": "confirmed",
-        "channel": "meta"
+        "text": "GHL shows 80 opportunities created vs 0 won and 0 appointments in the 28-day window against 124 Meta leads — 262 contacts but no booked chair time visible; intake leak likely, not an ads problem.",
+        "confidence": "probable",
+        "channel": "GHL"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
+        "text": "Complete phone-match attribution and sync/contact cleanup immediately — both overdue milestones block August scoreboard readability.",
         "cites": [
-          "F1"
+          "F1",
+          "F2"
         ],
-        "text": "Close phone-match attribution gap immediately; every untracked call undermines the leads-to-patients scoreboard.",
-        "monday_item_name": "Close Phone Attribution Gap",
-        "monday_update": "The phone-match attribution gap has been overdue since 2026-08-07 and is unresolved. Without it, inbound calls cannot be matched to booked appointments, making the client's scoreboard (leads → scheduled → showed → new patient) impossible to validate. Success means every GHL lead record has a matched contact source by 2026-08-21. Nacer/Attribution team to confirm completion in Monday by that date."
+        "monday_item_name": "Close Attribution & Sync Gaps",
+        "monday_update": "Both the phone-match attribution gap (due 2026-08-07) and sync/contact cleanup (due 2026-08-14) are overdue and must be resolved this week. Without these, the lead-to-patient pipeline cannot be tracked, and the August renewal decision will be made blind. Success is confirmed when attribution is live and the GHL contact list reflects clean, deduplicated records — target completion by 2026-08-20."
       },
       {
         "id": "S2",
         "type": "fix",
+        "text": "Audit GHL intake: 124 leads vs 0 appointments in 28 days signals a front-desk or pipeline-stage leak, not an ads problem.",
         "cites": [
-          "F2"
+          "F5"
         ],
-        "text": "Complete GHL contact cleanup; 80 opps and 0 appointments is a pipeline read that cannot be trusted until sync is verified.",
-        "monday_item_name": "GHL Sync + Contact Cleanup",
-        "monday_update": "The sync items and contact cleanup milestone was due 2026-08-14 and remains open. GHL shows 80 opportunities created, 0 won, and 0 appointments — these numbers cannot be reported to the client until the sync integrity is confirmed. Success check: appointment count in GHL reflects actual booked slots pulled from OpenDental, verified by Lily in the next biweekly sync. Target completion: 2026-08-21."
+        "monday_item_name": "GHL Intake Leak Audit",
+        "monday_update": "GHL recorded 80 opportunities created and 0 appointments against 124 Meta leads in the 28-day window — the gap between lead arrival and booked appointments must be diagnosed with Lily and the new intake hire. Check pipeline stage movement, GHL-to-Flex Dental handoff, and whether leads are being contacted within SLA. Success is at least 10 documented appointments visible in GHL within 7 days of this fix; re-check 2026-08-24."
       },
       {
         "id": "S3",
         "type": "watch",
+        "text": "Watch spend recovery: daily spend dropped to $18.51–$41.10 over last 3 days vs $64.90 prior — confirm cause before adjusting budget.",
         "cites": [
-          "F5"
+          "F3",
+          "F4"
         ],
-        "text": "Watch Meta spend floor: 3-day avg of $26.24/day is below the $46.30/day weekly pace — confirm intentional or restore to prior level by 2026-08-20.",
-        "monday_item_name": "Meta Spend Floor Check",
-        "monday_update": "Daily Meta spend dropped to $18.51–$41.10 over Aug 14–16, averaging $26.24/day against the 7-day pace of $46.30/day. CPL of $11.84 is efficient and holding, so this is a volume risk, not an efficiency risk. Confirm with Sohib whether the pullback is intentional budget management. If unintentional, restore to the $46/day pace by 2026-08-20 and recheck lead volume on 2026-08-22."
+        "monday_item_name": "Watch Meta Spend Recovery",
+        "monday_update": "Meta spend fell sharply over Aug 14–16, averaging $26.91/day vs $65.85/day the prior 3-day window; CPL remains healthy at $11.84 so efficiency is not the issue. Confirm whether this is a deliberate budget pull, a billing/payment event, or a campaign-level cap being hit. If spend normalises above $50/day with CPL holding below $15, no further action needed — re-check 2026-08-20."
       }
     ],
-    "next_check": "2026-08-22"
+    "next_check": "2026-08-20"
   }
 }

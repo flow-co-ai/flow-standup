@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-17T22:12:39.522Z",
+  "generated_at": "2026-08-17T22:56:50.958Z",
   "date": "2026-08-17",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 60,
   "status": "amber",
-  "verdict": "Paid activity has fully paused in the last 7 days, with spend, leads, and CPL each down 100% week-over-week, suggesting Meta campaigns (the sole paid channel at $1,267.48 and 50 leads over 28 days) were turned off. Organic signals are partially offsetting this, with GA4 sessions up 84.12% and Search Console clicks up 14.29%, though GBP actions dipped 12.5%.",
+  "verdict": "Paid activity has fully stalled this week, with spend, leads, and CPL all down 100% in the last 7 days versus the prior period, suggesting Meta campaigns (including top spender \"CROA || CBO - 3/17/26\" at $673.62) were paused or exhausted budget mid-window. On the organic side, GBP held relatively steady with 168 total actions and 57 calls over 28 days, though GBP engagement dipped 12.5% week-over-week, making it the only active demand signal while paid recovers.",
   "windsor": {
     "totals": {
       "spend": 1267.48,
@@ -438,79 +438,186 @@
       "google_my_business"
     ]
   },
+  "brief": {
+    "date": "2026-08-17",
+    "headlines": [
+      {
+        "text": "No movement; two loops stalled 34 days",
+        "tone": "info"
+      },
+      {
+        "text": "Video and CRM both blocked, nothing shipped",
+        "tone": "info"
+      }
+    ],
+    "workstreams": [
+      {
+        "title": "Justice Consumer Law - Video",
+        "badge": {
+          "label": "P1 - blocked",
+          "tone": "red"
+        },
+        "items": [
+          {
+            "state": "blocked",
+            "text": "Rocco video content delayed 34 days, slowing growth"
+          },
+          {
+            "state": "next",
+            "text": "(inferred) Chase Rocco to unblock video content production"
+          }
+        ]
+      },
+      {
+        "title": "Justice Consumer Law - CRM / Zoho",
+        "badge": {
+          "label": "P1 - blocked",
+          "tone": "red"
+        },
+        "items": [
+          {
+            "state": "blocked",
+            "text": "Zoho admin permissions needed for SMS automation — Auto Reply Setup"
+          },
+          {
+            "state": "next",
+            "text": "(inferred) Obtain Zoho admin access to enable Auto Reply Setup [id: 12595000355]"
+          }
+        ]
+      }
+    ],
+    "waiting_on_client": [],
+    "launch_gate": null,
+    "brief_v2": {
+      "verdict": "Team's move: two loops stalled 34 days — Rocco video and Zoho admin permissions both unresolved.",
+      "next_move": "Team: secure Zoho admin permissions — unblocks Auto Reply Setup [id: 12595000355] immediately.",
+      "blocks": [
+        {
+          "item": "Rocco video content",
+          "side": "team",
+          "who": "Rocco",
+          "age_days": 34,
+          "hot": true
+        },
+        {
+          "item": "Auto Reply Setup [id: 12595000355]",
+          "side": "team",
+          "who": "Zoho admin (role)",
+          "age_days": 34,
+          "hot": true
+        }
+      ],
+      "snapshot": [
+        {
+          "label": "Open items",
+          "value": "8 open, all in-progress — 2 stalled 34 days",
+          "tone": "warn"
+        }
+      ],
+      "history_line": null
+    }
+  },
+  "brief_v2": {
+    "verdict": "Team's move: two loops stalled 34 days — Rocco video and Zoho admin permissions both unresolved.",
+    "next_move": "Team: secure Zoho admin permissions — unblocks Auto Reply Setup [id: 12595000355] immediately.",
+    "blocks": [
+      {
+        "item": "Rocco video content",
+        "side": "team",
+        "who": "Rocco",
+        "age_days": 34,
+        "hot": true
+      },
+      {
+        "item": "Auto Reply Setup [id: 12595000355]",
+        "side": "team",
+        "who": "Zoho admin (role)",
+        "age_days": 34,
+        "hot": true
+      }
+    ],
+    "snapshot": [
+      {
+        "label": "Open items",
+        "value": "8 open, all in-progress — 2 stalled 34 days",
+        "tone": "warn"
+      }
+    ],
+    "history_line": null
+  },
   "performance": {
-    "generated_at": "2026-08-17T22:15:05.874Z",
+    "generated_at": "2026-08-17T23:01:05.856Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Campaigns went dark 11 days ago; organic holds but cannot replace paid volume.",
+    "verdict": "Paid is fully dark 11 days; organic holding but cannot replace it.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "All paid spend hit $0 on 2026-08-06 and has stayed zero for 11 consecutive days — 50 leads and $1,267.48 in Meta spend now entirely in the prior window.",
+        "text": "Meta spend has been $0 for 11 consecutive days (Aug 7–17); zero leads generated in that window versus 4 leads/day prior.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3-day lead signal (Aug 14–16): 0 leads vs prior 3-day avg of ~2.7/day — a confirmed zero-output state, not a dip.",
+        "text": "3-day signal (Aug 14–16) vs prior 3 (Aug 11–13): spend $0 vs $0, leads 0 vs 0 — campaign dark confirms pause/budget exhaustion, not a new deterioration.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GHL shows 36 contacts but 0 opportunities created and 0 appointments over 28 days — pipeline intake is not processing leads from the active spend period.",
-        "confidence": "probable",
-        "channel": "ghl"
+        "text": "GHL shows 0 opportunities created and 0 appointments against 36 contacts and 50 leads over 28 days — intake pipeline is not converting leads to opps.",
+        "confidence": "confirmed",
+        "channel": "GHL"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GA4 sessions spiked to 206 on 2026-08-13 — 3.8× the series median — with no paid spend active; likely organic or direct anomaly, directional only per known GA4 double-count issue.",
-        "confidence": "hypothesis",
-        "channel": "ga4"
+        "text": "GBP held 168 actions and 57 calls over 28 days but dipped 12.5% week-over-week — organic demand is real but insufficient alone.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "Search Console clicks held at 14–25/day through the paid blackout (avg 17/day Aug 6–15), confirming organic search is intact but insufficient to replace 50 paid leads.",
-        "confidence": "confirmed",
-        "channel": "organic"
+        "text": "GA4 sessions spiked to 206 on Aug 13 then collapsed to 13 by Aug 16 — anomalous single-day spike, likely bot or tracking artifact (double-count caveat applies).",
+        "confidence": "hypothesis",
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Confirm deliberate pause or reinstate Meta campaigns at prior $69–$102/day spend rate immediately.",
+        "text": "Reactivate Meta campaigns immediately; confirm budget is loaded and CROA CBO ($673.62 prior spend) is unpaused.",
         "cites": [
           "F1",
           "F2"
         ],
-        "monday_item_name": "Reinstate Meta Campaigns JCL",
-        "monday_update": "Meta spend dropped to $0 on 2026-08-06 and has not resumed — 11 days of zero leads confirmed. If this pause was not intentional, reinstate campaigns at the prior daily rate of $69–$102/day (matching the CROA || CBO - 3/17/26 campaign that drove $673.62 of the 28-day total). Success check: at least 2 leads/day within 3 days of reactivation, CPL back below the 28-day baseline of $25.35. Confirm intent with client by 2026-08-18."
+        "monday_item_name": "Reactivate Meta Campaigns",
+        "monday_update": "Meta has been fully dark since Aug 7 — zero spend and zero leads for 11 days. The top campaign 'CROA || CBO - 3/17/26' drove $673.62 of the prior 28-day $1,267.48 spend and should be confirmed live with budget replenished. Success check: spend resumes above $50/day and at least 2 leads recorded within 48 hours of reactivation. Re-confirm by Aug 19."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GHL pipeline: 36 contacts with 0 opportunities created signals an intake routing failure, not an ads problem.",
+        "text": "Audit GHL pipeline intake: 50 leads over 28 days produced 0 opportunities — fix lead-to-opp workflow before new paid volume arrives.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Fix GHL Intake Routing JCL",
-        "monday_update": "GHL shows 36 contacts over 28 days but zero opportunities created and zero appointments booked — leads from the paid period did not convert into pipeline. Check workflow triggers, lead assignment rules, and stage automations in GHL. Success check: new contacts from any reinstated paid activity appear as opportunities within 24 hours of form submission. Resolve by 2026-08-20."
+        "monday_item_name": "Fix GHL Lead-to-Opp Workflow",
+        "monday_update": "GHL recorded 36 contacts and 50 leads over the 28-day window but shows 0 opportunities created and 0 appointments — this is an intake leak, not an ads problem. Before restoring paid spend volume, confirm the lead routing automation correctly creates opportunities on new contact submission. Success check: next 10 incoming leads each produce a corresponding opportunity in GHL. Review by Aug 20."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GA4 session spike of 206 on Aug 13 — re-check source/medium breakdown before attributing to any channel.",
+        "text": "Monitor GA4 Aug 13 spike (206 sessions) — watch next 3 days for recurrence before treating as meaningful signal.",
         "cites": [
-          "F4"
+          "F5"
         ],
-        "monday_item_name": "Watch GA4 Aug 13 Spike JCL",
-        "monday_update": "GA4 recorded 206 sessions on 2026-08-13 against a series median of ~38, with zero paid spend active — source is unknown and the GA4 double-count issue means this is directional only. Pull source/medium report for that date to rule out bot traffic or misconfigured property. Re-check on 2026-08-20 once paid activity (if reinstated) gives a clean baseline for comparison."
+        "monday_item_name": "Watch GA4 Session Spike",
+        "monday_update": "GA4 showed an anomalous 206-session day on Aug 13 against a baseline of roughly 20–55 sessions, then dropped to 13 by Aug 16. Given the known JCL GA4 double-count issue, this is directional only. Watch Aug 17–19 for recurrence; if sessions exceed 150 again without a corresponding paid traffic source, flag for property audit. Re-check Aug 20."
       }
     ],
     "next_check": "2026-08-20"

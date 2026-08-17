@@ -485,14 +485,10 @@
     "next_check": "2026-08-02"
   },
   "brief": {
-    "date": "2026-08-05",
+    "date": "2026-08-17",
     "headlines": [
       {
-        "text": "No movement this week; access issue persists",
-        "tone": "info"
-      },
-      {
-        "text": "Meta Ads Pixel setup blocked 21 days",
+        "text": "Meta Ads access still blocked — 33 days open",
         "tone": "info"
       }
     ],
@@ -506,35 +502,74 @@
         "items": [
           {
             "state": "blocked",
-            "text": "Meta Ads access needed for Pixel setup — blocked on client (21 days)"
+            "text": "Meta Ads access needed for Pixel setup — waiting on client 33d"
           },
           {
             "state": "next",
-            "text": "(inferred) Chase client for Meta Ads access to unblock Pixel"
+            "text": "(inferred) Client to grant Meta Ads access to unblock Pixel setup"
           }
         ]
       }
     ],
     "waiting_on_client": [
       {
-        "item": "Meta Ads account access required for Pixel setup",
-        "who": "<UNKNOWN>",
+        "item": "Meta Ads access — needed for Pixel setup",
+        "who": "Client-side contact",
         "since": "7/15"
       }
     ],
-    "launch_gate": {
-      "title": "Launch gate - clear before Ads go live",
-      "items": [
+    "launch_gate": null,
+    "brief_v2": {
+      "verdict": "Client's move: Meta Ads access has been outstanding 33 days, blocking all Pixel setup work.",
+      "next_move": "Client: grant Meta Ads access — directly unblocks Pixel setup and any dependent ad work.",
+      "blocks": [
         {
-          "text": "Meta Ads access granted to Flow team",
-          "done": false
-        },
-        {
-          "text": "Pixel installed and verified",
-          "done": false
+          "item": "Meta Ads access needed for Pixel setup",
+          "side": "client",
+          "who": "Client-side contact",
+          "age_days": 33,
+          "hot": true
         }
       ],
-      "note": "Nothing can launch until access is provided by client."
+      "snapshot": [
+        {
+          "label": "Open items",
+          "value": "1 open, 1 stalled 33d — Meta Ads access",
+          "tone": "bad"
+        },
+        {
+          "label": "Last client word",
+          "value": "No recent client comms on record",
+          "tone": "warn"
+        }
+      ],
+      "history_line": null
     }
+  },
+  "brief_v2": {
+    "verdict": "Client's move: Meta Ads access has been outstanding 33 days, blocking all Pixel setup work.",
+    "next_move": "Client: grant Meta Ads access — directly unblocks Pixel setup and any dependent ad work.",
+    "blocks": [
+      {
+        "item": "Meta Ads access needed for Pixel setup",
+        "side": "client",
+        "who": "Client-side contact",
+        "age_days": 33,
+        "hot": true
+      }
+    ],
+    "snapshot": [
+      {
+        "label": "Open items",
+        "value": "1 open, 1 stalled 33d — Meta Ads access",
+        "tone": "bad"
+      },
+      {
+        "label": "Last client word",
+        "value": "No recent client comms on record",
+        "tone": "warn"
+      }
+    ],
+    "history_line": null
   }
 }

@@ -487,14 +487,10 @@
     "next_check": "2026-08-01"
   },
   "brief": {
-    "date": "2026-08-05",
+    "date": "2026-08-17",
     "headlines": [
       {
-        "text": "No completions or movement this week",
-        "tone": "info"
-      },
-      {
-        "text": "Two CRM items stalled 27 days",
+        "text": "No activity this week; two loops aging 41 days",
         "tone": "info"
       }
     ],
@@ -508,20 +504,85 @@
         "items": [
           {
             "state": "blocked",
-            "text": "HANDOFF awaiting action — stalled 27 days (monday item 12470597527)"
+            "text": "ACCESS handoff awaiting action — stalled 41 days [id: 12470597527]"
           },
           {
             "state": "blocked",
-            "text": "1st DIRECTIVES no recent activity — stalled 27 days (monday item 12470651472)"
+            "text": "1st DIRECTIVES no recent activity — stalled 41 days [id: 12470651472]"
           },
           {
             "state": "next",
-            "text": "(inferred) Resolve HANDOFF and 1st DIRECTIVES blockers to restore momentum"
+            "text": "(inferred) Identify who owns ACCESS handoff and drive to resolution"
           }
         ]
       }
     ],
     "waiting_on_client": [],
-    "launch_gate": null
+    "brief_v2": {
+      "verdict": "Team's move: ACCESS and 1st DIRECTIVES both stalled 41 days with no action taken.",
+      "next_move": "Team: identify owner and push ACTION on ACCESS handoff — clears the longest-running open loop.",
+      "blocks": [
+        {
+          "item": "ACCESS",
+          "side": "team",
+          "who": "Assignee (unnamed)",
+          "age_days": 41,
+          "hot": true
+        },
+        {
+          "item": "1st DIRECTIVES",
+          "side": "team",
+          "who": "Assignee (unnamed)",
+          "age_days": 41,
+          "hot": true
+        }
+      ],
+      "snapshot": [
+        {
+          "label": "Open items",
+          "value": "9 open, 2 stalled 41d — all items in Working, none Done",
+          "tone": "warn"
+        },
+        {
+          "label": "Last client word",
+          "value": "No client comms recorded this period",
+          "tone": "muted"
+        }
+      ],
+      "history_line": null
+    }
+  },
+  "brief_v2": {
+    "verdict": "Team's move: ACCESS and 1st DIRECTIVES both stalled 41 days with no action taken.",
+    "next_move": "Team: identify owner and push ACTION on ACCESS handoff — clears the longest-running open loop.",
+    "blocks": [
+      {
+        "item": "ACCESS",
+        "side": "team",
+        "who": "Assignee (unnamed)",
+        "age_days": 41,
+        "hot": true
+      },
+      {
+        "item": "1st DIRECTIVES",
+        "side": "team",
+        "who": "Assignee (unnamed)",
+        "age_days": 41,
+        "hot": true
+      }
+    ],
+    "snapshot": [
+      {
+        "label": "Open items",
+        "value": "9 open, 2 stalled 41d — all items in Working, none Done",
+        "tone": "warn"
+      },
+      {
+        "label": "Last client word",
+        "value": "No client comms recorded this period",
+        "tone": "muted"
+      }
+    ],
+    "history_line": null
   }
 }

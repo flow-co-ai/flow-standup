@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-17T22:12:45.987Z",
+  "generated_at": "2026-08-17T22:56:57.795Z",
   "date": "2026-08-17",
   "slug": "liferun",
   "name": "Liferun",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 43,
   "status": "orange",
-  "verdict": "Leads dropped 48% week-over-week to a $22.23 CPL (up 63%), driven by Meta going dark (channel_dark flag) which cut off all 128 of the 28-day leads at the source, while Google Ads burned $1,495.13 with zero conversions recorded.",
+  "verdict": "Leads dropped 48% week-over-week to a $22.23 CPL (up 63%), driven primarily by Meta going dark (reporting blackout) and Google Ads delivering 0 conversions on $1,495.13 in spend over the 28-day window, leaving all 128 tracked leads sourced entirely from Meta.",
   "windsor": {
     "totals": {
       "spend": 2844.98,
@@ -434,44 +434,138 @@
       "google_my_business"
     ]
   },
+  "brief": {
+    "date": "2026-08-17",
+    "headlines": [
+      {
+        "text": "No new activity this week",
+        "tone": "info"
+      }
+    ],
+    "workstreams": [
+      {
+        "title": "Liferun - CRM / GHL",
+        "badge": {
+          "label": "P1 - stalled",
+          "tone": "amber"
+        },
+        "items": [
+          {
+            "state": "blocked",
+            "text": "HANDOFF: Khurram handoff Loom absorption stalled 34 days — waiting on team to close"
+          },
+          {
+            "state": "next",
+            "text": "(inferred) Complete review of June 22 Automation Guide to close HANDOFF item"
+          }
+        ]
+      }
+    ],
+    "waiting_on_client": [],
+    "launch_gate": {
+      "title": "Launch gate - clear before scaling",
+      "items": [
+        {
+          "text": "Becklar billing drop: dummy deactivation + invoice verification",
+          "done": false
+        },
+        {
+          "text": "BWS field mapping verification",
+          "done": false
+        }
+      ]
+    },
+    "brief_v2": {
+      "verdict": "Team's move: HANDOFF item stalled 34 days with no action this week.",
+      "next_move": "Team: absorb June 22 Automation Guide and close HANDOFF [id: 12470616714] — unblocks CRM knowledge continuity.",
+      "blocks": [
+        {
+          "item": "HANDOFF [id: 12470616714]",
+          "side": "team",
+          "who": "Ahmed Memon / Ali Shaheer",
+          "age_days": 34,
+          "hot": true
+        }
+      ],
+      "snapshot": [
+        {
+          "label": "Open items",
+          "value": "14 open, 1 stalled 34d (HANDOFF)",
+          "tone": "warn"
+        },
+        {
+          "label": "Last client word",
+          "value": "No client comms this period",
+          "tone": "muted"
+        }
+      ],
+      "history_line": null
+    }
+  },
+  "brief_v2": {
+    "verdict": "Team's move: HANDOFF item stalled 34 days with no action this week.",
+    "next_move": "Team: absorb June 22 Automation Guide and close HANDOFF [id: 12470616714] — unblocks CRM knowledge continuity.",
+    "blocks": [
+      {
+        "item": "HANDOFF [id: 12470616714]",
+        "side": "team",
+        "who": "Ahmed Memon / Ali Shaheer",
+        "age_days": 34,
+        "hot": true
+      }
+    ],
+    "snapshot": [
+      {
+        "label": "Open items",
+        "value": "14 open, 1 stalled 34d (HANDOFF)",
+        "tone": "warn"
+      },
+      {
+        "label": "Last client word",
+        "value": "No client comms this period",
+        "tone": "muted"
+      }
+    ],
+    "history_line": null
+  },
   "performance": {
-    "generated_at": "2026-08-17T22:15:31.244Z",
+    "generated_at": "2026-08-17T23:01:30.822Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Meta dark kills all leads; Google burns $1,495 with zero CRM-verified conversions.",
+    "verdict": "Google burning $1,495 with zero conversions is the real crisis, not Meta.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Meta channel_dark: $0 spend Aug 13–16, killing all 128 28-day leads — every lead this account generates originates from Meta, none from Google.",
+        "text": "Meta went channel_dark: $0 spend and 0 leads on Aug 15–16, causing 48% lead drop and CPL spiking to $22.23 (+63% 7d).",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 1,
-        "text": "Google spent $1,495.13 over 28 days with 0 recorded conversions; 3-day spend (Aug 14–16) was $34.88 producing 0 leads — confirmed zero-return channel this window.",
+        "text": "Google Ads spent $1,495.13 over 28 days — top campaign 'BWS - Search Campaign - Calls' alone $1,172.23 — recording 0 conversions. All 128 leads sourced from Meta only.",
         "confidence": "confirmed",
         "channel": "google"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "SOW milestone: Stripe Products QA due July 20 shows no completed event in CRM data; GHL has 135 opps created but 0 won and $0 value, suggesting intake mapping unverified.",
+        "text": "SOW milestone 'Stripe Products QA'd & Done' (due 2026-07-20) has no confirmed completed event in the data — status unverified.",
         "confidence": "probable",
         "channel": "SOW"
       },
       {
         "id": "F4",
-        "priority": 3,
-        "text": "3-day lead signal (Aug 14–16): 4, 0, 0 vs prior 3 days (Aug 11–13): 7, 9, 5 — a confirmed downward break, not noise, coinciding with Meta going dark.",
+        "priority": 2,
+        "text": "3-day signal (Aug 14–16): leads = 4, 0, 0 vs prior 3 days (Aug 11–13): 7, 9, 5 — a confirmed declining signal, not a one-day anomaly.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 158 contacts vs 128 Meta leads and 135 opps created, but 0 appointments and 0 won — pipeline intake exists but no activated subscribers are reaching close stage.",
+        "text": "GHL shows 135 opportunities created but 0 won and 0 appointments — leads arriving but no pipeline progression, suggesting an intake or follow-up process gap.",
         "confidence": "probable",
         "channel": "GHL"
       }
@@ -480,34 +574,33 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Diagnose and restore Meta channel immediately — account has been dark since Aug 13, losing 100% of lead volume.",
+        "text": "Diagnose and restore Meta account immediately — 2 dark days caused 0 leads Aug 15–16 and all 128 28-day leads depend on it.",
         "cites": [
           "F1",
           "F4"
         ],
-        "monday_item_name": "Restore Meta — channel dark",
-        "monday_update": "Meta has been $0 spend since Aug 13, confirmed dark for 4 days, and is the sole lead source: 128 of 128 28-day leads came from Meta alone. Identify whether this is a billing, policy, or account-level suspension and resolve it today. Success: Meta spend resumes and at least 1 lead recorded within 48 hours of restoration. Re-check 2026-08-19."
+        "monday_item_name": "Restore Meta — urgent fix",
+        "monday_update": "Meta went dark on Aug 15–16, producing 0 leads across both days; the account is the sole lead source, responsible for all 128 leads in the 28-day window. Check for billing failure, ad account disable, or policy flag and resolve immediately. Success is confirmed when Meta spend resumes at ≥$70/day and leads reappear within 24 hours of restoration. Re-check on 2026-08-18."
       },
       {
         "id": "S2",
         "type": "kill",
-        "text": "Pause Google Ads pending conversion tracking fix — $1,495.13 spent over 28 days with 0 conversions is confirmed dead spend.",
+        "text": "Pause Google Ads spend — $1,495.13 spent over 28 days with 0 conversions is a confirmed zero-result leak.",
         "cites": [
           "F2"
         ],
         "monday_item_name": "Pause Google — zero conversions",
-        "monday_update": "Google Ads has burned $1,495.13 over 28 days with zero recorded conversions and zero leads attributed; the 3-day spend Aug 14–16 was $34.88 for nothing. Pause all Google campaigns until pixel/conversion tracking is verified client-side. Success check: a clean conversion test fires in Google Ads before any reactivation. Do not reactivate until confirmed — target verification by 2026-08-22."
+        "monday_update": "Google Ads has consumed $1,495.13 over the 28-day window, including $1,172.23 on 'BWS - Search Campaign - Calls', with zero recorded conversions and zero leads attributed. This is not a pixel gap to wait on — 28 days and 190 clicks with no result is confirmed non-performance. Pause all Google campaigns now and redirect the ~$11–15/day remaining daily budget to Meta once Meta is restored. Revisit Google only after conversion tracking is verified end-to-end."
       },
       {
         "id": "S3",
         "type": "fix",
-        "text": "Verify Stripe Products QA and BWS duplicate-check per SOW — 135 opps at $0 value and 0 won suggests intake mapping is broken.",
+        "text": "Investigate GHL pipeline: 135 opportunities created, 0 won, 0 appointments — likely an intake or follow-up automation gap.",
         "cites": [
-          "F3",
           "F5"
         ],
-        "monday_item_name": "Verify Stripe QA & BWS intake",
-        "monday_update": "The SOW Stripe Products QA milestone (due July 20) has no confirmed completion event, and GHL shows 135 opportunities created but $0 pipeline value and 0 wins, pointing to broken field mapping. Run one live order through each intake path (WordPress/Stripe webhook and GHL Products Payment - BWS) and confirm exactly one fully-mapped opportunity per order as specified in the SOW. Success: both paths produce a correctly mapped opp with value populated. Complete by 2026-08-22."
+        "monday_item_name": "GHL pipeline intake audit",
+        "monday_update": "GHL shows 135 opportunities created against 128 tracked leads but 0 appointments booked and 0 won — leads are entering the pipeline but no progression is occurring. This is an intake or automation gap, not an ads problem. Audit the post-lead automation sequence in GHL (triggers, assignment rules, follow-up tasks) to find where contacts are stalling. Success is at least one confirmed appointment booked within 7 days of this fix. Re-check on 2026-08-24."
       }
     ],
     "next_check": "2026-08-20"

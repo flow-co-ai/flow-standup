@@ -515,18 +515,14 @@
     "next_check": "2026-08-01"
   },
   "brief": {
-    "date": "2026-08-05",
+    "date": "2026-08-17",
     "headlines": [
       {
-        "text": "No activity this week; all loops aging",
+        "text": "No activity; two items stalled 45–49 days",
         "tone": "info"
       },
       {
-        "text": "Meta Ads decision stalled 31 days",
-        "tone": "info"
-      },
-      {
-        "text": "Website SEO stalled 35 days, no movement",
+        "text": "Meta Ads and Website SEO both aging",
         "tone": "info"
       }
     ],
@@ -534,31 +530,105 @@
       {
         "title": "Flow Company - Ads",
         "badge": {
-          "label": "P1 - needs attention",
-          "tone": "amber"
+          "label": "P1 - stalled",
+          "tone": "red"
         },
         "items": [
           {
             "state": "blocked",
-            "text": "Meta Ads placement decision pending — awaiting decision (31 days stalled)"
+            "text": "Meta Ads placement decision pending — stalled 45 days"
+          },
+          {
+            "state": "next",
+            "text": "(inferred) Force a placement decision to unblock Meta Ads"
           }
         ]
       },
       {
         "title": "Flow Company - Web / SEO",
         "badge": {
-          "label": "P1 - needs attention",
-          "tone": "amber"
+          "label": "P1 - stalled",
+          "tone": "red"
         },
         "items": [
           {
             "state": "blocked",
-            "text": "Website SEO Update — no activity in 35 days"
+            "text": "Website SEO Update — no activity in 49 days"
+          },
+          {
+            "state": "next",
+            "text": "(inferred) Re-engage SEO workstream and assign next action"
           }
         ]
       }
     ],
     "waiting_on_client": [],
-    "launch_gate": null
+    "launch_gate": null,
+    "brief_v2": {
+      "verdict": "Team's move: Meta Ads and Website SEO Update both stalled with no owner action.",
+      "next_move": "Team: escalate Meta Ads placement decision — 45-day stall is the most urgent unblock.",
+      "blocks": [
+        {
+          "item": "Meta Ads",
+          "side": "team",
+          "who": "Flow team",
+          "age_days": 45,
+          "hot": true
+        },
+        {
+          "item": "Website SEO Update",
+          "side": "team",
+          "who": "Flow team",
+          "age_days": 49,
+          "hot": true
+        }
+      ],
+      "snapshot": [
+        {
+          "label": "Open items",
+          "value": "9 open, 2 stalled 45d+",
+          "tone": "bad"
+        },
+        {
+          "label": "Last client word",
+          "value": "No client comms on record this period",
+          "tone": "warn"
+        }
+      ],
+      "history_line": null
+    }
+  },
+  "brief_v2": {
+    "verdict": "Team's move: Meta Ads and Website SEO Update both stalled with no owner action.",
+    "next_move": "Team: escalate Meta Ads placement decision — 45-day stall is the most urgent unblock.",
+    "blocks": [
+      {
+        "item": "Meta Ads",
+        "side": "team",
+        "who": "Flow team",
+        "age_days": 45,
+        "hot": true
+      },
+      {
+        "item": "Website SEO Update",
+        "side": "team",
+        "who": "Flow team",
+        "age_days": 49,
+        "hot": true
+      }
+    ],
+    "snapshot": [
+      {
+        "label": "Open items",
+        "value": "9 open, 2 stalled 45d+",
+        "tone": "bad"
+      },
+      {
+        "label": "Last client word",
+        "value": "No client comms on record this period",
+        "tone": "warn"
+      }
+    ],
+    "history_line": null
   }
 }
