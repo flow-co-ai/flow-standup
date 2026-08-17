@@ -123,6 +123,11 @@ must clear before launch.
   title: "Launch gate - clear before [X] go live".
   null when no gate exists; never invent one.
 
+**brief_v2** — CEO-level decision surface. Two plain strings, always required:
+- `verdict`: one sentence, max 20 words. Whose move is it and what is the decisive factor? Name the actual Monday item or open loop. No hedging.
+- `next_move`: one action, max 20 words. Format "Owner: task — why it unblocks." Must trace to a real Monday item by name. Never invented.
+Example: `{ "verdict": "Client's move: Dr. Jamal hasn't confirmed working hours, blocking the scheduler fix.", "next_move": "Nacer: send calendar request by Thursday — unblocks the OpenDental sync item." }`
+
 **Rules across all fields:**
 - Aggregate/status text only. Never PII, never individual lead values.
 - Confidence tags (confirmed / probable / hypothesis) copy verbatim from the

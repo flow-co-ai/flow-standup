@@ -51,7 +51,7 @@ const EMIT_BRIEF = {
   description: 'Emit the structured client brief per ops-pulse.md CLIENT BRIEF rules.',
   input_schema: {
     type: 'object',
-    required: ['date', 'headlines', 'workstreams', 'waiting_on_client'],
+    required: ['date', 'headlines', 'workstreams', 'waiting_on_client', 'brief_v2'],
     properties: {
       date: { type: 'string', description: 'YYYY-MM-DD' },
       headlines: {
@@ -130,6 +130,14 @@ const EMIT_BRIEF = {
           },
           { type: 'null' },
         ],
+      },
+      brief_v2: {
+        type: 'object',
+        required: ['verdict', 'next_move'],
+        properties: {
+          verdict:    { type: 'string', description: 'One sentence ≤20 words. Whose move, what matters, cite the Monday item.' },
+          next_move:  { type: 'string', description: 'One action ≤20 words. Format: "Owner: task — why it unblocks."' },
+        },
       },
     },
   },
@@ -254,8 +262,9 @@ async function main() {
 
     try {
       const prompt = buildPrompt(lens, card, playbook, today);
-      const brief  = await callLens(prompt);
-      pulse.brief  = brief;
+      const brief      = await callLens(prompt);
+      pulse.brief      = brief;
+      pulse.brief_v2   = brief.brief_v2 || null;
       writeFileSync(pulsePath, JSON.stringify(pulse, null, 2));
       console.log(`  ${slug}: ✓ brief written`);
       generated++;

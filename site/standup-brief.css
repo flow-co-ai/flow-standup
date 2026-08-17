@@ -1,12 +1,394 @@
-/* standup-brief.css — brief block rendered below .client-card in detail view */
+/* standup-brief.css — Standup tab overrides + v2 detail view
+   Only linked on index.html — all rules are automatically scoped to the
+   Standup tab. Never edit style.css for Standup-only changes. */
 
-/* ── Section wrapper ── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   LEVEL 1 — WHITE CARD GRID
+   ═══════════════════════════════════════════════════════════════════════════ */
 
-.sb-brief {
-  margin-top: 16px;
+.mini-card {
+  background: #ffffff !important;
+  border-color: rgba(0,0,0,0.09) !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07) !important;
 }
 
-/* ── Headline chips ── */
+.mini-card:hover {
+  background: #f7f7f5 !important;
+  border-color: rgba(0,0,0,0.16) !important;
+}
+
+.mini-card .mini-name {
+  color: #111 !important;
+}
+
+.mini-card .mini-micro {
+  color: #555 !important;
+}
+
+/* Darken inline-colored status elements for readability on white.
+   CSS filter is applied on top of the inline color/background from app.js —
+   no JS remapping needed. */
+.mini-card .mini-state-label {
+  filter: brightness(0.42) saturate(1.1) !important;
+}
+
+.mini-card .mini-dot {
+  filter: brightness(0.62) saturate(0.9) !important;
+  box-shadow: none !important;
+}
+
+.mini-card .ops-score-value {
+  filter: brightness(0.42) saturate(1.1) !important;
+}
+
+.mini-card .ops-score-label {
+  color: #888 !important;
+}
+
+.mini-card .subscore-chip {
+  filter: brightness(0.46) !important;
+  border-color: rgba(0,0,0,0.14) !important;
+}
+
+.mini-card .mini-stats {
+  border-top-color: rgba(0,0,0,0.07) !important;
+}
+
+.mini-card .mini-stat {
+  color: #666 !important;
+}
+
+.mini-card .mini-stat-n {
+  color: #333 !important;
+}
+
+.mini-card .mini-stat.stat-warn,
+.mini-card .mini-stat.stat-warn .mini-stat-n {
+  color: #9a3d00 !important;
+}
+
+.mini-card .card-drag-handle,
+.mini-card .card-remove-btn {
+  color: rgba(0,0,0,0.3) !important;
+}
+
+.mini-card .card-drag-handle:hover {
+  background: rgba(0,0,0,0.05) !important;
+  color: rgba(0,0,0,0.6) !important;
+}
+
+.mini-card .card-remove-btn:hover {
+  background: rgba(200,60,40,0.08) !important;
+  color: #c03b20 !important;
+}
+
+.mini-card .mini-name[contenteditable]:focus,
+.mini-card .mini-micro[contenteditable]:focus {
+  background: rgba(0,0,0,0.03) !important;
+  outline-color: rgba(0,0,0,0.2) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LEVEL 2 — V2 DETAIL LAYOUT
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Hide the old split layout when v2 is active */
+#app.sb-v2 .client-detail-split {
+  display: none !important;
+}
+
+/* ── V2 detail container ── */
+
+.sb-v2-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+/* ── Shared section shell ── */
+
+.sb-v2-section {
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.09);
+  border-radius: 14px;
+  padding: 18px 20px;
+}
+
+.sb-v2-section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,0.35);
+  margin-bottom: 10px;
+  display: block;
+}
+
+
+/* ── CONTRACT HEADER ── */
+
+.sb-contract-header {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.sb-contract-block {
+  font-size: 13px;
+  line-height: 1.55;
+  color: #222;
+}
+
+.sb-contract-empty {
+  font-size: 13px;
+  color: rgba(0,0,0,0.35);
+  border-top: 1px dashed rgba(0,0,0,0.15);
+  padding-top: 6px;
+  margin-top: 2px;
+}
+
+
+/* ── VERDICT + NEXT MOVE ── */
+
+.sb-verdict-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111;
+  line-height: 1.45;
+  margin-bottom: 10px;
+}
+
+.sb-next-move-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,0.35);
+  margin-bottom: 5px;
+  display: block;
+}
+
+.sb-next-move-text {
+  font-size: 13px;
+  color: #333;
+  line-height: 1.5;
+  padding: 9px 12px;
+  background: rgba(0,0,0,0.03);
+  border-left: 3px solid #DCA746;
+  border-radius: 0 6px 6px 0;
+}
+
+.sb-verdict-fallback {
+  color: rgba(0,0,0,0.4);
+}
+
+
+/* ── DEPARTMENT LANES ── */
+
+.sb-lanes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sb-lane {
+  border: 1px solid rgba(0,0,0,0.07);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.sb-lane-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  cursor: pointer;
+  user-select: none;
+  background: rgba(0,0,0,0.015);
+  transition: background 0.1s;
+}
+
+.sb-lane-header:hover {
+  background: rgba(0,0,0,0.04);
+}
+
+.sb-lane-caret {
+  font-size: 10px;
+  color: rgba(0,0,0,0.35);
+  flex-shrink: 0;
+  width: 12px;
+}
+
+.sb-lane-dept {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #333;
+  flex: 1;
+}
+
+.sb-lane-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: rgba(0,0,0,0.3);
+  letter-spacing: 0.04em;
+}
+
+.sb-lane-items {
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+
+.sb-lane-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.1s;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+.sb-lane-item:last-child {
+  border-bottom: none;
+}
+
+.sb-lane-item:hover {
+  background: rgba(0,0,0,0.025);
+}
+
+.sb-lane-item-name {
+  font-size: 12.5px;
+  color: #222;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sb-lane-item-days {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: rgba(0,0,0,0.35);
+  flex-shrink: 0;
+}
+
+.sb-lane-item-days.stale {
+  color: #b83200;
+  font-weight: 600;
+}
+
+.sb-lane-item-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.sb-lane-item-status.active {
+  background: rgba(61,122,26,0.09);
+  color: #3a7a1a;
+}
+
+.sb-lane-item-status.stalled {
+  background: rgba(184,50,0,0.08);
+  color: #b83200;
+}
+
+.sb-lane-item-expand {
+  padding: 8px 12px 10px 24px;
+  background: rgba(0,0,0,0.018);
+  border-top: 1px solid rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.sb-lane-expand-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #111;
+}
+
+.sb-lane-expand-name a {
+  color: #111;
+  text-decoration: none;
+}
+
+.sb-lane-expand-name a:hover {
+  text-decoration: underline;
+}
+
+.sb-lane-expand-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: rgba(0,0,0,0.4);
+  letter-spacing: 0.04em;
+}
+
+.sb-lane-expand-update {
+  font-size: 11.5px;
+  color: #555;
+}
+
+
+/* ── ON THE GROUND ── */
+
+.sb-ground-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sb-ground-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.sb-ground-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.sb-ground-item-name {
+  font-size: 13px;
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+.sb-ground-item-name a {
+  color: #1a1a1a;
+  text-decoration: none;
+}
+
+.sb-ground-item-name a:hover {
+  text-decoration: underline;
+}
+
+.sb-ground-meta {
+  font-size: 11px;
+  color: rgba(0,0,0,0.4);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LEGACY BRIEF BLOCK (kept for transition; new detail uses sb-v2-section)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.sb-brief { margin-top: 16px; }
 
 .sb-headlines {
   display: flex;
@@ -27,8 +409,6 @@
   line-height: 1.4;
 }
 
-/* ── 2-col card grid ── */
-
 .sb-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -39,8 +419,6 @@
   .sb-grid { grid-template-columns: 1fr; }
 }
 
-/* ── Card ── */
-
 .sb-card {
   background: #141A14;
   border: 1px solid rgba(237,233,220,0.08);
@@ -48,11 +426,7 @@
   padding: 12px 14px;
 }
 
-.sb-card--full {
-  grid-column: 1 / -1;
-}
-
-/* ── Card header: icon + title + right-aligned badge ── */
+.sb-card--full { grid-column: 1 / -1; }
 
 .sb-card-hdr {
   display: flex;
@@ -61,19 +435,9 @@
   margin-bottom: 10px;
 }
 
-.sb-track-icon {
-  font-size: 13px;
-  flex-shrink: 0;
-  line-height: 1;
-}
+.sb-track-icon { font-size: 13px; flex-shrink: 0; line-height: 1; }
 
-.sb-card-title {
-  font-size: 12px;
-  font-weight: 600;
-  color: #EDE9DA;
-  flex: 1;
-  min-width: 0;
-}
+.sb-card-title { font-size: 12px; font-weight: 600; color: #EDE9DA; flex: 1; min-width: 0; }
 
 .sb-badge {
   flex-shrink: 0;
@@ -87,64 +451,21 @@
   white-space: nowrap;
 }
 
-/* ── Line items: icon column + wrapped text ── */
+.sb-items { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 
-.sb-items {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
+.sb-item { display: flex; align-items: flex-start; gap: 7px; }
 
-.sb-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 7px;
-}
+.sb-item-icon { flex-shrink: 0; width: 14px; font-size: 11px; line-height: 1.55; text-align: center; }
 
-.sb-item-icon {
-  flex-shrink: 0;
-  width: 14px;
-  font-size: 11px;
-  line-height: 1.55;
-  text-align: center;
-}
+.sb-item-text { font-size: 12px; color: rgba(237,233,220,0.82); line-height: 1.55; }
 
-.sb-item-text {
-  font-size: 12px;
-  color: rgba(237,233,220,0.82);
-  line-height: 1.55;
-}
+.sb-owners { margin-top: 9px; font-size: 11px; color: rgba(237,233,220,0.38); letter-spacing: 0.01em; }
 
-/* ── Owners footer ── */
+.sb-item--woc { align-items: baseline; }
 
-.sb-owners {
-  margin-top: 9px;
-  font-size: 11px;
-  color: rgba(237,233,220,0.38);
-  letter-spacing: 0.01em;
-}
+.sb-woc-item { font-size: 12px; font-weight: 600; color: #EDE9DA; }
 
-/* ── Waiting-on-client card ── */
-
-.sb-item--woc {
-  align-items: baseline;
-}
-
-.sb-woc-item {
-  font-size: 12px;
-  font-weight: 600;
-  color: #EDE9DA;
-}
-
-.sb-woc-meta {
-  font-size: 11px;
-  color: rgba(237,233,220,0.4);
-}
-
-/* ── Launch gate card ── */
+.sb-woc-meta { font-size: 11px; color: rgba(237,233,220,0.4); }
 
 .sb-gate-grid {
   display: grid;
@@ -166,15 +487,6 @@
   line-height: 1.45;
 }
 
-.sb-gate-item input[type="checkbox"] {
-  margin-top: 2px;
-  accent-color: #8CBE6E;
-  flex-shrink: 0;
-}
+.sb-gate-item input[type="checkbox"] { margin-top: 2px; accent-color: #8CBE6E; flex-shrink: 0; }
 
-.sb-gate-note {
-  margin-top: 10px;
-  font-size: 11px;
-  color: rgba(237,233,220,0.38);
-  font-style: italic;
-}
+.sb-gate-note { margin-top: 10px; font-size: 11px; color: rgba(237,233,220,0.38); font-style: italic; }

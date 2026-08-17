@@ -1,19 +1,17 @@
-// standup-brief.js — injects the `brief` block from pulse JSON into the
-// client detail view of the Standup tab (index.html).
+// standup-brief.js — Standup tab v2: white cards + CEO decision surface.
 //
-// Observes #app for re-renders via MutationObserver; never touches
-// app.js / index.html / style.css.
-//
-// If pulse/{slug}.json has no `brief` key, falls through silently and the
-// existing expand behavior is unchanged.
+// ONLY modifies DOM via MutationObserver — never edits app.js, style.css, index.html.
+// Level 1: white mini-card overrides (via standup-brief.css).
+// Level 2: v2 detail layout injected after .client-detail-split when a card is opened.
 
 (function () {
   'use strict';
 
-  const PULSE_BASE = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/refs/heads/main/pulse';
+  const PULSE_BASE    = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/refs/heads/main/pulse';
+  const PLAYBOOK_BASE = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/refs/heads/main/playbooks';
 
-  // Display name → slug. Mirrors apply_ops_pulse.js + extends performance.js's
-  // PULSE_SLUG map (same source of truth philosophy).
+  // ── Slug map ─────────────────────────────────────────────────────────────────
+
   const SLUG_MAP = {
     'Billy Doe Meats':       'billy-doe',
     'Full Smile':            'full-smile',
@@ -41,7 +39,7 @@
     return m ? decodeURIComponent(m[1]) : null;
   }
 
-  // ── Minimal DOM builder ──────────────────────────────────────────────────────
+  // ── DOM builder ──────────────────────────────────────────────────────────────
 
   function el(tag, cls, ...children) {
     const e = document.createElement(tag);
@@ -53,238 +51,408 @@
     return e;
   }
 
-  // ── Color tokens ─────────────────────────────────────────────────────────────
+  // ── In-session caches ────────────────────────────────────────────────────────
 
-  const HEADLINE_TONE = {
-    win:   { bg: 'rgba(140,190,110,0.18)', color: '#8CBE6E', border: 'rgba(140,190,110,0.35)' },
-    info:  { bg: 'rgba(155,137,212,0.18)', color: '#A998E0', border: 'rgba(155,137,212,0.35)' },
-    shift: { bg: 'rgba(220,167,70,0.18)',  color: '#DCA746', border: 'rgba(220,167,70,0.35)' },
-  };
+  const pulseCache    = new Map();
+  const playbookCache = new Map();
+  let   latestCache   = null;
+  let   inboxCache    = null;
 
-  const BADGE_TONE = {
-    red:    { bg: 'rgba(222,110,76,0.18)',  color: '#DE6E4C', border: 'rgba(222,110,76,0.35)' },
-    amber:  { bg: 'rgba(220,167,70,0.18)',  color: '#DCA746', border: 'rgba(220,167,70,0.35)' },
-    green:  { bg: 'rgba(140,190,110,0.18)', color: '#8CBE6E', border: 'rgba(140,190,110,0.35)' },
-    purple: { bg: 'rgba(155,137,212,0.18)', color: '#A998E0', border: 'rgba(155,137,212,0.35)' },
-  };
+  // ── Data fetchers ────────────────────────────────────────────────────────────
 
-  const STATE_ICON = {
-    blocked: { char: '⚠', color: '#DE6E4C' },
-    done:    { char: '✓', color: '#8CBE6E' },
-    next:    { char: '→', color: '#DCA746' },
-    queued:  { char: '⏱', color: 'rgba(237,233,220,0.35)' },
-  };
-
-  function trackIcon(title) {
-    const t = title.toLowerCase();
-    if (t.includes('crm') || t.includes('ghl'))    return '🔗';
-    if (t.includes('ads') || t.includes('meta'))   return '📣';
-    if (t.includes('web') || t.includes('seo'))    return '🌐';
-    if (t.includes('video'))                        return '🎬';
-    if (t.includes('email'))                        return '📧';
-    return '◆';
+  async function fetchPulse(slug) {
+    if (pulseCache.has(slug)) return pulseCache.get(slug);
+    try {
+      const res = await fetch(`${PULSE_BASE}/${slug}.json?t=${Date.now()}`, { cache: 'no-store' });
+      if (!res.ok) { pulseCache.set(slug, null); return null; }
+      const data = await res.json();
+      pulseCache.set(slug, data);
+      return data;
+    } catch { pulseCache.set(slug, null); return null; }
   }
 
-  // ── Brief DOM builders ───────────────────────────────────────────────────────
+  async function fetchPlaybook(slug) {
+    if (playbookCache.has(slug)) return playbookCache.get(slug);
+    try {
+      const res = await fetch(`${PLAYBOOK_BASE}/${slug}.md?t=${Date.now()}`, { cache: 'no-store' });
+      if (!res.ok) { playbookCache.set(slug, null); return null; }
+      const text = await res.text();
+      playbookCache.set(slug, text);
+      return text;
+    } catch { playbookCache.set(slug, null); return null; }
+  }
 
-  function buildHeadlines(headlines) {
-    const row = el('div', 'sb-headlines');
-    for (const h of headlines) {
-      const t = HEADLINE_TONE[h.tone] || HEADLINE_TONE.info;
-      const chip = el('span', 'sb-chip');
-      chip.textContent = h.text;
-      chip.style.cssText = `background:${t.bg};color:${t.color};border-color:${t.border}`;
-      row.append(chip);
+  async function fetchLatest() {
+    if (latestCache) return latestCache;
+    try {
+      const res = await fetch(`latest.json?t=${Date.now()}`, { cache: 'no-store' });
+      if (!res.ok) return null;
+      latestCache = await res.json();
+      return latestCache;
+    } catch { return null; }
+  }
+
+  async function fetchInbox() {
+    if (inboxCache) return inboxCache;
+    try {
+      const res = await fetch(`inbox.json?t=${Date.now()}`, { cache: 'no-store' });
+      if (!res.ok) return null;
+      inboxCache = await res.json();
+      return inboxCache;
+    } catch { return null; }
+  }
+
+  // ── Unhide hidden clients ────────────────────────────────────────────────────
+
+  let clientsEnsured = false;
+
+  async function ensureClientsVisible() {
+    if (clientsEnsured) return;
+    clientsEnsured = true;
+
+    const latest = await fetchLatest();
+    if (!latest?.by_client?.length) return;
+
+    let overrides = {};
+    try {
+      const res = await fetch('/.netlify/functions/standup-overrides');
+      if (res.ok) overrides = await res.json();
+    } catch { return; }
+
+    const toUnhide = latest.by_client
+      .map(c => c.client)
+      .filter(key => overrides[key]?.hidden);
+
+    if (!toUnhide.length) return;
+
+    await Promise.all(toUnhide.map(key =>
+      fetch('/.netlify/functions/standup-overrides', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ client: key, hidden: false }),
+      }).catch(() => {})
+    ));
+
+    if (typeof window.loadRemoteStandupOverrides === 'function') {
+      await window.loadRemoteStandupOverrides();
     }
-    return row;
   }
 
-  function buildWorkstreamCard(ws) {
-    const bt   = BADGE_TONE[ws.badge?.tone] || BADGE_TONE.amber;
-    const card = el('div', 'sb-card');
+  // ── Inbox item lookup for a client ───────────────────────────────────────────
 
-    // Header: icon + title + badge (right-aligned via flex)
-    const hdr   = el('div', 'sb-card-hdr');
-    const icon  = el('span', 'sb-track-icon');
-    icon.textContent = trackIcon(ws.title);
-    const title = el('span', 'sb-card-title');
-    title.textContent = ws.title;
-    const badge = el('span', 'sb-badge');
-    badge.textContent = ws.badge?.label || '';
-    badge.style.cssText = `background:${bt.bg};color:${bt.color};border-color:${bt.border}`;
-    hdr.append(icon, title, badge);
-    card.append(hdr);
+  function clientInboxItems(inbox, clientName) {
+    if (!inbox) return [];
+    if (Array.isArray(inbox.by_client)) {
+      const match = inbox.by_client.find(c => c.client === clientName);
+      return match?.items || [];
+    }
+    if (Array.isArray(inbox)) return inbox.filter(i => i.client === clientName);
+    return [];
+  }
 
-    // Items
-    if (ws.items?.length) {
-      const list = el('ul', 'sb-items');
-      for (const item of ws.items) {
-        const si = STATE_ICON[item.state] || STATE_ICON.queued;
-        const li = el('li', 'sb-item');
-        const ico = el('span', 'sb-item-icon');
-        ico.textContent = si.char;
-        ico.style.color = si.color;
-        const txt = el('span', 'sb-item-text');
-        txt.textContent = item.text;
-        li.append(ico, txt);
-        list.append(li);
+  // ── Playbook: extract bold header blocks before first `---` ─────────────────
+
+  function parsePlaybookHeader(md) {
+    if (!md) return [];
+    const text = md.replace(/^<!--[^>]*-->\n?/, '');
+    const [preamble = ''] = text.split(/^---$/m);
+    const blocks = [];
+    for (const line of preamble.split('\n')) {
+      const m = line.match(/^\*\*(.+?)\*\*/);
+      if (!m) continue;
+      const value = line.slice(m[0].length).replace(/^:\s*/, '').trim();
+      blocks.push({ label: m[1], value });
+    }
+    return blocks;
+  }
+
+  // ── v2 section builders ──────────────────────────────────────────────────────
+
+  function buildContractHeader(md) {
+    const section = el('div', 'sb-v2-section');
+    section.append(el('span', 'sb-v2-section-label', 'Contract'));
+
+    const blocks = parsePlaybookHeader(md);
+    if (blocks.length) {
+      const hdr = el('div', 'sb-contract-header');
+      for (const b of blocks) {
+        const block  = el('div', 'sb-contract-block');
+        const strong = document.createElement('strong');
+        strong.textContent = b.label;
+        block.append(strong);
+        if (b.value) block.append(': ' + b.value);
+        hdr.append(block);
       }
-      card.append(list);
+      section.append(hdr);
+    } else {
+      section.append(el('div', 'sb-contract-empty', 'No playbook on file.'));
     }
-
-    // Owners footer
-    if (ws.owners?.length) {
-      const owners = el('div', 'sb-owners');
-      owners.textContent = ws.owners.join(', ');
-      card.append(owners);
-    }
-
-    return card;
+    return section;
   }
 
-  function buildWaitingCard(items) {
-    if (!items?.length) return null;
-    const card = el('div', 'sb-card sb-card--woc');
+  function buildVerdictBlock(pulse, entry) {
+    const section = el('div', 'sb-v2-section');
+    section.append(el('span', 'sb-v2-section-label', 'Situation'));
 
-    const hdr = el('div', 'sb-card-hdr');
-    const ico = el('span', 'sb-track-icon');
-    ico.textContent = '⏳';
-    const title = el('span', 'sb-card-title');
-    title.textContent = 'Waiting on client';
-    hdr.append(ico, title);
-    card.append(hdr);
+    const v2       = pulse?.brief_v2 || pulse?.brief?.brief_v2;
+    const verdict  = v2?.verdict  || entry?.headline  || null;
+    const nextMove = v2?.next_move || entry?.upcoming?.[0]?.text || null;
 
-    const list = el('ul', 'sb-items');
-    for (const w of items) {
-      const li   = el('li', 'sb-item sb-item--woc');
-      const bold = el('strong', 'sb-woc-item');
-      bold.textContent = w.item;
-      const meta = el('span', 'sb-woc-meta');
-      meta.textContent = ` (${w.who}, since ${w.since})`;
-      li.append(bold, meta);
-      list.append(li);
-    }
-    card.append(list);
-    return card;
-  }
+    if (verdict)  section.append(el('div', 'sb-verdict-text', verdict));
 
-  function buildGateCard(gate) {
-    if (!gate) return null;
-    const card = el('div', 'sb-card sb-card--gate sb-card--full');
-
-    const hdr = el('div', 'sb-card-hdr');
-    const ico = el('span', 'sb-track-icon');
-    ico.textContent = '🚦';
-    const title = el('span', 'sb-card-title');
-    title.textContent = gate.title;
-    hdr.append(ico, title);
-    card.append(hdr);
-
-    if (gate.items?.length) {
-      const grid = el('div', 'sb-gate-grid');
-      for (const item of gate.items) {
-        const label = el('label', 'sb-gate-item');
-        const cb = document.createElement('input');
-        cb.type = 'checkbox';
-        cb.checked = !!item.done;
-        cb.disabled = true;
-        const txt = el('span', null);
-        txt.textContent = item.text;
-        label.append(cb, txt);
-        grid.append(label);
-      }
-      card.append(grid);
+    if (nextMove) {
+      section.append(el('span', 'sb-next-move-label', 'Next move'));
+      section.append(el('div',  'sb-next-move-text',  nextMove));
     }
 
-    if (gate.note) {
-      const note = el('div', 'sb-gate-note');
-      note.textContent = gate.note;
-      card.append(note);
+    if (!verdict && !nextMove) {
+      section.append(el('div', 'sb-verdict-fallback', 'No situation data available.'));
     }
-    return card;
-  }
-
-  function buildBrief(brief) {
-    const section = el('section', 'sb-brief');
-
-    if (brief.headlines?.length) {
-      section.append(buildHeadlines(brief.headlines));
-    }
-
-    const grid = el('div', 'sb-grid');
-
-    for (const ws of (brief.workstreams || [])) {
-      grid.append(buildWorkstreamCard(ws));
-    }
-
-    const woc = buildWaitingCard(brief.waiting_on_client);
-    if (woc) grid.append(woc);
-
-    const gate = buildGateCard(brief.launch_gate);
-    if (gate) grid.append(gate);
-
-    if (grid.children.length) section.append(grid);
 
     return section;
   }
 
-  // ── Injection ─────────────────────────────────────────────────────────────────
+  function buildDeptLanes(entry, inboxItems) {
+    const section = el('div', 'sb-v2-section');
+    section.append(el('span', 'sb-v2-section-label', 'By department'));
 
-  // In-session cache: slug → pulse JSON (avoids re-fetching on render() calls)
-  const pulseCache = new Map();
+    const depts = entry?.work_by_department || [];
+    if (!depts.length) {
+      section.append(el('div', 'sb-verdict-fallback', 'No department data.'));
+      return section;
+    }
 
-  async function injectBrief() {
+    // Lookup: monday_item_id → inbox item
+    const inboxById = new Map();
+    for (const ix of inboxItems) {
+      if (ix.monday_item_id != null) inboxById.set(String(ix.monday_item_id), ix);
+    }
+
+    // Group by department
+    const byDept = new Map();
+    for (const item of depts) {
+      const dept = item.department || 'Other';
+      if (!byDept.has(dept)) byDept.set(dept, []);
+      byDept.get(dept).push(item);
+    }
+
+    // Sort items within each lane stalest first; sort lanes by max days_stalled
+    for (const items of byDept.values()) {
+      items.sort((a, b) => (b.days_stalled || 0) - (a.days_stalled || 0));
+    }
+    const sortedDepts = [...byDept.entries()].sort((a, b) => {
+      const maxA = Math.max(...a[1].map(i => i.days_stalled || 0));
+      const maxB = Math.max(...b[1].map(i => i.days_stalled || 0));
+      return maxB - maxA;
+    });
+
+    const lanesList = el('div', 'sb-lanes-list');
+
+    for (const [dept, items] of sortedDepts) {
+      const lane  = el('div', 'sb-lane');
+      const caret = el('span', 'sb-lane-caret', '▶');
+
+      const header = el('div', 'sb-lane-header');
+      header.append(caret, el('span', 'sb-lane-dept', dept), el('span', 'sb-lane-count', String(items.length)));
+
+      const itemsWrap = el('div', 'sb-lane-items');
+      itemsWrap.style.display = 'none';
+
+      header.addEventListener('click', () => {
+        const open = itemsWrap.style.display !== 'none';
+        itemsWrap.style.display = open ? 'none' : 'block';
+        caret.textContent = open ? '▶' : '▼';
+      });
+
+      for (const item of items) {
+        const stale    = (item.days_stalled || 0) > 3;
+        const isActive = !(item.days_stalled > 0);
+        const itemId   = item.monday_item_id != null ? String(item.monday_item_id) : null;
+        const inboxItem = itemId ? inboxById.get(itemId) : null;
+
+        const row = el('div', 'sb-lane-item');
+        row.append(
+          el('span', 'sb-lane-item-name', item.item_name || item.text || '—'),
+          el('span', `sb-lane-item-days${stale ? ' stale' : ''}`,
+            item.days_stalled != null ? `${item.days_stalled}d` : ''),
+          el('span', `sb-lane-item-status ${isActive ? 'active' : 'stalled'}`,
+            isActive ? 'active' : 'stalled'),
+        );
+
+        const expandKey = itemId || item.text || Math.random().toString(36);
+
+        row.addEventListener('click', () => {
+          const existing = lane.querySelector(`[data-expand-id="${CSS.escape(expandKey)}"]`);
+          if (existing) { existing.remove(); return; }
+
+          const expand = el('div', 'sb-lane-item-expand');
+          expand.dataset.expandId = expandKey;
+
+          // Item name (linked to Monday)
+          const nameEl = el('div', 'sb-lane-expand-name');
+          if (item.monday_url) {
+            const a = document.createElement('a');
+            a.href = item.monday_url; a.target = '_blank'; a.rel = 'noopener';
+            a.textContent = item.item_name || item.text || '—';
+            nameEl.append(a);
+          } else {
+            nameEl.textContent = item.item_name || item.text || '—';
+          }
+          expand.append(nameEl);
+
+          // Subitems count
+          if (itemId) {
+            const subCount = inboxItems.filter(ix => String(ix.parent_item_id) === itemId).length;
+            if (subCount > 0) {
+              expand.append(el('div', 'sb-lane-expand-sub',
+                `${subCount} sub-item${subCount !== 1 ? 's' : ''}`));
+            }
+          }
+
+          // Latest update snippet
+          if (inboxItem?.latest_update) {
+            const upd  = inboxItem.latest_update;
+            const date = upd.created_at ? upd.created_at.slice(0, 10) : '';
+            expand.append(el('div', 'sb-lane-expand-sub',
+              `${upd.creator_name || ''}${date ? ' · ' + date : ''}`));
+          }
+          if (inboxItem?.state_label) {
+            expand.append(el('div', 'sb-lane-expand-update', inboxItem.state_label));
+          }
+
+          row.after(expand);
+        });
+
+        itemsWrap.append(row);
+      }
+
+      lane.append(header, itemsWrap);
+      lanesList.append(lane);
+    }
+
+    section.append(lanesList);
+    return section;
+  }
+
+  function buildGroundStrip(inboxItems) {
+    const section = el('div', 'sb-v2-section');
+    section.append(el('span', 'sb-v2-section-label', 'On the ground'));
+
+    const items = inboxItems
+      .filter(i => i.latest_update)
+      .sort((a, b) => {
+        const ta = a.latest_update?.created_at || '';
+        const tb = b.latest_update?.created_at || '';
+        return tb.localeCompare(ta);
+      })
+      .slice(0, 5);
+
+    if (!items.length) {
+      section.append(el('div', 'sb-verdict-fallback', 'No recent activity.'));
+      return section;
+    }
+
+    const list = el('div', 'sb-ground-list');
+    for (const item of items) {
+      const upd  = item.latest_update;
+      const date = upd?.created_at ? upd.created_at.slice(0, 10) : '';
+      const row  = el('div', 'sb-ground-row');
+
+      const nameEl = el('div', 'sb-ground-item-name');
+      if (item.url) {
+        const a = document.createElement('a');
+        a.href = item.url; a.target = '_blank'; a.rel = 'noopener';
+        a.textContent = item.item_name || '—';
+        nameEl.append(a);
+      } else {
+        nameEl.textContent = item.item_name || '—';
+      }
+      row.append(nameEl);
+
+      if (upd) {
+        row.append(el('div', 'sb-ground-meta',
+          `${upd.creator_name || ''}${date ? ' · ' + date : ''}`));
+      }
+      list.append(row);
+    }
+    section.append(list);
+    return section;
+  }
+
+  // ── Detail v2 injection ──────────────────────────────────────────────────────
+
+  let injectedFor = null;
+
+  async function injectDetailV2() {
     const clientName = currentClient();
     if (!clientName) return;
 
-    const summary = document.querySelector('.client-detail-pane-summary');
-    if (!summary) return;
+    const split = document.querySelector('.client-detail-split');
+    if (!split) return;
 
-    // Guard against double-injection on the same render cycle.
-    // Mark early (before the async fetch) so concurrent observer firings bail out.
-    if (summary.dataset.sbInjected === clientName) return;
-    summary.dataset.sbInjected = clientName;
+    // Synchronous guard — prevents re-entry for same client
+    if (split.dataset.sbV2 === clientName) return;
+    split.dataset.sbV2 = clientName;
+    injectedFor = clientName;
 
     const slug = slugFor(clientName);
-    let pulse;
+    const [pulse, md, latest, inbox] = await Promise.all([
+      fetchPulse(slug),
+      fetchPlaybook(slug),
+      fetchLatest(),
+      fetchInbox(),
+    ]);
 
-    if (pulseCache.has(slug)) {
-      pulse = pulseCache.get(slug);
-    } else {
-      try {
-        const res = await fetch(`${PULSE_BASE}/${slug}.json?t=${Date.now()}`, { cache: 'no-store' });
-        if (!res.ok) return;            // no pulse file → leave existing UI unchanged
-        pulse = await res.json();
-        pulseCache.set(slug, pulse);
-      } catch {
-        return;                         // network error → leave existing UI unchanged
-      }
-    }
+    // Validate DOM still valid after async
+    if (!document.querySelector('.client-detail-split')) return;
+    if (injectedFor !== clientName) return;
 
-    if (!pulse?.brief) return;          // pulse exists but no brief → leave unchanged
+    const entry      = latest?.by_client?.find(c => c.client === clientName) || null;
+    const clientInbox = clientInboxItems(inbox, clientName);
 
-    // Re-check the summary is still in the DOM (app.js may have re-rendered)
-    const card = summary.querySelector('.client-card');
-    if (!card) return;
+    document.querySelector('.sb-v2-detail')?.remove();
 
-    card.after(buildBrief(pulse.brief));
+    const detail = el('div', 'sb-v2-detail');
+    detail.append(
+      buildContractHeader(md),
+      buildVerdictBlock(pulse, entry),
+      buildDeptLanes(entry, clientInbox),
+      buildGroundStrip(clientInbox),
+    );
+
+    const app = document.getElementById('app');
+    app?.classList.add('sb-v2');
+
+    const freshSplit = document.querySelector('.client-detail-split');
+    if (freshSplit) freshSplit.after(detail);
   }
 
-  // ── MutationObserver ──────────────────────────────────────────────────────────
+  // ── MutationObserver ─────────────────────────────────────────────────────────
 
   function observe() {
     const app = document.getElementById('app');
     if (!app) return;
 
     const obs = new MutationObserver(() => {
-      if (document.querySelector('.client-detail-pane-summary')) {
-        injectBrief();
+      if (document.querySelector('.client-detail-split')) {
+        injectDetailV2();
+      } else {
+        if (app.classList.contains('sb-v2')) {
+          app.classList.remove('sb-v2');
+          document.querySelector('.sb-v2-detail')?.remove();
+          injectedFor = null;
+        }
+        ensureClientsVisible();
       }
     });
+
     obs.observe(app, { childList: true, subtree: true });
 
-    // Catch the case where we load directly onto a detail-view URL
-    if (document.querySelector('.client-detail-pane-summary')) injectBrief();
+    if (document.querySelector('.client-detail-split')) {
+      injectDetailV2();
+    } else {
+      ensureClientsVisible();
+    }
   }
 
   if (document.readyState === 'loading') {
