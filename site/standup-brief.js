@@ -1150,7 +1150,16 @@
     const app = document.getElementById('app');
     if (!app) return;
 
-    const tick = () => {
+    const tick = (mutations) => {
+      // Break the observer loop: our own renderRoot() writes fire mutations
+      // whose targets are all inside .sb3-root. Ignore those or we recurse
+      // forever (mount → render → mutation → tick → render → …).
+      if (mutations && mutations.length && mutations.every(m => {
+        const t  = m.target;
+        const el = t && (t.nodeType === 1 ? t : t.parentElement);
+        return el && el.closest('.sb3-root');
+      })) return;
+
       // Per-client drill-in: v2 owns this.
       if (document.querySelector('.client-detail-split')) {
         unmountV3();
@@ -1164,6 +1173,9 @@
           document.querySelector('.sb-v2-detail')?.remove();
           injectedFor = null;
         }
+        // Already mounted and root is still in the DOM: leave it. User-driven
+        // re-renders (pill clicks, card toggles) call renderRoot() directly.
+        if (v3State.mounted && document.querySelector('.sb3-root')) return;
         mountV3();
         return;
       }
