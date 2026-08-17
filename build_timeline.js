@@ -193,11 +193,87 @@ function sharedTokenCount(tokensA, tokensB) {
   return tokensA.filter(a => tokensB.some(b => tokensSimilar(a, b))).length;
 }
 
-// ── Match plan tasks → Monday items + subitems ────────────────────────────────
-// Requires 2+ shared meaningful tokens (or 1 if task has only 1 meaningful token).
+// Lens matches from apply_task_matching.js. plan_task_id format = `${rawDept}::${label}`.
+function loadLensMatches(slug) {
+  const p = `timeline/${slug}.matches.json`;
+  if (!existsSync(p)) return null;
+  const data = readJSON(p);
+  if (!data?.matches) return null;
+  const byId = new Map();
+  for (const m of data.matches) {
+    if (m.plan_task_id && m.monday_item_id) {
+      byId.set(m.plan_task_id, { monday_item_id: String(m.monday_item_id), confidence: m.confidence });
+    }
+  }
+  return byId;
+}
 
-function matchPlanTasks(planDepts, milestones, mondayItems, inboxItems) {
-  // Flatten plan tasks, dedupe by dept+label.
+const DONE_STATUSES = new Set(['done', 'complete', 'completed', 'closed', 'shipped', 'live', 'approved']);
+
+function isDoneStatus(s) {
+  if (!s) return false;
+  return DONE_STATUSES.has(String(s).toLowerCase().trim());
+}
+
+// Full monday snapshot (from generate.py) → { itemId: {status, subitems: [{id, status}]} }
+function loadMondaySnapshot(standupNames) {
+  const snap = readJSON('site/monday-items.json');
+  if (!snap?.by_client) return new Map();
+  const byId = new Map();
+  for (const [clientName, items] of Object.entries(snap.by_client)) {
+    if (!standupNames.some(n => clientName.toLowerCase().includes(n.toLowerCase()) || n.toLowerCase().includes(clientName.toLowerCase()))) continue;
+    for (const it of items) {
+      byId.set(String(it.monday_item_id), {
+        status:   it.status || null,
+        subitems: (it.subitems || []).map(s => ({
+          monday_item_id: String(s.monday_item_id),
+          status:         s.status || null,
+        })),
+      });
+      for (const s of it.subitems || []) {
+        byId.set(String(s.monday_item_id), { status: s.status || null, subitems: [] });
+      }
+    }
+  }
+  return byId;
+}
+
+// Items marked "Done" via standups' completed_history + completed_this_week text.
+// Returns Set<monday_item_id>. Only IDs parseable from monday_url are included.
+function loadDoneFromStandupHistory(standupNames) {
+  const DONE_RE  = /Marked Done on Monday:/i;
+  const PULSE_RE = /\/pulses\/(\d+)/;
+  const doneIds  = new Set();
+  if (!existsSync('standups')) return doneIds;
+
+  for (const f of readdirSync('standups')) {
+    if (!f.endsWith('.json')) continue;
+    const data = readJSON(`standups/${f}`);
+    if (!data?.by_client) continue;
+    for (const c of data.by_client) {
+      const cn = (c.client || '').toLowerCase();
+      if (!standupNames.some(n => cn.includes(n.toLowerCase()) || n.toLowerCase().includes(cn))) continue;
+      const pools = [
+        ...(c.completed_this_week || []),
+        ...(c.completed_history || []).flatMap(b => b.items || []),
+      ];
+      for (const item of pools) {
+        if (!DONE_RE.test(item.text || '')) continue;
+        const m = (item.monday_url || '').match(PULSE_RE);
+        if (m) doneIds.add(m[1]);
+      }
+    }
+  }
+  return doneIds;
+}
+
+// ── Match plan tasks → Monday items + subitems ────────────────────────────────
+// Lens matches (from apply_task_matching.js) take precedence.
+// Token fallback requires 2+ shared meaningful tokens (or 1 if task has only 1).
+
+function matchPlanTasks(planDepts, milestones, mondayItems, inboxItems, lensMatches, doneIds, snapshotById) {
+  // Flatten plan tasks, dedupe by canonical dept + label. Keep RAW dept in id so
+  // it matches the plan_task_id emitted by apply_task_matching.js.
   const planTasks = [];
   const taskSeen  = new Set();
 
@@ -207,7 +283,7 @@ function matchPlanTasks(planDepts, milestones, mondayItems, inboxItems) {
       const key  = dept + '|' + bar.label.toLowerCase();
       if (!taskSeen.has(key)) {
         taskSeen.add(key);
-        planTasks.push({ label: bar.label, dept, source: 'bar' });
+        planTasks.push({ id: `${d.dept}::${bar.label}`, label: bar.label, dept, source: 'bar' });
       }
     }
   }
@@ -216,7 +292,7 @@ function matchPlanTasks(planDepts, milestones, mondayItems, inboxItems) {
     const key  = dept + '|' + m.label.toLowerCase();
     if (!taskSeen.has(key)) {
       taskSeen.add(key);
-      planTasks.push({ label: m.label, dept, source: 'milestone', date: m.date });
+      planTasks.push({ id: `${m.dept}::${m.label}`, label: m.label, dept, source: 'milestone', date: m.date });
     }
   }
 
@@ -259,19 +335,29 @@ function matchPlanTasks(planDepts, milestones, mondayItems, inboxItems) {
     const taskTokens = meaningfulTokens(task.label);
     const minShared  = taskTokens.length >= 2 ? 2 : 1;
 
-    // Filter candidates to same canonical dept.
-    const deptCandidates = allCandidates.filter(c =>
-      normalizeDept(c.department) === task.dept
-    );
+    let best = null, bestShared = 0, matchedVia = null;
 
-    let best = null, bestShared = 0;
-    for (const c of deptCandidates) {
-      const cTokens = meaningfulTokens(c.item_name);
-      const shared  = sharedTokenCount(taskTokens, cTokens);
-      if (shared >= minShared && shared > bestShared) {
-        bestShared = shared;
-        best = c;
+    // Lens match first — model has already validated meaning, so no dept filter.
+    const lens = lensMatches?.get(task.id);
+    if (lens) {
+      best = allCandidates.find(c => c.monday_item_id === lens.monday_item_id);
+      if (best) matchedVia = best.is_subitem ? 'lens-subitem' : 'lens';
+    }
+
+    // Token fallback within same canonical dept.
+    if (!best) {
+      const deptCandidates = allCandidates.filter(c =>
+        normalizeDept(c.department) === task.dept
+      );
+      for (const c of deptCandidates) {
+        const cTokens = meaningfulTokens(c.item_name);
+        const shared  = sharedTokenCount(taskTokens, cTokens);
+        if (shared >= minShared && shared > bestShared) {
+          bestShared = shared;
+          best = c;
+        }
       }
+      if (best) matchedVia = best.is_subitem ? 'subitem' : 'item';
     }
 
     const result = { label: task.label, dept: task.dept, source: task.source };
@@ -294,6 +380,24 @@ function matchPlanTasks(planDepts, milestones, mondayItems, inboxItems) {
       if (best.days_stalled > 0) state = 'stalled';
       if (ix?.state === 'done' || ix?.state_label?.toLowerCase() === 'done') state = 'done';
 
+      // Widen done detection: known-done ids from standups history / snapshot,
+      // explicit Done status from monday snapshot, or a parent whose ALL subitems
+      // (per snapshot) are Done.
+      if (id) {
+        if (doneIds?.has(id)) state = 'done';
+        const snap = snapshotById?.get(id);
+        if (snap) {
+          if (isDoneStatus(snap.status)) state = 'done';
+          if (snap.subitems?.length > 0 && snap.subitems.every(s => isDoneStatus(s.status))) {
+            state = 'done';
+          }
+        }
+      }
+
+      const matchScore = matchedVia?.startsWith('lens')
+        ? 100
+        : Math.round(bestShared * 100 / Math.max(taskTokens.length, meaningfulTokens(best.item_name).length));
+
       Object.assign(result, {
         not_on_monday:     false,
         monday_item_id:    id,
@@ -304,8 +408,8 @@ function matchPlanTasks(planDepts, milestones, mondayItems, inboxItems) {
         subitem_count:     subCount,
         state,
         state_label:       ix?.state_label || null,
-        match_score:       Math.round(bestShared * 100 / Math.max(taskTokens.length, meaningfulTokens(best.item_name).length)),
-        matched_via:       best.is_subitem ? 'subitem' : 'item',
+        match_score:       matchScore,
+        matched_via:       matchedVia,
       });
     } else {
       result.not_on_monday = true;
@@ -603,13 +707,26 @@ async function main() {
       ? `ENGAGEMENT · ${engStart} → ${engEnd}`
       : 'ENGAGEMENT · dates unknown';
 
-    // Match plan tasks to current Monday items.
+    // Match plan tasks to current Monday items (lens matches first, then token).
+    const lensMatches   = loadLensMatches(slug);
+    const doneIds       = loadDoneFromStandupHistory(standupNames);
+    const snapshotById  = loadMondaySnapshot(standupNames);
     const { matched_tasks, monday_only, planTaskCount } = matchPlanTasks(
-      plan.departments || [], plan.milestones || [], mondayItems, inboxItems
+      plan.departments || [], plan.milestones || [], mondayItems, inboxItems,
+      lensMatches, doneIds, snapshotById
     );
     const matchedCount   = matched_tasks.filter(t => !t.not_on_monday).length;
     const unmatchedCount = matched_tasks.filter(t =>  t.not_on_monday).length;
+    const doneMatched    = matched_tasks.filter(t => !t.not_on_monday && t.state === 'done').length;
     const matchRatio     = planTaskCount > 0 ? Math.round(matchedCount / planTaskCount * 100) / 100 : 0;
+
+    // When a matches.json exists, prefer a match-based actualPct: % of plan tasks
+    // whose matched Monday item is done. Falls back to the milestone-fuzzy metric
+    // when there is no lens file yet.
+    const actualPctFinal = lensMatches
+      ? (planTaskCount > 0 ? Math.round(doneMatched / planTaskCount * 100) + '%' : '0%')
+      : actualPct;
+    const paceFinal = lensMatches ? computePace(actualPctFinal, plannedPct) : pace;
 
     const out = {
       generated_at: new Date().toISOString(),
@@ -622,10 +739,10 @@ async function main() {
       events:       dedupedEvents.map(e => ({ ...e, dept: normalizeDept(e.dept) })),
       // Computed
       completedCount,
-      actualPct,
+      actualPct:    actualPctFinal,
       plannedPct,
-      paceLabel:    pace.label,
-      paceColor:    pace.color,
+      paceLabel:    paceFinal.label,
+      paceColor:    paceFinal.color,
       nextUp,
       window:       window_,
       insight,
@@ -636,7 +753,8 @@ async function main() {
     };
 
     writeFileSync(`timeline/${slug}.json`, JSON.stringify(out, null, 2));
-    console.log(`  ${slug}: ✓ ${planTaskCount} plan tasks — ${matchedCount} matched, ${unmatchedCount} unmatched | ${dedupedEvents.length} events, ${pace.label}`);
+    const lensTag = lensMatches ? ' (lens)' : '';
+    console.log(`  ${slug}: ✓ ${planTaskCount} plan tasks — ${matchedCount} matched${lensTag}, ${unmatchedCount} unmatched | ${dedupedEvents.length} events, ${paceFinal.label}`);
     built++;
   }
 
