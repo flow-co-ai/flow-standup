@@ -133,10 +133,42 @@ const EMIT_BRIEF = {
       },
       brief_v2: {
         type: 'object',
-        required: ['verdict', 'next_move'],
+        required: ['verdict', 'next_move', 'blocks', 'snapshot', 'history_line'],
         properties: {
           verdict:    { type: 'string', description: 'One sentence ≤20 words. Whose move, what matters, cite the Monday item.' },
           next_move:  { type: 'string', description: 'One action ≤20 words. Format: "Owner: task — why it unblocks."' },
+          blocks: {
+            type: 'array',
+            description: 'Open loops blocking progress today. Whose move is it? Infer side from last-word direction in the standup comms, the Monday assignee, and waiting_on_client entries. Empty array when nothing is blocked.',
+            items: {
+              type: 'object',
+              required: ['item', 'side', 'who', 'age_days', 'hot'],
+              properties: {
+                item:     { type: 'string', description: 'Cite the Monday item name or the comms thread. Never invent.' },
+                side:     { type: 'string', enum: ['you', 'team', 'client'], description: '"you" = Sohib specifically. "team" = another Flow teammate. "client" = client-side contact.' },
+                who:      { type: 'string', description: 'Person name, or role if unnamed.' },
+                age_days: { type: 'integer', description: 'Days the block has been open.' },
+                hot:      { type: 'boolean', description: 'True when age_days >= 19 OR renewal-adjacent (touches a stated renewal, launch gate, or scoreboard decision).' },
+              },
+            },
+          },
+          snapshot: {
+            type: 'array',
+            description: '3–5 header rows. Attempt in order: Open items, Contract, Last client word, Judged on, Month to date. SKIP any row whose source data is missing — never invent contract terms or targets. Honest-gaps rule: absence is stated by omitting the row, never by placeholder text.',
+            items: {
+              type: 'object',
+              required: ['label', 'value', 'tone'],
+              properties: {
+                label: { type: 'string', description: 'One of: "Open items", "Contract", "Last client word", "Judged on", "Month to date".' },
+                value: { type: 'string', description: 'One sentence.' },
+                tone:  { type: 'string', enum: ['ok', 'warn', 'bad', 'plain', 'muted'] },
+              },
+            },
+          },
+          history_line: {
+            anyOf: [{ type: 'string' }, { type: 'null' }],
+            description: 'Up to 3 items from completed_this_week joined with " · " (space, middle-dot, space). Null when the week has no completions. Never include anything not in completed_this_week.',
+          },
         },
       },
     },

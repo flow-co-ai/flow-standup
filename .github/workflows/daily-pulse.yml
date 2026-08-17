@@ -66,6 +66,11 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node apply_ops_pulse.js
 
+      - name: Build standup summary
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node build_standup_summary.js
+
       - name: Apply performance lens
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -87,7 +92,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add pulse/ history/ reports/ playbooks/ timeline/
+          git add pulse/ history/ reports/ playbooks/ timeline/ standups/
           if git diff --staged --quiet; then
             echo "Nothing changed — skipping commit."
             exit 0
