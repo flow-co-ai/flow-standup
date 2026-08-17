@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-16T11:12:48.197Z",
-  "date": "2026-08-16",
+  "generated_at": "2026-08-17T11:18:23.640Z",
+  "date": "2026-08-17",
   "slug": "steel-advance",
   "name": "Advance Grinding",
   "type": "leadgen",
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) recorded zero spend, leads, and clicks over the past 28 days, meaning all engagement came exclusively from Google Business Profile, which drove 107 total actions including 3 calls, 70 direction requests, and 34 website clicks. The biggest concern is GBP activity dropping 45.45% in the last 7 days versus the prior 7 days, likely driven by reduced search demand or a dip in profile visibility rather than any paid support.",
+  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, meaning all engagement is coming entirely from Google Business Profile, which drove 110 total actions including 3 calls, 70 direction requests, and 37 website clicks. The biggest concern is a 30% drop in GBP actions over the last 7 days versus the prior 7 days, likely driven by reduced search demand or a dip in profile visibility without any paid traffic to supplement it.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,20 +25,20 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 107,
+          "actions": 110,
           "calls": 3,
           "directions": 70,
-          "web_clicks": 34
+          "web_clicks": 37
         }
       }
     },
     "organic": {
-      "gbp_actions": 107,
+      "gbp_actions": 110,
       "ig_reach": 0
     },
     "top_campaign": null,
     "latest_day": {
-      "date": "2026-08-15",
+      "date": "2026-08-16",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -56,7 +56,7 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -45.45,
+      "gbp_7d_pct": -30,
       "sc_7d_pct": null,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
@@ -65,7 +65,6 @@
     "flags": [],
     "series": {
       "dates": [
-        "2026-07-19",
         "2026-07-20",
         "2026-07-21",
         "2026-07-22",
@@ -92,7 +91,8 @@
         "2026-08-12",
         "2026-08-13",
         "2026-08-14",
-        "2026-08-15"
+        "2026-08-15",
+        "2026-08-16"
       ],
       "spend": [
         0,
@@ -215,7 +215,6 @@
         0
       ],
       "gbp_actions": [
-        0,
         2,
         0,
         3,
@@ -240,7 +239,8 @@
         1,
         10,
         7,
-        0,
+        1,
+        2,
         0,
         0
       ],
@@ -404,45 +404,63 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-16T11:15:57.115Z",
+    "generated_at": "2026-08-17T11:21:56.534Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP-only account; paid dark 28+ days, organic fading fast.",
+    "verdict": "GBP-only account; paid silence is the real risk, not GBP dip.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend, leads, and clicks across Meta and Google Ads for the full 28-day window — no paid channel is contributing revenue.",
+        "text": "Zero paid spend, zero leads, zero clicks across Meta and Google Ads for all 28 tracked days — no paid efficiency to measure.",
         "confidence": "confirmed",
-        "channel": "meta/google_ads"
+        "channel": "meta+google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP 3-day signal confirms decline: Aug 13–15 = 0 actions vs Aug 10–12 = 1 action; broader drop is 45.45% vs prior 7d, all from 107 28-day total.",
+        "text": "GBP actions fell to roughly 3 total in the last 3 days (Aug 14–16: 2, 0, 0) vs 18 in the prior 3 days (Aug 11–13: 1, 10, 7) — a confirmed 3-day drop, not noise.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GBP is carrying the entire account: 107 actions (3 calls, 70 directions, 34 web clicks) with zero paid support — single point of failure.",
-        "confidence": "confirmed",
+        "text": "GBP actions are volatile across the full 45-day series (range: 0–12/day) with no paid traffic to stabilise demand; 110 total 28-day actions rest entirely on organic visibility.",
+        "confidence": "probable",
         "channel": "gbp"
+      },
+      {
+        "id": "F4",
+        "priority": 4,
+        "text": "GA4 sessions, Search Console clicks, and IG reach are all zero for 28 days — either tracking is fully broken or no web/social activity exists outside GBP.",
+        "confidence": "confirmed",
+        "channel": "ga4+sc+ig"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Watch GBP daily actions; if 3-day total stays at 0, escalate to Sohib for account status review by 2026-08-19.",
+        "type": "fix",
+        "text": "Verify GA4 and Search Console tracking installation; zero sessions across 28 days signals a broken pixel, not zero traffic.",
         "cites": [
-          "F2"
+          "F4"
         ],
-        "monday_item_name": "Watch GBP Decline Aug",
-        "monday_update": "GBP actions have hit 0 for the last 3 consecutive days (Aug 13–15), continuing a 45.45% 7d decline from 107 total 28-day actions. No paid channels are running to offset this drop. Success check: any day with ≥3 GBP actions before 2026-08-19 holds the watch; zero through Aug 19 requires Sohib to confirm account standing and intent to reactivate paid. Re-check date: 2026-08-19."
+        "monday_item_name": "Fix GA4 / SC Tracking",
+        "monday_update": "GA4 sessions and Search Console clicks have read zero for every day in the 45-day series, which almost certainly means a tracking break, not the absence of any web traffic. Audit the GA4 property tag and GSC site verification before attributing any performance story to these channels. Success = at least one non-zero GA4 session recorded within 3 days of the fix. Target resolution by 2026-08-20."
+      },
+      {
+        "id": "S2",
+        "type": "watch",
+        "text": "Watch GBP daily actions for 3 more days; last 3-day signal (2 total) vs prior 3 days (18 total) warrants monitoring before escalating.",
+        "cites": [
+          "F2",
+          "F3"
+        ],
+        "monday_item_name": "Watch GBP Action Drop",
+        "monday_update": "GBP actions dropped from 18 over Aug 11–13 to just 2 over Aug 14–16 — a confirmed 3-day decline. This may be weekend seasonality or early profile visibility loss. No paid traffic exists to offset it. Re-check on 2026-08-20; if the 3-day total remains below 6, escalate to a GBP profile audit."
       }
     ],
-    "next_check": "2026-08-19"
+    "next_check": "2026-08-20"
   }
 }

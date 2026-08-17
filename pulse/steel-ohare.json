@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-16T11:12:53.170Z",
-  "date": "2026-08-16",
+  "generated_at": "2026-08-17T11:18:31.824Z",
+  "date": "2026-08-17",
   "slug": "steel-ohare",
   "name": "O'Hare Precision",
   "type": "leadgen",
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "O'Hare Precision had zero paid spend and zero leads across Meta and Google Ads in the last 28 days, so all 204 GBP actions (including 149 direction requests and 6 calls) represent the only measurable demand activity. The biggest movement is a -8% week-over-week dip in GBP engagement, likely driven by seasonal softness or reduced local search visibility rather than any paid media change.",
+  "verdict": "GBP was the standout channel this period, driving 214 total actions (147 directions, 11 calls, 56 web clicks) with a strong 42% week-over-week surge, likely fueled by improved local search visibility or a spike in near-me intent. Paid channels (Meta and Google Ads) show zero spend and zero leads, so reactivating those campaigns should be the immediate priority to diversify lead flow.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,24 +25,24 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 204,
-          "calls": 6,
-          "directions": 149,
-          "web_clicks": 49
+          "actions": 214,
+          "calls": 11,
+          "directions": 147,
+          "web_clicks": 56
         }
       }
     },
     "organic": {
-      "gbp_actions": 204,
+      "gbp_actions": 214,
       "ig_reach": 0
     },
     "top_campaign": null,
     "search": {
-      "clicks": 429,
-      "impressions": 65329
+      "clicks": 433,
+      "impressions": 64972
     },
     "latest_day": {
-      "date": "2026-08-15",
+      "date": "2026-08-16",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -60,8 +60,8 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -8,
-      "sc_7d_pct": -6.67,
+      "gbp_7d_pct": 42,
+      "sc_7d_pct": -7.62,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
       "spend_per_day_7d": 0
@@ -69,7 +69,6 @@
     "flags": [],
     "series": {
       "dates": [
-        "2026-07-19",
         "2026-07-20",
         "2026-07-21",
         "2026-07-22",
@@ -96,7 +95,8 @@
         "2026-08-12",
         "2026-08-13",
         "2026-08-14",
-        "2026-08-15"
+        "2026-08-15",
+        "2026-08-16"
       ],
       "spend": [
         0,
@@ -219,7 +219,6 @@
         0
       ],
       "gbp_actions": [
-        15,
         11,
         7,
         4,
@@ -244,7 +243,8 @@
         15,
         12,
         7,
-        12,
+        21,
+        16,
         0,
         0
       ],
@@ -279,7 +279,6 @@
         0
       ],
       "sc_clicks": [
-        2,
         26,
         26,
         24,
@@ -306,6 +305,7 @@
         20,
         14,
         14,
+        6,
         0
       ],
       "ga4_sessions": [
@@ -409,53 +409,72 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-16T11:16:09.521Z",
+    "generated_at": "2026-08-17T11:22:18.523Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Zero paid activity for 28 days; organic demand still alive but softening.",
+    "verdict": "Paid channels fully dark; GBP alone is holding the line.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend and zero leads for the full 28-day window — no CPL to evaluate; all demand is organic-only.",
+        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google Ads — means CPL is undefined and all lead flow is offline.",
         "confidence": "confirmed",
-        "channel": "cross"
+        "channel": "meta+google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions fell -8% week-over-week (204 total, 28d); last 3 days logged 0 GBP actions vs prior 3-day avg of ~9.7.",
-        "confidence": "confirmed",
-        "channel": "GBP"
+        "text": "GBP delivered 214 actions (147 directions, 11 calls, 56 web clicks) over 28 days but last 2 days show 0 actions — pattern needs watching.",
+        "confidence": "probable",
+        "channel": "gbp"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "Search clicks down -6.67% week-over-week; last 3 days averaged 9.3 clicks vs prior 3-day avg of 19.0 — a 3-day confirmed dip.",
-        "confidence": "confirmed",
+        "priority": 3,
+        "text": "Search clicks dropped 7.62% week-over-week and last recorded day (2026-08-16) shows 0 sc_clicks, suggesting indexing or GSC drop risk.",
+        "confidence": "hypothesis",
         "channel": "search"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "429 search clicks over 28 days with zero paid amplification; inbound interest exists but no paid funnel is capturing it.",
-        "confidence": "probable",
-        "channel": "search"
+        "text": "GA4 sessions are 0 across all 45 days — tracking is not firing; website lead capture is fully blind.",
+        "confidence": "confirmed",
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Watch GBP and search clicks for 3 more days; re-check 2026-08-19 before any paid reactivation decision.",
+        "type": "fix",
+        "text": "Investigate and reactivate paid campaigns; $0 spend for 28 days means zero paid lead flow — confirm budget, billing, and campaign status.",
         "cites": [
-          "F2",
-          "F3"
+          "F1"
         ],
-        "monday_item_name": "Watch GBP & Search Decline",
-        "monday_update": "GBP actions hit 0 on each of the last 3 logged days (Aug 13–15) and search clicks dropped from a 3-day avg of 19.0 to 9.3, a confirmed short-term dip. No paid spend is running to offset this softness. Success check: GBP daily actions return to ≥7 and sc_clicks return to ≥15/day by 2026-08-19; if they do not, escalate to paid reactivation discussion with Sohib."
+        "monday_item_name": "Reactivate Paid Campaigns",
+        "monday_update": "Both Meta and Google Ads have recorded $0 spend across the full 28-day window — no paid leads have been generated. Sohib should confirm with the client whether campaigns were intentionally paused or if there is a billing/account issue, then reactivate with at least a minimum test budget. Success is confirmed when daily spend registers above $0 and at least one lead is recorded within 7 days of reactivation. Resolve by 2026-08-21."
+      },
+      {
+        "id": "S2",
+        "type": "fix",
+        "text": "Audit and repair GA4 tracking; 0 sessions across all 45 days means the property is misfired or disconnected — website performance is invisible.",
+        "cites": [
+          "F4"
+        ],
+        "monday_item_name": "Fix GA4 Tracking",
+        "monday_update": "GA4 sessions have read 0 for every single day in the 45-day series, which means the tag is either misfired, pointing to the wrong property, or the site is not tagged. This is a confirmed blind spot — any website leads or organic traffic are untracked. Success is confirmed when GA4 begins reporting non-zero daily sessions. Resolve and verify by 2026-08-21."
+      },
+      {
+        "id": "S3",
+        "type": "watch",
+        "text": "Watch GBP actions for 3 more days; last 2 days show 0 actions after a 42% weekly surge — confirm whether weekend dip or reversal.",
+        "cites": [
+          "F2"
+        ],
+        "monday_item_name": "Watch GBP Action Drop",
+        "monday_update": "GBP delivered 214 actions over 28 days with a 42% week-over-week surge, but the last 2 recorded days (2026-08-15 and 2026-08-16) both show 0 actions. This may be a weekend pattern given the series shows recurring Sunday zeros, but it should be confirmed. Re-check on 2026-08-20 — if the 3-day average falls below 5 actions/day versus the prior 7-day average of ~10, escalate as a GBP visibility issue."
       }
     ],
-    "next_check": "2026-08-19"
+    "next_check": "2026-08-20"
   }
 }

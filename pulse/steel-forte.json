@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-16T11:12:43.744Z",
-  "date": "2026-08-16",
+  "generated_at": "2026-08-17T11:18:12.163Z",
+  "date": "2026-08-17",
   "slug": "steel-forte",
   "name": "Forte Metals",
   "type": "leadgen",
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Forte Metals saw no paid ad activity in the last 28 days (zero spend, zero leads across Meta and Google Ads), but organic GBP drove 89 total actions including 10 calls, 48 direction requests, and 31 website clicks. The biggest movement was a 400% spike in Search Console clicks over the past 7 days, suggesting a strong lift in organic search visibility likely driven by improved local rankings or seasonal demand.",
+  "verdict": "Forte Metals saw no paid activity across Meta or Google Ads in the last 28 days, making Google Business Profile the sole source of engagement with 94 total actions (10 calls, 49 directions, 35 web clicks). The biggest movement was a 450% spike in Search Console clicks over the past 7 days, likely driven by improved organic visibility or a recent content or listing update.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,24 +25,24 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 89,
+          "actions": 94,
           "calls": 10,
-          "directions": 48,
-          "web_clicks": 31
+          "directions": 49,
+          "web_clicks": 35
         }
       }
     },
     "organic": {
-      "gbp_actions": 89,
+      "gbp_actions": 94,
       "ig_reach": 0
     },
     "top_campaign": null,
     "search": {
-      "clicks": 26,
-      "impressions": 1743
+      "clicks": 27,
+      "impressions": 1777
     },
     "latest_day": {
-      "date": "2026-08-15",
+      "date": "2026-08-16",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -60,8 +60,8 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": 18.75,
-      "sc_7d_pct": 400,
+      "gbp_7d_pct": 100,
+      "sc_7d_pct": 450,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
       "spend_per_day_7d": 0
@@ -69,7 +69,6 @@
     "flags": [],
     "series": {
       "dates": [
-        "2026-07-19",
         "2026-07-20",
         "2026-07-21",
         "2026-07-22",
@@ -96,7 +95,8 @@
         "2026-08-12",
         "2026-08-13",
         "2026-08-14",
-        "2026-08-15"
+        "2026-08-15",
+        "2026-08-16"
       ],
       "spend": [
         0,
@@ -219,7 +219,6 @@
         0
       ],
       "gbp_actions": [
-        0,
         4,
         6,
         6,
@@ -244,6 +243,7 @@
         1,
         7,
         9,
+        5,
         2,
         0,
         0
@@ -279,7 +279,6 @@
         0
       ],
       "sc_clicks": [
-        0,
         2,
         0,
         0,
@@ -304,6 +303,7 @@
         1,
         4,
         3,
+        1,
         1,
         1,
         0
@@ -409,63 +409,45 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-16T11:15:45.772Z",
+    "generated_at": "2026-08-17T11:21:38.645Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Organic is the only engine running; paid is fully dark.",
+    "verdict": "Organic signals alive; zero paid activity means money question is moot.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — Meta and Google both dark. No CPL to evaluate; all lead generation is offline.",
+        "text": "Zero paid spend across Meta and Google Ads for all 28 days observed; CPL and ROAS are undefined — no paid efficiency to assess.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "meta/google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Search Console clicks surged 400% 7d vs prior 7d, reaching 5 clicks on 2026-08-12 alone — strongest organic signal in the 45-day series.",
-        "confidence": "confirmed",
+        "text": "Search Console clicks spiked 450% in the last 7 days; 3-day signal (Aug 14–16) averages 0.7 clicks/day vs 2.3/day prior 3 days — spike already fading.",
+        "confidence": "probable",
         "channel": "organic"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GBP actions up 18.75% 7d vs prior 7d; last-3-day total (2026-08-13–15) is 3 actions vs prior-3-day total of 17 — short-term GBP momentum has stalled after the mid-July peak of 12 actions on 2026-07-31.",
-        "confidence": "probable",
+        "text": "GBP delivered 94 actions (10 calls, 49 directions, 35 web clicks) in 28 days with zero paid support; 7d GBP delta is +100% but last 2 days show 0 actions.",
+        "confidence": "confirmed",
         "channel": "gbp"
-      },
-      {
-        "id": "F4",
-        "priority": 4,
-        "text": "SC click spike is not converting to GA4 sessions — GA4 shows 0 sessions across all 28 days, indicating a likely tracking gap or GA4 misconfiguration.",
-        "confidence": "probable",
-        "channel": "organic"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "watch",
-        "text": "Monitor SC clicks: if 7-day total exceeds 26 again by 2026-08-23, organic intent justifies restarting paid capture.",
+        "text": "Watch SC clicks daily; if 3-day average drops below 1 click/day, investigate listing or content change that drove the 450% spike.",
         "cites": [
-          "F2",
-          "F1"
+          "F2"
         ],
-        "monday_item_name": "Watch SC relaunch threshold",
-        "monday_update": "Search Console clicks hit a 400% spike (26 clicks in 7 days) while paid spend remains at $0. This organic demand is currently uncaptured by any paid channel. If SC clicks hold above 26 for the next 7-day window (check 2026-08-23), that confirms sustained intent and makes a case to Sohib for restarting Meta or Google campaigns. No paid action until that threshold is confirmed."
-      },
-      {
-        "id": "S2",
-        "type": "fix",
-        "text": "Investigate GA4 zero-session read — 26 SC clicks with 0 GA4 sessions over 28 days signals a broken or missing tracking tag.",
-        "cites": [
-          "F4"
-        ],
-        "monday_item_name": "Fix GA4 tracking Forte Metals",
-        "monday_update": "GA4 has recorded 0 sessions across all 28 days despite 26 Search Console clicks in the last 7 days alone. This is almost certainly a misconfigured or missing GA4 tag on the website, not a traffic problem. The fix is to verify the GA4 property ID in GTM or the site's header and confirm a live session fires on 2026-08-19. Success check: GA4 sessions > 0 within 3 days of the fix being deployed."
+        "monday_item_name": "Watch SC Click Decay",
+        "monday_update": "Search Console clicks spiked 450% last 7 days but the Aug 14–16 3-day average has already dropped to ~0.7 clicks/day from a peak of ~2.3. No action is warranted yet. Success check: if the 3-day SC average holds above 2 clicks/day by 2026-08-20, the spike has legs; if it falls below 1, pull the GSC query report to identify what changed and whether a GBP or content update is responsible. Re-check 2026-08-20."
       }
     ],
-    "next_check": "2026-08-23"
+    "next_check": "2026-08-20"
   }
 }
