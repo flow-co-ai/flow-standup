@@ -17,7 +17,17 @@ const ACTIVE_STATUSES = ["ready", "confirm"];
 // visually distinct even though both sections are handled-and-collapsed.
 const HANDLED_STATUSES = ["done", "ignored"];
 const MONDAYED_STATUSES = ["sent"];
-const foSectionExpanded = { handled: false, mondayed: false, dismissed: false };
+// Neither of these is an actionable draft: "exists" means the Monday item was
+// already there so nothing to send, "blocked" means the drafter couldn't
+// proceed. They still deserve to be visible so the vocabulary is auditable.
+const NOT_DRAFTED_STATUSES = ["blocked", "exists"];
+const foSectionExpanded = {
+  handled:    false,
+  mondayed:   false,
+  dismissed:  false,
+  notDrafted: false,
+  other:      false,
+};
 
 // Last-known full queue, kept client-side so button clicks can re-render
 // immediately from a local optimistic guess instead of waiting 5-10s on a
@@ -159,10 +169,19 @@ function foRenderFromItems(items) {
   // A dismissed prospect keeps whatever status it already had (still
   // 'confirm', typically) -- dismissed is checked FIRST so it never also
   // counts as active just because its status hasn't changed.
-  const active  = items.filter(it => !it.mondayItemId && !it.dismissed && ACTIVE_STATUSES.includes(it.status));
-  const handled = items.filter(it => !it.mondayItemId && !it.dismissed && HANDLED_STATUSES.includes(it.status));
-  const mondayed = items.filter(it => it.mondayItemId || MONDAYED_STATUSES.includes(it.status));
-  const dismissed = items.filter(it => it.dismissed && !it.mondayItemId);
+  const active     = items.filter(it => !it.mondayItemId && !it.dismissed && ACTIVE_STATUSES.includes(it.status));
+  const handled    = items.filter(it => !it.mondayItemId && !it.dismissed && HANDLED_STATUSES.includes(it.status));
+  const mondayed   = items.filter(it => it.mondayItemId || MONDAYED_STATUSES.includes(it.status));
+  const dismissed  = items.filter(it => it.dismissed && !it.mondayItemId);
+  const notDrafted = items.filter(it => !it.mondayItemId && !it.dismissed && NOT_DRAFTED_STATUSES.includes(it.status));
+
+  // Catch-all so no item is ever invisible again. Anything the buckets above
+  // didn't claim lands here, with its raw status shown, so a new/unknown
+  // status vocabulary can't silently swallow the queue.
+  const claimed = new Set(
+    [...active, ...handled, ...mondayed, ...dismissed, ...notDrafted].map(it => it.id)
+  );
+  const other = items.filter(it => !claimed.has(it.id));
 
   if (foSelectedId && !items.find(it => it.id === foSelectedId)) foSelectedId = null;
 
@@ -171,7 +190,7 @@ function foRenderFromItems(items) {
 
   document.getElementById("fo-queue-cards").innerHTML = `
     <div class="fo-shell${foSelectedId ? ' fo-detail-visible' : ''}">
-      <div class="fo-list">${foRenderListPane(active, handled, mondayed, dismissed)}</div>
+      <div class="fo-list">${foRenderListPane(active, handled, mondayed, dismissed, notDrafted, other)}</div>
       <div class="fo-detail">${detailHtml}</div>
     </div>`;
 }
@@ -223,7 +242,11 @@ function foRenderSkeleton() {
 
 // ── list pane rendering ───────────────────────────────────────────────────────
 
-function foRenderListPane(active, handled, mondayed, dismissed) {
+function foRenderListPane(active, handled, mondayed, dismissed, notDrafted, other) {
+  notDrafted = notDrafted || [];
+  other      = other      || [];
+  dismissed  = dismissed  || [];
+
   const activeReal      = active.filter(it => !!it.group);
   const activeProspects = active.filter(it => !it.group);
 
@@ -255,15 +278,23 @@ function foRenderListPane(active, handled, mondayed, dismissed) {
     </div>`;
   }
 
-  if (!activeReal.length && !activeProspects.length) {
+  // Empty-state only fires when the queue is genuinely empty. Previously it
+  // fired when just the active bucket was empty, which was misleading once
+  // "blocked"/"exists"/unknown-status items existed but silently rendered
+  // nowhere.
+  const totalCount = active.length + handled.length + mondayed.length
+    + dismissed.length + notDrafted.length + other.length;
+  if (!activeReal.length && !activeProspects.length && totalCount === 0) {
     html += `<div class="fo-list-empty">nothing waiting on you.<br>
       <span class="fo-list-empty-sub">${handled.length} handled · ${mondayed.length} mondayed</span>
     </div>`;
   }
 
-  html += foRenderListSection('handled', 'handled', handled);
-  html += foRenderListSection('mondayed', 'mondayed', mondayed);
-  html += foRenderListSection('dismissed', 'hidden prospects', dismissed || []);
+  html += foRenderListSection('handled',    'handled',          handled);
+  html += foRenderListSection('mondayed',   'mondayed',         mondayed);
+  html += foRenderListSection('notDrafted', 'NOT DRAFTED',      notDrafted);
+  html += foRenderListSection('dismissed',  'hidden prospects', dismissed);
+  html += foRenderListSection('other',      'OTHER',            other);
 
   return html;
 }
