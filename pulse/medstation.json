@@ -4,10 +4,10 @@
   "slug": "medstation",
   "name": "MedStation",
   "brief": {
-    "date": "2026-08-17",
+    "date": "2026-08-18",
     "headlines": [
       {
-        "text": "No movement this week — two loops stalled 33d",
+        "text": "No movement this week — two loops stalled 33 days",
         "tone": "info"
       }
     ],
@@ -21,24 +21,35 @@
         "items": [
           {
             "state": "blocked",
-            "text": "Patient demographic report — waiting on Paulo / Agencia WeMark (33d stalled)"
+            "text": "Patient demographic report — waiting on Paulo / Agencia WeMark (33 days)"
           },
           {
             "state": "blocked",
-            "text": "Clinic leader introductions — 6 contacts not yet connected to Sohib's team (33d stalled)"
+            "text": "Connect Sohib's team with six clinic leaders — no movement (33 days)"
           },
           {
             "state": "next",
-            "text": "(inferred) Chase Paulo / Agencia WeMark for demographic report to unblock analysis"
+            "text": "(inferred) Chase Paulo / WeMark for demographic report to unblock track"
           }
         ]
       }
     ],
-    "waiting_on_client": [],
+    "waiting_on_client": [
+      {
+        "item": "Patient demographic report",
+        "who": "Paulo / Agencia WeMark",
+        "since": "7/16"
+      },
+      {
+        "item": "Introduction to six clinic leaders",
+        "who": "MedStation client-side contact",
+        "since": "7/16"
+      }
+    ],
     "launch_gate": null,
     "brief_v2": {
-      "verdict": "Team's move: two loops — demographic report and clinic intros — stalled 33 days with no update.",
-      "next_move": "Sohib: follow up with Paulo / Agencia WeMark on demographic report — longest-open block at 33 days.",
+      "verdict": "Client's move: two loops stalled 33 days — demographic report and clinic intros both unresolved.",
+      "next_move": "Sohib: escalate to Paulo / WeMark for demographic report — longest-running block at 33 days.",
       "blocks": [
         {
           "item": "Patient demographic report from Paulo/Agencia WeMark",
@@ -50,7 +61,7 @@
         {
           "item": "Connect Sohib's team with six clinic leaders",
           "side": "client",
-          "who": "Client-side contact (unnamed)",
+          "who": "MedStation client-side contact",
           "age_days": 33,
           "hot": true
         }
@@ -58,21 +69,21 @@
       "snapshot": [
         {
           "label": "Open items",
-          "value": "8 open, 2 stalled 33d — all items in working, none in review or done",
+          "value": "8 open, 2 stalled 33 days — no tasks done this week",
           "tone": "warn"
         },
         {
           "label": "Last client word",
-          "value": "No recent client comms on record this week",
-          "tone": "warn"
+          "value": "No client comms recorded this period",
+          "tone": "plain"
         }
       ],
       "history_line": null
     }
   },
   "brief_v2": {
-    "verdict": "Team's move: two loops — demographic report and clinic intros — stalled 33 days with no update.",
-    "next_move": "Sohib: follow up with Paulo / Agencia WeMark on demographic report — longest-open block at 33 days.",
+    "verdict": "Client's move: two loops stalled 33 days — demographic report and clinic intros both unresolved.",
+    "next_move": "Sohib: escalate to Paulo / WeMark for demographic report — longest-running block at 33 days.",
     "blocks": [
       {
         "item": "Patient demographic report from Paulo/Agencia WeMark",
@@ -84,7 +95,7 @@
       {
         "item": "Connect Sohib's team with six clinic leaders",
         "side": "client",
-        "who": "Client-side contact (unnamed)",
+        "who": "MedStation client-side contact",
         "age_days": 33,
         "hot": true
       }
@@ -92,13 +103,13 @@
     "snapshot": [
       {
         "label": "Open items",
-        "value": "8 open, 2 stalled 33d — all items in working, none in review or done",
+        "value": "8 open, 2 stalled 33 days — no tasks done this week",
         "tone": "warn"
       },
       {
         "label": "Last client word",
-        "value": "No recent client comms on record this week",
-        "tone": "warn"
+        "value": "No client comms recorded this period",
+        "tone": "plain"
       }
     ],
     "history_line": null

@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-17T22:57:14.757Z",
-  "date": "2026-08-17",
+  "generated_at": "2026-08-18T11:20:30.642Z",
+  "date": "2026-08-18",
   "slug": "steel-ohare",
   "name": "O'Hare Precision",
   "type": "leadgen",
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "O'Hare Precision's biggest movement is a 42% week-over-week surge in Google Business Profile engagement, driven by 214 total actions (including 147 direction requests and 11 calls) over the past 28 days, likely reflecting stronger local search visibility or a recent uptick in nearby demand. Paid channels (Meta and Google Ads) show zero spend and zero leads, so all lead-gen activity is currently organic through GBP.",
+  "verdict": "O'Hare Precision's only active channel this period is Google Business Profile, which drove 203 total actions (138 directions, 10 calls, 55 web clicks) with no paid spend on Meta or Google Ads. The biggest movement is a -18.27% drop in Search Console clicks over the last 7 days, likely reflecting reduced organic search visibility, while GBP held relatively steady with a +3.7% week-over-week gain.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,24 +25,24 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 214,
-          "calls": 11,
-          "directions": 147,
-          "web_clicks": 56
+          "actions": 203,
+          "calls": 10,
+          "directions": 138,
+          "web_clicks": 55
         }
       }
     },
     "organic": {
-      "gbp_actions": 214,
+      "gbp_actions": 203,
       "ig_reach": 0
     },
     "top_campaign": null,
     "search": {
-      "clicks": 433,
-      "impressions": 64972
+      "clicks": 413,
+      "impressions": 64052
     },
     "latest_day": {
-      "date": "2026-08-16",
+      "date": "2026-08-17",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -60,8 +60,8 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": 42,
-      "sc_7d_pct": -7.62,
+      "gbp_7d_pct": 3.7,
+      "sc_7d_pct": -18.27,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
       "spend_per_day_7d": 0
@@ -69,7 +69,6 @@
     "flags": [],
     "series": {
       "dates": [
-        "2026-07-20",
         "2026-07-21",
         "2026-07-22",
         "2026-07-23",
@@ -96,7 +95,8 @@
         "2026-08-13",
         "2026-08-14",
         "2026-08-15",
-        "2026-08-16"
+        "2026-08-16",
+        "2026-08-17"
       ],
       "spend": [
         0,
@@ -219,7 +219,6 @@
         0
       ],
       "gbp_actions": [
-        11,
         7,
         4,
         8,
@@ -245,6 +244,7 @@
         7,
         21,
         16,
+        0,
         0,
         0
       ],
@@ -280,7 +280,6 @@
       ],
       "sc_clicks": [
         26,
-        26,
         24,
         18,
         18,
@@ -305,6 +304,7 @@
         20,
         14,
         14,
+        6,
         6,
         0
       ],
@@ -409,52 +409,72 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-17T23:02:36.928Z",
+    "generated_at": "2026-08-18T11:26:07.552Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP momentum is real but paid is fully dark — no pipeline forming.",
+    "verdict": "No paid activity; organic signals mixed — SC decline warrants monitoring.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend and zero leads across all 28 days — $0 CPL is meaningless; there is no active paid engine to evaluate.",
+        "text": "Zero paid spend across all 28 days — $0 on Meta and Google Ads. No CPL or ROAS to evaluate; this is a purely organic period.",
         "confidence": "confirmed",
-        "channel": "meta+google"
+        "channel": "all"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP produced 214 actions (147 directions, 11 calls, 56 web clicks) in 28 days — a 42% WoW surge, the sole lead-gen signal active.",
+        "text": "Search Console clicks fell -18.27% week-over-week; last 3 days (Aug 15-17) show 6, 6, 0 vs prior 3 (Aug 12-14) at 20, 14, 14 — a confirmed 3-day drop.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "organic"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "3-day search clicks signal: last 3 days (Aug 14-16) averaged 6.7 vs prior 3 days (Aug 11-13) at 17.3 — a -61% drop, extending the -7.62% 7d delta into a sharper short-term dip.",
-        "confidence": "confirmed",
-        "channel": "search"
+        "text": "GBP actions show 0 for Aug 15, 16, 17 vs a 45-day daily average of ~7.5 — three consecutive zeroes is an atypical gap, possible data lag or listing issue.",
+        "confidence": "probable",
+        "channel": "GBP"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GBP actions on Aug 15-16 show 16 then 0 — weekend zeroes are a recurring pattern (Jul 26, Aug 2, Aug 9 also zero), suggesting data latency or genuine weekend drop, not a new problem.",
-        "confidence": "probable",
-        "channel": "gbp"
+        "text": "GA4 sessions are 0 for all 45 days in the series — tracking is either not connected or broken; website traffic is fully blind.",
+        "confidence": "confirmed",
+        "channel": "GA4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Monitor search clicks recovery through Aug 20; 3-day avg of 6.7 vs 17.3 prior needs a confirmed rebound before any paid reactivation.",
+        "type": "fix",
+        "text": "Verify GBP listing health and data connector; 3 consecutive zero-action days (Aug 15-17) are atypical vs 7.5/day average.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Watch SC Drop Aug 20",
-        "monday_update": "Search clicks dropped to a 3-day average of 6.7 (Aug 14-16) versus 17.3 the prior 3 days — a -61% short-term fall inside a -7.62% 7d trend. No paid spend is live to compensate. Success check: sc_clicks 3-day average returns above 15 by Aug 20. Re-check on 2026-08-20."
+        "monday_item_name": "Check GBP listing & connector",
+        "monday_update": "GBP actions read 0 for Aug 15, 16, and 17 against a 45-day average of ~7.5 actions/day — this is the first 3-day zero streak observed. Check the GBP listing for suspensions or edits and confirm the data connector is pulling correctly. Success looks like actions resuming to ≥5/day and the connector showing live data. Resolve by 2026-08-21."
+      },
+      {
+        "id": "S2",
+        "type": "fix",
+        "text": "Audit and connect GA4 property; 45 days of zero sessions makes paid channel launch decisions completely blind.",
+        "cites": [
+          "F4"
+        ],
+        "monday_item_name": "Fix GA4 tracking connection",
+        "monday_update": "GA4 sessions have read 0 for every single day in the 45-day series — the property is either not tagged or the integration is broken. This must be resolved before any paid spend is activated, as it would leave all website conversion tracking blind. Success is confirmed non-zero sessions appearing in the series within 48 hours of the fix. Target: 2026-08-20."
+      },
+      {
+        "id": "S3",
+        "type": "watch",
+        "text": "Watch Search Console clicks: 3-day signal is down (6, 6, 0 vs 20, 14, 14). Re-check 2026-08-21 for trend reversal.",
+        "cites": [
+          "F2"
+        ],
+        "monday_item_name": "Watch SC click trend",
+        "monday_update": "Search Console clicks dropped sharply in the last 3 days (6, 6, 0) versus the prior 3 (20, 14, 14), continuing a -18.27% weekly decline. No paid activity is masking this — it is a pure organic signal. Re-check on 2026-08-21; if the 3-day average has not recovered above 12 clicks/day, escalate to an SEO review."
       }
     ],
-    "next_check": "2026-08-20"
+    "next_check": "2026-08-21"
   }
 }

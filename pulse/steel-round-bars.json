@@ -487,10 +487,14 @@
     "next_check": "2026-08-01"
   },
   "brief": {
-    "date": "2026-08-17",
+    "date": "2026-08-18",
     "headlines": [
       {
-        "text": "No activity this week; two loops aging 41 days",
+        "text": "No new activity; open loops aging 41 days",
+        "tone": "info"
+      },
+      {
+        "text": "ACCESS and 1st DIRECTIVES stalled in CRM",
         "tone": "info"
       }
     ],
@@ -498,8 +502,8 @@
       {
         "title": "Steel Round Bars - CRM",
         "badge": {
-          "label": "P1 - needs attention",
-          "tone": "amber"
+          "label": "P1 - blocked",
+          "tone": "red"
         },
         "items": [
           {
@@ -512,27 +516,29 @@
           },
           {
             "state": "next",
-            "text": "(inferred) Identify who owns ACCESS handoff and drive to resolution"
+            "text": "(inferred) Identify owner and drive ACTION on ACCESS handoff"
           }
-        ]
+        ],
+        "owners": []
       }
     ],
     "waiting_on_client": [],
+    "launch_gate": null,
     "brief_v2": {
-      "verdict": "Team's move: ACCESS and 1st DIRECTIVES both stalled 41 days with no action taken.",
-      "next_move": "Team: identify owner and push ACTION on ACCESS handoff — clears the longest-running open loop.",
+      "verdict": "Team's move: ACCESS and 1st DIRECTIVES both stalled 41 days with no owner action.",
+      "next_move": "Team: assign and action the ACCESS handoff today — unblocks 41-day stall on [id: 12470597527].",
       "blocks": [
         {
           "item": "ACCESS",
           "side": "team",
-          "who": "Assignee (unnamed)",
+          "who": "Unassigned teammate",
           "age_days": 41,
           "hot": true
         },
         {
           "item": "1st DIRECTIVES",
           "side": "team",
-          "who": "Assignee (unnamed)",
+          "who": "Unassigned teammate",
           "age_days": 41,
           "hot": true
         }
@@ -540,12 +546,12 @@
       "snapshot": [
         {
           "label": "Open items",
-          "value": "9 open, 2 stalled 41d — all items in Working, none Done",
+          "value": "9 open, 2 stalled 41d+ in CRM — all items in working status",
           "tone": "warn"
         },
         {
           "label": "Last client word",
-          "value": "No client comms recorded this period",
+          "value": "No client comms on record this period",
           "tone": "muted"
         }
       ],
@@ -553,20 +559,20 @@
     }
   },
   "brief_v2": {
-    "verdict": "Team's move: ACCESS and 1st DIRECTIVES both stalled 41 days with no action taken.",
-    "next_move": "Team: identify owner and push ACTION on ACCESS handoff — clears the longest-running open loop.",
+    "verdict": "Team's move: ACCESS and 1st DIRECTIVES both stalled 41 days with no owner action.",
+    "next_move": "Team: assign and action the ACCESS handoff today — unblocks 41-day stall on [id: 12470597527].",
     "blocks": [
       {
         "item": "ACCESS",
         "side": "team",
-        "who": "Assignee (unnamed)",
+        "who": "Unassigned teammate",
         "age_days": 41,
         "hot": true
       },
       {
         "item": "1st DIRECTIVES",
         "side": "team",
-        "who": "Assignee (unnamed)",
+        "who": "Unassigned teammate",
         "age_days": 41,
         "hot": true
       }
@@ -574,12 +580,12 @@
     "snapshot": [
       {
         "label": "Open items",
-        "value": "9 open, 2 stalled 41d — all items in Working, none Done",
+        "value": "9 open, 2 stalled 41d+ in CRM — all items in working status",
         "tone": "warn"
       },
       {
         "label": "Last client word",
-        "value": "No client comms recorded this period",
+        "value": "No client comms on record this period",
         "tone": "muted"
       }
     ],
