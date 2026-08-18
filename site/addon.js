@@ -315,7 +315,7 @@ function foListRow(item, section) {
   const isSelected = item.id === foSelectedId;
   const p = foPriority(item);
   const nameRow = item.payload ? foMondayNameRow(item) : null;
-  const title = nameRow ? nameRow.value : (item.sourceLabel || '(untitled)');
+  const title = nameRow ? nameRow.value : (item.title || item.sourceLabel || '(untitled)');
   const statusKey = item.status || 'confirm';
 
   const cls = [
@@ -359,7 +359,7 @@ function foRenderDetailPane(item) {
   const p         = foPriority(item);
   const statusKey = item.status || 'confirm';
   const nameRow   = item.payload ? foMondayNameRow(item) : null;
-  const title     = nameRow ? nameRow.value : (item.sourceLabel || '(untitled)');
+  const title     = nameRow ? nameRow.value : (item.title || item.sourceLabel || '(untitled)');
   const section   = item.mondayItemId ? 'mondayed'
     : item.dismissed ? 'dismissed'
     : HANDLED_STATUSES.includes(item.status) ? 'handled' : 'active';
