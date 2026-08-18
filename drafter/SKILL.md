@@ -23,8 +23,11 @@ No `create_item`, `create_items`, `create_subitem`, `create_update`,
 `change_item_column_values`, `change_item_position`, no reassignment, no status
 changes, no `all_monday_api` mutation, no GraphQL mutation.
 
-Monday access is read-only: `get_board_items_page`, `get_board_info`,
-`get_type_details`, `all_monday_api` queries.
+Monday access is read-only, through the repo's existing fetcher via Bash:
+`python3 -c` calls into `fetch_monday.fetch_board(board_id, board_name, days_back,
+clients_config)` or `fetch_monday.fetch_all_boards(config)`. They handle auth,
+pagination, and subitems already. `fetch_monday.py` contains exactly one write
+function, `set_monday_status_done()` — NEVER call it, import it, or reference it.
 
 Everything this run produces lands in the draft queue as a proposal. Naz reviews
 and fires it from the dashboard. This is the whole reason the job is allowed to
@@ -92,9 +95,10 @@ This runs even when A3–A8 find nothing new.
 
 ### A3 — pull transcripts
 
-`fireflies_get_transcripts`, `fromDate` = `state.lastCheckedISO` minus one day,
-format `toon`, limit 15–20, paginate with `skip`. No organizer or participant
-filter.
+Fetch through the repo's existing fetcher via Bash:
+`fetch_fireflies.fetch_transcripts(days_back=N)` where N covers from
+`state.lastCheckedISO` minus one day to now (compute N, round up, minimum 2).
+It handles auth and pagination. No organizer or participant filter.
 
 Keep only transcripts where the id is not already in `state.processedIds` **and**
 `meeting_info.summary_status == "processed"`.
@@ -147,9 +151,10 @@ carries a genuine conversion signal (a signed agreement, confirmed scope or
 pricing). "Still in the pipeline" is not a conversion signal.
 
 **Mandatory board audit — never skipped, never deferred.** For every candidate,
-`get_board_items_page` on the relevant groups across **all four boards** with
-`includeSubItems: true`. Subitems are exactly where duplicates and already-finished
-work hide. Outcomes:
+check the relevant groups across **all four boards** using
+`fetch_monday.fetch_board()` output (it already includes subitems). Subitems are
+exactly where duplicates and already-finished work hide. Fetch each board once and
+reuse the result across candidates — do not refetch per candidate. Outcomes:
 
 - already fully covered → `status: 'exists'`, no payload, don't flag for review
 - belongs under an existing parent → `create_subitem` with the real `parentItemId`
@@ -236,7 +241,8 @@ them. Update `lastArchivedWeek` either way so it doesn't re-check every run.
 
 ## JOB B — health check
 
-Across all four boards, `get_board_items_page` with columns, and flag:
+Across all four boards, using the same `fetch_monday.fetch_board()` results
+(columns included), flag:
 
 - items and subitems with a timeline ending in the next 3 days
 - anything currently **Stuck**

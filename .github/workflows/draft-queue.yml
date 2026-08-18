@@ -9,15 +9,14 @@ on:
     - cron: "0 15 * * *"
 
   # Lets the dashboard's "Refresh Everything" button reach this job.
-  # See netlify/functions/refresh-everything.js -- add "draft-queue.yml" to its
-  # dispatch list or the button keeps refreshing everything except this.
   workflow_dispatch:
 
-# No `contents: write` here on purpose. This job writes to the `state` branch via
-# the GitHub Contents API using GH_STATE_TOKEN, the same path generate.py already
-# uses for standups/completed-accumulator.json. It never commits to main.
+# No `contents: write` on purpose. This job writes to the `state` branch via the
+# GitHub Contents API using GH_STATE_TOKEN, same path generate.py already uses.
+# id-token: write is required by claude-code-action's authentication.
 permissions:
   contents: read
+  id-token: write
 
 concurrency:
   # A second run overlapping the first would read a stale queue sha and clobber
@@ -45,39 +44,33 @@ jobs:
       - name: Validate the deterministic half before spending a model call
         run: python drafter/validate.py
 
-      # The drafting itself is judgment work -- relevance passes, prospect-vs-client
-      # disambiguation, the priority rubric's "would delaying this quietly cause a
-      # bigger problem later?" None of that is expressible as a script, which is why
-      # this step runs Claude with drafter/SKILL.md as its prompt rather than
-      # executing a Python reimplementation of it.
+      # Data access goes through the repo's existing fetchers (fetch_monday.py,
+      # fetch_fireflies.py) via Bash -- they already handle auth, pagination, and
+      # subitems, and generate.py has used them since July. No MCP config exists
+      # in this repo, so no MCP tool names belong here.
+      #
+      # Read-only on Monday is a hard requirement from Naz. fetch_monday.py has
+      # exactly one write function, set_monday_status_done() -- the drafter must
+      # never call it. SKILL.md states this; the narrow allowlist backs it up.
       - name: Run the daily draft pass
         uses: anthropics/claude-code-action@v1
         env:
-          # Every one of these already exists as a repo secret -- standup.yml has
-          # used them since July. Nothing new to provision.
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           MONDAY_API_TOKEN:  ${{ secrets.MONDAY_API_TOKEN }}
           FIREFLIES_API_KEY: ${{ secrets.FIREFLIES_API_KEY }}
           GH_STATE_TOKEN:    ${{ secrets.GH_STATE_TOKEN }}
           GH_REPO:           ${{ github.repository }}
           GH_BRANCH:         state
         with:
-          prompt_file: drafter/SKILL.md
-          # Read-only on Monday. The skill's HARD RULE says so, but the rule is
-          # only prose -- this is what actually enforces it. Do not add a Monday
-          # write tool here without Naz saying so explicitly.
-          allowed_tools: >-
-            Bash,Read,Write,
-            mcp__monday__get_board_items_page,
-            mcp__monday__get_board_info,
-            mcp__monday__get_type_details,
-            mcp__fireflies__fireflies_get_transcripts,
-            mcp__fireflies__fireflies_get_summary,
-            mcp__fireflies__fireflies_get_transcript
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Read drafter/SKILL.md and follow it end to end as your complete
+            instructions for this run. It defines the jobs, the rules files to
+            load, how to fetch data through the repo's existing fetchers, and
+            how to write results to the state branch.
+          claude_args: |
+            --allowedTools "Bash,Read,Write"
+            --max-turns 60
 
-      # The run summary is JOB B plus the push/state lines. It is chat-only by
-      # design -- never pushed to the dashboard -- so the Actions log is where it
-      # lives now that there's no Cowork thread to print it into.
       - name: Surface the summary in the job log
         if: always()
         run: echo "Run summary is in the previous step's output."
