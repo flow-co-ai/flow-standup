@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T19:47:59.562Z",
+  "generated_at": "2026-08-18T20:55:27.806Z",
   "date": "2026-08-18",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Healing Helps saw no paid activity in the last 28 days (zero spend, zero leads across Meta and Google Ads), so organic channels are carrying all engagement. GBP drove 56 total actions (33 directions, 22 web clicks, 1 call), though GBP actions are trending down 21% week-over-week, making it worth reviewing profile content or posting cadence to reverse that dip.",
+  "verdict": "GBP drove all 56 organic actions (33 directions, 22 web clicks, 1 call) over the last 28 days, though GBP engagement is trending down 21% week-over-week while GA4 sessions are up 53%, suggesting some web interest is building despite no paid spend or leads recorded.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -462,53 +462,60 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-18T19:51:25.948Z",
+    "generated_at": "2026-08-18T20:57:26.167Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Organic-only account; GBP softening is the sole money signal to watch.",
+    "verdict": "No paid activity; organic holding but GBP signal weakening now.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend and zero leads for all 28 days observed; no paid efficiency metric can be computed or compared against baseline.",
+        "text": "Zero spend, zero leads, zero CPL across all 28 days — no paid channel is active; efficiency cannot be measured.",
         "confidence": "confirmed",
-        "channel": "meta/google"
+        "channel": "cross-channel"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions fell 21% week-over-week (56 total in 28 days); last 3 days show 0, 0, 0 actions vs prior 3-day avg of ~1.7 — confirmed deceleration.",
+        "text": "3-day GBP signal: last 3 days (Aug 15–17) total 0 actions vs prior 3 days (Aug 12–14) total 8 — a confirmed drop to zero.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "GBP"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GA4 sessions up 52.94% week-over-week (recent 3-day avg ~5.3 vs prior 3-day avg ~9.3 reverses that gain); 189 sessions produced 0 GA4 conversions in 28 days.",
+        "text": "GA4 sessions up 53% week-over-week (189 sessions, 28d) with 0 GA4 conversions recorded — web interest not converting to leads.",
         "confidence": "probable",
-        "channel": "ga4"
+        "channel": "GA4"
+      },
+      {
+        "id": "F4",
+        "priority": 4,
+        "text": "GBP down 21% week-over-week while GA4 sessions rose 52.94% — organic traffic sources are diverging, GBP losing share as referrer.",
+        "confidence": "hypothesis",
+        "channel": "GBP"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "watch",
-        "text": "Watch GBP actions: 3 consecutive zero-action days. Re-check after 2026-08-21 for recovery or continued drop.",
+        "text": "Monitor GBP actions daily; 0 actions across Aug 15–17 may indicate listing issue — re-check Aug 21.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Watch GBP Action Drop",
-        "monday_update": "GBP actions hit 0 for three consecutive days (Aug 15–17) after averaging ~1.7/day the prior 3 days, and the 7-day window is already down 21%. No paid activity exists to compensate. Success looks like GBP returning to 3+ actions/day by 2026-08-21; if not, escalate to a profile content or posting cadence review."
+        "monday_item_name": "Watch GBP Drop Aug 21",
+        "monday_update": "GBP actions fell to 0 over the last 3 days (Aug 15–17) after averaging ~3–4/day earlier in August. Manually verify the GBP listing is active, categories are correct, and no suspensions are pending. Success looks like GBP actions returning to 3+ per day by Aug 21. Re-check on Aug 21."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Investigate 0 GA4 conversions across 189 sessions — likely a missing or broken conversion event, not a traffic problem.",
+        "text": "Audit GA4 conversion events — 189 sessions with 0 conversions recorded suggests a broken or unmapped goal.",
         "cites": [
           "F3"
         ],
         "monday_item_name": "Fix GA4 Conversion Tracking",
-        "monday_update": "189 sessions and 151 users visited the site in the 28-day window but recorded exactly 0 GA4 conversions. This is almost certainly a tracking gap — form submission or thank-you page event is not firing. Confirm by checking GA4 DebugView or Tag Assistant against the contact form. Success is at least one confirmed conversion event firing by 2026-08-25."
+        "monday_update": "GA4 recorded 189 sessions and 151 users over 28 days but zero conversion events. The contact or enquiry form goal may be unmapped or misfiring. Verify the GA4 goal event is firing correctly on form submission and confirm it is marked as a conversion in the GA4 property. Success is at least 1 confirmed conversion event recorded within 7 days of the fix."
       }
     ],
     "next_check": "2026-08-21"

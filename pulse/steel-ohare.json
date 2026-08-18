@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T19:50:08.225Z",
+  "generated_at": "2026-08-18T20:56:11.700Z",
   "date": "2026-08-18",
   "slug": "steel-ohare",
   "name": "O'Hare Precision",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "O'Hare Precision's only active channel this period is Google Business Profile, which drove 203 total actions over 28 days (138 directions, 55 web clicks, 10 calls) with no paid spend on Meta or Google Ads. The biggest movement is a 3.7% week-over-week lift in GBP engagement, likely reflecting organic search demand, while the 18.27% drop in Search Console clicks signals a dip in organic website traffic worth monitoring.",
+  "verdict": "O'Hare Precision's only active channel this period is Google Business Profile, which drove 203 total actions (138 directions, 55 web clicks, 10 calls) with no paid spend on Meta or Google Ads. GBP actions are up 3.7% week-over-week, likely reflecting steady organic visibility, while the 18.27% drop in Search Console clicks signals a dip in organic search traffic worth monitoring.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,51 +409,44 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-18T19:54:00.184Z",
+    "generated_at": "2026-08-18T20:59:46.763Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Organic holding; zero paid activity means no money is working yet.",
+    "verdict": "Organic holding steady; paid channels completely dark — structural gap.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — no Meta, no Google Ads. CPL is literally undefined; there is nothing to optimize.",
+        "text": "Zero paid spend across all 28 days — no Meta, no Google Ads, $0 CPL because there are zero leads. No paid engine running.",
         "confidence": "confirmed",
-        "channel": "paid"
+        "channel": "meta/google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Search Console clicks 3-day signal: Aug 15–17 averaged 4 clicks/day vs Aug 12–14 average of 16 — a confirmed 75% drop.",
+        "text": "Search Console clicks dropped 18.27% 7d vs prior 7d; last 3 days (Aug 15–17) show 6, 6, 0 vs prior 3 (Aug 12–14) averaging 16 — a confirmed 3-day deceleration.",
         "confidence": "confirmed",
-        "channel": "organic"
+        "channel": "organic_search"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GBP actions zeroed on Aug 15–17 (0 each day) after averaging 12.3/day Aug 12–14 — a sharp 3-day stall in local intent.",
-        "confidence": "confirmed",
-        "channel": "gbp"
-      },
-      {
-        "id": "F4",
-        "priority": 4,
-        "text": "SC clicks and GBP are moving in sync downward; combined 7d SC delta is -18.27%, suggesting shared organic demand compression, not a tracking fault.",
+        "text": "GBP actions last 3 days (Aug 15–17) show 0, 0, 0 vs prior 3 (Aug 12–14) averaging 15 — a sharp short-term drop, though the 28-day total of 203 actions remains intact.",
         "confidence": "probable",
-        "channel": "organic"
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "watch",
-        "text": "Monitor SC clicks and GBP actions daily; re-check Aug 21 to confirm if 3-day zero is weekend pattern or real drop.",
+        "text": "Monitor SC clicks and GBP actions through Aug 21; 3-day zeroes may reflect weekend/reporting lag.",
         "cites": [
           "F2",
           "F3"
         ],
-        "monday_item_name": "Watch SC + GBP drop",
-        "monday_update": "Search Console clicks averaged 4/day Aug 15–17 vs 16/day the prior 3 days (−75%), and GBP actions hit zero all three days. Both channels dropped in lockstep, suggesting organic demand compression rather than a data gap. Re-check on 2026-08-21: if SC clicks recover above 12/day and GBP actions resume, this was a weekend/holiday dip. If they remain suppressed, escalate to Sohib for a paid activation conversation."
+        "monday_item_name": "Watch SC & GBP Drop",
+        "monday_update": "Search Console clicks collapsed to 6, 6, 0 over Aug 15–17 vs a prior-3-day average of 16, and GBP actions hit 0 for the same window after averaging 15. This pattern may be a weekend/data-lag artefact — Aug 15–17 includes two weekend days and a potential reporting delay for Aug 17. Re-check on Aug 21: if SC clicks and GBP actions have not recovered to at least 12–15/day, escalate to an organic visibility audit."
       }
     ],
     "next_check": "2026-08-21"

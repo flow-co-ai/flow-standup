@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T19:49:53.363Z",
+  "generated_at": "2026-08-18T20:56:02.842Z",
   "date": "2026-08-18",
   "slug": "steel-forte",
   "name": "Forte Metals",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Forte Metals saw no paid activity in the last 28 days (zero spend, leads, or clicks across Meta and Google Ads), but organic visibility is carrying the load with GBP driving 90 total actions including 10 calls, 49 direction requests, and 31 website clicks. The standout movement is a 233.33% week-over-week spike in Search Console activity, likely reflecting improved local search visibility or a recent uptick in branded queries.",
+  "verdict": "Forte Metals saw no paid activity in the last 28 days (zero spend, leads, or clicks across Meta and Google Ads), but organic GBP engagement is a bright spot with 90 total actions including 10 calls, 49 directions, and 31 web clicks. The biggest movement is a 76.92% week-over-week surge in GBP activity, likely driven by increased local search interest or a recent profile update boosting visibility.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,64 +409,63 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-18T19:53:22.987Z",
+    "generated_at": "2026-08-18T20:59:18.141Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Organic is the only engine running; paid is fully off.",
+    "verdict": "Paid channels fully dormant; organic momentum is the only active signal.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across Meta and Google for all 28 days. No CPL is calculable — paid demand generation is completely absent.",
+        "text": "Zero paid spend across both Meta and Google Ads for the full 28-day window — $0 spent, 0 leads generated. No efficiency to measure.",
         "confidence": "confirmed",
-        "channel": "meta, google_ads"
+        "channel": "meta+google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3-day SC clicks signal: last 3 days (Aug 15–17) sum to 1 vs prior 3 (Aug 12–14) sum of 8 — organic search momentum stalling after the spike.",
-        "confidence": "probable",
-        "channel": "search_console"
-      },
-      {
-        "id": "F3",
-        "priority": 2,
-        "text": "GBP actions last 3 days (Aug 15–17) sum to 0 vs prior 3 (Aug 12–14) sum of 16 — local visibility spike appears to be fading.",
-        "confidence": "probable",
+        "text": "GBP actions surged 76.92% week-over-week to 90 total (10 calls, 49 directions, 31 web clicks) with zero paid support — organic demand exists.",
+        "confidence": "confirmed",
         "channel": "gbp"
       },
       {
-        "id": "F4",
+        "id": "F3",
         "priority": 3,
-        "text": "233.33% SC week-over-week spike is real (7 clicks prior week vs 25-click 28-day total) but did not convert — GHL shows null pipeline, zero leads captured.",
+        "text": "Search clicks rose 233% week-over-week (25 clicks, 1,724 impressions last 28d) with no paid search active — unmonetised intent is growing.",
         "confidence": "confirmed",
-        "channel": "search_console"
+        "channel": "search"
+      },
+      {
+        "id": "F4",
+        "priority": 4,
+        "text": "3-day GBP signal (Aug 15–17): 0 + 0 + 0 actions vs prior 3 days (Aug 12–14): 9 + 5 + 2 — GBP momentum has stalled in the last 3 days.",
+        "confidence": "probable",
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "watch",
-        "text": "Monitor GBP and SC 3-day trend for 7 more days before any paid reactivation decision.",
+        "text": "Monitor GBP daily actions; re-check Aug 21 to confirm if 3-day stall (0 actions) extends to a full week.",
         "cites": [
-          "F2",
-          "F3"
+          "F4"
         ],
-        "monday_item_name": "Watch GBP & SC 3-day trend",
-        "monday_update": "GBP actions dropped to 0 over Aug 15–17 after a peak of 16 actions in Aug 12–14, and SC clicks fell from 8 to 1 over the same window. The organic spike may be fading and does not yet justify paid spend activation. Re-check both signals on 2026-08-25 — if GBP actions and SC clicks return to or exceed the Aug 12–14 levels, treat as sustained organic demand worth amplifying with paid."
+        "monday_item_name": "Watch GBP stall Aug 21",
+        "monday_update": "GBP actions dropped to zero for the last 3 days (Aug 15–17) after a 76.92% WoW surge, suggesting the spike may have been a one-time event. No paid channels are active to offset any organic softening. Success check: if GBP actions return above 3/day by Aug 21, the stall is noise; if flat, investigate whether the profile update that drove the surge has faded. Re-check on 2026-08-21."
       },
       {
         "id": "S2",
-        "type": "fix",
-        "text": "Confirm GHL intake is live and configured to capture any inbound leads before paid is reactivated.",
+        "type": "watch",
+        "text": "Watch whether growing search intent (233% sc spike, 1,724 impressions) warrants reactivating paid search — confirm with Sohib on scope.",
         "cites": [
-          "F1",
-          "F4"
+          "F3",
+          "F1"
         ],
-        "monday_item_name": "Fix GHL intake pre-launch",
-        "monday_update": "GHL pipeline is null and zero leads have been recorded despite 90 GBP actions and 25 SC clicks over 28 days — any inbound intent is not being captured. Before any paid budget is switched on, verify that GHL forms, call tracking, and pipeline stages are active and correctly mapped. Success check: at least one test lead flows through GHL end-to-end before 2026-08-25."
+        "monday_item_name": "Watch Paid Reactivation Readiness",
+        "monday_update": "Search clicks jumped 233% WoW and impressions reached 1,724 over 28 days with zero paid spend — organic intent is building with no paid capture mechanism in place. Before any budget is activated, Sohib must confirm whether paid reactivation is in scope and what the CPL ceiling is for Forte Metals. This is a watch only; no spend moves until approved. Re-check on 2026-08-21."
       }
     ],
-    "next_check": "2026-08-25"
+    "next_check": "2026-08-21"
   }
 }

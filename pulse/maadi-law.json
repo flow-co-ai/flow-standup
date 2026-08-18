@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T19:49:47.533Z",
+  "generated_at": "2026-08-18T20:55:58.984Z",
   "date": "2026-08-18",
   "slug": "maadi-law",
   "name": "Maadi Law, LLC",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Maadi Law's GBP drove all 28-day engagement activity with 93 total actions (20 calls, 29 directions, 44 web clicks), but GBP actions dropped 40% over the last 7 days, likely reflecting reduced organic search visibility or seasonal dip in legal service demand. Paid channels (Meta and Google Ads) recorded zero spend and zero leads, so reactivating at least one paid channel should be the immediate priority to generate measurable lead flow.",
+  "verdict": "Maadi Law's biggest movement is a 40% drop in Google Business Profile engagement over the last 7 days, likely driven by reduced local search visibility or seasonal dip in legal queries. Paid channels (Meta and Google Ads) show zero spend and zero leads over the past 28 days, meaning all 93 GBP actions, 20 calls, and 44 web clicks are coming entirely from organic sources.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -403,7 +403,7 @@
     }
   },
   "ghl": {
-    "contacts": 488,
+    "contacts": 489,
     "opportunities": {
       "created": {
         "count": 0,
@@ -559,36 +559,36 @@
     "history_line": "Fixed call routing: LSA calls switched to business line"
   },
   "performance": {
-    "generated_at": "2026-08-18T19:53:05.268Z",
+    "generated_at": "2026-08-18T20:58:59.400Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid channels dead 45+ days; only organic GBP sustains any contact.",
+    "verdict": "Zero paid activity; organic erosion now the only risk worth tracking.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days (Meta $0, Google $0); CPL is undefined because no paid leads exist.",
+        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google Ads. No CPL can be computed; leadgen engine is entirely off.",
         "confidence": "confirmed",
-        "channel": "meta,google"
+        "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions fell to 0 for the last 3 days (Aug 15–17) vs 7 avg in prior 3 days; 3-day confirmed collapse, not noise.",
+        "text": "GBP actions fell 40% last 7 days; last 3 days of series show 0, 0, 0 vs a prior-3-day average of ~2 actions/day — the drop is real, not noise.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "IG reach dropped 37.98% week-over-week; last 3 days avg 623 vs prior 3 days avg 1180, halving organic social visibility.",
-        "confidence": "confirmed",
+        "priority": 3,
+        "text": "IG reach dropped 37.98% week-over-week; last 3 days avg 623 vs prior 3 avg 980 — content cadence or algorithm shift likely causing sustained pullback.",
+        "confidence": "probable",
         "channel": "instagram"
       },
       {
         "id": "F4",
-        "priority": 3,
-        "text": "GHL shows 488 contacts but 0 opportunities created and 0 appointments in 28 days; CRM is stagnant, not an ads problem.",
+        "priority": 4,
+        "text": "GHL shows 489 contacts, 0 opportunities created, 0 appointments in 28 days — CRM is stale and not reflecting any pipeline activity.",
         "confidence": "confirmed",
         "channel": "ghl"
       }
@@ -596,33 +596,24 @@
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Audit and reactivate Meta or Google Ads — $0 spend for 45+ days means zero paid lead flow.",
-        "cites": [
-          "F1"
-        ],
-        "monday_item_name": "Reactivate Paid Channel Audit",
-        "monday_update": "Meta and Google Ads have recorded $0 spend across the full 45-day series, confirmed by daily series data. Sohib should verify whether campaigns are paused, budgets are zeroed, or billing has lapsed on both accounts. Success check: at least one paid channel shows non-zero daily spend by 2026-08-22."
-      },
-      {
-        "id": "S2",
         "type": "watch",
-        "text": "Watch GBP: 3 consecutive zero-action days (Aug 15–17); re-check Aug 21 for recovery or listing issue.",
+        "text": "Monitor GBP actions daily; if 3-day average stays at 0 by 2026-08-21, escalate to client for profile audit.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Watch GBP Action Drop",
-        "monday_update": "GBP actions have been 0 for the last 3 recorded days (Aug 15–17), down from a 7-action average in the prior 3 days. This is a confirmed 3-day signal, not noise. Check Google Business Profile for listing suspension, review flags, or ranking drop. Re-check on 2026-08-21; if still zero, escalate to a GBP fix as a priority."
+        "monday_item_name": "Watch GBP Drop Aug 21",
+        "monday_update": "GBP actions hit 0 for the last 3 consecutive days (Aug 15–17), down from a prior-3-day average of ~2/day and a 7d delta of -40%. No paid activity exists to compensate for organic erosion. Re-check on 2026-08-21; if the 3-day average remains at or near 0, flag to client for a Google Business Profile audit (category, photos, post cadence). Success signal: GBP actions recover to ≥3/day average within the next 7-day window."
       },
       {
-        "id": "S3",
+        "id": "S2",
         "type": "fix",
-        "text": "Investigate GHL pipeline: 488 contacts, 0 opportunities — intake process is broken regardless of lead source.",
+        "text": "Audit GHL pipeline: 489 contacts with 0 opportunities signals an intake or workflow configuration failure — fix before any paid reactivation.",
         "cites": [
-          "F4"
+          "F4",
+          "F1"
         ],
-        "monday_item_name": "Fix GHL Intake Pipeline",
-        "monday_update": "GHL shows 488 total contacts but zero opportunities created and zero appointments in the 28-day window. This is a CRM intake failure, not an advertising problem. Review automation workflows and stage-entry triggers to confirm contacts are being qualified and moved. Success check: at least 1 opportunity created within 7 days of workflow fix, by 2026-08-25."
+        "monday_item_name": "Fix GHL Pipeline Config",
+        "monday_update": "GHL shows 489 contacts accumulated but 0 opportunities created and 0 appointments in the 28-day window. This means any leads generated when paid campaigns reactivate will fall into a black hole. Review GHL pipeline stages and lead intake automations to confirm contact-to-opportunity conversion is wired correctly. Success check: at least 1 test contact flows through to an open opportunity by 2026-08-21."
       }
     ],
     "next_check": "2026-08-21"

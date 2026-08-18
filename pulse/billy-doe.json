@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T19:47:15.651Z",
+  "generated_at": "2026-08-18T20:55:17.086Z",
   "date": "2026-08-18",
   "slug": "billy-doe",
   "name": "Billy Doe Meats",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 70,
   "status": "amber",
-  "verdict": "Purchases surged 350% week-over-week, driving ROAS up 416.2% to 3.54, likely fueled by the top Meta campaign \"BWS - Muslim Subscription Box - 17/06/26\" which alone accounted for $849.24 of the $1,500.50 in spend. The only concern is zero leads across all channels, flagging a lead drought that warrants attention if lead generation is a secondary goal.",
+  "verdict": "Purchases surged 350% week-over-week, driving ROAS up 416.2% to 3.54, likely fueled by the top Meta campaign \"BWS - Muslim Subscription Box - 17/06/26\" which alone accounted for $849.24 of the $1,500.50 in spend. GBP engagement dropped 35.71% over the same period, worth monitoring to ensure offline interest keeps pace with paid momentum.",
   "windsor": {
     "totals": {
       "spend": 1500.5,
@@ -535,43 +535,43 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-18T19:50:40.000Z",
+    "generated_at": "2026-08-18T20:56:43.906Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "ROAS recovery is real but driven by 3 purchase days; structural fragility remains.",
+    "verdict": "ROAS surge is real but purchase volume is thin and lumpy — efficiency masks fragility.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "ROAS 3.54 over 28 days looks healthy, but 22 purchases cluster into ~6 days; 16 of 28 days logged zero purchases — revenue is episodic, not structural.",
+        "text": "ROAS 3.54 on 28-day window and +416% 7d swing look strong, but only 22 purchases in 28 days — 3-day signal (Aug 15–17) shows 3 purchases vs 6 in prior 3 days (Aug 12–14), meaning momentum is already decelerating.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
-        "priority": 1,
-        "text": "3-day signal (Aug 15–17): 3 purchases and $421.86 revenue vs 0 purchases prior 3 days (Aug 12–14) — short burst after a 3-day zero streak, not a sustained trend.",
-        "confidence": "probable",
-        "channel": "meta"
-      },
-      {
-        "id": "F3",
         "priority": 2,
-        "text": "OVERDUE: Live-Cooking Event Shoot 1 was due 2026-08-14 with no completed event recorded — video pipeline stalled 4+ days.",
+        "text": "OVERDUE: Live-Cooking Event Shoot 1 was due 2026-08-14 with no completed event recorded. Fresh creative pipeline is the stated fix for retargeting fatigue; this delay directly risks ad performance.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
+        "id": "F3",
+        "priority": 2,
+        "text": "lead_drought flag: 0 leads across all 28 days and every daily series entry. This is ecom-only pipeline; no GHL intake issue — purchases are the conversion unit, but the flag confirms no email/subscribe captures are firing.",
+        "confidence": "confirmed",
+        "channel": "meta"
+      },
+      {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions dropped -35.71% week-over-week, and the last 3 series days show 0 GBP actions (Aug 15–17) vs a prior 45-day average of ~18/day — organic local intent has gone dark.",
+        "text": "GBP actions dropped 35.71% 7d vs prior and hit 0 on Aug 15–17 (3 consecutive zero days vs 23 avg earlier in the series) — offline local interest is diverging from paid momentum at renewal launch.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F5",
-        "priority": 4,
-        "text": "Top campaign 'BWS - Muslim Subscription Box - 17/06/26' consumed $849.24 of $1,500.50 (57%) with no secondary campaign data visible — concentration risk is high if this creative fatigues.",
+        "priority": 3,
+        "text": "Single campaign 'BWS - Muslim Subscription Box - 17/06/26' consumed 56.6% of 28-day spend ($849.24 of $1,500.50) — concentration risk high; no second campaign data visible to assess diversification.",
         "confidence": "probable",
         "channel": "meta"
       }
@@ -580,34 +580,34 @@
       {
         "id": "S1",
         "type": "watch",
-        "text": "Watch Aug 15–17 purchase burst; confirm 3 more purchase days before scaling 'Muslim Subscription Box' budget.",
+        "text": "Hold budget flat; monitor purchases over next 3 days — if daily run rate stays below 1 purchase/day, protect ROAS floor before any scale.",
         "cites": [
           "F1",
-          "F2"
+          "F5"
         ],
-        "monday_item_name": "Watch Meta purchase trend",
-        "monday_update": "Purchases spiked to 3 in the Aug 15–17 window ($421.86 revenue) after a 3-day zero streak Aug 12–14. This is one burst, not a confirmed trend — do not scale yet. Success check: 3+ purchase days in the next 7-day window before any budget increase on BWS Muslim Subscription Box. Re-check 2026-08-21."
+        "monday_item_name": "Watch ROAS floor Aug 21",
+        "monday_update": "The 3-day purchase signal (Aug 15–17: 3 purchases) decelerated from the prior 3 days (Aug 12–14: 6 purchases), while the single top campaign accounts for 56.6% of all spend. Hold current daily budget (~$55/day) unchanged through Aug 21. Success check: if purchases recover to ≥2/day average by Aug 21, revisit a modest +15% budget lift on the top campaign at next cycle."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Escalate Live-Cooking Shoot 1 to Video/Content team; 4-day overdue blocks fresh creative pipeline needed against F5 concentration risk.",
+        "text": "Escalate Live-Cooking Shoot 1 (due Aug 14, overdue) — creative gap is the confirmed retargeting fatigue risk at current frequency.",
         "cites": [
-          "F3",
-          "F5"
+          "F2",
+          "F3"
         ],
-        "monday_item_name": "Escalate Shoot 1 overdue",
-        "monday_update": "Live-Cooking Shoot 1 was due 2026-08-14 and shows no completed event. The top Meta campaign holds 57% of 28-day spend ($849.24) with no visible secondary creative — fatigue risk is real with no replacement in queue. Escalate to Nacer (Ops) for immediate rescheduling. Success check: confirmed shoot date logged in the Video board by 2026-08-21."
+        "monday_item_name": "Unblock Shoot 1 Creative",
+        "monday_update": "The Live-Cooking Event Shoot 1 milestone missed its Aug 14 deadline and no completion event is recorded. Retargeting creative fatigue was identified as a known failure mode from the test phase, and 0 subscribe/lead captures are firing. Escalate to Video/Content and Nacer (Ops) to confirm a new shoot date by Aug 21. Success check: shoot confirmed and assets in Drive folder by Aug 25 so new creative can enter the ad account before the next review cycle."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP: 0 actions for 3 consecutive days (Aug 15–17) vs 18/day prior average — confirm data gap or real drop before acting.",
+        "text": "Watch GBP actions recovery — 3 consecutive zero days (Aug 15–17) after a 35.71% weekly drop warrants a data-integrity check before assuming local demand loss.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Watch GBP dark 3 days",
-        "monday_update": "GBP actions have shown zero for Aug 15, 16, and 17 against a 45-day average of roughly 18 actions per day and a -35.71% weekly delta. This may be a reporting lag or a real local-intent drop. Check GBP dashboard directly to confirm whether data is missing or actions genuinely stopped. Success check: data confirmed present or absent by 2026-08-21; if confirmed drop, escalate as a local SEO fix."
+        "monday_item_name": "GBP Zero-Day Data Check",
+        "monday_update": "GBP actions recorded 0 on Aug 15, 16, and 17 — the first 3-day zero streak in the 45-day series, following a 35.71% weekly decline. First confirm this is not a tracking or GBP listing issue (verify listing status and Google data pipeline). If data is clean, local offline interest is genuinely lagging paid momentum at renewal launch. Re-check on Aug 21; if still zero, flag to Nacer for local visibility review."
       }
     ],
     "next_check": "2026-08-21"
