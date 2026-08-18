@@ -258,7 +258,8 @@
         "itemName": "WhatsApp GHL Connect",
         "updateBody": "<p>Salam,</p><ul><li><strong>Context</strong>: In the 8/17 Med Station onboarding sync, WhatsApp integration was flagged as the last real gap before the <strong>8/24 go-live</strong> and Thursday's soft onboarding session. WhatsApp is still connected to Como and needs to move to GHL before any of the built messaging/lead-escalation workflows can actually send anything.</li><li><strong>Deliverable</strong>: <strong>Disconnect WhatsApp from Como</strong>, then connect it to GHL. Only migrate the one number that's moving over, the rest stay on Como to avoid disrupting current client messaging. Run a full test pass (inbound/outbound, workflow triggers) once connected.</li><li><strong>Dependencies</strong>: This is a partial blocker on Lead Escalation and Reactivation Build, which are built but can't fully activate until WhatsApp is live on GHL. Confirm the WhatsApp Business API plan supports multi-number/multi-CRM before migrating, so Como-side messaging isn't accidentally interrupted.</li><li><strong>Done</strong>: WhatsApp is sending/receiving through GHL on the migrated number, workflows that depend on it (lead escalation, fallback messages) fire correctly in a live test, and Como continues working normally for the numbers that stayed there.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
         "blocked": false,
-        "needsNaz": false
+        "needsNaz": false,
+        "parentItemName": "GHL Setup"
       },
       "nullReason": null,
       "priority": 1,
