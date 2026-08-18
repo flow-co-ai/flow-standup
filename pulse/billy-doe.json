@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T15:31:00.423Z",
+  "generated_at": "2026-08-18T15:53:47.657Z",
   "date": "2026-08-18",
   "slug": "billy-doe",
   "name": "Billy Doe Meats",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 70,
   "status": "amber",
-  "verdict": "Purchases surged 350% and ROAS jumped 416.45% week-over-week, driven largely by the top Meta campaign \"BWS - Muslim Subscription Box - 17/06/26\" which alone accounted for $849.08 of the $1,500.31 in spend and contributed to $5,311.58 in revenue (3.54 ROAS over 28 days). GBP engagement dropped 35.71% WoW, worth monitoring to ensure offline demand keeps pace with the strong ecom momentum.",
+  "verdict": "Purchases surged 350% week-over-week, driving ROAS up 416.45% to 3.54 over 28 days, likely fueled by the top Meta campaign \"BWS - Muslim Subscription Box - 17/06/26\" which alone accounted for $849.08 of the $1,500.31 in spend. GBP engagement dropped 35.71% WoW, worth monitoring to ensure offline visibility keeps pace with the paid momentum.",
   "windsor": {
     "totals": {
       "spend": 1500.31,
@@ -535,78 +535,79 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-18T15:32:54.762Z",
+    "generated_at": "2026-08-18T15:55:34.242Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "ROAS spike is real but purchase clustering masks thin daily engine.",
+    "verdict": "ROAS spike is real but purchase clustering masks fragility; scale cautiously.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "ROAS +416% and purchases +350% WoW are driven by 3 clustered days (Jul 27: $1,071, Aug 13: $1,661, Aug 17: $421); 19 of 28 days show zero revenue.",
+        "text": "ROAS 3.54x over 28 days on $1,500.31 spend is above the test-phase 3.8–4.6x floor — marginally. 7d ROAS jumped 416% but on only 3 purchases in the last 3 days (Aug 15–17: 0+0+3), with $421.86 revenue on $162.62 spend — a 2.59x 3-day ROAS, well below the 28-day headline.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "SOW milestone: Live-Cooking Event Shoot 1 was due 2026-08-14 with no completed event recorded — video asset pipeline is stalled.",
+        "text": "Overdue: Live-Cooking Event Shoot 1 was due 2026-08-14 with no completed event recorded. Creative pipeline for fresh real-footage ads is blocked until this shoot delivers.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "3-day signal (Aug 15–17): spend averaged $54.20/day, purchases = 3 total (all on Aug 17), prior 3 days (Aug 12–14) = 0 purchases — single-day recovery, not a trend.",
+        "text": "Purchase volume is heavily clustered: 6 purchases on Aug 11 and 4 on Aug 3 account for the 350% WoW spike. The 3-day signal (Aug 15–17) shows 3 purchases vs prior 3 days (Aug 12–14) at 0 — one late rescue, not a trend reversal.",
         "confidence": "probable",
         "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions dropped to 0 on Aug 15–17 (vs 23/16/19 on prior comparable days), a 3-day flatline that may signal offline demand cooling beneath the ecom spike.",
-        "confidence": "probable",
+        "text": "GBP actions zeroed out Aug 15–17 (0, 0, 0) after averaging ~17/day across July. The 35.71% WoW GBP drop the daily verdict flagged is confirmed and accelerating — local offline intent is collapsing while paid runs.",
+        "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "IG reach has drifted from ~1,200 (late July) to 671–925 in the last 6 days, a ~30% decay suggesting creative fatigue on organic social.",
-        "confidence": "hypothesis",
-        "channel": "instagram"
+        "text": "IG reach fell from a July peak of ~1,214 to 811 on Aug 17, a sustained 33% compression over 4 weeks with spend flat (~$52–60/day). No new creative refresh on record; probable organic fatigue on existing ad creatives.",
+        "confidence": "probable",
+        "channel": "meta"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "watch",
-        "text": "Hold budget flat at ~$55/day; confirm Aug 17 $421 purchase is not a one-day outlier before any scale.",
+        "text": "Watch 3-day ROAS signal through Aug 21 before any budget move; current 3-day ROAS is 2.59x.",
         "cites": [
           "F1",
           "F3"
         ],
-        "monday_item_name": "Watch Meta spend — hold flat",
-        "monday_update": "Budget stays at current ~$55/day (spend_per_day_7d: $55.61). Aug 17 returned $421.86 in revenue but the prior 6 days were $0 — one day is noise, not a signal. Success check: 3 consecutive days with purchases before any budget increase. Re-check 2026-08-21."
+        "monday_item_name": "Watch ROAS 3-day signal",
+        "monday_update": "Do not adjust Meta daily budget ($55.61/day) until Aug 21. The 28-day ROAS of 3.54x is driven by two cluster days (Aug 3 and Aug 11); the 3-day window ending Aug 17 shows only $421.86 revenue on $162.62 spend — a 2.59x return, below the test-phase floor. Success check: if 3-day ROAS returns above 3.5x by Aug 21, a +15% budget step is defensible. Re-check Aug 21."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Escalate Live-Cooking Shoot 1 (due Aug 14, overdue) — creative gap is the most actionable risk to ROAS continuity.",
+        "text": "Escalate Live-Cooking Shoot 1 (due Aug 14, overdue); no new real-footage creative can launch without it.",
         "cites": [
-          "F2"
+          "F2",
+          "F5"
         ],
-        "monday_item_name": "Overdue: Live-Cooking Shoot 1",
-        "monday_update": "The Live-Cooking Event Shoot 1 milestone was due 2026-08-14 and has no completed event logged. Creative refresh is the documented fix for fatigue (frequency burn noted in test phase). Nacer (Ops) to surface a reschedule date from Haney/Ameer by 2026-08-21. Success check: shoot date confirmed and on calendar."
+        "monday_item_name": "Escalate Shoot 1 delivery",
+        "monday_update": "The Live-Cooking Event Shoot 1 milestone due Aug 14 has no completed event. IG reach has compressed 33% from its July peak (1,214 to 811 on Aug 17) and the creative refresh needed to counter fatigue is blocked on this footage. Escalate to Nacer (Ops) today for a rescheduled shoot date. Success check: confirmed new shoot date on the Video board by Aug 20."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Monitor GBP daily actions; 3-day zero (Aug 15–17) needs one full week of data before diagnosing offline demand drop.",
+        "text": "Watch GBP actions; zero readings Aug 15–17 after ~17/day average — confirm data gap vs real drop.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Watch GBP actions Aug 15–21",
-        "monday_update": "GBP actions read 0 for Aug 15, 16, and 17 — a hard flatline after averaging 14–27/day earlier in the series. This may be a data feed lag or a genuine offline cooling. No paid action warranted yet. Success check: GBP actions resume above 10/day by 2026-08-21; if still zero, escalate as a tracking or listing issue."
+        "monday_item_name": "Investigate GBP zero actions",
+        "monday_update": "GBP actions recorded 0 for three consecutive days (Aug 15–17) against a July daily average of approximately 17 actions. Before treating this as a local-visibility collapse, verify whether the GBP data feed has a reporting lag for these dates. If the zero readings are confirmed real by Aug 21, escalate to Nacer as a local presence issue running counter to active paid spend. Re-check Aug 21."
       }
     ],
     "next_check": "2026-08-21"

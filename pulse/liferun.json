@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T15:32:06.229Z",
+  "generated_at": "2026-08-18T15:54:36.932Z",
   "date": "2026-08-18",
   "slug": "liferun",
   "name": "Liferun",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 59,
   "status": "amber",
-  "verdict": "Liferun's biggest movement this week was a 50% drop in leads alongside a 35.43% pullback in spend, pointing to reduced budget delivery as the likely driver rather than a conversion efficiency issue. Meta carried all 130 leads over the 28-day window while Google Ads generated zero conversions despite $1,239.78 in spend, making that channel a priority to investigate or pause.",
+  "verdict": "Liferun's biggest movement this week is a 50% drop in leads alongside a 35.43% pullback in spend, pointing to reduced budget delivery as the primary driver rather than a conversion efficiency issue. Google Ads is the sharpest drag, down 47.11% in spend over 7 days with 0 recorded conversions in the 28-day window, while Meta continues to carry all 130 leads at a CPL of $19.85.",
   "windsor": {
     "totals": {
       "spend": 2580.14,
@@ -527,79 +527,77 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-18T15:34:53.905Z",
+    "generated_at": "2026-08-18T15:57:37.771Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Google is confirmed dead weight; CPL spike is a spend-cut artifact, not conversion decay.",
+    "verdict": "Google spend collapsing; Meta CPL rising; GHL intake gap masks true lead quality.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Google Ads spent $1,239.78 over 28 days and generated 0 conversions. Every lead in the window came from Meta alone.",
-        "confidence": "confirmed",
-        "channel": "google_ads"
-      },
-      {
-        "id": "F2",
-        "priority": 1,
-        "text": "CPL rose 29.14% (7d delta) but Meta spend fell ~35%; CPL inflation is a volume-drop artifact, not a conversion efficiency collapse.",
+        "text": "CPL jumped 29.14% week-over-week to ~$19.85 while leads fell 50%; rising cost-per-lead on fewer impressions points to budget compression, not audience exhaustion.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
-        "id": "F3",
+        "id": "F2",
         "priority": 2,
-        "text": "SOW milestone 'Stripe Products QA'd & Done' (due 2026-07-20) has no confirmed completed event on record — 29 days overdue.",
-        "confidence": "confirmed",
+        "text": "Stripe Products QA milestone marked Done July 20 per SOW, but no completed-event confirmation exists — overdue verification of the money path.",
+        "confidence": "probable",
         "channel": "SOW"
       },
       {
-        "id": "F4",
+        "id": "F3",
         "priority": 2,
-        "text": "3-day lead signal (Aug 15–17): 0+0+2 = 2 leads vs prior 3 days (Aug 12–14): 9+5+4 = 18 leads — a sharp short-term collapse driven by near-zero spend ($14.76, $4.96, $32.78).",
+        "text": "Google Ads spend collapsed to $4.96–$14.76/day in the last 3 days vs $30–$87/day prior 3; 0 conversions across 28 days on $1,239.78 spend — channel delivering zero attributable leads.",
+        "confidence": "confirmed",
+        "channel": "google_ads"
+      },
+      {
+        "id": "F4",
+        "priority": 3,
+        "text": "3-day lead signal: Aug 15–17 produced 0, 0, 2 leads vs Aug 12–14 producing 9, 5, 4 — a confirmed three-day drop, not noise. Spend also fell to $14.76, $4.96, $32.78 over same window.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 130 opportunities created, 0 won, 0 appointments — pipeline intake appears active but no progression, suggesting post-lead handling gap.",
-        "confidence": "hypothesis",
+        "text": "GHL shows 130 contacts and 130 opportunities created but 0 won and 0 appointments — leads entering pipeline but zero progression, indicating intake or follow-up automation leak.",
+        "confidence": "probable",
         "channel": "GHL"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "kill",
-        "text": "Pause Google Ads (BWS Search Campaign - Calls): $1,239.78 spent, 0 conversions over 28 days.",
+        "type": "fix",
+        "text": "Audit Google Ads delivery and budget cap immediately; $1,239.78 spent with 0 conversions and spend near zero last 3 days.",
         "cites": [
-          "F1"
+          "F3"
         ],
-        "monday_item_name": "Pause Google Ads - 0 Convs",
-        "monday_update": "Google Ads has spent $1,239.78 over the last 28 days and recorded zero conversions — the top campaign alone (BWS Search Campaign - Calls) consumed $930.24 with no result. Pause all Google Ads spend immediately to stop the leak. Success check: zero further Google Ads spend appearing in the daily series by 2026-08-19. Before reactivating, confirm conversion tracking fires correctly on the client side."
+        "monday_item_name": "Google Ads delivery audit",
+        "monday_update": "Google Ads has spent $1,239.78 over 28 days with zero recorded conversions, and daily spend has collapsed to under $9 in the last 3 days. Check campaign status, budget caps, and bidding strategy for the BWS Search Campaign (top spender at $930.24). Success is confirmed when daily spend returns to ≥$50/day and at least one conversion event fires. Complete by 2026-08-21."
       },
       {
         "id": "S2",
-        "type": "budget_shift",
-        "text": "Redirect up to $50/day freed from Google into Meta to restore lead volume toward prior 7d baseline.",
+        "type": "fix",
+        "text": "Verify Stripe Products QA path end-to-end; milestone marked Done July 20 but no confirmed event — run one live dummy transaction.",
         "cites": [
-          "F1",
-          "F2",
-          "F4"
+          "F2"
         ],
-        "monday_item_name": "Shift Google Budget to Meta",
-        "monday_update": "With Google paused, reallocate up to $50/day of recovered spend into Meta campaigns that produced all 130 28-day leads at a $19.85 CPL. The 3-day lead total (Aug 15–17) collapsed to 2 leads on near-zero Meta spend; restoring daily Meta budget should recover volume. Success check: Meta daily leads return to 5+ per active day within 5 days of budget restoration (by 2026-08-23). Hold the shift at ≤20% of current Meta daily rate for the first 3 days before any further increase."
+        "monday_item_name": "Stripe QA verification run",
+        "monday_update": "The Stripe Products QA milestone was marked Done on July 20 per SOW, but no completed-event confirmation exists in the data. Run one dummy transaction through each intake path and confirm the opportunity is created in GHL with full field mapping and no duplicate. Success is a single, fully mapped opportunity per order visible in GHL. Complete by 2026-08-22."
       },
       {
         "id": "S3",
         "type": "fix",
-        "text": "Escalate Stripe Products QA milestone (overdue 29 days) — unverified payment path risks silent revenue loss.",
+        "text": "Investigate GHL pipeline: 130 leads created, 0 appointments, 0 won — confirm follow-up sequences are triggering on new contacts.",
         "cites": [
-          "F3"
+          "F5"
         ],
-        "monday_item_name": "Stripe QA Milestone Escalate",
-        "monday_update": "The Stripe Products QA milestone was marked done July 20 but has no confirmed completed event on record — it is 29 days overdue for verification. Ahmed/Ali to run one live test transaction through both intake paths (WordPress/Stripe webhook and GHL Products Payment - BWS) and confirm exactly one opportunity is created, fully field-mapped, with no duplicate. Success check: screenshot of both test transactions and resulting GHL opportunities shared with Nacer/Sohib by 2026-08-21."
+        "monday_item_name": "GHL follow-up sequence audit",
+        "monday_update": "GHL shows 130 opportunities created and 130 contacts but zero appointments booked and zero won deals over 28 days. Check whether the automated follow-up sequences are enrolled and firing on new contacts, and confirm no workflow errors are silently halting them. Success is at least one test contact completing the full sequence without error. Complete by 2026-08-21."
       }
     ],
     "next_check": "2026-08-21"

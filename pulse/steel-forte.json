@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T15:32:19.458Z",
+  "generated_at": "2026-08-18T15:54:50.820Z",
   "date": "2026-08-18",
   "slug": "steel-forte",
   "name": "Forte Metals",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Forte Metals saw no paid activity in the last 28 days (zero spend, leads, or clicks across Meta and Google Ads), but organic presence is carrying the load with GBP delivering 90 total actions including 10 calls, 49 direction requests, and 31 website clicks. The standout movement is a 233.33% week-over-week spike in Search Console activity, likely driven by increased branded or local search demand rather than any paid push.",
+  "verdict": "Forte Metals saw no paid activity in the last 28 days (zero spend, leads, or clicks across Meta and Google Ads), but organic visibility is carrying the load with GBP delivering 90 total actions including 10 calls, 49 direction requests, and 31 website clicks. The biggest movement is a 76.92% week-over-week surge in GBP engagement, likely driven by increased local search demand or a recent profile update boosting visibility.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,61 +409,61 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-18T15:35:32.708Z",
+    "generated_at": "2026-08-18T15:58:25.550Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Organic is the only active revenue signal; paid is fully dark.",
+    "verdict": "Organic holding its own; paid is fully dark with no launch signal.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across Meta and Google for all 28 days — $0 across 28 data points. No CPL is computable; leadgen engine is off.",
+        "text": "Zero paid spend across all 28 days — Meta and Google Ads both completely dark; 0 leads generated from paid channels.",
         "confidence": "confirmed",
-        "channel": "meta,google"
+        "channel": "meta/google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Search Console clicks surged 233% week-over-week (last 7d: ~10 clicks vs ~3 prior 7d), but last 3 days show 0 clicks — spike may have already faded.",
-        "confidence": "probable",
-        "channel": "organic"
-      },
-      {
-        "id": "F3",
-        "priority": 3,
-        "text": "GBP actions rose 76.92% week-over-week to 90 total (10 calls, 49 directions, 31 web clicks), but last 3 days GBP actions = 0 — recency trend is cooling.",
+        "text": "GBP surged 76.92% week-over-week to 90 total actions (10 calls, 49 directions, 31 web clicks) — organic is the only active conversion surface.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
+        "id": "F3",
+        "priority": 3,
+        "text": "Search clicks jumped 233.33% week-over-week (to 25 clicks, 1,724 impressions over 28 days) with zero paid support — demand exists but is unmonetised.",
+        "confidence": "confirmed",
+        "channel": "search"
+      },
+      {
         "id": "F4",
         "priority": 4,
-        "text": "GA4 sessions = 0 across all 28 days despite 25 Search Console clicks and 31 GBP web clicks — likely a GA4 tracking installation gap, not zero real traffic.",
+        "text": "3-day GBP signal (Aug 15–17): 0 actions across all 3 days, vs 11 actions in the prior 3 days (Aug 12–14) — recent GBP momentum has stalled.",
         "confidence": "probable",
-        "channel": "ga4"
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Audit and repair GA4 tracking — 25 SC clicks and 31 GBP web clicks produced 0 recorded sessions; fix before any paid launch.",
+        "type": "watch",
+        "text": "No paid budget to shift or scale. Confirm paid launch status before any channel action; re-check 2026-08-21.",
         "cites": [
-          "F4"
+          "F1"
         ],
-        "monday_item_name": "Fix GA4 Tracking Gap",
-        "monday_update": "GA4 has recorded zero sessions across the full 28-day window despite 25 Search Console clicks and 31 GBP website clicks confirming real traffic exists. A tracking installation issue (missing tag, wrong property, or blocked script) is the most likely cause. Action: audit GA4 tag firing via Tag Assistant or GTM preview mode and confirm pageview hits are reaching the property. Success check: at least 10 consecutive sessions recorded in GA4 by 2026-08-22, before any paid campaign is activated."
+        "monday_item_name": "Confirm Paid Launch Status",
+        "monday_update": "Forte Metals has recorded $0 spend across Meta and Google Ads for the full 28-day window through 2026-08-17. No paid action can be taken until campaign activation is confirmed with the client or account team. Success check: at least $1 in recorded spend visible by 2026-08-21. If still dark on that date, escalate to account lead."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch SC and GBP trends through 2026-08-21 — last 3 days show 0 on both; confirm whether the 233% spike is holding or has reversed.",
+        "text": "Monitor GBP recovery; 3-day actions dropped to 0 after peaking at 16 Aug 10–12. Re-check 2026-08-21.",
         "cites": [
-          "F2",
-          "F3"
+          "F4",
+          "F2"
         ],
-        "monday_item_name": "Watch Organic Momentum",
-        "monday_update": "Search Console clicks spiked 233% week-over-week but the last 3 days of the series show 0 clicks, and GBP actions have also read 0 for the final 3 days. This may reflect a weekend dip or a genuine reversal of the organic surge. No action taken this cycle. Re-check on 2026-08-21: if SC clicks and GBP actions resume above the prior 7d baseline, the spike is structural and can inform paid geo or keyword targeting at launch."
+        "monday_item_name": "Watch GBP Momentum Drop",
+        "monday_update": "GBP actions hit 0 for three consecutive days (Aug 15–17) after a 76.92% weekly surge driven by earlier engagement. This may reflect normal weekend variance or a visibility drop. No paid amplification is available to compensate. Confirm GBP actions have recovered above 3/day by 2026-08-21; if not, review profile completeness and recent post activity."
       }
     ],
     "next_check": "2026-08-21"
