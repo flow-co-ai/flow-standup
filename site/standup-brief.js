@@ -89,15 +89,32 @@
     } catch { pulseCache.set(slug, null); return null; }
   }
 
+  // Four clients keep their playbooks under playbooks/_unmatched/ with a
+  // different filename convention. Try the canonical path first, fall back to
+  // the alias. Only both 404 counts as "No playbook on file."
+  const PLAYBOOK_ALIASES = {
+    'medstation':        '_unmatched/medstation-department-playbooks',
+    'jcl':               '_unmatched/jcl-department-playbooks',
+    'maadi-law':         '_unmatched/maadi-law-department-playbooks',
+    'steel-round-bars':  '_unmatched/steel-group-department-playbooks',
+  };
+
   async function fetchPlaybook(slug) {
     if (playbookCache.has(slug)) return playbookCache.get(slug);
-    try {
-      const res = await fetch(`${PLAYBOOK_BASE}/${slug}.md?t=${Date.now()}`, { cache: 'no-store' });
-      if (!res.ok) { playbookCache.set(slug, null); return null; }
-      const text = await res.text();
-      playbookCache.set(slug, text);
-      return text;
-    } catch { playbookCache.set(slug, null); return null; }
+    const paths = [`${slug}.md`];
+    if (PLAYBOOK_ALIASES[slug]) paths.push(`${PLAYBOOK_ALIASES[slug]}.md`);
+    for (const rel of paths) {
+      try {
+        const res = await fetch(`${PLAYBOOK_BASE}/${rel}?t=${Date.now()}`, { cache: 'no-store' });
+        if (res.ok) {
+          const text = await res.text();
+          playbookCache.set(slug, text);
+          return text;
+        }
+      } catch { /* try next path */ }
+    }
+    playbookCache.set(slug, null);
+    return null;
   }
 
   async function fetchTimeline(slug) {
@@ -920,9 +937,249 @@
     return detail;
   }
 
-  // Deterministic CONTRACT section built from playbooks/[slug].md header blocks.
-  // No LLM: shows engagement dates, computed "Month X of Y" when start+end
-  // are ISO dates, plus scope/setup blocks straight from the header.
+  // ── Playbook extractor (v3 CONTRACT section — deterministic, no LLM) ────────
+  // parsePlaybookHeader() is v2 territory; it dumps whole paragraphs. The v3
+  // path builds at most four short rows, everything markdown-stripped and
+  // word-capped. Anything not confidently findable is omitted.
+
+  const MD_MONTHS_RE = 'jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sept?(?:ember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?';
+  const MD_MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const MD_MONTH_INDEX = { jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,sept:8,oct:9,nov:10,dec:11 };
+
+  function stripMarkdown(s) {
+    return String(s || '')
+      .replace(/```[\s\S]*?```/g, ' ')
+      .replace(/`[^`]*`/g, '')
+      .replace(/\*\*([^*]+)\*\*/g, '$1')
+      .replace(/__([^_]+)__/g, '$1')
+      .replace(/\*([^*]+)\*/g, '$1')
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      .replace(/^#+\s*/gm, '')
+      .replace(/[*_`>]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function capWords(s, n) {
+    const clean = stripMarkdown(s);
+    if (!clean) return '';
+    const words = clean.split(/\s+/);
+    if (words.length <= n) return words.join(' ');
+    return words.slice(0, n).join(' ') + '…';
+  }
+
+  function monthIdxFromName(name) {
+    const key = name.toLowerCase().slice(0, 4).replace(/[^a-z]/g, '');
+    if (key.length >= 3 && MD_MONTH_INDEX[key.slice(0,3)] != null) return MD_MONTH_INDEX[key.slice(0,3)];
+    if (MD_MONTH_INDEX[key]) return MD_MONTH_INDEX[key];
+    return null;
+  }
+
+  // Bare month-day (no year) never resolves to a future date — most recent
+  // past occurrence only. "Oct 1" on 2026-08-18 → Oct 1 2025.
+  function parseHumanDate(str) {
+    const s = str.trim();
+    let m = s.match(/^(\d{4})-(\d{1,2})-\d{1,2}/);
+    if (m) return { month: parseInt(m[2],10) - 1, year: parseInt(m[1],10) };
+    m = s.match(new RegExp(`^(${MD_MONTHS_RE})\\.?\\s+\\d{1,2}(?:,)?\\s+(\\d{4})`, 'i'));
+    if (m) { const mi = monthIdxFromName(m[1]); if (mi != null) return { month: mi, year: parseInt(m[2],10) }; }
+    m = s.match(new RegExp(`^(${MD_MONTHS_RE})\\.?\\s+(\\d{4})`, 'i'));
+    if (m) { const mi = monthIdxFromName(m[1]); if (mi != null) return { month: mi, year: parseInt(m[2],10) }; }
+    m = s.match(new RegExp(`^(${MD_MONTHS_RE})\\.?\\s+(\\d{1,2})\\b`, 'i'));
+    if (m) {
+      const mi = monthIdxFromName(m[1]);
+      if (mi == null) return null;
+      const now = new Date();
+      let year = now.getUTCFullYear();
+      const day = parseInt(m[2],10);
+      const candidate = new Date(Date.UTC(year, mi, day));
+      if (candidate > now) year -= 1;
+      return { month: mi, year };
+    }
+    return null;
+  }
+
+  function formatStartedText(parsed) {
+    return `${MD_MONTH_NAMES[parsed.month]} ${parsed.year}`;
+  }
+
+  const START_KEY_RE = /(original agreement|renewal(?:\s+start(?:s|ed)?)?|onboard(?:ed|ing)?|kick[-\s]?off|kickoff|commenced|retainer|start(?:s|ed)?\b)/i;
+
+  // Split a stripped line on `. ` followed by a capital letter — sentence
+  // boundaries only, not abbreviations ("Sept. 1") or emoji-led fragments.
+  function splitClauses(line) {
+    return line.split(/(?<=\.)\s+(?=[A-Z])/);
+  }
+
+  // Returns { parsed, clause } — clause is the sentence carrying the start
+  // keyword, so length lookup can be scoped to it and won't stray to
+  // unrelated "3 months" text elsewhere in the same paragraph.
+  function extractStartedInfo(md) {
+    for (const raw of md.split('\n')) {
+      const line = stripMarkdown(raw);
+      if (!START_KEY_RE.test(line)) continue;
+      for (const clause of splitClauses(line)) {
+        if (!START_KEY_RE.test(clause)) continue;
+        const patterns = [
+          new RegExp(`(${MD_MONTHS_RE})\\.?\\s+\\d{1,2}(?:,)?\\s+\\d{4}`, 'i'),
+          /\d{4}-\d{2}-\d{2}/,
+          new RegExp(`(${MD_MONTHS_RE})\\.?\\s+\\d{4}`, 'i'),
+          new RegExp(`(${MD_MONTHS_RE})\\.?\\s+\\d{1,2}\\b`, 'i'),
+        ];
+        for (const re of patterns) {
+          const m = clause.match(re);
+          if (m) {
+            const parsed = parseHumanDate(m[0]);
+            if (parsed) return { parsed, clause };
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  function extractLengthFromClause(clause) {
+    const m = clause.match(/\b(\d{1,2})[-\s]months?\b/i);
+    return m ? parseInt(m[1], 10) : null;
+  }
+
+  function computeCurrentMonthNumber(started) {
+    const now = new Date();
+    return Math.max(1,
+      (now.getUTCFullYear() - started.year) * 12 +
+      (now.getUTCMonth() - started.month) + 1
+    );
+  }
+
+  // Playbook can state the current month explicitly ("Month 10 now") — that
+  // beats the computed value.
+  function extractStatedMonth(md) {
+    const m = stripMarkdown(md).match(/\bmonth\s+(\d{1,2})\s+now\b/i);
+    return m ? parseInt(m[1], 10) : null;
+  }
+
+  function detectMonthToMonth(md) {
+    return /month[-\s]to[-\s]month/i.test(md);
+  }
+
+  // Scope selection — item-count capped (max 5), joined with " · ", never
+  // truncated mid-word. Preference:
+  //   (1) engagement "Scope: A + B + …" line with 4+ items,
+  //   (2) h1 (excl title) when h1 >= 3 and h1 >= h2 (billy-doe shape),
+  //   (3) 2+ filtered h2 (most files),
+  //   (4) any h1 fallback,
+  //   (5) "Scope:" line with any items as last resort.
+  // Structural containers (ADMIN & COORDINATION, EXECUTION DEPARTMENTS,
+  // Launch Gate, Access, Account, Ops, …) are treated as scaffolding.
+  const SCOPE_BAD = /^(where|what|out\s+of\s+scope|compliance|scope\s+cuts?|about|architecture|the\s+dashboard|if\s+renewed|sequence\s+at\s+a\s+glance|client\s+to-?do|account\b|ops\b|access\b|launch\s+gate|admin\s*(?:&|and)\s*coordination|execution\s+departments|needs\b|done\b)/i;
+
+  function scopeLineItems(md) {
+    for (const raw of md.split('\n')) {
+      const clean = stripMarkdown(raw);
+      const m = clean.match(/scope:\s*(.+)/i);
+      if (!m) continue;
+      const listRaw = m[1].split(/\s+—\s+|\.\s+|;\s+/)[0];
+      const items = listRaw
+        .split(/\s+·\s+|\s+\+\s+|,\s+/)
+        .map(s => s.trim())
+        .filter(Boolean);
+      if (items.length) return items;
+    }
+    return null;
+  }
+
+  function extractScopeItems(md) {
+    const lines = md.split('\n');
+
+    const scopeItems = scopeLineItems(md);
+    if (scopeItems && scopeItems.length >= 4) return scopeItems.slice(0, 5);
+
+    const h1s = [];
+    let sawTitle = false;
+    for (const raw of lines) {
+      if (!/^#\s+/.test(raw)) continue;
+      if (!sawTitle) { sawTitle = true; continue; }
+      h1s.push(stripMarkdown(raw).replace(/^#+\s*/, ''));
+    }
+    const h1sFiltered = h1s.filter(h => !SCOPE_BAD.test(h));
+    const h2s = lines
+      .filter(l => /^##\s+/.test(l))
+      .map(l => stripMarkdown(l).replace(/^#+\s*/, ''))
+      .filter(h => !SCOPE_BAD.test(h));
+
+    let picked = null;
+    if (h1sFiltered.length >= 3 && h1sFiltered.length >= h2s.length) picked = h1sFiltered;
+    else if (h2s.length >= 2)                                        picked = h2s;
+    else if (h1sFiltered.length >= 1)                                picked = h1sFiltered;
+
+    if (picked && picked.length) {
+      const cleaned = picked
+        .map(h => h.split(/\s*—\s*/)[0].trim())
+        .filter(Boolean);
+      return [...new Set(cleaned)].slice(0, 5);
+    }
+
+    if (scopeItems && scopeItems.length) return scopeItems.slice(0, 5);
+    return [];
+  }
+
+  // Strip the metric-intro prefix ("Measured on", "Internally benchmarked
+  // on", "Judged on"), cut at em dash, cap at 12 words. 3-word minimum with
+  // hyphens counted as word breaks so hyphenated metrics
+  // ("cost-per-signed-case") aren't rejected as "one word".
+  function extractJudgedOn(md) {
+    const KW = /\b(measured|judged|scoreboard|scorecard|success|prove-?it|kpi|internally\s+benchmarked)\b/i;
+    const INTRO_RE = /\b(?:measured\s+on|internally\s+benchmarked\s+on|judged\s+on|scored\s+on)\s+/i;
+    const clean = stripMarkdown(md.replace(/```[\s\S]*?```/g, ''));
+    const sentences = clean.split(/(?<=[.!?])\s+/);
+    for (const s of sentences) {
+      if (!KW.test(s)) continue;
+      const letters = s.replace(/[^A-Za-z]/g, '');
+      if (letters.length > 0 && letters === letters.toUpperCase()) continue;
+      if (s.split(/\s+/).length < 6) continue;
+      const introMatch = s.match(INTRO_RE);
+      const remainder  = introMatch
+        ? s.slice(introMatch.index + introMatch[0].length)
+        : s;
+      const beforeDash = remainder.split(/\s*—\s*|\s+--\s+/)[0];
+      const capped     = capWords(beforeDash, 12);
+      if (!capped) continue;
+      const wordCount = capped.replace(/-/g, ' ').split(/\s+/).filter(Boolean).length;
+      if (wordCount < 3) continue;
+      return capped;
+    }
+    return null;
+  }
+
+  // Returns at most 4 rows: Started / Month / Scope / Judged on. Omits any
+  // row whose source isn't findable — never invents.
+  function extractContractRows(md) {
+    if (!md) return [];
+    const rows = [];
+    const startedInfo = extractStartedInfo(md);
+    if (startedInfo) {
+      rows.push({ label: 'Started', value: formatStartedText(startedInfo.parsed) });
+
+      const len      = extractLengthFromClause(startedInfo.clause);
+      const computed = computeCurrentMonthNumber(startedInfo.parsed);
+      const stated   = extractStatedMonth(md);
+      const cur      = stated ?? computed;
+      const m2m      = detectMonthToMonth(md);
+
+      let monthValue;
+      if (m2m)                   monthValue = `Month ${cur}, month-to-month`;
+      else if (len && cur > len) monthValue = `Month ${cur}, past initial ${len}-month term`;
+      else if (len)              monthValue = `Month ${cur} of ${len}`;
+      else                       monthValue = `Month ${cur}`;
+      rows.push({ label: 'Month', value: monthValue });
+    }
+    const scopeItems = extractScopeItems(md);
+    if (scopeItems.length) rows.push({ label: 'Scope', value: scopeItems.join(' · ') });
+    const judged = extractJudgedOn(md);
+    if (judged) rows.push({ label: 'Judged on', value: judged });
+    return rows;
+  }
+
   function renderContractFromPlaybook(playbook) {
     const sec = el('div', 'sb3-section');
     sec.append(el('div', 'sb3-section-label', 'CONTRACT'));
@@ -934,50 +1191,21 @@
       return sec;
     }
 
-    const blocks = parsePlaybookHeader(playbook);
-    if (!blocks.length) {
-      body.append(el('div', 'sb3-contract-empty', 'Playbook has no header blocks.'));
+    const rows = extractContractRows(playbook);
+    if (!rows.length) {
+      body.append(el('div', 'sb3-contract-empty', 'No contract data in playbook.'));
       sec.append(body);
       return sec;
     }
 
-    // Compute Month X of Y only when we can find ISO dates in header values.
-    const startBlk = findHeaderDate(blocks, ['start', 'kickoff', 'kick-off', 'kick off', 'engagement start', 'began', 'began on']);
-    const endBlk   = findHeaderDate(blocks, ['end', 'renew', 'renewal', 'expires', 'through', 'engagement end']);
-    if (startBlk && endBlk) {
-      const line = computeMonthLine(startBlk.date, endBlk.date);
-      if (line) body.append(el('div', 'sb3-contract-month', line));
-    }
-
-    for (const b of blocks) {
+    for (const r of rows) {
       const row = el('div', 'sb3-playbook-row');
-      row.append(el('span', 'sb3-playbook-label', b.label));
-      if (b.value) row.append(el('span', 'sb3-playbook-value', b.value));
+      row.append(el('div', 'sb3-playbook-label', r.label));
+      row.append(el('div', 'sb3-playbook-value', r.value));
       body.append(row);
     }
     sec.append(body);
     return sec;
-  }
-
-  function findHeaderDate(blocks, keywords) {
-    for (const b of blocks) {
-      const lbl = (b.label || '').toLowerCase();
-      if (!keywords.some(k => lbl.includes(k))) continue;
-      const m = (b.value || '').match(/(\d{4}-\d{2}-\d{2})/);
-      if (m) return { block: b, date: m[1] };
-    }
-    return null;
-  }
-
-  function computeMonthLine(startISO, endISO) {
-    const start = new Date(startISO + 'T00:00:00Z');
-    const end   = new Date(endISO   + 'T00:00:00Z');
-    if (isNaN(start) || isNaN(end)) return null;
-    const MONTH_MS = 1000 * 60 * 60 * 24 * 30.44;
-    const monthsTotal   = Math.max(1, Math.round((end - start) / MONTH_MS));
-    let   monthsElapsed = Math.floor((Date.now() - start) / MONTH_MS) + 1;
-    monthsElapsed = Math.max(1, Math.min(monthsTotal, monthsElapsed));
-    return `Month ${monthsElapsed} of ${monthsTotal}`;
   }
 
   function renderSnapshotSection(rows) {
@@ -987,7 +1215,9 @@
     for (const r of rows) {
       const row = el('div', 'sb3-snap-row');
       row.append(el('div', 'sb3-snap-label', r.label || ''));
-      row.append(el('div', `sb3-snap-value tone-${r.tone || 'plain'}`, r.value || ''));
+      // Every snapshot value gets the same treatment as CONTRACT: markdown
+      // stripped, hard-capped at 12 words.
+      row.append(el('div', `sb3-snap-value tone-${r.tone || 'plain'}`, capWords(r.value, 12)));
       body.append(row);
     }
     sec.append(body);

@@ -1007,13 +1007,26 @@ body.sb3-active #app {
 
 /* ── Card detail (expanded) ─────────────────────────────────────────────── */
 
+/* Explicit two-column grid so sections stay full-width columns rather than
+   collapsing into slivers. Each child gets min-width: 0 so long values
+   ellipsize/clamp instead of forcing overflow. Under 900px, collapse to one. */
 .sb3-detail {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-  gap: 30px 34px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 34px 40px;
   padding-top: 20px;
   margin-top: 6px;
   border-top: 1px solid rgba(20,22,15,0.08);
+}
+
+.sb3-detail > * {
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .sb3-detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .sb3-section-label {
@@ -1029,7 +1042,8 @@ body.sb3-active #app {
 .sb3-section-body {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  min-width: 0;
 }
 
 
@@ -1038,7 +1052,8 @@ body.sb3-active #app {
 .sb3-snap-row {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
+  min-width: 0;
 }
 
 .sb3-snap-label {
@@ -1049,9 +1064,17 @@ body.sb3-active #app {
   color: rgba(20,22,15,0.38);
 }
 
+/* Values are hard-capped at 12 words in JS; clamp visually to 2 lines here so
+   nothing runs into a wall of text. */
 .sb3-snap-value {
   font-size: 13.5px;
   line-height: 1.42;
+  min-width: 0;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .sb3-snap-value.tone-ok    { color: #4a4e3d; }
@@ -1150,38 +1173,34 @@ body.sb3-active #app {
   color: rgba(20,22,15,0.5);
 }
 
-/* CONTRACT (from playbook header) rows and computed month line. */
-.sb3-contract-month {
-  font-family: 'Outfit', sans-serif;
-  font-size: 18px;
-  font-weight: 500;
-  color: var(--sb3-ink);
-  margin-bottom: 8px;
-}
-
+/* CONTRACT (from playbook) — label above value, same rhythm as SNAPSHOT.
+   Values are word-capped in JS; still clamp to 2 lines defensively. */
 .sb3-playbook-row {
   display: flex;
-  gap: 12px;
-  font-size: 12.5px;
-  line-height: 1.45;
-  color: var(--sb3-ink);
-  padding: 2px 0;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
 }
 
 .sb3-playbook-label {
   font-family: 'Space Mono', monospace;
-  font-size: 10px;
+  font-size: 9.5px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: rgba(20,22,15,0.4);
-  min-width: 92px;
-  flex-shrink: 0;
-  padding-top: 2px;
+  font-weight: 600;
 }
 
 .sb3-playbook-value {
+  font-size: 13.5px;
   color: rgba(20,22,15,0.82);
-  flex: 1;
+  line-height: 1.42;
+  min-width: 0;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .sb3-contract-tag {
