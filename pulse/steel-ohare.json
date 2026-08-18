@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T13:49:05.977Z",
+  "generated_at": "2026-08-18T15:32:28.070Z",
   "date": "2026-08-18",
   "slug": "steel-ohare",
   "name": "O'Hare Precision",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "GBP drove all measurable activity this period with 203 total actions (138 directions, 55 web clicks, 10 calls), and GBP engagement is trending up 3.7% week-over-week. Paid channels (Meta and Google Ads) show zero spend and zero leads, so growth is entirely organic at this stage.",
+  "verdict": "Google Business Profile was the standout channel this period, driving 203 total actions (138 directions, 55 web clicks, 10 calls) with a +3.7% week-over-week uptick, likely reflecting steady local search demand. The only notable drag is Search Console traffic sliding 18.27% week-over-week, worth monitoring for ranking or indexing shifts, though paid channels show no spend or lead activity to report.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,60 +409,50 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-18T13:53:00.764Z",
+    "generated_at": "2026-08-18T15:35:58.310Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP holds the line; search clicks declining signals organic fragility ahead.",
+    "verdict": "No paid media active; organic signals are the only money story.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend and zero leads across all 28 days — CPL is undefined because no paid activity exists at all.",
+        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google Ads. No CPL or ROAS possible; client is entirely off paid media.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "meta, google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions trending +3.7% WoW (203 total in 28 days), but last 3 days (Aug 15–17) show 0 actions vs prior 3 days (Aug 12–14) averaging 14.7 — a sharp short-term drop.",
-        "confidence": "probable",
-        "channel": "gbp"
+        "text": "Search Console clicks dropped 18.27% week-over-week. Last 3 days (Aug 15–17) show 6, 6, 0 clicks vs prior 3 days (Aug 12–14) avg of 19.7 — a confirmed 3-day deterioration.",
+        "confidence": "confirmed",
+        "channel": "search_console"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "Search clicks -18.27% WoW; last 3 days averaged 4 clicks vs prior 3-day average of 19.3 — a confirmed 3-day declining signal, not noise.",
+        "priority": 3,
+        "text": "GBP holding steady at +3.7% week-over-week with 203 actions (138 directions, 55 web clicks, 10 calls) in 28 days. Local demand signal is intact.",
         "confidence": "confirmed",
-        "channel": "google_ads"
+        "channel": "gbp"
       },
       {
         "id": "F4",
-        "priority": 3,
-        "text": "GA4 sessions are zero for all 45 days in series — either tracking is broken or property is unmapped; web_clicks from GBP (55 in 28d) should generate some sessions.",
-        "confidence": "confirmed",
-        "channel": "ga4"
+        "priority": 4,
+        "text": "GBP actions zeroed on Aug 15–17 in the series — 3 consecutive zero-days. May reflect a reporting lag or a weekend pattern; 28-day total of 203 argues against a real drop.",
+        "confidence": "hypothesis",
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Audit GA4 property connection — 55 GBP web clicks in 28 days produce zero recorded sessions; fix tracking before any paid launch.",
-        "cites": [
-          "F4"
-        ],
-        "monday_item_name": "Fix GA4 Tracking Gap",
-        "monday_update": "GA4 has recorded zero sessions across all 45 days of available data despite 55 GBP web clicks in the last 28 days. Verify the GA4 property is correctly linked and the tracking tag is firing on the landing page. Success looks like GA4 sessions appearing within 48 hours of the fix. Resolve by 2026-08-20 before any paid spend is activated."
-      },
-      {
-        "id": "S2",
         "type": "watch",
-        "text": "Watch search clicks for 3 more days — 3-day average dropped to 4 from 19.3; confirm if structural or weekend-skew artifact.",
+        "text": "Monitor SC clicks daily; if 3-day avg stays below 10 by Aug 21, escalate to SEO/technical audit.",
         "cites": [
-          "F3"
+          "F2"
         ],
-        "monday_item_name": "Watch SC Click Drop",
-        "monday_update": "Search clicks fell to a 3-day average of 4 (Aug 15–17) versus 19.3 in the prior 3 days, an -18.27% WoW delta. Aug 15–17 includes a Saturday and Sunday, so weekend skew may explain part of the drop. Re-check on 2026-08-21 after two full weekdays are in the window — if the average has not recovered above 15, escalate to an SEO or listing audit."
+        "monday_item_name": "SC Click Drop — Watch",
+        "monday_update": "Search Console clicks fell 18.27% week-over-week, with the last 3 days (Aug 15–17) averaging 4 clicks vs a prior-3-day avg of ~19.7 — a confirmed short-term deterioration. No paid media is running to buffer organic traffic loss, making this the primary risk signal right now. Success check: SC 3-day avg recovers above 15 clicks by 2026-08-21. If it does not, flag for a technical SEO/indexing review before the next performance cycle."
       }
     ],
     "next_check": "2026-08-21"

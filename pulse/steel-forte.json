@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T13:48:52.820Z",
+  "generated_at": "2026-08-18T15:32:19.458Z",
   "date": "2026-08-18",
   "slug": "steel-forte",
   "name": "Forte Metals",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Forte Metals saw no paid activity in the last 28 days (zero spend, leads, or clicks across Meta and Google Ads), but organic visibility is carrying the load with GBP delivering 90 total actions including 10 calls, 49 direction requests, and 31 website clicks. The biggest movement is a 76.92% week-over-week surge in GBP engagement, likely driven by increased local search demand or a recent profile update boosting visibility.",
+  "verdict": "Forte Metals saw no paid activity in the last 28 days (zero spend, leads, or clicks across Meta and Google Ads), but organic presence is carrying the load with GBP delivering 90 total actions including 10 calls, 49 direction requests, and 31 website clicks. The standout movement is a 233.33% week-over-week spike in Search Console activity, likely driven by increased branded or local search demand rather than any paid push.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,79 +409,61 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-18T13:52:28.300Z",
+    "generated_at": "2026-08-18T15:35:32.708Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Organic holding the line; paid is fully dark with no pipeline to show for it.",
+    "verdict": "Organic is the only active revenue signal; paid is fully dark.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google. No leads generated; CPL is undefined and the paid channel is completely dark.",
+        "text": "Zero paid spend across Meta and Google for all 28 days — $0 across 28 data points. No CPL is computable; leadgen engine is off.",
         "confidence": "confirmed",
-        "channel": "meta+google"
+        "channel": "meta,google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions surged 76.92% week-over-week to 90 total actions (10 calls, 49 directions, 31 web clicks) — organic is the sole demand driver right now.",
-        "confidence": "confirmed",
-        "channel": "gbp"
+        "text": "Search Console clicks surged 233% week-over-week (last 7d: ~10 clicks vs ~3 prior 7d), but last 3 days show 0 clicks — spike may have already faded.",
+        "confidence": "probable",
+        "channel": "organic"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "Search clicks jumped 233% week-over-week (25 clicks, 1,724 impressions over 28 days) with zero paid support — latent intent is present but uncaptured.",
-        "confidence": "confirmed",
-        "channel": "search"
-      },
-      {
-        "id": "F4",
         "priority": 3,
-        "text": "GBP actions are zeroing out over the last 3 days (Aug 15–17: 0, 0, 0) after peaking at 12 on Jul 31 — the surge may already be fading.",
-        "confidence": "probable",
+        "text": "GBP actions rose 76.92% week-over-week to 90 total (10 calls, 49 directions, 31 web clicks), but last 3 days GBP actions = 0 — recency trend is cooling.",
+        "confidence": "confirmed",
         "channel": "gbp"
       },
       {
-        "id": "F5",
+        "id": "F4",
         "priority": 4,
-        "text": "GHL pipeline data is null — with 10 GBP calls in 28 days, it is unknown whether those calls are being captured as opportunities at all.",
-        "confidence": "hypothesis",
-        "channel": "ghl"
+        "text": "GA4 sessions = 0 across all 28 days despite 25 Search Console clicks and 31 GBP web clicks — likely a GA4 tracking installation gap, not zero real traffic.",
+        "confidence": "probable",
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Confirm whether paid campaigns are intentionally paused or erroneously dark before any budget action.",
+        "type": "fix",
+        "text": "Audit and repair GA4 tracking — 25 SC clicks and 31 GBP web clicks produced 0 recorded sessions; fix before any paid launch.",
         "cites": [
-          "F1"
+          "F4"
         ],
-        "monday_item_name": "Confirm Paid Channel Status",
-        "monday_update": "All paid spend has read $0 across Meta and Google for the full 28-day window including every day Aug 15–17. Before any budget move, Sohib should confirm whether this is a planned pause, a billing issue, or a campaign error. Success check: paid status clarified by 2026-08-19. No budget action is appropriate until this is resolved."
+        "monday_item_name": "Fix GA4 Tracking Gap",
+        "monday_update": "GA4 has recorded zero sessions across the full 28-day window despite 25 Search Console clicks and 31 GBP website clicks confirming real traffic exists. A tracking installation issue (missing tag, wrong property, or blocked script) is the most likely cause. Action: audit GA4 tag firing via Tag Assistant or GTM preview mode and confirm pageview hits are reaching the property. Success check: at least 10 consecutive sessions recorded in GA4 by 2026-08-22, before any paid campaign is activated."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Monitor GBP 3-day zero streak (Aug 15–17); re-check Aug 21 to confirm if the 76.92% surge has reversed.",
+        "text": "Watch SC and GBP trends through 2026-08-21 — last 3 days show 0 on both; confirm whether the 233% spike is holding or has reversed.",
         "cites": [
-          "F4",
-          "F2"
+          "F2",
+          "F3"
         ],
-        "monday_item_name": "Watch GBP Action Streak",
-        "monday_update": "GBP actions hit zero for three consecutive days (Aug 15–17) after the account's strongest week at +76.92% WoW. This may be a weekend lull or the start of a reversal. Re-check the 3-day signal on 2026-08-21. If actions remain near zero through Aug 20, investigate whether a profile update or Google suspension is the cause."
-      },
-      {
-        "id": "S3",
-        "type": "fix",
-        "text": "Audit GHL pipeline for GBP call intake; 10 calls in 28 days should produce visible opportunities — confirm they are not being lost.",
-        "cites": [
-          "F5",
-          "F2"
-        ],
-        "monday_item_name": "GHL Call Intake Audit",
-        "monday_update": "GBP logged 10 inbound calls over the past 28 days but GHL pipeline data is returning null — it is unknown whether any of those calls were logged as opportunities. This is a potential intake leak unrelated to ad performance. Sohib should verify GHL is receiving and tagging inbound calls correctly. Success check: pipeline data populating and at least some of the 10 calls appearing as contacts by 2026-08-21."
+        "monday_item_name": "Watch Organic Momentum",
+        "monday_update": "Search Console clicks spiked 233% week-over-week but the last 3 days of the series show 0 clicks, and GBP actions have also read 0 for the final 3 days. This may reflect a weekend dip or a genuine reversal of the organic surge. No action taken this cycle. Re-check on 2026-08-21: if SC clicks and GBP actions resume above the prior 7d baseline, the spike is structural and can inform paid geo or keyword targeting at launch."
       }
     ],
     "next_check": "2026-08-21"

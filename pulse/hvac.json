@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T13:48:13.036Z",
+  "generated_at": "2026-08-18T15:31:46.320Z",
   "date": "2026-08-18",
   "slug": "hvac",
   "name": "Quality HVAC by Fibid",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 70,
   "status": "amber",
-  "verdict": "Google Ads drove all $1,687.76 in spend over 28 days and recorded 16 conversions, but GBP engagement dropped sharply by 61.29% week-over-week, which is the biggest movement and likely signals reduced local search visibility or seasonal demand softening. The lead_drought flag warrants close attention, as CRM-tracked leads are showing zero despite Google Ads conversion activity.",
+  "verdict": "Google Ads drove all $1,687.76 in spend over 28 days with 16 conversions, but GBP engagement dropped sharply by 61.29% week-over-week, which is the biggest concern and likely signals reduced local search visibility or seasonal demand softening. The lead_drought flag warrants immediate attention, as no leads are being tracked through the paid funnel despite active spend.",
   "windsor": {
     "totals": {
       "spend": 1687.76,
@@ -543,80 +543,79 @@
     "history_line": "Deleted pre-July opportunity records — pipeline cleaned"
   },
   "performance": {
-    "generated_at": "2026-08-18T13:50:48.979Z",
+    "generated_at": "2026-08-18T15:34:03.285Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "GBP dark, leads zero in CRM — spend is circling but not landing.",
+    "verdict": "Spend is live but leads read zero — tracking gap, not demand failure.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "lead_drought confirmed: 0 CRM leads across all 28 days despite 16 Google Ads conversions and $1,687.76 spend — intake or tracking is broken, not ads.",
+        "text": "lead_drought flag: 28 days, 0 leads tracked despite $1,687.76 spend and 16 Google Ads conversions — CRM/pixel disconnect, not zero demand.",
         "confidence": "confirmed",
-        "channel": "GHL"
+        "channel": "google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "SOW milestone overdue: Booking bot battle-test was due 2026-07-31 and shows no completed event — speed-to-lead promise is unverified with intake seat potentially empty since Vivian left 7/7.",
+        "text": "Booking bot battle-test was due 2026-07-31 — no completed event recorded; with intake seat vacant since Vivian left 7/7, speed-to-lead automations may be unmonitored.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GBP actions collapsed to 0 for last 3 days (Aug 15–17) vs avg ~4/day prior 3 days — 61.29% weekly drop signals local visibility loss or reporting lag at window edge.",
-        "confidence": "probable",
-        "channel": "GBP"
+        "text": "GBP actions: last 3 days (Aug 15–17) = 0+0+0 vs prior 3 days (Aug 12–14) = 2+0+5 — GBP engagement has collapsed to zero across the most recent 3-day window.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Google spend is erratic: 17 of 28 days spent under $20 or $0, yet 16 conversions claimed — conversion pixel likely misfiring; CRM shows 0 leads against those 16 events.",
-        "confidence": "probable",
-        "channel": "Google Ads"
+        "text": "Google spend is erratic: 17 of 28 days show spend under $20 or $0, yet the top campaign alone consumed $1,392.13 — budget pacing is highly uneven, suppressing consistent lead flow.",
+        "confidence": "confirmed",
+        "channel": "google_ads"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 84 contacts and 49 opportunities created but 0 appointments booked — 49 opps with 0 appointments confirms intake process stalled, not an ads volume problem.",
-        "confidence": "confirmed",
-        "channel": "GHL"
+        "text": "GHL shows 49 opportunities created and 5 won (28d), but 0 appointments and $0 pipeline value recorded — intake data is incomplete; 84 contacts exist with no monetization trail.",
+        "confidence": "probable",
+        "channel": "crm"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit GHL intake seat and booking bot immediately; 49 opps, 0 appointments confirm the pipeline is stalled post-Vivian departure.",
+        "text": "Audit lead-to-GHL path: reconcile 16 Google Ads conversions against 0 CRM leads — identify and repair the broken handoff.",
         "cites": [
           "F1",
-          "F2",
           "F5"
         ],
-        "monday_item_name": "Fix GHL Intake & Bot Gap",
-        "monday_update": "Vivian left 7/7 and the booking bot battle-test (due 7/31) is still unconfirmed — GHL shows 49 opportunities created but 0 appointments booked against 0 CRM leads across 28 days. Confirm who owns the intake seat now, verify their GHL login, validate after-hours automation routing, and run the booking bot battle-test. Success = at least 1 appointment booked and logged in GHL within 48 hours of fix; re-check 2026-08-21."
+        "monday_item_name": "Fix GHL Lead Tracking Gap",
+        "monday_update": "Google Ads reported 16 conversions over 28 days against $1,687.76 spend, but GHL shows 0 leads and 0 appointments — the pipeline handoff is broken. Pull the conversion action source in Google Ads, check the GHL webhook or form destination, and confirm whether the 49 created opportunities map to these conversions. Success is confirmed when at least 1 new conversion from Google Ads appears as a GHL opportunity with a contact record by 2026-08-21."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Reconcile Google Ads 16 conversions vs 0 CRM leads — verify conversion action pixel is mapping to an actual intake event, not a page view.",
+        "text": "Confirm intake ownership post-Vivian: validate GHL login, after-hours coverage, and booking bot readiness before any budget increase.",
         "cites": [
-          "F1",
-          "F4"
+          "F2",
+          "F1"
         ],
-        "monday_item_name": "Audit Google Conversion Pixel",
-        "monday_update": "Google Ads reports 16 conversions on $1,687.76 spend but CRM records 0 leads — this gap means CPL is uncalculable and budget efficiency is invisible. Pull the conversion action definition in Google Ads and confirm it fires on a real lead event (form submit or call), not a site visit. Success = CRM leads and Google Ads conversions within reasonable alignment; re-check 2026-08-21."
+        "monday_item_name": "Confirm Intake Owner Post-Vivian",
+        "monday_update": "Vivian left on 7/7 and the booking bot battle-test due 7/31 has no completion record — speed-to-lead automations may be routing to an empty seat. Confirm with Xavier or Nader who owns the GHL inbox now, verify their login is active, and complete the booking bot battle-test. Success is a named intake owner confirmed in writing and a battle-test pass logged in GHL by 2026-08-22."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions: 3 consecutive zero days (Aug 15–17); confirm whether Windsor lag or true visibility drop by Aug 21.",
+        "text": "Watch GBP: 3-day actions = 0 — re-check Aug 21 before attributing to data lag vs. real visibility loss.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Watch GBP Aug 15-17 Drop",
-        "monday_update": "GBP actions hit 0 for three straight days (Aug 15–17), consistent with the 61.29% weekly decline. SOW notes Windsor data lags at window edges, so this may resolve by Aug 21. If GBP actions remain at or near 0 after lag clears, escalate as a local visibility issue. Re-check 2026-08-21."
+        "monday_item_name": "Watch GBP Aug 21 Recheck",
+        "monday_update": "GBP actions have read 0 for the last 3 consecutive days (Aug 15–17), down from a prior-3-day total of 7 actions. The SOW notes that the last 2–3 days of any GBP window carry Windsor data lag, so this may be an artifact. Re-check the native GBP Insights dashboard on 2026-08-21; if actions remain at or near 0 for Aug 15–19, escalate as a visibility issue requiring a GBP audit."
       }
     ],
     "next_check": "2026-08-21"
