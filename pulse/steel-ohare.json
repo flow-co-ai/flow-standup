@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T15:55:02.421Z",
+  "generated_at": "2026-08-18T16:26:54.695Z",
   "date": "2026-08-18",
   "slug": "steel-ohare",
   "name": "O'Hare Precision",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "GBP drove all measurable activity this period with 203 total actions (138 directions, 55 web clicks, 10 calls), and GBP engagement is trending up 3.7% week-over-week, likely reflecting steady local search visibility. Paid channels (Meta and Google Ads) show zero spend and zero leads, so scaling lead volume will require activating or restarting paid campaigns.",
+  "verdict": "O'Hare Precision's only active channel this period is Google Business Profile, which drove 203 total actions (138 directions, 55 web clicks, 10 calls) in the last 28 days with zero paid spend on Meta or Google Ads. GBP engagement is trending up 3.7% week-over-week, likely reflecting organic search visibility, while Search Console clicks dipped 18.27%, suggesting a potential drop in organic rankings or seasonal query volume worth monitoring.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,36 +409,36 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-18T15:59:05.879Z",
+    "generated_at": "2026-08-18T16:30:26.689Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid channels are off; GBP is the only active revenue signal.",
+    "verdict": "GBP holding steady; Search Console decline needs monitoring before paid reactivation.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google Ads — so CPL is undefined and no paid leads have been generated.",
+        "text": "Zero paid spend across all 28 days — $0 Meta and $0 Google Ads — means CPL and ROAS are structurally absent; no efficiency data exists.",
         "confidence": "confirmed",
-        "channel": "meta+google"
+        "channel": "cross"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP delivered 203 actions (138 directions, 55 web clicks, 10 calls) in 28 days — the only channel producing measurable intent.",
+        "text": "Search Console clicks fell 18.27% week-over-week; 3-day signal (Aug 15–17: 6, 6, 0) vs prior 3 days (Aug 12–14: 20, 14, 14) confirms a real decline, not noise.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "organic"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "Search clicks fell 18.27% week-over-week; last 3 days (Aug 15-17) averaged 4 clicks vs prior 3 days (Aug 12-14) averaging 16 — a confirmed 3-day drop.",
+        "text": "GBP actions rose 3.7% week-over-week to 203 total (138 directions, 55 web clicks, 10 calls), the sole active engagement signal in the account.",
         "confidence": "confirmed",
-        "channel": "search"
+        "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GBP actions show zero for Aug 15-17 vs a 28-day daily average of ~7.3 — last 3 days are dark, possibly a reporting lag.",
+        "text": "GBP actions show zero values on Aug 15–17 (last 3 days of series), possibly a reporting lag; diverges from the otherwise healthy weekly GBP trend.",
         "confidence": "hypothesis",
         "channel": "gbp"
       }
@@ -447,25 +447,24 @@
       {
         "id": "S1",
         "type": "watch",
-        "text": "Monitor search click recovery: 3-day avg dropped to 4 from 16 — confirm before any paid activation decision.",
+        "text": "Monitor Search Console clicks over next 7 days; if weekly total stays below 70 clicks, escalate to SEO audit.",
         "cites": [
-          "F3",
-          "F4"
+          "F2"
         ],
-        "monday_item_name": "Watch SC Drop + GBP Gap",
-        "monday_update": "Search clicks fell 18.27% week-over-week and the last 3 days (Aug 15–17) averaged just 4 clicks vs 16 the prior 3 days. GBP actions also read zero for those same 3 days, which may indicate a reporting lag rather than a true drop. Re-check both metrics on 2026-08-21 to separate data lag from a real decline. If search clicks remain below 8/day by then, escalate as a confirmed signal before any paid reactivation."
+        "monday_item_name": "Watch SC Click Decline",
+        "monday_update": "Search Console clicks dropped 18.27% week-over-week, and the 3-day signal (Aug 15–17: 6, 6, 0 clicks) confirms this is a real trend, not noise. No paid activity is running to compensate for lost organic visibility. Success check: weekly SC clicks recover to ≥85 (prior 7d baseline) by 2026-08-25. If not recovered, flag for SEO content or technical audit."
       },
       {
         "id": "S2",
-        "type": "fix",
-        "text": "Paid campaigns are fully dark at $0 spend for 28 days — confirm with client whether pause is intentional or a setup gap.",
+        "type": "watch",
+        "text": "Confirm GBP reporting lag for Aug 15–17 zero values before drawing conclusions on GBP trend.",
         "cites": [
-          "F1"
+          "F4"
         ],
-        "monday_item_name": "Confirm Paid Campaign Status",
-        "monday_update": "Meta and Google Ads have recorded $0 spend across every single day in the 45-day series — this is not a gradual decline but a full stop. Before any budget is allocated, confirm with O'Hare Precision whether campaigns are intentionally paused or whether there is a missing payment method, account access issue, or campaign setup gap. Success check: at least one paid channel shows active spend by 2026-08-21, or the intentional pause is documented."
+        "monday_item_name": "Verify GBP Data Aug 15–17",
+        "monday_update": "GBP actions show zero for Aug 15–17, which conflicts with the 3.7% weekly growth trend reported in the delta. This is likely a data ingestion lag rather than a true activity drop. Check the GBP dashboard directly to confirm Aug 15–17 action counts by 2026-08-21. If zeroes are real, re-assess the GBP finding at next check."
       }
     ],
-    "next_check": "2026-08-21"
+    "next_check": "2026-08-25"
   }
 }

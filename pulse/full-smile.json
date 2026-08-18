@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T15:53:56.859Z",
+  "generated_at": "2026-08-18T16:25:43.012Z",
   "date": "2026-08-18",
   "slug": "full-smile",
   "name": "Full Smile",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 87,
   "status": "green",
-  "verdict": "Spend dropped 32.93% week-over-week while leads held up relatively well at only -9.37%, driving CPL down 26% and signaling improved efficiency from the top campaign \"BWS - Instant Leads - Awareness\" ($749.85 of $1,452.31 total spend). The biggest movement is the sharp spend pullback on Meta, which appears to be the likely driver of the CPL improvement as the remaining budget concentrated on higher-converting placements.",
+  "verdict": "Spend dropped 32.93% week-over-week while CPL improved 26%, suggesting a budget pullback on Meta (the sole active channel at $1,452.31 / 122 leads over 28 days) that reduced volume but filtered toward higher-intent traffic. The top campaign \"BWS - Instant Leads - Awareness\" anchored delivery at $749.85, and with Google Ads contributing nothing, any further spend cuts will directly pressure lead volume.",
   "windsor": {
     "totals": {
       "spend": 1452.31,
@@ -557,43 +557,43 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-18T15:56:02.847Z",
+    "generated_at": "2026-08-18T16:27:46.916Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "CPL efficiency is real, but pipeline is hollow — 81 opps, zero won.",
+    "verdict": "CPL at $11.90 is efficient, but pipeline conversion is broken — ads are not the problem.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "OVERDUE: Phone-match attribution gap (due 2026-08-07) and sync/contact cleanup (due 2026-08-14) both unresolved — August scoreboard cannot be validated without these.",
+        "text": "OVERDUE: Phone-match attribution gap (due 2026-08-07) and sync/contact cleanup (due 2026-08-14) both unresolved — 122 leads over 28 days cannot be traced to appointments or patients.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
-        "priority": 1,
-        "text": "CPL fell to ~$11.90 (28d) with spend dropping 32.93% and leads only -9.37% — efficiency gain is real, but driven by spend pullback, not output growth.",
+        "priority": 2,
+        "text": "OVERDUE: Renewal closed 2026-07-23 triggering a prove-it month — scoreboard (leads → scheduled → shown → new patients) has no functional tracking bridge yet.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "GHL shows 81 opportunities created, 0 won, 0 appointments in 28 days — leads are arriving but not converting inside CRM; this is an intake leak, not an ads problem.",
+        "priority": 1,
+        "text": "CPL improved to $11.90 (28d) with a 26% drop week-over-week, but 3-day spend signal is soft: $18.51→$41.10→$34.85 vs prior 3-day $21.11→$42.59→$64.90 — volume compressing without efficiency gain sustaining it.",
         "confidence": "confirmed",
-        "channel": "GHL"
+        "channel": "Meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "3-day trend (Aug 15–17): spend averaged $31.49/day vs prior 3-day (Aug 12–14) $42.87/day; leads averaged 4.0 vs 4.3 — spend is drifting down, leads barely holding.",
+        "text": "GHL pipeline shows 81 opportunities created but 0 won and 0 appointments logged against 122 leads — intake leak confirmed, not an ads problem.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "GHL"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GBP actions were 25 on Aug 14, then dropped to 0 for three consecutive days (Aug 15–17) — organic floor may be collapsing heading into the prove-it month.",
+        "text": "GBP actions dropped to 0 for three consecutive days (Aug 15–17) after a peak of 25 on Aug 14 — organic floor may be losing ground during a high-stakes prove-it month.",
         "confidence": "probable",
         "channel": "GBP"
       }
@@ -602,34 +602,33 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Close phone-match attribution gap immediately — without it, August's scoreboard (leads → scheduled → shown) cannot be validated.",
+        "text": "Escalate phone-match attribution gap closure immediately; without it, 122 leads cannot map to the prove-it scoreboard.",
         "cites": [
           "F1",
-          "F3"
+          "F2"
         ],
-        "monday_item_name": "Close Attribution & Sync Gap",
-        "monday_update": "The phone-match attribution gap (due 2026-08-07) and sync/contact cleanup (due 2026-08-14) are both overdue and unresolved. Without these, the 81 GHL opportunities cannot be traced back to ad source, and the 0-won pipeline cannot be diagnosed as an intake problem vs. a data problem. Complete both tasks this week. Success check: attribution report shows phone-matched leads with source populated, and GHL opportunity records reflect correct contact state — confirmed by 2026-08-21."
+        "monday_item_name": "Close Attribution Gap NOW",
+        "monday_update": "The phone-match attribution gap flagged due 2026-08-07 and the sync/contact cleanup due 2026-08-14 are both unresolved. With 122 leads in 28 days and 0 appointments logged in GHL, the client's scoreboard (leads → scheduled → shown → new patients) is blind. Ahmed/Ali to confirm completion date no later than 2026-08-21. Success check: at least one confirmed lead-to-appointment trace visible in GHL by 2026-08-21."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GHL intake flow: 81 opps created, 0 won, 0 appointments — confirm Lily or new hire is actioning leads within the same business day.",
+        "text": "Audit GHL intake: 81 opportunities created, 0 won, 0 appointments — identify where leads are dropping between opp creation and scheduling.",
         "cites": [
-          "F3"
+          "F4"
         ],
-        "monday_item_name": "GHL Intake Audit — 0 Won",
-        "monday_update": "GHL shows 81 opportunities created and 0 won with 0 appointments logged in the past 28 days. This is an intake process gap, not an ads delivery failure. Verify with Lily and the new intake hire that leads are being contacted and dispositioned in GHL within the same business day. Success check: at least 5 opportunities move to a scheduled or contacted stage visible in GHL by 2026-08-22."
+        "monday_item_name": "GHL Intake Leak Audit",
+        "monday_update": "GHL shows 81 opportunities created over 28 days against 122 Meta leads, with 0 appointments and 0 won — the gap is in intake handling, not ad delivery. Nacer to coordinate with Lily and the new intake hire to map the current follow-up workflow and identify the drop-off point. Success check: a documented step-by-step intake flow with identified fix(es) delivered by 2026-08-22, and appointment count in GHL begins rising within 7 days of fix."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch Meta spend drift: daily average fell to $31.49 (Aug 15–17) vs $42.87 prior 3 days — re-check Aug 21 before adjusting budget.",
+        "text": "Watch Meta spend recovery: 3-day spend at $34.85 trending down — re-check if lead volume falls below 3/day on 2026-08-21.",
         "cites": [
-          "F2",
-          "F4"
+          "F3"
         ],
-        "monday_item_name": "Watch Meta Spend Drift",
-        "monday_update": "Meta daily spend averaged $31.49 over Aug 15–17, down from $42.87 in the prior 3 days, while CPL held at approximately $11.90 on a 28-day basis. The efficiency looks good but volume is thinning at a critical prove-it moment. Do not adjust budget yet — confirm whether this is a weekend/scheduling artifact or a real pullback. Re-check on 2026-08-21; if spend is still below $40/day with leads under 3/day, escalate to a budget correction."
+        "monday_item_name": "Watch Meta Volume Aug 21",
+        "monday_update": "Meta spend has compressed from $64.90 to $34.85 over the last 3 days, and lead volume is following. CPL efficiency is real at $11.90 but volume is the prove-it month constraint. No budget change now — monitor daily lead count and if it falls below 3/day for 3 consecutive days before 2026-08-21, escalate to Sohib for a budget review. Re-check 2026-08-21."
       }
     ],
     "next_check": "2026-08-21"

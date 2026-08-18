@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T15:54:04.974Z",
+  "generated_at": "2026-08-18T16:25:47.183Z",
   "date": "2026-08-18",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the last 28 days, so all activity is organic. GBP drove 56 total actions (33 directions, 22 web clicks, 1 call), though GBP engagement is down 21.43% week over week, likely due to reduced search demand or listing visibility, while GA4 sessions are up 50% week over week, suggesting some organic web momentum is building.",
+  "verdict": "Healing Helps saw zero paid activity across Meta and Google Ads in the last 28 days, making GBP the sole source of engagement with 56 total actions (33 directions, 22 web clicks, 1 call). The biggest movement is a 50% week-over-week lift in GA4 sessions, likely driven by organic or direct traffic, though the 21.43% dip in GBP actions over the same 7-day window suggests local profile visibility may be softening.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -462,60 +462,60 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-18T15:56:19.728Z",
+    "generated_at": "2026-08-18T16:28:02.317Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Organic-only account; GBP cooling while GA4 builds — no paid signal yet.",
+    "verdict": "No paid activity in 45 days; organic sustaining minimally but softening.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days; CPL and ROAS are undefined because no paid campaigns are active.",
+        "text": "Zero paid spend across Meta and Google for all 28 days observed — $0 spend, 0 leads, 0 CPL. No paid efficiency to evaluate.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "meta/google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions fell to 0 for the last 3 days (Aug 15–17) vs an avg of ~2.7/day prior 3 days — a confirmed short-term drop.",
+        "text": "GBP actions dropped -21.43% week-over-week (56 total in 28 days), with last 3 days showing 0 actions vs prior 3-day average of ~1.7 — local profile reach decelerating.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
-        "priority": 3,
-        "text": "GA4 sessions up 50% week-over-week (recent 7d avg ~5.7 vs prior ~3.8), but 188 sessions over 28 days converted 0 times.",
+        "priority": 2,
+        "text": "GA4 sessions up +50% week-over-week but last 3 days averaged only 4.3 sessions vs prior 3-day average of 11.3 — the spike has already reversed.",
         "confidence": "confirmed",
         "channel": "ga4"
       },
       {
         "id": "F4",
-        "priority": 4,
-        "text": "GBP driving 56 actions (33 directions, 22 web clicks, 1 call) in 28 days with 0 paid support — organic floor is real but thin.",
+        "priority": 3,
+        "text": "GHL pipeline is null and GA4 reports 0 conversions over 28 days — no intake funnel data available to assess lead quality or pipeline health.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "ghl"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "watch",
-        "text": "Watch GBP actions: if 3-day total stays at 0 through Aug 21, flag listing visibility for review.",
+        "text": "Monitor GBP daily actions; if 0-action streak extends to 5+ days, escalate to profile optimisation review.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Watch GBP Action Drop",
-        "monday_update": "GBP actions hit 0 for three consecutive days (Aug 15–17) after averaging ~2.7/day in the prior window. No paid activity is live to compensate. Check listing status, Q&A, and recent review activity on Aug 21. Success looks like GBP returning to ≥2 actions/day by Aug 22."
+        "monday_item_name": "Watch GBP Action Decline",
+        "monday_update": "GBP actions have dropped -21.43% week-over-week and the last 3 recorded days show 0 actions each. No paid channels are active to compensate. Watch for a 5-consecutive-day zero-action streak as the escalation trigger. Re-check on 2026-08-21."
       },
       {
         "id": "S2",
-        "type": "watch",
-        "text": "Watch GA4 conversion rate: 188 sessions, 0 conversions over 28 days — confirm contact form or CTA is functional.",
+        "type": "fix",
+        "text": "Confirm with client whether paid campaigns are intentionally paused; $0 spend for 45 days is an account-status risk.",
         "cites": [
-          "F3"
+          "F1"
         ],
-        "monday_item_name": "Verify Site Conversion Path",
-        "monday_update": "GA4 shows 188 sessions and 150 users over 28 days with zero recorded conversions, despite a 50% week-over-week session increase. This suggests either a broken form, missing GA4 goal configuration, or a tracking gap rather than a demand problem. Verify the primary CTA form submits and fires a confirmation event by Aug 21. Success is at least 1 confirmed conversion event recorded in GA4."
+        "monday_item_name": "Confirm Paid Pause Status",
+        "monday_update": "Meta and Google Ads have recorded $0 spend across all 45 days in the series — this is either a deliberate pause or an account/billing issue. Clarify client intent immediately. Success check: confirmation received and account status documented by 2026-08-21."
       }
     ],
     "next_check": "2026-08-21"
