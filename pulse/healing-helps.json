@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T13:26:42.416Z",
+  "generated_at": "2026-08-18T13:47:53.719Z",
   "date": "2026-08-18",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the last 28 days, suggesting campaigns are paused or inactive. The biggest organic movement is a 50% week-over-week lift in GA4 activity, likely driven by increased website engagement, though GBP actions dipped 21.43% over the same period, pulling total organic momentum in opposite directions.",
+  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the last 28 days, suggesting campaigns are paused or inactive. The biggest organic movement is a 50% week-over-week lift in GA4 activity, likely driven by increased website engagement, while GBP actions totaled 56 over 28 days but trended down 21.43% in the last 7 days, pointing to softening local search visibility.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -462,60 +462,60 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-18T13:29:11.345Z",
+    "generated_at": "2026-08-18T13:50:24.409Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid channels dormant; organic-only traffic thinning at the 3-day edge.",
+    "verdict": "Paid is fully dark; only organic GBP sustains any client touchpoints.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google — means CPL is undefined and no leads are being generated.",
+        "text": "Zero paid spend across all 28 days — Meta and Google both at $0 — means CPL is undefined and no leads are being generated from paid channels.",
         "confidence": "confirmed",
-        "channel": "paid"
+        "channel": "meta/google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3-day GA4 signal (Aug 15–17): 4, 4, 5 sessions vs prior 3 days (Aug 12–14): 15, 9, 4 — momentum is fading, not building.",
+        "text": "GBP actions trending down 21.43% week-over-week (56 total, last 7d declining); last 3 days show 0 GBP actions vs prior 3-day avg of ~1.7 — local organic softening.",
         "confidence": "confirmed",
-        "channel": "organic"
+        "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GBP actions last 3 days (Aug 15–17): 0, 0, 0 vs prior 3 days (Aug 12–14): 3, 4, 1 — local organic has gone dark, down 100% in the window.",
-        "confidence": "confirmed",
-        "channel": "GBP"
+        "text": "GA4 sessions up 50% week-over-week but averaging only 4.3 sessions/day in the last 3 days vs 9.3 prior 3 days — the 7d lift is driven by a mid-period spike, not sustained growth.",
+        "confidence": "probable",
+        "channel": "ga4"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GA4 shows 188 sessions and 150 users over 28 days with 0 GA4 conversions recorded — tracking or goal setup may be broken.",
+        "text": "GA4 shows 188 sessions and 150 users over 28 days with 0 recorded conversions — either the conversion event is unfired or intake is fully broken, not an ads problem.",
         "confidence": "probable",
-        "channel": "organic"
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Verify GA4 conversion events are firing; 188 sessions and 0 conversions over 28 days signals a broken goal.",
+        "text": "Audit GA4 conversion event: 188 sessions, 150 users, 0 conversions recorded — confirm goal firing before any paid reactivation.",
         "cites": [
           "F4"
         ],
         "monday_item_name": "Fix GA4 Conversion Tracking",
-        "monday_update": "GA4 recorded 188 sessions and 150 users over the last 28 days but logged zero conversions, which is inconsistent with any active contact or booking form. Audit the GA4 goal/event configuration and confirm events fire on form submission. Success is confirmed when at least one conversion event registers within 48 hours of the fix. Re-check by 2026-08-20."
+        "monday_update": "GA4 recorded 188 sessions and 150 users over 28 days but logged zero conversions, which is almost certainly a broken or unfired goal event. Verify that the conversion event tag is live and triggering on the intended thank-you page or form submission. Success is confirmed when at least one conversion event fires in GA4 in a live test by 2026-08-21. No paid spend should reactivate until this is resolved — without it there is no way to measure CPL."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GBP actions: 0 for 3 consecutive days (Aug 15–17) after averaging ~3/day prior — re-check in 3 days.",
+        "text": "Watch GBP actions: 3 consecutive days at 0 — if still zero by 2026-08-21, investigate listing health.",
         "cites": [
-          "F3"
+          "F2"
         ],
-        "monday_item_name": "Watch GBP Action Drop",
-        "monday_update": "GBP actions dropped to zero for Aug 15, 16, and 17 after averaging approximately 3 actions per day across the prior period. No paid activity is masking this — it is a pure organic signal. Monitor daily; if zero persists through Aug 21, investigate GBP listing health (suspension, hours, reviews). Re-check 2026-08-21."
+        "monday_item_name": "Watch GBP Actions Drop",
+        "monday_update": "GBP actions hit 0 for the last 3 recorded days (Aug 15–17) after averaging 1.7/day in the prior 3-day window, and the 7-day delta is already -21.43%. This may reflect a weekend pattern or an early sign of listing suppression. Re-check GBP actions on 2026-08-21; if the 3-day total remains at or near 0, escalate to a listing audit (photos, Q&A, review recency). No action required before that date."
       }
     ],
     "next_check": "2026-08-21"

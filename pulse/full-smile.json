@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T13:26:38.545Z",
+  "generated_at": "2026-08-18T13:47:49.421Z",
   "date": "2026-08-18",
   "slug": "full-smile",
   "name": "Full Smile",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 87,
   "status": "green",
-  "verdict": "Meta drove all 122 leads over 28 days at a $11.90 CPL, with \"BWS - Instant Leads - Awareness\" leading spend at $749.85. The biggest movement this week was a 32.93% drop in spend, which likely drove the 9.37% dip in leads, though improved efficiency brought CPL down 26% week over week.",
+  "verdict": "Spend dropped 32.93% week-over-week while CPL improved 26%, suggesting a budget pullback on Meta (the sole active channel at $1,452.31 / 122 leads over 28 days) that reduced volume but filtered toward higher-intent traffic. The top campaign \"BWS - Instant Leads - Awareness\" anchored delivery at $749.85, and GBP remained a steady organic support with 59 calls and 100 direction requests.",
   "windsor": {
     "totals": {
       "spend": 1452.31,
@@ -557,80 +557,79 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-18T13:28:54.618Z",
+    "generated_at": "2026-08-18T13:50:05.792Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "CPL efficiency strong, but zero GHL appointments exposes a deep intake gap.",
+    "verdict": "CPL at $11.90 is efficient, but August volume risk is real.",
     "findings": [
       {
         "id": "F1",
-        "priority": 2,
-        "text": "OVERDUE: Phone-match attribution gap (due 2026-08-07) and sync/contact cleanup (due 2026-08-14) both unresolved — leads cannot be traced to patients in the chair.",
+        "priority": 1,
+        "text": "CPL improved to $8.96 effective rate over last 7d (spend -32.93% vs leads -9.37%), but daily spend at $40.83 may be too thin to sustain August scoreboard volume.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "OVERDUE: Renewal closed 2026-07-23 — 1-month prove-it window is already 26 days in with 0 GHL won opportunities and 0 appointments logged.",
+        "text": "OVERDUE: Phone-match attribution gap (due 2026-08-07) still open; without it, lead-to-patient journey on the August scoreboard cannot be traced.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 1,
-        "text": "CPL efficiency improved: 28-day CPL $11.90, down 26% week-over-week. Spend dropped 32.93% but leads fell only 9.37% — Meta is spending more efficiently, not collapsing.",
+        "priority": 2,
+        "text": "OVERDUE: Sync items + contact cleanup (due 2026-08-14) unresolved; 255 GHL contacts with 81 opps created and 0 won signals intake data is still unreliable.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "3-day signal (Aug 15–17): leads 1, 3, 8 vs prior 3 days (Aug 12–14): 8, 4, 1 — volatile, not trending down. Spend compressed to $18.51/$41.10/$34.85 vs $64.90/$42.59/$21.11. Low spend days driving low lead days.",
-        "confidence": "probable",
+        "text": "3-day signal (Aug 15–17): spend averaged $31.49/day and leads totaled 12, vs prior 3 days (Aug 12–14) averaging $42.87/day and 13 leads — a spend contraction, not a creative failure.",
+        "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 81 opportunities created but 0 won, 0 appointments, and 255 contacts vs 122 ad leads — 133-contact overhang suggests intake process is not converting leads to scheduled visits.",
-        "confidence": "confirmed",
+        "text": "GHL pipeline shows 0 appointments and 0 won opportunities against 81 created in 28 days; leads are arriving but not converting in CRM — intake leak, not an ads problem.",
+        "confidence": "probable",
         "channel": "GHL"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Close phone-match attribution gap immediately — every unattributed call is invisible on the August scoreboard.",
+        "type": "scale",
+        "text": "Raise Meta daily budget ~20% (from ~$41/day to ~$49/day) to recover volume without breaking $11.90 CPL baseline.",
         "cites": [
           "F1",
-          "F2"
+          "F4"
         ],
-        "monday_item_name": "Close Attribution Gap Now",
-        "monday_update": "The phone-match attribution gap (due 2026-08-07) is unresolved and the sync/contact cleanup (due 2026-08-14) is also open. With 0 won opportunities and 0 appointments in GHL over 28 days, the client's scoreboard — leads to scheduled patients to production — cannot be read. Complete both tasks this week. Success check: at least one inbound call or lead is traceable end-to-end from ad source to GHL contact by 2026-08-21."
+        "monday_item_name": "Meta budget +20% Aug",
+        "monday_update": "Daily Meta spend has contracted to $31.49 avg over the last 3 days, pulling leads down while CPL remains healthy at $11.90 over 28 days. Raise the daily budget from ~$41 to ~$49 to recover lead volume. Success check: CPL stays at or below $12.50 and leads return to 5+/day average. Re-check by 2026-08-21."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GHL intake pipeline: 81 opportunities created, 0 converted — confirm Lily/new hire are working leads within 24 hours.",
+        "text": "Close the phone-match attribution gap (overdue since 2026-08-07) so lead-to-patient tracking is valid for August renewal decision.",
         "cites": [
-          "F5",
           "F2"
         ],
-        "monday_item_name": "GHL Intake Audit — 0 Won",
-        "monday_update": "GHL shows 81 opportunities created and 0 won over the 28-day window, with 255 total contacts against only 122 ad-sourced leads. This is not an ads problem — it is an intake process gap. Confirm with Lily and the new intake hire that leads are being contacted within 24 hours and moved to 'Appointment Booked' stage. Success check: at least 5 opportunities advanced to a booked stage by 2026-08-25, which would begin to populate the August scoreboard before month-end."
+        "monday_item_name": "Phone attribution gap fix",
+        "monday_update": "The phone-match attribution task was due 2026-08-07 and remains open. Without it, the August scoreboard — legitimate leads → schedules → shows → new patients — cannot be verified for the client's renewal decision. Attribution team must close and confirm by 2026-08-21. Success check: at least one tracked call correctly maps to a GHL contact with source attribution."
       },
       {
         "id": "S3",
-        "type": "watch",
-        "text": "Watch Meta daily spend: 3-day avg $31.49 vs mid-month avg ~$60 — confirm budget is not unintentionally suppressed before scaling.",
+        "type": "fix",
+        "text": "Resolve GHL sync + contact cleanup (overdue 2026-08-14) to unblock 0-won-opp pipeline and expose true intake conversion rate.",
         "cites": [
-          "F4",
-          "F3"
+          "F3",
+          "F5"
         ],
-        "monday_item_name": "Watch Meta Spend Level",
-        "monday_update": "Meta spend over Aug 15–17 averaged $31.49/day against a mid-month average near $60/day, with CPL holding strong at $11.90 over 28 days. Before any budget increase, verify that the daily budget setting has not been manually reduced or that delivery is not being suppressed by learning-phase issues. Re-check on 2026-08-21: if spend has recovered toward $50–60/day and CPL remains below $15, a modest +15–20% budget increase on BWS - Instant Leads - Awareness would be defensible."
+        "monday_item_name": "GHL sync + cleanup close",
+        "monday_update": "81 opportunities were created in GHL over 28 days with 0 won and 0 appointments logged — a clear signal the pipeline data is unreliable pending the overdue contact cleanup (due 2026-08-14). CRM team must complete sync repairs and tagging so intake performance is visible before the August prove-it decision. Success check: at least one opportunity moves to a won or scheduled stage by 2026-08-22."
       }
     ],
     "next_check": "2026-08-21"

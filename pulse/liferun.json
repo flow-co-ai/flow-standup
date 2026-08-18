@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T13:27:25.064Z",
+  "generated_at": "2026-08-18T13:48:33.092Z",
   "date": "2026-08-18",
   "slug": "liferun",
   "name": "Liferun",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 59,
   "status": "amber",
-  "verdict": "Liferun saw a sharp 7-day pullback with leads dropping 50% and spend down 35.43%, likely driven by Google Ads being cut nearly in half (-47.11%) while Meta's \"BWS - Search Campaign - Calls\" carried the full 130-lead load at a $19.85 CPL over the 28-day window. The CPL rising 29.14% week-over-week signals reduced efficiency as volume contracted, worth monitoring if budget reductions continue.",
+  "verdict": "Liferun's 28-day CPL holds at a solid $19.85 across 130 leads, but the last 7 days show a sharp pullback with leads down 50% and CPL up 29.14%, likely driven by a 47.11% cut in Google Ads spend that left \"BWS - Search Campaign - Calls\" carrying most of the $1,239.78 Google budget with zero recorded conversions.",
   "windsor": {
     "totals": {
       "spend": 2580.14,
@@ -527,78 +527,78 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-18T13:30:30.011Z",
+    "generated_at": "2026-08-18T13:51:45.995Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Google spend collapse is confirmed; Meta CPL holding but volume starved.",
+    "verdict": "CPL efficiency masking a spend collapse; money nearly stopped flowing.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "CPL rose 29.14% WoW as Google spend fell 47.11%; Meta's 28-day CPL of $19.85 is carrying all 130 leads alone.",
+        "text": "CPL spiked 29.14% in 7 days while leads fell 50% — caused by Google spend cut of 47.11%, not creative failure.",
         "confidence": "confirmed",
-        "channel": "cross-channel"
+        "channel": "google"
       },
       {
         "id": "F2",
-        "priority": 2,
-        "text": "OVERDUE (due Jul 20): Stripe Products QA marked Done but no confirmed verification event on record; revenue and purchase fields show $0 across all 28 days.",
-        "confidence": "probable",
-        "channel": "SOW"
+        "priority": 1,
+        "text": "3-day signal (Aug 15–17): total spend averaged only $17.50/day vs $98.43/day prior 3 days — a near-full spend collapse.",
+        "confidence": "confirmed",
+        "channel": "cross-channel"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "3-day signal (Aug 15–17): spend collapsed to $14.76/$4.96/$32.78 vs prior 3-day avg of $100.63; leads 0/0/2 vs prior avg 6/day — confirmed downtrend, not noise.",
-        "confidence": "confirmed",
-        "channel": "cross-channel"
+        "text": "Overdue milestone: Stripe Products marked Done July 20, but GHL shows 0 opportunities won and $0 pipeline value — payment path unverified.",
+        "confidence": "probable",
+        "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Google Ads spent $1,239.78 over 28 days and recorded 0 conversions — pixel or attribution issue, not necessarily zero results; leads all attributed to Meta.",
-        "confidence": "probable",
+        "text": "Google Ads top campaign 'BWS - Search Campaign - Calls' spent $930.24 in 28 days recording 0 conversions — pixel/attribution not firing.",
+        "confidence": "confirmed",
         "channel": "google"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 130 opportunities created, 0 won, 0 appointments — 130 leads entering pipeline with no progression is an intake/follow-up leak, not an ads problem.",
-        "confidence": "confirmed",
-        "channel": "GHL"
+        "text": "GBP directions spiked to 38 of 39 total actions in 28 days yet calls = 0 — organic interest exists but phone path is broken or untracked.",
+        "confidence": "hypothesis",
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Restore Meta daily budget to prior-period level (~$104/day); current $23.83 spend (Aug 17) is starving the only confirmed lead source.",
+        "text": "Restore Google daily budget to pre-cut level (~$63/day minimum) to stop the confirmed spend collapse.",
         "cites": [
           "F1",
-          "F3"
+          "F2"
         ],
-        "monday_item_name": "Restore Meta Budget $104/day",
-        "monday_update": "Meta is the sole lead driver at a 28-day CPL of $19.85, but Aug 15–17 daily spend dropped to $0/$0/$23.83 against a prior-period avg of ~$104/day. Restore Meta daily budget to $104/day immediately to stop the volume bleed. Success check: leads return to 5+ per active day within 3 days of restoration (by Aug 21). Sohib to confirm budget authority before Buyer acts."
+        "monday_item_name": "Restore Google Spend Floor",
+        "monday_update": "Google spend dropped 47.11% week-over-week and averaged only $17.50/day across Aug 15–17 — the account is functionally paused. Restore the daily budget on BWS - Search Campaign - Calls to at least $63/day (the Aug 4 floor) immediately. Success check: spend back above $60/day within 3 days and leads returning to 4+ per day. Re-check Aug 21."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit Google Ads conversion pixel; 0 conversions on $1,239.78 spend is a tracking fault until proven otherwise.",
+        "text": "Audit Google Ads conversion tracking; 0 conversions on $930.24 spend is a confirmed pixel failure, not campaign under-performance.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Google Pixel Conversion Audit",
-        "monday_update": "Google Ads recorded 0 conversions against $1,239.78 in 28-day spend — this is a known client-side pixel gap pattern, not confirmed zero performance. Pull the Google Tag diagnostics and confirm whether call conversions are firing; if not, repoint the conversion action to a verified trigger. Success check: at least one conversion event confirmed in Google Ads UI within 5 business days (by Aug 25)."
+        "monday_item_name": "Fix Google Conversion Pixel",
+        "monday_update": "BWS - Search Campaign - Calls has spent $930.24 over 28 days and recorded exactly 0 conversions in Google Ads, while GHL shows 130 leads arriving — this is a client-side pixel mis-fire, not a campaign problem. Tag team to audit the Google Ads conversion tag on the call/thank-you page and confirm at least one test conversion fires before Aug 21. Success: at least 1 recorded conversion in the Google Ads interface."
       },
       {
         "id": "S3",
-        "type": "fix",
-        "text": "Investigate GHL pipeline: 130 opps created, 0 won, 0 appointments — confirm intake automation is routing leads to follow-up correctly.",
+        "type": "watch",
+        "text": "Watch GBP call volume; 38 direction actions vs 0 calls in 28 days suggests a broken call button — verify before acting.",
         "cites": [
           "F5"
         ],
-        "monday_item_name": "GHL Pipeline Intake Leak Fix",
-        "monday_update": "130 contacts and opportunities entered GHL in 28 days with 0 appointments booked and 0 pipeline progression — this is an intake or follow-up automation failure, not an ads problem. Ahmed/Ali should trace one recent lead end-to-end through the GHL pipeline to confirm the call/SMS sequence is triggering. Success check: appointment count moves above 0 within 7 days (by Aug 25), confirming the follow-up workflow is live."
+        "monday_item_name": "Watch GBP Call Tracking",
+        "monday_update": "GBP logged 38 direction requests but zero calls over 28 days — an unusual split that suggests the GBP phone number or call-tracking redirect is broken. No paid action warranted yet. Verify the GBP listing phone number and call-tracking setup manually. Re-check Aug 21; if calls remain at 0 with directions still active, escalate to a fix task."
       }
     ],
     "next_check": "2026-08-21"

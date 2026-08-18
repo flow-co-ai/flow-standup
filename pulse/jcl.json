@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T13:27:10.606Z",
+  "generated_at": "2026-08-18T13:48:26.244Z",
   "date": "2026-08-18",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 60,
   "status": "amber",
-  "verdict": "Paid activity came to a complete halt in the last 7 days, with spend, leads, and CPL all dropping 100% versus the prior period, suggesting Meta campaigns were paused or exhausted budget. Organic GBP engagement softened as well, down 23.4%, though the 28-day window still shows 45 leads at a $26.04 CPL driven entirely by Meta, with the top campaign \"CROA || CBO - 3/17/26\" accounting for $621.70 of the $1,171.64 total spend.",
+  "verdict": "Meta was the sole active paid channel over the 28-day window, delivering 45 leads at a $26.04 CPL across $1,171.64 in spend, led by \"CROA || CBO - 3/17/26\" at $621.70. The biggest movement is a -100% drop in spend, leads, and CPL in the last 7 days versus the prior 7 days, strongly suggesting Meta campaigns were paused or fully exhausted budget mid-period.",
   "windsor": {
     "totals": {
       "spend": 1171.64,
@@ -567,79 +567,77 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-18T13:30:04.142Z",
+    "generated_at": "2026-08-18T13:51:16.153Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Campaigns went dark Aug 6; 12-day spend blackout, not an efficiency story.",
+    "verdict": "Campaigns went dark Aug 6; GHL pipeline shows zero opps despite 45 leads.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "All paid spend hit $0 on Aug 6 and has not recovered — 12 consecutive zero-spend days; 0 leads generated in that period.",
+        "text": "All paid spend dropped to $0 from Aug 6 onward — 12 consecutive zero-spend days confirmed in series; zero leads since Aug 6.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
-        "priority": 1,
-        "text": "Pre-blackout CPL was $26.04 over 28 days on 45 leads; no efficiency deterioration preceded the shutdown — campaigns paused at a working rate.",
+        "priority": 2,
+        "text": "GHL shows 33 contacts but 0 opportunities created and 0 appointments from 45 leads — intake pipeline is not converting leads to opps at all.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "GHL"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "3-day signal (Aug 15–17) vs prior 3 (Aug 12–14): sc_clicks dropped from 25→6→4→0 vs 25→22→21 — organic search traffic collapsing with paid off.",
+        "text": "3-day signal (Aug 15–17): spend $0, leads 0, sc_clicks avg 3.3 vs prior 3-day avg 21.7 — organic search also declining sharply as paid halo disappears.",
         "confidence": "confirmed",
         "channel": "search"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions went 0→0→0 on Aug 15–17 vs avg 7.3/day the prior week — GBP engagement fading, likely tied to reduced brand search activity.",
+        "text": "GBP actions down -23.4% (7d delta) and ig_reach collapsed -98.76% — organic presence decaying in parallel with paid shutdown, compounding lead loss.",
         "confidence": "probable",
         "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 33 contacts but 0 opportunities created and 0 appointments against 45 leads in 28 days — intake pipeline not converting leads to opps at all.",
-        "confidence": "confirmed",
-        "channel": "GHL"
+        "text": "GA4 sessions spiked to 206 on Aug 13 while spend was $0 — directional anomaly only (known double-count property issue); not a real traffic event.",
+        "confidence": "hypothesis",
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Restore Meta campaigns immediately; pre-pause CPL was $26.04 — 12 days of confirmed zero output.",
+        "text": "Immediately identify why Meta campaigns paused Aug 6 — billing, policy, or budget exhaustion — and restore spend at prior $69/day rate.",
         "cites": [
-          "F1",
-          "F2"
+          "F1"
         ],
-        "monday_item_name": "Restore Meta Campaigns Now",
-        "monday_update": "Meta spend went to $0 on Aug 6 and has not resumed for 12 days; the prior 28-day CPL was $26.04 on 45 leads, meaning campaigns were paused at a working rate. Sohib to confirm whether this was intentional (budget exhaustion, client pause request) or an error, then reactivate the 'CROA || CBO - 3/17/26' campaign or its replacement. Success check: spend resumes at prior daily rate (~$69–$84/day) and at least 1 lead recorded within 48 hours of reactivation. Confirm status by 2026-08-20."
+        "monday_item_name": "Reactivate Meta Campaigns",
+        "monday_update": "Meta spend has been $0 for 12 consecutive days since Aug 6, halting all 45-lead-per-28-day flow. Diagnose cause (billing hold, policy flag, or budget cap hit) and restore campaigns at the last confirmed daily rate of ~$69/day. Success is confirmed when spend resumes and at least 1 lead is recorded within 48 hours of reactivation. Resolve by Aug 20."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Investigate GHL intake: 45 leads arrived, 0 opportunities created — confirm leads are routing to pipeline correctly.",
+        "text": "Audit GHL intake: 33 contacts, 0 opportunities created — find where leads are entering but not converting to opps and fix the pipeline stage mapping.",
         "cites": [
-          "F5"
+          "F2"
         ],
-        "monday_item_name": "GHL Pipeline Intake Audit",
-        "monday_update": "GHL shows 33 contacts and 0 opportunities created against 45 Meta leads in the 28-day window — this is an intake leak, not an ads problem. Sohib to audit the GHL workflow: check that form submissions are triggering opportunity creation and confirm no stage mapping is broken. Success check: new leads post-reactivation appear as opportunities in GHL within 24 hours of submission. Review by 2026-08-22."
+        "monday_item_name": "Fix GHL Pipeline Intake",
+        "monday_update": "GHL shows 33 contacts from the 28-day window but 0 opportunities created and 0 appointments — leads are arriving but not progressing, which is an intake configuration issue, not an ads problem. Review the contact-to-opportunity automation or manual workflow in GHL to identify the broken handoff. Success is confirmed when new leads from resumed Meta campaigns begin generating opportunities within the same week. Complete audit by Aug 21."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Monitor GBP actions and sc_clicks daily; if still at 0 by Aug 21, escalate as brand-signal decay requiring separate action.",
+        "text": "Watch sc_clicks 3-day average after Meta reactivation; if paid halo does not recover to 15+ clicks/day by Aug 25, flag for organic search review.",
         "cites": [
-          "F3",
-          "F4"
+          "F3"
         ],
-        "monday_item_name": "Watch GBP & Search Decay",
-        "monday_update": "Search clicks dropped to 0 on Aug 17 and GBP actions have been 0 for three consecutive days (Aug 15–17), consistent with brand search cooling when paid ads go dark. No action is warranted yet — this is expected correlation. Re-check sc_clicks and gbp_actions on Aug 21; if both remain at or near 0 after Meta reactivation, escalate as a separate organic/brand issue. No budget move this cycle."
+        "monday_item_name": "Watch Search Click Recovery",
+        "monday_update": "Search clicks averaged 21.7/day in the 3 days before paid shutdown and have since dropped to a 3-day average of 3.3 — consistent with paid halo loss. Once Meta campaigns are restored (S1), monitor sc_clicks daily. If the 3-day average does not return to at least 15 clicks/day by Aug 25, escalate to Sohib for an organic or SEO review. Re-check Aug 25."
       }
     ],
     "next_check": "2026-08-21"

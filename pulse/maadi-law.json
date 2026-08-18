@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T13:27:35.219Z",
+  "generated_at": "2026-08-18T13:48:46.591Z",
   "date": "2026-08-18",
   "slug": "maadi-law",
   "name": "Maadi Law, LLC",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) generated zero spend, leads, or clicks over the past 28 days, so all client activity is coming entirely from organic Google Business Profile, which drove 93 total actions (20 calls, 29 directions, 44 web clicks). The biggest concern is GBP actions dropping 40% over the last 7 days versus the prior 7 days, likely driven by reduced profile engagement or a dip in local search visibility that warrants immediate investigation.",
+  "verdict": "Maadi Law's paid channels (Meta and Google Ads) generated zero spend, leads, or clicks over the past 28 days, so all engagement activity came entirely from Google Business Profile, which drove 93 total actions including 20 calls, 29 direction requests, and 44 website clicks. However, GBP activity is trending down 40% week-over-week, likely reflecting reduced organic search demand or a drop in profile visibility that warrants immediate attention.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -559,71 +559,70 @@
     "history_line": "Fixed call routing: LSA calls switched to business line"
   },
   "performance": {
-    "generated_at": "2026-08-18T13:30:57.109Z",
+    "generated_at": "2026-08-18T13:52:06.348Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP is the only engine; its 3-day collapse demands immediate attention.",
+    "verdict": "Organic-only account: GBP collapsing and paid channels fully dark.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "GBP actions hit 0 for 3 straight days (Aug 15–17), down from a prior-3-day avg of ~2.3/day — a confirmed stall, not a blip.",
+        "text": "Zero paid spend across all 28 days — Meta $0, Google Ads $0 — means this account has no active paid lead-generation engine at all.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP dropped 40% week-over-week (93 total 28-day actions), with calls (20), directions (29), and web clicks (44) all at risk of further decline.",
+        "text": "GBP actions fell -40% week-over-week; last 3 days (Aug 15–17) recorded 0, 0, 0 actions vs prior 3 days (Aug 12–14) averaging 4 actions/day — a confirmed 3-day collapse.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "IG reach fell 37.98% week-over-week; last 3 days averaged 623 vs prior-3-day avg of 1,498 — organic social compressing alongside GBP.",
+        "text": "Instagram reach dropped -38% week-over-week; last 3 days averaged 623 vs prior 3 days averaging 1,181 — organic social losing momentum in parallel with GBP.",
         "confidence": "confirmed",
-        "channel": "Instagram"
+        "channel": "instagram"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GHL shows 488 contacts but 0 opportunities created and 0 appointments in 28 days — pipeline intake is completely disconnected from any inbound activity.",
-        "confidence": "confirmed",
-        "channel": "GHL"
+        "text": "GHL shows 488 contacts and 0 opportunities created in 28 days — with zero paid spend this is an CRM hygiene gap, not an intake leak, but pipeline is completely stagnant.",
+        "confidence": "probable",
+        "channel": "ghl"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit GBP profile immediately: check for suspended listing, removed photos, or dropped reviews causing the 3-day zero-action streak.",
+        "text": "Investigate and resolve GBP visibility drop; 0 actions for 3 consecutive days signals a listing issue or suppression.",
         "cites": [
-          "F1",
           "F2"
         ],
-        "monday_item_name": "Fix GBP Zero-Action Streak",
-        "monday_update": "GBP actions have been zero for 3 consecutive days (Aug 15–17) against a 28-day total of 93 actions, and GBP is the only active lead channel. Log into Google Business Profile and check for suspension notices, flagged content, removed photos, or recent review removals that could suppress local visibility. Success is confirmed when daily GBP actions return to a 7-day avg of ≥3/day. Re-check by 2026-08-21."
+        "monday_item_name": "Fix GBP Listing Visibility",
+        "monday_update": "GBP actions hit 0 for three consecutive days (Aug 15–17), down from a prior-3-day average of 4 actions/day, and -40% week-over-week. Audit the GBP listing for suppression, missing information, or a recent policy flag. Success is confirmed when daily GBP actions return to ≥4/day for 3 consecutive days. Re-check by 2026-08-21."
       },
       {
         "id": "S2",
-        "type": "fix",
-        "text": "Investigate GHL pipeline: 488 contacts and 0 opportunities created signals an intake configuration or workflow failure, not a lead volume problem.",
+        "type": "watch",
+        "text": "Watch IG reach: if 3-day average stays below 600 through Aug 21, escalate to creative refresh.",
         "cites": [
-          "F4"
+          "F3"
         ],
-        "monday_item_name": "Fix GHL Pipeline Intake",
-        "monday_update": "GHL shows 488 contacts but zero opportunities created and zero appointments in the 28-day window — this is an intake leak, not an ads problem. Review GHL automation workflows and opportunity-creation triggers to confirm contacts are routing correctly into the pipeline. Success is confirmed when new inbound contacts are generating opportunities at a non-zero rate. Re-check by 2026-08-21."
+        "monday_item_name": "Watch IG Reach Trend",
+        "monday_update": "Instagram reach averaged 623 over the last 3 days (Aug 15–17) vs 1,181 in the prior 3 days — a -47% 3-day drop inside a broader -38% weekly decline. No action yet; hypothesis is organic content cadence or algorithm shift. If the 3-day average remains below 600 on the Aug 21 re-check, escalate to a creative refresh."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch IG reach recovery: if 3-day avg stays below 700 through Aug 21, escalate to creative refresh.",
+        "text": "Paid channels are fully dark; confirm with client whether pause is intentional before any reactivation.",
         "cites": [
-          "F3"
+          "F1"
         ],
-        "monday_item_name": "Watch IG Reach Recovery",
-        "monday_update": "IG reach averaged only 623 over the last 3 days (Aug 15–17) versus a prior-3-day avg of 1,498, a 58% drop. No action is taken this cycle as the channel is organic and one content gap could explain the dip. If the 3-day avg remains below 700 by Aug 21, escalate to a creative refresh. Re-check 2026-08-21."
+        "monday_item_name": "Confirm Paid Channel Status",
+        "monday_update": "Meta and Google Ads have recorded $0 spend across all 28 tracked days with no flags explaining the cause. This may be a client-directed pause, a billing issue, or an account suspension. Confirm the reason with the client before any paid reactivation is planned. If unintentional, treat as urgent — the account has no paid lead pipeline whatsoever."
       }
     ],
     "next_check": "2026-08-21"
