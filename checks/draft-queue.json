@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-18T17:23:45.265Z",
+  "updatedAt": "2026-08-18T20:45:52.209692+00:00",
   "items": [
     {
       "id": "websEo-pricing-question",
@@ -265,6 +265,109 @@
       "priority": 1,
       "createdAt": "2026-08-18T12:00:00.000Z",
       "updatedAt": "2026-08-18T17:23:45.263Z"
+    },
+    {
+      "id": "medstation-nextgen-access",
+      "title": "NextGen Mirror",
+      "note": "Context: NextGen remote desktop access is still failing after the credentials posted 8/10, and it blocks the appointment data audit, the Weston calendar migration into GHL, and the booking sync Lead Escalation needs, six days before the 8/24 go live. Deliverable: escalate to MedStation IT for working access, audit appointment data, migrate Weston calendars only, and get Renata onto the GHL admin invite. Dependencies: blocked on client IT, Naz owns the chase; no other location gets migrated. Done: access works, data audited, Weston calendars live in GHL with location separation, test booking syncs. Update onto the existing NextGen Mirror subitem (12484780084), last touched 8/10, so the current blocker is on record. Assigned to: Ahmed Memon, Ali Shaheer, Naz (client IT chase, blocked).",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: GHL Build Sync, 8/17",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12484780084",
+        "itemName": "NextGen Mirror",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context</strong>: The 8/17 GHL sync confirmed remote desktop access to NextGen is still failing with the credentials posted on this item on 8/10. With no access, nobody can audit the appointment data or read how the NextGen calendars are structured, which holds up moving Weston's calendars into GHL and the booking sync that Lead Escalation depends on. MedStation soft onboarding is Thursday <strong>8/20</strong> and full go live is <strong>8/24</strong>, so this is the critical path.</li><li><strong>Deliverable</strong>: <strong>Escalate to MedStation IT</strong> for working remote desktop credentials and a connection method that actually resolves. Once inside, <strong>audit the appointment data</strong> and document the calendar structure per location. Then <strong>migrate only the Weston calendars</strong> into GHL, keeping location separation intact. Have Renata accept the GHL admin invitation so calendar configuration can be finished under her user.</li><li><strong>Dependencies</strong>: Genuinely blocked on MedStation IT supplying access that works, and Naz owns that chase with the client IT contact. <strong>Do not migrate calendars for any location other than Weston</strong>, the other clinics stay on their current setup for the pilot. Confirm the NextGen calendar structure with client IT before anything is moved.</li><li><strong>Done</strong>: Remote desktop access works, appointment data is audited, Weston calendars are live in GHL with location separation verified, and a test booking syncs through to GHL.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
+        "blocked": true,
+        "needsNaz": true
+      },
+      "nullReason": null,
+      "priority": 1,
+      "createdAt": "2026-08-18T20:45:52.209655+00:00"
+    },
+    {
+      "id": "medstation-lead-escalation-approvals",
+      "title": "Lead Escalation",
+      "note": "Context: escalation and fallback workflows are built but not live; this subitem has had no activity since 7/22 so the 8/17 state is unrecorded. Three open pieces: abandoned booking timeout unset, WhatsApp fallback message unconnected while WhatsApp is still on Como, follow up copy unapproved. Deliverable: set the timeout, wire the fallback once WhatsApp is on GHL, get copy approved, run one end to end test. Dependencies: gated on the separate WhatsApp GHL connect item; copy approval sits with Naz and nothing sends before it. Done: escalation and fallback both fire in a live test with approved copy on record. Update onto existing Lead Escalation subitem (12484780180). Assigned to: Ahmed Memon, Ali Shaheer, Naz (copy approval).",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: GHL Build Sync, 8/17",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12484780180",
+        "itemName": "Lead Escalation",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context</strong>: Per the 8/17 GHL sync the escalation and fallback workflows are effectively built but not live, and this item has had no activity since 7/22 so its current state is not recorded here. Three things remain open: the abandoned booking timeout parameter is not set, the WhatsApp fallback message has nothing to send through because WhatsApp is still on Como, and the follow up copy has not been approved.</li><li><strong>Deliverable</strong>: <strong>Set the abandoned booking timeout</strong> to the agreed window, <strong>connect the fallback message path</strong> once WhatsApp is live on GHL, get the follow up copy approved on record, then <strong>run an end to end test</strong> with one unassigned lead and one abandoned booking to prove the waterfall and the fallback both fire.</li><li><strong>Dependencies</strong>: Gated on the WhatsApp to GHL connection tracked separately under GHL Setup. Copy approval sits with Naz. <strong>Do not enable sending before copy is approved</strong>, this is a medical clinic audience and messages go out in Portuguese with English as fallback.</li><li><strong>Done</strong>: Escalation fires on unassigned leads, abandoned bookings get automatic follow up inside the agreed timeout, fallback messages deliver over WhatsApp in a live test, and the approved copy is recorded on this item.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
+        "blocked": false,
+        "needsNaz": true
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-18T20:45:52.209655+00:00"
+    },
+    {
+      "id": "medstation-lp-call-tracking",
+      "title": "Landing Pages",
+      "note": "Context: the 8/17 sync added two tracking requirements to the MedStation landing page set that are not on the item: the Google Ads assigned number must appear on each page, and bookings must run through a GHL form or booking link so source is captured. Page views already track (2.1K) but calls and bookings off these pages are not attributable. Deliverable: add the Google Ads numbers, route bookings through GHL, and match tracking parameters with the Ads side request from 8/17. Dependencies: Naz supplies the numbers; published clinic and GBP numbers must not change; confirm whether booking sits on the same domain. Done: numbers live per page, test call attributed in GHL, test booking captured with source. Update onto the existing Web + SEO Landing Pages item (12720959017), last touched 8/5. Assigned to: Muhammad Hashir Faiz, Zayan Faiz, Naz (landing page default tagging per rules).",
+      "status": "ready",
+      "board": "Web + SEO",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: GHL Build Sync, 8/17",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12720959017",
+        "itemName": "Landing Pages",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context</strong>: The 8/17 GHL sync added two tracking requirements to the MedStation landing page set (one template plus seven clinic pages) that are not reflected here yet. Each page needs the Google Ads assigned phone number on it, and bookings need to run through a GHL form or GHL booking link so the source is captured. The GHL tracking script is already live and showing over 2,100 page views, but calls and bookings coming off these pages are not attributable today.</li><li><strong>Deliverable</strong>: <strong>Place the Google Ads number</strong> on each landing page so paid calls track separately, and <strong>route the booking action</strong> on each page through a GHL form or GHL booking link. Coordinate with the Ads team on the pages being inserted into Google Ads so the tracking parameters match, which was already requested on the Ads side on 8/17.</li><li><strong>Dependencies</strong>: Naz supplies the per page Google Ads numbers. <strong>Do not change the published clinic numbers or the GBP number</strong> on any page, static ad account numbers only, same as agreed on Source Tracking. Confirm whether the booking flow sits on the same domain as the landing pages before wiring events.</li><li><strong>Done</strong>: Every MedStation landing page shows its Google Ads number, a test call routes correctly and appears attributed in GHL, and a test booking lands in GHL with its source captured.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
+        "blocked": false,
+        "needsNaz": true
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-18T20:45:52.209655+00:00"
+    },
+    {
+      "id": "qualityhvac-intake-record-cleanup",
+      "title": "Intake Cleanup",
+      "note": "Context: the 8/17 sync flagged HVAC intake cleanup as incomplete with over 1,400 old records still in the account. The 8/13 note on this item covers Luis's access, the pre 1 July deletion instruction, and the Lesson Pro email filtering, but the record work itself has not been done. Deliverable: clear the remaining records keeping only contacts from 1 July onward, reconcile the count, and reconfirm new lead and missed call notifications so the 5 minute response window holds. Dependencies: Lesson Pro reactivation sits with Xavier client side and runs in parallel; records tied to open jobs stay. Done: pre 1 July opportunities removed, count reconciled and posted, queue shows workable leads only, notifications confirmed. Update onto the existing Intake Cleanup item (12798879601). Assigned to: Ahmed Memon, Ali Shaheer.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Quality HVAC by FIbid",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: GHL Build Sync, 8/17",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12798879601",
+        "itemName": "Intake Cleanup",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context</strong>: The 8/17 sync reviewed HVAC intake cleanup and it is not finished. Over <strong>1,400 old records</strong> are still in the account. The 8/13 note on this item covers granting Luis Valencia GHL access, deleting opportunity records dated before 1 July, and filtering the Lesson Pro schedule emails with Xavier, but the record cleanup itself has not been worked through.</li><li><strong>Deliverable</strong>: <strong>Work through the remaining 1,400 plus records</strong>, keeping only contacts from 1 July onward so Luis's queue shows workable leads only. Then <strong>reconcile the resulting record count</strong> and confirm the new lead and missed call notification settings still hold after the deletions, so the 5 minute response window stays achievable.</li><li><strong>Dependencies</strong>: Lesson Pro schedule email reactivation sits with Xavier on the client side and can run in parallel. <strong>Do not delete contacts created from 1 July onward</strong>, and leave any record tied to an open job alone.</li><li><strong>Done</strong>: Opportunity records dated before 1 July are removed, the record count is reconciled and posted here, Luis's queue shows only workable leads, and new lead plus missed call notifications are confirmed firing.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 3,
+      "createdAt": "2026-08-18T20:45:52.209655+00:00"
+    },
+    {
+      "id": "ghl-docs-client-unclear",
+      "title": "GHL build documentation, client unclear",
+      "note": "content-conflict: Ahmed committed in the 8/17 sync to finish and submit outstanding GHL build documentation by the next day, but the two Fireflies recordings of that same meeting disagree on whose documentation it is. One reads 'complete remaining Med Station documentation' at 56:27, the other 'complete and prioritize pending Med Law documentation' at 57:53. Different timestamps, so it may be both clients rather than one mistranscription. No documentation item exists on either client's boards to attach this to (Maadi Law's Document Handling and Document Automation are Dropbox and DocuSign build work, not build documentation), so the board and parent cannot be resolved without knowing the client. Naz: confirm whether this is MedStation, Maadi Law, or both, and it will be drafted against the right group next run.",
+      "status": "confirm",
+      "board": "CRM",
+      "group": null,
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: GHL Build Sync, 8/17",
+      "payload": null,
+      "nullReason": "content-conflict",
+      "priority": 2,
+      "createdAt": "2026-08-18T20:45:52.209655+00:00"
     }
   ]
 }
