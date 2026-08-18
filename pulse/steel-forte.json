@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T13:08:50.819Z",
+  "generated_at": "2026-08-18T13:27:40.231Z",
   "date": "2026-08-18",
   "slug": "steel-forte",
   "name": "Forte Metals",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Forte Metals saw no paid activity in the last 28 days (zero spend, leads, or clicks across Meta and Google Ads), but organic visibility is carrying the load with GBP driving 90 total actions including 10 calls, 49 direction requests, and 31 website clicks. The standout movement is a 233.33% week-over-week spike in Search Console activity, likely reflecting improved local search visibility or a recent uptick in branded queries.",
+  "verdict": "Forte Metals saw no paid activity in the last 28 days (zero spend, leads, or clicks across Meta and Google Ads), but organic visibility is picking up the slack with GBP delivering 90 total actions including 10 calls, 49 direction requests, and 31 website clicks. The standout movement is a 233.33% week-over-week spike in Search Console activity, likely driven by improved local search visibility or a recent uptick in branded queries.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,60 +409,61 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-18T13:12:31.413Z",
+    "generated_at": "2026-08-18T13:31:15.497Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Organic search surging but paid is fully dark — no efficiency to defend.",
+    "verdict": "Organic momentum is real, but zero paid activity means zero scalable lead pipeline.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across Meta and Google Ads for all 28 days; CPL is undefined with 0 leads generated from paid channels.",
+        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google Ads — means CPL is undefined and paid lead pipeline is completely absent.",
         "confidence": "confirmed",
-        "channel": "meta+google"
+        "channel": "paid"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Search Console clicks surged 233% week-over-week to 25 clicks / 1,724 impressions (28d), driven entirely by organic; paid is contributing nothing.",
-        "confidence": "confirmed",
-        "channel": "search_console"
+        "text": "Search Console clicks spiked 233% week-over-week (last 7d: ~10 clicks vs prior ~3), but last 3 days show 0, 0, 0 — momentum stalled at the end of the window.",
+        "confidence": "probable",
+        "channel": "organic"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GBP actions rose 76.92% week-over-week; last 3 days (Aug 15–17) show 0 GBP actions vs prior 3 days (Aug 12–14) averaging 5.3/day — momentum may be stalling.",
-        "confidence": "probable",
+        "text": "GBP delivered 90 actions in 28 days (10 calls, 49 directions, 31 web clicks), but last 3 days show 0 actions each — a noticeable tail-off from the mid-period peak of 12/day.",
+        "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GA4 sessions are 0 across all 28 days despite 25 Search Console clicks and 31 GBP web clicks — tracking is either uninstalled or broken.",
+        "text": "GA4 sessions are 0 across all 28 days despite 25 Search Console clicks and 31 GBP web clicks — tracking is broken or GA4 property is not connected to the live site.",
         "confidence": "confirmed",
-        "channel": "ga4"
+        "channel": "organic"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit and restore GA4 tracking; 31 GBP web clicks and 25 SC clicks are landing with zero sessions recorded.",
+        "text": "Fix GA4 tracking: 31 GBP web clicks and 25 SC clicks are landing with 0 sessions recorded — resolve before any paid reactivation.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Fix GA4 Tracking Gap",
-        "monday_update": "GA4 is recording 0 sessions despite confirmed inbound traffic: 31 GBP website clicks and 25 Search Console clicks in the last 28 days. Verify GA4 tag is firing on the live domain (GTM publish, tag assistant check). Success = GA4 sessions > 0 within 48 hours of fix, confirmed by 2026-08-20."
+        "monday_item_name": "Fix GA4 tracking gap",
+        "monday_update": "GA4 is recording zero sessions despite confirmed inbound traffic: 25 Search Console clicks and 31 GBP web clicks in the last 28 days all show zero in GA4 (F4). Audit the GA4 property connection to the live site — check tag firing in GTM or the native snippet. Success is confirmed when GA4 sessions rise above zero on a day with known SC or GBP click activity; target resolution by 2026-08-22."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GBP momentum: last 3 days show 0 actions after a 76.92% weekly surge — confirm whether spike holds by Aug 21.",
+        "text": "Watch SC and GBP for 3-day recovery signal before any organic-to-paid strategy decision; re-check 2026-08-21.",
         "cites": [
+          "F2",
           "F3"
         ],
-        "monday_item_name": "Watch GBP Action Trend",
-        "monday_update": "GBP actions jumped 76.92% week-over-week (90 total actions in 28 days) but the last 3 days (Aug 15–17) recorded 0 actions. This may be weekend seasonality or a real drop. Re-check on 2026-08-21; if the 3-day average remains below 2 actions/day, escalate to Sohib for profile review."
+        "monday_item_name": "Watch organic recovery signal",
+        "monday_update": "Both Search Console clicks and GBP actions dropped to zero across the last 3 days (Aug 15–17) after a strong mid-period (SC peaked at 4 clicks on Aug 11, GBP peaked at 12 actions on Jul 31) — F2 and F3. No action is warranted yet; the 3-day zero run may be a weekend/lag artifact. Re-check on 2026-08-21: if SC clicks and GBP actions resume above their prior 7-day baseline, organic health is intact and paid reactivation planning can begin."
       }
     ],
     "next_check": "2026-08-21"

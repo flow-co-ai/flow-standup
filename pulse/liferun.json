@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T13:08:37.235Z",
+  "generated_at": "2026-08-18T13:27:25.064Z",
   "date": "2026-08-18",
   "slug": "liferun",
   "name": "Liferun",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 59,
   "status": "amber",
-  "verdict": "Liferun had a tough 7-day stretch, with leads dropping 50% week-over-week and CPL rising 29.14% to $19.85, likely driven by a sharp 47.11% pullback in Google Ads spend that left \"BWS - Search Campaign - Calls\" carrying most of the $1,239.78 Google budget with zero recorded conversions. Meta continued to deliver all 130 tracked leads over the 28-day window, but the overall spend reduction of 35.43% week-over-week signals a pacing cut that is directly suppressing lead volume.",
+  "verdict": "Liferun saw a sharp 7-day pullback with leads dropping 50% and spend down 35.43%, likely driven by Google Ads being cut nearly in half (-47.11%) while Meta's \"BWS - Search Campaign - Calls\" carried the full 130-lead load at a $19.85 CPL over the 28-day window. The CPL rising 29.14% week-over-week signals reduced efficiency as volume contracted, worth monitoring if budget reductions continue.",
   "windsor": {
     "totals": {
       "spend": 2580.14,
@@ -527,44 +527,44 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-18T13:11:48.629Z",
+    "generated_at": "2026-08-18T13:30:30.011Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Google spend collapsing; Meta alone can't hold volume at safe CPL.",
+    "verdict": "Google spend collapse is confirmed; Meta CPL holding but volume starved.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "CPL rose 29.14% to $19.85 as Google spend dropped 47.11% WoW, forcing Meta to carry all 130 28-day leads alone at rising unit cost.",
+        "text": "CPL rose 29.14% WoW as Google spend fell 47.11%; Meta's 28-day CPL of $19.85 is carrying all 130 leads alone.",
         "confidence": "confirmed",
         "channel": "cross-channel"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "SOW milestone 'Stripe Products QA'd & Done' (due 2026-07-20) has no confirmed completed event on record — money paths unverified.",
+        "text": "OVERDUE (due Jul 20): Stripe Products QA marked Done but no confirmed verification event on record; revenue and purchase fields show $0 across all 28 days.",
         "confidence": "probable",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "3-day signal (Aug 15–17): total spend averaged only $17.50/day vs $100.30/day in the prior 3 days (Aug 12–14) — spend has effectively collapsed.",
+        "text": "3-day signal (Aug 15–17): spend collapsed to $14.76/$4.96/$32.78 vs prior 3-day avg of $100.63; leads 0/0/2 vs prior avg 6/day — confirmed downtrend, not noise.",
         "confidence": "confirmed",
         "channel": "cross-channel"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Google Ads spent $1,239.78 over 28 days with 0 recorded conversions; BWS Search Campaign alone consumed $930.24 with no attributable leads.",
-        "confidence": "confirmed",
+        "text": "Google Ads spent $1,239.78 over 28 days and recorded 0 conversions — pixel or attribution issue, not necessarily zero results; leads all attributed to Meta.",
+        "confidence": "probable",
         "channel": "google"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 130 opportunities created but 0 won and 0 appointments — leads are entering the pipeline but producing no downstream activation signal.",
-        "confidence": "probable",
+        "text": "GHL shows 130 opportunities created, 0 won, 0 appointments — 130 leads entering pipeline with no progression is an intake/follow-up leak, not an ads problem.",
+        "confidence": "confirmed",
         "channel": "GHL"
       }
     ],
@@ -572,33 +572,33 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Diagnose Google spend collapse: confirm campaign statuses and budget caps causing avg $17.50/day vs prior $100/day.",
+        "text": "Restore Meta daily budget to prior-period level (~$104/day); current $23.83 spend (Aug 17) is starving the only confirmed lead source.",
         "cites": [
-          "F3",
-          "F1"
+          "F1",
+          "F3"
         ],
-        "monday_item_name": "Fix Google Spend Collapse",
-        "monday_update": "Total daily spend averaged $17.50 over Aug 15–17 versus $100.30 over Aug 12–14 — Google campaigns appear paused or severely budget-capped. Pull campaign status and billing health in Google Ads today and restore intended daily pacing. Success check: Google daily spend returns to ≥$50/day by 2026-08-21 and CPL retreats from $19.85."
+        "monday_item_name": "Restore Meta Budget $104/day",
+        "monday_update": "Meta is the sole lead driver at a 28-day CPL of $19.85, but Aug 15–17 daily spend dropped to $0/$0/$23.83 against a prior-period avg of ~$104/day. Restore Meta daily budget to $104/day immediately to stop the volume bleed. Success check: leads return to 5+ per active day within 3 days of restoration (by Aug 21). Sohib to confirm budget authority before Buyer acts."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GHL pipeline: 130 opps created, 0 won, 0 appointments — confirm intake automation is routing leads to follow-up correctly.",
-        "cites": [
-          "F5"
-        ],
-        "monday_item_name": "GHL Pipeline Intake Audit",
-        "monday_update": "GHL shows 130 opportunities created over 28 days with zero wins and zero appointments booked — leads are arriving but going nowhere downstream. Ahmed/Ali to trace one recent lead contact through the full pipeline and confirm the follow-up automation and CS assignment are firing. Success check: at least one appointment booked within 7 days of this audit, confirming the intake path is live by 2026-08-25."
-      },
-      {
-        "id": "S3",
-        "type": "watch",
-        "text": "Watch Google Ads conversion tracking: $930.24 spent on BWS Search with 0 conversions — likely pixel gap, not campaign failure.",
+        "text": "Audit Google Ads conversion pixel; 0 conversions on $1,239.78 spend is a tracking fault until proven otherwise.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Google Conversion Tracking Watch",
-        "monday_update": "BWS Search Campaign consumed $930.24 over 28 days with zero recorded conversions in Google Ads — this matches the known client-side pixel gap pattern flagged in the system. Do not kill the campaign on zero-conversion data alone. Re-check on 2026-08-21 after spend is restored (S1); if spend recovers but conversions remain at zero for 3 more days, escalate to a tracking fix."
+        "monday_item_name": "Google Pixel Conversion Audit",
+        "monday_update": "Google Ads recorded 0 conversions against $1,239.78 in 28-day spend — this is a known client-side pixel gap pattern, not confirmed zero performance. Pull the Google Tag diagnostics and confirm whether call conversions are firing; if not, repoint the conversion action to a verified trigger. Success check: at least one conversion event confirmed in Google Ads UI within 5 business days (by Aug 25)."
+      },
+      {
+        "id": "S3",
+        "type": "fix",
+        "text": "Investigate GHL pipeline: 130 opps created, 0 won, 0 appointments — confirm intake automation is routing leads to follow-up correctly.",
+        "cites": [
+          "F5"
+        ],
+        "monday_item_name": "GHL Pipeline Intake Leak Fix",
+        "monday_update": "130 contacts and opportunities entered GHL in 28 days with 0 appointments booked and 0 pipeline progression — this is an intake or follow-up automation failure, not an ads problem. Ahmed/Ali should trace one recent lead end-to-end through the GHL pipeline to confirm the call/SMS sequence is triggering. Success check: appointment count moves above 0 within 7 days (by Aug 25), confirming the follow-up workflow is live."
       }
     ],
     "next_check": "2026-08-21"
