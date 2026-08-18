@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T16:26:47.056Z",
+  "generated_at": "2026-08-18T19:49:53.363Z",
   "date": "2026-08-18",
   "slug": "steel-forte",
   "name": "Forte Metals",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Forte Metals saw no paid activity in the last 28 days (zero spend, leads, or clicks across Meta and Google Ads), but organic visibility is carrying the load with GBP driving 90 total actions including 10 calls, 49 direction requests, and 31 website clicks. The biggest movement is a 76.92% week-over-week surge in GBP engagement, likely driven by increased local search demand or a recent profile update boosting visibility.",
+  "verdict": "Forte Metals saw no paid activity in the last 28 days (zero spend, leads, or clicks across Meta and Google Ads), but organic visibility is carrying the load with GBP driving 90 total actions including 10 calls, 49 direction requests, and 31 website clicks. The standout movement is a 233.33% week-over-week spike in Search Console activity, likely reflecting improved local search visibility or a recent uptick in branded queries.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,62 +409,64 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-18T16:29:54.192Z",
+    "generated_at": "2026-08-18T19:53:22.987Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Organic holding the line; paid is entirely absent — intentional or oversight?",
+    "verdict": "Organic is the only engine running; paid is fully off.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across Meta and Google for the full 45-day series — no CPL calculable; all lead potential is unfunded.",
+        "text": "Zero paid spend across Meta and Google for all 28 days. No CPL is calculable — paid demand generation is completely absent.",
         "confidence": "confirmed",
-        "channel": "meta/google"
+        "channel": "meta, google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions surged 76.92% week-over-week to 90 total actions (10 calls, 49 directions, 31 web clicks) with zero paid support — organic is absorbing all demand.",
-        "confidence": "confirmed",
-        "channel": "gbp"
+        "text": "3-day SC clicks signal: last 3 days (Aug 15–17) sum to 1 vs prior 3 (Aug 12–14) sum of 8 — organic search momentum stalling after the spike.",
+        "confidence": "probable",
+        "channel": "search_console"
       },
       {
         "id": "F3",
-        "priority": 3,
-        "text": "Search clicks rose 233% week-over-week (last 7d: ~7 clicks vs prior ~2), suggesting real local intent — but no paid search is capturing it.",
+        "priority": 2,
+        "text": "GBP actions last 3 days (Aug 15–17) sum to 0 vs prior 3 (Aug 12–14) sum of 16 — local visibility spike appears to be fading.",
         "confidence": "probable",
-        "channel": "search"
+        "channel": "gbp"
       },
       {
         "id": "F4",
-        "priority": 4,
-        "text": "Last 3 days (Aug 15–17): GBP actions = 0, 0, 0 vs prior 3 days (Aug 12–14): 9, 5, 2 — GBP momentum is cooling after the mid-week spike.",
+        "priority": 3,
+        "text": "233.33% SC week-over-week spike is real (7 clicks prior week vs 25-click 28-day total) but did not convert — GHL shows null pipeline, zero leads captured.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "search_console"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "watch",
-        "text": "Confirm with Sohib whether zero paid spend is intentional pause or a setup gap — no budget action until resolved.",
+        "text": "Monitor GBP and SC 3-day trend for 7 more days before any paid reactivation decision.",
         "cites": [
-          "F1"
+          "F2",
+          "F3"
         ],
-        "monday_item_name": "Confirm Paid Status Forte",
-        "monday_update": "All spend has been $0 across Meta and Google for the full 45-day window — no campaigns appear to be running. Before any budget action, confirm with client whether this is a deliberate pause or a launch not yet executed. If paid is intended to be live, check account access, billing, and campaign status. Resolve by 2026-08-21 to avoid another full week of zero data."
+        "monday_item_name": "Watch GBP & SC 3-day trend",
+        "monday_update": "GBP actions dropped to 0 over Aug 15–17 after a peak of 16 actions in Aug 12–14, and SC clicks fell from 8 to 1 over the same window. The organic spike may be fading and does not yet justify paid spend activation. Re-check both signals on 2026-08-25 — if GBP actions and SC clicks return to or exceed the Aug 12–14 levels, treat as sustained organic demand worth amplifying with paid."
       },
       {
         "id": "S2",
-        "type": "watch",
-        "text": "Watch GBP 3-day zero run (Aug 15–17); if actions remain at 0 through Aug 21, investigate profile change or algorithm shift.",
+        "type": "fix",
+        "text": "Confirm GHL intake is live and configured to capture any inbound leads before paid is reactivated.",
         "cites": [
+          "F1",
           "F4"
         ],
-        "monday_item_name": "Monitor GBP Drop Forte",
-        "monday_update": "GBP actions dropped to 0 for three consecutive days (Aug 15–17) after peaking at 9 on Aug 12. This follows the 76.92% weekly surge, so a natural taper is plausible — but three flat days in a row is a signal worth tracking. Re-check GBP actions on Aug 21: if still at 0, review for profile suspension, category change, or competitor displacement. Success = actions return above 3/day within the next check window."
+        "monday_item_name": "Fix GHL intake pre-launch",
+        "monday_update": "GHL pipeline is null and zero leads have been recorded despite 90 GBP actions and 25 SC clicks over 28 days — any inbound intent is not being captured. Before any paid budget is switched on, verify that GHL forms, call tracking, and pipeline stages are active and correctly mapped. Success check: at least one test lead flows through GHL end-to-end before 2026-08-25."
       }
     ],
-    "next_check": "2026-08-21"
+    "next_check": "2026-08-25"
   }
 }

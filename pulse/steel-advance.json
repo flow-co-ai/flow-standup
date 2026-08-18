@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T16:26:51.021Z",
+  "generated_at": "2026-08-18T19:49:59.118Z",
   "date": "2026-08-18",
   "slug": "steel-advance",
   "name": "Advance Grinding",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, so all engagement is coming entirely from Google Business Profile, which drove 108 total actions including 3 calls, 70 direction requests, and 35 website clicks. The biggest movement is a 16.67% decline in GBP actions over the last 7 days versus the prior 7 days, likely driven by reduced search demand or a drop in profile visibility without any paid traffic to supplement organic interest.",
+  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, so all engagement is coming entirely from Google Business Profile, which drove 108 total actions including 3 calls, 70 direction requests, and 35 website clicks. The biggest movement is a 16.67% decline in GBP engagement over the last 7 days versus the prior 7 days, likely driven by reduced search demand or a drop in profile visibility rather than any change in paid activity.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -404,44 +404,72 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-18T16:30:06.081Z",
+    "generated_at": "2026-08-18T19:53:44.823Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid channels fully dark; only GBP active and now fading.",
+    "verdict": "Zero paid activity; GBP is the only engine and it's slowing.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — Meta and Google Ads have $0 spend, 0 leads, 0 clicks. No paid efficiency to evaluate.",
+        "text": "Zero paid spend across all 28 days — Meta $0, Google Ads $0 — means no CPL baseline exists and no paid lead engine is running.",
         "confidence": "confirmed",
-        "channel": "meta+google"
+        "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP 3-day signal (Aug 15–17) shows 0 actions vs prior 3 days (Aug 12–14) averaging 3.3/day — organic momentum halting without paid support.",
+        "text": "3-day GBP signal (Aug 15–17): 0+0+0 actions vs prior 3 days (Aug 12–14): 7+1+2 = 10 actions — a confirmed hard stop in GBP engagement.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GBP actions down 16.67% week-over-week across 28-day window of 108 total actions; 3 calls in 28 days signals near-zero pipeline intake.",
-        "confidence": "confirmed",
+        "text": "GBP 7d delta is -16.67%, but the 3-day zeroes suggest the decline is accelerating beyond the weekly average; profile visibility or listing issue is probable cause.",
+        "confidence": "probable",
         "channel": "gbp"
+      },
+      {
+        "id": "F4",
+        "priority": 4,
+        "text": "GA4 sessions, Search Console clicks, and IG reach are all zero for the full 45-day series — no organic web traffic data is being captured at all.",
+        "confidence": "confirmed",
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Monitor GBP daily actions; if 3-day average stays at 0, escalate paid reactivation immediately.",
+        "type": "fix",
+        "text": "Audit GBP listing immediately — 3 consecutive zero-action days after 10 actions Aug 12–14 signals a suspension or visibility drop.",
         "cites": [
           "F2",
           "F3"
         ],
-        "monday_item_name": "Watch GBP — paid dark",
-        "monday_update": "Paid channels have been at $0 spend for the full 28-day window; GBP is the only active channel with 108 actions total but the last 3 days (Aug 15–17) recorded 0 actions. Success check: GBP 3-day average returns to 3+ actions/day by 2026-08-21. If it does not recover, escalate to Sohib for paid reactivation discussion."
+        "monday_item_name": "GBP listing audit fix",
+        "monday_update": "GBP actions dropped to zero for Aug 15, 16, and 17 after averaging 3–10 actions per day earlier in August. Check the Google Business Profile for suspension flags, duplicate listings, or a pending re-verification prompt. Success is confirmed when daily GBP actions return to the Aug 1–14 average of ~5 per day. Resolve and re-check by 2026-08-21."
+      },
+      {
+        "id": "S2",
+        "type": "fix",
+        "text": "Diagnose why GA4, Search Console, and IG reach show zero for 45 days — tracking is broken or properties are disconnected.",
+        "cites": [
+          "F4"
+        ],
+        "monday_item_name": "Fix GA4 SC IG tracking",
+        "monday_update": "GA4 sessions, Search Console clicks, and IG reach have all read zero across the entire 45-day series, indicating missing property connections or broken pixel/tag installations. Verify GA4 property ID in the data feed, confirm Search Console is linked, and check IG account connection. Success is confirmed when at least GA4 sessions register a non-zero value within 48 hours of the fix, by 2026-08-20."
+      },
+      {
+        "id": "S3",
+        "type": "watch",
+        "text": "Watch GBP recovery for 3 days post-audit before any paid reactivation decision; no spend evidence to act on yet.",
+        "cites": [
+          "F1",
+          "F2"
+        ],
+        "monday_item_name": "Watch GBP reactivation trigger",
+        "monday_update": "There is zero paid spend history for this client, so no CPL baseline exists to set a budget or bid strategy against. Hold on any Meta or Google Ads reactivation until GBP actions return to baseline (≥5/day for 3 consecutive days), confirming organic demand is present. Re-evaluate paid channel readiness on 2026-08-21 after the GBP audit resolves."
       }
     ],
     "next_check": "2026-08-21"
