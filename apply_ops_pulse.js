@@ -135,20 +135,19 @@ const EMIT_BRIEF = {
         type: 'object',
         required: ['verdict', 'next_move', 'blocks', 'snapshot', 'history_line'],
         properties: {
-          verdict:    { type: 'string', description: 'One sentence ≤20 words. Whose move, what matters, cite the Monday item.' },
-          next_move:  { type: 'string', description: 'One action ≤20 words. Format: "Owner: task — why it unblocks."' },
+          verdict:    { type: 'string', description: 'One sentence ≤20 words. Anchor on what is actually moving or actually awaiting a reply this week. Never mention day counts or "stalled N days".' },
+          next_move:  { type: 'string', description: 'One action ≤20 words. Format: "Owner: task — why it unblocks." Reference a live thread or an item with recent activity — never a dormant item.' },
           blocks: {
             type: 'array',
-            description: 'Open loops blocking progress today. Whose move is it? Infer side from last-word direction in the standup comms, the Monday assignee, and waiting_on_client entries. Empty array when nothing is blocked.',
+            description: 'Open loops with CURRENT ACTIVITY. Include a loop only if at least one is true: (1) the standup card names it in highlights or stalled_items this week, (2) the Monday item has recent comms in its thread, or (3) it has an active Monday status. Age alone does NOT qualify. Silent items with no recent comms are background noise — omit them. Empty array when nothing is blocked with real activity.',
             items: {
               type: 'object',
-              required: ['item', 'side', 'who', 'age_days', 'hot'],
+              required: ['item', 'side', 'who', 'last_activity'],
               properties: {
-                item:     { type: 'string', description: 'Cite the Monday item name or the comms thread. Never invent.' },
-                side:     { type: 'string', enum: ['you', 'team', 'client'], description: '"you" = Sohib specifically. "team" = another Flow teammate. "client" = client-side contact.' },
-                who:      { type: 'string', description: 'Person name, or role if unnamed.' },
-                age_days: { type: 'integer', description: 'Days the block has been open.' },
-                hot:      { type: 'boolean', description: 'True when age_days >= 19 OR renewal-adjacent (touches a stated renewal, launch gate, or scoreboard decision).' },
+                item:          { type: 'string', description: 'Cite the Monday item name or the comms thread. Never invent.' },
+                side:          { type: 'string', enum: ['you', 'team', 'client'], description: '"you" = Sohib specifically. "team" = another Flow teammate. "client" = client-side contact.' },
+                who:           { type: 'string', description: 'Person name, or role if unnamed.' },
+                last_activity: { type: 'string', description: 'What most recently happened on this loop: the latest comms line, the latest Monday update, or the this-week standup card mention. One short line, ≤14 words. Never a bare day count like "8d stalled".' },
               },
             },
           },

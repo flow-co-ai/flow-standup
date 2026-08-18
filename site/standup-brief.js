@@ -678,13 +678,14 @@
 
   const v3State = {
     mounted:  false,
-    filter:   null,   // slug or null
-    openCard: null,   // slug or null
+    // Unified single-slug selection: card click and pill click both set this.
+    // null = all-clients grid view, slug = solo view (that client, expanded).
+    selected: null,
   };
 
   const v3Data = {
     loaded:  false,
-    entries: [],      // [{ slug, name, pulse, timeline, latestEntry }]
+    entries: [],      // [{ slug, name, pulse, timeline, playbook, latestEntry }]
     summary: null,
   };
 
@@ -765,11 +766,12 @@
 
     const entries = await Promise.all(clients.map(async (c) => {
       const slug = slugFor(c.client);
-      const [pulse, timeline] = await Promise.all([
+      const [pulse, timeline, playbook] = await Promise.all([
         fetchPulse(slug),
         fetchTimeline(slug),
+        fetchPlaybook(slug),
       ]);
-      return { slug, name: c.client, pulse, timeline, latestEntry: c };
+      return { slug, name: c.client, pulse, timeline, playbook, latestEntry: c };
     }));
 
     v3Data.entries = entries;
@@ -778,39 +780,50 @@
 
   // ── v3 renderers: header + pills + grid ─────────────────────────────────────
 
-  function renderHeader(summary, entries) {
+  // Header:
+  //   All-clients view: date line + subline (block counts). NO hero — headlines
+  //   are per-client and live on the selected card.
+  //   Solo view: date line + the client's own brief_v2.verdict as the hero.
+  function renderHeader(summary, entries, selectedEntry) {
     const header = el('div', 'sb3-header');
     const totalBlocks = entries.reduce((s, e) => s + blocksFor(e.pulse).length, 0);
     header.append(el('div', 'sb3-date-line', todayDateLine(entries.length, totalBlocks)));
-    if (summary?.hero) {
-      header.append(el('div', 'sb3-hero', summary.hero));
-      if (summary.subline) header.append(el('div', 'sb3-subline', summary.subline));
+
+    if (selectedEntry) {
+      const verdict = briefV2Of(selectedEntry.pulse)?.verdict;
+      if (verdict) header.append(el('div', 'sb3-hero', verdict));
+      // No verdict: skip. Do not fabricate.
+    } else if (summary?.subline) {
+      header.append(el('div', 'sb3-subline', summary.subline));
     }
     return header;
   }
 
-  function renderPills(entries) {
-    const pills = el('div', 'sb3-pills');
+  // Pills in all-view; "← All clients" back control in solo view. Same
+  // `v3State.selected` state — pill click and card click are the same action.
+  function renderPillsOrBack(entries) {
+    if (v3State.selected) {
+      const back = el('button', 'sb3-back', '← All clients');
+      back.addEventListener('click', () => {
+        v3State.selected = null;
+        renderRoot();
+      });
+      return back;
+    }
 
-    const allPill = el('button',
-      `sb3-pill${!v3State.filter ? ' active' : ''}`,
-      `All ${entries.length} clients`);
-    allPill.addEventListener('click', () => {
-      v3State.filter = null;
-      v3State.openCard = null;
-      renderRoot();
-    });
+    const pills = el('div', 'sb3-pills');
+    const allPill = el('button', 'sb3-pill active', `All ${entries.length} clients`);
+    allPill.addEventListener('click', () => { /* no-op; already all */ });
     pills.append(allPill);
 
     for (const e of entries) {
       const status = statusFor(e.pulse);
-      const pill = el('button', `sb3-pill${v3State.filter === e.slug ? ' active' : ''}`);
+      const pill = el('button', 'sb3-pill');
       const dot = el('span', 'sb3-pill-dot');
       dot.style.background = status.color;
       pill.append(dot, document.createTextNode(e.name));
       pill.addEventListener('click', () => {
-        v3State.filter = v3State.filter === e.slug ? null : e.slug;
-        v3State.openCard = null;
+        v3State.selected = e.slug;
         renderRoot();
       });
       pills.append(pill);
@@ -819,8 +832,8 @@
   }
 
   function renderGrid(entries) {
-    const visible = v3State.filter
-      ? entries.filter(e => e.slug === v3State.filter)
+    const visible = v3State.selected
+      ? entries.filter(e => e.slug === v3State.selected)
       : entries;
     const sorted = sortEntries(visible);
     const grid = el('div', 'sb3-grid');
@@ -834,9 +847,15 @@
     const { name, slug, pulse } = entry;
     const status = statusFor(pulse);
     const v2  = briefV2Of(pulse);
-    const isOpen = v3State.openCard === slug;
+    const isOpen = v3State.selected === slug;
 
-    const card = el('div', `sb3-card${isOpen ? ' open' : ''}`);
+    const card = el('div', `sb3-card${isOpen ? ' open' : ' clickable'}`);
+    if (!isOpen) {
+      card.addEventListener('click', () => {
+        v3State.selected = slug;
+        renderRoot();
+      });
+    }
 
     // Top row: dot + state label / ops score
     const top = el('div', 'sb3-card-top');
@@ -855,21 +874,16 @@
     card.append(el('div', 'sb3-card-name', name));
     if (pulse?.type) card.append(el('div', 'sb3-card-sub', pulse.type));
 
-    // Verdict
-    const verdict = v2?.verdict;
-    card.append(el('div', verdict ? 'sb3-card-verdict' : 'sb3-card-verdict muted',
-      verdict || 'No brief generated yet'));
+    // Verdict — hidden on open (the hero shows it) to avoid duplication.
+    if (!isOpen) {
+      const verdict = v2?.verdict;
+      card.append(el('div', verdict ? 'sb3-card-verdict' : 'sb3-card-verdict muted',
+        verdict || 'No brief generated yet'));
+    }
 
-    // Footer: move line + toggle
+    // Footer: move line only. Card click drives selection; no toggle button.
     const footer = el('div', 'sb3-card-footer');
     footer.append(el('span', 'sb3-move-line', moveLine(blocksFor(pulse))));
-    const toggle = el('button', 'sb3-toggle', isOpen ? 'Close' : 'Open');
-    toggle.addEventListener('click', (ev) => {
-      ev.stopPropagation();
-      v3State.openCard = isOpen ? null : slug;
-      renderRoot();
-    });
-    footer.append(toggle);
     card.append(footer);
 
     // Detail
@@ -881,10 +895,13 @@
   // ── v3 renderers: card detail (snapshot / streams / contract / history) ─────
 
   function renderCardDetailV3(entry) {
-    const { pulse, latestEntry, timeline } = entry;
+    const { pulse, latestEntry, timeline, playbook } = entry;
     const v2 = briefV2Of(pulse);
 
     const detail = el('div', 'sb3-detail');
+
+    // CONTRACT — deterministic, from the playbook header. Anchor section.
+    detail.append(renderContractFromPlaybook(playbook));
 
     // SNAPSHOT — render only if source array has rows
     const snap = v2?.snapshot || [];
@@ -901,6 +918,66 @@
     if (hl) detail.append(el('div', 'sb3-detail-history', hl));
 
     return detail;
+  }
+
+  // Deterministic CONTRACT section built from playbooks/[slug].md header blocks.
+  // No LLM: shows engagement dates, computed "Month X of Y" when start+end
+  // are ISO dates, plus scope/setup blocks straight from the header.
+  function renderContractFromPlaybook(playbook) {
+    const sec = el('div', 'sb3-section');
+    sec.append(el('div', 'sb3-section-label', 'CONTRACT'));
+    const body = el('div', 'sb3-section-body');
+
+    if (!playbook) {
+      body.append(el('div', 'sb3-contract-empty', 'No playbook on file.'));
+      sec.append(body);
+      return sec;
+    }
+
+    const blocks = parsePlaybookHeader(playbook);
+    if (!blocks.length) {
+      body.append(el('div', 'sb3-contract-empty', 'Playbook has no header blocks.'));
+      sec.append(body);
+      return sec;
+    }
+
+    // Compute Month X of Y only when we can find ISO dates in header values.
+    const startBlk = findHeaderDate(blocks, ['start', 'kickoff', 'kick-off', 'kick off', 'engagement start', 'began', 'began on']);
+    const endBlk   = findHeaderDate(blocks, ['end', 'renew', 'renewal', 'expires', 'through', 'engagement end']);
+    if (startBlk && endBlk) {
+      const line = computeMonthLine(startBlk.date, endBlk.date);
+      if (line) body.append(el('div', 'sb3-contract-month', line));
+    }
+
+    for (const b of blocks) {
+      const row = el('div', 'sb3-playbook-row');
+      row.append(el('span', 'sb3-playbook-label', b.label));
+      if (b.value) row.append(el('span', 'sb3-playbook-value', b.value));
+      body.append(row);
+    }
+    sec.append(body);
+    return sec;
+  }
+
+  function findHeaderDate(blocks, keywords) {
+    for (const b of blocks) {
+      const lbl = (b.label || '').toLowerCase();
+      if (!keywords.some(k => lbl.includes(k))) continue;
+      const m = (b.value || '').match(/(\d{4}-\d{2}-\d{2})/);
+      if (m) return { block: b, date: m[1] };
+    }
+    return null;
+  }
+
+  function computeMonthLine(startISO, endISO) {
+    const start = new Date(startISO + 'T00:00:00Z');
+    const end   = new Date(endISO   + 'T00:00:00Z');
+    if (isNaN(start) || isNaN(end)) return null;
+    const MONTH_MS = 1000 * 60 * 60 * 24 * 30.44;
+    const monthsTotal   = Math.max(1, Math.round((end - start) / MONTH_MS));
+    let   monthsElapsed = Math.floor((Date.now() - start) / MONTH_MS) + 1;
+    monthsElapsed = Math.max(1, Math.min(monthsTotal, monthsElapsed));
+    return `Month ${monthsElapsed} of ${monthsTotal}`;
   }
 
   function renderSnapshotSection(rows) {
@@ -948,11 +1025,12 @@
       }
       laneRow.append(dots);
 
-      // Note: stalest stalled item + days, else first highlight, else Not in scope.
+      // Note: first stalled item name, else first highlight, else Not in scope.
+      // No day counts — activity is the signal, not age.
       let note = '', muted = false;
       if (stalled.length) {
-        const s = [...stalled].sort((a, b) => (b.days_stalled || 0) - (a.days_stalled || 0))[0];
-        note = `${s.item_name || s.text || ''} · ${s.days_stalled || 0}d`;
+        const s = stalled[0];
+        note = s.item_name || s.text || '';
       } else if (highlights.length) {
         const h = highlights[0];
         note = h.item_name || h.text || '';
@@ -1010,7 +1088,6 @@
       } else if (t.state === 'stalled') {
         row.append(el('span', 'sb3-contract-dot stalled'));
         row.append(el('span', 'sb3-contract-label', t.label));
-        row.append(el('span', 'sb3-contract-days', `${t.days_stalled || 0}d stalled`));
       } else {
         row.append(el('span', 'sb3-contract-dot live'));
         row.append(el('span', 'sb3-contract-label', t.label));
@@ -1027,8 +1104,7 @@
   // ── v3 renderers: rail + footnotes ──────────────────────────────────────────
 
   function railScope() {
-    // openCard wins over filter (last user click owns the scope).
-    return v3State.openCard || v3State.filter || null;
+    return v3State.selected || null;
   }
 
   function renderRail(entries) {
@@ -1057,9 +1133,7 @@
     ];
 
     for (const g of groups) {
-      const rows = allBlocks
-        .filter(b => b.side === g.key)
-        .sort((a, b) => (b.hot ? 1 : 0) - (a.hot ? 1 : 0) || (b.age_days || 0) - (a.age_days || 0));
+      const rows = allBlocks.filter(b => b.side === g.key);
       if (!rows.length) continue;
 
       const group = el('div', 'sb3-block-group');
@@ -1070,12 +1144,8 @@
         const row = el('div', 'sb3-block-row');
         row.append(el('div', 'sb3-block-client', r.client));
         row.append(el('div', 'sb3-block-item', r.item || ''));
-        const meta = el('div', 'sb3-block-meta');
-        meta.append(
-          el('span', 'sb3-block-who', r.who || ''),
-          el('span', `sb3-block-age${r.hot ? ' hot' : ''}`, `${r.age_days || 0}d`),
-        );
-        row.append(meta);
+        if (r.who) row.append(el('div', 'sb3-block-who', r.who));
+        if (r.last_activity) row.append(el('div', 'sb3-block-activity', r.last_activity));
         group.append(row);
       }
       rail.append(group);
@@ -1106,8 +1176,12 @@
     const layout = el('div', 'sb3-layout');
     const main   = el('div', 'sb3-main');
 
-    main.append(renderHeader(v3Data.summary, v3Data.entries));
-    main.append(renderPills(v3Data.entries));
+    const selectedEntry = v3State.selected
+      ? v3Data.entries.find(e => e.slug === v3State.selected) || null
+      : null;
+
+    main.append(renderHeader(v3Data.summary, v3Data.entries, selectedEntry));
+    main.append(renderPillsOrBack(v3Data.entries));
     main.append(renderGrid(v3Data.entries));
 
     layout.append(main, renderRail(v3Data.entries));

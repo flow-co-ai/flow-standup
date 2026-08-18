@@ -968,25 +968,40 @@ body.sb3-active #app {
   color: rgba(20,22,15,0.56);
 }
 
-.sb3-toggle {
-  font-family: 'Space Mono', monospace;
-  font-size: 9.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  font-weight: 600;
-  background: transparent;
-  border: 1px solid rgba(20,22,15,0.18);
-  border-radius: 4px;
-  padding: 5px 11px;
-  color: rgba(20,22,15,0.65);
+/* Whole card is clickable when collapsed; the card click drives selection.
+   No Open/Close button — the "← All clients" back control restores the grid. */
+.sb3-card.clickable {
   cursor: pointer;
-  transition: background 0.1s, border-color 0.1s, color 0.1s;
 }
 
-.sb3-toggle:hover {
-  background: rgba(20,22,15,0.05);
-  border-color: rgba(20,22,15,0.35);
-  color: var(--sb3-ink);
+.sb3-card.clickable:hover {
+  border-color: rgba(255,255,255,0.18);
+  transform: translateY(-1px);
+}
+
+/* Solo-view back control replaces the pills row. */
+.sb3-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: transparent;
+  border: 1px solid rgba(251,250,245,0.16);
+  border-radius: 99px;
+  color: rgba(251,250,245,0.7);
+  font-family: 'Space Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin: 22px 0 20px;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+
+.sb3-back:hover {
+  background: rgba(251,250,245,0.06);
+  border-color: rgba(251,250,245,0.36);
+  color: #fbfaf5;
 }
 
 
@@ -1135,12 +1150,38 @@ body.sb3-active #app {
   color: rgba(20,22,15,0.5);
 }
 
-.sb3-contract-days {
+/* CONTRACT (from playbook header) rows and computed month line. */
+.sb3-contract-month {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--sb3-ink);
+  margin-bottom: 8px;
+}
+
+.sb3-playbook-row {
+  display: flex;
+  gap: 12px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--sb3-ink);
+  padding: 2px 0;
+}
+
+.sb3-playbook-label {
   font-family: 'Space Mono', monospace;
   font-size: 10px;
-  color: var(--sb3-red);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(20,22,15,0.4);
+  min-width: 92px;
   flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.sb3-playbook-value {
+  color: rgba(20,22,15,0.82);
+  flex: 1;
 }
 
 .sb3-contract-tag {
@@ -1243,31 +1284,21 @@ body.sb3-active #app {
   font-size: 13px;
   color: rgba(251,250,245,0.92);
   line-height: 1.42;
-  margin-bottom: 5px;
-}
-
-.sb3-block-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+  margin-bottom: 4px;
 }
 
 .sb3-block-who {
   font-size: 11.5px;
   color: rgba(251,250,245,0.55);
+  margin-bottom: 3px;
 }
 
-.sb3-block-age {
-  font-family: 'Space Mono', monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.06em;
-  color: rgba(251,250,245,0.42);
-}
-
-.sb3-block-age.hot {
-  color: var(--sb3-red);
-  font-weight: 700;
+/* Last-activity line replaces the old age chip. Activity, not age. */
+.sb3-block-activity {
+  font-size: 11.5px;
+  color: rgba(251,250,245,0.4);
+  line-height: 1.4;
+  font-style: italic;
 }
 
 

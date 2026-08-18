@@ -23,15 +23,11 @@ const MODEL   = 'claude-sonnet-4-6';
 
 const EMIT_SUMMARY = {
   name: 'emit_summary',
-  description: 'Emit the single-sentence hero and subline for the day.',
+  description: 'Emit the day-level subline (block counts). No hero — headlines live per client, on their card.',
   input_schema: {
     type: 'object',
-    required: ['hero', 'subline'],
+    required: ['subline'],
     properties: {
-      hero: {
-        type: 'string',
-        description: 'One sentence, ≤25 words, naming the single most important thing across all clients today. Name the client and the item. Prefer hot blocks and blocks whose side is "you". No hedging.',
-      },
       subline: {
         type: 'string',
         description: 'One sentence stating counts, exact template: "X blocks yours, Y team\'s, Z with clients, N clients quiet." Numbers must match the totals passed in.',
@@ -88,11 +84,10 @@ async function callSummary({ rows, counts, quiet, today }) {
   const clientBlocks = rows.map(r => ({
     client: r.name,
     blocks: (r.blocks || []).map(b => ({
-      item:     b.item,
-      side:     b.side,
-      who:      b.who,
-      age_days: b.age_days,
-      hot:      !!b.hot,
+      item:          b.item,
+      side:          b.side,
+      who:           b.who,
+      last_activity: b.last_activity,
     })),
   }));
 
@@ -108,8 +103,8 @@ async function callSummary({ rows, counts, quiet, today }) {
     JSON.stringify(clientBlocks, null, 2),
     ``,
     `Rules:`,
-    `- hero: one sentence ≤25 words. Name the single most important thing right now across all clients. Concrete: name the client and the item verbatim from the data. Prefer hot blocks and blocks on side "you" (that's Sohib). If everything is quiet, say so — do not invent urgency.`,
-    `- subline: exact template — "X blocks yours, Y team's, Z with clients, N clients quiet." Fill X/Y/Z/N from the counts above.`,
+    `- subline only. Exact template: "X blocks yours, Y team's, Z with clients, N clients quiet." Fill X/Y/Z/N from the counts above.`,
+    `- No hero — headlines belong per client, not at the top of the day.`,
     `- No hedging. No em dashes. No URLs.`,
   ].join('\n');
 
@@ -148,15 +143,14 @@ async function main() {
 
   console.log(`  ${rows.length} active clients — you=${counts.you}, team=${counts.team}, client=${counts.client}, quiet=${quiet}`);
 
-  let hero = '', subline = '';
+  let subline = '';
   if (!API_KEY) {
-    console.log('  ANTHROPIC_API_KEY not set — writing counts only, hero/subline blank');
+    console.log('  ANTHROPIC_API_KEY not set — writing counts only, subline blank');
   } else if (!rows.length) {
     console.log('  no active pulse files — writing empty summary');
   } else {
     try {
       const out = await callSummary({ rows, counts, quiet, today });
-      hero    = out.hero    || '';
       subline = out.subline || '';
     } catch (err) {
       console.error(`  summary generation failed — ${err.message}`);
@@ -167,7 +161,6 @@ async function main() {
   const out = {
     date:         today,
     generated_at: new Date().toISOString(),
-    hero,
     subline,
     block_counts: counts,
   };

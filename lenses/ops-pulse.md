@@ -127,12 +127,26 @@ must clear before launch.
 empty, history_line may be null):
 
 - `verdict`: one sentence, max 20 words. Whose move is it and what is the decisive
-  factor? Name the actual Monday item or open loop. No hedging.
+  factor? Anchor on what is actually MOVING right now, or on the specific reply
+  someone is waiting for. Name the actual Monday item or open loop. Never
+  mention day counts ("stalled 18 days") — age is not the story, activity is.
+  No hedging.
 
 - `next_move`: one action, max 20 words. Format "Owner: task — why it unblocks."
-  Must trace to a real Monday item by name. Never invented.
+  Must trace to a real Monday item WITH RECENT ACTIVITY by name. Never point
+  at a dormant item as the "next move".
 
-- `blocks`: every open loop blocking progress today. Each row:
+- `blocks`: open loops WITH CURRENT ACTIVITY. Include a loop ONLY when at least
+  one is true:
+    1. the standup card names it in `highlights` or `stalled_items` this week,
+    2. the Monday item's thread has recent comms (the standup card carries the
+       last-word direction — that counts), or
+    3. the item has an active Monday status (assigned, working, review).
+  Age alone does NOT qualify. An item stuck for 60 days with no comms is
+  archive noise, not headline material — OMIT it. Being stale is not urgent;
+  being active is.
+
+  Each row:
     - `item`: cite the Monday item name or the comms thread. Never invent.
     - `side`: whose move is it right now?
         `you`    — Sohib specifically. Not other Flow teammates.
@@ -144,17 +158,20 @@ empty, history_line may be null):
       unsure; if the card genuinely doesn't say whose move it is, omit the row.
     - `who`: real person name from the card, or a role ("client PM") when the
       card only names a role. Never a made-up name.
-    - `age_days`: integer, days since the block first surfaced (from
-      `days_stalled` or the `since` field on waiting_on_client).
-    - `hot`: true when `age_days >= 19` OR the item is renewal-adjacent (touches
-      a stated contract renewal, launch gate, or scoreboard decision named in
-      the playbook). Otherwise false.
-  Empty array when nothing is blocked today. Quiet is valid.
+    - `last_activity`: one short line (≤14 words) naming what most recently
+      happened on this loop — the latest comms line, latest Monday update, or
+      this week's standup card mention. Never a bare day count like
+      "8d stalled". If you can't name a real recent activity, the block
+      doesn't qualify — omit it.
+
+  Empty array when nothing is blocked with real activity today. Quiet is valid.
 
 - `snapshot`: 3–5 header rows a CEO reads in one glance. Attempt in this order
   and SKIP any row whose source data is missing:
-    1. `Open items` — count of open Monday items plus a one-line stall summary
-       ("17 open, 4 stalled 10d+"). Source: the standup card's `stats`.
+    1. `Open items` — count of open Monday items plus a one-line summary of
+       what is actually in motion this week ("17 open, 3 moving, 1 awaiting
+       client reply"). Source: the standup card's `stats` + `highlights`.
+       Do NOT summarise by day counts.
     2. `Contract` — "Month X of Y, renews DATE" ONLY when the playbook states
        the engagement window and renewal date. Skip otherwise.
     3. `Last client word` — date + topic from the most recent client-side
@@ -180,15 +197,15 @@ empty, history_line may be null):
 Example:
 ```
 {
-  "verdict":     "Client's move: Dr. Jamal hasn't confirmed working hours, blocking the scheduler fix.",
-  "next_move":   "Nacer: send calendar request by Thursday — unblocks the OpenDental sync item.",
+  "verdict":     "Client's move: Dr. Jamal owes working hours on the scheduler thread.",
+  "next_move":   "Nacer: reply on OpenDental sync with proposed times — thread went quiet yesterday.",
   "blocks": [
-    { "item": "OpenDental sync",   "side": "client", "who": "Dr. Jamal",       "age_days": 21, "hot": true  },
-    { "item": "GHL intake capture","side": "team",   "who": "Nacer",          "age_days": 6,  "hot": false }
+    { "item": "OpenDental sync",    "side": "client", "who": "Dr. Jamal", "last_activity": "Client asked for revised timeline Fri" },
+    { "item": "GHL intake capture", "side": "team",   "who": "Nacer",    "last_activity": "Nacer posted staging link this morning" }
   ],
   "snapshot": [
-    { "label": "Open items",       "value": "17 open, 4 stalled 10d+",       "tone": "warn" },
-    { "label": "Contract",         "value": "Month 4 of 6, renews 2026-10-31","tone": "muted" },
+    { "label": "Open items",       "value": "17 open, 3 moving, 1 awaiting client",  "tone": "warn" },
+    { "label": "Contract",         "value": "Month 4 of 6, renews 2026-10-31",       "tone": "muted" },
     { "label": "Last client word", "value": "2026-08-15 — asked for revised timeline","tone": "plain" }
   ],
   "history_line": "Reranked 8 keywords · Fixed FB event · Deployed dashboard"
