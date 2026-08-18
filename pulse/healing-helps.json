@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T11:18:34.542Z",
+  "generated_at": "2026-08-18T13:07:51.216Z",
   "date": "2026-08-18",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Healing Helps saw zero paid activity across Meta and Google Ads in the last 28 days, so all 56 GBP actions (including 33 direction requests and 1 call) are carrying the full lead gen load. The biggest movement is a 50% week-over-week lift in GA4 engagement, likely driven by increased organic or direct site traffic, though GBP actions dipped 21.43% week-over-week, suggesting some softening in local search intent.",
+  "verdict": "Healing Helps saw zero paid activity across Meta and Google Ads in the last 28 days, so all engagement came from Google Business Profile, which drove 56 total actions (33 directions, 22 web clicks, 1 call). The biggest movement is a 50% week-over-week lift in GA4 sessions, likely reflecting organic interest, though GBP actions dipped 21.43% in the same period, suggesting some inconsistency in local profile visibility.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -462,61 +462,62 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-18T11:23:37.663Z",
+    "generated_at": "2026-08-18T13:10:31.107Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "No paid activity in 45 days; organic alone cannot sustain lead generation.",
+    "verdict": "Zero paid activity; organic-only momentum is softening across all signals.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero spend across Meta and Google for all 28 days (and entire 45-day series); CPL is undefined because no paid leads exist.",
+        "text": "Zero spend across Meta and Google Ads for the full 45-day series — CPL is undefined because no paid leads were generated at all.",
         "confidence": "confirmed",
-        "channel": "meta/google"
+        "channel": "meta,google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions fell to 0 in the last 3 days (Aug 15–17) vs 5 total in prior 3 (Aug 12–14), a confirmed 3-day downtrend in the only active acquisition signal.",
-        "confidence": "confirmed",
+        "text": "GBP actions fell 21.43% week-over-week (28-day total: 56) while GA4 sessions rose 50% — organic web traffic arriving but GBP local visibility is slipping.",
+        "confidence": "probable",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GA4 sessions averaged 4.3/day over last 3 days (Aug 15–17) vs 12.3/day Aug 12–14, a 65% drop — organic interest is cooling after a brief mid-August spike.",
-        "confidence": "probable",
-        "channel": "ga4"
+        "text": "3-day GBP signal (Aug 15–17): 0+0+0 actions vs prior 3 days (Aug 12–14): 3+4+1 — a confirmed 3-day dropout, not a single-day blip.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GHL pipeline is null with 0 leads recorded; 56 GBP actions (33 directions, 1 call, 22 web clicks) produced no trackable intake — intake tracking is absent or broken.",
-        "confidence": "confirmed",
-        "channel": "ghl"
+        "text": "GA4 sessions last 3 days (Aug 15–17): 4+4+5 vs prior 3 (Aug 12–14): 15+9+4 — session momentum is also reversing after a mid-August peak.",
+        "confidence": "probable",
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit GHL intake tracking: 56 GBP actions and 188 GA4 sessions in 28 days produced 0 recorded leads — repair before any paid spend.",
+        "text": "Audit GBP profile for suppression or listing issues causing 3-day zero-action streak.",
         "cites": [
-          "F4",
-          "F1"
+          "F3",
+          "F2"
         ],
-        "monday_item_name": "Fix GHL Lead Intake Tracking",
-        "monday_update": "GBP generated 56 actions (including 33 direction requests and 1 call) and the site received 188 sessions over 28 days, yet GHL shows zero leads and null pipeline — meaning contacts are either not reaching a form or the form-to-GHL connection is broken. Audit the GBP call tracking number, website contact form webhook, and GHL pipeline stage triggers. Success is confirmed when at least 1 inbound contact appears in GHL within 3 days of the fix going live. Re-check by 2026-08-21."
+        "monday_item_name": "Fix GBP Listing Dropout",
+        "monday_update": "GBP logged zero actions for 3 consecutive days (Aug 15–17) after averaging 2–4 actions/day across July–early August, and the 7-day delta is already -21.43%. Check the GBP dashboard for any suspended/suppressed status, flagged photos, or category changes that could suppress local visibility. Success is confirmed when daily GBP actions return to a 3+ average over 3 consecutive days. Re-check by 2026-08-21."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GBP action trend: 0 actions for 3 consecutive days (Aug 15–17); if zero continues through Aug 21, flag for profile review.",
+        "text": "Watch GA4 sessions through Aug 21 — 3-day dip to 4–5/day may confirm organic pullback requiring a paid reactivation conversation.",
         "cites": [
-          "F2"
+          "F4",
+          "F1"
         ],
-        "monday_item_name": "Watch GBP Action Drought",
-        "monday_update": "GBP actions have been zero for three consecutive days (Aug 15–17), down from 5 actions in the prior 3-day window. This could be a weekend lull or early signal of profile suppression. No action is taken now. If the zero-action streak extends to 6+ days by Aug 21, escalate to a GBP profile audit. Re-check 2026-08-21."
+        "monday_item_name": "Watch GA4 Session Dip",
+        "monday_update": "GA4 sessions peaked at 15 on Aug 12 and have since dropped to 4–5/day for three days running. With zero paid spend active (F1), there is no paid lever to pull — this is a signal to watch, not act on yet. If sessions stay below 6/day through Aug 21 and GBP actions remain at zero, this becomes the trigger to open a paid reactivation conversation with the client. Re-check 2026-08-21."
       }
     ],
     "next_check": "2026-08-21"

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T11:19:18.078Z",
+  "generated_at": "2026-08-18T13:08:19.054Z",
   "date": "2026-08-18",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 60,
   "status": "amber",
-  "verdict": "Paid activity came to a complete halt in the last 7 days, with spend, leads, and CPL all down 100% versus the prior period, suggesting Meta campaigns (including top spender \"CROA || CBO - 3/17/26\" at $621.70) were paused or exhausted their budget. GBP continues to carry organic load with 161 actions and 55 calls over the 28-day window, though GBP engagement itself slipped 23.4% week-over-week.",
+  "verdict": "Paid activity has fully paused in the last 7 days, with spend, leads, and CPL each down 100% versus the prior period, suggesting the Meta campaigns (including top spender \"CROA || CBO - 3/17/26\" at $621.70) were turned off or exhausted budget. Organic GBP engagement is softening as well, down 23.4% week-over-week, though GA4 traffic is up 71.04%, which may be cushioning overall visibility while paid is offline.",
   "windsor": {
     "totals": {
       "spend": 1171.64,
@@ -567,43 +567,43 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-18T11:24:29.100Z",
+    "generated_at": "2026-08-18T13:11:20.393Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid engine is fully dark; GBP and search hold but won't replace lost leads.",
+    "verdict": "Paid is fully dark 12 days; pipeline shows zero opps despite 33 contacts.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Meta spend hit $0 on 2026-08-06 and stayed dark for 12 consecutive days through 2026-08-17; 0 leads generated in that window.",
+        "text": "Meta spend has been $0 for 12 consecutive days (Aug 6–17); all 45 leads and $1,171.64 spend came from the prior active period.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3-day signal (Aug 15–17) vs prior 3 (Aug 12–14): spend $0 vs $0, leads 0 vs 0 — full-stop, not a dip. 28-day CPL was $26.04 when active.",
+        "text": "3-day signal (Aug 15–17) vs prior 3 (Aug 12–14): sc_clicks collapsed from avg 23.3 to avg 3.3, a 86% drop — organic search momentum is fading fast with paid dark.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "organic"
       },
       {
         "id": "F3",
-        "priority": 3,
-        "text": "GHL shows 33 contacts but 0 opportunities created and 0 appointments in 28 days — intake pipeline is not converting arriving contacts.",
+        "priority": 2,
+        "text": "GHL shows 33 contacts but 0 opportunities created and 0 appointments — leads from the active period are not entering the pipeline; this is an intake leak, not an ads problem.",
         "confidence": "confirmed",
         "channel": "GHL"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions fell 23.4% week-over-week (from ~14/day peak to 0 on Aug 15–17), the only active lead channel is also decelerating.",
+        "text": "GBP actions down 23.4% WoW and ig_reach near zero (avg 0.3 last 7 days vs 85 prior) — brand presence collapsing across all organic touchpoints while paid is offline.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "organic"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GA4 sessions spiked to 206 on 2026-08-13 with $0 paid spend — directional anomaly only, possibly direct/organic surge; warrants a source check.",
+        "text": "GA4 sessions spiked to 206 on Aug 13 then dropped to 13 on Aug 16 — likely a one-day referral or direct anomaly; directional only given known double-count issue.",
         "confidence": "hypothesis",
         "channel": "ga4"
       }
@@ -612,35 +612,34 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Reactivate Meta campaigns at prior daily rate of ~$69/day to restore lead flow confirmed stopped Aug 6.",
+        "text": "Relaunch 'CROA || CBO - 3/17/26' at its last active daily budget (~$69/day) to restore lead flow immediately.",
         "cites": [
-          "F1",
-          "F2"
+          "F1"
         ],
-        "monday_item_name": "Reactivate Meta — $69/day",
-        "monday_update": "Meta spend has been $0 since 2026-08-06, producing 0 leads over 12 days. Restart 'CROA || CBO - 3/17/26' or its replacement at the pre-pause daily average of ~$69/day. Success check: at least 3 leads within 5 days at CPL ≤ $26.04 (28-day baseline). Recheck by 2026-08-23."
+        "monday_item_name": "Relaunch CROA CBO Campaign",
+        "monday_update": "Meta has been fully dark for 12 days (Aug 6–17), with $0 spend and 0 leads generated. Relaunch 'CROA || CBO - 3/17/26' at approximately $69/day, matching the last active daily spend average before shutdown. Success is confirmed when CPL returns to or below the 28-day baseline of $26.04 within 7 days of relaunch (by 2026-08-25)."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GHL intake: 33 contacts, 0 opportunities created — identify and fix the intake assignment or pipeline stage gap.",
+        "text": "Audit GHL intake: 33 contacts logged but 0 opportunities created — identify where contacts are stalling before any ad spend resumes.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Fix GHL Intake Pipeline Gap",
-        "monday_update": "GHL shows 33 contacts over 28 days but zero opportunities created and zero appointments booked — leads are arriving but not being worked. Review contact assignment rules, pipeline stage triggers, and any automation gaps in GHL. Success check: at least 5 opportunities created within 7 days of fix. Recheck by 2026-08-25."
+        "monday_item_name": "Fix GHL Pipeline Intake Leak",
+        "monday_update": "GHL shows 33 contacts from the active paid period but zero opportunities created and zero appointments booked, meaning leads are arriving but not entering the pipeline. Review the GHL workflow and contact stage automation to identify the breakpoint — this is an intake process failure, not an ads problem. Success is confirmed when newly arriving contacts from the relaunched campaign (S1) begin generating opportunities within the first week, targeting at least 5 opportunities created by 2026-08-25."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Monitor GBP trend: actions dropped to 0 on Aug 15–17; watch for 3-day recovery before any organic action.",
+        "text": "Watch sc_clicks for 3 days post-relaunch; if avg stays below 10/day, organic search health needs separate investigation.",
         "cites": [
-          "F4"
+          "F2"
         ],
-        "monday_item_name": "Watch GBP Aug 15–17 Drop",
-        "monday_update": "GBP actions fell to 0 on Aug 15–17 after averaging 6–14/day earlier in August, a 3-day confirmed dip. No organic action is warranted yet. If GBP actions remain below 5/day through 2026-08-21, escalate to an organic/GBP review. Recheck 2026-08-21."
+        "monday_item_name": "Watch Search Clicks Recovery",
+        "monday_update": "Search clicks averaged 23.3/day Aug 12–14 but collapsed to 3.3/day over the last 3 days, coinciding with paid going dark. Monitor sc_clicks daily starting at relaunch. If the 3-day average does not recover above 12 clicks/day by 2026-08-25, escalate for a separate organic/GSC investigation beyond the paid relaunch."
       }
     ],
-    "next_check": "2026-08-21"
+    "next_check": "2026-08-25"
   }
 }

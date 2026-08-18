@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T11:20:15.287Z",
+  "generated_at": "2026-08-18T13:08:50.819Z",
   "date": "2026-08-18",
   "slug": "steel-forte",
   "name": "Forte Metals",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Forte Metals saw no paid activity in the last 28 days (zero spend, leads, or clicks across Meta and Google Ads), but organic channels are carrying the load: Google Business Profile drove 90 total actions including 10 calls, 49 direction requests, and 31 website clicks, with GBP actions up 76.92% over the prior 7-day period, likely reflecting improved local search visibility or seasonal demand.",
+  "verdict": "Forte Metals saw no paid activity in the last 28 days (zero spend, leads, or clicks across Meta and Google Ads), but organic visibility is carrying the load with GBP driving 90 total actions including 10 calls, 49 direction requests, and 31 website clicks. The standout movement is a 233.33% week-over-week spike in Search Console activity, likely reflecting improved local search visibility or a recent uptick in branded queries.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,61 +409,60 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-18T11:25:31.004Z",
+    "generated_at": "2026-08-18T13:12:31.413Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Organic holding the fort; zero paid activity makes score meaningless.",
+    "verdict": "Organic search surging but paid is fully dark — no efficiency to defend.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across Meta and Google for all 28 days; CPL is undefined because no campaigns are active.",
+        "text": "Zero paid spend across Meta and Google Ads for all 28 days; CPL is undefined with 0 leads generated from paid channels.",
         "confidence": "confirmed",
-        "channel": "meta/google"
+        "channel": "meta+google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions rose 76.92% last 7 days; 90 total actions (10 calls, 49 directions, 31 web clicks) with no paid amplification.",
+        "text": "Search Console clicks surged 233% week-over-week to 25 clicks / 1,724 impressions (28d), driven entirely by organic; paid is contributing nothing.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "search_console"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "Search clicks up 233% last 7 days (25 clicks, 1,724 impressions over 28 days); organic demand signal is real but unmonetised.",
+        "text": "GBP actions rose 76.92% week-over-week; last 3 days (Aug 15–17) show 0 GBP actions vs prior 3 days (Aug 12–14) averaging 5.3/day — momentum may be stalling.",
         "confidence": "probable",
-        "channel": "search"
+        "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "Last 3 days (Aug 15-17): GBP actions = 0, 0, 0 vs prior 3 days (Aug 12-14) = 9, 5, 2 — short-term GBP momentum has stalled.",
-        "confidence": "probable",
-        "channel": "gbp"
+        "text": "GA4 sessions are 0 across all 28 days despite 25 Search Console clicks and 31 GBP web clicks — tracking is either uninstalled or broken.",
+        "confidence": "confirmed",
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Hold all paid channels; confirm whether zero spend is intentional pause before any budget move.",
+        "type": "fix",
+        "text": "Audit and restore GA4 tracking; 31 GBP web clicks and 25 SC clicks are landing with zero sessions recorded.",
         "cites": [
-          "F1"
+          "F4"
         ],
-        "monday_item_name": "Confirm Paid Pause Status",
-        "monday_update": "Forte Metals has had $0 spend across Meta and Google for the full 28-day window — no campaigns are active. Before any budget action is taken, confirm with the client whether this is a deliberate pause, a billing issue, or a missed launch. Success check: paid status clarified by 2026-08-20. No spend should be activated without this confirmation."
+        "monday_item_name": "Fix GA4 Tracking Gap",
+        "monday_update": "GA4 is recording 0 sessions despite confirmed inbound traffic: 31 GBP website clicks and 25 Search Console clicks in the last 28 days. Verify GA4 tag is firing on the live domain (GTM publish, tag assistant check). Success = GA4 sessions > 0 within 48 hours of fix, confirmed by 2026-08-20."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Monitor GBP 3-day stall (0 actions Aug 15-17); re-check Aug 21 before drawing conclusions.",
+        "text": "Watch GBP momentum: last 3 days show 0 actions after a 76.92% weekly surge — confirm whether spike holds by Aug 21.",
         "cites": [
-          "F4",
-          "F2"
+          "F3"
         ],
-        "monday_item_name": "Watch GBP Action Stall",
-        "monday_update": "GBP actions were 0, 0, 0 on Aug 15–17 after a strong run of 9, 5, and 2 the three days prior, and 76.92% week-over-week growth. Three consecutive zero days is a signal worth watching but not acting on yet — weekend/reporting lag may explain it. Re-check on 2026-08-21; if actions remain near zero for another 3-day window, investigate GBP listing health or category ranking."
+        "monday_item_name": "Watch GBP Action Trend",
+        "monday_update": "GBP actions jumped 76.92% week-over-week (90 total actions in 28 days) but the last 3 days (Aug 15–17) recorded 0 actions. This may be weekend seasonality or a real drop. Re-check on 2026-08-21; if the 3-day average remains below 2 actions/day, escalate to Sohib for profile review."
       }
     ],
     "next_check": "2026-08-21"

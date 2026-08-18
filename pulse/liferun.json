@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18T11:19:45.361Z",
+  "generated_at": "2026-08-18T13:08:37.235Z",
   "date": "2026-08-18",
   "slug": "liferun",
   "name": "Liferun",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 59,
   "status": "amber",
-  "verdict": "Liferun had a tough 7-day stretch, with leads dropping 50% and CPL rising 29.14% week-over-week, likely driven by a sharp 47.11% pullback in Google Ads spend that left \"BWS - Search Campaign - Calls\" carrying most of the $1,239.78 Google budget with zero recorded conversions. Meta continued to deliver all 130 leads over the 28-day window, but the overall spend reduction of 35.43% signals a pacing or budget cap issue that needs to be addressed to stabilize lead volume.",
+  "verdict": "Liferun had a tough 7-day stretch, with leads dropping 50% week-over-week and CPL rising 29.14% to $19.85, likely driven by a sharp 47.11% pullback in Google Ads spend that left \"BWS - Search Campaign - Calls\" carrying most of the $1,239.78 Google budget with zero recorded conversions. Meta continued to deliver all 130 tracked leads over the 28-day window, but the overall spend reduction of 35.43% week-over-week signals a pacing cut that is directly suppressing lead volume.",
   "windsor": {
     "totals": {
       "spend": 2580.14,
@@ -527,80 +527,80 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-18T11:24:53.085Z",
+    "generated_at": "2026-08-18T13:11:48.629Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Google is burning $1,240 with zero conversions; Meta holds all leads alone.",
+    "verdict": "Google spend collapsing; Meta alone can't hold volume at safe CPL.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Google Ads spent $1,239.78 over 28 days and recorded 0 conversions — every lead (130) came from Meta alone.",
+        "text": "CPL rose 29.14% to $19.85 as Google spend dropped 47.11% WoW, forcing Meta to carry all 130 28-day leads alone at rising unit cost.",
         "confidence": "confirmed",
-        "channel": "google_ads"
+        "channel": "cross-channel"
       },
       {
         "id": "F2",
-        "priority": 1,
-        "text": "CPL rose 29.14% week-over-week as leads fell 50%; 3-day signal (Aug 15-17) shows 0+0+2 leads vs 4+9+5 prior 3 days — deteriorating.",
-        "confidence": "confirmed",
-        "channel": "meta"
-      },
-      {
-        "id": "F3",
         "priority": 2,
-        "text": "SOW milestone: Stripe Products QA marked Done 2026-07-20 but no completed-event confirmation exists in the data as of today.",
+        "text": "SOW milestone 'Stripe Products QA'd & Done' (due 2026-07-20) has no confirmed completed event on record — money paths unverified.",
         "confidence": "probable",
         "channel": "SOW"
       },
       {
+        "id": "F3",
+        "priority": 2,
+        "text": "3-day signal (Aug 15–17): total spend averaged only $17.50/day vs $100.30/day in the prior 3 days (Aug 12–14) — spend has effectively collapsed.",
+        "confidence": "confirmed",
+        "channel": "cross-channel"
+      },
+      {
         "id": "F4",
         "priority": 3,
-        "text": "GHL shows 130 opportunities created, 0 won, and 0 appointments — leads are arriving but no pipeline progression, indicating an intake or follow-up leak.",
+        "text": "Google Ads spent $1,239.78 over 28 days with 0 recorded conversions; BWS Search Campaign alone consumed $930.24 with no attributable leads.",
         "confidence": "confirmed",
-        "channel": "GHL"
+        "channel": "google"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GBP actions dropped 50% week-over-week to near zero (0 actions last 3 days Aug 15-17); 0 calls recorded across all 28 days.",
-        "confidence": "confirmed",
-        "channel": "GBP"
+        "text": "GHL shows 130 opportunities created but 0 won and 0 appointments — leads are entering the pipeline but producing no downstream activation signal.",
+        "confidence": "probable",
+        "channel": "GHL"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "kill",
-        "text": "Pause Google Ads 'BWS - Search Campaign - Calls': $1,239.78 spent, 0 conversions over 28 days.",
+        "type": "fix",
+        "text": "Diagnose Google spend collapse: confirm campaign statuses and budget caps causing avg $17.50/day vs prior $100/day.",
         "cites": [
+          "F3",
           "F1"
         ],
-        "monday_item_name": "Pause Google Search — 0 Conv",
-        "monday_update": "Pause 'BWS - Search Campaign - Calls' immediately. This campaign spent $1,239.78 over 28 days and recorded zero conversions — the pixel or call-tracking is either broken or the traffic is entirely non-converting. Before reactivating, confirm call-conversion tracking fires correctly in Google Ads. Reactivate only after a verified conversion event is recorded; re-check by 2026-08-25."
+        "monday_item_name": "Fix Google Spend Collapse",
+        "monday_update": "Total daily spend averaged $17.50 over Aug 15–17 versus $100.30 over Aug 12–14 — Google campaigns appear paused or severely budget-capped. Pull campaign status and billing health in Google Ads today and restore intended daily pacing. Success check: Google daily spend returns to ≥$50/day by 2026-08-21 and CPL retreats from $19.85."
       },
       {
         "id": "S2",
-        "type": "budget_shift",
-        "text": "Shift up to $14/day (≤20% of current $71/day) from Google to Meta while Google tracking is unresolved.",
+        "type": "fix",
+        "text": "Audit GHL pipeline: 130 opps created, 0 won, 0 appointments — confirm intake automation is routing leads to follow-up correctly.",
         "cites": [
-          "F1",
-          "F2"
+          "F5"
         ],
-        "monday_item_name": "Budget Shift Google → Meta",
-        "monday_update": "Move $14/day from Google Ads to Meta campaigns while the Google conversion-tracking gap (0 conversions on $1,239.78) is investigated. Meta is the sole source of all 130 leads this period; the 3-day lead signal (0+0+2) suggests Meta also needs volume support. Success check: Meta CPL returns below its recent series average within 7 days. Re-check 2026-08-25."
+        "monday_item_name": "GHL Pipeline Intake Audit",
+        "monday_update": "GHL shows 130 opportunities created over 28 days with zero wins and zero appointments booked — leads are arriving but going nowhere downstream. Ahmed/Ali to trace one recent lead contact through the full pipeline and confirm the follow-up automation and CS assignment are firing. Success check: at least one appointment booked within 7 days of this audit, confirming the intake path is live by 2026-08-25."
       },
       {
         "id": "S3",
-        "type": "fix",
-        "text": "Fix GHL intake: 130 opportunities created, 0 appointments, 0 won — leads are not progressing past intake.",
+        "type": "watch",
+        "text": "Watch Google Ads conversion tracking: $930.24 spent on BWS Search with 0 conversions — likely pixel gap, not campaign failure.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Fix GHL Lead Pipeline Flow",
-        "monday_update": "Audit the GHL pipeline for Liferun: 130 opportunities were created this 28-day window but zero appointments were set and zero were won. Check whether the automated follow-up sequences are active and correctly enrolled, and whether CS (Cebu) has the permissions needed to action inbound leads. Success is defined as at least one appointment created and pipeline stage movement recorded within the next 7 days. Re-check 2026-08-25."
+        "monday_item_name": "Google Conversion Tracking Watch",
+        "monday_update": "BWS Search Campaign consumed $930.24 over 28 days with zero recorded conversions in Google Ads — this matches the known client-side pixel gap pattern flagged in the system. Do not kill the campaign on zero-conversion data alone. Re-check on 2026-08-21 after spend is restored (S1); if spend recovers but conversions remain at zero for 3 more days, escalate to a tracking fix."
       }
     ],
-    "next_check": "2026-08-25"
+    "next_check": "2026-08-21"
   }
 }
