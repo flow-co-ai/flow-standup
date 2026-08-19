@@ -12,19 +12,15 @@
 //
 // ENV VARS: GH_STATE_TOKEN, MONDAY_API_TOKEN (already set in Netlify)
 //
-// KNOWN RISK (not fixed here, a real tradeoff -- flagged 2026-08-06): this
-// writes directly to the GitHub Contents API for the SAME file
-// (completed-accumulator.json) that standup.yml's Action ALSO bundles into
-// its own daily commit (git add standups/ ...). If this webhook fires while
-// that Action is mid-run, its push gets rejected, it rebases, and a real
-// conflict on this file makes the Action drop its ENTIRE day's commit
-// (standup.yml's own documented behavior: abort the rebase, reset to
-// origin/main, defer to whichever run already landed) -- not just this
-// file. Narrow window (the Action's own run is short), but real. Properly
-// fixing it means deciding whether standup.yml should stop bundling this
-// file into its own commit at all, which would break generate.py's own
-// MTG/WA-sourced completions unless that's restructured too -- a real
-// product decision, not something to silently change here.
+// CONCURRENT WRITES to completed-accumulator.json (fixed 2026-08-06,
+// ee181cd): this webhook and standup.yml's Action both touch this file, so
+// standup.yml excludes it from its own git add/commit (pathspec
+// ':!standups/completed-accumulator.json') and generate.py instead syncs it
+// through this SAME GitHub Contents API path -- sync_accumulator_via_github:
+// read fresh, re-dedup against whatever landed since the run started, merge,
+// PUT with retry-on-409. Same read/merge/PUT/retry shape as this webhook's
+// own getFile/putFile below, so the two writers never race each other's
+// commits, only retry against each other's PUTs.
 
 const crypto = require("crypto");
 
