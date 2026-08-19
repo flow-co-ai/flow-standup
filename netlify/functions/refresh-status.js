@@ -1,5 +1,5 @@
 const GITHUB_REPO = "flow-co-ai/flow-standup";
-const WORKFLOWS = ["daily-pulse.yml", "standup.yml"];
+const WORKFLOWS = ["daily-pulse.yml", "standup.yml", "draft-queue.yml"];
 
 async function getLatestRunStatus(workflowFile, since, token) {
   const url = `https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/${workflowFile}/runs?event=workflow_dispatch&per_page=5`;
