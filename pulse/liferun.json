@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-19T18:48:31.657Z",
+  "generated_at": "2026-08-19T21:17:17.096Z",
   "date": "2026-08-19",
   "slug": "liferun",
   "name": "Liferun",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 65,
   "status": "amber",
-  "verdict": "Liferun saw a sharp pullback over the last 7 days, with leads dropping 41.3% and spend falling 33.72% period-over-period, driven largely by a 47.53% reduction in Google Ads spend that produced zero conversions over the full 28-day window. With Meta carrying all 133 leads at a CPL of $19.24, pausing or scaling back Google Ads appears to be the primary lever behind both the cost reduction and the lead volume decline.",
+  "verdict": "Liferun saw a sharp 7-day pullback with leads dropping 41.3% and spend down 33.72%, driving CPL up 12.92%, likely reflecting reduced Meta and Google budget pacing rather than a demand issue. Google Ads remains a concern with $1,144.71 spent over 28 days yielding 0 conversions, making it the top priority to audit or reallocate.",
   "windsor": {
     "totals": {
       "spend": 2558.47,
@@ -409,10 +409,10 @@
     }
   },
   "ghl": {
-    "contacts": 165,
+    "contacts": 167,
     "opportunities": {
       "created": {
-        "count": 133,
+        "count": 134,
         "value": 0
       },
       "won": {
@@ -529,80 +529,80 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-19T18:52:07.150Z",
+    "generated_at": "2026-08-19T21:20:25.727Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Google's $1,145 spend over 28 days produced zero leads — Meta is funding everything.",
+    "verdict": "Google burning $1,145 with 0 conversions is the critical leak; Meta CPL degrading.",
     "findings": [
       {
         "id": "F1",
-        "priority": 2,
-        "text": "SOW milestone 'Stripe Products QA'd & Done' (due Jul 20) shows no completed verification event — money paths unconfirmed.",
+        "priority": 1,
+        "text": "Google Ads spent $1,144.71 over 28 days yielding 0 conversions and 178 clicks — confirmed dead channel, not a pixel gap.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "google"
       },
       {
         "id": "F2",
         "priority": 1,
-        "text": "Google Ads consumed $1,144.71 over 28 days with 0 conversions and 178 clicks — confirmed dead channel for lead generation.",
-        "confidence": "confirmed",
-        "channel": "Google"
+        "text": "Meta CPL rose 12.92% 7d vs prior 7d while leads fell 41.3%; 3-day signal (Aug 16-18): 0+2+7 leads vs 5+4+0 prior 3 — efficiency degrading.",
+        "confidence": "probable",
+        "channel": "meta"
       },
       {
         "id": "F3",
-        "priority": 1,
-        "text": "Meta CPL rose 12.92% week-over-week; 3-day signal (Aug 16–18: 2+7 leads, $4.96+$32.78+$148.68 spend) shows uneven daily delivery suggesting budget irregularity, not fatigue.",
-        "confidence": "probable",
-        "channel": "Meta"
+        "priority": 2,
+        "text": "SOW milestone: Stripe Products QA marked Done July 20 but no confirmed completed event on record — money path unverified per OVERDUE flag.",
+        "confidence": "confirmed",
+        "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GHL shows 133 opportunities created but 0 won, 0 appointments — leads arriving but pipeline is stalled, intake or follow-up is leaking, not an ads problem.",
+        "text": "134 GHL opportunities created, 0 won, 0 appointments, $0 pipeline value — 133 Meta leads arriving but intake converting nothing; CRM leak, not an ads problem.",
         "confidence": "confirmed",
         "channel": "GHL"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GBP actions fell 40% week-over-week to near-zero (0 actions Aug 16–18); organic brand signal collapsing alongside paid pullback.",
-        "confidence": "probable",
-        "channel": "GBP"
+        "text": "IG reach is 0 across all 45 days logged despite IG being connected — channel is dark; attribution blind spot confirmed.",
+        "confidence": "confirmed",
+        "channel": "instagram"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "kill",
-        "text": "Pause Google Ads entirely — $1,144.71 spent over 28 days, 0 leads, 0 conversions confirmed.",
+        "text": "Pause Google Ads entirely: $1,144.71 spent, 0 conversions over 28 days — confirmed zero-return channel.",
         "cites": [
-          "F2"
+          "F1"
         ],
-        "monday_item_name": "Pause Google Ads Zero-Lead",
-        "monday_update": "Google Ads has spent $1,144.71 over the past 28 days with zero conversions and zero leads recorded. Pause all Google campaigns immediately to stop the confirmed spend leak. Success is confirmed when zero further Google spend accrues and the freed budget is available for reallocation. Re-evaluate Google reentry only after conversion tracking is verified client-side. Review by 2026-08-26."
+        "monday_item_name": "Pause Google Ads — 0 conv",
+        "monday_update": "Pause all Google Ads campaigns immediately. Over 28 days, $1,144.71 was spent across 178 clicks with zero conversions recorded — this is not a pixel ambiguity; no conversion path is functioning. Success check: confirm campaigns are paused in Google Ads UI and spend drops to $0 by 2026-08-21. Freed budget ($40–50/day) is held pending audit, not auto-reallocated."
       },
       {
         "id": "S2",
         "type": "budget_shift",
-        "text": "Shift up to $15/day from paused Google budget into Meta — protect CPL ceiling while volume rebuilds.",
+        "text": "Shift up to $20/day of freed Google budget into Meta — only after CPL holds ≤ $19.24 baseline for 3 days.",
         "cites": [
-          "F2",
-          "F3"
+          "F1",
+          "F2"
         ],
-        "monday_item_name": "Shift Google Budget to Meta",
-        "monday_update": "With Google paused, redirect up to $15/day of the freed Google spend into the active Meta campaigns. Meta is currently the sole lead source at a CPL of $19.24, up 12.92% week-over-week — a modest budget increase should recover lead volume without compounding CPL risk. Confirm success if Meta leads return to 7+ per active day and CPL stabilises or declines by 2026-08-26."
+        "monday_item_name": "Meta budget shift post-Google pause",
+        "monday_update": "Once Google is paused (S1), conditionally move $20/day into Meta spend. Gate condition: Meta CPL must hold at or below the 28-day baseline of $19.24 for three consecutive days before the shift is made. Current 7d CPL is trending up 12.92% — do not shift until that reverses. Re-check on 2026-08-22 to assess CPL direction."
       },
       {
         "id": "S3",
         "type": "fix",
-        "text": "Investigate GHL pipeline: 133 leads created, 0 appointments, 0 won — confirm intake automation is firing correctly.",
+        "text": "Audit GHL intake: 134 opportunities created, 0 won, 0 appointments — leads entering but no activation path firing.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Fix GHL Lead Intake Leak",
-        "monday_update": "GHL shows 133 opportunities created over 28 days with zero appointments booked and zero won — leads are entering but nothing is progressing. Ahmed/Ali to audit the post-lead automation sequence: confirm assignment rules, follow-up triggers, and that the Becklar/BWS intake paths are routing correctly per the Aug gap-closure build. Success is at least one appointment booked within 48 hours of a new lead arriving. Report findings by 2026-08-22."
+        "monday_item_name": "Fix GHL intake — 0 wins",
+        "monday_update": "Investigate why 134 opportunities exist in GHL with 0 won, 0 appointments, and $0 pipeline value against 133 Meta leads. Likely cause: no automation is routing leads to a booked call or activation step. Confirm that the Device Fulfilment pipeline stages and post-lead automations are triggering correctly. Success check: at least one appointment created within 7 days of fix deployment; re-check on 2026-08-26."
       }
     ],
-    "next_check": "2026-08-26"
+    "next_check": "2026-08-22"
   }
 }

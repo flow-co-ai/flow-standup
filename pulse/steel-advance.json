@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-19T18:49:07.789Z",
+  "generated_at": "2026-08-19T21:17:46.329Z",
   "date": "2026-08-19",
   "slug": "steel-advance",
   "name": "Advance Grinding",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, meaning all engagement is coming entirely from Google Business Profile, which drove 113 total actions (75 directions, 35 web clicks, 3 calls). The biggest concern is GBP activity dropping 54.55% in the last 7 days versus the prior 7 days, likely driven by reduced search demand or a dip in profile visibility rather than any paid media change.",
+  "verdict": "Paid channels (Meta and Google Ads) generated zero spend, leads, or clicks over the past 28 days, suggesting campaigns are paused or inactive. Google Business Profile was the only source of activity, driving 113 total actions (75 directions, 35 web clicks, 3 calls), though GBP engagement dropped 54.55% in the last 7 days versus the prior 7 days, likely due to reduced organic search demand or a listing issue worth investigating.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -404,44 +404,78 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-19T18:53:03.688Z",
+    "generated_at": "2026-08-19T21:21:43.308Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP is the only engine running; paid is fully dark.",
+    "verdict": "Paid ads fully dark; GBP collapsing — only active channel now fading.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — Meta and Google Ads are completely inactive, producing 0 leads and 0 clicks.",
+        "text": "All paid channels (Meta + Google Ads) have recorded $0 spend and 0 leads for the full 45-day series — campaigns appear paused or disconnected.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "meta/google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions fell -54.55% week-over-week; last 3 days (Aug 16–18) total just 2 actions vs 14 in the prior 3 days (Aug 13–15).",
+        "text": "OVERDUE: 1st Directives (Jul 7), Tom call list prioritisation (Jul 28), and dedup workbook + 126 accounts (Jul 31) are all past due with no confirmed completion event.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "SOW"
       },
       {
         "id": "F3",
+        "priority": 2,
+        "text": "GBP is the only active channel, but the 3-day signal (Aug 16–18: 2, 0, 0 actions) vs prior 3 days (Aug 13–15: 1, 2, 3) shows actions collapsing to zero — 28-day total is 113 actions, now stalling.",
+        "confidence": "confirmed",
+        "channel": "GBP"
+      },
+      {
+        "id": "F4",
         "priority": 3,
-        "text": "GBP series is inherently volatile (daily range 0–12 actions) but the 3-day signal is the weakest stretch in 45 days, suggesting a real dip not noise.",
+        "text": "GA4 sessions are 0 across the entire 45-day series; with paid dark and GBP declining, there is no organic web traffic signal at all — site or tracking may be broken.",
         "confidence": "probable",
-        "channel": "gbp"
+        "channel": "GA4"
+      },
+      {
+        "id": "F5",
+        "priority": 4,
+        "text": "342 stub accounts in SugarCRM remain unreconciled (SOW-flagged blocker) — Sales-i sync keys on Customer ID, so these accounts receive zero engagement data until fixed.",
+        "confidence": "confirmed",
+        "channel": "SOW"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Watch GBP daily actions for 3 more days; re-check Aug 22 before any profile or paid action.",
+        "type": "fix",
+        "text": "Confirm campaign pause status with client; document reason and expected reactivation date before next billing cycle.",
         "cites": [
-          "F2",
+          "F1"
+        ],
+        "monday_item_name": "Confirm Paid Campaign Pause Status",
+        "monday_update": "Meta and Google Ads have recorded $0 spend and 0 leads across all 45 tracked days — campaigns are confirmed dark. Clarify with Nabil/Sohib whether this is intentional and document the reactivation target. Success check: a written pause rationale or a reactivation date is logged in Monday before 2026-08-22."
+      },
+      {
+        "id": "S2",
+        "type": "watch",
+        "text": "Watch GBP daily actions over next 3 days; if zero persists, investigate listing suppression or category change.",
+        "cites": [
           "F3"
         ],
-        "monday_item_name": "Watch GBP Action Drop",
-        "monday_update": "GBP actions dropped -54.55% week-over-week, with only 2 actions across the last 3 days (Aug 16–18) vs 14 in the prior 3 days. No paid channels are active to offset this. Success looks like daily GBP actions recovering above 5/day for 3 consecutive days. Re-check on Aug 22, 2026."
+        "monday_item_name": "GBP Zero-Action Watch",
+        "monday_update": "GBP actions dropped to 0 on Aug 17 and Aug 18 after averaging roughly 4 actions/day over the 28-day window (113 total). The 3-day signal confirms this is a trend, not noise. Check the GBP listing for suppression flags, ownership issues, or a recent category edit. Re-check on 2026-08-22; if actions remain at 0, escalate to a listing audit."
+      },
+      {
+        "id": "S3",
+        "type": "fix",
+        "text": "Complete overdue CRM milestones: execute 447-group merge workbook and reconcile 342 stub accounts blocking Sales-i sync.",
+        "cites": [
+          "F2",
+          "F5"
+        ],
+        "monday_item_name": "CRM Overdue Milestones — Execute",
+        "monday_update": "Three milestones are overdue (Jul 7, Jul 28, Jul 31) with no completion event recorded. The 342 unreconciled stub accounts are an active blocker: Sales-i keys on Customer ID, so these accounts receive no engagement data. Ahmed to begin audited merge batches against the approved 447-group workbook this week. Success check: rollback files posted to the Monday CRM board and stub account count reduced from 342 by 2026-08-26."
       }
     ],
     "next_check": "2026-08-22"

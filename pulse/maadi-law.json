@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-19T18:48:58.251Z",
+  "generated_at": "2026-08-19T21:17:24.293Z",
   "date": "2026-08-19",
   "slug": "maadi-law",
   "name": "Maadi Law, LLC",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "GBP activity is the only active channel driving results, with 89 total actions (18 calls, 30 directions, 41 web clicks) over 28 days, but momentum is fading fast with GBP down 40.91% and Instagram engagement down 40.13% week over week. Paid channels (Meta and Google Ads) show zero spend and zero leads, meaning all traffic is organic and the recent drop likely reflects reduced search demand or listing engagement with no paid support to compensate.",
+  "verdict": "Maadi Law's paid channels (Meta and Google Ads) show zero spend, leads, or clicks over the past 28 days, so all activity is organic, with GBP driving 89 total actions including 18 calls and 30 direction requests. The biggest concern is a -40.91% drop in GBP engagement over the last 7 days versus the prior 7 days, likely reflecting reduced search demand or a dip in profile visibility that warrants a fresh post or review push to regain momentum.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -563,60 +563,79 @@
     "history_line": "Fixed call routing — switched LSA calls to business line"
   },
   "performance": {
-    "generated_at": "2026-08-19T18:52:24.442Z",
+    "generated_at": "2026-08-19T21:20:52.932Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "No paid channel active; 89 GBP actions are the entire business case.",
+    "verdict": "Ads never launched; 5 overdue milestones block all paid revenue.",
     "findings": [
       {
         "id": "F1",
-        "priority": 1,
-        "text": "Zero spend, zero leads, zero CPL across all 28 days — paid channels (Meta and Google Ads) are completely dark with $0 spend.",
+        "priority": 2,
+        "text": "Pre-Launch Stack Test, LSA Verification, and Site/Landing Pages all missed 2026-07-31 deadline — 19 days overdue; no paid traffic possible without these.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions are collapsing: 3-day signal (Aug 16–18) totals 1 action vs 12 actions in prior 3 days (Aug 13–15), a 92% drop.",
+        "text": "LSA + Search go-live and Meta Retargeting launch both missed 2026-08-01 — 18 days overdue; $0 spend across all 28 days confirms ads have never run.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "Instagram reach is declining — last 3 days (Aug 16–18) averaged 483 vs 1,180 in the prior 3 days (Aug 13–15), down 59%.",
+        "text": "GBP engagement fell -40.91% last 7 days vs prior 7; last 3 days (Aug 16–18) logged 1, 0, 0 actions vs 6, 5, 1 in the prior 3 — a confirmed 3-day deceleration.",
         "confidence": "confirmed",
-        "channel": "ig"
+        "channel": "GBP"
       },
       {
         "id": "F4",
+        "priority": 3,
+        "text": "Instagram reach dropped -40.13% week-over-week; last 3 days averaged 483 vs 1,013 prior 3 days — parallel decay with GBP signals reduced organic visibility, not just noise.",
+        "confidence": "probable",
+        "channel": "Instagram"
+      },
+      {
+        "id": "F5",
         "priority": 4,
-        "text": "GHL shows 492 contacts and 0 opportunities created in 28 days — pipeline is completely stalled, disconnected from any lead intake.",
+        "text": "GHL shows 492 contacts and 0 opportunities created, 0 appointments — pipeline is not capturing any inbound; intake routing from SOW Month 1 appears unbuilt.",
         "confidence": "confirmed",
-        "channel": "ghl"
+        "channel": "GHL"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Monitor GBP daily actions; if 3-day total remains below 3 by Aug 22, escalate to client immediately.",
+        "type": "fix",
+        "text": "Clear all 5 overdue SOW blockers this week; no paid budget should move until launch stack is verified.",
         "cites": [
+          "F1",
           "F2"
         ],
-        "monday_item_name": "Watch GBP Action Collapse",
-        "monday_update": "GBP actions dropped from 12 in Aug 13–15 to just 1 in Aug 16–18 — a 92% 3-day decline. No paid support exists to compensate if organic fades further. Re-check the 3-day GBP total on Aug 22; if still below 3, escalate to client for listing audit or paid reactivation discussion. Success check: 3-day GBP total returns to 6+ by Aug 25."
+        "monday_item_name": "Clear 5 Launch Blockers Now",
+        "monday_update": "Five milestones are confirmed overdue as of 2026-08-19: Pre-Launch Stack Test, LSA Verification, Site/Landing Pages (all missed 2026-07-31), and both Ads Launch and Meta Retargeting (missed 2026-08-01). No paid spend — $0 across 28 days — can begin until these are cleared. Nacer to confirm completion of each blocker by 2026-08-22; Sohib to gate any budget release on that confirmation. Success check: stack test passes, LSA submitted, site live, and at least one campaign goes active before 2026-08-26."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GHL pipeline: 492 contacts, 0 opportunities — confirm whether intake workflow is broken or client is not progressing contacts.",
+        "text": "Build GHL pipeline stages and opportunity creation so inbound contacts (492 sitting idle) route into trackable opportunities.",
         "cites": [
+          "F5"
+        ],
+        "monday_item_name": "GHL Pipeline Stages Build",
+        "monday_update": "GHL currently holds 492 contacts with 0 opportunities created and 0 appointments — meaning no lead is being tracked through intake. The SOW requires pipeline stages, routing, and first-contact-under-5-min to be live in Month 1, which is now overdue. Action: build pipeline stages and auto-assignment rules so every new contact generates an opportunity. Success check: next weekly review shows opportunities > 0 and at least one appointment booked, target 2026-08-26."
+      },
+      {
+        "id": "S3",
+        "type": "watch",
+        "text": "Watch GBP engagement: if 3-day total stays at or below 1 action through 2026-08-22, escalate a profile post or review push.",
+        "cites": [
+          "F3",
           "F4"
         ],
-        "monday_item_name": "Fix GHL Intake Pipeline",
-        "monday_update": "GHL holds 492 contacts but shows 0 opportunities created and 0 appointments in the 28-day window. This is an intake leak, not an ads problem — no leads are being converted into tracked opportunities. Sohib should confirm with client whether the opportunity-creation step in the GHL workflow is active and properly configured. Success check: at least 1 opportunity created and visible in GHL within 7 days of fix."
+        "monday_item_name": "Watch GBP Engagement Drop",
+        "monday_update": "GBP actions hit 0 on both Aug 17 and Aug 18, continuing a confirmed 3-day deceleration from a prior-3-day average of ~4 actions/day. IG reach simultaneously dropped -40.13% week-over-week to a 3-day average of 483. No paid traffic exists to compensate. Monitor through 2026-08-22: if the 3-day GBP total remains ≤ 1, trigger a fresh GBP post and a direct review-request push to recover profile signals before ads launch."
       }
     ],
     "next_check": "2026-08-22"

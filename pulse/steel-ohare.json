@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-19T18:49:13.090Z",
+  "generated_at": "2026-08-19T21:17:50.870Z",
   "date": "2026-08-19",
   "slug": "steel-ohare",
   "name": "O'Hare Precision",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "GBP activity is the only measurable traffic source this period, with 196 total actions (134 directions, 52 web clicks, 10 calls) over 28 days, but momentum is slipping with a 21.43% week-over-week decline in GBP engagement. Paid channels (Meta and Google Ads) show zero spend, leads, and clicks, so reactivating at least one paid channel should be the immediate priority to generate trackable leads.",
+  "verdict": "O'Hare Precision's paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, suggesting campaigns are paused or inactive. On the organic side, GBP actions totaled 196 over 28 days but are trending down 21.43% week-over-week, likely driven by reduced search visibility or seasonal softness in local queries.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,70 +409,71 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-19T18:53:28.301Z",
+    "generated_at": "2026-08-19T21:22:05.944Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid is fully dark; only organic signals remain, and those are fading.",
+    "verdict": "Paid channels dead; organic erosion now the only active risk.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero spend across all 28 days — Meta and Google both dark. No leads, no CPL to measure. The account is generating no paid pipeline whatsoever.",
+        "text": "Zero paid spend across all 28 days — Meta and Google Ads both flatline at $0. No leads, no CPL to assess. Campaigns are paused or inactive.",
         "confidence": "confirmed",
         "channel": "meta+google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions fell 21.43% week-over-week to near-zero last 3 days (Aug 16–18 show 0 actions), accelerating from a mid-period high of 21 on Aug 13.",
+        "text": "SOW OVERDUE: 3 CRM milestones unresolved — 1st Directives (Jul 7), Tom call list (Jul 28), dedup workbook + 126 accounts (Jul 31) — all past due with no completion event logged.",
+        "confidence": "confirmed",
+        "channel": "SOW"
+      },
+      {
+        "id": "F3",
+        "priority": 2,
+        "text": "GBP actions fell 21.43% week-over-week (196 over 28 days); last 3 days show 0 actions each vs prior 3-day avg of 14. Trend is a confirmed 3-day signal, not noise.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
-        "id": "F3",
-        "priority": 3,
-        "text": "Search clicks dropped 20.59% week-over-week; last 3 days (Aug 16–18) averaged 9 clicks vs prior 3-day average (Aug 13–15) of 13.3 — a clear short-term softening.",
-        "confidence": "confirmed",
-        "channel": "search"
-      },
-      {
         "id": "F4",
-        "priority": 4,
-        "text": "408 search clicks over 28 days with 0 GA4 sessions recorded — either GA4 is untracked or the pixel is broken, creating a data blind spot.",
+        "priority": 3,
+        "text": "Search clicks dropped 20.59% week-over-week; last 3 days averaged 9 clicks vs prior 3-day avg of 18. Organic visibility is slipping without paid support to fill the gap.",
         "confidence": "probable",
-        "channel": "ga4"
+        "channel": "search"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Confirm paid reactivation plan with client before any budget move; 28-day zero spend requires a go/no-go decision first.",
+        "type": "fix",
+        "text": "Confirm with Sohib whether paid campaigns are intentionally paused; zero spend for 28+ days is an unlogged decision.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Paid Reactivation Go/No-Go",
-        "monday_update": "Meta and Google Ads have recorded $0 spend across all 28 days and 0 leads — this is not a performance issue but a channel-off situation. Before any budget can be allocated or shifted, we need client confirmation that campaigns should reactivate and under what budget. Success check: at least one paid channel live with spend > $0 by 2026-08-22. No buyer action is possible until this gate is cleared."
+        "monday_item_name": "Confirm paid pause status",
+        "monday_update": "Meta and Google Ads have recorded $0 spend across all 28 days of the window with zero leads — no flags were set and no past decision logs a deliberate pause. Sohib to confirm: are campaigns intentionally off, and if so, what is the reactivation date? Success check: a written decision logged to Monday by 2026-08-22 so the next performance run has context."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GA4 pixel: 408 search clicks recorded but 0 sessions — tracking is likely broken and must be repaired before paid relaunch.",
+        "text": "Escalate 3 overdue CRM milestones (Jul 7, Jul 28, Jul 31) to Ahmed and Sohib for immediate completion confirmation.",
         "cites": [
-          "F4"
+          "F2"
         ],
-        "monday_item_name": "Fix GA4 Pixel Tracking",
-        "monday_update": "Search Console logged 408 clicks over 28 days but GA4 shows 0 sessions for the same period — this confirms a tracking disconnect, not a traffic absence. The GA4 pixel or property link must be verified and repaired before paid channels go live, otherwise we will be unable to measure landing page performance or CPL accurately. Success check: GA4 sessions > 0 on the same days SC clicks > 0, confirmed by 2026-08-22."
+        "monday_item_name": "Resolve 3 overdue CRM tasks",
+        "monday_update": "Three SOW milestones are past due with no completion event: 1st Directives (Jul 7), Tom call list priority flag (Jul 28), and the dedup workbook + 126 accounts delivery (Jul 31). Ahmed to confirm status on each item and post completion evidence or a revised delivery date to the Monday CRM board. Success check: all three items marked complete or rescheduled with owner sign-off by 2026-08-26."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP trend: 3-day GBP actions at 0 (Aug 16–18) — re-check on Aug 22 to determine if decline is a reporting lag or real drop.",
+        "text": "Watch GBP actions and search clicks for a third consecutive week of decline before diagnosing cause.",
         "cites": [
-          "F2"
+          "F3",
+          "F4"
         ],
-        "monday_item_name": "Watch GBP Aug 22 Recheck",
-        "monday_update": "GBP actions hit 0 for the last 3 recorded days (Aug 16–18) after a 21.43% weekly decline, which may reflect a reporting lag over the weekend or a genuine engagement drop. No action is warranted yet because one multi-day gap has appeared before in the series (Aug 10 also showed 0). Re-check on 2026-08-22: if GBP actions remain at or near 0, escalate to a content/profile audit."
+        "monday_item_name": "Watch GBP + search decline",
+        "monday_update": "GBP actions are down 21.43% week-over-week and hit 0 for the last 3 consecutive days; search clicks are down 20.59% with a matching 3-day drop from 18 to 9 avg. With paid fully dark, there is no paid suppression effect to rule out — the organic drop may be seasonal or a listing issue. Re-check both metrics on 2026-08-22; if the 3-day GBP zero streak continues, escalate to a GBP listing audit."
       }
     ],
     "next_check": "2026-08-22"

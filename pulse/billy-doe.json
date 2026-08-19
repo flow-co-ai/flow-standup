@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-19T18:46:45.361Z",
+  "generated_at": "2026-08-19T21:16:36.276Z",
   "date": "2026-08-19",
   "slug": "billy-doe",
   "name": "Billy Doe Meats",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 46,
   "status": "orange",
-  "verdict": "ROAS dropped 81% week-over-week to 3.54 (28d blended), driven by a 62.5% decline in purchases, likely concentrated in the top campaign \"BWS - Muslim Subscription Box - 17/06/26\" which consumed $850.13 of the $1,501.35 total spend. GBP engagement also fell 49.58% WoW, signaling reduced local discovery that may be compounding the purchase slowdown.",
+  "verdict": "ROAS dropped 81% week-over-week to 3.54 (28d) as purchases fell 62.5%, likely driven by the top campaign \"BWS - Muslim Subscription Box - 17/06/26\" absorbing $850.13 of the $1,501.35 spend without sustaining conversion momentum. GBP actions also cratered 49.58% WoW, signaling a broader drop in local demand that may be compounding the revenue pressure.",
   "windsor": {
     "totals": {
       "spend": 1501.35,
@@ -552,81 +552,79 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-19T18:49:45.550Z",
+    "generated_at": "2026-08-19T21:18:19.020Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "ROAS collapse is real; purchase drought last 6 days confirms the trend.",
+    "verdict": "ROAS collapse is real; purchase clustering masks a near-zero baseline.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "ROAS fell 81% WoW to 3.54 blended; last 6 days (Aug 13–18) show 0 purchases and $0 revenue — confirmed collapse, not noise.",
+        "text": "ROAS fell 81% WoW to 3.54 (28d); last 3 days show 3 purchases on Aug 17 vs 0 on Aug 15–16 and Aug 18 — not a recovery, a single-day spike inside a drought.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Live-Cooking Shoot 1 (due Aug 14) has no completed event recorded — creative pipeline is stalled at the exact moment fatigue is biting.",
+        "text": "Overdue: Live-Cooking Shoot 1 (due 2026-08-14) not completed; without real facility footage the creative reset flagged in the SOW cannot proceed.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "3-day signal (Aug 16–18): 3 purchases, $422 revenue vs prior 3 days (Aug 13–15): 0 purchases, $0 — but the window is riding a single Aug 17 spike of $421.86; underlying rate is still near zero.",
-        "confidence": "probable",
-        "channel": "meta"
-      },
-      {
-        "id": "F4",
-        "priority": 3,
-        "text": "GBP actions dropped to 0 on Aug 16–18 (vs 14–27/day in July) — local discovery has gone dark in the same 3-day window as the purchase drought.",
+        "text": "GBP actions collapsed to 0 on Aug 16–18 (from a 45-day daily average of ~17); three consecutive zeros is a confirmed signal, not noise.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
-        "id": "F5",
+        "id": "F4",
         "priority": 3,
-        "text": "Top campaign 'BWS - Muslim Subscription Box' consumed $850.13 of $1,501.35 (57%) in 28d; with 0 purchases in the last 6 days it is spending with no return.",
-        "confidence": "confirmed",
+        "text": "Top campaign 'BWS - Muslim Subscription Box' consumed $850.13 of $1,501.35 (28d spend) — 57% share — while 22 total purchases came from the full account, not this campaign alone.",
+        "confidence": "probable",
+        "channel": "meta"
+      },
+      {
+        "id": "F5",
+        "priority": 4,
+        "text": "IG reach is flat-to-declining (668 on Aug 18 vs 1,214 peak on Jul 27) while spend held ~$55–59/day — classic creative fatigue pattern across a 3-week spend plateau.",
+        "confidence": "probable",
         "channel": "meta"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "kill",
-        "text": "Pause 'BWS - Muslim Subscription Box' campaign immediately — 6 confirmed days of $0 revenue on $57% of total spend.",
+        "type": "watch",
+        "text": "Hold all budget changes; watch purchases over next 3 days — need 3+ consecutive purchase days to confirm ROAS floor before any scale.",
         "cites": [
           "F1",
-          "F5"
+          "F4"
         ],
-        "monday_item_name": "Pause Subscription Box Campaign",
-        "monday_update": "Pause the 'BWS - Muslim Subscription Box - 17/06/26' campaign effective today. It has run 6 consecutive days with 0 purchases and $0 revenue while consuming 57% ($850.13) of 28-day spend. Success is confirmed by spend stopping and zero further waste. Re-evaluate relaunch only when new creative from the overdue Shoot 1 milestone is ready."
+        "monday_item_name": "Watch ROAS floor Aug 22",
+        "monday_update": "ROAS dropped 81% WoW to 3.54 and the last 3 days show only 1 purchase day out of 3 — not enough signal to scale or cut. Hold current daily spend (~$55/day) unchanged. If purchases appear on at least 2 of the next 3 days (Aug 19–21), Sohib can approve a +15% budget test on the best-performing ad set. Re-check 2026-08-22."
       },
       {
         "id": "S2",
-        "type": "budget_shift",
-        "text": "Redirect freed budget (up to $40/day) to any general-audience product campaign with Aug purchase history — protect the $421.86 Aug 17 signal.",
+        "type": "fix",
+        "text": "Escalate Live-Cooking Shoot 1 to unblock creative refresh; fatigue and missing footage are compounding the ROAS drop.",
         "cites": [
-          "F1",
-          "F3",
+          "F2",
           "F5"
         ],
-        "monday_item_name": "Shift Budget to General Audience",
-        "monday_update": "Once the Subscription Box campaign is paused, shift up to $40/day of reclaimed budget to the best-performing general-audience product campaign (the July 4th 17%-off structure or equivalent). The Aug 17 purchase of $421.86 is the only positive signal in 6 days and came from the general audience. Success check: at least 2 purchases in the next 3 days (by Aug 22). Hold the shift at ≤20% total budget increase — no doubles."
+        "monday_item_name": "Unblock Shoot 1 creative",
+        "monday_update": "The Live-Cooking Shoot (due Aug 14) is overdue and is blocking the creative reset identified in the SOW. IG reach has fallen from 1,214 to 668 over 3 weeks on flat spend, confirming fatigue. Nacer to chase Haney/Ameer for a reschedule date by Aug 21. Success check: shoot confirmed and footage in Drive by 2026-08-26."
       },
       {
         "id": "S3",
         "type": "fix",
-        "text": "Escalate Live-Cooking Shoot 1 (overdue Aug 14) — creative drought is the structural cause of fatigue; unblock Video board immediately.",
+        "text": "Investigate GBP listing: 3 consecutive zero-action days (Aug 16–18) vs 45-day average of ~17 — possible listing suspension or data outage.",
         "cites": [
-          "F2",
-          "F1"
+          "F3"
         ],
-        "monday_item_name": "Unblock Shoot 1 Creative",
-        "monday_update": "The Live-Cooking Shoot 1 milestone was due Aug 14 and has no completed event. With 6 days of zero purchases and creative fatigue confirmed, this is now a blocker for any recovery. Nacer (Ops) to confirm rescheduled shoot date no later than Aug 22. Success check: shoot completed and footage in Drive folder by Aug 26, allowing at least one new ad creative live before the next performance review."
+        "monday_item_name": "Fix GBP zero actions Aug 16–18",
+        "monday_update": "GBP actions hit zero on Aug 16, 17, and 18 — three consecutive days against a 45-day average of ~17/day. This is a confirmed signal. Check the Google Business Profile dashboard immediately for suspension notices, ownership flags, or a reporting API outage. Success check: GBP actions resume above 10/day by 2026-08-22, or a data-gap explanation is documented."
       }
     ],
     "next_check": "2026-08-22"
