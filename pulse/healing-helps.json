@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-19T11:18:00.701Z",
+  "generated_at": "2026-08-19T18:47:10.148Z",
   "date": "2026-08-19",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -462,61 +462,61 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-19T11:23:14.238Z",
+    "generated_at": "2026-08-19T18:50:43.740Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid channels dead 28+ days; GBP fading is now the only signal worth watching.",
+    "verdict": "Paid channels are dormant; GBP is fading with no backstop.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero spend and zero leads across Meta and Google Ads for the full 45-day series — no paid efficiency to measure; CPL is undefined.",
+        "text": "Zero spend and zero leads across all 28 days — CPL is undefined because no paid activity exists whatsoever.",
         "confidence": "confirmed",
-        "channel": "meta/google"
+        "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP 3-day signal (Aug 16–18): 0 actions vs prior 3-day average of 2.3 — confirmed downward step, not noise.",
+        "text": "GBP actions collapsed to 0 across the last 4 days (Aug 15–18), vs a prior-7d average of ~2.6/day — a confirmed 3-day zero signal.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GA4 sessions up 14.63% week-over-week (avg ~5.3/day last 7d vs ~4.6 prior) while GBP actions collapse — organic search landing pages may be receiving traffic that GBP is losing.",
-        "confidence": "hypothesis",
+        "text": "GA4 sessions averaged 5.0 over the last 3 days (Aug 16–18) vs 11.3 over Aug 10–12 peak — organic web traffic trending down with no paid support.",
+        "confidence": "probable",
         "channel": "ga4"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GHL pipeline is null with 0 leads in 28 days — no intake data to audit, but the pipeline is producing no opps regardless of source.",
-        "confidence": "confirmed",
-        "channel": "ghl"
+        "text": "GBP logged only 1 call out of 55 total actions in 28 days — direction and web-click intent is not converting to contact, a structural intake gap.",
+        "confidence": "probable",
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "watch",
-        "text": "Watch GBP daily actions: 3 consecutive zero-action days (Aug 16–18) — re-check Aug 22 for recovery or continued decline.",
+        "text": "Watch GBP actions daily; if 3 more zero-action days confirm, escalate to paid reactivation conversation immediately.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Watch GBP Action Drop",
-        "monday_update": "GBP recorded 0 actions on Aug 16, 17, and 18 — a confirmed 3-day signal against a prior 3-day average of 2.3 actions/day and a 28-day total of 55. No paid channels are live to compensate. Check GBP listing health (photos, posts, review recency) and confirm no listing suspension. Success looks like ≥2 actions/day restored by Aug 22; if still zero, escalate to listing audit."
+        "monday_item_name": "GBP Zero-Action Watch",
+        "monday_update": "GBP actions have been 0 for 4 consecutive days (Aug 15–18), against a prior average of ~2.6 actions/day. No paid channel is running to compensate. Monitor daily through Aug 22 — if the zero streak holds to 7 days, flag for urgent paid reactivation discussion with the client. Success check: at least 1 GBP action/day returning by Aug 22."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit why paid channels have been fully dark for 45+ days — confirm intentional pause or surface a billing/account issue.",
+        "text": "Audit GBP listing for suppression or info changes explaining the 4-day zero-action drop across directions and web clicks.",
         "cites": [
-          "F1",
+          "F2",
           "F4"
         ],
-        "monday_item_name": "Resolve Paid Channel Dark Status",
-        "monday_update": "Meta spend and Google spend have both read $0 for every day in the 45-day series, producing 0 leads and an undefined CPL. GHL pipeline shows null — no intake activity at all. Confirm with the client whether campaigns are intentionally paused or whether there is an account access, billing, or pixel issue blocking reactivation. Resolution target: clear status confirmed by Aug 22."
+        "monday_item_name": "GBP Listing Audit Fix",
+        "monday_update": "GBP actions dropped to 0 for Aug 15–18 after averaging 2–4 actions/day earlier in the month. The 28-day period shows only 1 call vs 33 directions and 21 web clicks, suggesting a contact conversion gap. Check the GBP listing for any category changes, suspended status, duplicate listings, or phone number errors. Confirm resolution by Aug 22 and verify actions resume above 2/day within 3 days of any fix."
       }
     ],
     "next_check": "2026-08-22"

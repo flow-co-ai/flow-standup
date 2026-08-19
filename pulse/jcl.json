@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-19T11:18:45.698Z",
+  "generated_at": "2026-08-19T18:48:02.448Z",
   "date": "2026-08-19",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 50,
   "status": "amber",
-  "verdict": "Paid activity has fully stalled this week, with spend, leads, and CPL all down 100% in the last 7 days versus the prior period, suggesting Meta campaigns (including top spender \"CROA || CBO - 3/17/26\" at $581.23) were paused or exhausted budget mid-window. GBP continues to provide organic support with 55 calls and 158 total actions over 28 days, but cannot offset the complete drop in paid lead volume.",
+  "verdict": "Paid activity came to a complete halt in the last 7 days, with spend, leads, and CPL all dropping 100% versus the prior period, suggesting Meta campaigns (including top spender \"CROA || CBO - 3/17/26\" at $581.23) were paused or exhausted budget. Organic GBP engagement softened as well, down 55.1%, though GA4 traffic bucked the trend with a 52.32% week-over-week gain.",
   "windsor": {
     "totals": {
       "spend": 1094.57,
@@ -46,8 +46,8 @@
       "conversions": 2335
     },
     "search": {
-      "clicks": 362,
-      "impressions": 29109
+      "clicks": 386,
+      "impressions": 30561
     },
     "social": {
       "followers": 0,
@@ -75,7 +75,7 @@
       "meta_leads_7d_pct": -100,
       "google_spend_7d_pct": null,
       "gbp_7d_pct": -55.1,
-      "sc_7d_pct": -36.94,
+      "sc_7d_pct": -15.32,
       "ga4_7d_pct": 52.32,
       "ig_7d_pct": -98.57,
       "spend_per_day_7d": 0
@@ -319,7 +319,7 @@
         14,
         6,
         4,
-        0,
+        24,
         0
       ],
       "ga4_sessions": [
@@ -588,43 +588,43 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-19T11:24:03.366Z",
+    "generated_at": "2026-08-19T18:51:43.200Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Campaigns dark 13 days; GBP and search holding but cannot replace paid volume.",
+    "verdict": "Campaigns fully dark 13 days; organic holding but leads gone.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "All paid spend is $0 for 13 consecutive days (Aug 6–18); 44 leads and $1,094.57 spend are entirely pre-blackout.",
+        "text": "All paid spend has been $0 since 2026-08-06 — 13 consecutive zero-spend days, producing zero leads vs. 28-day CPL baseline of $24.88.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3-day lead signal is zero: last 3 days (Aug 16–18) vs prior 3 (Aug 13–15) both flat at 0 leads — not a dip, a full stop.",
+        "text": "3-day trend (Aug 16–18): spend $0, leads 0, vs. prior 3-day active window (Aug 4–6) spend $144.92 and 8 leads — full stop, not a dip.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GBP actions dropped 55% week-over-week to near-zero, and IG reach collapsed -98.57%; organic support is also eroding, not compensating.",
-        "confidence": "confirmed",
-        "channel": "organic"
+        "text": "GBP actions collapsed to 0 over Aug 16–18, down from a 28-day average of ~5.6/day — organic floor disappearing alongside paid.",
+        "confidence": "probable",
+        "channel": "gbp"
       },
       {
         "id": "F4",
-        "priority": 3,
-        "text": "GHL shows 32 contacts but 0 opportunities created and 0 appointments — a pipeline intake leak independent of the spend blackout.",
+        "priority": 4,
+        "text": "GHL pipeline shows 32 contacts but 0 opportunities created and 0 appointments — 44 leads over 28 days are not converting into pipeline at all.",
         "confidence": "confirmed",
-        "channel": "GHL"
+        "channel": "ghl"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GA4 sessions spiked to 206 on Aug 13 then collapsed to 13 by Aug 16; directional only (known double-count), but the pattern matches the paid shutdown.",
+        "text": "GA4 sessions spiked to 206 on 2026-08-13 and remain directionally elevated (avg ~58 last 5 active days) despite zero paid spend — source unknown, treat directionally only.",
         "confidence": "hypothesis",
         "channel": "ga4"
       }
@@ -633,33 +633,33 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Immediately confirm why Meta campaigns went dark Aug 6; reactivate or rebuild with prior $70/day baseline budget.",
+        "text": "Confirm why Meta campaigns paused Aug 6; restore 'CROA || CBO - 3/17/26' at last active daily budget (~$70/day) immediately.",
         "cites": [
           "F1",
           "F2"
         ],
-        "monday_item_name": "Diagnose & Restart Meta Campaigns",
-        "monday_update": "Meta spend has been $0 for 13 consecutive days (Aug 6–18), erasing all lead volume; the last active day averaged ~$70/day and delivered a 28-day CPL of $24.88. Confirm whether campaigns were paused, budget-exhausted, or flagged, then reactivate or rebuild to restore the $70/day spend floor. Success is confirmed when daily spend registers >$50 and at least 1 lead is recorded within 3 days of reactivation (by Aug 22)."
+        "monday_item_name": "Restore CROA Meta Campaign",
+        "monday_update": "Campaigns have been fully dark since 2026-08-06 with $0 spend across 13 days, eliminating all lead volume (28-day CPL was $24.88). First step is to diagnose the pause reason — budget exhaustion, policy flag, or manual pause — before reactivating. Relaunch 'CROA || CBO - 3/17/26' at ~$70/day (last confirmed active daily rate) and do not scale until CPL returns to the $24.88 baseline or better. Confirm leads are flowing again by 2026-08-22."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GHL intake: 32 contacts logged with 0 opportunities created — leads arriving but not converting to pipeline entries.",
+        "text": "Audit GHL intake: 44 leads in 28 days produced 0 opportunities — identify where leads are dropping out of the pipeline.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Fix GHL Opportunity Intake",
-        "monday_update": "GHL shows 32 contacts in the 28-day window but zero opportunities created and zero appointments booked — this is an intake process failure, not an ads problem. Review the GHL workflow automations and manual intake steps to identify where contacts are stalling before opportunity creation. Success is confirmed when newly arriving leads result in at least 1 opportunity created within 48 hours of contact entry, verified by Aug 26."
+        "monday_item_name": "GHL Pipeline Intake Audit",
+        "monday_update": "GHL shows 32 contacts but zero opportunities created and zero appointments across the 28-day window, despite 44 Meta-attributed leads. This is an intake leak, not an ads problem — leads are arriving but not being converted into pipeline stages. Review GHL workflow triggers, lead assignment rules, and contact-to-opportunity automation to find the drop-off point. Target at least 1 opportunity created per 5 leads within 7 days of campaign reactivation as the success check."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions and search clicks for further decay; re-check Aug 22 if paid reactivation is delayed beyond 3 days.",
+        "text": "Watch GBP recovery: actions were 0 for Aug 16–18; re-check after 3 days of paid activity to separate organic drift from paid halo loss.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Watch GBP & Search Decay",
-        "monday_update": "GBP actions fell 55% week-over-week and IG reach dropped 98.57%, meaning organic channels are also weakening, not holding the line. No buyer action is warranted here yet, but if paid campaigns are not reactivated by Aug 22, monitor whether GBP calls (55 over 28 days) continue to decline. Re-check this item on Aug 22 to determine if an organic support action is needed."
+        "monday_item_name": "Watch GBP Organic Recovery",
+        "monday_update": "GBP actions dropped to 0 over Aug 16–18 against a 28-day average of ~5.6 actions/day. It is unclear whether this is organic softening or a halo effect lost when paid went dark. Re-check GBP action volume on 2026-08-22 after Meta campaigns are restored to determine if recovery tracks with paid reactivation. If GBP remains at 0 after 3 days of active paid spend, escalate as an independent organic issue."
       }
     ],
     "next_check": "2026-08-22"
