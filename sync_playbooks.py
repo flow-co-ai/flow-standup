@@ -31,13 +31,12 @@ STEEL_SLUGS = {"steel-forte", "steel-advance", "steel-ohare", "steel-round-bars"
 ALIASES: dict[str, str | None] = {
     "jcl": "jcl",
     "steel-group": "steel-round-bars",
-    "medstation": None,  # pending client — skip silently
 }
 
 
 def _normalize_stem(stem: str) -> str:
     s = stem.lower().strip()
-    s = re.sub(r"\s*[-–]\s*department\s*playbooks?\s*$", "", s, flags=re.IGNORECASE)
+    s = re.sub(r"\s*[-–]?\s*(?:department\s*)?playbooks?\s*$", "", s, flags=re.IGNORECASE)
     return s.strip()
 
 
@@ -45,7 +44,46 @@ def _norm(s: str) -> str:
     return re.sub(r"[^a-z0-9]", "", s.lower())
 
 
-def _stem_to_slug(stem: str, clients: list) -> str | None:
+def _canonical_to_slug(canonical: str, clients: list) -> str:
+    """Map a config.json canonical client name to a clients.json slug, falling
+    back to a slugified version of the canonical name for clients (e.g.
+    MedStation) that don't have a clients.json entry yet."""
+    n_canon = _norm(canonical)
+    for c in clients:
+        if n_canon == _norm(c["slug"]) or n_canon == _norm(c["name"]):
+            return c["slug"]
+    for c in clients:
+        n_name = _norm(c["name"])
+        if n_name and (n_name in n_canon or n_canon in n_name):
+            return c["slug"]
+    return _sanitize_filename(canonical)
+
+
+def _build_alias_candidates(config: dict, clients: list) -> list:
+    """(alias, slug) pairs from config.json's per-client alias arrays,
+    longest-alias-first so e.g. 'Steel Round Bars' is tried before 'Steel'."""
+    pairs = []
+    for canonical, aliases in config.get("clients", {}).items():
+        slug = _canonical_to_slug(canonical, clients)
+        for alias in aliases:
+            pairs.append((alias, slug))
+    pairs.sort(key=lambda p: len(p[0]), reverse=True)
+    return pairs
+
+
+def _alias_matches(alias: str, text: str) -> bool:
+    """Word-boundary-aware match: 'Steel' must match as a whole word, not as
+    a substring of an unrelated longer word."""
+    text = re.sub(r"\s+", " ", text.lower()).strip()
+    variants = {alias.lower().strip()}
+    variants.add(re.sub(r"\s+", "", alias.lower().strip()))
+    for v in variants:
+        if v and re.search(rf"(?<!\w){re.escape(v)}(?!\w)", text):
+            return True
+    return False
+
+
+def _stem_to_slug(stem: str, clients: list, alias_candidates: list = ()) -> str | None:
     n_stem = _norm(stem)
     for c in clients:
         if n_stem == _norm(c["slug"]):
@@ -57,6 +95,9 @@ def _stem_to_slug(stem: str, clients: list) -> str | None:
         n_name = _norm(c["name"])
         if n_name and (n_name in n_stem or n_stem in n_name):
             return c["slug"]
+    for alias, slug in alias_candidates:
+        if _alias_matches(alias, stem):
+            return slug
     return None
 
 
@@ -92,6 +133,8 @@ def sync_playbooks() -> None:
 
     with open("clients.json") as f:
         clients = json.load(f)
+
+    alias_candidates = _build_alias_candidates(config, clients)
 
     folder_id = config.get("playbooks_drive_folder_id", "")
     if not folder_id:
@@ -160,7 +203,10 @@ def sync_playbooks() -> None:
             out_path = PLAYBOOKS_DIR / f"{alias_val}.md"
             is_unmatched = False
         else:
-            slug = _stem_to_slug(norm_stem, clients) or _stem_to_slug(stem, clients)
+            slug = (
+                _stem_to_slug(norm_stem, clients, alias_candidates)
+                or _stem_to_slug(stem, clients, alias_candidates)
+            )
             if slug is None:
                 safe = _sanitize_filename(stem)
                 out_path = UNMATCHED_DIR / f"{safe}.md"
