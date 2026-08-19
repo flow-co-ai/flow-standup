@@ -4,114 +4,131 @@
   "slug": "medstation",
   "name": "MedStation",
   "brief": {
-    "date": "2026-08-18",
+    "date": "2026-08-19",
     "headlines": [
       {
-        "text": "No movement this week — two loops stalled 33 days",
+        "text": "GHL source tracking & A2P registration done",
+        "tone": "win"
+      },
+      {
+        "text": "No new movement today; two loops still open",
         "tone": "info"
       }
     ],
     "workstreams": [
       {
-        "title": "MedStation - General",
+        "title": "MedStation - CRM / GHL",
         "badge": {
-          "label": "P1 - needs attention",
-          "tone": "amber"
+          "label": "P1 - on track",
+          "tone": "green"
+        },
+        "items": [
+          {
+            "state": "done",
+            "text": "GHL Setup — Source Tracking marked Done (2026-08-17)"
+          },
+          {
+            "state": "done",
+            "text": "GHL Setup — A2P Registration marked Done (2026-08-17)"
+          },
+          {
+            "state": "next",
+            "text": "(inferred) Confirm remaining 8 working items advance toward completion"
+          }
+        ]
+      },
+      {
+        "title": "MedStation - Clinic Onboarding",
+        "badge": {
+          "label": "P1 - blocked",
+          "tone": "red"
         },
         "items": [
           {
             "state": "blocked",
-            "text": "Patient demographic report — waiting on Paulo / Agencia WeMark (33 days)"
+            "text": "Patient demographic report pending from Paulo / Agencia WeMark"
           },
           {
             "state": "blocked",
-            "text": "Connect Sohib's team with six clinic leaders — no movement (33 days)"
-          },
-          {
-            "state": "next",
-            "text": "(inferred) Chase Paulo / WeMark for demographic report to unblock track"
+            "text": "Intro of Sohib's team to six clinic leaders not yet arranged"
           }
         ]
       }
     ],
     "waiting_on_client": [
       {
-        "item": "Patient demographic report",
-        "who": "Paulo / Agencia WeMark",
+        "item": "Patient demographic report from Agencia WeMark",
+        "who": "Paulo (Agencia WeMark)",
         "since": "7/16"
       },
       {
-        "item": "Introduction to six clinic leaders",
-        "who": "MedStation client-side contact",
+        "item": "Connect Sohib's team with six clinic leaders",
+        "who": "MedStation client contact",
         "since": "7/16"
       }
     ],
     "launch_gate": null,
     "brief_v2": {
-      "verdict": "Client's move: two loops stalled 33 days — demographic report and clinic intros both unresolved.",
-      "next_move": "Sohib: escalate to Paulo / WeMark for demographic report — longest-running block at 33 days.",
+      "verdict": "Client's move: two clinic-onboarding loops await action from MedStation's side.",
+      "next_move": "Sohib: follow up with Paulo on demographic report and clinic leader intros — both loops are client-blocked.",
       "blocks": [
         {
-          "item": "Patient demographic report from Paulo/Agencia WeMark",
+          "item": "Patient demographic report from Paulo / Agencia WeMark",
           "side": "client",
-          "who": "Paulo / Agencia WeMark",
-          "age_days": 33,
-          "hot": true
+          "who": "Paulo (Agencia WeMark)",
+          "last_activity": "Standup card flags this as stalled; no client response received"
         },
         {
           "item": "Connect Sohib's team with six clinic leaders",
           "side": "client",
-          "who": "MedStation client-side contact",
-          "age_days": 33,
-          "hot": true
+          "who": "MedStation client contact",
+          "last_activity": "Standup card flags this as stalled; intro not yet made"
         }
       ],
       "snapshot": [
         {
           "label": "Open items",
-          "value": "8 open, 2 stalled 33 days — no tasks done this week",
+          "value": "8 open, all in working status, 2 blocked on client action",
           "tone": "warn"
         },
         {
           "label": "Last client word",
-          "value": "No client comms recorded this period",
-          "tone": "plain"
+          "value": "No client comms recorded this week",
+          "tone": "warn"
         }
       ],
-      "history_line": null
+      "history_line": "GHL Setup — Source Tracking marked Done · GHL Setup — A2P Registration marked Done"
     }
   },
   "brief_v2": {
-    "verdict": "Client's move: two loops stalled 33 days — demographic report and clinic intros both unresolved.",
-    "next_move": "Sohib: escalate to Paulo / WeMark for demographic report — longest-running block at 33 days.",
+    "verdict": "Client's move: two clinic-onboarding loops await action from MedStation's side.",
+    "next_move": "Sohib: follow up with Paulo on demographic report and clinic leader intros — both loops are client-blocked.",
     "blocks": [
       {
-        "item": "Patient demographic report from Paulo/Agencia WeMark",
+        "item": "Patient demographic report from Paulo / Agencia WeMark",
         "side": "client",
-        "who": "Paulo / Agencia WeMark",
-        "age_days": 33,
-        "hot": true
+        "who": "Paulo (Agencia WeMark)",
+        "last_activity": "Standup card flags this as stalled; no client response received"
       },
       {
         "item": "Connect Sohib's team with six clinic leaders",
         "side": "client",
-        "who": "MedStation client-side contact",
-        "age_days": 33,
-        "hot": true
+        "who": "MedStation client contact",
+        "last_activity": "Standup card flags this as stalled; intro not yet made"
       }
     ],
     "snapshot": [
       {
         "label": "Open items",
-        "value": "8 open, 2 stalled 33 days — no tasks done this week",
+        "value": "8 open, all in working status, 2 blocked on client action",
         "tone": "warn"
       },
       {
         "label": "Last client word",
-        "value": "No client comms recorded this period",
-        "tone": "plain"
+        "value": "No client comms recorded this week",
+        "tone": "warn"
       }
     ],
-    "history_line": null
+    "history_line": "GHL Setup — Source Tracking marked Done · GHL Setup — A2P Registration marked Done"
   }
 }
