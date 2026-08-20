@@ -4,14 +4,14 @@
   "slug": "medstation",
   "name": "MedStation",
   "brief": {
-    "date": "2026-08-19",
+    "date": "2026-08-20",
     "headlines": [
       {
-        "text": "GHL source tracking & A2P registration done",
+        "text": "GHL Source Tracking & A2P marked done",
         "tone": "win"
       },
       {
-        "text": "No new movement today; two loops still open",
+        "text": "No new movement today; two loops stalled",
         "tone": "info"
       }
     ],
@@ -25,20 +25,20 @@
         "items": [
           {
             "state": "done",
-            "text": "GHL Setup — Source Tracking marked Done (2026-08-17)"
+            "text": "GHL Setup — Source Tracking (marked done 8/17)"
           },
           {
             "state": "done",
-            "text": "GHL Setup — A2P Registration marked Done (2026-08-17)"
+            "text": "GHL Setup — A2P Registration (marked done 8/17)"
           },
           {
             "state": "next",
-            "text": "(inferred) Confirm remaining 8 working items advance toward completion"
+            "text": "(inferred) Confirm remaining GHL setup items are progressing"
           }
         ]
       },
       {
-        "title": "MedStation - Clinic Onboarding",
+        "title": "MedStation - Admin & Coordination",
         "badge": {
           "label": "P1 - blocked",
           "tone": "red"
@@ -46,89 +46,129 @@
         "items": [
           {
             "state": "blocked",
-            "text": "Patient demographic report pending from Paulo / Agencia WeMark"
+            "text": "Patient demographic report — awaiting Paulo / Agencia WeMark"
           },
           {
             "state": "blocked",
-            "text": "Intro of Sohib's team to six clinic leaders not yet arranged"
+            "text": "Clinic leader introductions — 6 contacts not yet connected to Sohib's team"
+          }
+        ],
+        "owners": [
+          "Sohib"
+        ]
+      },
+      {
+        "title": "MedStation - Local / SEO",
+        "badge": {
+          "label": "P2 - needs attention",
+          "tone": "amber"
+        },
+        "items": [
+          {
+            "state": "next",
+            "text": "LSA setup — due 8/19 (past target)"
+          },
+          {
+            "state": "next",
+            "text": "GBP setup — due 8/19 (past target)"
           }
         ]
       }
     ],
     "waiting_on_client": [
       {
-        "item": "Patient demographic report from Agencia WeMark",
-        "who": "Paulo (Agencia WeMark)",
+        "item": "Patient demographic report",
+        "who": "Paulo / Agencia WeMark",
         "since": "7/16"
       },
       {
         "item": "Connect Sohib's team with six clinic leaders",
-        "who": "MedStation client contact",
+        "who": "Mateus",
         "since": "7/16"
       }
     ],
     "launch_gate": null,
     "brief_v2": {
-      "verdict": "Client's move: two clinic-onboarding loops await action from MedStation's side.",
-      "next_move": "Sohib: follow up with Paulo on demographic report and clinic leader intros — both loops are client-blocked.",
+      "verdict": "Client's move: two coordination blockers from Paulo and Mateus remain unresolved and are holding account momentum.",
+      "next_move": "Sohib: follow up with Mateus on clinic leader intros and WeMark demographic report — both gate execution.",
       "blocks": [
         {
           "item": "Patient demographic report from Paulo / Agencia WeMark",
           "side": "client",
-          "who": "Paulo (Agencia WeMark)",
-          "last_activity": "Standup card flags this as stalled; no client response received"
+          "who": "Paulo / Agencia WeMark",
+          "last_activity": "Standup card flags item as stalled; no comms received this week"
         },
         {
           "item": "Connect Sohib's team with six clinic leaders",
           "side": "client",
-          "who": "MedStation client contact",
-          "last_activity": "Standup card flags this as stalled; intro not yet made"
+          "who": "Mateus",
+          "last_activity": "Standup card flags item as stalled; introductions still not made"
         }
       ],
       "snapshot": [
         {
           "label": "Open items",
-          "value": "8 open, all in working status, 2 blocked on client action",
+          "value": "8 open, all in working status, 2 coordination loops awaiting client action",
           "tone": "warn"
+        },
+        {
+          "label": "Contract",
+          "value": "Month 2 of 3 (Phase 1), flat retainer $3,500–$5,000/mo",
+          "tone": "muted"
         },
         {
           "label": "Last client word",
           "value": "No client comms recorded this week",
-          "tone": "warn"
+          "tone": "plain"
+        },
+        {
+          "label": "Judged on",
+          "value": "Booked appointments and reactivated patients",
+          "tone": "plain"
         }
       ],
-      "history_line": "GHL Setup — Source Tracking marked Done · GHL Setup — A2P Registration marked Done"
+      "history_line": "GHL Setup — Source Tracking marked done · GHL Setup — A2P Registration marked done"
     }
   },
   "brief_v2": {
-    "verdict": "Client's move: two clinic-onboarding loops await action from MedStation's side.",
-    "next_move": "Sohib: follow up with Paulo on demographic report and clinic leader intros — both loops are client-blocked.",
+    "verdict": "Client's move: two coordination blockers from Paulo and Mateus remain unresolved and are holding account momentum.",
+    "next_move": "Sohib: follow up with Mateus on clinic leader intros and WeMark demographic report — both gate execution.",
     "blocks": [
       {
         "item": "Patient demographic report from Paulo / Agencia WeMark",
         "side": "client",
-        "who": "Paulo (Agencia WeMark)",
-        "last_activity": "Standup card flags this as stalled; no client response received"
+        "who": "Paulo / Agencia WeMark",
+        "last_activity": "Standup card flags item as stalled; no comms received this week"
       },
       {
         "item": "Connect Sohib's team with six clinic leaders",
         "side": "client",
-        "who": "MedStation client contact",
-        "last_activity": "Standup card flags this as stalled; intro not yet made"
+        "who": "Mateus",
+        "last_activity": "Standup card flags item as stalled; introductions still not made"
       }
     ],
     "snapshot": [
       {
         "label": "Open items",
-        "value": "8 open, all in working status, 2 blocked on client action",
+        "value": "8 open, all in working status, 2 coordination loops awaiting client action",
         "tone": "warn"
+      },
+      {
+        "label": "Contract",
+        "value": "Month 2 of 3 (Phase 1), flat retainer $3,500–$5,000/mo",
+        "tone": "muted"
       },
       {
         "label": "Last client word",
         "value": "No client comms recorded this week",
-        "tone": "warn"
+        "tone": "plain"
+      },
+      {
+        "label": "Judged on",
+        "value": "Booked appointments and reactivated patients",
+        "tone": "plain"
       }
     ],
-    "history_line": "GHL Setup — Source Tracking marked Done · GHL Setup — A2P Registration marked Done"
+    "history_line": "GHL Setup — Source Tracking marked done · GHL Setup — A2P Registration marked done"
   }
 }

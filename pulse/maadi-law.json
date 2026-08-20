@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-19T21:17:24.293Z",
-  "date": "2026-08-19",
+  "generated_at": "2026-08-20T01:05:12.284Z",
+  "date": "2026-08-20",
   "slug": "maadi-law",
   "name": "Maadi Law, LLC",
   "type": "leadgen",
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Maadi Law's paid channels (Meta and Google Ads) show zero spend, leads, or clicks over the past 28 days, so all activity is organic, with GBP driving 89 total actions including 18 calls and 30 direction requests. The biggest concern is a -40.91% drop in GBP engagement over the last 7 days versus the prior 7 days, likely reflecting reduced search demand or a dip in profile visibility that warrants a fresh post or review push to regain momentum.",
+  "verdict": "GBP activity is the primary story this period, with 89 total actions (18 calls, 30 directions, 41 web clicks) over 28 days, but momentum is fading fast as GBP actions dropped 66.67% in the last 7 days versus the prior 7, likely driven by reduced search demand or a drop in profile visibility. Paid channels (Meta and Google Ads) show zero spend and zero leads, meaning all lead-gen activity is currently organic only.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -34,23 +34,23 @@
     },
     "organic": {
       "gbp_actions": 89,
-      "ig_reach": 32919
+      "ig_reach": 32669
     },
     "top_campaign": null,
     "social": {
-      "followers": 3,
-      "reach": 32919,
+      "followers": 0,
+      "reach": 32669,
       "impressions": 0,
-      "engagement": 1669
+      "engagement": 1643
     },
     "latest_day": {
-      "date": "2026-08-18",
+      "date": "2026-08-19",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
       "google_spend": 0,
       "gbp_actions": 0,
-      "ig_reach": 538,
+      "ig_reach": 517,
       "sc_clicks": 0,
       "ga4_sessions": 0,
       "purchases": 0,
@@ -62,16 +62,15 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -40.91,
+      "gbp_7d_pct": -66.67,
       "sc_7d_pct": null,
       "ga4_7d_pct": null,
-      "ig_7d_pct": -40.13,
+      "ig_7d_pct": -56.04,
       "spend_per_day_7d": 0
     },
     "flags": [],
     "series": {
       "dates": [
-        "2026-07-22",
         "2026-07-23",
         "2026-07-24",
         "2026-07-25",
@@ -98,7 +97,8 @@
         "2026-08-15",
         "2026-08-16",
         "2026-08-17",
-        "2026-08-18"
+        "2026-08-18",
+        "2026-08-19"
       ],
       "spend": [
         0,
@@ -221,7 +221,6 @@
         0
       ],
       "gbp_actions": [
-        0,
         8,
         4,
         1,
@@ -248,10 +247,10 @@
         0,
         1,
         0,
+        0,
         0
       ],
       "ig_reach": [
-        767,
         2219,
         1964,
         1760,
@@ -278,7 +277,8 @@
         958,
         576,
         334,
-        538
+        538,
+        517
       ],
       "sc_clicks": [
         0,
@@ -424,7 +424,7 @@
     ]
   },
   "brief": {
-    "date": "2026-08-19",
+    "date": "2026-08-20",
     "headlines": [
       {
         "text": "No new activity; open loops unchanged",
@@ -439,17 +439,13 @@
       {
         "title": "Maadi Law - Ads",
         "badge": {
-          "label": "P1 - blocked",
-          "tone": "red"
+          "label": "P1 - needs attention",
+          "tone": "amber"
         },
         "items": [
           {
             "state": "blocked",
             "text": "Meta & Google ads awaiting client response — client has not replied"
-          },
-          {
-            "state": "next",
-            "text": "(inferred) Follow up with client to unblock ads launch"
           }
         ]
       },
@@ -461,17 +457,13 @@
         },
         "items": [
           {
-            "state": "blocked",
-            "text": "SEO H1 update to 'Personal Injury Attorneys Orland Park' pending"
-          },
-          {
             "state": "next",
-            "text": "(inferred) Complete SEO H1 update on item [id: 12600171135]"
+            "text": "SEO H1 update to 'Personal Injury Attorneys Orland Park' — pending completion"
           }
         ]
       },
       {
-        "title": "Maadi Law - Tracking",
+        "title": "Maadi Law - CRM / GHL",
         "badge": {
           "label": "P2 - on track",
           "tone": "green"
@@ -479,41 +471,54 @@
         "items": [
           {
             "state": "done",
-            "text": "Fixed call routing — switched LSA calls to business line"
-          },
-          {
-            "state": "queued",
-            "text": "Tracking Setup scheduled [id: 12700991621]"
+            "text": "Fixed call routing: LSA calls switched to business line"
           }
-        ],
-        "owners": [
-          "Sohib Boundaoui"
         ]
       }
     ],
     "waiting_on_client": [
       {
         "item": "Meta & Google ads approval / response",
-        "who": "Client contact",
+        "who": "Client POC",
         "since": "7/14"
       }
     ],
-    "launch_gate": null,
+    "launch_gate": {
+      "title": "Launch gate - clear before ads go live",
+      "items": [
+        {
+          "text": "A2P 10DLC brand + campaign registration approved",
+          "done": false
+        },
+        {
+          "text": "Email auth (SPF/DKIM/DMARC) configured",
+          "done": false
+        },
+        {
+          "text": "Client response on Meta & Google ads",
+          "done": false
+        },
+        {
+          "text": "Lead end-to-end test into Clio Manage",
+          "done": false
+        }
+      ]
+    },
     "brief_v2": {
-      "verdict": "Client's move: Meta & Google ads remain blocked awaiting client response.",
-      "next_move": "Sohib: follow up with client on ads approval — unblocks the longest-stalled loop.",
+      "verdict": "Client's move: ads are blocked on a client reply that has not come for over a month.",
+      "next_move": "Sohib: re-escalate Meta & Google ads thread to client — nothing moves until they respond.",
       "blocks": [
         {
           "item": "Meta & Google ads awaiting client response",
           "side": "client",
-          "who": "Client contact",
-          "last_activity": "Standup flags ads stalled, awaiting client reply"
+          "who": "Client POC",
+          "last_activity": "Standup card flags ads stalled, awaiting client response"
         },
         {
           "item": "SEO H1 update to 'Personal Injury Attorneys Orland Park'",
           "side": "team",
           "who": "Sohib Boundaoui",
-          "last_activity": "Monday item [id: 12600171135] active, update pending"
+          "last_activity": "Monday item active; update not yet completed as of today"
         }
       ],
       "snapshot": [
@@ -523,29 +528,39 @@
           "tone": "warn"
         },
         {
+          "label": "Contract",
+          "value": "Month 2 of 6, started July 1 2026",
+          "tone": "muted"
+        },
+        {
           "label": "Last client word",
-          "value": "No client comms this week; ads loop unresponded",
-          "tone": "bad"
+          "value": "No client comms recorded this week",
+          "tone": "warn"
+        },
+        {
+          "label": "Judged on",
+          "value": "Cost-per-signed-case — not clicks, not leads",
+          "tone": "plain"
         }
       ],
-      "history_line": "Fixed call routing — switched LSA calls to business line"
+      "history_line": "Fixed call routing: LSA calls switched to business line"
     }
   },
   "brief_v2": {
-    "verdict": "Client's move: Meta & Google ads remain blocked awaiting client response.",
-    "next_move": "Sohib: follow up with client on ads approval — unblocks the longest-stalled loop.",
+    "verdict": "Client's move: ads are blocked on a client reply that has not come for over a month.",
+    "next_move": "Sohib: re-escalate Meta & Google ads thread to client — nothing moves until they respond.",
     "blocks": [
       {
         "item": "Meta & Google ads awaiting client response",
         "side": "client",
-        "who": "Client contact",
-        "last_activity": "Standup flags ads stalled, awaiting client reply"
+        "who": "Client POC",
+        "last_activity": "Standup card flags ads stalled, awaiting client response"
       },
       {
         "item": "SEO H1 update to 'Personal Injury Attorneys Orland Park'",
         "side": "team",
         "who": "Sohib Boundaoui",
-        "last_activity": "Monday item [id: 12600171135] active, update pending"
+        "last_activity": "Monday item active; update not yet completed as of today"
       }
     ],
     "snapshot": [
@@ -555,51 +570,61 @@
         "tone": "warn"
       },
       {
+        "label": "Contract",
+        "value": "Month 2 of 6, started July 1 2026",
+        "tone": "muted"
+      },
+      {
         "label": "Last client word",
-        "value": "No client comms this week; ads loop unresponded",
-        "tone": "bad"
+        "value": "No client comms recorded this week",
+        "tone": "warn"
+      },
+      {
+        "label": "Judged on",
+        "value": "Cost-per-signed-case — not clicks, not leads",
+        "tone": "plain"
       }
     ],
-    "history_line": "Fixed call routing — switched LSA calls to business line"
+    "history_line": "Fixed call routing: LSA calls switched to business line"
   },
   "performance": {
-    "generated_at": "2026-08-19T21:20:52.932Z",
+    "generated_at": "2026-08-20T01:10:30.224Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Ads never launched; 5 overdue milestones block all paid revenue.",
+    "verdict": "No paid activity; 5 overdue launch milestones block all revenue.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "Pre-Launch Stack Test, LSA Verification, and Site/Landing Pages all missed 2026-07-31 deadline — 19 days overdue; no paid traffic possible without these.",
+        "text": "Pre-Launch Stack Test, LSA Verification, and Site/Landing Pages all missed July 31 deadline — 3 blockers overdue 20+ days.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "LSA + Search go-live and Meta Retargeting launch both missed 2026-08-01 — 18 days overdue; $0 spend across all 28 days confirms ads have never run.",
+        "text": "Ads Launch (LSA + Search) and Meta Retargeting both missed August 1 deadline — $6,500/mo planned spend is generating $0.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GBP engagement fell -40.91% last 7 days vs prior 7; last 3 days (Aug 16–18) logged 1, 0, 0 actions vs 6, 5, 1 in the prior 3 — a confirmed 3-day deceleration.",
+        "text": "GBP actions collapsed to 0 over the last 3 days (Aug 17–19) vs. avg 4–6/day prior — the only active lead channel is now dark.",
         "confidence": "confirmed",
         "channel": "GBP"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Instagram reach dropped -40.13% week-over-week; last 3 days averaged 483 vs 1,013 prior 3 days — parallel decay with GBP signals reduced organic visibility, not just noise.",
+        "text": "IG reach dropped 56% in 7d and is trending down: last 3 days avg 530 vs prior 3-day avg 826 — organic visibility shrinking across both channels.",
         "confidence": "probable",
-        "channel": "Instagram"
+        "channel": "Meta"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 492 contacts and 0 opportunities created, 0 appointments — pipeline is not capturing any inbound; intake routing from SOW Month 1 appears unbuilt.",
+        "text": "GHL shows 492 contacts, 0 opportunities created, 0 appointments — pipeline is either unbuilt or intake is not routing contacts into stages.",
         "confidence": "confirmed",
         "channel": "GHL"
       }
@@ -608,36 +633,36 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Clear all 5 overdue SOW blockers this week; no paid budget should move until launch stack is verified.",
+        "text": "Escalate 5 overdue SOW milestones to Nacer immediately; no paid dollar can launch until blockers clear.",
         "cites": [
           "F1",
           "F2"
         ],
-        "monday_item_name": "Clear 5 Launch Blockers Now",
-        "monday_update": "Five milestones are confirmed overdue as of 2026-08-19: Pre-Launch Stack Test, LSA Verification, Site/Landing Pages (all missed 2026-07-31), and both Ads Launch and Meta Retargeting (missed 2026-08-01). No paid spend — $0 across 28 days — can begin until these are cleared. Nacer to confirm completion of each blocker by 2026-08-22; Sohib to gate any budget release on that confirmation. Success check: stack test passes, LSA submitted, site live, and at least one campaign goes active before 2026-08-26."
+        "monday_item_name": "Clear 5 Launch Blockers",
+        "monday_update": "Five SOW milestones are confirmed overdue: Pre-Launch Stack Test, LSA Verification, Site/Landing Pages (all missed July 31), and Ads Launch + Meta Retargeting (both missed August 1). Zero paid spend has occurred across 28 days against a $6,500/month budget plan. Nacer must provide a revised go-live date for each item by August 22. Success check: all 5 items marked complete in Monday and confirmed by Sohib before any ad spend is activated."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Build GHL pipeline stages and opportunity creation so inbound contacts (492 sitting idle) route into trackable opportunities.",
+        "text": "Audit GHL pipeline: 492 contacts with 0 opportunities and 0 appointments signals intake routing is broken, not an ads problem.",
         "cites": [
           "F5"
         ],
-        "monday_item_name": "GHL Pipeline Stages Build",
-        "monday_update": "GHL currently holds 492 contacts with 0 opportunities created and 0 appointments — meaning no lead is being tracked through intake. The SOW requires pipeline stages, routing, and first-contact-under-5-min to be live in Month 1, which is now overdue. Action: build pipeline stages and auto-assignment rules so every new contact generates an opportunity. Success check: next weekly review shows opportunities > 0 and at least one appointment booked, target 2026-08-26."
+        "monday_item_name": "Fix GHL Intake Routing",
+        "monday_update": "GHL shows 492 contacts but 0 opportunities created and 0 appointments booked over the 28-day window. This indicates pipeline stages, routing rules, or form-to-pipeline wiring were never completed or are misfiring. CRM lead should audit the contact-to-opportunity flow and confirm at least 1 test lead routes end-to-end into Clio Manage by August 22. Success check: first opportunity appears in GHL pipeline with a source tag and a Clio Manage record."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP engagement: if 3-day total stays at or below 1 action through 2026-08-22, escalate a profile post or review push.",
+        "text": "Watch GBP daily actions; 3-day zero streak warrants profile audit before next check on August 23.",
         "cites": [
           "F3",
           "F4"
         ],
-        "monday_item_name": "Watch GBP Engagement Drop",
-        "monday_update": "GBP actions hit 0 on both Aug 17 and Aug 18, continuing a confirmed 3-day deceleration from a prior-3-day average of ~4 actions/day. IG reach simultaneously dropped -40.13% week-over-week to a 3-day average of 483. No paid traffic exists to compensate. Monitor through 2026-08-22: if the 3-day GBP total remains ≤ 1, trigger a fresh GBP post and a direct review-request push to recover profile signals before ads launch."
+        "monday_item_name": "Watch GBP Visibility Drop",
+        "monday_update": "GBP actions hit 0 for three consecutive days (Aug 17–19) after averaging 4–6/day earlier in the period, and IG reach is down 56% week-over-week. No paid channels are live to compensate. Review the GBP profile for suspension flags, missing hours, or category changes before August 23. Success check: GBP actions return to 3+ per day by the next review cycle."
       }
     ],
-    "next_check": "2026-08-22"
+    "next_check": "2026-08-23"
   }
 }
