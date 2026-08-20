@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-20T01:04:16.434Z",
+  "generated_at": "2026-08-20T11:22:26.172Z",
   "date": "2026-08-20",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Meta drove all 43 leads over 28 days at a $23.82 CPL, led by \"CROA || CBO - 3/17/26\" at $546.28 in spend, while GBP actions dropped 75% week-over-week, likely reflecting reduced organic search visibility or a listing issue worth investigating.",
+  "verdict": "Meta drove all 43 leads over 28 days at a $23.82 CPL, led by \"CROA || CBO - 3/17/26\" at $546.28 in spend, while the sharpest movement is a 75% drop in GBP actions over the last 7 days, likely reflecting reduced organic search visibility or a listing engagement issue worth investigating.",
   "windsor": {
     "totals": {
       "spend": 1024.27,
@@ -41,13 +41,13 @@
       "spend": 546.28
     },
     "analytics": {
-      "sessions": 1321,
-      "users": 1078,
-      "conversions": 0
+      "sessions": 1336,
+      "users": 1264,
+      "conversions": 2439
     },
     "search": {
-      "clicks": 378,
-      "impressions": 29599
+      "clicks": 399,
+      "impressions": 31249
     },
     "social": {
       "followers": 0,
@@ -64,7 +64,7 @@
       "gbp_actions": 0,
       "ig_reach": 0,
       "sc_clicks": 0,
-      "ga4_sessions": 52,
+      "ga4_sessions": 62,
       "purchases": 0,
       "revenue": 0
     },
@@ -75,8 +75,8 @@
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
       "gbp_7d_pct": -75,
-      "sc_7d_pct": -42.98,
-      "ga4_7d_pct": 47.45,
+      "sc_7d_pct": -25.62,
+      "ga4_7d_pct": 50,
       "ig_7d_pct": -100,
       "spend_per_day_7d": 0
     },
@@ -319,7 +319,7 @@
         6,
         4,
         24,
-        0,
+        21,
         0
       ],
       "ga4_sessions": [
@@ -328,29 +328,29 @@
         20,
         11,
         49,
-        33,
+        35,
         50,
         54,
-        47,
+        49,
         23,
-        19,
+        18,
         38,
-        50,
+        51,
         43,
         52,
-        51,
+        52,
         20,
         21,
-        59,
+        58,
         77,
-        53,
+        54,
         206,
-        78,
+        80,
         22,
         13,
-        58,
+        56,
         62,
-        52
+        62
       ],
       "purchases": [
         0,
@@ -597,43 +597,43 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-20T01:09:40.359Z",
+    "generated_at": "2026-08-20T11:25:39.125Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Spend went dark Aug 6; 14 days of zero is the only real problem.",
+    "verdict": "Meta spend went dark Aug 6; all 43 leads are pre-blackout, not current.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Meta spend has been $0 for 14 consecutive days (Aug 6–19); all 43 leads and $1,024 in 28-day spend came before the blackout.",
+        "text": "Meta spend has been $0 every day since Aug 6 — 14 consecutive zero-spend days; all 43 leads and $1,024 spend are pre-blackout, not active.",
         "confidence": "confirmed",
         "channel": "Meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3-day lead signal (Aug 4–5: 4+4=8 leads, $144.92 spend) vs prior 3 (Aug 1–3: 1+3+1=5 leads, $224.38 spend) shows CPL was improving pre-blackout — the pause killed a working engine.",
+        "text": "GHL shows 31 contacts vs 43 Meta leads with 0 opportunities created and 0 appointments — a confirmed intake leak, not an ads problem.",
         "confidence": "confirmed",
-        "channel": "Meta"
+        "channel": "GHL"
       },
       {
         "id": "F3",
-        "priority": 3,
-        "text": "GHL shows only 31 contacts vs 43 leads and 0 opportunities created — 12-lead gap signals an intake leak, not an ads problem; this predates the blackout.",
+        "priority": 2,
+        "text": "GBP actions collapsed from ~12/day peak to 0 for 3 consecutive days (Aug 17–19); 75% weekly drop likely signals listing suppression or engagement loss.",
         "confidence": "probable",
-        "channel": "GHL"
+        "channel": "GBP"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions dropped 75% WoW and ig_reach hit -100% (0 reach last 7d vs 1,205 prior 28d); organic visibility collapsing alongside paid dark compounds pipeline drought.",
+        "text": "IG reach hit 0 for 13 consecutive days (Aug 7–19), a -100% delta; organic social is fully dark alongside paid, suggesting account-level issue.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "Instagram"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "Search clicks fell -42.98% WoW (recent low of 0 on Aug 18–19 in series) while GA4 sessions rose +47.45% — directional conflict suggests GA4 double-count property issue, not real traffic growth.",
+        "text": "Search clicks averaged 16/day Aug 10–19 vs 14/day prior 10 days — organic search holding, partially offsetting paid blackout, but GA4 sessions directional only.",
         "confidence": "hypothesis",
         "channel": "SEO"
       }
@@ -642,33 +642,33 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Immediately diagnose and restore Meta spend; account has been dark 14 days — identify billing, policy, or access block causing $0 spend.",
+        "text": "Diagnose and restore Meta spend immediately; identify billing, policy, or account access block causing 14-day zero-spend.",
         "cites": [
           "F1",
-          "F2"
+          "F4"
         ],
-        "monday_item_name": "Restore Meta Spend Urgently",
-        "monday_update": "Meta spend has been $0 since Aug 6 — 14 full days of zero delivery, confirmed in the daily series. Prior to the blackout, the account was producing leads at a CPL of ~$18 in the Aug 4–5 window, below the 28-day average of $23.82. Hamza/Hamdan must diagnose the root cause today (billing hold, ad account disabled, policy flag, or access issue) and restore delivery at the last active daily budget of ~$70–75/day. Success is confirmed when Meta spend resumes above $50/day within 48 hours (by Aug 22)."
+        "monday_item_name": "Restore Meta Spend Now",
+        "monday_update": "Meta spend has been $0 since August 6 — 14 consecutive days with no delivery and no leads. IG reach simultaneously dropped to 0 on the same date, pointing to an account-level event (billing lapse, policy flag, or access issue) rather than a campaign setting. Confirm the account status, payment method, and any Meta policy notifications in Business Manager today. Success = spend resumes at the prior $65–75/day rate and IG reach returns above 0 by August 22."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GHL intake: 12 leads missing from pipeline (43 leads, 31 contacts, 0 opps) — fix form-to-GHL webhook or contact deduplication causing the gap.",
+        "text": "Audit GHL intake: 43 leads arrived but 0 opportunities created — find and close the pipeline gap before next leads arrive.",
         "cites": [
-          "F3"
+          "F2"
         ],
-        "monday_item_name": "Fix GHL Lead Intake Gap",
-        "monday_update": "GHL shows only 31 contacts against 43 leads recorded in Meta over the 28-day window, and 0 opportunities have been created. This is an intake leak, not an ads problem — leads are arriving but not entering the pipeline for Andrew to work. The fix is to audit the instant-form-to-GHL webhook connection and check for duplicate suppression or failed syncs dropping records. Success is confirmed when contacts in GHL match within 5% of Meta leads reported, validated by Aug 25."
+        "monday_item_name": "Fix GHL Intake Pipeline",
+        "monday_update": "GHL logged 31 contacts against 43 Meta leads with zero opportunities created and zero appointments set. This is a CRM intake leak — leads are arriving but not being converted to pipeline entries, likely a workflow, stage, or Andrew-side Zoho sync issue. Coordinate with Andrew to trace one recent lead end-to-end and confirm where the handoff breaks. Success = every new lead from Meta creates a GHL opportunity within 24 hours of form submission, confirmed by August 25."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP: actions dropped 75% WoW and ig_reach is at 0 — re-check Aug 23 to determine if listing issue or organic decay after paid went dark.",
+        "text": "Watch GBP actions: 0 for Aug 17–19 after averaging 8/day in July — re-check Aug 23 for listing suppression confirmation.",
         "cites": [
-          "F4"
+          "F3"
         ],
-        "monday_item_name": "Watch GBP Organic Drop",
-        "monday_update": "GBP actions fell 75% week-over-week and Instagram reach dropped to 0 over the last 7 days. This may be organic decay coinciding with the paid blackout, or an independent listing or access issue. No action is warranted until Meta spend is restored and we can separate paid halo from true organic performance. Re-check on Aug 23 — if GBP actions remain below 5/day after Meta resumes, escalate to a listing audit."
+        "monday_item_name": "Watch GBP Listing Drop",
+        "monday_update": "GBP actions dropped 75% week-over-week and hit 0 for three consecutive days (Aug 17–19), after averaging roughly 8 actions/day through July. This is probable listing suppression or a ranking drop, but one data gap could be a reporting lag. No action is taken this cycle. Re-check on August 23 — if actions remain below 3/day, escalate to a GBP audit (listing status, review flags, category accuracy)."
       }
     ],
     "next_check": "2026-08-23"

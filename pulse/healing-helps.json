@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-20T01:03:42.986Z",
+  "generated_at": "2026-08-20T11:21:34.046Z",
   "date": "2026-08-20",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) generated zero spend, leads, or clicks over the past 28 days, so all engagement is coming from Google Business Profile, which recorded 53 total actions (33 directions, 19 web clicks, 1 call). The biggest concern is GBP activity dropping 68.75% over the last 7 days versus the prior 7 days, likely driven by reduced profile visibility or seasonal search demand softening.",
+  "verdict": "GBP activity is the biggest story this period, with 53 total actions (33 directions, 19 web clicks, 1 call) over 28 days, but GBP engagement dropped 68.75% in the last 7 days versus the prior 7 days, likely driven by reduced profile visibility or seasonal search demand. Paid channels (Meta and Google Ads) show zero spend and zero leads, so all lead generation activity is currently organic via GBP.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -38,8 +38,8 @@
     },
     "top_campaign": null,
     "analytics": {
-      "sessions": 181,
-      "users": 145,
+      "sessions": 188,
+      "users": 151,
       "conversions": 0
     },
     "latest_day": {
@@ -51,7 +51,7 @@
       "gbp_actions": 0,
       "ig_reach": 0,
       "sc_clicks": 0,
-      "ga4_sessions": 5,
+      "ga4_sessions": 12,
       "purchases": 0,
       "revenue": 0
     },
@@ -63,7 +63,7 @@
       "google_spend_7d_pct": null,
       "gbp_7d_pct": -68.75,
       "sc_7d_pct": null,
-      "ga4_7d_pct": -25.49,
+      "ga4_7d_pct": -11.76,
       "ig_7d_pct": null,
       "spend_per_day_7d": 0
     },
@@ -337,7 +337,7 @@
         4,
         6,
         6,
-        5
+        12
       ],
       "purchases": [
         0,
@@ -462,61 +462,61 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-20T01:08:48.700Z",
+    "generated_at": "2026-08-20T11:24:45.948Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP is the only lifeline; 4-day silence is a real signal.",
+    "verdict": "Organic-only account; GBP dark 4 days straight, no paid safety net.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend, zero leads, zero clicks across Meta and Google Ads for the full 28-day window — no efficiency to measure.",
+        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google. All lead generation depends entirely on organic GBP.",
         "confidence": "confirmed",
         "channel": "meta, google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP has recorded 0 actions on each of the last 4 days (Aug 16–19), down from an average of ~3/day in prior weeks — a confirmed 4-day silence.",
+        "text": "GBP actions have been 0 for the last 4 consecutive days (Aug 16–19), versus a prior daily average of ~2.7 actions. A 4-day zero streak is a signal, not noise.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "GA4 sessions fell 25.49% week-over-week; last 3 days (Aug 17–19) averaged 5.7 vs prior 3 days (Aug 14–16) averaging 4.0 — directional only, trend is flat-to-soft.",
-        "confidence": "probable",
-        "channel": "ga4"
+        "priority": 3,
+        "text": "GBP dropped 68.75% (7d vs prior 7d): from ~16 actions to ~5. The 3-day signal (Aug 17–19: 0+0+0) vs prior 3 days (Aug 14–16: 1+0+0) confirms the collapse, not a dip.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       },
       {
         "id": "F4",
-        "priority": 3,
-        "text": "GBP 7-day actions dropped 68.75% vs prior 7 days (53 total in 28 days, but only 1 action in most recent 7-day window), suggesting profile visibility loss, not seasonal noise.",
+        "priority": 4,
+        "text": "GA4 sessions dropped 11.76% (7d vs prior 7d); last 3 days (6, 6, 12) vs prior 3 (4, 4, 4) shows slight recovery, suggesting GBP dark has not yet fully suppressed site traffic.",
         "confidence": "probable",
-        "channel": "gbp"
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit GBP profile immediately for suspensions, category changes, or Q&A spam suppressing the 53-action profile.",
+        "text": "Audit GBP profile immediately — 4 zero-action days may indicate suspension, suppression, or listing issue.",
         "cites": [
           "F2",
-          "F4"
+          "F3"
         ],
         "monday_item_name": "GBP Profile Audit Fix",
-        "monday_update": "GBP recorded 0 actions for 4 consecutive days (Aug 16–19) after averaging ~3/day, and the 7-day window is down 68.75% vs the prior 7 days. Check for profile suspension, ownership issues, category edits, or flagged content that could suppress visibility. Success is confirmed when daily GBP actions return to ≥2/day sustained over 3 days. Re-check by 2026-08-23."
+        "monday_update": "GBP actions have been zero for 4 straight days (Aug 16–19), down 68.75% versus the prior 7-day period, and the account has no paid ads running as a fallback. Log into Google Business Profile to confirm the listing is active, not suspended, and has no policy flags or ownership issues. Success check: GBP actions return above 2 per day within 5 days of any fix applied. Re-check by 2026-08-25."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GA4 sessions through Aug 23; if 3-day average stays below 5 sessions/day, investigate landing page or referral source drop.",
+        "text": "Watch GA4 sessions through Aug 23 — last 3 days (6, 6, 12) suggest mild recovery before acting.",
         "cites": [
-          "F3"
+          "F4"
         ],
-        "monday_item_name": "GA4 Session Trend Watch",
-        "monday_update": "GA4 sessions are down 25.49% week-over-week, and the last 3 days averaged 5.7 sessions vs a mid-series peak of 15 on Aug 12. This is directional only — no paid traffic is feeding it. If the 3-day average remains below 5 by Aug 23, investigate whether GBP web-click drop (F4) is cutting the referral source. No action taken yet."
+        "monday_item_name": "Watch GA4 Session Recovery",
+        "monday_update": "GA4 sessions in the last 3 days averaged 8 versus 4 in the prior 3 days, suggesting a possible partial rebound despite GBP going dark. No action warranted yet — the signal is too short and GBP status is unresolved. If sessions fall below 4/day for 3 consecutive days after the GBP fix is applied, escalate to Sohib for a paid activation discussion. Re-check 2026-08-23."
       }
     ],
     "next_check": "2026-08-23"
