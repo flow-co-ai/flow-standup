@@ -485,7 +485,7 @@
     "next_check": "2026-08-02"
   },
   "brief": {
-    "date": "2026-08-20",
+    "date": "2026-08-21",
     "headlines": [
       {
         "text": "Meta Ads access still blocking Pixel setup",
@@ -502,7 +502,7 @@
         "items": [
           {
             "state": "blocked",
-            "text": "Meta Ads access needed — Pixel setup cannot proceed without it"
+            "text": "Meta Ads access needed for Pixel setup — waiting on client to grant access"
           },
           {
             "state": "next",
@@ -513,44 +513,27 @@
     ],
     "waiting_on_client": [
       {
-        "item": "Meta Ads account access for Pixel setup",
-        "who": "Client contact",
+        "item": "Meta Ads access for Pixel setup",
+        "who": "Client-side contact",
         "since": "7/16"
       }
     ],
-    "launch_gate": {
-      "title": "Launch gate - clear before Meta Ads go live",
-      "items": [
-        {
-          "text": "Meta Ads account access granted",
-          "done": false
-        },
-        {
-          "text": "Facebook Pixel installed and verified",
-          "done": false
-        }
-      ]
-    },
+    "launch_gate": null,
     "brief_v2": {
-      "verdict": "Client's move: Meta Ads access is the sole blocker; Pixel setup cannot start without it.",
-      "next_move": "Client: grant Meta Ads account access — directly unblocks Pixel setup and ad launch.",
+      "verdict": "Client's move: Meta Ads access grant is the only thing blocking Pixel setup.",
+      "next_move": "Client: grant Meta Ads access — Pixel setup cannot start until access is provided.",
       "blocks": [
         {
           "item": "Meta Ads access needed for Pixel setup",
           "side": "client",
-          "who": "Client contact",
-          "last_activity": "Access still outstanding; item active in Monday board this week"
+          "who": "Client-side contact",
+          "last_activity": "Access request still open; standup card flags it as stalled this week"
         }
       ],
       "snapshot": [
         {
           "label": "Open items",
-          "value": "1 open, 1 blocked on client access, 0 moving independently",
-          "tone": "bad"
-        },
-        {
-          "label": "Last client word",
-          "value": "No recent client comms recorded in feed",
+          "value": "1 open, 1 stalled on client action — Meta Ads access pending",
           "tone": "warn"
         }
       ],
@@ -558,25 +541,20 @@
     }
   },
   "brief_v2": {
-    "verdict": "Client's move: Meta Ads access is the sole blocker; Pixel setup cannot start without it.",
-    "next_move": "Client: grant Meta Ads account access — directly unblocks Pixel setup and ad launch.",
+    "verdict": "Client's move: Meta Ads access grant is the only thing blocking Pixel setup.",
+    "next_move": "Client: grant Meta Ads access — Pixel setup cannot start until access is provided.",
     "blocks": [
       {
         "item": "Meta Ads access needed for Pixel setup",
         "side": "client",
-        "who": "Client contact",
-        "last_activity": "Access still outstanding; item active in Monday board this week"
+        "who": "Client-side contact",
+        "last_activity": "Access request still open; standup card flags it as stalled this week"
       }
     ],
     "snapshot": [
       {
         "label": "Open items",
-        "value": "1 open, 1 blocked on client access, 0 moving independently",
-        "tone": "bad"
-      },
-      {
-        "label": "Last client word",
-        "value": "No recent client comms recorded in feed",
+        "value": "1 open, 1 stalled on client action — Meta Ads access pending",
         "tone": "warn"
       }
     ],
