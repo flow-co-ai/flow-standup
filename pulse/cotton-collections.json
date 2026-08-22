@@ -485,55 +485,42 @@
     "next_check": "2026-08-02"
   },
   "brief": {
-    "date": "2026-08-21",
+    "date": "2026-08-22",
     "headlines": [
       {
-        "text": "Meta Ads access still blocking Pixel setup",
+        "text": "Standup generation failed — workflow log issue",
         "tone": "info"
       }
     ],
     "workstreams": [
       {
-        "title": "Cotton Collections - Ads",
+        "title": "Cotton Collections - Status",
         "badge": {
-          "label": "P1 - blocked",
-          "tone": "red"
+          "label": "P1 - needs attention",
+          "tone": "amber"
         },
         "items": [
           {
             "state": "blocked",
-            "text": "Meta Ads access needed for Pixel setup — waiting on client to grant access"
+            "text": "Standup card generation failed; no feed data available today"
           },
           {
             "state": "next",
-            "text": "(inferred) Client to grant Meta Ads access to unblock Pixel setup"
+            "text": "(inferred) Investigate workflow log to restore standup generation"
           }
         ]
       }
     ],
-    "waiting_on_client": [
-      {
-        "item": "Meta Ads access for Pixel setup",
-        "who": "Client-side contact",
-        "since": "7/16"
-      }
-    ],
+    "waiting_on_client": [],
     "launch_gate": null,
     "brief_v2": {
-      "verdict": "Client's move: Meta Ads access grant is the only thing blocking Pixel setup.",
-      "next_move": "Client: grant Meta Ads access — Pixel setup cannot start until access is provided.",
-      "blocks": [
-        {
-          "item": "Meta Ads access needed for Pixel setup",
-          "side": "client",
-          "who": "Client-side contact",
-          "last_activity": "Access request still open; standup card flags it as stalled this week"
-        }
-      ],
+      "verdict": "No feed data today — standup generation failed; workflow log must be checked.",
+      "next_move": "Flow ops: inspect workflow log and rerun standup — restores visibility for Cotton Collections.",
+      "blocks": [],
       "snapshot": [
         {
           "label": "Open items",
-          "value": "1 open, 1 stalled on client action — Meta Ads access pending",
+          "value": "1 open item in working status; no meetings, messages, or completions recorded.",
           "tone": "warn"
         }
       ],
@@ -541,20 +528,13 @@
     }
   },
   "brief_v2": {
-    "verdict": "Client's move: Meta Ads access grant is the only thing blocking Pixel setup.",
-    "next_move": "Client: grant Meta Ads access — Pixel setup cannot start until access is provided.",
-    "blocks": [
-      {
-        "item": "Meta Ads access needed for Pixel setup",
-        "side": "client",
-        "who": "Client-side contact",
-        "last_activity": "Access request still open; standup card flags it as stalled this week"
-      }
-    ],
+    "verdict": "No feed data today — standup generation failed; workflow log must be checked.",
+    "next_move": "Flow ops: inspect workflow log and rerun standup — restores visibility for Cotton Collections.",
+    "blocks": [],
     "snapshot": [
       {
         "label": "Open items",
-        "value": "1 open, 1 stalled on client action — Meta Ads access pending",
+        "value": "1 open item in working status; no meetings, messages, or completions recorded.",
         "tone": "warn"
       }
     ],
