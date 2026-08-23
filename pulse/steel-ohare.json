@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-22T11:17:38.872Z",
-  "date": "2026-08-22",
+  "generated_at": "2026-08-23T11:17:22.283Z",
+  "date": "2026-08-23",
   "slug": "steel-ohare",
   "name": "O'Hare Precision",
   "type": "leadgen",
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "The biggest movement this period is a 69.23% drop in GBP actions week-over-week, likely driven by reduced search visibility or seasonal dip in local intent, though the profile still generated 186 total actions (13 calls, 126 directions, 47 web clicks) over 28 days. Paid channels (Meta and Google Ads) show zero spend and zero leads, so no lead generation activity is running and should be reviewed immediately.",
+  "verdict": "The biggest movement is a 60.56% drop in Google Business Profile engagement over the last 7 days, likely driven by reduced local search visibility or seasonal softening in demand. Paid channels (Meta and Google Ads) show zero spend and zero leads over the 28-day window, meaning all 176 GBP actions, 13 calls, 114 direction requests, and 49 web clicks are the sole source of inbound activity.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,24 +25,24 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 186,
+          "actions": 176,
           "calls": 13,
-          "directions": 126,
-          "web_clicks": 47
+          "directions": 114,
+          "web_clicks": 49
         }
       }
     },
     "organic": {
-      "gbp_actions": 186,
+      "gbp_actions": 176,
       "ig_reach": 0
     },
     "top_campaign": null,
     "search": {
-      "clicks": 413,
-      "impressions": 64806
+      "clicks": 411,
+      "impressions": 63028
     },
     "latest_day": {
-      "date": "2026-08-21",
+      "date": "2026-08-22",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -60,8 +60,8 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -69.23,
-      "sc_7d_pct": -2.97,
+      "gbp_7d_pct": -60.56,
+      "sc_7d_pct": -11.54,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
       "spend_per_day_7d": 0
@@ -69,7 +69,6 @@
     "flags": [],
     "series": {
       "dates": [
-        "2026-07-25",
         "2026-07-26",
         "2026-07-27",
         "2026-07-28",
@@ -96,7 +95,8 @@
         "2026-08-18",
         "2026-08-19",
         "2026-08-20",
-        "2026-08-21"
+        "2026-08-21",
+        "2026-08-22"
       ],
       "spend": [
         0,
@@ -219,7 +219,6 @@
         0
       ],
       "gbp_actions": [
-        14,
         0,
         6,
         7,
@@ -244,6 +243,7 @@
         0,
         12,
         10,
+        4,
         2,
         0,
         0
@@ -279,7 +279,6 @@
         0
       ],
       "sc_clicks": [
-        2,
         8,
         15,
         20,
@@ -306,6 +305,7 @@
         30,
         19,
         16,
+        0,
         0
       ],
       "ga4_sessions": [
@@ -409,79 +409,80 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-22T11:23:30.818Z",
+    "generated_at": "2026-08-23T11:23:54.411Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid channels dead 28+ days; organic holding but GBP fading fast.",
+    "verdict": "GBP cliff is real; 3-day sc_clicks collapse confirms organic pullback.",
     "findings": [
       {
         "id": "F1",
-        "priority": 1,
-        "text": "Zero paid spend and zero leads across all 28 days — $0 Meta, $0 Google Ads. No efficiency to measure; the channel is off.",
-        "confidence": "confirmed",
-        "channel": "meta+google"
-      },
-      {
-        "id": "F2",
         "priority": 2,
-        "text": "SOW OVERDUE: CRM directives issued 2026-07-07, Tom call list 2026-07-28, and dedup workbook 2026-07-31 all lack a confirmed completion event.",
+        "text": "OVERDUE: 3 CRM milestones unresolved — 1st Directives (Jul 7), Tom call list (Jul 28), dedup workbook + 126 accounts (Jul 31) — blocking Sales-i sync for 342 stub accounts.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
+        "id": "F2",
+        "priority": 1,
+        "text": "GBP actions fell 60.56% week-over-week; last 3 days (Aug 20–22) show 2, 0, 0 actions vs prior 3-day avg of ~8 — sustained collapse, not a single-day blip.",
+        "confidence": "confirmed",
+        "channel": "GBP"
+      },
+      {
         "id": "F3",
         "priority": 2,
-        "text": "GBP actions dropped 69.23% week-over-week to near zero; last 3 days (Aug 19–21) show 2, 0, 0 vs prior 3 days (Aug 16–18) averaging 11.3 actions/day.",
+        "text": "Search clicks (sc) dropped to 0 on Aug 21–22; prior 3-day avg was ~18.7 clicks/day — a 100% 3-day signal drop after a stable mid-August run.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "Search"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Search clicks remain active (413 over 28 days, 3-day avg ~12) but GA4 sessions read zero for entire 45-day series — tracking is broken or property is unlinked.",
+        "text": "Paid spend is $0 across all 28 days on both Meta and Google Ads — no paid lead engine exists; 100% of inbound (176 GBP actions, 13 calls) relies on organic alone.",
         "confidence": "confirmed",
-        "channel": "organic"
+        "channel": "Paid"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL pipeline is null despite 413 search clicks and 186 GBP actions over 28 days — any organic inquiries are not entering CRM intake at all.",
+        "text": "GA4 sessions are zero for all 45 days — either the GA4 property is misconfigured or unlinked; GBP web clicks (49 over 28 days) should register some sessions.",
         "confidence": "probable",
-        "channel": "ghl"
+        "channel": "GA4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Resolve GA4 tracking gap immediately — 45 days of zero sessions with 413 real search clicks confirms a broken property link.",
+        "text": "Escalate all 3 overdue CRM milestones to Ahmed immediately; 342 stub accounts are dark to Sales-i until resolved.",
         "cites": [
-          "F4"
+          "F1"
         ],
-        "monday_item_name": "Fix GA4 tracking O'Hare",
-        "monday_update": "GA4 sessions have read zero for the entire 45-day series (2026-07-25 to 2026-08-21) despite 413 confirmed search clicks — the property is either unlinked or the tag is misfiring. Dev team to audit the GA4 tag and Search Console property linkage this week. Success is confirmed when sessions appear within 48 hours of the fix. Re-check by 2026-08-27."
+        "monday_item_name": "Escalate 3 Overdue CRM Milestones",
+        "monday_update": "Three CRM milestones are overdue: 1st Directives (Jul 7), Tom call list (Jul 28), and the dedup workbook + 126 accounts (Jul 31). The 342 stub accounts cannot sync to Sales-i until the dedup workbook is executed, meaning those accounts receive no inactivity automation or pipeline data. Ahmed to confirm status and unblock in the next 48 hours. Success check: rollback files posted to Monday and merge batches confirmed started by 2026-08-26."
       },
       {
         "id": "S2",
-        "type": "watch",
-        "text": "Watch GBP actions for 3 more days — 0 actions on Aug 20–21 may be a reporting lag, not a true drop.",
+        "type": "fix",
+        "text": "Audit GBP listing for suppression or ranking drop; sc_clicks at 0 for 2 days confirms something broke, not seasonal drift.",
         "cites": [
+          "F2",
           "F3"
         ],
-        "monday_item_name": "Watch GBP action drop",
-        "monday_update": "GBP actions fell from an 11.3/day average (Aug 16–18) to 0 on both Aug 20 and Aug 21, a 69.23% weekly decline. This could be a weekend reporting lag rather than a structural drop — the 28-day total of 186 actions (13 calls, 126 directions, 47 web clicks) is still meaningful. Re-check on 2026-08-25; if the 3-day average remains below 4 actions/day, escalate to a GBP optimisation task."
+        "monday_item_name": "GBP Listing Audit Aug 23",
+        "monday_update": "GBP actions dropped 60.56% week-over-week and hit 0 on Aug 21–22; search clicks also fell to 0 on those same days. These two signals together suggest a listing suppression, suspension flag, or a ranking penalty — not seasonal softening as the daily verdict implied. Check GBP dashboard for policy flags, verify listing ownership and category, and confirm no recent edits triggered a re-verification loop. Success check: GBP actions return to ≥5/day and sc_clicks return to ≥15/day within 7 days of fix confirmed."
       },
       {
         "id": "S3",
-        "type": "fix",
-        "text": "Chase the 3 overdue CRM milestones — completion confirmations required before downstream automation builds can proceed.",
+        "type": "watch",
+        "text": "Watch GA4 zero-session anomaly; if still zero by Aug 26, treat as broken pixel requiring fix before any paid traffic is considered.",
         "cites": [
-          "F2"
+          "F5"
         ],
-        "monday_item_name": "CRM Milestones Completion Check",
-        "monday_update": "Three SOW milestones are overdue with no completion event logged: 1st Directives (2026-07-07), Tom call list priority (2026-07-28), and dedup workbook + 126 accounts delivery (2026-07-31). Sohib to confirm status with Ahmed and Jorge; if the dedup workbook is complete, post the rollback files to the Monday CRM board as required by the data rules. All three must be marked complete or re-scoped before the Sales-i parser build (next Aug–Oct milestone) can begin. Resolve by 2026-08-29."
+        "monday_item_name": "Watch GA4 Pixel Zero Sessions",
+        "monday_update": "GA4 sessions have read zero for all 45 days in the series despite 49 GBP web clicks recorded in the same window — these clicks should register at least some sessions. This is likely a disconnected property or missing tracking code. No paid channel should be activated until GA4 is verified functional, as conversion tracking would be blind. Re-check on 2026-08-26; if still zero, escalate to Dev team as a fix item."
       }
     ],
-    "next_check": "2026-08-25"
+    "next_check": "2026-08-26"
   }
 }

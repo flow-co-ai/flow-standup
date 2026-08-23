@@ -487,10 +487,10 @@
     "next_check": "2026-08-01"
   },
   "brief": {
-    "date": "2026-08-22",
+    "date": "2026-08-23",
     "headlines": [
       {
-        "text": "Standup generation failed — feed unavailable today",
+        "text": "No feed data generated — standup card failed",
         "tone": "info"
       }
     ],
@@ -504,92 +504,18 @@
         "items": [
           {
             "state": "next",
-            "text": "(inferred) Check workflow log and regenerate standup feed"
+            "text": "(inferred) Reconcile 342 stub accounts — gates Sales-i sync"
           },
           {
-            "state": "queued",
-            "text": "Reconcile 342 stub accounts against authoritative customer sheet"
-          }
-        ]
-      },
-      {
-        "title": "Steel Round Bars - Web / SEO / GBP",
-        "badge": {
-          "label": "P2 - status unknown",
-          "tone": "amber"
-        },
-        "items": [
-          {
-            "state": "queued",
-            "text": "(inferred) Confirm active tasks across 5 sites — feed missing"
-          }
-        ]
-      },
-      {
-        "title": "Steel Round Bars - Ads / Cold Email",
-        "badge": {
-          "label": "P2 - status unknown",
-          "tone": "amber"
-        },
-        "items": [
-          {
-            "state": "queued",
-            "text": "(inferred) Verify ad and outreach task status — feed missing"
+            "state": "blocked",
+            "text": "Standup card generation failed; no feed data available today"
           }
         ]
       }
     ],
     "waiting_on_client": [],
     "launch_gate": null,
-    "brief_v2": {
-      "verdict": "Standup generation failed today; 23 working tasks exist but no activity detail is available.",
-      "next_move": "Sohib: check workflow log and re-run standup generation — unblocks today's visibility.",
-      "blocks": [
-        {
-          "item": "Standup feed generation failure",
-          "side": "you",
-          "who": "Sohib",
-          "last_activity": "Generation failed for this client — see workflow log"
-        }
-      ],
-      "snapshot": [
-        {
-          "label": "Open items",
-          "value": "23 tasks in working status; 0 stuck, 0 in review — no detail available today",
-          "tone": "warn"
-        },
-        {
-          "label": "Contract",
-          "value": "$10,500/mo retainer; Aug–Oct 2026 window active",
-          "tone": "muted"
-        }
-      ],
-      "history_line": null
-    }
+    "brief_v2": "{\"verdict\": \"Standup card failed to generate — no activity confirmed or denied for this week.\", \"next_move\": \"Ops: rerun standup generation for Steel Round Bars — no data means no visibility.\", \"blocks\": [], \"snapshot\">[{\"label\": \"Open items\", \"value\": \"23 open, all in Working status, 0 moving confirmed this week\", \"tone\": \"warn\"}, {\"label\": \"Contract\", \"value\": \"Retainer $10,500/mo, Flow Co., Jan 2026; Aug–Oct 2026 window active\", \"tone\": \"muted\"}, {\"label\": \"Judged on\", \"value\": \"RFQs → quotes → orders; revenue recovered from quiet accounts\", \"tone\": \"plain\"}], \"history_line\": null}"
   },
-  "brief_v2": {
-    "verdict": "Standup generation failed today; 23 working tasks exist but no activity detail is available.",
-    "next_move": "Sohib: check workflow log and re-run standup generation — unblocks today's visibility.",
-    "blocks": [
-      {
-        "item": "Standup feed generation failure",
-        "side": "you",
-        "who": "Sohib",
-        "last_activity": "Generation failed for this client — see workflow log"
-      }
-    ],
-    "snapshot": [
-      {
-        "label": "Open items",
-        "value": "23 tasks in working status; 0 stuck, 0 in review — no detail available today",
-        "tone": "warn"
-      },
-      {
-        "label": "Contract",
-        "value": "$10,500/mo retainer; Aug–Oct 2026 window active",
-        "tone": "muted"
-      }
-    ],
-    "history_line": null
-  }
+  "brief_v2": "{\"verdict\": \"Standup card failed to generate — no activity confirmed or denied for this week.\", \"next_move\": \"Ops: rerun standup generation for Steel Round Bars — no data means no visibility.\", \"blocks\": [], \"snapshot\">[{\"label\": \"Open items\", \"value\": \"23 open, all in Working status, 0 moving confirmed this week\", \"tone\": \"warn\"}, {\"label\": \"Contract\", \"value\": \"Retainer $10,500/mo, Flow Co., Jan 2026; Aug–Oct 2026 window active\", \"tone\": \"muted\"}, {\"label\": \"Judged on\", \"value\": \"RFQs → quotes → orders; revenue recovered from quiet accounts\", \"tone\": \"plain\"}], \"history_line\": null}"
 }
