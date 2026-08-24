@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-24T11:23:20.956Z",
+  "generated_at": "2026-08-24T16:48:48.704Z",
   "date": "2026-08-24",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Over the past 28 days, Meta drove all 29 leads at a $25.57 CPL with $741.52 in spend, led by the \"CROA || CBO - 3/17/26\" campaign at $389.25. The biggest movement is Instagram's +29,700% 7-day spike, likely driven by that campaign's creative gaining sudden traction in the CBO auction.",
+  "verdict": "Meta drove all 29 leads over 28 days at a $25.57 CPL, with the top campaign \"CROA || CBO - 3/17/26\" accounting for $389.25 of the $741.52 in spend. The biggest movement is Instagram's 29,700% 7-day spike, likely driven by a new creative or audience push within that campaign.",
   "windsor": {
     "totals": {
       "spend": 741.52,
@@ -25,15 +25,15 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 179,
-          "calls": 59,
+          "actions": 184,
+          "calls": 61,
           "directions": 0,
-          "web_clicks": 120
+          "web_clicks": 123
         }
       }
     },
     "organic": {
-      "gbp_actions": 179,
+      "gbp_actions": 184,
       "ig_reach": 1442
     },
     "top_campaign": {
@@ -74,7 +74,7 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": 4.65,
+      "gbp_7d_pct": 16.28,
       "sc_7d_pct": 16.38,
       "ga4_7d_pct": -26.86,
       "ig_7d_pct": 29700,
@@ -258,7 +258,7 @@
         7,
         19,
         12,
-        0,
+        5,
         0,
         0
       ],
@@ -415,7 +415,7 @@
     }
   },
   "ghl": {
-    "contacts": 28,
+    "contacts": 29,
     "opportunities": {
       "created": {
         "count": 0,
@@ -566,78 +566,77 @@
     "history_line": "Pixel set up and test event ran"
   },
   "performance": {
-    "generated_at": "2026-08-24T11:29:12.655Z",
+    "generated_at": "2026-08-24T16:51:30.602Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Ads went dark Aug 6 — score of 100 is stale, not real.",
+    "verdict": "Ads dark since Aug 6 — 29 leads this month are stale, not current.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Meta spend has been $0 for 18 consecutive days (Aug 6–23); all 29 leads and $741.52 spend are pre-blackout. No active paid acquisition right now.",
+        "text": "Meta spend has been $0 for 18 consecutive days (Aug 6–23); all 29 leads and $741.52 in spend belong to the prior active window.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GHL shows 28 contacts but 0 opportunities created and 0 appointments — leads arriving but intake pipeline is completely empty, signaling a CRM intake leak.",
+        "text": "GHL shows 29 contacts but 0 opportunities created and 0 appointments — every lead from the active run sits unworked in pipeline.",
         "confidence": "confirmed",
-        "channel": "crm"
+        "channel": "GHL"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Score of 100/green is machine-stale: it reflects a zero-spend period with no penalties triggered, not healthy performance. The triage signal is unreliable today.",
-        "confidence": "confirmed",
+        "text": "3-day trend (Aug 21–23): ig_reach spiked to 210, 150, 182 vs near-zero prior 3 days — organic Instagram active while paid is dark; cause unknown.",
+        "confidence": "probable",
         "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "IG reach spiked to 210–182 on Aug 21–23 despite zero paid spend, suggesting organic content is gaining traction; GBP actions also steady at 12 on Aug 20.",
-        "confidence": "probable",
-        "channel": "organic"
+        "text": "GBP actions +16.28% (7d) and search clicks +16.38% — organic demand is holding up despite paid going dark; not reflected in signed cases.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "Search clicks rose +16.38% 7d vs prior 7d (31 clicks on Aug 22), but GA4 sessions fell -26.86% — directional gap may reflect GA4 double-count issue; watch only.",
+        "text": "GA4 sessions -26.86% (7d), directional only given known double-count issue; consistent with paid traffic cutoff on Aug 6.",
         "confidence": "hypothesis",
-        "channel": "seo"
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Restore Meta spend to $65/day immediately — 18 dark days means zero lead intake against a 3/day volume target.",
+        "text": "Urgently diagnose why Meta spend dropped to $0 on Aug 6 — account suspension, billing, or manual pause; restore or escalate.",
         "cites": [
-          "F1",
-          "F3"
+          "F1"
         ],
-        "monday_item_name": "Restore Meta spend $65/day",
-        "monday_update": "Meta has been at $0 spend since Aug 6 — 18 consecutive dark days confirmed in the daily series. Restart the CROA CBO campaign at $65/day (the pre-blackout floor from the SOW). Success check: at least 3 leads recorded within 72 hours of relaunch, CPL ≤ $45 (top of the July range). Confirm live by Aug 25 and report lead count by Aug 27."
+        "monday_item_name": "Diagnose Meta Spend Outage",
+        "monday_update": "Meta spend has been $0 for 18 consecutive days (Aug 6–23), halting all lead flow from the $65–75/day active campaign. Immediately check account status, billing, and campaign-level pause flags in Ads Manager. Success is confirmed when daily spend resumes at or near $65/day and GHL begins receiving new contacts. This must be resolved before Aug 27 or the 3-lead/day July volume target is unrecoverable for August."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GHL intake: 28 contacts, 0 opportunities created — confirm Andrew's Zoho-to-GHL pipeline stage mapping is firing correctly.",
+        "text": "Escalate to Andrew: 29 GHL contacts at $0 opportunities created — intake has not processed a single lead from the July–Aug run.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Fix GHL intake pipeline mapping",
-        "monday_update": "GHL shows 28 contacts from the 28-day window but zero opportunities created and zero appointments booked — this is a confirmed intake leak, not an ads problem. Flag to Andrew to verify that lead form submissions are triggering the opportunity-creation workflow in GHL/Zoho. Success check: at least 1 opportunity created per new contact within 24 hours of the fix. Resolve by Aug 26 and confirm in Friday's Meta report."
+        "monday_item_name": "GHL Intake Leak — Andrew",
+        "monday_update": "All 29 leads captured before Aug 6 show in GHL as contacts, but 0 opportunities were created and 0 appointments booked. This is an intake processing failure, not an ads problem. Andrew must audit the GHL pipeline and confirm whether contacts were worked, disqualified, or simply missed. Success check: at least 20 of the 29 contacts have an opportunity stage and a disposition entered by Aug 28."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch IG organic reach (182 on Aug 23) through Aug 27 — if sustained ≥100/day, flag for Sohib as content momentum worth preserving in the creative brief.",
+        "text": "Watch IG reach spike (210–182 reach, Aug 21–23) — identify source before crediting or acting on it.",
         "cites": [
-          "F4"
+          "F3"
         ],
-        "monday_item_name": "Watch IG organic reach trend",
-        "monday_update": "IG reach spiked to 210 on Aug 21 and held at 182 on Aug 23 with zero paid spend behind it. Monitor daily reach through Aug 27; if it holds at or above 100/day for 4 consecutive days, surface to Sohib as evidence of organic traction that should inform the next Marwan/Rocco video shoot brief. No action before the re-check date."
+        "monday_item_name": "Monitor IG Reach Spike",
+        "monday_update": "Instagram reach jumped from near-zero to 182–210 over Aug 21–23 with no active paid spend; this is likely organic posting or a boosted reel outside tracked campaigns. Do not attribute lead quality to this until the source is confirmed. Re-check on Aug 27 — if reach sustains above 150/day and any GHL contacts trace to Instagram, escalate to Hamza/Hamdan for attribution."
       }
     ],
     "next_check": "2026-08-27"

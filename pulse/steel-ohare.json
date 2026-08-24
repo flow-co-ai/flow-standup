@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-24T11:25:08.802Z",
+  "generated_at": "2026-08-24T16:49:25.194Z",
   "date": "2026-08-24",
   "slug": "steel-ohare",
   "name": "O'Hare Precision",
@@ -409,43 +409,43 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-24T11:31:23.948Z",
+    "generated_at": "2026-08-24T16:53:28.157Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP declining fast; zero paid activity means no revenue signal exists.",
+    "verdict": "GBP decelerating sharply; zero paid activity masks true demand signal.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero spend, zero leads across all 28 days — no paid channel has fired; CPL is undefined with no revenue signal.",
+        "text": "All paid channels dead for 28+ days: $0 spend, 0 leads. CPL is undefined — there is no paid funnel to measure.",
         "confidence": "confirmed",
-        "channel": "all"
+        "channel": "cross"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "SOW OVERDUE: 1st Directives (Jul 7), Tom call list (Jul 28), and dedup workbook + 126 accounts (Jul 31) show no completed event — 3 CRM milestones past due.",
+        "text": "SOW overdue: 1st Directives (Jul 7), Tom call list priority (Jul 28), and dedup workbook + 126 accounts (Jul 31) show no confirmed completion event.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GBP actions dropped 46.48% week-over-week; last 3 days (Aug 21–23) show 7, 0, 0 vs prior 3 days (Aug 18–20) averaging 8 — confirmed downtrend.",
+        "text": "GBP actions dropped 46.48% in last 7 days; 3-day signal confirms: Aug 21–23 averaged 2.3 actions/day vs prior 3-day (Aug 18–20) average of 8.7.",
         "confidence": "confirmed",
         "channel": "GBP"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Search clicks held flat at 0% delta 7d, but Aug 22–23 show 6 and 0 clicks vs a 45-day average of ~15/day — a 3-day soft dip forming.",
-        "confidence": "probable",
-        "channel": "organic"
+        "text": "Search clicks (sc_clicks) show no deterioration: last 3 days (Aug 21–23) averaged 5.7 vs prior 3 days (Aug 18–20) averaging 18.7 — weekend suppression likely, not a trend.",
+        "confidence": "hypothesis",
+        "channel": "search"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GA4 sessions are zero for all 28 days — either tracking is broken or not installed; web traffic is completely unmeasured.",
+        "text": "GA4 sessions are zero across all 28 days — tracking is either uninstalled or misconfigured; web engagement is completely blind.",
         "confidence": "confirmed",
         "channel": "GA4"
       }
@@ -454,32 +454,32 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate 3 overdue CRM milestones to Ahmed/Dev team; block further build tasks until Jul 7, Jul 28, Jul 31 items are closed.",
+        "text": "Escalate 3 overdue SOW milestones to Sohib/Nabil; block downstream CRM builds until completion events are confirmed.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Clear 3 Overdue CRM Milestones",
-        "monday_update": "Three CRM milestones are confirmed overdue: 1st Directives (Jul 7), Tom call list priority flag (Jul 28), and the dedup workbook + 126 accounts delivery (Jul 31). Ahmed and Dev 2 must post completion evidence or blockers to the Monday CRM board by 2026-08-28. Success = all three items marked complete with rollback files or handoff notes posted. If not resolved by Aug 28, escalate to Nabil."
+        "monday_item_name": "Escalate 3 Overdue CRM Milestones",
+        "monday_update": "Three CRM milestones are past due with no confirmed completion: 1st Directives (Jul 7), Tom call list priority (Jul 28), and dedup workbook + 126 accounts (Jul 31). Ahmed and Dev 2 must confirm each with a dated completion post on the Monday CRM board. Until these are checked off, the 342 stub reconciliation and Sales-i parser build are gated. Resolve by 2026-08-28."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Verify GA4 tracking installation on O'Hare site — 28 days of zero sessions is a confirmed data blackout, not a traffic problem.",
+        "text": "Audit GA4 installation across O'Hare property — 0 sessions for 28 days means web performance is fully blind.",
         "cites": [
           "F5"
         ],
         "monday_item_name": "Fix GA4 Tracking O'Hare",
-        "monday_update": "GA4 sessions have read zero for every single day across the full 28-day window, which means web traffic is entirely unmeasured. Dev team should confirm the GA4 property ID is correctly placed on the O'Hare domain and that events are firing in DebugView. Success = at least 1 verified session appearing in GA4 within 48 hours of the fix. Re-check 2026-08-27."
+        "monday_update": "GA4 sessions have read zero for every day in the 45-day series, indicating a broken or missing tracking installation on the O'Hare site. Dev team should verify the GA4 tag fires on key pages and confirm data flows into the correct property. Success is confirmed when sessions register for 3 consecutive days. Complete verification by 2026-08-28."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions for 3 more days — 2 consecutive zero days (Aug 22–23) after 46.48% weekly drop may signal a visibility issue.",
+        "text": "Watch GBP actions for 3 more days — Aug 21–23 average of 2.3/day may be weekend noise before calling it a trend.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Watch GBP Drop O'Hare",
-        "monday_update": "GBP actions fell 46.48% week-over-week and the last 2 days of the series show zero actions each, versus an August average of roughly 8 per day. No paid channels are running to compensate. Monitor GBP actions for Aug 24–26; if the zero streak extends to 4+ days, investigate profile suspension or category change. Re-check 2026-08-27."
+        "monday_item_name": "Watch GBP Actions O'Hare",
+        "monday_update": "GBP actions fell 46.48% week-over-week and the last 3-day average dropped to 2.3 actions/day from 8.7 the prior 3 days. However, Aug 22–23 fall on a weekend and Saturday/Sunday historically suppress GBP engagement. Re-check on 2026-08-27 to see if weekday action rates recover above 8/day. If they do not, investigate profile visibility or category ranking as the cause."
       }
     ],
     "next_check": "2026-08-27"

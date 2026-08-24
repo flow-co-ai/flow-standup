@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-24T11:22:40.839Z",
+  "generated_at": "2026-08-24T16:48:40.510Z",
   "date": "2026-08-24",
   "slug": "hvac",
   "name": "Quality HVAC by Fibid",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Google Ads drove all $1,317.43 in 28-day spend and delivered 13 conversions, with the top Local Services campaign alone accounting for $1,009.72. Spend pulled back 26.13% over the last 7 days, likely reflecting a budget throttle or seasonal demand dip, while GBP engagement also softened 10% week-over-week.",
+  "verdict": "Google Ads spend dropped 26.13% week-over-week to $1,317.43 over 28 days, likely driven by a pullback in the top Local Services campaign (\"LocalServicesCampaign:SystemGenerated:0005fc228eede686\") which alone accounted for $1,009.72 of total spend. GBP engagement held relatively steady with 115 actions (including 31 calls), suggesting organic demand remains intact despite the paid slowdown.",
   "windsor": {
     "totals": {
       "spend": 1317.43,
@@ -404,10 +404,10 @@
     }
   },
   "ghl": {
-    "contacts": 77,
+    "contacts": 80,
     "opportunities": {
       "created": {
-        "count": 38,
+        "count": 42,
         "value": 0
       },
       "won": {
@@ -528,79 +528,78 @@
     "history_line": "Deleted pre-July pipeline records · Fixed submit quote button"
   },
   "performance": {
-    "generated_at": "2026-08-24T11:28:47.399Z",
+    "generated_at": "2026-08-24T16:51:04.562Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Throttle is working but intake ownership gap blocks any scale decision.",
+    "verdict": "Spend throttled intentionally; SOW blocker on intake seat is the real risk.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "Booking bot battle-test was due 2026-07-31 — 24 days overdue. GHL shows 38 opps created but 0 appointments logged, suggesting automation may be untested or broken.",
-        "confidence": "probable",
+        "text": "Booking bot battle-test was due 2026-07-31 — 24 days overdue with no completed event logged; CRM automation readiness is unconfirmed.",
+        "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
-        "priority": 2,
-        "text": "Intake ownership unconfirmed since Vivian left 7/7. GHL logs 77 contacts and 38 opps but 0 appointments — speed-to-lead automations may be pointing at an unmanned seat.",
-        "confidence": "probable",
-        "channel": "CRM"
+        "priority": 1,
+        "text": "Leads field reads 0 across all 28 days and the full 45-day series — GHL contacts (80) and 13 Google Ads conversions exist, but CPL is uncomputable; attribution chain is broken.",
+        "confidence": "confirmed",
+        "channel": "google_ads"
       },
       {
         "id": "F3",
-        "priority": 1,
-        "text": "Leads field reads 0 across all 28 days despite 13 Google Ads conversions and 31 GBP calls. CPL is incalculable — attribution between LSA and GHL is broken or unmapped.",
-        "confidence": "confirmed",
-        "channel": "Google"
+        "priority": 2,
+        "text": "Spend is highly erratic: 9 zero-spend days in the last 28 days, including 2026-08-22 ($0) and a 3-day signal of $20.77 / $0 / $62.48 vs prior-3 avg of $16.50 — pattern is budget exhaustion mid-day, not a pull-back decision.",
+        "confidence": "probable",
+        "channel": "google_ads"
       },
       {
         "id": "F4",
-        "priority": 2,
-        "text": "3-day spend signal (Aug 21–23): $20.77 + $0 + $62.48 = $83.25 vs prior 3 days (Aug 18–20): $16.06 + $21.63 + $84.70 = $122.39 — spend contracting, consistent with intentional throttle.",
-        "confidence": "confirmed",
-        "channel": "Google"
+        "priority": 3,
+        "text": "GBP actions fell 10% week-over-week (last reported: 115 over 28 days, 31 calls); Aug 19 spiked to 17 actions then collapsed to 0 for Aug 22–23 — directional softening despite paid being live.",
+        "confidence": "probable",
+        "channel": "gbp"
       },
       {
         "id": "F5",
-        "priority": 3,
-        "text": "GBP actions fell 10% week-over-week; last 3 days (Aug 21–23) show 2 + 0 + 0 = 2 actions vs prior 3 (Aug 18–20): 1 + 17 + 2 = 20. Aug-22/23 GBP zeros likely Windsor lag, not real drop.",
-        "confidence": "hypothesis",
-        "channel": "GBP"
+        "priority": 4,
+        "text": "GHL shows 42 opportunities created vs only 9 won (21% close rate) with $0 pipeline value recorded — opportunity value field is unpopulated, blocking any revenue-per-lead calculation.",
+        "confidence": "confirmed",
+        "channel": "crm"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Confirm live intake owner in GHL and test speed-to-lead automation end-to-end before any budget increase.",
+        "text": "Fix lead attribution: reconcile 80 GHL contacts and 13 Google Ads conversions to populate the leads field and unlock CPL tracking.",
         "cites": [
-          "F1",
           "F2"
         ],
-        "monday_item_name": "Fix GHL Intake & Bot Test",
-        "monday_update": "Vivian left 7/7 and the booking bot battle-test is 24 days overdue (due 2026-07-31). Confirm who now owns the GHL intake seat, verify their login, and run a live end-to-end test of the speed-to-lead automation. Success check: at least 1 appointment logged in GHL within 5 minutes of a test lead submission, confirmed by 2026-08-28. No budget increases should be approved until this is resolved — it is the stated scale-back-up gate."
+        "monday_item_name": "Fix Lead Attribution Pipeline",
+        "monday_update": "The leads field has returned 0 for the entire 45-day series despite 80 GHL contacts and 13 Google Ads conversions existing in the same window — CPL is currently uncomputable. Action: trace the GHL-to-reporting connector and confirm which contact stage maps to a 'lead' event; populate or fix the field. Success check: leads field shows a non-zero value matching GHL contact volume within 3 days (by 2026-08-27). Until this is resolved, no budget scaling decision is defensible."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Map LSA and GBP call conversions into GHL so CPL becomes calculable; 13 conversions and 31 calls are currently invisible to pipeline.",
+        "text": "Confirm who owns intake post-Vivian departure (7/7); verify GHL seat login and after-hours coverage before any budget increase.",
         "cites": [
-          "F3"
+          "F2",
+          "F5"
         ],
-        "monday_item_name": "Map LSA/GBP Calls to GHL",
-        "monday_update": "28-day data shows 13 Google Ads conversions and 31 GBP calls, but the GHL leads field reads 0 — these are not flowing into pipeline. Audit the LSA lead notification destination and GBP call tracking to confirm they route to an active GHL workflow. Success check: leads field in next performance run reflects at least a portion of those 13 conversions, verifiable by 2026-08-31."
+        "monday_item_name": "Confirm Intake Owner Post-Vivian",
+        "monday_update": "Vivian left on 7/7 and speed-to-lead automations were pointed at her seat. GHL shows 42 opportunities created but only 9 won with $0 value recorded — it is unclear whether this reflects a real close-rate problem or an intake/data-entry gap. Action: confirm with Xavier or Nader who owns dispatch intake now, verify their GHL login is active, and confirm after-hours coverage is live. Success check: a named owner with active GHL access is confirmed in writing by 2026-08-27. This is a SOW-listed ⛔ blocker on budget scale-up."
       },
       {
         "id": "S3",
-        "type": "watch",
-        "text": "Hold all budget changes; re-check Aug 27 once GBP lag clears and intake gate is confirmed.",
+        "type": "fix",
+        "text": "Complete overdue booking bot battle-test (due 2026-07-31, now 24 days late); document pass/fail result in Monday.",
         "cites": [
-          "F4",
-          "F5"
+          "F1"
         ],
-        "monday_item_name": "Hold Budget — Watch Aug 27",
-        "monday_update": "Spend is intentionally throttled at ~$32/day average over the last 7 days and the scale-back-up gate (intake ownership) is unresolved. GBP zeros on Aug 22–23 are likely Windsor data lag, not a real drop. No budget move is warranted this cycle. Re-check on 2026-08-27 to confirm GBP lag has cleared and to assess whether the intake fix (S1) is complete before any scale discussion."
+        "monday_item_name": "Booking Bot Battle-Test Overdue",
+        "monday_update": "The CRM & Automation booking bot battle-test was due 2026-07-31 and has no completed event recorded as of 2026-08-24 — 24 days overdue. Action: Nacer to schedule and run the battle-test this week, logging pass/fail outcomes per the original test script. Success check: a completed event is logged in Monday with results documented by 2026-08-28. Failure to complete this blocks confidence in the speed-to-lead promise underpinning any future budget increase."
       }
     ],
     "next_check": "2026-08-27"

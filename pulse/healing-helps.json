@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-24T11:22:01.782Z",
+  "generated_at": "2026-08-24T16:48:23.961Z",
   "date": "2026-08-24",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "The biggest movement is a sharp 86.67% drop in GBP actions over the last 7 days compared to the prior 7 days, likely driven by reduced organic search visibility or seasonal dip in local intent. Paid channels (Meta and Google Ads) show zero spend and zero leads over the 28-day window, meaning all 47 GBP actions and 1 call in that period came entirely from unpaid sources.",
+  "verdict": "The biggest movement is a steep 86.67% drop in GBP actions over the last 7 days, likely driven by reduced local search visibility or seasonal dip in demand. Paid channels (Meta and Google Ads) show zero spend and zero leads over the past 28 days, meaning all 47 GBP actions (including 1 call, 25 directions, and 21 web clicks) represent the only lead-gen activity in the period.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -466,60 +466,61 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-24T11:28:20.620Z",
+    "generated_at": "2026-08-24T16:50:36.221Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid channels fully dark; organic GBP collapse is the only live risk.",
+    "verdict": "Paid channels are fully dark; only GBP organic activity sustains the account.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — Meta and Google both $0. No CPL is computable; all activity is organic-only.",
+        "text": "Zero paid spend across Meta and Google Ads for the full 28-day window — $0 spend, 0 leads, 0 CPL calculable. No paid efficiency to evaluate.",
         "confidence": "confirmed",
-        "channel": "meta, google"
+        "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions collapsed 86.67% week-over-week. Last 3 days (Aug 21-23) show 0, 0, 0 vs prior 3 (Aug 18-20) of 0, 2, 0 — collapse sustained, not a single-day blip.",
+        "text": "GBP actions collapsed to 0 in the last 4 days (Aug 20–23) vs an average of ~2.4/day in the prior 3 weeks — a confirmed 3-day zero signal.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
-        "priority": 3,
-        "text": "GA4 sessions fell 20% week-over-week; last 3 days avg 4.7 sessions vs prior 3-day avg of 8.0 — directional signal of declining organic site reach.",
+        "priority": 2,
+        "text": "GA4 sessions dropped to 1 on Aug 23, the lowest single-day value in the 45-day series; last 3 days avg 4.7 vs prior 3-day avg of 6.3 — a deteriorating trend.",
         "confidence": "probable",
         "channel": "ga4"
       },
       {
         "id": "F4",
-        "priority": 4,
-        "text": "28-day GBP produced 1 call and 25 direction requests from 47 actions — call conversion rate of ~2%, suggesting GBP profile may not be optimised for lead capture.",
-        "confidence": "hypothesis",
+        "priority": 3,
+        "text": "GBP 7d actions down 86.67% with zero paid amplification — no paid demand exists to offset any organic visibility loss.",
+        "confidence": "confirmed",
         "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Audit GBP profile for suspension, category changes, or review suppression causing the 86.67% action drop.",
+        "type": "watch",
+        "text": "Monitor GBP actions daily for 3 more days; 0 actions Aug 20–23 must resolve before any paid reactivation is scoped.",
         "cites": [
-          "F2"
+          "F2",
+          "F4"
         ],
-        "monday_item_name": "GBP action drop audit",
-        "monday_update": "GBP actions dropped 86.67% week-over-week, hitting zero for the last 3 consecutive days (Aug 21–23). Check for profile suspension, category edits, or review flags in Google Business dashboard. Success is confirmed when daily GBP actions return above the prior baseline of ~3–5/day. Re-check by 2026-08-27."
+        "monday_item_name": "Watch GBP zero-action streak",
+        "monday_update": "GBP actions have been 0 for 4 consecutive days (Aug 20–23), down 86.67% over 7 days. No paid channels are active to compensate, making this the sole lead-gen signal. Success check: any return to 2+ actions/day by Aug 27 indicates recovery; if still zero, escalate to a GBP audit (categories, reviews, listing health). Re-check Aug 27, 2026."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GA4 sessions: if 3-day avg stays below 5.0 by Aug 27, escalate organic visibility investigation.",
+        "text": "Track GA4 sessions daily; Aug 23 hit 1 session — lowest in 45 days — before recommending paid reactivation.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "GA4 session trend watch",
-        "monday_update": "GA4 sessions have declined 20% week-over-week, with the last 3-day average at 4.7 vs a prior average of 8.0. No paid traffic is driving sessions, so this is a pure organic signal. If the 3-day average does not recover above 6 sessions by 2026-08-27, escalate to a site and Search Console review. Re-check 2026-08-27."
+        "monday_item_name": "Watch GA4 session floor",
+        "monday_update": "GA4 sessions fell to 1 on Aug 23, and the 3-day average (4.7) is trending below the prior 3-day average (6.3). This is directional only given known GA4 reliability caveats. If sessions remain below 5/day through Aug 27, investigate landing page or tracking issues before launching any paid traffic. Re-check Aug 27, 2026."
       }
     ],
     "next_check": "2026-08-27"
