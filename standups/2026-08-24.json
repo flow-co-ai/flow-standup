@@ -1,15 +1,63 @@
 {
   "week_of": "2026-08-24",
-  "executive_summary": "Billy Doe Meats: Generation failed for this client — see workflow log. Full Smile: Generation failed for this client — see workflow log. Quality HVAC: Generation failed for this client — see workflow log. Justice Consumer Law: Generation failed for this client — see workflow log. Liferun: Generation failed for this client — see workflow log.",
-  "departments_overview": [],
+  "executive_summary": "Ten of eleven clients show no new activity this week, with multiple stalls exceeding 30 days across Ads, CRM, and Web. MedStation WhatsApp go-live is scheduled for today (Aug 24); Next Gen system access remains a blocker for calendar migration. Justice Consumer Law reported 'terrible' August performance with contract extension still open.",
+  "departments_overview": [
+    {
+      "department": "CRM",
+      "summary": "Light load; Quality HVAC intake owner unconfirmed 48 days, Maadi Law GHL onboarding rescheduled to Tuesday, Liferun handoff and billing verifications pending."
+    },
+    {
+      "department": "Ads",
+      "summary": "Multiple stalls: Billy Doe halal stamp creative violation persists, Quality HVAC Meta billing unverified 74 days, Justice Consumer Law ramp pending post-reconnect, Maadi Law tracking setup overdue."
+    },
+    {
+      "department": "Video",
+      "summary": "Justice Consumer Law edits in progress with no delivery date; Flow Company internal videos awaiting action 3 days."
+    },
+    {
+      "department": "Web + SEO",
+      "summary": "Healing Helps email deliverability stalled 88 days and website item stalled 76 days; no other active web work flagged."
+    }
+  ],
   "by_client": [
     {
       "client": "Billy Doe Meats",
-      "headline": "Generation failed for this client — see workflow log.",
+      "headline": "No new activity since yesterday",
       "health": "needs_attention",
-      "work_by_department": [],
+      "work_by_department": [
+        {
+          "department": "Ads",
+          "highlights": [],
+          "stalled_items": [
+            {
+              "text": "/halal-subscribe conversion test awaiting results",
+              "department": "Ads",
+              "source": "monday",
+              "monday_item_id": "[id: 12613897388]",
+              "item_name": "/halal-subscribe Conversion Test",
+              "days_stalled": 32,
+              "monday_url": null,
+              "id": "225b48b1"
+            },
+            {
+              "text": "Halal stamp still appearing on general ads",
+              "department": "Ads",
+              "source": "whatsapp",
+              "monday_item_id": null,
+              "item_name": null,
+              "days_stalled": 2,
+              "monday_url": null,
+              "id": "12352c69"
+            }
+          ]
+        }
+      ],
       "status_change_suggestions": [],
-      "risks": [],
+      "risks": [
+        "Halal stamp creative rule violation persists on general audience ads"
+      ],
+      "upcoming": [],
+      "next_up": null,
       "stats": {
         "tasks": 14,
         "todo": 0,
@@ -147,19 +195,19 @@
         }
       ],
       "scores": {
-        "composite": 81,
-        "label": "green",
+        "composite": 34,
+        "label": "red",
         "sub_scores": {
           "task_stalling": {
-            "score": "green",
-            "reason": "0 in review",
-            "max_days_stalled": 0,
+            "score": "red",
+            "reason": "0 in review, max stalled 32d",
+            "max_days_stalled": 32,
             "review_count": 0
           },
           "comms_quality": {
-            "score": "green",
-            "reason": "100% medium/high",
-            "pct_medium_high": 100
+            "score": "yellow",
+            "reason": "50% medium/high",
+            "pct_medium_high": 50
           },
           "meeting_cadence": {
             "score": "red",
@@ -175,6 +223,11 @@
         },
         "flags": [
           {
+            "id": "long_stalled_task",
+            "label": "Long-stalled task",
+            "action": "Escalate in next standup — decide kill or keep, don't let it age further"
+          },
+          {
             "id": "meeting_cadence_red",
             "label": "Meeting cadence red",
             "action": "Book a check-in this week; if client unresponsive, escalate to account owner as a risk, not just a scheduling gap"
@@ -184,11 +237,48 @@
     },
     {
       "client": "Full Smile",
-      "headline": "Generation failed for this client — see workflow log.",
+      "headline": "No new activity since yesterday",
       "health": "needs_attention",
-      "work_by_department": [],
+      "work_by_department": [
+        {
+          "department": "Ads",
+          "highlights": [],
+          "stalled_items": [
+            {
+              "text": "LSA charging clarification ongoing with Lily",
+              "department": "Ads",
+              "source": "whatsapp",
+              "monday_item_id": null,
+              "item_name": null,
+              "days_stalled": 5,
+              "monday_url": null,
+              "id": "56d24744"
+            }
+          ]
+        },
+        {
+          "department": "General",
+          "highlights": [],
+          "stalled_items": [
+            {
+              "text": "Rescheduled call not yet confirmed",
+              "department": "",
+              "source": "whatsapp",
+              "monday_item_id": null,
+              "item_name": null,
+              "days_stalled": 5,
+              "monday_url": null,
+              "id": "84856d18"
+            }
+          ]
+        }
+      ],
       "status_change_suggestions": [],
-      "risks": [],
+      "risks": [
+        "No client communication in 5 days; call repeatedly postponed"
+      ],
+      "upcoming": [],
+      "next_up": null,
       "stats": {
         "tasks": 16,
         "todo": 0,
@@ -329,13 +419,13 @@
         }
       ],
       "scores": {
-        "composite": 100,
-        "label": "green",
+        "composite": 75,
+        "label": "yellow",
         "sub_scores": {
           "task_stalling": {
-            "score": "green",
-            "reason": "0 in review",
-            "max_days_stalled": 0,
+            "score": "yellow",
+            "reason": "0 in review, max stalled 5d",
+            "max_days_stalled": 5,
             "review_count": 0
           },
           "comms_quality": {
@@ -359,11 +449,53 @@
     },
     {
       "client": "Quality HVAC",
-      "headline": "Generation failed for this client — see workflow log.",
+      "headline": "No new activity; Thursday 8AM call scheduled",
       "health": "needs_attention",
-      "work_by_department": [],
+      "work_by_department": [
+        {
+          "department": "CRM",
+          "highlights": [],
+          "stalled_items": [
+            {
+              "text": "Intake owner unconfirmed since Vivian left 7/7",
+              "department": "CRM",
+              "source": "monday",
+              "monday_item_id": null,
+              "days_stalled": 48,
+              "monday_url": null,
+              "id": "7981a104"
+            }
+          ]
+        },
+        {
+          "department": "Ads",
+          "highlights": [],
+          "stalled_items": [
+            {
+              "text": "Meta billing card migration not closed-loop verified",
+              "department": "Ads",
+              "source": "monday",
+              "monday_item_id": null,
+              "days_stalled": 74,
+              "monday_url": null,
+              "id": "e95836ce"
+            }
+          ]
+        }
+      ],
       "status_change_suggestions": [],
-      "risks": [],
+      "risks": [
+        "Intake ownership gap blocks budget scale-up"
+      ],
+      "upcoming": [
+        {
+          "text": "GBP performance review call with Nader",
+          "when": "Thu Aug 27 8am",
+          "source": "whatsapp",
+          "monday_item_id": null
+        }
+      ],
+      "next_up": "Thu Aug 27 8am - GBP performance review with Nader",
       "stats": {
         "tasks": 19,
         "todo": 0,
@@ -488,13 +620,13 @@
         }
       ],
       "scores": {
-        "composite": 62,
-        "label": "yellow",
+        "composite": 29,
+        "label": "red",
         "sub_scores": {
           "task_stalling": {
-            "score": "green",
-            "reason": "0 in review",
-            "max_days_stalled": 0,
+            "score": "red",
+            "reason": "0 in review, max stalled 74d",
+            "max_days_stalled": 74,
             "review_count": 0
           },
           "comms_quality": {
@@ -516,6 +648,11 @@
         },
         "flags": [
           {
+            "id": "long_stalled_task",
+            "label": "Long-stalled task",
+            "action": "Escalate in next standup — decide kill or keep, don't let it age further"
+          },
+          {
             "id": "comms_quality_red",
             "label": "Comms quality red",
             "action": "1:1 on update expectations; share one \"high\" example from the team as a model"
@@ -525,11 +662,48 @@
     },
     {
       "client": "Justice Consumer Law",
-      "headline": "Generation failed for this client — see workflow log.",
+      "headline": "No new activity since yesterday",
       "health": "needs_attention",
-      "work_by_department": [],
+      "work_by_department": [
+        {
+          "department": "Ads",
+          "highlights": [],
+          "stalled_items": [
+            {
+              "text": "Meta account reconnected 8/20; ramp & optimization pending",
+              "department": "Ads",
+              "source": "whatsapp",
+              "days_stalled": 4,
+              "item_name": null,
+              "monday_item_id": null,
+              "monday_url": null,
+              "id": "7213fa26"
+            }
+          ]
+        },
+        {
+          "department": "Video",
+          "highlights": [],
+          "stalled_items": [
+            {
+              "text": "Video edits in progress; delivery date unknown",
+              "department": "Video",
+              "source": "whatsapp",
+              "days_stalled": 5,
+              "item_name": null,
+              "monday_item_id": null,
+              "monday_url": null,
+              "id": "91b2222a"
+            }
+          ]
+        }
+      ],
       "status_change_suggestions": [],
-      "risks": [],
+      "risks": [
+        "Client reported 'terrible' August performance; contract extension still open"
+      ],
+      "upcoming": [],
+      "next_up": null,
       "stats": {
         "tasks": 8,
         "todo": 0,
@@ -541,7 +715,16 @@
         "meetings": 0,
         "wa_msgs": 9
       },
-      "completed_this_week": [],
+      "completed_this_week": [
+        {
+          "text": "First Meta ads launched live after account reconnection and tracking setup",
+          "who": "Sohib Boundaoui",
+          "source": "WA",
+          "date": "2026-08-20",
+          "generated": false,
+          "monday_url": "https://flowcompany.monday.com/boards/18405754312/pulses/12808950259"
+        }
+      ],
       "completed_history": [
         {
           "week_of": "2026-W34",
@@ -604,13 +787,13 @@
         }
       ],
       "scores": {
-        "composite": 71,
-        "label": "yellow",
+        "composite": 45,
+        "label": "red",
         "sub_scores": {
           "task_stalling": {
-            "score": "green",
-            "reason": "0 in review",
-            "max_days_stalled": 0,
+            "score": "yellow",
+            "reason": "0 in review, max stalled 5d",
+            "max_days_stalled": 5,
             "review_count": 0
           },
           "comms_quality": {
@@ -640,11 +823,42 @@
     },
     {
       "client": "Liferun",
-      "headline": "Generation failed for this client — see workflow log.",
+      "headline": "No new activity",
       "health": "needs_attention",
-      "work_by_department": [],
+      "work_by_department": [
+        {
+          "department": "CRM",
+          "highlights": [],
+          "stalled_items": [
+            {
+              "text": "HANDOFF item open — absorb June 22 Automation Guide",
+              "department": "CRM",
+              "source": "monday",
+              "item_name": "HANDOFF",
+              "monday_item_id": "12470616714",
+              "days_stalled": null,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12470616714",
+              "id": "85b16cbe"
+            },
+            {
+              "text": "Becklar billing drop verification — confirm deactivation reflects",
+              "department": "CRM",
+              "source": "monday",
+              "item_name": "Becklar Deactivation",
+              "monday_item_id": "12472536909",
+              "days_stalled": null,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12472536909",
+              "id": "45a779d2"
+            }
+          ]
+        }
+      ],
       "status_change_suggestions": [],
-      "risks": [],
+      "risks": [
+        "No comms activity; critical payment-path verifications unconfirmed"
+      ],
+      "upcoming": [],
+      "next_up": null,
       "stats": {
         "tasks": 14,
         "todo": 0,
@@ -764,11 +978,42 @@
     },
     {
       "client": "Healing Helps",
-      "headline": "Generation failed for this client — see workflow log.",
+      "headline": "No activity; board items aging quietly",
       "health": "needs_attention",
-      "work_by_department": [],
+      "work_by_department": [
+        {
+          "department": "Web + SEO",
+          "highlights": [],
+          "stalled_items": [
+            {
+              "text": "Email deliverability stalled since May",
+              "department": "Web + SEO",
+              "source": "monday",
+              "item_name": "Email Deliverability",
+              "monday_item_id": "12066501922",
+              "days_stalled": 88,
+              "monday_url": "https://flowcompany.monday.com/boards/18099807701/pulses/12066501922",
+              "id": "f0392b13"
+            },
+            {
+              "text": "Website item no recent activity",
+              "department": "Web + SEO",
+              "source": "monday",
+              "item_name": "Website",
+              "monday_item_id": "12235492388",
+              "days_stalled": 76,
+              "monday_url": "https://flowcompany.monday.com/boards/18099807701/pulses/12235492388",
+              "id": "fed1ead6"
+            }
+          ]
+        }
+      ],
       "status_change_suggestions": [],
-      "risks": [],
+      "risks": [
+        "No comms or board movement in 88 days"
+      ],
+      "upcoming": [],
+      "next_up": null,
       "stats": {
         "tasks": 4,
         "todo": 0,
@@ -833,13 +1078,13 @@
         }
       ],
       "scores": {
-        "composite": 100,
-        "label": "green",
+        "composite": 20,
+        "label": "red",
         "sub_scores": {
           "task_stalling": {
-            "score": "green",
-            "reason": "0 in review",
-            "max_days_stalled": 0,
+            "score": "red",
+            "reason": "0 in review, max stalled 88d",
+            "max_days_stalled": 88,
             "review_count": 0
           },
           "comms_quality": {
@@ -857,16 +1102,43 @@
             "reason": "no per-assignee task-count data yet -- needs a Monday query grouped by assignee, plus per-person capacity thresholds (docs/scoring-spec-draft.md section 1.4)"
           }
         },
-        "flags": []
+        "flags": [
+          {
+            "id": "long_stalled_task",
+            "label": "Long-stalled task",
+            "action": "Escalate in next standup — decide kill or keep, don't let it age further"
+          }
+        ]
       }
     },
     {
       "client": "Cotton Collections",
-      "headline": "Generation failed for this client — see workflow log.",
+      "headline": "No new activity since yesterday",
       "health": "needs_attention",
-      "work_by_department": [],
+      "work_by_department": [
+        {
+          "department": "Ads",
+          "highlights": [],
+          "stalled_items": [
+            {
+              "text": "Lawrence, Kansas campaign - no recent activity",
+              "department": "Ads",
+              "source": "monday",
+              "item_name": "Lawrence, Kansas campaign",
+              "monday_item_id": "12614813650",
+              "days_stalled": 32,
+              "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12614813650",
+              "id": "d165f1b1"
+            }
+          ]
+        }
+      ],
       "status_change_suggestions": [],
-      "risks": [],
+      "risks": [
+        "No communication or board activity for over a month"
+      ],
+      "upcoming": [],
+      "next_up": null,
       "stats": {
         "tasks": 1,
         "todo": 0,
@@ -906,13 +1178,13 @@
         }
       ],
       "scores": {
-        "composite": 100,
-        "label": "green",
+        "composite": 20,
+        "label": "red",
         "sub_scores": {
           "task_stalling": {
-            "score": "green",
-            "reason": "0 in review",
-            "max_days_stalled": 0,
+            "score": "red",
+            "reason": "0 in review, max stalled 32d",
+            "max_days_stalled": 32,
             "review_count": 0
           },
           "comms_quality": {
@@ -930,16 +1202,53 @@
             "reason": "no per-assignee task-count data yet -- needs a Monday query grouped by assignee, plus per-person capacity thresholds (docs/scoring-spec-draft.md section 1.4)"
           }
         },
-        "flags": []
+        "flags": [
+          {
+            "id": "long_stalled_task",
+            "label": "Long-stalled task",
+            "action": "Escalate in next standup — decide kill or keep, don't let it age further"
+          }
+        ]
       }
     },
     {
       "client": "Flow Company",
-      "headline": "Generation failed for this client — see workflow log.",
+      "headline": "No new activity since yesterday",
       "health": "needs_attention",
-      "work_by_department": [],
+      "work_by_department": [
+        {
+          "department": "Video",
+          "highlights": [],
+          "stalled_items": [
+            {
+              "text": "Ihya School Promo awaiting Tahir action",
+              "department": "Video",
+              "source": "monday",
+              "item_name": "Ihya School Promo (5-6 min)",
+              "monday_item_id": "12589574123",
+              "days_stalled": 3,
+              "monday_url": "https://flowcompany.monday.com/boards/18100257069/pulses/12589574123",
+              "id": "8efce7ca"
+            },
+            {
+              "text": "Youtube Clinic SEO video needs PDF placement",
+              "department": "Video",
+              "source": "monday",
+              "item_name": "Youtube: Clinic SEO",
+              "monday_item_id": "12865913250",
+              "days_stalled": 3,
+              "monday_url": "https://flowcompany.monday.com/boards/18100257069/pulses/12865913250",
+              "id": "f6e0de4f"
+            }
+          ]
+        }
+      ],
       "status_change_suggestions": [],
-      "risks": [],
+      "risks": [
+        "No client communication or board updates in 3 days"
+      ],
+      "upcoming": [],
+      "next_up": null,
       "stats": {
         "tasks": 7,
         "todo": 0,
@@ -1048,11 +1357,20 @@
     },
     {
       "client": "MedStation",
-      "headline": "Generation failed for this client — see workflow log.",
+      "headline": "No new activity since yesterday",
       "health": "needs_attention",
       "work_by_department": [],
       "status_change_suggestions": [],
       "risks": [],
+      "upcoming": [
+        {
+          "text": "LSA scheduled",
+          "when": "2026-08-24",
+          "source": "monday",
+          "monday_item_id": "12786016809"
+        }
+      ],
+      "next_up": "Sun Aug 24 - LSA scheduled",
       "stats": {
         "tasks": 8,
         "todo": 0,
@@ -1064,7 +1382,24 @@
         "meetings": 0,
         "wa_msgs": 80
       },
-      "completed_this_week": [],
+      "completed_this_week": [
+        {
+          "text": "Gained NextGen access after IT whitelisting and machine name resolution",
+          "who": "Nacer Amrouch",
+          "source": "WA",
+          "date": "2026-08-19",
+          "generated": false,
+          "monday_url": null
+        },
+        {
+          "text": "External Application Setup access enabled for NextGen API integration",
+          "who": "Gabryel (IT Medstation)",
+          "source": "WA",
+          "date": "2026-08-20",
+          "generated": false,
+          "monday_url": null
+        }
+      ],
       "completed_history": [
         {
           "week_of": "2026-W34",
@@ -1179,11 +1514,55 @@
     },
     {
       "client": "Maadi Law",
-      "headline": "Generation failed for this client — see workflow log.",
+      "headline": "No new activity today",
       "health": "needs_attention",
-      "work_by_department": [],
+      "work_by_department": [
+        {
+          "department": "CRM",
+          "highlights": [],
+          "stalled_items": [
+            {
+              "text": "GHL onboarding rescheduled to Tuesday 10AM CST",
+              "department": "CRM",
+              "source": "whatsapp",
+              "days_stalled": 4,
+              "item_name": null,
+              "monday_item_id": null,
+              "monday_url": null,
+              "id": "ee306b19"
+            }
+          ]
+        },
+        {
+          "department": "Ads",
+          "highlights": [],
+          "stalled_items": [
+            {
+              "text": "Tracking Setup scheduled for today, no update",
+              "department": "Ads",
+              "source": "monday",
+              "days_stalled": 21,
+              "item_name": "Tracking Setup",
+              "monday_item_id": "[id: 12700991621]",
+              "monday_url": null,
+              "id": "f5905af6"
+            }
+          ]
+        }
+      ],
       "status_change_suggestions": [],
-      "risks": [],
+      "risks": [
+        "GHL onboarding delayed; tracking & routing still not live"
+      ],
+      "upcoming": [
+        {
+          "text": "GHL onboarding call with Tracy",
+          "when": "Tue Aug 26 10am CST",
+          "source": "whatsapp",
+          "monday_item_id": null
+        }
+      ],
+      "next_up": "Tue Aug 26 10am CST - GHL onboarding call with Tracy",
       "stats": {
         "tasks": 23,
         "todo": 0,
@@ -1195,7 +1574,32 @@
         "meetings": 1,
         "wa_msgs": 38
       },
-      "completed_this_week": [],
+      "completed_this_week": [
+        {
+          "text": "Updated homepage hero image to requested photo from Drive",
+          "who": "Hashir Faiz",
+          "source": "WA",
+          "date": "2026-08-19",
+          "generated": false,
+          "monday_url": null
+        },
+        {
+          "text": "Fixed call routing so inbound calls now ring through correctly",
+          "who": "Sohib Boundaoui",
+          "source": "WA",
+          "date": "2026-08-20",
+          "generated": false,
+          "monday_url": "https://flowcompany.monday.com/boards/18405754312/pulses/12810179269"
+        },
+        {
+          "text": "Added website video section with background video to homepage",
+          "who": "Hashir Faiz",
+          "source": "WA",
+          "date": "2026-08-21",
+          "generated": false,
+          "monday_url": "https://flowcompany.monday.com/boards/18100257069/pulses/12738748026"
+        }
+      ],
       "completed_history": [
         {
           "week_of": "2026-W34",
@@ -1411,13 +1815,13 @@
         }
       ],
       "scores": {
-        "composite": 100,
-        "label": "green",
+        "composite": 67,
+        "label": "yellow",
         "sub_scores": {
           "task_stalling": {
-            "score": "green",
-            "reason": "0 in review",
-            "max_days_stalled": 0,
+            "score": "red",
+            "reason": "0 in review, max stalled 21d",
+            "max_days_stalled": 21,
             "review_count": 0
           },
           "comms_quality": {
@@ -1437,16 +1841,24 @@
             "reason": "no per-assignee task-count data yet -- needs a Monday query grouped by assignee, plus per-person capacity thresholds (docs/scoring-spec-draft.md section 1.4)"
           }
         },
-        "flags": []
+        "flags": [
+          {
+            "id": "long_stalled_task",
+            "label": "Long-stalled task",
+            "action": "Escalate in next standup — decide kill or keep, don't let it age further"
+          }
+        ]
       }
     },
     {
       "client": "Steel Round Bars",
-      "headline": "Generation failed for this client — see workflow log.",
+      "headline": "No new activity since yesterday",
       "health": "needs_attention",
       "work_by_department": [],
       "status_change_suggestions": [],
       "risks": [],
+      "upcoming": [],
+      "next_up": null,
       "stats": {
         "tasks": 23,
         "todo": 0,
@@ -1675,9 +2087,43 @@
       ]
     }
   ],
-  "comms_flags": [],
-  "blockers": [],
-  "this_week_priorities": [],
+  "comms_flags": [
+    "Full Smile: No client communication in 5 days; call repeatedly postponed",
+    "Justice Consumer Law: Client reported 'terrible' August performance; contract extension still open",
+    "Healing Helps: No comms or board movement in 88 days",
+    "Cotton Collections: No communication or board activity for over a month"
+  ],
+  "blockers": [
+    "Quality HVAC: Intake ownership gap blocks budget scale-up (48d since Vivian left)",
+    "MedStation: Next Gen system access blocks calendar data migration and booking sync",
+    "Maadi Law: GHL onboarding delayed; tracking & routing still not live"
+  ],
+  "this_week_priorities": [
+    {
+      "client": "MedStation",
+      "text": "MedStation: Finalize WhatsApp connection and resolve Next Gen access for calendar migration",
+      "action": null,
+      "id": "31e56f54"
+    },
+    {
+      "client": "Justice Consumer Law",
+      "text": "Justice Consumer Law: Complete Meta ramp/optimization and confirm video delivery date",
+      "action": null,
+      "id": "229d419d"
+    },
+    {
+      "client": "Quality HVAC",
+      "text": "Quality HVAC: Confirm intake owner and close Meta billing migration verification",
+      "action": null,
+      "id": "c852e2bb"
+    },
+    {
+      "client": "Maadi Law",
+      "text": "Maadi Law: Execute Tuesday GHL onboarding and complete tracking setup",
+      "action": null,
+      "id": "0ea58cc5"
+    }
+  ],
   "auto_completed_alerts": [
     {
       "item": "Inactivity test batch using Quote Date",
@@ -1748,6 +2194,20 @@
       "evidence_source": "MTG",
       "evidence_text": "Migrated approximately 14,000 Zoho notes into GHL",
       "timestamp": "2026-08-15T12:37:04.569508+00:00"
+    },
+    {
+      "item": "First Meta ads launched live after account reconnection and tracking setup",
+      "board": "Ads",
+      "evidence_source": "WA",
+      "evidence_text": "First Meta ads launched live after account reconnection and tracking setup",
+      "timestamp": "2026-08-24T16:43:32.949627+00:00"
+    },
+    {
+      "item": "Added website video section with background video to homepage",
+      "board": "Video",
+      "evidence_source": "WA",
+      "evidence_text": "Added website video section with background video to homepage",
+      "timestamp": "2026-08-24T16:43:33.452610+00:00"
     }
   ]
 }
