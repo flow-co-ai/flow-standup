@@ -1079,10 +1079,10 @@ def _call_tool(client: anthropic.Anthropic, prompt: str, tool: dict, label: str,
     response = client.messages.create(
         model=MODEL,
         max_tokens=max_tokens,
-        temperature=0,
         tools=[tool],
         tool_choice={"type": "tool", "name": tool["name"]},
         messages=[{"role": "user", "content": prompt}],
+        extra_body={"temperature": 0},
     )
     print(
         f"  [{label}] stop={response.stop_reason} "
@@ -2195,6 +2195,7 @@ def main():
                 "work_by_department": [],
                 "status_change_suggestions": [],
                 "risks": [],
+                "_generation_failed": True,
             }
         entry["stats"] = compute_client_stats(
             grouped.get(c, {}), meetings_by_client.get(c, []), chats_by_client.get(c, [])
@@ -2219,6 +2220,11 @@ def main():
             results_by_client[c] = future.result()
 
     client_entries: list[dict] = [results_by_client[c] for c in active]
+
+    failed_clients = [e["client"] for e in client_entries if e.pop("_generation_failed", False)]
+    if failed_clients:
+        print(f"  ⚠️  Generation failed for {len(failed_clients)}/{len(active)} client(s): "
+              f"{', '.join(failed_clients)}")
 
     # Content the per-client call itself filtered out of a correctly-matched
     # client's own card -- a meeting/chat matched this client as a whole, but
@@ -2389,6 +2395,13 @@ def main():
         print(f"  Drive pulse warning: {exc}")
 
     print("\n✓ Done.")
+
+    if len(failed_clients) > 2:
+        print(
+            f"\n✗ Generation failed for {len(failed_clients)}/{len(active)} clients "
+            f"({', '.join(failed_clients)}) — failing the run so this doesn't ship silently."
+        )
+        sys.exit(1)
 
 
 if __name__ == "__main__":
