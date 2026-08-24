@@ -487,10 +487,10 @@
     "next_check": "2026-08-01"
   },
   "brief": {
-    "date": "2026-08-23",
+    "date": "2026-08-24",
     "headlines": [
       {
-        "text": "No feed data generated — standup card failed",
+        "text": "Standup generation failed; no feed data today.",
         "tone": "info"
       }
     ],
@@ -504,18 +504,52 @@
         "items": [
           {
             "state": "next",
-            "text": "(inferred) Reconcile 342 stub accounts — gates Sales-i sync"
+            "text": "(inferred) Investigate standup generation failure before resuming work tracking."
           },
           {
-            "state": "blocked",
-            "text": "Standup card generation failed; no feed data available today"
+            "state": "queued",
+            "text": "Reconcile 342 stub accounts against authoritative customer sheet."
           }
         ]
       }
     ],
     "waiting_on_client": [],
     "launch_gate": null,
-    "brief_v2": "{\"verdict\": \"Standup card failed to generate — no activity confirmed or denied for this week.\", \"next_move\": \"Ops: rerun standup generation for Steel Round Bars — no data means no visibility.\", \"blocks\": [], \"snapshot\">[{\"label\": \"Open items\", \"value\": \"23 open, all in Working status, 0 moving confirmed this week\", \"tone\": \"warn\"}, {\"label\": \"Contract\", \"value\": \"Retainer $10,500/mo, Flow Co., Jan 2026; Aug–Oct 2026 window active\", \"tone\": \"muted\"}, {\"label\": \"Judged on\", \"value\": \"RFQs → quotes → orders; revenue recovered from quiet accounts\", \"tone\": \"plain\"}], \"history_line\": null}"
+    "brief_v2": {
+      "verdict": "No feed data today — standup generation failed, so no active loops can be confirmed.",
+      "next_move": "Ops: investigate and re-run standup generation — no work status can be reported without it.",
+      "blocks": [],
+      "snapshot": [
+        {
+          "label": "Open items",
+          "value": "23 open, all in Working status; no movement confirmed today.",
+          "tone": "warn"
+        },
+        {
+          "label": "Contract",
+          "value": "Retainer $10,500/mo, Flow Company, Jan 2026; Aug–Oct 2026 window active.",
+          "tone": "muted"
+        }
+      ],
+      "history_line": null
+    }
   },
-  "brief_v2": "{\"verdict\": \"Standup card failed to generate — no activity confirmed or denied for this week.\", \"next_move\": \"Ops: rerun standup generation for Steel Round Bars — no data means no visibility.\", \"blocks\": [], \"snapshot\">[{\"label\": \"Open items\", \"value\": \"23 open, all in Working status, 0 moving confirmed this week\", \"tone\": \"warn\"}, {\"label\": \"Contract\", \"value\": \"Retainer $10,500/mo, Flow Co., Jan 2026; Aug–Oct 2026 window active\", \"tone\": \"muted\"}, {\"label\": \"Judged on\", \"value\": \"RFQs → quotes → orders; revenue recovered from quiet accounts\", \"tone\": \"plain\"}], \"history_line\": null}"
+  "brief_v2": {
+    "verdict": "No feed data today — standup generation failed, so no active loops can be confirmed.",
+    "next_move": "Ops: investigate and re-run standup generation — no work status can be reported without it.",
+    "blocks": [],
+    "snapshot": [
+      {
+        "label": "Open items",
+        "value": "23 open, all in Working status; no movement confirmed today.",
+        "tone": "warn"
+      },
+      {
+        "label": "Contract",
+        "value": "Retainer $10,500/mo, Flow Company, Jan 2026; Aug–Oct 2026 window active.",
+        "tone": "muted"
+      }
+    ],
+    "history_line": null
+  }
 }
