@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-25T11:21:09.152Z",
+  "generated_at": "2026-08-25T20:38:48.138Z",
   "date": "2026-08-25",
   "slug": "hvac",
   "name": "Quality HVAC by Fibid",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Google Ads spend dropped 28.51% week-over-week to $1,085.39 over 28 days, with the top campaign \"LocalServicesCampaign:SystemGenerated:0005fc228eede686\" accounting for $787.71 of that spend, likely reflecting a budget pullback or seasonal demand softening. GBP engagement also declined 25% week-over-week, though 28 calls and 106 total actions signal continued organic interest worth nurturing.",
+  "verdict": "Google Ads spend dropped 28.51% week-over-week to $1,085.39 over 28 days, with the top campaign \"LocalServicesCampaign:SystemGenerated:0005fc228eede686\" accounting for $787.71 of that spend, likely reflecting a budget pullback or seasonal demand dip. Despite the spend decline, Google Ads still drove 11 conversions and 126 clicks, and GBP activity remained solid with 28 calls and 107 total actions over the period.",
   "windsor": {
     "totals": {
       "spend": 1085.39,
@@ -25,15 +25,15 @@
           "clicks": 126
         },
         "gbp": {
-          "actions": 106,
+          "actions": 107,
           "calls": 28,
           "directions": 45,
-          "web_clicks": 33
+          "web_clicks": 34
         }
       }
     },
     "organic": {
-      "gbp_actions": 106,
+      "gbp_actions": 107,
       "ig_reach": 0
     },
     "top_campaign": {
@@ -63,7 +63,7 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": -28.51,
-      "gbp_7d_pct": -25,
+      "gbp_7d_pct": -21.87,
       "sc_7d_pct": -11.11,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
@@ -247,7 +247,7 @@
         17,
         2,
         3,
-        1,
+        2,
         0,
         0
       ],
@@ -404,14 +404,14 @@
     }
   },
   "ghl": {
-    "contacts": 78,
+    "contacts": 80,
     "opportunities": {
       "created": {
-        "count": 39,
+        "count": 41,
         "value": 0
       },
       "won": {
-        "count": 11,
+        "count": 12,
         "value": 0
       }
     },
@@ -545,44 +545,44 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-25T11:26:40.513Z",
+    "generated_at": "2026-08-25T20:42:17.272Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Score flatters reality: intake seat empty, zero leads tracked, overdue CRM test.",
+    "verdict": "Spend throttled intentionally; intake seat gap is the real scaling blocker.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "Booking bot battle-test was due 2026-07-31 — 25 days overdue. Speed-to-lead automations unverified while dispatch seat is vacant.",
+        "text": "Booking bot battle-test was due 2026-07-31 — no completed event recorded; 25 days overdue with no confirmation of live status.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
+        "priority": 2,
+        "text": "Dispatch intake owner unconfirmed since Vivian left 7/7; speed-to-lead automations may point at an empty GHL seat, blocking the scale-back-up gate entirely.",
+        "confidence": "confirmed",
+        "channel": "SOW"
+      },
+      {
+        "id": "F3",
         "priority": 1,
-        "text": "Leads read 0 across all 28 days despite 11 Google Ads conversions and 28 GBP calls — CPL is unmeasurable; intake tracking is broken or unmapped in GHL.",
+        "text": "Leads feed shows 0 across all 28 days; GHL logged 41 opportunities created vs 80 contacts — CPL is unmeasurable from ad data, not a spend failure.",
         "confidence": "confirmed",
         "channel": "google_ads"
       },
       {
-        "id": "F3",
-        "priority": 2,
-        "text": "GHL shows 78 contacts and 39 opportunities created but 0 appointments — 39 opps with no booked slot signals intake leak, not an ads problem.",
-        "confidence": "confirmed",
-        "channel": "CRM"
-      },
-      {
         "id": "F4",
         "priority": 2,
-        "text": "Google spend erratic: 7 zero-spend days in the last 28, including 3 consecutive (Aug 2–4). 3-day signal (Aug 22–24 avg $26) vs prior 3 (Aug 19–21 avg $18) is up slightly — not alarming, but zero-day pattern is chronic.",
+        "text": "Google spend is erratic: 5 zero-spend days in the last 28 (e.g. 7/29, 8/02, 8/26) with bursts up to $130.18 on 8/15 — pattern consistent with throttled daily budget, not campaign failure.",
         "confidence": "confirmed",
         "channel": "google_ads"
       },
       {
         "id": "F5",
         "priority": 3,
-        "text": "GBP actions collapsed to 0 on both Aug 23 and Aug 24 after a 17-action spike on Aug 19 — 3-day avg (1.0) vs prior 3 (7.7) is a sharp drop; Windsor lag may partly explain.",
-        "confidence": "probable",
+        "text": "GBP actions dropped to 0 on both 8/23 and 8/24 (last 2 days of series); 3-day avg (0.67) vs prior 3-day avg (6.33) — possible Windsor data lag per SOW, not confirmed organic decline yet.",
+        "confidence": "hypothesis",
         "channel": "gbp"
       }
     ],
@@ -590,35 +590,34 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Map GHL intake owner post-Vivian; verify speed-to-lead automations fire correctly — 0 appointments from 39 opps is a confirmed leak.",
+        "text": "Confirm new intake owner, GHL login, and after-hours coverage — unblocks the scale gate; no budget move until resolved.",
         "cites": [
-          "F3",
           "F2"
         ],
-        "monday_item_name": "Fix GHL Intake Owner & Automations",
-        "monday_update": "Vivian (dispatch) left 7/7 and no replacement GHL seat has been confirmed active. GHL shows 39 opportunities created but 0 appointments booked in 28 days, and leads read zero despite 11 Google Ads conversions and 28 GBP calls. Confirm with Xavier or Aiman who now owns the GHL inbox and after-hours coverage, then re-trigger and log the speed-to-lead automation test. Success check: at least 1 confirmed booked appointment appearing in GHL within 5 business days of the owner seat being assigned — verify by 2026-08-30."
+        "monday_item_name": "Confirm GHL Intake Owner",
+        "monday_update": "Vivian left 7/7 and the GHL intake seat is unconfirmed, blocking all budget scale-up per the SOW gate. Contact Xavier or Nader to name the new dispatch owner, verify their GHL login is active, and confirm after-hours coverage is assigned. Success check: named owner confirmed in writing with active GHL access by 2026-08-29. Until this is done, speed-to-lead automations may be firing into a dead seat and losing the 11 Google Ads conversions recorded in the 28-day window."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Complete overdue booking-bot battle-test (due 2026-07-31, now 25 days late) before any budget scale-up.",
+        "text": "Complete booking bot battle-test overdue since 7/31 — 25 days elapsed; document pass/fail before next scaling decision.",
         "cites": [
           "F1"
         ],
         "monday_item_name": "Booking Bot Battle-Test Overdue",
-        "monday_update": "The CRM & Automation booking-bot battle-test was due 2026-07-31 and has no recorded completion event as of 2026-08-25 — 25 days overdue. Run the full battle-test sequence against the current intake owner's GHL seat and document pass/fail for each automation trigger. Success check: battle-test results logged in the SOW tracker and shared with Nacer by 2026-08-29. This is a hard gate before any paid budget is raised per the SOW scale-back-up clause."
+        "monday_update": "The CRM & Automation booking bot battle-test was due 2026-07-31 and has no recorded completion event as of 2026-08-25, 25 days overdue. Run the battle-test against live inbound scenarios and document results for Nacer. Success check: pass/fail report delivered to Sohib by 2026-08-29. This is a prerequisite for trusting any GHL pipeline numbers in future performance reads."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions over next 3 days — Aug 23–24 both read 0; confirm Windsor lag before concluding organic decline.",
+        "text": "Watch GBP actions: 2 consecutive zero days (8/23–8/24) may be Windsor lag; confirm against native GBP dashboard by 8/28.",
         "cites": [
           "F5"
         ],
-        "monday_item_name": "Watch GBP Actions Aug 28",
-        "monday_update": "GBP actions dropped to a 3-day average of 1.0 (Aug 22–24) versus 7.7 in the prior 3 days, but the SOW flags Windsor data lag on the last 2–3 days of any reporting window. Pull native GBP Insights for Aug 23–24 on 2026-08-28 to separate real demand softening from a reporting artifact. Success check: if native GBP confirms the drop persists at under 3 actions/day through Aug 28, escalate to a priority finding next cycle."
+        "monday_item_name": "Watch GBP Actions Drop",
+        "monday_update": "GBP actions fell to 0 on both 2026-08-23 and 2026-08-24, versus a 3-day prior average of 6.33 actions. Per SOW guidance, the last 2–3 days of any GBP window carry Windsor data lag risk — check the native GBP dashboard directly before treating this as an organic decline. Success check: if native GBP confirms actions are normal by 2026-08-28, no action needed; if native GBP also shows zero, escalate as a new finding next cycle."
       }
     ],
-    "next_check": "2026-08-28"
+    "next_check": "2026-08-29"
   }
 }

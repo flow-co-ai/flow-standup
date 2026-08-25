@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-25T11:22:40.196Z",
+  "generated_at": "2026-08-25T20:40:32.847Z",
   "date": "2026-08-25",
   "slug": "steel-forte",
   "name": "Forte Metals",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "The biggest movement is a 56.76% drop in Google Business Profile actions over the last 7 days (versus the prior 7 days), likely driven by reduced local search visibility or seasonal demand softening. Paid channels (Meta and Google Ads) show zero spend and zero leads over the full 28-day window, so no paid activity is contributing to lead generation at this time.",
+  "verdict": "The biggest movement is a 56.76% drop in Google Business Profile actions over the last 7 days (versus the prior 7 days), likely driven by reduced organic search visibility or seasonal demand softening. Paid channels (Meta and Google Ads) show zero spend and zero leads over the past 28 days, so no paid activity is currently supporting lead flow.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,78 +409,77 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-25T11:28:21.280Z",
+    "generated_at": "2026-08-25T20:43:48.562Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "No paid activity; organic collapse accelerating — SOW milestones also overdue.",
+    "verdict": "Organic decay is the only active signal; paid is fully dark.",
     "findings": [
       {
         "id": "F1",
+        "priority": 1,
+        "text": "Zero paid spend and zero leads for all 28 days — no Meta, no Google Ads activity producing any results whatsoever.",
+        "confidence": "confirmed",
+        "channel": "meta/google_ads"
+      },
+      {
+        "id": "F2",
         "priority": 2,
-        "text": "OVERDUE: 1st Directives (Jul 7), Tom call list priority (Jul 28), and dedup workbook + 126 accounts (Jul 31) — all 3 CRM milestones unconfirmed complete, now 25–49 days overdue.",
+        "text": "SOW milestone overdue: 1st Directives (Jul 7), Tom call list (Jul 28), and dedup workbook + 126 accounts (Jul 31) show no confirmed completion event.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
-        "id": "F2",
-        "priority": 1,
-        "text": "Zero paid spend and zero leads across 28 full days — Meta and Google Ads entirely dark, no CPL to evaluate; all lead generation is offline.",
-        "confidence": "confirmed",
-        "channel": "paid"
-      },
-      {
         "id": "F3",
         "priority": 2,
-        "text": "GBP actions collapsed: last 3 days (Aug 22–24) averaged 2.0 vs prior 3 days (Aug 19–21) averaged 5.7 — a 65% 3-day drop inside an already weak 45-day trend.",
+        "text": "GBP actions collapsed 56.76% week-over-week; last 3 days (Aug 22–24) total 6 actions vs prior 3 days (Aug 19–21) total 17 — a confirmed 3-day downtrend.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "gbp"
       },
       {
         "id": "F4",
-        "priority": 2,
-        "text": "Search clicks fell 58.33% week-over-week; last 3 days (Aug 22–24) totaled 2 clicks vs 3 in the prior 3 — organic search visibility is also eroding, not just GBP.",
-        "confidence": "confirmed",
+        "priority": 3,
+        "text": "Search clicks down 58.33% week-over-week; last 3 days (Aug 22–24) = 2 clicks vs prior 3 (Aug 19–21) = 3 clicks — low absolute volume masks a sustained decay trend.",
+        "confidence": "probable",
         "channel": "organic"
       },
       {
         "id": "F5",
-        "priority": 3,
-        "text": "GA4 sessions are zero for all 28 days in series — either tracking is broken or the property is unmapped; no web session data available to diagnose conversion path.",
-        "confidence": "confirmed",
-        "channel": "GA4"
+        "priority": 4,
+        "text": "GA4 sessions are zero across all 28 days — either tracking is broken or the property is not connected; GBP web clicks (33 in 28d) contradict a true zero.",
+        "confidence": "hypothesis",
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate all 3 overdue CRM milestones to Ahmed/Sohib immediately; confirm completion status by 2026-08-28.",
+        "text": "Escalate 3 overdue CRM milestones to Ahmed/Dev team; block downstream Sales-i pipeline until resolved.",
         "cites": [
-          "F1"
+          "F2"
         ],
-        "monday_item_name": "Overdue CRM Milestones Escalation",
-        "monday_update": "Three SOW milestones are confirmed overdue: 1st Directives (Jul 7, 49 days), Tom call list priority (Jul 28, 28 days), and dedup workbook + 126 accounts (Jul 31, 25 days). Tag Ahmed and Sohib to post completion evidence or a new delivery date on this board item by Aug 28. Success check: all three milestones show a confirmed-complete status with rollback files or equivalent deliverables posted by Aug 28."
+        "monday_item_name": "Resolve 3 Overdue CRM Milestones",
+        "monday_update": "Three SOW milestones are overdue: 1st Directives (Jul 7), Tom call list prioritisation (Jul 28), and the dedup workbook + 126 accounts delivery (Jul 31) — none have a confirmed completion event. Escalate to Ahmed and Dev 2 immediately, as the 342 stub account reconciliation and Sales-i pipeline are gated behind these. Success is confirmed completion events logged on the Monday CRM board for all three items by 2026-08-28."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GA4 property mapping — 28 consecutive zero-session days signals a broken or unmapped tag, not low traffic.",
+        "text": "Investigate GA4 tracking gap — GBP recorded 33 web clicks in 28 days but GA4 shows zero sessions.",
         "cites": [
           "F5"
         ],
-        "monday_item_name": "GA4 Tracking Audit Forte",
-        "monday_update": "GA4 sessions have read zero for every single day in the 28-day series, which is inconsistent with 28 search clicks and 98 GBP actions recorded in the same window. Dev team should verify the GA4 property ID mapped in the reporting stack matches the live tag on the Forte Metals site. Success check: at least 1 verified session recorded in GA4 within 48 hours of the tag fix, confirmed by Aug 27."
+        "monday_item_name": "Fix GA4 Tracking — Forte Metals",
+        "monday_update": "GBP reported 33 web clicks over the past 28 days, but GA4 sessions are zero for the same period, indicating a broken or disconnected tracking implementation. Dev team to verify the GA4 property connection and tag firing on the Forte Metals site. Success is confirmed GA4 session data populating within 3 days of the fix, by 2026-08-28."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions and search clicks over next 7 days — if 3-day average stays below 3 actions/day, investigate GBP listing health.",
+        "text": "Monitor GBP actions daily; if 3-day total stays below 5 by Sep 1, escalate GBP optimisation as confirmed decay.",
         "cites": [
-          "F3",
-          "F4"
+          "F3"
         ],
-        "monday_item_name": "GBP & Search Clicks Watch",
-        "monday_update": "GBP actions averaged 2.0 over the last 3 days (Aug 22–24) vs 5.7 in the prior 3, and search clicks are down 58.33% week-over-week. No paid activity is running to mask or offset this organic decline. Re-check on Sep 1: if the 3-day GBP average remains below 3 actions/day, escalate to a GBP listing audit (categories, photos, review recency) and SEO content review."
+        "monday_item_name": "Watch GBP Actions Decay",
+        "monday_update": "GBP actions dropped 56.76% week-over-week and the last 3 days (Aug 22–24) totalled only 6 actions versus 17 in the prior 3 days. No paid channels are active to compensate, making GBP the sole lead-generating surface. Re-check on 2026-09-01; if the 3-day rolling total remains below 5, escalate to an active GBP remediation task."
       }
     ],
     "next_check": "2026-09-01"

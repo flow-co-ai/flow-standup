@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-25T11:21:36.205Z",
+  "generated_at": "2026-08-25T20:39:25.026Z",
   "date": "2026-08-25",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Over the past 28 days, Meta drove all 27 leads at a $24.43 CPL with $659.48 in spend, led by \"CROA || CBO - 3/17/26\" at $349.65. The biggest movement is Instagram's +31,500% 7-day spike, likely driven by that top campaign's creative gaining sudden traction on IG placements.",
+  "verdict": "Instagram surged +31,500% week-over-week, likely driven by the top Meta campaign \"CROA || CBO - 3/17/26\" which alone accounted for $349.65 of the $659.48 in 28-day spend, helping deliver 27 leads at a $24.43 CPL entirely through Meta with no Google Ads activity in the period.",
   "windsor": {
     "totals": {
       "spend": 659.48,
@@ -25,15 +25,15 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 172,
+          "actions": 173,
           "calls": 58,
           "directions": 0,
-          "web_clicks": 114
+          "web_clicks": 115
         }
       }
     },
     "organic": {
-      "gbp_actions": 172,
+      "gbp_actions": 173,
       "ig_reach": 1382
     },
     "top_campaign": {
@@ -41,9 +41,9 @@
       "spend": 349.65
     },
     "analytics": {
-      "sessions": 1478,
+      "sessions": 1479,
       "users": 1395,
-      "conversions": 2646
+      "conversions": 2647
     },
     "search": {
       "clicks": 441,
@@ -64,7 +64,7 @@
       "gbp_actions": 0,
       "ig_reach": 36,
       "sc_clicks": 0,
-      "ga4_sessions": 89,
+      "ga4_sessions": 90,
       "purchases": 0,
       "revenue": 0
     },
@@ -74,9 +74,9 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -2.27,
+      "gbp_7d_pct": 0,
       "sc_7d_pct": 6.9,
-      "ga4_7d_pct": -20.08,
+      "ga4_7d_pct": -19.88,
       "ig_7d_pct": 31500,
       "spend_per_day_7d": 0
     },
@@ -258,7 +258,7 @@
         19,
         12,
         5,
-        0,
+        1,
         0,
         0
       ],
@@ -350,7 +350,7 @@
         68,
         32,
         35,
-        89
+        90
       ],
       "purchases": [
         0,
@@ -561,43 +561,43 @@
     "history_line": "First Meta ads launched live after account reconnection and tracking setup"
   },
   "performance": {
-    "generated_at": "2026-08-25T11:27:06.386Z",
+    "generated_at": "2026-08-25T20:42:39.090Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Ads are dark 16 days; score is a lagging artefact, not reality.",
+    "verdict": "Ads dark 16 days; GBP and organic holding but pipeline intake is broken.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Meta spend reads $0 every day from 2026-08-06 through 2026-08-24 — 19 consecutive zero-spend days. All 27 28-day leads and $659 spend belong to the Jul 28–Aug 5 window only.",
+        "text": "Meta spend has been $0 every day since 2026-08-06 — 19 consecutive zero-spend days, all leads have stopped.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
-        "priority": 1,
-        "text": "GHL shows 27 contacts but 0 opportunities created and 0 appointments — every lead that did arrive went unworked. This is an intake leak, not an ads problem.",
+        "priority": 2,
+        "text": "GHL shows 27 contacts created but 0 opportunities opened and 0 appointments — leads that did arrive never entered the pipeline.",
         "confidence": "confirmed",
         "channel": "crm"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "The score of 100 and 'green' status are artefacts of the 28-day window masking 19 dark days; the triage signal is materially wrong and should not be trusted this cycle.",
+        "text": "SOW extension with Marwan is open and unresolved; the 3-month renewal gates all Aug–Sep campaign and creative work listed in the plan.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP is still generating actions (172 over 28d, 58 calls) while paid is dark — organic is the only active lead surface right now, and it is untracked for case conversion.",
+        "text": "3-day sc_clicks signal: Aug 22–24 averaged 16.3 vs prior 3-day avg of 25.3 — search click momentum fading without paid support.",
         "confidence": "probable",
-        "channel": "gbp"
+        "channel": "search"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "IG reach spiked to 210–182 on Aug 21–22 from a baseline near 0, while spend was $0 — likely organic reel pickup; worth monitoring but unexplained without platform data.",
+        "text": "IG reach spiked to 210 on Aug 21 and 182 on Aug 23 despite zero paid spend — organic posts still active but no conversion path behind them.",
         "confidence": "hypothesis",
         "channel": "meta"
       }
@@ -606,33 +606,32 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Diagnose and restore Meta spend immediately — 19 dark days at $65–75/day SOW budget is a confirmed full stop.",
+        "text": "Identify and resolve cause of Meta $0 spend since Aug 6; restore to $65–75/day immediately.",
         "cites": [
-          "F1",
-          "F3"
+          "F1"
         ],
-        "monday_item_name": "Restore Meta Spend Urgently",
-        "monday_update": "Meta has shown $0 spend every day from Aug 6 through Aug 24 — 19 consecutive dark days against the contracted $65–75/day budget. Check for a payment failure, account flag, campaign pause, or policy hold in Meta Business Suite and resolve before any optimisation is possible. Success is confirmed when daily spend returns to ≥$60 for 3 consecutive days. Escalate to Sohib and Marwan today; this gates all volume targets."
+        "monday_item_name": "Restore Meta Spend Aug 6",
+        "monday_update": "Meta has delivered $0 spend and 0 leads for 19 consecutive days since 2026-08-06, ending all lead flow. Diagnose the account — check billing, campaign status, ad set rejections, or account flags — and restore daily budget to $65–75 as per SOW. Success is confirmed when spend resumes at ≥$65/day and the first new leads register in GHL. Resolve by 2026-08-27."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Fix GHL intake: 27 contacts, 0 opportunities created — leads are arriving but Andrew's pipeline is empty; repair before ads restart.",
+        "text": "Audit GHL intake: 27 contacts entered but 0 opportunities created — repair the pipeline stage automation.",
         "cites": [
           "F2"
         ],
         "monday_item_name": "Fix GHL Intake Pipeline",
-        "monday_update": "GHL logged 27 contacts over the past 28 days but shows 0 opportunities created and 0 appointments — no lead was moved into the pipeline. Audit the GHL workflow with Andrew to confirm whether the instant-form webhook is firing correctly and whether stage-entry automation is active. Success is confirmed when new contacts auto-create opportunities within the same session. This must be resolved before ad spend is restored, or leads will again go unworked."
+        "monday_update": "27 Meta leads reached GHL as contacts over the 28-day window, but 0 opportunities were created and 0 appointments booked — meaning no lead has entered the sales pipeline at all. Work with Andrew to confirm whether the GHL workflow automating contact-to-opportunity conversion is active and correctly mapped. Success is a non-zero opportunity count within 48 hours of leads resuming. Complete audit by 2026-08-27."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch IG organic reach spike (210 on Aug 21) — no spend driving it; hold until ad account is live to separate paid vs organic signal.",
+        "text": "Watch contract extension resolution; no creative or budget scaling until Marwan renewal is confirmed.",
         "cites": [
-          "F5"
+          "F3"
         ],
-        "monday_item_name": "Watch IG Organic Reach Spike",
-        "monday_update": "Instagram reach jumped to 210 on Aug 21 and 182 on Aug 22 with zero ad spend — this may be organic reel traction. No action is warranted until Meta spend is restored and we can isolate paid vs organic reach in the platform. Re-check on 2026-08-28 after spend is confirmed live; if organic reach holds above 150 alongside paid activity, flag for Hamza to assess a dedicated IG placement test."
+        "monday_item_name": "JCL Contract Extension Status",
+        "monday_update": "The SOW extension with Marwan is open and unresolved, gating all planned Aug–Sep Meta creative work and the 3-month renewal. No new campaign builds, creative shoots, or budget increases should be actioned until the contract is signed. Re-check status on 2026-08-28 and escalate to Sohib if no response received."
       }
     ],
     "next_check": "2026-08-28"
