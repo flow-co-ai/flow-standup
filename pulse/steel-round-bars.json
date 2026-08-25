@@ -487,10 +487,10 @@
     "next_check": "2026-08-01"
   },
   "brief": {
-    "date": "2026-08-24",
+    "date": "2026-08-25",
     "headlines": [
       {
-        "text": "Standup generation failed; no feed data today.",
+        "text": "No new activity or comms today",
         "tone": "info"
       }
     ],
@@ -504,50 +504,63 @@
         "items": [
           {
             "state": "next",
-            "text": "(inferred) Investigate standup generation failure before resuming work tracking."
+            "text": "(inferred) Reconcile 342 stub accounts against authoritative customer sheet"
           },
           {
             "state": "queued",
-            "text": "Reconcile 342 stub accounts against authoritative customer sheet."
+            "text": "Verify 2 accounts held pending Epicor confirmation"
           }
+        ],
+        "owners": [
+          "Ahmed"
         ]
       }
     ],
     "waiting_on_client": [],
     "launch_gate": null,
     "brief_v2": {
-      "verdict": "No feed data today — standup generation failed, so no active loops can be confirmed.",
-      "next_move": "Ops: investigate and re-run standup generation — no work status can be reported without it.",
+      "verdict": "No activity today; 23 CRM items are in-working status with no blocking signal.",
+      "next_move": "Ahmed: advance stub-account reconciliation — 342 accounts remain unresolved and gate Sales-i sync.",
       "blocks": [],
       "snapshot": [
         {
           "label": "Open items",
-          "value": "23 open, all in Working status; no movement confirmed today.",
+          "value": "23 open, all in Working, none stuck or in review this week",
           "tone": "warn"
         },
         {
           "label": "Contract",
-          "value": "Retainer $10,500/mo, Flow Company, Jan 2026; Aug–Oct 2026 window active.",
+          "value": "Retainer $10,500/mo, Flow Company Jan 2026; Aug–Oct 2026 window active",
           "tone": "muted"
+        },
+        {
+          "label": "Judged on",
+          "value": "RFQs → quotes → orders; revenue recovered from quiet accounts",
+          "tone": "plain"
         }
       ],
       "history_line": null
     }
   },
   "brief_v2": {
-    "verdict": "No feed data today — standup generation failed, so no active loops can be confirmed.",
-    "next_move": "Ops: investigate and re-run standup generation — no work status can be reported without it.",
+    "verdict": "No activity today; 23 CRM items are in-working status with no blocking signal.",
+    "next_move": "Ahmed: advance stub-account reconciliation — 342 accounts remain unresolved and gate Sales-i sync.",
     "blocks": [],
     "snapshot": [
       {
         "label": "Open items",
-        "value": "23 open, all in Working status; no movement confirmed today.",
+        "value": "23 open, all in Working, none stuck or in review this week",
         "tone": "warn"
       },
       {
         "label": "Contract",
-        "value": "Retainer $10,500/mo, Flow Company, Jan 2026; Aug–Oct 2026 window active.",
+        "value": "Retainer $10,500/mo, Flow Company Jan 2026; Aug–Oct 2026 window active",
         "tone": "muted"
+      },
+      {
+        "label": "Judged on",
+        "value": "RFQs → quotes → orders; revenue recovered from quiet accounts",
+        "tone": "plain"
       }
     ],
     "history_line": null
