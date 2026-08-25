@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-24T16:47:09.125953+00:00",
+  "updatedAt": "2026-08-25T15:46:03.194287+00:00",
   "items": [
     {
       "id": "websEo-pricing-question",
@@ -391,6 +391,177 @@
       "nullReason": null,
       "priority": 2,
       "createdAt": "2026-08-20T01:03:13.416695+00:00"
+    },
+    {
+      "id": "medstation-appointment-sync-duplicates",
+      "title": "Appointment Sync",
+      "note": "Context: the 8/24 GHL go live checkin confirmed the NextGen to GHL appointment sync is running on the separate DigitalOcean instance that keeps MedStation PHI isolated for HIPAA, pushing appointment status every 15 minutes, but raised two defects: rescheduled appointments leave duplicate records because the sync account appears to lack delete rights on the mirror, and the sync overwrites the contact source field, destroying Google, Meta and LSA attribution. Deliverable: verify the 15 minute sync end to end, obtain delete rights and confirm reschedules no longer duplicate, stop the source overwrite and tag synced contacts Next Gen Sync. Dependencies: DigitalOcean mirror stability and MedStation IT granting delete rights. Done: one appointment record per booking after a reschedule, and source preserved with the tag applied. Board audit 2026-08-25 across all four boards with subitems: NextGen Mirror (12484780084) is the mirror build and is already Done, Source Tracking (12484780178) is Done and owns tracking configuration rather than sync behaviour, and nothing on Ads, Video or Web + SEO touches appointment sync. No existing item covers this, so it drafts as a new subitem under GHL Setup (12665521507).",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: GHL Go Live Checkin, 8/24",
+      "payload": {
+        "mode": "create_subitem",
+        "boardId": "18418241405",
+        "parentItemId": "12665521507",
+        "itemName": "Appointment Sync",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> At the 24 August go live checkin the NextGen to GHL appointment sync was confirmed running on the separate DigitalOcean instance that keeps MedStation patient data isolated for HIPAA, pushing appointment status into GHL every 15 minutes. Final verification against live data is still outstanding, and this is the last piece of the Weston pilot that has not been signed off.</li><li><strong>Defect one, duplicate appointments.</strong> Rescheduling in NextGen produces two appointment records in GHL instead of one. The working theory from the session is that the sync account has read and write rights on the mirror but no delete right, so the superseded appointment is never removed. The team has not yet ruled out genuine double bookings by patients, so this needs confirming with MedStation before any logic changes.</li><li><strong>Defect two, source overwrite.</strong> The sync currently writes the contact source field on contacts it touches, which wipes the original Google Ads, Meta Ads or LSA attribution the moment a patient books. Every synced contact ends up looking like it came from NextGen.</li><li><strong>Verify</strong> the appointment status sync end to end against live NextGen data and confirm each status change lands in GHL inside the 15 minute window.</li><li><strong>Request and confirm</strong> delete permission for the sync account on the NextGen mirror, then reproduce a reschedule and a cancellation and confirm GHL holds exactly one current appointment record afterwards.</li><li><strong>Modify</strong> the sync so it no longer writes contact source on an existing contact, and <strong>add</strong> the tag \"Next Gen Sync\" to every contact it touches so NextGen originated records stay identifiable without destroying campaign attribution.</li><li><strong>Dependencies.</strong> Depends on the DigitalOcean mirror connection staying stable and on MedStation IT granting delete rights, which sits outside our control. <strong>Do not</strong> change the Source Tracking configuration itself, which was verified complete on 17 August. The fix belongs in the sync, not in the tracking setup.</li><li><strong>done = </strong> a rescheduled or cancelled NextGen appointment leaves exactly one matching appointment record in GHL with no duplicate, and a contact that syncs from NextGen keeps its original source value and carries the \"Next Gen Sync\" tag.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 1,
+      "createdAt": "2026-08-25T15:46:03.194287+00:00"
+    },
+    {
+      "id": "medstation-call-source-tagging",
+      "title": "Source Tracking",
+      "note": "Context: Source Tracking was audited complete on 8/17 (external script installed, page view and form analytics live, Meta and Google Lead Ads connected). The 8/24 checkin added one remaining piece: the call source tagging automation exists but has not been replicated across the Google Ads, Meta Ads and LSA numbers, so inbound calls do not carry their channel. Deliverable: replicate the automation onto all three ad platform numbers and verify with a test call on each. Dependencies: none, the numbers were verified present in the 8/17 Phone Consolidation audit. Done: a test call on each number tags the contact with the right channel. Board audit 2026-08-25 across all four boards with subitems: Source Tracking (12484780178) on CRM is the only item that owns call source attribution; Ads Reports (12471121477) is reporting only. Drafted as an update on the existing item rather than a new one. Note it is currently marked Done on Monday, so this update reopens real remaining scope.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: GHL Go Live Checkin, 8/24",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12484780178",
+        "itemName": "Source Tracking",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> This item was audited complete on 17 August: the external tracking script is installed, page view analytics, form analytics and form submissions are enabled, and the Facebook and Google Lead Ads integrations are connected. The 24 August go live checkin surfaced one piece of the original scope that is not actually finished, which is why this is reopening rather than closing.</li><li><strong>The gap.</strong> The automation that tags an inbound call with its source channel is built but has only been applied to one number. The Google Ads, Meta Ads and Local Service Ads numbers are provisioned and verified, but calls arriving on them are not being tagged, so paid call volume cannot be attributed back to the channel that produced it.</li><li><strong>Replicate</strong> the call source tagging automation onto the Google Ads number, the Meta Ads number and the LSA number, using the same tag convention already in use so reporting stays consistent.</li><li><strong>Verify</strong> with one live test call into each of the three numbers that the resulting GHL contact carries the correct channel tag, and post the three results here.</li><li><strong>Dependencies and constraints.</strong> No external dependency, all three numbers were confirmed present and verified in the 17 August Phone Consolidation audit, so this can start immediately. <strong>Do not</strong> introduce number pools, which were explicitly ruled out for MedStation, and <strong>do not</strong> change the published site or Google Business Profile number. The separate problem of the NextGen sync overwriting contact source is tracked on the Appointment Sync subitem, not here.</li><li><strong>done = </strong> a test call into each of the Google Ads, Meta Ads and LSA numbers creates or updates a GHL contact tagged with that channel as the call source, confirmed on all three.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-25T15:46:03.194287+00:00"
+    },
+    {
+      "id": "medstation-booking-webhook-delay",
+      "title": "Booking Document Tracking",
+      "note": "Context: the 8/24 checkin established that the booking app webhook carries UTM and campaign data but does not create the appointment, which arrives separately via the NextGen sync, so mapping at webhook time creates a second contact. Deliverable: build a workflow that waits 30 minutes after the webhook fires then maps UTM and campaign values onto the contact the sync has created, matched on phone or email. Dependencies: still waiting on the integration spec requested from the booking vendor on 8/17 (endpoint, auth, UTM taxonomy, GTM container, confirmation event, domain), so this is blocked on a third party. Done: one contact per booking carrying its campaign values. Board audit 2026-08-25 across all four boards with subitems: Booking Document Tracking (12825164498) under GHL Setup is exactly this workstream and already holds the 8/17 spec request; nothing on Ads, Video or Web + SEO duplicates it.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: GHL Go Live Checkin, 8/24",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12825164498",
+        "itemName": "Booking Document Tracking",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> The 24 August go live checkin clarified how the booking flow actually behaves. The booking app webhook does carry the UTM and campaign parameters, but it does not create the appointment in GHL. The appointment arrives separately through the NextGen appointment sync, on its own schedule. That timing gap is the whole problem.</li><li><strong>Why mapping at webhook time fails.</strong> If the webhook writes campaign data the moment it fires, the matching contact usually does not exist yet, so GHL creates a second contact. The booking then lands on one record and the attribution on another, and neither is complete.</li><li><strong>Build</strong> a delayed workflow that <strong>waits 30 minutes</strong> after the webhook is received, then maps the UTM and campaign parameters onto the contact the NextGen sync has created by that point, matching on phone number first and email as a fallback. <strong>Do not</strong> let the workflow create a contact if no match is found; log the miss instead so the window can be tuned.</li><li><strong>Chase the spec.</strong> The integration detail requested on 17 August has still not come back: GHL webhook endpoint for staging and production, auth method, the exact UTM parameter names and expected values per channel, the GTM container arrangement, the confirmation event name and fields, and whether the landing pages sit on the same domain as the booking flow. Sohib to confirm with the MedStation booking team and Rafael that the webhook is genuinely sending the full campaign payload and to get that document back.</li><li><strong>Dependencies.</strong> Blocked on the booking vendor returning the spec above. Also depends on the NextGen appointment sync being reliable, which is being fixed on the Appointment Sync subitem. Building against a guessed payload shape is not worth it here, the 30 minute delay needs to be tuned against real sync timings.</li><li><strong>done = </strong> a booking made through the booking app results in exactly one GHL contact carrying its UTM and campaign values alongside the synced appointment, with no duplicate contact created, verified on a live test booking.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": true,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-25T15:46:03.194287+00:00"
+    },
+    {
+      "id": "medstation-reactivation-whatsapp-gate",
+      "title": "Reactivation Build",
+      "note": "Context: the 8/24 checkin confirmed reactivation logic is built for roughly 150,000 Weston leads but is deliberately held until WhatsApp replaces SMS, and two client inputs are still missing, the lead file itself and the last visit date field from NextGen. Deliverable: keep workflows unpublished, finish the language branch, obtain the file with consent filtering and the last visit date field, and settle segmentation. Dependencies: WhatsApp connection plus MedStation supplying the file and field, so genuinely blocked on a third party and needs Naz to chase the client. Done: reactivation sends over WhatsApp to a consent filtered lapsed segment with language branching verified. Board audit 2026-08-25 across all four boards with subitems: Reactivation Build (12484780177) is the owning item and already holds the approved Portuguese and English copy from 8/4; nothing elsewhere duplicates it.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: GHL Go Live Checkin, 8/24",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12484780177",
+        "itemName": "Reactivation Build",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> At the 24 August go live checkin the reactivation campaign was confirmed built in logic and sized at roughly 150,000 Weston leads, but deliberately not enabled. It is waiting on WhatsApp to replace SMS, because sending a campaign of that size over SMS is both a compliance risk and a poor fit for the audience.</li><li><strong>Hold the workflows.</strong> Keep every reactivation workflow unpublished with zero contacts enrolled until WhatsApp is live in the account. <strong>Do not</strong> enable the SMS fallback path as an interim measure, this was called out explicitly in the session.</li><li><strong>Finish the language branch.</strong> Complete the language detection so a recipient replying \"EN\" switches that contact to the English copy while Portuguese stays the default, using the approved copy already posted on this item on 4 August. Every message must keep the \"Reply: EN or English\" and \"Stop to Unsubscribe\" lines.</li><li><strong>Two client inputs are still missing.</strong> First, the file of roughly 150,000 Weston leads has not been received; it needs consent filtering applied before import so only contactable records enrol. Second, the last visit date field is not available in GHL and reactivation segmentation depends on it, so the field needs identifying in NextGen and adding to the sync.</li><li><strong>Settle segmentation before launch.</strong> Confirm with MedStation whether the first wave targets lapsed patients only at 45 days past first visit as originally scoped, and how active patients and post consultation patients should be excluded or handled differently, so the campaign does not message someone who was seen last week.</li><li><strong>Dependencies.</strong> Blocked on the WhatsApp connection landing and on MedStation returning both the lead file and the last visit date field. Naz to chase MedStation on both, they are client side and have been outstanding since the pin on this item on 30 July.</li><li><strong>done = </strong> the reactivation campaign sends over WhatsApp to a consent filtered lapsed patient segment built on last visit date, with the English and Portuguese branching verified on a test contact, and the client has signed off on the segment before the first real send.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
+        "blocked": true,
+        "needsNaz": true
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-25T15:46:03.194287+00:00"
+    },
+    {
+      "id": "medstation-weston-number-porting",
+      "title": "Phone Consolidation",
+      "note": "Context: the 8/24 checkin set up an onboarding call to port Weston's number from Como into GHL, with Ahmed to send the porting steps and documentation and Sohib to run the call. Deliverable: send the porting pack, run the call, track the port to completion, re verify routing and the fallback number after cut over. Dependencies: carrier porting has a long external lead time and needs MedStation to sign paperwork, so Naz is tagged to chase the client side. Done: Weston's number answers in GHL and Como no longer receives its calls. Board audit 2026-08-25 across all four boards with subitems: Phone Consolidation (12484780179) owns the Weston forward and number work and was last audited 8/17; the separate WhatsApp connection is already covered by the pending medstation-whatsapp-ghl-connect card in this queue and is deliberately excluded here to avoid a duplicate.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: GHL Go Live Checkin, 8/24",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12484780179",
+        "itemName": "Phone Consolidation",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> The 17 August audit on this item confirmed MedStation is A2P compliant, that the main, Google Ads, Meta Ads and LSA numbers are present and verified, that the fallback number is configured as third routing priority, and that the chat widget is installed. The 24 August go live checkin moved the remaining piece forward: Weston's own number is still sitting with Como and needs to move into GHL, and a client onboarding call has been arranged to walk MedStation through it.</li><li><strong>Send the porting pack.</strong> Prepare and send MedStation the full porting steps and the documentation the carrier will require, including the letter of authorisation, the account name and number on the Como account, the service address on record and a recent bill. Getting this wrong is the usual cause of a rejected port, so it is worth checking the details against Como before sending.</li><li><strong>Run the onboarding call</strong> with MedStation, walk them through what they need to sign and what the cut over window looks like, and confirm the date and time in writing afterwards so there is a record of who agreed to what.</li><li><strong>Track the port to completion</strong> and post the carrier confirmation here, then <strong>re verify</strong> after cut over that inbound routing to the contact owner still behaves, that the existing fallback number is still third in the routing priority, and that no call path silently reverted to Como.</li><li><strong>Dependencies and scope.</strong> The port itself has a long external lead time and cannot complete until MedStation signs the carrier paperwork, so Naz is tagged to keep the client side moving. <strong>Do not</strong> port any of the ten representatives personal numbers, that was ruled out earlier. The WhatsApp business number configuration is a separate piece of work tracked on its own card and is deliberately not part of this item.</li><li><strong>done = </strong> Weston's number rings through in GHL with routing and the fallback priority verified after cut over, and Como no longer receives calls for it.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
+        "blocked": false,
+        "needsNaz": true
+      },
+      "nullReason": null,
+      "priority": 1,
+      "createdAt": "2026-08-25T15:46:03.194287+00:00"
+    },
+    {
+      "id": "maadilaw-dropbox-signed-docs",
+      "title": "Document Automation",
+      "note": "Context: this subitem already scopes automatic Dropbox folder creation per case and automatic filing of signed documents. The 8/24 checkin fixed the mechanism (Zapier) and the deadline (demonstrable at the Maadi Law onboarding call on 8/25), and added an access dependency, Sohib verifying Dropbox and Zapier access and the folder structure. Deliverable: build the Zapier route for signed PDFs into the case named folder, confirm the multi file upload path end to end, demo on one real case. Dependencies: Dropbox and Zapier access plus an agreed naming convention. Done: a signed PDF files itself into the case folder with no manual step. Board audit 2026-08-25 across all four boards with subitems: Document Automation (12810218373) under Document Handling is the owning item, its sibling multi file upload and text auto attach subitems are already Done, and the DocuSign versus Zapier fallback subitem (12471728394) is still Waiting; nothing elsewhere duplicates this.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: GHL Go Live Checkin, 8/24",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12810218373",
+        "itemName": "Document Automation",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> This item already scopes automatic Dropbox folder creation for every new Maadi Law case, automatic routing of signed documents and intake photos into that folder, and reminders on unsigned documents. The 24 August go live checkin settled two things that were open: the mechanism is Zapier, and document handling has to be demonstrable at the Maadi Law onboarding call and demo on <strong>25 August</strong>.</li><li><strong>Build the Zapier route.</strong> Signed PDFs coming out of the document flow should land automatically in a Dropbox folder named for the case, with no manual filing. The folder should be created by the automation when the case opens rather than in advance, so a case that never opens does not leave an empty folder behind.</li><li><strong>Confirm the multi file upload path end to end</strong> from the client facing intake form through to the contact document section in GHL and on into Dropbox. The upload form subitem is marked Done, but the leg from GHL into Dropbox has never been run against a real case.</li><li><strong>Prepare the demo.</strong> Have one real case set up with its folder created and at least one signed document filed in it, so the flow can be shown live rather than described.</li><li><strong>Dependencies.</strong> Sohib to confirm Dropbox and Zapier access and agree the folder naming convention before the build starts, since renaming folders after cases exist is painful. Settle this the same way as the open DocuSign versus Zapier fallback question on the sibling subitem so the two do not diverge into different document paths.</li><li><strong>done = </strong> a signed PDF for a Maadi Law case lands automatically in that case's own Dropbox folder with no manual filing, demonstrated live on a real case at the onboarding call.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 1,
+      "createdAt": "2026-08-25T15:46:03.194287+00:00"
+    },
+    {
+      "id": "maadilaw-clio-push-button",
+      "title": "Clio Push Button",
+      "note": "Context: the 8/24 checkin asked for a manual trigger button in GHL that sends a selected contact into Clio Manage, creating both the contact and the matter without duplication, with an update due before the Maadi Law onboarding call. Prerequisite check: the Clio Manage integration method has been Waiting since 7/24, blocked pending approval of native connector versus Zapier versus custom API webhook, so the button is drafted as one sequenced item with the approval as step one rather than as standalone ready work. Dependencies: approved integration method plus Clio API credentials. Done: one press creates exactly one Clio contact and matter with ids written back, a second press updates rather than duplicates. Board audit 2026-08-25 across all four boards with subitems: Clio Migration (12471734017, Ongoing) is the parent workstream, its Determine Clio Manage integration method subitem (12471693739) is the standing decision and is not the build, and Sync Clio case manager assignment (12471747947) covers owner sync only. Nothing covers a push button, so it drafts as a new subitem under Clio Migration.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: GHL Go Live Checkin, 8/24",
+      "payload": {
+        "mode": "create_subitem",
+        "boardId": "18418241405",
+        "parentItemId": "12471734017",
+        "itemName": "Clio Push Button",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> The 24 August go live checkin asked for a manual push button inside GHL that sends a selected contact into Clio Manage, creating both the Clio contact and the matter in one action, with an update due before the Maadi Law onboarding call. Today everything moves by hand, which is the main friction Tracy's intake flow still has.</li><li><strong>Prerequisite, and it is not confirmed.</strong> The Clio Manage integration method has been Waiting since 24 July, blocked pending a decision between the native connector, Zapier, and a custom Clio Manage API and webhook integration. The standing recommendation on that subitem is the custom API route with Clio as source of truth. The button cannot be built until that call is made, because the transport it uses is exactly what is being decided.</li><li><strong>Step one, approve the integration method.</strong> Naz or Sohib to confirm the custom Clio Manage API and webhook route, or name the alternative. <strong>Do not start step two before step one is approved.</strong></li><li><strong>Step two, build the button.</strong> It triggers on a selected GHL contact, checks first for an existing Clio Contact ID on that record, then creates the Clio contact and the associated matter, writes the returned Clio Contact ID and Matter ID back onto the GHL contact, and logs any failure visibly rather than failing silently. A second press on the same contact must update the existing Clio records rather than create a second matter.</li><li><strong>Constraints.</strong> <strong>Do not</strong> touch the historical owner mapping table that was already imported and verified on 24 July, and keep the first phase one way from GHL into Clio for this button so it does not collide with the Clio to GHL owner sync being built on the sibling subitem. Clio API credentials are needed before step two can start.</li><li><strong>done = </strong> pressing the button on a GHL contact creates exactly one matching Clio Manage contact and one matter, both ids written back onto the GHL contact, and a second press on the same contact updates rather than duplicating, verified on a test case.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
+        "blocked": false,
+        "needsNaz": true
+      },
+      "nullReason": null,
+      "priority": 1,
+      "createdAt": "2026-08-25T15:46:03.194287+00:00"
+    },
+    {
+      "id": "elgin-dental-implants-prospect",
+      "title": "Elgin Dental Implants, prospect not on roster",
+      "note": "unmapped-client: the 8/24 call between Sohib and Monique Reyes of Elgin Dental Implants is a real prospect conversation, but Elgin Dental Implants is not in config.json's client roster and has no group on any of the four boards, so there is nothing to audit against and no group to route to. What was discussed: they currently run four separate marketing vendors and want to consolidate to one full stack provider at $3,500 per month plus $2,000 ad spend, minimum three month term. They run Meta Ads only today, have 148 reviews and want 30 to 50 new reviews a month, have no Spanish language SEO despite roughly half their patients speaking Spanish, and have no call centre. Flow proposed Google Local Service Ads scoped to surgical implant cases only, plus Open Dental integration for lead to patient visibility in one dashboard. Near term commitment on our side: send Monique the Google Local Service Ads detail. Decision point: they reconnect mid November with a possible 1 December start, contingent on the client facing dashboard and on whether Flow offers a call centre. Needs Naz to confirm whether Elgin becomes a tracked prospect and where the LSA information task should live before anything is drafted onto a board.",
+      "status": "confirm",
+      "board": null,
+      "group": null,
+      "potentialClient": "Elgin Dental Implants",
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Elgin Dental Implants, 8/24",
+      "payload": null,
+      "nullReason": "unmapped-client",
+      "priority": 2,
+      "createdAt": "2026-08-25T15:46:03.194287+00:00"
     }
   ]
 }
