@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-25T20:38:32.088Z",
-  "date": "2026-08-25",
+  "generated_at": "2026-08-26T11:23:18.960Z",
+  "date": "2026-08-26",
   "slug": "healing-helps",
   "name": "Healing Helps",
   "type": "leadgen",
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "The biggest movement this period is a 78.57% drop in GBP actions over the last 7 days compared to the prior 7 days, likely driven by reduced organic search visibility or seasonal dips in local intent. Paid channels (Meta and Google Ads) show zero spend and zero leads over the 28-day window, meaning all 48 GBP actions recorded are the sole source of engagement for Healing Helps.",
+  "verdict": "GBP activity is the standout signal this period, with 43 total actions (22 directions, 20 web clicks, 1 call) over 28 days, though GBP engagement dropped 54.55% in the last 7 days versus the prior 7, likely reflecting reduced local search visibility or seasonal demand. Paid channels (Meta and Google Ads) show zero spend and zero leads, so all lead-gen momentum is currently dependent on organic GBP performance alone.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,25 +25,25 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 48,
+          "actions": 43,
           "calls": 1,
-          "directions": 26,
-          "web_clicks": 21
+          "directions": 22,
+          "web_clicks": 20
         }
       }
     },
     "organic": {
-      "gbp_actions": 48,
+      "gbp_actions": 43,
       "ig_reach": 0
     },
     "top_campaign": null,
     "analytics": {
       "sessions": 190,
-      "users": 153,
+      "users": 154,
       "conversions": 0
     },
     "latest_day": {
-      "date": "2026-08-24",
+      "date": "2026-08-25",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -51,7 +51,7 @@
       "gbp_actions": 0,
       "ig_reach": 0,
       "sc_clicks": 0,
-      "ga4_sessions": 9,
+      "ga4_sessions": 6,
       "purchases": 0,
       "revenue": 0
     },
@@ -61,16 +61,15 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -78.57,
+      "gbp_7d_pct": -54.55,
       "sc_7d_pct": null,
-      "ga4_7d_pct": -5.77,
+      "ga4_7d_pct": 2.08,
       "ig_7d_pct": null,
       "spend_per_day_7d": 0
     },
     "flags": [],
     "series": {
       "dates": [
-        "2026-07-28",
         "2026-07-29",
         "2026-07-30",
         "2026-07-31",
@@ -97,7 +96,8 @@
         "2026-08-21",
         "2026-08-22",
         "2026-08-23",
-        "2026-08-24"
+        "2026-08-24",
+        "2026-08-25"
       ],
       "spend": [
         0,
@@ -220,7 +220,6 @@
         0
       ],
       "gbp_actions": [
-        7,
         0,
         1,
         2,
@@ -246,6 +245,7 @@
         0,
         0,
         3,
+        2,
         0,
         0
       ],
@@ -310,7 +310,6 @@
         0
       ],
       "ga4_sessions": [
-        6,
         8,
         6,
         9,
@@ -337,7 +336,8 @@
         8,
         5,
         3,
-        9
+        9,
+        6
       ],
       "purchases": [
         0,
@@ -410,10 +410,14 @@
     ]
   },
   "brief": {
-    "date": "2026-08-25",
+    "date": "2026-08-26",
     "headlines": [
       {
-        "text": "No activity this week; board aging quietly",
+        "text": "No new activity this week",
+        "tone": "info"
+      },
+      {
+        "text": "Two loops aging with no comms",
         "tone": "info"
       }
     ],
@@ -427,15 +431,15 @@
         "items": [
           {
             "state": "blocked",
-            "text": "Email Deliverability — no activity since May, awaiting owner action"
+            "text": "Email Deliverability — no movement since May, awaiting action"
           },
           {
             "state": "blocked",
-            "text": "Website — no recent activity, status stagnant"
+            "text": "Website — no recent activity, status unclear"
           },
           {
             "state": "next",
-            "text": "(inferred) Review and action both stalled Web + SEO items"
+            "text": "(inferred) Identify owner and re-engage on Email Deliverability loop"
           }
         ]
       }
@@ -443,13 +447,26 @@
     "waiting_on_client": [],
     "launch_gate": null,
     "brief_v2": {
-      "verdict": "No movement this week; two Web + SEO board items are aging with no owner action.",
-      "next_move": "Team: triage Email Deliverability and Website items — both are marked working but have no recent activity.",
-      "blocks": [],
+      "verdict": "No move from anyone this week; Email Deliverability and Website loops sit idle.",
+      "next_move": "Team: re-engage on Email Deliverability item — longest-aging active loop needing an owner.",
+      "blocks": [
+        {
+          "item": "Email Deliverability",
+          "side": "team",
+          "who": "Flow team",
+          "last_activity": "Standup card flags item stalled with no recent comms or updates"
+        },
+        {
+          "item": "Website",
+          "side": "team",
+          "who": "Flow team",
+          "last_activity": "Standup card flags item with no recent activity this week"
+        }
+      ],
       "snapshot": [
         {
           "label": "Open items",
-          "value": "4 open, all marked working, 0 moving this week",
+          "value": "4 open, all in working status, none moving this week",
           "tone": "warn"
         }
       ],
@@ -457,75 +474,79 @@
     }
   },
   "brief_v2": {
-    "verdict": "No movement this week; two Web + SEO board items are aging with no owner action.",
-    "next_move": "Team: triage Email Deliverability and Website items — both are marked working but have no recent activity.",
-    "blocks": [],
+    "verdict": "No move from anyone this week; Email Deliverability and Website loops sit idle.",
+    "next_move": "Team: re-engage on Email Deliverability item — longest-aging active loop needing an owner.",
+    "blocks": [
+      {
+        "item": "Email Deliverability",
+        "side": "team",
+        "who": "Flow team",
+        "last_activity": "Standup card flags item stalled with no recent comms or updates"
+      },
+      {
+        "item": "Website",
+        "side": "team",
+        "who": "Flow team",
+        "last_activity": "Standup card flags item with no recent activity this week"
+      }
+    ],
     "snapshot": [
       {
         "label": "Open items",
-        "value": "4 open, all marked working, 0 moving this week",
+        "value": "4 open, all in working status, none moving this week",
         "tone": "warn"
       }
     ],
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-25T20:41:53.395Z",
+    "generated_at": "2026-08-26T11:28:21.411Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "No paid activity; only organic signal, and it's fading fast.",
+    "verdict": "Paid channels dormant 28+ days; GBP alone sustains minimal organic presence.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — Meta and Google both $0 — so CPL analysis is moot; the engagement base is purely organic.",
+        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google — means CPL is undefined and no lead pipeline exists from paid.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "meta/google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions collapsed 78.57% week-over-week; last 3 days (Aug 22–24) logged 3 total vs 14 in the prior 3 days (Aug 19–21), confirming trend.",
+        "text": "GBP actions dropped from ~22 in prior 7d to ~10 in last 7d (−54.55%); 3-day signal (Aug 23–25) shows 2 actions vs 5 in prior 3 days — deteriorating.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GA4 sessions averaged 5.7/day over last 3 days (Aug 22–24) vs 8.0/day in the prior 3 — a mild 29% softening, directional only given GA4 caveat.",
-        "confidence": "probable",
+        "text": "GA4 sessions flat at ~6/day (3-day avg: Aug 23–25 = 6) vs prior 3-day avg (Aug 20–22 = 8) — no growth signal; 190 sessions over 28 days yield 0 conversions.",
+        "confidence": "confirmed",
         "channel": "ga4"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "28-day GA4 records 190 sessions and 0 conversions — no intake pipeline data available (GHL null), so it is unknown whether any organic visitors are converting.",
-        "confidence": "hypothesis",
-        "channel": "ga4"
+        "text": "GHL pipeline is null with 0 leads recorded over 28 days — intake system shows no inbound activity, consistent with zero paid and declining organic.",
+        "confidence": "confirmed",
+        "channel": "ghl"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "watch",
-        "text": "Monitor GBP actions daily; if 3-day average stays below 2 actions/day through Sep 1, escalate to SOW review.",
+        "text": "No paid budget to move; monitor GBP weekly — re-check if actions recover above 5/day before activating paid.",
         "cites": [
+          "F1",
           "F2"
         ],
-        "monday_item_name": "Watch GBP Action Collapse",
-        "monday_update": "GBP actions dropped 78.57% week-over-week, with only 3 actions in the last 3 days (Aug 22–24). No paid channels are active to compensate, so this organic signal is Healing Helps' sole source of engagement. Success check: GBP actions return to a 3-day average of 5+ by Sep 1. Re-check Sep 1, 2026."
-      },
-      {
-        "id": "S2",
-        "type": "fix",
-        "text": "Confirm GHL pipeline is receiving and logging any organic-sourced inquiries; 190 sessions with 0 recorded conversions suggests an intake gap.",
-        "cites": [
-          "F4"
-        ],
-        "monday_item_name": "Fix GHL Intake Logging",
-        "monday_update": "GA4 recorded 190 sessions over 28 days but GHL returned null and shows 0 conversions — it is unknown whether organic visitors are enquiring at all or whether intake logging is broken. Verify GHL form/webhook connections are live and tied to the website contact flow. Success check: GHL pipeline populates with opportunities within 7 days of the fix. Re-check Sep 1, 2026."
+        "monday_item_name": "Watch GBP Recovery Signal",
+        "monday_update": "Paid channels have been at $0 spend for the full 28-day window, so no budget action is possible this cycle. GBP actions dropped 54.55% in the last 7 days, with the 3-day signal (Aug 23–25) at only 2 actions — the sole organic signal is weakening. Success check: GBP actions return to ≥5/day and GA4 sessions trend above 10/day. Re-check by 2026-09-02."
       }
     ],
-    "next_check": "2026-09-01"
+    "next_check": "2026-09-02"
   }
 }
