@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-26T11:24:32.062Z",
+  "generated_at": "2026-08-26T21:01:21.120Z",
   "date": "2026-08-26",
   "slug": "liferun",
   "name": "Liferun",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Liferun had a strong 7-day stretch, with leads surging 44.44% week-over-week while CPL dropped 21.1%, pointing to Meta's retargeting push (led by \"BWS - July - Call Campaign - Retarget\" at $542 spend) as the likely efficiency driver. Google Ads remains a concern with zero conversions on $813.24 in 28-day spend and a further 28.72% pullback in the last 7 days, worth reviewing for budget reallocation.",
+  "verdict": "Liferun had a strong 7-day stretch, with leads surging 44.44% week-over-week while CPL dropped 21.1%, pointing to improved Meta efficiency led by the \"BWS - July - Call Campaign - Retarget\" campaign ($542 spend). Google Ads remains a concern with zero conversions on $813.24 in 28-day spend, and a further 28.72% pullback in Google spend this past week warrants a performance review.",
   "windsor": {
     "totals": {
       "spend": 2422.72,
@@ -17,7 +17,7 @@
         "meta": {
           "spend": 1609.48,
           "leads": 152,
-          "clicks": 1387
+          "clicks": 1388
         },
         "google_ads": {
           "spend": 813.24,
@@ -41,8 +41,8 @@
       "spend": 542
     },
     "analytics": {
-      "sessions": 647,
-      "users": 612,
+      "sessions": 658,
+      "users": 621,
       "conversions": 0
     },
     "search": {
@@ -70,7 +70,7 @@
       "google_spend_7d_pct": -28.72,
       "gbp_7d_pct": 20,
       "sc_7d_pct": -20,
-      "ga4_7d_pct": -11.96,
+      "ga4_7d_pct": -5.98,
       "ig_7d_pct": null,
       "spend_per_day_7d": 81.74
     },
@@ -343,7 +343,7 @@
         28,
         25,
         22,
-        20,
+        31,
         26
       ],
       "purchases": [
@@ -409,10 +409,10 @@
     }
   },
   "ghl": {
-    "contacts": 157,
+    "contacts": 166,
     "opportunities": {
       "created": {
-        "count": 122,
+        "count": 131,
         "value": 0
       },
       "won": {
@@ -545,78 +545,79 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-26T11:29:39.312Z",
+    "generated_at": "2026-08-26T21:04:58.351Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Meta efficiency is real; Google is a confirmed $813 drain with zero returns.",
+    "verdict": "Meta efficiency is real; Google at $813 zero-conversion is a confirmed leak.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "SOW milestone 'Stripe Products QA'd & Done' (due 2026-07-20) shows no verified completion event — money paths unconfirmed 37 days overdue.",
+        "text": "SOW milestone overdue: Stripe Products QA marked done July 20 but no verified completion event exists — cash-path integrity unconfirmed.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 1,
-        "text": "Google Ads: $813.24 spent over 28 days, 0 conversions recorded — confirmed zero-result channel dragging blended CPL up silently.",
+        "text": "Google Ads spent $813.24 over 28 days and produced 0 conversions — confirmed dead spend; pixel/conversion action is broken or absent.",
         "confidence": "confirmed",
-        "channel": "google_ads"
+        "channel": "Google Ads"
       },
       {
         "id": "F3",
         "priority": 1,
-        "text": "Meta CPL improving: leads +44.44% and CPL -21.1% 7d vs prior 7d; 3-day signal (Aug 23–25: 0+3+8 leads) steady post-weekend drop — trend intact but fragile.",
-        "confidence": "probable",
-        "channel": "meta"
+        "text": "Meta CPL improved -21.1% 7d vs prior 7d; 3-day signal (Aug 23-25: 8 leads, ~$185 spend) holds vs prior 3 days (Aug 20-22: 27 leads, ~$366 spend) — volume dipped on weekend zero-spend days; weekday efficiency confirmed.",
+        "confidence": "confirmed",
+        "channel": "Meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GHL pipeline: 157 contacts, 122 opportunities created, 0 won, 0 appointments — leads arriving but zero pipeline progression signals an intake or follow-up leak, not an ads problem.",
+        "text": "GHL shows 131 opportunities created but 0 won and 0 appointments in 28 days — leads arriving but pipeline stalls at intake, not an ads problem.",
         "confidence": "confirmed",
-        "channel": "crm"
+        "channel": "GHL"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GBP direction clicks spiked to 37 of 38 total actions (28d) with 0 calls recorded — organic interest exists but call-through is not converting, possibly a GBP phone setup gap.",
-        "confidence": "hypothesis",
-        "channel": "gbp"
+        "text": "Google spend pulled back -28.72% 7d vs prior 7d, trending to ~$6-20/day from a $150+ peak — budget exhaustion or campaign pause, not a bid issue.",
+        "confidence": "probable",
+        "channel": "Google Ads"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "budget_shift",
-        "text": "Shift ~$15/day from Google Ads to Meta — Google has 0 conversions on $813.24 over 28 days.",
+        "type": "fix",
+        "text": "Audit Google Ads conversion action and pixel — $813.24 spent, 0 conversions; pause Google until tracking is verified.",
         "cites": [
           "F2",
-          "F3"
+          "F5"
         ],
-        "monday_item_name": "Shift Google budget to Meta",
-        "monday_update": "Reduce Google Ads daily budget by ~$15/day and apply it to Meta (BWS retarget campaign) immediately. Google Ads has produced 0 conversions on $813.24 of 28-day spend while Meta is delivering leads at a CPL 21.1% lower week-over-week. Success is confirmed if Meta leads hold or rise within 7 days and blended CPL stays at or below the current $15.94. Re-check by 2026-09-02."
+        "monday_item_name": "Fix Google Ads Conversion Tracking",
+        "monday_update": "Google Ads has consumed $813.24 over 28 days with zero recorded conversions, and the 7-day spend is already pulling back -28.72%. The immediate action is to audit the conversion action setup in Google Ads and confirm the pixel is firing on the thank-you/call page — if no fix can be confirmed within 5 business days, pause Google Ads spend entirely to stop the leak. Success check: at least one conversion recorded in Google Ads within 3 days of the fix going live. Re-verify by 2026-08-31."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GHL pipeline: 122 opps created, 0 won, 0 appointments — diagnose intake or follow-up automation break.",
+        "text": "Run Becklar dummy deactivation and BWS duplicate-order test — 0 won opps in GHL confirms cash-path verification is still open.",
         "cites": [
+          "F1",
           "F4"
         ],
-        "monday_item_name": "Fix GHL pipeline intake leak",
-        "monday_update": "Review the Device Fulfilment pipeline and lead-response automation in GHL to identify why 122 created opportunities have produced zero appointments and zero wins. Check trigger firing, assignment rules, and SMS/email sequences for new contacts. Success is at least one confirmed appointment booked through the automated flow by 2026-09-02. This is a CRM ops fix, not an ads change."
+        "monday_item_name": "Verify GHL Money Paths",
+        "monday_update": "The Stripe Products QA milestone (July 20) has no verified completion event, and GHL shows 131 opportunities created with 0 won and 0 appointments — suggesting intake or activation flows may not be closing correctly. The action is to run one dummy Becklar deactivation and one live order through each intake path (WordPress/Stripe and GHL Products) to confirm single-opportunity creation with full field mapping. Success is confirmed when both tests pass with no duplicate opps and the Becklar portal reflects the deactivation. Complete by 2026-09-02."
       },
       {
         "id": "S3",
-        "type": "watch",
-        "text": "Watch Stripe QA milestone (overdue 37 days): Becklar and BWS money paths must be verified before any further scale.",
+        "type": "scale",
+        "text": "Raise Meta daily budget +15% on BWS Call Campaign Retarget — CPL down -21.1%, 152 leads at $15.94 CPL confirmed efficient.",
         "cites": [
-          "F1"
+          "F3"
         ],
-        "monday_item_name": "Verify Stripe & Becklar money paths",
-        "monday_update": "The Stripe Products QA milestone was marked done on 2026-07-20 but has no verified completion event — Becklar billing drop and BWS duplicate-order checks are both flagged as ⛔ scale blockers in the SOW. Run the dummy deactivation and dual-path order test described in the SOW before approving any budget increases. Confirm both paths clean by 2026-09-02; if not resolved, escalate to Nacer."
+        "monday_item_name": "Scale Meta Retarget +15%",
+        "monday_update": "Meta delivered 152 leads at a 28-day CPL of $15.94 with a -21.1% CPL improvement week-over-week, and the BWS - July - Call Campaign - Retarget is the top campaign at $542 spend. Raise the daily budget on this campaign by +15% (from current level). Success check: CPL remains at or below $15.94 and lead volume grows within 7 days. Re-check 2026-09-02 before any further scaling."
       }
     ],
     "next_check": "2026-09-02"

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-26T11:24:53.798Z",
+  "generated_at": "2026-08-26T21:02:03.190Z",
   "date": "2026-08-26",
   "slug": "steel-forte",
   "name": "Forte Metals",
@@ -409,78 +409,60 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-26T11:30:28.333Z",
+    "generated_at": "2026-08-26T21:05:43.738Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP-only inbound is now collapsing; paid channels remain fully dark.",
+    "verdict": "GBP is the only active channel; paid is fully dark for 45+ days.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend and zero leads for the full 45-day series; GBP actions (95 over 28 days) are the only inbound source.",
+        "text": "Zero paid spend across all 28 days — Meta and Google Ads have been dark for the full 45-day series, generating 0 leads and $0 CPL baseline.",
         "confidence": "confirmed",
-        "channel": "cross-channel"
+        "channel": "meta/google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "OVERDUE SOW: 1st Directives (Jul 7), Tom call list (Jul 28), and dedup workbook + 126 accounts (Jul 31) all show no completed event in CRM & Automation.",
+        "text": "SOW OVERDUE: 1st Directives (Jul 7), Tom call list priority (Jul 28), and dedup workbook + 126 accounts (Jul 31) all show no completed-event match — 3 CRM milestones are unverified.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "3-day GBP signal: Aug 23–25 = 0+0+0 actions vs Aug 20–22 = 4+3+0 — a confirmed hard stop after a volatile but non-zero prior stretch.",
+        "priority": 3,
+        "text": "GBP actions collapsed: last 3 days (Aug 23–25) total 0 actions vs prior 3 days (Aug 20–22) totalling 13 — a confirmed 3-day signal, not noise. 28-day total is only 95.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "gbp"
       },
       {
         "id": "F4",
-        "priority": 3,
-        "text": "Search clicks also softening: last 3 days (Aug 23–25) = 0+2+0 vs prior 3 (Aug 20–22) = 1+2+0; 7d delta is -12.5%, compounding GBP drop.",
-        "confidence": "probable",
-        "channel": "organic"
-      },
-      {
-        "id": "F5",
         "priority": 4,
-        "text": "GHL pipeline data is null and GA4 sessions are zero across all 28 days — both tracking surfaces are dark, masking any intake activity.",
-        "confidence": "confirmed",
-        "channel": "cross-channel"
+        "text": "Search clicks fell 12.5% week-over-week; last 3 days (Aug 23–25) show 2, 2, 0 clicks vs prior 3 (Aug 20–22) at 1, 2, 0 — directionally weak but not a clean signal.",
+        "confidence": "probable",
+        "channel": "search"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
+        "text": "Audit and confirm the 3 overdue CRM milestones; block downstream automations until dedup workbook (447 groups) is executed.",
         "cites": [
           "F2"
         ],
-        "text": "Escalate 3 overdue CRM milestones to Sohib/Nabil; block no further SOW work until confirmed complete.",
-        "monday_item_name": "Escalate Overdue CRM Milestones",
-        "monday_update": "Three SOW milestones are confirmed overdue: 1st Directives (Jul 7), Tom call list priority flag (Jul 28), and dedup workbook + 126 accounts delivered (Jul 31). No completed event exists for any of them in the data. Sohib to confirm status with Ahmed and Jorge; downstream Sales-i pipeline and BPM automations are gated on these. Escalation resolved when all three show a completed timestamp in Monday by 2026-08-29."
+        "monday_item_name": "Resolve 3 CRM Overdue Milestones",
+        "monday_update": "Three SOW milestones — 1st Directives (Jul 7), Tom call list priority (Jul 28), and dedup workbook + 126 accounts (Jul 31) — have no confirmed completion event in the data. Ahmed and Dev 2 must post completion evidence or escalate blockers to Sohib by 2026-08-29. Success is confirmed when rollback files and merge batch receipts are posted to the Monday CRM board. If the 342 stub reconciliation is also not started, flag it as a secondary blocker immediately."
       },
       {
         "id": "S2",
-        "type": "fix",
-        "cites": [
-          "F5"
-        ],
-        "text": "Restore GHL pipeline tracking and GA4 connection; both are null/zero, hiding all intake data.",
-        "monday_item_name": "Fix GHL and GA4 Tracking",
-        "monday_update": "GHL pipeline is returning null and GA4 sessions are zero for the entire 45-day window, meaning zero visibility into whether any leads are entering or stalling in the funnel. Dev team to verify GHL webhook connections and GA4 property tagging are live and firing. Success is confirmed when GHL shows pipeline data and GA4 records at least 1 session within 3 days of the fix. Target resolution: 2026-08-29."
-      },
-      {
-        "id": "S3",
         "type": "watch",
+        "text": "Watch GBP daily actions; if the 0-action streak extends to 5 consecutive days, escalate GBP optimisation as urgent.",
         "cites": [
-          "F3",
-          "F4"
+          "F3"
         ],
-        "text": "Watch GBP actions and search clicks over next 3 days; 3 consecutive zero-action days confirm structural drop requiring GBP content action.",
-        "monday_item_name": "Watch GBP Action Recovery",
-        "monday_update": "GBP actions hit 0 for 3 consecutive days (Aug 23–25), down from a volatile but non-zero baseline, and search clicks are also softening (-12.5% on the 7d delta). No paid support exists to compensate. Re-check on 2026-08-29: if GBP actions remain at or near zero, escalate to a GBP content and Q&A refresh. No action is taken this cycle — confirmation window must close first."
+        "monday_item_name": "Watch GBP Action Streak",
+        "monday_update": "GBP actions have been 0 for the last 3 consecutive days (Aug 23–25), down from 13 actions across the prior 3 days. No paid amplification is running to compensate. Re-check on 2026-08-29: if the daily action count has not returned above 3, escalate to a GBP content or profile audit. Do not act before that date — one week of data is needed to distinguish seasonal softening from a structural profile issue."
       }
     ],
     "next_check": "2026-08-29"

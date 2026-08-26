@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-26T11:24:58.158Z",
+  "generated_at": "2026-08-26T21:02:08.225Z",
   "date": "2026-08-26",
   "slug": "steel-advance",
   "name": "Advance Grinding",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, so all engagement is coming organically through Google Business Profile, which drove 126 total actions including 91 direction requests and 2 calls. GBP actions are also trending up 19.23% week over week, suggesting growing local search visibility without any active ad support.",
+  "verdict": "With zero spend and zero leads from paid channels over the past 28 days, all engagement is coming organically through Google Business Profile, which drove 126 total actions including 91 direction requests, 2 calls, and 33 website clicks. GBP activity is also trending up 19.23% week over week, suggesting strong local search visibility that could be leveraged with paid campaigns to convert that interest into leads.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -404,37 +404,44 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-26T11:30:46.667Z",
+    "generated_at": "2026-08-26T21:06:03.657Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Organic GBP holding alone; 3 CRM milestones overdue and unresolved.",
+    "verdict": "Paid is fully dark; only GBP is alive — fix CRM before any launch.",
     "findings": [
       {
         "id": "F1",
-        "priority": 2,
-        "text": "CRM 1st Directives milestone (2026-07-07) has no confirmed completion event — 50+ days overdue.",
+        "priority": 1,
+        "text": "Zero paid spend and zero leads across all 28 days — no paid channel is active; GBP is the only traffic source.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "all"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Tom call list priority flag (2026-07-28) and dedup workbook + 126 accounts delivery (2026-07-31) both show no completed event — 26–29 days overdue.",
+        "text": "OVERDUE: '1st Directives issued (CRM handoff)' milestone dated 2026-07-07 has no confirmed completion event on record.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 1,
-        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google Ads — CPL is undefined; all lead volume is 0.",
+        "priority": 2,
+        "text": "OVERDUE: 'Tom call list flagged priority' milestone dated 2026-07-28 has no confirmed completion event on record.",
         "confidence": "confirmed",
-        "channel": "paid"
+        "channel": "SOW"
       },
       {
         "id": "F4",
+        "priority": 2,
+        "text": "OVERDUE: 'Dedup workbook + 126 accounts delivered' milestone dated 2026-07-31 has no confirmed completion event on record.",
+        "confidence": "confirmed",
+        "channel": "SOW"
+      },
+      {
+        "id": "F5",
         "priority": 3,
-        "text": "GBP delivered 126 actions (91 directions, 2 calls) with +19.23% WoW growth, but last 3 days (Aug 23–25) show 17, 0, 0 — spike then stall.",
-        "confidence": "probable",
+        "text": "GBP actions up 19.23% week-over-week (126 total in 28d, 91 direction requests); organic demand exists with no paid amplification.",
+        "confidence": "confirmed",
         "channel": "GBP"
       }
     ],
@@ -442,23 +449,25 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Confirm completion status of all 3 overdue CRM milestones with Ahmed; surface blockers to Sohib by 2026-08-28.",
+        "text": "Confirm completion of all 3 overdue CRM milestones; block any paid launch until dedup workbook is executed.",
         "cites": [
-          "F1",
-          "F2"
+          "F2",
+          "F3",
+          "F4"
         ],
-        "monday_item_name": "CRM Milestones Overdue Review",
-        "monday_update": "Three CRM milestones — 1st Directives (Jul 7), Tom call list (Jul 28), and dedup workbook + 126 accounts (Jul 31) — have no confirmed completion event as of Aug 26. Ahmed to provide status on each by Aug 28; any remaining blockers (e.g. 342 stub accounts, merge workbook execution) to be escalated to Sohib immediately. Success check: all three milestones marked complete or a concrete unblocking date confirmed by Aug 28."
+        "monday_item_name": "Clear 3 Overdue CRM Milestones",
+        "monday_update": "Three CRM milestones (July 7, July 28, July 31) show no confirmed completion event. Ahmed/Dev team to post evidence of completion or current status to this board by 2026-08-29. Success check: all three items marked complete with rollback files posted. Any paid launch should remain on hold until the dedup workbook (447-group merge) is verified executed, as bad data in Sugar will corrupt lead attribution from day one."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GBP daily actions through Aug 29 — last 2 days at 0 after Aug 23 spike of 17; confirm if trend resumes.",
+        "text": "Watch GBP trend; re-check 2026-08-29 for 3-day signal before any paid amplification decision.",
         "cites": [
-          "F4"
+          "F1",
+          "F5"
         ],
-        "monday_item_name": "GBP Action Trend Watch",
-        "monday_update": "GBP actions spiked to 17 on Aug 23 then dropped to 0 on Aug 24 and Aug 25. With paid channels at $0 spend, GBP is the only active lead-generating surface. Monitor daily through Aug 29; if the 3-day average stays below 3 actions/day, escalate as a visibility concern. No paid action is warranted until the Aug 29 re-check."
+        "monday_item_name": "Watch GBP — Paid Launch Gate",
+        "monday_update": "GBP is the only active channel, delivering 126 actions in 28 days with a 19.23% week-over-week lift. No paid spend has run in the entire 45-day series window. Re-check on 2026-08-29: if GBP momentum holds and CRM milestones are cleared, a paid launch proposal becomes defensible. Success check: 3-day GBP action average meets or exceeds the recent Aug 23 spike of 17 actions, and all SOW blockers are resolved."
       }
     ],
     "next_check": "2026-08-29"
