@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-25T20:38:17.721963+00:00",
+  "updatedAt": "2026-08-26T16:21:25.367645+00:00",
   "items": [
     {
       "id": "websEo-pricing-question",
@@ -564,6 +564,112 @@
       "nullReason": "unmapped-client",
       "priority": 2,
       "createdAt": "2026-08-25T15:46:03.194287+00:00"
+    },
+    {
+      "id": "maadilaw-doc-template-prefill",
+      "title": "Template Prefill Fields",
+      "note": "done = a representation agreement generated from a GHL contact carries location of incident, a self populating signature date, and Sharif's pre assigned signature box, with no manual edit before sending. Source: Maadi Law GHL onboarding call 8/25, action items at 01:00:44 (Ahmed, template signature dates and multi signer including Sharif's pre assigned box) and 01:11:26 (Sohib, custom contact field for location of incident). Board audit 2026-08-26 across all four boards with subitems: Document Handling (12471736810) on CRM is the owning workstream. Its 8/25 update covers the Zapier signed document to Dropbox route, the Child Representation Agreement rebuild and the bankruptcy checkbox fix, and none of the three prefill items here. Sibling subitems multi file upload (12471728505) and text auto attach (12471725035) are Done, DocuSign versus Zapier fallback (12471728394) is Waiting, and Document Automation (12810218373) scopes Dropbox folder creation and reminders. Nothing on Ads, Web + SEO or Video touches document templates. Drafted as a subitem rather than a top level item per the single item bias, since a real parent workstream already exists.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Maadi Law, 8/25",
+      "payload": {
+        "mode": "create_subitem",
+        "boardId": "18418241405",
+        "parentItemId": "12471736810",
+        "itemName": "Template Prefill Fields",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> On the Maadi Law GHL onboarding call on <strong>25 August</strong> the firm walked the document flow end to end with Tracy. Three prefill gaps came out of that walkthrough that are not covered by the go live tasks already posted on this parent. Today a representation agreement generated out of GHL still needs manual editing before it can go to a client, which is the thing that has to stop before GHL goes live on <strong>27 August</strong>.</li><li><strong>Create the custom contact field for location of incident.</strong> GHL has no field for where the incident happened, so the templates cannot pull it and Tracy retypes it on every matter. Add it as a custom contact field on the contact record and wire the intake form and manual intake path to populate it, then reference it as a merge field in the representation agreement templates.</li><li><strong>Auto populate the signature date.</strong> The signature date on the agreement templates is currently a free text field a signer fills in by hand. Configure it to fill itself with the date the document is actually signed, so a signed document always carries a true execution date rather than whatever the signer typed.</li><li><strong>Place Sharif's signature box as a pre assigned signer.</strong> The representation agreement is a multi signer document: client plus Sharif for the firm. Sharif's box has to be positioned on the template ahead of time and assigned to him, so the document routes to him automatically once the client signs, with nobody dropping a box in by hand per matter.</li><li><strong>Dependencies and constraints.</strong> This sits alongside, and does not replace, the two template tasks already on the parent for 26 August: the Child Representation Agreement rebuild with the new top paragraph and two name fields, and the bankruptcy yes or no boxes becoming non required with initials moved to checkboxes. <strong>Do not</strong> rework either of those here. Document renaming stays in Dropbox only, that limit was reconfirmed on the same call and is not something to work around inside GHL.</li><li><strong>Done.</strong> A representation agreement generated from a GHL contact opens with location of incident already filled from the contact record, a signature date that populates itself at signing, and Sharif's signature box already placed and assigned, with zero manual edits between generating the document and sending it.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-26T16:21:25.367606+00:00"
+    },
+    {
+      "id": "maadilaw-ghl-user-provisioning",
+      "title": "GHL User Provisioning",
+      "note": "done = every Maadi Law team member on Tracy's list exists as a GHL user with a mobile number on the user record, and a test internal SMS notification is confirmed received. Source: Maadi Law GHL onboarding call 8/25, action items at 02:11:19 (Sohib, add all team members' phone numbers into GHL user contacts to enable internal SMS notifications; Tracy, collect the missing numbers) and 02:13:29 (Tracy, provide the list of all users with names, emails and phone numbers). Board audit 2026-08-26 across all four boards with subitems: the only adjacent item anywhere is Add case managers as GHL users mapped to Clio usernames (12471724670) under Case Manager Routing, which is Done and covered three named case managers mapped to Clio usernames, not the wider team and not phone numbers. Verify notifications fire to correct owner (12471748357) under Stack Test tests the routing, not the provisioning. Nothing on Ads, Web + SEO or Video covers GHL user setup. Drafted as a subitem under Case Manager Routing per the single item bias. blocked true because it is genuinely waiting on Maadi Law for the user list; needsNaz true because a client needs chasing and clients are never tagged directly.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Maadi Law, 8/25",
+      "payload": {
+        "mode": "create_subitem",
+        "boardId": "18418241405",
+        "parentItemId": "12471674976",
+        "itemName": "GHL User Provisioning",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> Internal SMS notifications cannot fire for Maadi Law today because the team is not fully present in GHL as users, and the users who do exist have no mobile number on their user record. This surfaced late on the onboarding call on <strong>25 August</strong>. The existing subitem on this parent that mapped case managers to Clio usernames is Done, but it only covered Carmen Reyes, Kassem Moghnieh and Leena Banimineih, and it mapped usernames rather than phone numbers, so it does not solve this.</li><li><strong>Add every team member as a GHL user with a mobile number.</strong> Each person needs a GHL user record carrying full name, work email and mobile number. The mobile number on the user record is the part that matters here: it is what internal SMS notifications are delivered to, and a user without one silently receives nothing.</li><li><strong>Blocked on the client.</strong> Tracy Aoun owes the full list of who should be added, with names and emails, and is separately collecting the mobile numbers that are missing for part of the team. Nothing can be built here until that list lands. Naz to chase Tracy for it; the Maadi Law side is not tagged on this item.</li><li><strong>Sequencing.</strong> This is a prerequisite for <strong>Verify notifications fire to correct owner</strong> under Stack Test, and for the internal notification half of the case manager handoff. That verification cannot pass honestly while users are missing or have no number on file, so this needs to land before the stack test run rather than alongside it.</li><li><strong>Done.</strong> Every name on Tracy's list exists as a GHL user with a mobile number on the user record, and one test internal notification is delivered by SMS to a real case manager handset and confirmed received.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
+        "blocked": true,
+        "needsNaz": true
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-26T16:21:25.367606+00:00"
+    },
+    {
+      "id": "dilan-talsida-dental-prospect",
+      "title": "Dilan Talsida, dental prospect not on roster",
+      "note": "unmapped-client: the 8/25 call between Sohib and Dilan Talsida is a real prospect conversation, but the practice is not in config.json's client roster and has no group on any of the four boards, so there is nothing to audit against and no group to route to. The organisation name was never stated cleanly in the recording, only the contact name, so it is recorded here as Dilan Talsida rather than a guessed practice name. What was discussed: a dental practice running Peer Dent for practice management and GoHighLevel proposed alongside it for marketing leads and communication, kept deliberately separate so lead quality and workflow stay legible. Flow quoted a flat retainer starting at $3,500 per location plus $1,500 to $2,000 ad spend, covering content, ads, automation, reporting and a dedicated rep. Their live problems: no after hours cover so patient leads are missed, staff resistance to a second login on top of Peer Dent, Google reviews well below competitors, and seasonal demand peaking late August into September, so timing is against us if this drags. Near term commitments on our side, all Sohib's: audit their existing Google Ads once admin access is granted, send case studies and a service overview by email, propose the GoHighLevel to Peer Dent integration strategy including appointment and lead status sync, provide a website SEO audit, and set up a WhatsApp group with account reps and department leads. Dilan owes admin access to Google Ads and existing campaign data, then reviews the proposal by email. Needs Naz to confirm whether this becomes a tracked prospect, and under what name, before anything is drafted onto a board. Note that two further Fireflies recordings of this same meeting exist (01M0WG636F1VGY44FYVGY4K1AH and 01M0JD8CQ89FRQJ8E9D03D0JSM) with no summary generated yet; they are deliberately not marked processed and will be re-read once Fireflies finishes them, in case the practice name is recoverable.",
+      "status": "confirm",
+      "board": null,
+      "group": null,
+      "potentialClient": "Dilan Talsida",
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Dilan Talsida, 8/25",
+      "payload": null,
+      "nullReason": "unmapped-client",
+      "priority": 2,
+      "createdAt": "2026-08-26T16:21:25.367606+00:00"
+    },
+    {
+      "id": "maadilaw-golive-sequence-8-25",
+      "title": "Go live sequence already on Stack Test",
+      "note": "Already covered. The transcript has the firm targeting go live by 1 September with phased automation activation and weekly check ins. Stack Test (12471734319) was updated on 8/25 with a tighter and more current version of the same plan: GHL live Thursday 27 August, ads live Friday 28 August, all workflows published and activated, stack test run Wednesday 26 August with one lead per channel end to end into Clio Manage, and sign off to Naz required before ad spend turns on. Nothing to add. Not a content conflict: the board carries the more specific dates from the same call.",
+      "status": "exists",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Maadi Law, 8/25",
+      "payload": null,
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-26T16:21:25.367606+00:00"
+    },
+    {
+      "id": "maadilaw-afterhours-messaging-8-25",
+      "title": "Missed call and after hours copy already on Speed To Lead",
+      "note": "Already covered. The transcript action was to update messaging content and finalise the missed call and after hours text automation with Naz. Speed To Lead (12471754243) already carries the 8/25 outcome of exactly that conversation: the next morning callback line is removed from the after hours sequence because Tracy starts later than 9am and did not want clients promised a call she cannot hold, and the after hours reply stays as it is. The same update also scopes the missed call path audit across all three tracking numbers and the two live bugs found on 8/25. Drafting again would duplicate it.",
+      "status": "exists",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Maadi Law, 8/25",
+      "payload": null,
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-26T16:21:25.367606+00:00"
+    },
+    {
+      "id": "maadilaw-clio-contact-tags-8-25",
+      "title": "Clio contact upload with tags already on Clio Migration",
+      "note": "Already covered. The transcript action was to upload contact lists out of Clio into GHL with their existing tags so tag based filtering and reporting work. Clio Migration (12471734017) was updated on 8/25 with precisely this: Tracy's full contact export arrived on the call, pulled by Qasim, and needs uploading with tags intact, treater, health insurance, lead, client, referred out and did not hire, including contacts carrying multiple tags where they came in twice for separate cases. Nothing to add.",
+      "status": "exists",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Maadi Law, 8/25",
+      "payload": null,
+      "nullReason": null,
+      "priority": 3,
+      "createdAt": "2026-08-26T16:21:25.367606+00:00"
     }
   ]
 }
