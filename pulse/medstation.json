@@ -4,18 +4,18 @@
   "slug": "medstation",
   "name": "MedStation",
   "brief": {
-    "date": "2026-08-26",
+    "date": "2026-08-27",
     "headlines": [
       {
-        "text": "Weston gets dedicated budget, Sohib owns both platforms",
+        "text": "Meta access confirmed, Ads team managing account",
+        "tone": "win"
+      },
+      {
+        "text": "Two Google Ads landing pages requested",
         "tone": "info"
       },
       {
-        "text": "Google Ads audit requested for MedStation",
-        "tone": "info"
-      },
-      {
-        "text": "CRM: two open loops pending resolution",
+        "text": "CRM blocked on Weston WhatsApp and Neuryn webhook",
         "tone": "shift"
       }
     ],
@@ -29,173 +29,168 @@
         "items": [
           {
             "state": "done",
-            "text": "Weston separate budget approved; Sohib managing Meta + Google"
-          },
-          {
-            "state": "next",
-            "text": "Google Ads audit for MedStation [id: 12471101969]"
-          },
-          {
-            "state": "queued",
-            "text": "Google Ads go-live (scheduled 2026-08-25)"
+            "text": "Meta access granted; Ads Team now managing account"
           }
         ],
-        "owners": [
-          "Sohib"
-        ]
+        "owners": []
       },
       {
-        "title": "MedStation - CRM / GHL",
-        "badge": {
-          "label": "P1 - needs attention",
-          "tone": "amber"
-        },
-        "items": [
-          {
-            "state": "done",
-            "text": "GHL Setup — NextGen Mirror marked Done on Monday"
-          },
-          {
-            "state": "done",
-            "text": "NextGen access gained after IT whitelisting (Nacer)"
-          },
-          {
-            "state": "done",
-            "text": "External Application Setup access enabled for NextGen API (Gabryel, IT)"
-          },
-          {
-            "state": "blocked",
-            "text": "GHL Weston WhatsApp number config — pending scheduled call"
-          },
-          {
-            "state": "blocked",
-            "text": "Patient comms coordination between GHL and Neuryn — unresolved"
-          }
-        ],
-        "owners": [
-          "Nacer Amrouch"
-        ]
-      },
-      {
-        "title": "MedStation - Infrastructure",
+        "title": "MedStation - Web + SEO",
         "badge": {
           "label": "P2 - on track",
           "tone": "green"
         },
         "items": [
           {
+            "state": "next",
+            "text": "Build two landing pages requested for Google Ads"
+          }
+        ],
+        "owners": []
+      },
+      {
+        "title": "MedStation - CRM / GHL",
+        "badge": {
+          "label": "P1 - blocked",
+          "tone": "red"
+        },
+        "items": [
+          {
+            "state": "blocked",
+            "text": "GHL Weston WhatsApp number config pending a call to resolve"
+          },
+          {
+            "state": "blocked",
+            "text": "Neuryn webhook timeline needed before GHL rollout can be scheduled"
+          },
+          {
             "state": "done",
-            "text": "Separate Digital Ocean setup completed for HIPAA compliance (Muhammad Ahmed Memon)"
+            "text": "GHL Setup — NextGen Mirror marked Done on Monday"
+          },
+          {
+            "state": "done",
+            "text": "Separate Digital Ocean machine created for HIPAA-compliant infrastructure"
           }
         ],
         "owners": [
-          "Muhammad Ahmed Memon"
+          "Nacer Amrouch",
+          "Ahmed Memon"
         ]
       }
     ],
-    "waiting_on_client": [],
+    "waiting_on_client": [
+      {
+        "item": "Neuryn webhook timeline — needed to finalise GHL rollout timing",
+        "who": "Neuryn (third-party / client side)",
+        "since": "8/26"
+      }
+    ],
     "launch_gate": {
-      "title": "Launch gate - clear before GHL go-live",
+      "title": "Launch gate - clear before GHL goes live",
       "items": [
         {
           "text": "GHL Weston WhatsApp number configured",
           "done": false
         },
         {
-          "text": "Patient comms coordination (GHL ↔ Neuryn) resolved",
+          "text": "Neuryn webhook timeline confirmed",
           "done": false
         },
         {
-          "text": "NextGen Mirror setup complete",
+          "text": "GHL Setup — NextGen Mirror",
           "done": true
         },
         {
-          "text": "HIPAA-compliant Digital Ocean setup complete",
+          "text": "Digital Ocean HIPAA infrastructure isolated",
+          "done": true
+        },
+        {
+          "text": "NextGen API access enabled",
           "done": true
         }
       ]
     },
     "brief_v2": {
-      "verdict": "Team's move: two CRM loops — Weston WhatsApp config and Neuryn comms — need to clear before GHL goes live.",
-      "next_move": "Nacer: complete GHL Weston WhatsApp call — it unblocks number config and Neuryn comms coordination.",
+      "verdict": "Ads unblocked; CRM go-live waits on Weston WhatsApp call and Neuryn webhook confirmation.",
+      "next_move": "Sohib: schedule Weston WhatsApp config call — clears the GHL Weston CRM blocker.",
       "blocks": [
         {
           "item": "GHL Weston WhatsApp number configuration",
           "side": "team",
           "who": "Nacer Amrouch",
-          "last_activity": "Standup flags config pending a scheduled call"
+          "last_activity": "Standup flags config pending a call; stalled 2 days"
         },
         {
-          "item": "Patient comms coordination — GHL and Neuryn",
-          "side": "team",
-          "who": "Nacer Amrouch",
-          "last_activity": "Standup flags coordination unresolved, 4 days in"
+          "item": "Neuryn webhook timeline for GHL rollout",
+          "side": "client",
+          "who": "Neuryn contact",
+          "last_activity": "Standup flags timeline not yet received; stalled 1 day"
         }
       ],
       "snapshot": [
         {
           "label": "Open items",
-          "value": "8 open, all in working status; 2 CRM loops actively blocked",
+          "value": "8 open, 2 moving (Ads + Web/SEO), 2 CRM items blocked",
           "tone": "warn"
         },
         {
           "label": "Contract",
-          "value": "Phase 1 proof-of-concept, Month 2 of 3 (started July 1)",
+          "value": "Month 2 of 3 (Phase 1), flat retainer $3,500–$5,000/mo",
           "tone": "muted"
         },
         {
           "label": "Last client word",
-          "value": "2026-08-26 — Weston dedicated budget approved via WhatsApp",
+          "value": "2026-08-20 — Gabryel (IT) enabled External Application Setup for NextGen API",
           "tone": "plain"
         },
         {
           "label": "Judged on",
-          "value": "Booked appointments and reactivated patients (not clicks or raw leads)",
+          "value": "Booked appointments and reactivated patients",
           "tone": "plain"
         }
       ],
-      "history_line": "NextGen access + GHL Mirror done · Digital Ocean HIPAA setup complete · Weston Google Business Profile started"
+      "history_line": "GHL Setup — NextGen Mirror marked Done · Digital Ocean HIPAA machine created · NextGen access resolved"
     }
   },
   "brief_v2": {
-    "verdict": "Team's move: two CRM loops — Weston WhatsApp config and Neuryn comms — need to clear before GHL goes live.",
-    "next_move": "Nacer: complete GHL Weston WhatsApp call — it unblocks number config and Neuryn comms coordination.",
+    "verdict": "Ads unblocked; CRM go-live waits on Weston WhatsApp call and Neuryn webhook confirmation.",
+    "next_move": "Sohib: schedule Weston WhatsApp config call — clears the GHL Weston CRM blocker.",
     "blocks": [
       {
         "item": "GHL Weston WhatsApp number configuration",
         "side": "team",
         "who": "Nacer Amrouch",
-        "last_activity": "Standup flags config pending a scheduled call"
+        "last_activity": "Standup flags config pending a call; stalled 2 days"
       },
       {
-        "item": "Patient comms coordination — GHL and Neuryn",
-        "side": "team",
-        "who": "Nacer Amrouch",
-        "last_activity": "Standup flags coordination unresolved, 4 days in"
+        "item": "Neuryn webhook timeline for GHL rollout",
+        "side": "client",
+        "who": "Neuryn contact",
+        "last_activity": "Standup flags timeline not yet received; stalled 1 day"
       }
     ],
     "snapshot": [
       {
         "label": "Open items",
-        "value": "8 open, all in working status; 2 CRM loops actively blocked",
+        "value": "8 open, 2 moving (Ads + Web/SEO), 2 CRM items blocked",
         "tone": "warn"
       },
       {
         "label": "Contract",
-        "value": "Phase 1 proof-of-concept, Month 2 of 3 (started July 1)",
+        "value": "Month 2 of 3 (Phase 1), flat retainer $3,500–$5,000/mo",
         "tone": "muted"
       },
       {
         "label": "Last client word",
-        "value": "2026-08-26 — Weston dedicated budget approved via WhatsApp",
+        "value": "2026-08-20 — Gabryel (IT) enabled External Application Setup for NextGen API",
         "tone": "plain"
       },
       {
         "label": "Judged on",
-        "value": "Booked appointments and reactivated patients (not clicks or raw leads)",
+        "value": "Booked appointments and reactivated patients",
         "tone": "plain"
       }
     ],
-    "history_line": "NextGen access + GHL Mirror done · Digital Ocean HIPAA setup complete · Weston Google Business Profile started"
+    "history_line": "GHL Setup — NextGen Mirror marked Done · Digital Ocean HIPAA machine created · NextGen access resolved"
   }
 }

@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-26T21:02:08.225Z",
-  "date": "2026-08-26",
+  "generated_at": "2026-08-27T20:58:01.700Z",
+  "date": "2026-08-27",
   "slug": "steel-advance",
   "name": "Advance Grinding",
   "type": "leadgen",
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "With zero spend and zero leads from paid channels over the past 28 days, all engagement is coming organically through Google Business Profile, which drove 126 total actions including 91 direction requests, 2 calls, and 33 website clicks. GBP activity is also trending up 19.23% week over week, suggesting strong local search visibility that could be leveraged with paid campaigns to convert that interest into leads.",
+  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, so all engagement is coming entirely from Google Business Profile, which drove 127 total actions including 94 direction requests and 2 calls. GBP actions surged 72.73% in the last 7 days versus the prior 7 days, likely driven by increased local search visibility or seasonal demand for grinding services.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,20 +25,20 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 126,
+          "actions": 127,
           "calls": 2,
-          "directions": 91,
-          "web_clicks": 33
+          "directions": 94,
+          "web_clicks": 31
         }
       }
     },
     "organic": {
-      "gbp_actions": 126,
+      "gbp_actions": 127,
       "ig_reach": 0
     },
     "top_campaign": null,
     "latest_day": {
-      "date": "2026-08-25",
+      "date": "2026-08-26",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -56,7 +56,7 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": 19.23,
+      "gbp_7d_pct": 72.73,
       "sc_7d_pct": null,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
@@ -65,7 +65,6 @@
     "flags": [],
     "series": {
       "dates": [
-        "2026-07-29",
         "2026-07-30",
         "2026-07-31",
         "2026-08-01",
@@ -92,7 +91,8 @@
         "2026-08-22",
         "2026-08-23",
         "2026-08-24",
-        "2026-08-25"
+        "2026-08-25",
+        "2026-08-26"
       ],
       "spend": [
         0,
@@ -215,7 +215,6 @@
         0
       ],
       "gbp_actions": [
-        9,
         2,
         2,
         12,
@@ -241,6 +240,7 @@
         1,
         1,
         17,
+        10,
         0,
         0
       ],
@@ -404,44 +404,37 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-26T21:06:03.657Z",
+    "generated_at": "2026-08-27T21:04:22.082Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid is fully dark; only GBP is alive — fix CRM before any launch.",
+    "verdict": "GBP surge is real but paid is absent — no money working yet.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend and zero leads across all 28 days — no paid channel is active; GBP is the only traffic source.",
+        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google Ads — so there is no efficiency to measure; the channel is simply off.",
         "confidence": "confirmed",
-        "channel": "all"
+        "channel": "paid"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "OVERDUE: '1st Directives issued (CRM handoff)' milestone dated 2026-07-07 has no confirmed completion event on record.",
+        "text": "SOW OVERDUE: 1st CRM Directives (Jul 7), Tom call list priority flag (Jul 28), and dedup workbook + 126 accounts delivery (Jul 31) all show no completed event — now 27–51 days past due.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "OVERDUE: 'Tom call list flagged priority' milestone dated 2026-07-28 has no confirmed completion event on record.",
-        "confidence": "confirmed",
-        "channel": "SOW"
+        "priority": 3,
+        "text": "GBP 3-day signal (Aug 24–26: 10+0+0 = 10 actions) vs prior 3 days (Aug 21–23: 1+1+17 = 19 actions) — the 72.73% 7d surge is likely a spike around Aug 22–24, not a sustained acceleration.",
+        "confidence": "probable",
+        "channel": "GBP"
       },
       {
         "id": "F4",
-        "priority": 2,
-        "text": "OVERDUE: 'Dedup workbook + 126 accounts delivered' milestone dated 2026-07-31 has no confirmed completion event on record.",
-        "confidence": "confirmed",
-        "channel": "SOW"
-      },
-      {
-        "id": "F5",
-        "priority": 3,
-        "text": "GBP actions up 19.23% week-over-week (126 total in 28d, 91 direction requests); organic demand exists with no paid amplification.",
-        "confidence": "confirmed",
+        "priority": 4,
+        "text": "GBP drove 2 calls from 127 actions (1.6% call rate) over 28 days — direction requests (94) dominate but are not converting to trackable inquiries, suggesting weak phone/web conversion path.",
+        "confidence": "hypothesis",
         "channel": "GBP"
       }
     ],
@@ -449,27 +442,24 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Confirm completion of all 3 overdue CRM milestones; block any paid launch until dedup workbook is executed.",
+        "text": "Escalate 3 overdue CRM milestones to Ahmed/Dev team; block further build tasks until status confirmed.",
         "cites": [
-          "F2",
-          "F3",
-          "F4"
+          "F2"
         ],
         "monday_item_name": "Clear 3 Overdue CRM Milestones",
-        "monday_update": "Three CRM milestones (July 7, July 28, July 31) show no confirmed completion event. Ahmed/Dev team to post evidence of completion or current status to this board by 2026-08-29. Success check: all three items marked complete with rollback files posted. Any paid launch should remain on hold until the dedup workbook (447-group merge) is verified executed, as bad data in Sugar will corrupt lead attribution from day one."
+        "monday_update": "Three CRM milestones are confirmed overdue: 1st Directives (Jul 7), Tom call list priority (Jul 28), and dedup workbook + 126 accounts (Jul 31) — now 27–51 days past due with no completion event logged. Tag Ahmed and Dev 2 on this Monday item for a status update by 2026-08-28. Success check: each milestone marked complete with rollback files or a documented blocker reason posted to the CRM board by 2026-09-03."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GBP trend; re-check 2026-08-29 for 3-day signal before any paid amplification decision.",
+        "text": "Watch GBP daily actions for 3 consecutive days ≥5 before drawing trend conclusion; re-check 2026-08-30.",
         "cites": [
-          "F1",
-          "F5"
+          "F3"
         ],
-        "monday_item_name": "Watch GBP — Paid Launch Gate",
-        "monday_update": "GBP is the only active channel, delivering 126 actions in 28 days with a 19.23% week-over-week lift. No paid spend has run in the entire 45-day series window. Re-check on 2026-08-29: if GBP momentum holds and CRM milestones are cleared, a paid launch proposal becomes defensible. Success check: 3-day GBP action average meets or exceeds the recent Aug 23 spike of 17 actions, and all SOW blockers are resolved."
+        "monday_item_name": "Watch GBP Action Trend",
+        "monday_update": "The 7-day GBP surge of 72.73% appears driven by a spike around Aug 22–24 (17 actions on Aug 22 alone); the last 2 days (Aug 25–26) returned to 0. No action is warranted until 3 consecutive days at or above 5 actions confirm a real uptick. Re-check on 2026-08-30 and note whether the call rate (currently 1.6%, 2 of 127 actions) improves."
       }
     ],
-    "next_check": "2026-08-29"
+    "next_check": "2026-08-30"
   }
 }
