@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-26T20:59:31.026648+00:00",
+  "updatedAt": "2026-08-28T00:23:46.941163+00:00",
   "items": [
     {
       "id": "websEo-pricing-question",
@@ -672,6 +672,288 @@
       "nullReason": null,
       "priority": 3,
       "createdAt": "2026-08-26T16:21:25.367606+00:00"
+    },
+    {
+      "id": "maadilaw-meta-payment-confirmed",
+      "title": "Payment Method",
+      "note": "Audit: subitem Payment Method (12903583705) under Maadi Law Meta (12471071784) on Ads already exists, created 8/26 by the Ads Team asking Sohib to add the missing payment method. The 8/26 internal sync records that he did, so this is a completion signal and lands as an update rather than a Monday write. done = the Maadi Law Meta ad account shows an active verified payment method and the first charge clears without a billing hold.",
+      "status": "ready",
+      "board": "Ads",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Flow internal sync, 8/26",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12903583705",
+        "itemName": "Payment Method",
+        "blocked": false,
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li>Context: on 26 August the Ads Team flagged here that no payment method was attached to the Maadi Law Meta Ads account. With no billing on the account nothing could spend, which put the <strong>Friday 28 August</strong> launch of the calls and instant form campaigns at risk.</li><li>In the internal sync the same day Sohib <strong>added the missing payment method</strong> to the ad account, so the billing blocker is cleared.</li><li>Deliverable: <strong>confirm</strong> on the Meta account that the payment method shows as verified and in good standing, then proceed with the Friday 28 August launch against the brief already posted on Campaign Setup, including the awareness and retargeting folder split and the stated daily budgets.</li><li>Dependencies: none remaining on billing. The launch itself still depends on the conversion tag verification tracked on Tracking Setup. Meta side lead attribution through the conversion API is expected to lag past Friday and is <strong>not</strong> a reason to hold spend, since Google Ads tracking is confirmed working.</li><li>done = the Maadi Law Meta ad account shows an active verified payment method and the first charge clears without a billing hold.</li></ul><p><a class=\"mention\" data-mention-id=\"102221064\" data-mention-type=\"User\">@Khurram Jamil</a> <a class=\"mention\" data-mention-id=\"102221061\" data-mention-type=\"User\">@Ads Team</a></p>"
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-28T00:23:46.941114+00:00"
+    },
+    {
+      "id": "maadilaw-capi-attribution-slip",
+      "title": "Tracking Setup",
+      "note": "Audit: Tracking Setup (12700991621) on Ads is the live home for Maadi Law go live tracking and its 8/25 update is titled as the Friday 8/28 go live blocker. The cross client CAPI Setup group on Ads was checked and is a separate Full Smile scoped workstream, not this. The 8/26 sync changes the state of this exact item, so it is an update rather than a new item. done = a test lead from a Meta ad reaches GHL with its click ID intact and shows in Events Manager attributed to the correct campaign and ad set.",
+      "status": "ready",
+      "board": "Ads",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Flow internal sync, 8/26",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12700991621",
+        "itemName": "Tracking Setup",
+        "blocked": false,
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li>Context: the 26 August internal sync reviewed readiness for the <strong>Friday 28 August</strong> go live. Two things moved and one slipped. The missing payment method on the Meta ad account was added, and the incorrect webhook URLs on the site forms were corrected. The conversion API work did not land.</li><li>Current Meta state: leads are arriving in the account but are <strong>not attributed back to the ads that produced them</strong>, so campaign level optimisation has nothing to bid against. Full conversion API setup is now expected to <strong>slip past Friday 28 August</strong>.</li><li>Google Ads tracking is confirmed working end to end. Continue normal optimisation on Google while the Meta side is repaired, and <strong>do not hold Google spend</strong> because of the Meta gap.</li><li>Deliverables: <strong>finish</strong> the GTM conversion tags on the thank you page and post the Tag Assistant or Events Manager screenshot already requested on this item. <strong>Keep troubleshooting</strong> the Meta and GHL conversion API attribution path. <strong>Post a status here at least every other day</strong> until Meta attribution is confirmed, so the slip stays visible.</li><li>Dependencies and constraints: attribution repair depends on Meta side event matching and on click IDs reaching GHL from every form, which is still the open question from 24 August. It also depends on the corrected form webhooks tracked on Connecting Forms to GHL. Do not strip gclid or fbclid from any form handler while debugging.</li><li>done = a test lead submitted from a Meta ad appears in GHL with its click ID intact and shows in Events Manager attributed to the correct campaign and ad set.</li></ul><p><a class=\"mention\" data-mention-id=\"102221064\" data-mention-type=\"User\">@Khurram Jamil</a> <a class=\"mention\" data-mention-id=\"102221061\" data-mention-type=\"User\">@Ads Team</a></p>"
+      },
+      "nullReason": null,
+      "priority": 1,
+      "createdAt": "2026-08-28T00:23:46.941114+00:00"
+    },
+    {
+      "id": "maadilaw-form-webhook-split",
+      "title": "Connecting Forms to GHL",
+      "note": "Audit: two live Maadi Law items cover this wiring, the top level Connecting Forms to GHL (12750039746) and the Connect Forms to GHL subitem (12741218739) under Maadi Law Website. Both are In Progress and neither has moved since 8/07. Routed to the top level item because the 8/26 news is about the webhook architecture across both surfaces, and the subitem is cross referenced in the body rather than given a near duplicate update. done = a test submission from each of the three site forms and from a Google Ads landing page arrives in GHL as a correctly tagged contact with UTM and click ID values intact.",
+      "status": "ready",
+      "board": "Web + SEO",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Flow internal sync, 8/26",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12750039746",
+        "itemName": "Connecting Forms to GHL",
+        "blocked": false,
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li>Context: the webhook URLs configured on the Maadi Law site forms were wrong, so submissions were not reaching GHL at all. In the 26 August internal sync Sohib <strong>corrected the URLs</strong> on the home page form, the contact us form and the auto accident form.</li><li>Architecture decision: lead capture now runs through <strong>two separate webhooks on purpose</strong>. One handles the general website forms, the other handles the Google Ads landing pages, so UTM and campaign parameters stay attached to landing page traffic instead of being flattened into a single stream that cannot be attributed.</li><li>An interim backend store is holding submissions while the webhook path is validated, so no leads are lost during testing. <strong>Do not switch it off</strong> until both webhook paths are confirmed end to end.</li><li>Deliverables: Sohib to <strong>send Hashir the second webhook URL</strong> for the landing page forms. Hashir to <strong>fire a test payload</strong> through the general URL and the landing page URL separately and confirm here when each is sent. Sohib to <strong>map every contact field</strong> arriving in the webhook payload and finalise the trigger inside GHL so a submission creates the contact with its source and attribution fields populated.</li><li>Dependencies and constraints: the website form half is also tracked on the Connect Forms to GHL subitem under Maadi Law Website, so keep both in step rather than diverging. The attribution parameters carried here feed the conversion work on Tracking Setup, so <strong>do not drop</strong> gclid, fbclid or the utm fields from the mapping. This is on the critical path for the Friday 28 August launch.</li><li>done = a test submission from each of the three site forms and from a Google Ads landing page arrives in GHL as a correctly tagged contact with its UTM and click ID values intact, and the interim backend store can be retired.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a></p>"
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-28T00:23:46.941114+00:00"
+    },
+    {
+      "id": "medstation-weston-pilot-window",
+      "title": "Weston Pilot",
+      "note": "Audit: Weston Pilot (12484780085) under MedStation GHL Setup (12665521507) on CRM is In Progress and its 8/25 update covers calendar configuration and workflow activation but carries no pilot duration and no sequencing against Maadi Law. Both are new from 8/26, so this is an update on the existing subitem. done = Weston has run one to two full weeks on GHL and a written go or no go on full transition is recorded.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Flow internal sync, 8/26",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12484780085",
+        "itemName": "Weston Pilot",
+        "blocked": false,
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li>Context: the 26 August internal sync set the shape and the timing of the Weston pilot before any wider MedStation transition onto Go High Level. The pilot is a deliberate <strong>one to two week test window</strong> whose purpose is to surface bugs early rather than to prove the platform, with budget allocated for the period.</li><li>Sequencing constraint: <strong>Maadi Law setup finishes first</strong>. MedStation work resumes only once the Maadi Law build is complete, so plan the pilot start against that date and do not begin the wider rollout in parallel.</li><li>Deliverables: <strong>run</strong> Weston on GHL for the agreed one to two week window using the calendars and workflows already configured under this subitem, <strong>log every defect</strong> found during the window, and come back with a clear <strong>go or no go recommendation</strong> on moving the remaining locations across.</li><li>Dependencies and constraints: NextGen system admin access must stay working for the Weston calendar feed. Keep the locations separated, Weston only, as already specified here. Campaign rollout budgeting for the pilot period is coordinated by Sohib.</li><li>done = Weston has run one to two full weeks on GHL, the defect log is closed or triaged, and a written go or no go on full transition is recorded on this subitem.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
+      },
+      "nullReason": null,
+      "priority": 3,
+      "createdAt": "2026-08-28T00:23:46.941114+00:00"
+    },
+    {
+      "id": "medstation-reactivation-cohort-window",
+      "title": "Reactivation Build",
+      "note": "Audit: Reactivation Build (12484780177) under MedStation GHL Setup on CRM already carries the 8/25 rule of last visit over 45 days plus last WhatsApp message over 30 days. The 8/26 ops review describes the cohort as three months or more inactive, which contradicts it. Naz stated both, the later statement is not automatically the ruling, and the build cannot be enabled on an ambiguous cohort, so this goes back with needsNaz true rather than guessing. The Como re scrape, one way sync and ten day rotation are new and land in the same update. done = the reactivation workflow is live against a single confirmed inactivity window.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Flow ops review, 8/26",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12484780177",
+        "itemName": "Reactivation Build",
+        "blocked": false,
+        "needsNaz": true,
+        "updateBody": "<p>Salam,</p><ul><li>Context: this subitem currently carries the 25 August rule that the reactivation trigger fires on last visit more than <strong>45 days</strong> ago in NextGen, combined with last WhatsApp message more than 30 days ago. In the 26 August ops review the reactivation cohort was described instead as patients inactive for <strong>three months</strong> or more, run as phased campaigns with discount offers.</li><li>Those two windows are not the same and they select materially different patient populations. <strong>Decision needed from Naz</strong>: confirm whether the live cohort is last visit greater than 45 days or last visit greater than three months. Everything else in the build is ready to follow whichever is chosen. <strong>Do not enable the workflow</strong> before that is settled.</li><li>Also new from the 26 August review: the Como list is to be <strong>scraped again</strong> so the pipeline starts from a current export rather than the earlier pull. The NextGen to GHL sync stays <strong>one way</strong> so reactivation messaging cannot write back into the clinical system and create conflicts. Outreach runs on a rotation that <strong>switches the calling list every ten days</strong>, alongside the coordinated patient calling schedule.</li><li>Dependencies and constraints: still gated on WhatsApp replacing SMS as the send channel, and on the outstanding client inputs already noted on this subitem. The Portuguese and English copy posted on 4 August stays as written, including the reply and unsubscribe lines.</li><li>done = the reactivation workflow is live against a single confirmed inactivity window, sourced from a fresh Como export, sending over WhatsApp on a phased schedule with the ten day list rotation in place.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>"
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-28T00:23:46.941114+00:00"
+    },
+    {
+      "id": "medstation-website-launch-punchlist",
+      "title": "Website",
+      "note": "Audit: MedStation Website (12471126370) on Web + SEO exists with status Start and has never carried a single update, so the launch punch list is not recorded anywhere on the boards. Landing Pages (12720959017) is a separate active item and is cross referenced rather than merged. done = the MedStation site is live with the correct logo, a test submission from each site form arrives in GHL, and the scheduling and access issues are closed.",
+      "status": "ready",
+      "board": "Web + SEO",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Flow internal sync, 8/26",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12471126370",
+        "itemName": "Website",
+        "blocked": false,
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li>Context: the MedStation site is live as of the 26 August review, but it is not finished and the paid side is waiting on it. The forms are not reliably submitting, which means lead capture and lead submission tracking cannot be validated and conversion setup on the ads side cannot proceed. This item has never carried an update, so none of the outstanding work is visible on the board.</li><li>Deliverables: <strong>repair the site forms</strong> so every submission posts through to GHL, <strong>update the site logo</strong> to the current mark, and <strong>clear the scheduling and access issues</strong> raised in the review so the booking path works from the site.</li><li><strong>Notify the paid media side directly</strong> once the forms are confirmed working, so Hamza can validate lead submission tracking and resume conversion setup. Hamza is not a Monday user on this board, so raise it in the ads channel rather than expecting a tag here to reach him.</li><li>Dependencies and constraints: the landing page set is tracked separately on MedStation Landing Pages and must keep using the booking deep link and UTM behaviour specified there. <strong>Do not change the site theme</strong> while closing this list. No paid traffic to any page until tracking QA passes.</li><li>done = the MedStation site is live with the correct logo, a test submission from each site form arrives in GHL, and the scheduling and access issues are closed with the ads side notified.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a></p>"
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-28T00:23:46.941114+00:00"
+    },
+    {
+      "id": "zapier-landing-page-mapping-client-unclear",
+      "title": "Zapier landing page integration, client unclear",
+      "note": "content-conflict: the 26 August ops review lists a critical Zapier integration due Friday 28 August to connect landing page form fields correctly and adjust contact person mappings, but never names the client. Three roster clients plausibly fit. MedStation has a landing page set in active development with booking deep links. Maadi Law has five Google Ads landing pages being wired to GHL this week. Quality HVAC already has Zapier created contacts flowing into GHL, confirmed on Inspect Missing Data on Opportunities. Maadi Law's landing pages are documented as an inbound webhook build rather than Zapier, which argues against it, but that is inference and not evidence. Routing on resemblance alone would be a guess, and the task carries a Friday deadline, so Naz needs to name the client before it can be drafted. done = the Zapier integration maps landing page form fields into the correct client's CRM with contact person mappings corrected.",
+      "status": "confirm",
+      "board": null,
+      "group": null,
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Flow ops review, 8/26",
+      "payload": null,
+      "nullReason": "content-conflict",
+      "priority": 2,
+      "createdAt": "2026-08-28T00:23:46.941114+00:00"
+    },
+    {
+      "id": "qualityhvac-lead-handling-overhaul",
+      "title": "Lead Handling Overhaul",
+      "note": "Audit: all four boards checked with subitems. Nothing on CRM covers the pipeline stage split, the junk stage, the second missed call text or the lead response notification workflow. Intake Cleanup (12798879601) covers Luis's GHL access and the pre July record deletion only, and already has a ready card in this queue, so the Luis call function training and the backlog deadline are folded here rather than duplicated onto it. Genuinely new workstream with no existing parent, so create_item. done = the pipeline carries Attempted Contact, Engaged and Junk, call attempts write notes, the second missed call text fires at five minutes, and the missed call backlog is cleared.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Quality HVAC by FIbid",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Quality HVAC, 8/27",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm231wbb",
+        "itemName": "Lead Handling Overhaul",
+        "blocked": false,
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li>Context: the 27 August five month review put hard numbers on the intake problem. <strong>65 percent of inbound calls are missed</strong> and 78 percent of those arrive outside office hours. Only 20 percent of inbound texts and Instagram messages get a human reply. Against $8,200 of ad spend and 84 leads in the period, that intake gap is what is driving cost per lead up, not the campaigns. Callbacks are currently made outside GHL, so there is no record of who was chased or how many times.</li><li>Pipeline changes: <strong>split the single contacted stage into two</strong>, Attempted Contact and Engaged, so a lead that was called once is visibly different from a lead that actually replied. <strong>Log every call attempt as a note</strong> on the opportunity so attempt counts are queryable. <strong>Add a Junk stage</strong> so spam and marketing calls are filtered out instead of inflating lead counts.</li><li>Automation: <strong>send a second missed call text five minutes after the first</strong> to widen the engagement window on the after hours volume. <strong>Build a notification workflow</strong> that alerts the assigned team member when a lead responds, so replies are picked up in real time rather than at the next inbox check. Push the centralised lead inbox and the GHL mobile app so those alerts actually land.</li><li>Team and backlog: run a working session with Luis on the GHL call function so callbacks are dialled and tracked inside the system rather than from a personal phone. <strong>Clear the existing missed call backlog within one week</strong> of this item starting.</li><li>Dependencies and constraints: deletion of records dated before 1 July and Luis's GHL access are tracked on Intake Cleanup, so coordinate with that item rather than repeating the work. <strong>Do not delete or rename existing pipeline stages</strong> that live automations already reference. Add the new stages and repoint the workflows deliberately, and take a dated backup of any workflow you edit.</li><li>done = the GHL pipeline carries Attempted Contact, Engaged and Junk stages, every call attempt writes a note on the opportunity, a second missed call text fires five minutes after the first, team members are notified on lead responses, Luis is working callbacks inside GHL, and the missed call backlog is cleared.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
+      },
+      "nullReason": null,
+      "priority": 1,
+      "createdAt": "2026-08-28T00:23:46.941114+00:00"
+    },
+    {
+      "id": "qualityhvac-job-completion-sync",
+      "title": "Job Completion Sync",
+      "note": "Audit: all four boards checked with subitems. Re-run all Completed Jobs into GHL (12743073197) is a one off historical backfill, not the live automation, and Inspect Missing Data on Opportunities (12743000715) is closed out on a different root cause. Nothing covers automatic stage movement on job completion or the revenue value sync, and there is no existing parent to hang it under, so create_item. Kept separate from the lead handling card because it is a different kind of work with no shared workflow. done = completing a job in House Call Pro moves its GHL opportunity to job complete and writes the completed dollar value onto it.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Quality HVAC by FIbid",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Quality HVAC, 8/27",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm231wbb",
+        "itemName": "Job Completion Sync",
+        "blocked": false,
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li>Context: the 27 August review found that jobs finished in House Call Pro do not move their GHL opportunity into the job complete stage, so the pipeline shows work as open long after it is done. Completed revenue never reaches the opportunity that produced it either, which means there is no way to report revenue per campaign or per lead source. That number is what the client actually asked for in the review.</li><li>Deliverables: <strong>correct the GHL automation</strong> so an opportunity moves to the job complete stage automatically when the matching job is marked complete in House Call Pro. <strong>Sync the completed job dollar value</strong> from House Call Pro onto the GHL opportunity and surface it so lead revenue can be read directly in the pipeline and in reporting.</li><li>Constraints: <strong>match on the House Call Pro job identifier</strong>, not on contact name. The blank opportunity name problem investigated on 7 August showed name based matching is unreliable in this account. <strong>Do not overwrite</strong> the opportunity value on jobs that were already reconciled by hand.</li><li>Dependencies: this is the live automation and is distinct from the historical backfill tracked on Re-run all Completed Jobs into GHL. <strong>Run this after that backfill</strong> so the two do not fight over the same records. It also relates to Inspect Schedule Opportunities, where Facebook leads are sitting in the Scheduled stage without a real House Call Pro job behind them, so validate that the stage a job moves out of was accurate in the first place.</li><li>done = completing a job in House Call Pro moves its GHL opportunity to the job complete stage within the sync window and writes the completed dollar value onto that opportunity, verified on a test job.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
+      },
+      "nullReason": null,
+      "priority": 3,
+      "createdAt": "2026-08-28T00:23:46.941114+00:00"
+    },
+    {
+      "id": "qualityhvac-lsa-attribution-costs",
+      "title": "LSA",
+      "note": "Audit: Quality HVAC LSA (11929321987) on Ads is Ongoing and its 13 August update already asks for the missing LSA number to be added to tracking and call recording enabled, which is the direct fix for the tagging gap the review says is still open. Merged the cost cross reference into the same update because correct source tagging is a real prerequisite for the cost analysis, not merely adjacent work. done = LSA calls arrive in GHL tagged as LSA source and a month by month cost comparison is posted with a stated conclusion.",
+      "status": "ready",
+      "board": "Ads",
+      "group": "Quality HVAC",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Quality HVAC, 8/27",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "11929321987",
+        "itemName": "LSA",
+        "blocked": false,
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li>Context: the 27 August five month review put Local Service Ads at roughly <strong>$93 per call</strong>, the most expensive channel in the account. Two findings sit behind that number and they are connected.</li><li>First, LSA calls are <strong>not being tagged with LSA as their source</strong> when they land in GHL, so LSA volume and quality cannot be separated from the rest of the call mix and the channel is being judged on incomplete data. Second, the 65 percent missed call rate inflates effective cost per answered call, because Google charges for the call whether or not anyone picks it up.</li><li>The 13 August ask on this item, to add the missing LSA number +1 708 729 6198 to tracking setup and enable call recording, is the direct fix for the tagging gap. <strong>Confirm here</strong> whether that number is live in tracking and whether recording is on, because the review says attribution is still broken.</li><li>Deliverables: <strong>close the LSA source tagging gap</strong> so every LSA call arrives in GHL tagged as LSA. Then <strong>cross reference LSA call costs month by month</strong> across the past several months and report whether the $93 average reflects a pricing trend, a seasonal shift, or an anomaly confined to specific weeks.</li><li>Dependencies and constraints: the cost analysis is only meaningful once tagging is correct, so <strong>sequence tagging first</strong>. Missed call handling is being fixed separately on the CRM board and will change the answered call denominator, so state the date range and the missed call rate alongside any cost figure you report. A physical business address is still missing on the Fibid profile, which affects LSA eligibility and is tracked on the Web and SEO side.</li><li>done = LSA calls arrive in GHL tagged as LSA source, and a month by month LSA cost comparison is posted here with a stated conclusion on whether the current cost per call is a trend or an anomaly.</li></ul><p><a class=\"mention\" data-mention-id=\"102221064\" data-mention-type=\"User\">@Khurram Jamil</a> <a class=\"mention\" data-mention-id=\"102221061\" data-mention-type=\"User\">@Ads Team</a></p>"
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-28T00:23:46.941114+00:00"
+    },
+    {
+      "id": "qualityhvac-fibid-gbp-seo-plan",
+      "title": "Fibid Google Business Profile & SEO",
+      "note": "Audit: Fibid Google Business Profile & SEO (12231492464) under Quality HVAC Website on Web + SEO is the exact home and its only update is a 9 June request for a status. The weekly posting cadence ask maps to the existing Posting subitem (12545592455), which already scopes cadence documentation, so it is cross referenced rather than drafted as a second card. Fibid Website Rebuild (12078699633) stays Stuck on the branding decision and is named as a dependency. done = Fibid's profile carries a verified physical address, a weekly posting cadence is running with an owner, and the action plan is posted.",
+      "status": "ready",
+      "board": "Web + SEO",
+      "group": "Quality HVAC by FIbid",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Quality HVAC, 8/27",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12231492464",
+        "itemName": "Fibid Google Business Profile & SEO",
+        "blocked": false,
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li>Context: the 27 August five month review compared the two profiles directly. Quality HVAC is performing, with <strong>62 new reviews and 148 calls</strong> in the period. Fibid lags on both organic calls and local ranking, and the review identified two concrete causes: Fibid has <strong>no physical business address</strong> on its profile, and the profile is updated far less often than the Quality HVAC one. The last activity on this subitem was a request for a status on 9 June, so the current position is not documented anywhere.</li><li>Deliverables: <strong>produce a written action plan</strong> for the Fibid Google Business Profile covering the next steps and the order to do them in, and post it here. <strong>Secure and add a real physical business address</strong> for Fibid and for every other profile in the account, since a missing address hurts local ranking directly and affects Local Service Ads eligibility.</li><li><strong>Set up a weekly posting cadence</strong> on the Fibid profile with Hashir owning the workflow. <strong>Investigate why the Fibid website produces so few organic calls</strong> and apply the same refresh and on page SEO approach already used on the Quality HVAC site, including blog content and content placement, so the blog is genuinely indexed and visible rather than published and buried.</li><li>Dependencies and constraints: the full Fibid website rebuild is still <strong>Stuck</strong> pending the branding decision on whether Fibid stays separate or rolls under Quality HVAC, and the review raised website consolidation again. <strong>Do not wait on that decision</strong> for this work. The address, the posting cadence and the on page SEO all hold their value whichever way consolidation goes, so proceed and leave the rebuild parked. The GBP Posting subitem already scopes cadence documentation, so record the weekly decision there instead of writing a second strategy.</li><li>done = Fibid's profile carries a verified physical address, a weekly posting cadence is running with a named owner, the action plan is posted on this item, and Fibid organic calls are being measured against a stated baseline from the review period.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a></p>"
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-28T00:23:46.941114+00:00"
+    },
+    {
+      "id": "qualityhvac-calendar-conventions",
+      "title": "Technician Calendar Routing",
+      "note": "Audit: Technician Calendar Routing (12472427099) on CRM is Stuck since 13 August and already carries the color coding ask, so only the naming conventions and the appointment notification workflow are new. Update rather than a new item. Marked blocked because the routing QA is waiting on House Call Pro account access from the client, requested 6 August. done = a House Call Pro job lands once on the correct technician's calendar with the standard event name and color, and create, move and cancel all notify.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Quality HVAC by FIbid",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Flow ops review, 8/26",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12472427099",
+        "itemName": "Technician Calendar Routing",
+        "blocked": true,
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li>Context: this item has been <strong>Stuck since 13 August</strong>. The original defect, House Call Pro jobs landing on the wrong technician's calendar despite the correct name sitting in the appointment description, is still open, and the QA that would close it is waiting on House Call Pro account access requested from the client on 6 August. Color coding by technician was added to scope on 13 August.</li><li>The 26 August ops review added two further requirements to the same calendar work. <strong>Calendar naming conventions</strong> need standardising so events are identifiable at a glance rather than created under inconsistent titles. <strong>Appointment notification workflows</strong> need to fire so the assigned technician and the office are told when an appointment is created, moved or cancelled.</li><li>Deliverables: <strong>standardise event naming</strong> across the technician calendars and document the convention on this item. <strong>Build the appointment notification workflow</strong> for create, move and cancel. <strong>Complete the routing QA</strong> once access lands, using the single non customer test job assigned to Clifton plus a reschedule, to confirm the event lands once and does not duplicate.</li><li>Dependencies and constraints: <strong>blocked on the client</strong> for House Call Pro account access. The naming and notification work does not need that access and can start now, so do not hold the whole item behind it. <strong>Do not use live customer data</strong> for the routing test.</li><li>done = a House Call Pro job lands once on the correct technician's calendar with the standard event name and color, rescheduling updates the same event without duplicating it, and the assigned technician and the office are notified on create, move and cancel.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-28T00:23:46.941114+00:00"
+    },
+    {
+      "id": "qualityhvac-september-video-content",
+      "title": "September Content",
+      "note": "Audit: all four boards checked with subitems. The Video board has a live Quality HVAC group (group_mm2660b4, confirmed against the board's group list) with zero items, so no HVAC content work is tracked anywhere. Genuinely new workstream, so create_item on Video with Sohib as the sole assignee per the Video board rule. Campaign creative serving a live ad stays on Ads and is named as an exclusion. done = a performance read on the four live videos is posted, a segmented September calendar is approved, and the September batch is produced and posted.",
+      "status": "ready",
+      "board": "Video",
+      "group": "Quality HVAC",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Flow ops review, 8/26",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18100257069",
+        "groupId": "group_mm2660b4",
+        "itemName": "September Content",
+        "blocked": false,
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li>Context: four new videos are live, including Quality HVAC content, and the 26 August ops review asked for September content production and a segmented content calendar to be planned and executed off the back of them. The Video board currently has no Quality HVAC items at all, so none of this content work is tracked anywhere.</li><li>Deliverables: <strong>pull performance data</strong> on the four videos already posted and write a short read on what the numbers say about format, length and hook. <strong>Build a segmented September content calendar</strong> for Quality HVAC from that read, with each slot tagged to its audience segment and its intended placement. <strong>Produce and post the September batch</strong> against that calendar.</li><li>Dependencies and constraints: this covers <strong>organic and standalone content only</strong>. Creative cut specifically to serve a live Meta or Google campaign stays on the Ads board with that campaign and does not move here. The 27 August review found 65 percent of inbound calls are missed, so note that driving more calls into the account has limited value until the intake work on the CRM board lands, and size September's volume accordingly.</li><li>done = a performance read on the four live videos is posted on this item, a segmented September content calendar is approved, and the September batch is produced and posted.</li></ul><p><a class=\"mention\" data-mention-id=\"69662034\" data-mention-type=\"User\">@Sohib Boundaoui</a></p>"
+      },
+      "nullReason": null,
+      "priority": 3,
+      "createdAt": "2026-08-28T00:23:46.941114+00:00"
     }
   ]
 }
