@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-28T00:23:46.941163+00:00",
+  "updatedAt": "2026-08-28T19:07:13.150222+00:00",
   "items": [
     {
       "id": "websEo-pricing-question",
@@ -954,6 +954,95 @@
       "nullReason": null,
       "priority": 3,
       "createdAt": "2026-08-28T00:23:46.941114+00:00"
+    },
+    {
+      "id": "qualityhvac-review-request-routing",
+      "title": "Review Boost Campaign Launch",
+      "note": "Audit: all four boards checked with subitems. Review Boost Campaign Launch (12472491450) on CRM is the exact home and is For Review, idle since 6 August, with the duplicate request question still open from 1 August. Nothing else on any board covers profile distribution or a per contact guard, so this is an update rather than a new item. The 7 July Crestwood exclusion conflicts with the even distribution ask and is flagged in the body for confirmation rather than silently overridden. done = requests route by day of week across the profiles, one request per contact, job completion as the only trigger.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Quality HVAC by FIbid",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Quality HVAC, 8/27",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12472491450",
+        "itemName": "Review Boost Campaign Launch",
+        "updateBody": "<p>Salam,</p><ul><li>Context: the 27 August five month review came back to review generation. Quality HVAC carries <strong>62 new reviews and 148 calls</strong> in the period while the Fibid profile lags, and the client asked for review requests to be spread across all three Google business profiles rather than landing on one. Review volume is one of the two local ranking levers named in the review, alongside the missing physical address.</li><li>Where this item stands: the published Customer Review Request workflow fires on House Call Pro Job Finished with no filter, and a separate unpublished draft, Review Boost Converted Customer Draft, fires on Contact Tag Added equals converted customer with the approved day 1, day 7, day 14 pacing. The 1 August note on this item asked how to stop a contact receiving a request from both paths. The review answers that: <strong>job completion is the trigger</strong> and a contact gets one request only.</li><li>Deliverables: <strong>build day of week routing</strong> so review requests are distributed evenly across the three Google business profiles instead of arriving as a burst on one listing. <strong>Add a per contact guard</strong> so a contact can never receive a review request more than once across every workflow in the account, checked before send rather than after. <strong>Settle on job completion as the single trigger</strong> and gate or retire the tag based path so only one workflow can fire for a given contact.</li><li>Dependencies and constraints: keep the approved pacing and keep the $50 referral reward wording separate from the request for an honest review, exactly as set on 6 August. <strong>Do not use the existing customer import tag</strong>, the historical 1,067 contact import, as a bulk trigger. The 7 July instruction on this item was to grow the Homer Glen and Fibid listing and leave the Crestwood listing untouched at 145 reviews, which the even distribution ask now cuts across, so <strong>confirm on this item before putting Crestwood into the rotation</strong> and build the routing for the in scope profiles in the meantime.</li><li>done = review requests route across the profiles on a day of week schedule, no contact can receive more than one request across all workflows, job completion is the only trigger left live, and a week of sends has been checked against the profiles they landed on.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-28T19:07:13.150222+00:00"
+    },
+    {
+      "id": "qualityhvac-tuneup-membership-trigger",
+      "title": "Membership Sequence Trigger",
+      "note": "Audit: all four boards checked with subitems. Membership Sequence Trigger (12472421972) on CRM is already the yearly maintenance plan covering seasonal tune ups, Waiting since 1 August on an undefined trigger, with Build and Test Sequence and Define Trigger Logic as its subitems. The review's tune up text ask is the same workstream, so this is an update, not a new item. The Meta half is a separate card on Ads because it is media buying by a different team, not a step in this build. needsNaz set true because Ahmed asked Nacer for the trigger decision on 1 August and the item has sat four weeks on it. done = trigger confirmed, campaign pipeline with engagement tracking live, two message sequence tested and published.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Quality HVAC by FIbid",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Quality HVAC, 8/27",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12472421972",
+        "itemName": "Membership Sequence Trigger",
+        "updateBody": "<p>Salam,</p><ul><li>Context: this item has been <strong>Waiting since 1 August</strong>. The audit then found no maintenance, yearly or membership workflow anywhere in the Quality HVAC account, so nothing is wired to the Fibid Service Plans list. The two message copy is finished and the contact list was handed off in July. The only thing missing is the firing rule, and that decision has now been open for four weeks.</li><li>What the 27 August five month review adds: seasonal tune ups are the named conversion lever, with current campaign conversion sitting at <strong>5 to 11 percent and a target of 8 to 15 percent</strong>. The review asked for the tune up text sequence and a Meta tune up campaign to run as one combined push, sitting behind a <strong>campaign pipeline with engagement tracking</strong> so replies and bookings are readable in one place rather than inferred from message logs.</li><li>Proposed trigger, for confirmation: entry into a dedicated tune up campaign pipeline stage, populated from the Fibid Service Plans list. That satisfies the review's ask for a campaign pipeline and gives one queryable place to read engagement, rather than a manual tag with no reporting behind it. <strong>Confirm or replace this before any build starts.</strong></li><li>Deliverables: <strong>confirm the trigger</strong>, then <strong>build the tune up campaign pipeline</strong> with stages that record sent, replied and booked so engagement is trackable. <strong>Build and test the two message sequence</strong> on a small non live batch before publishing, then publish against the Fibid Service Plans list.</li><li>Dependencies and constraints: the Meta half of the same push is drafted separately under Meta Ads on the Ads board, and campaign copy for both goes to marketing for approval before launch. <strong>Do not use the existing customer import tag</strong>, the 1,067 contact historical import, as a bulk trigger. <strong>Do not let a contact be enrolled in this sequence and the review request sequence in the same week</strong>, since the per contact guard being built on Review Boost Campaign Launch has to cover both.</li><li>done = the trigger is confirmed and documented here, the tune up campaign pipeline with engagement tracking is live, the two message sequence has passed a non live batch test, and it is published against the Fibid Service Plans list.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
+        "blocked": false,
+        "needsNaz": true
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-28T19:07:13.150222+00:00"
+    },
+    {
+      "id": "qualityhvac-tuneup-meta-campaign",
+      "title": "Tune Up Campaign",
+      "note": "Audit: all four boards checked with subitems. Meta Ads (11929334685) on Ads is the live Quality HVAC Meta workstream and is already Ongoing per the parent status rule, with Retargetting List and New Ad as its only subitems, neither of which is the tune up campaign. Nothing on any board covers it, so this is a subitem under that parent rather than a new top level item. Split from the CRM text sequence because it is media buying by a different team on a different board, which the single item bias does not merge across. done = campaign live with approved copy and a first read against the 8 to 15 percent conversion target.",
+      "status": "ready",
+      "board": "Ads",
+      "group": "Quality HVAC",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Quality HVAC, 8/27",
+      "payload": {
+        "mode": "create_subitem",
+        "boardId": "18405754310",
+        "parentItemId": "11929334685",
+        "itemName": "Tune Up Campaign",
+        "updateBody": "<p>Salam,</p><ul><li>Context: the 27 August five month review asked for a seasonal tune up push to run as one campaign across two channels. This is the Meta half. The text half sits on Membership Sequence Trigger on the CRM board, where the two message copy is already written and the workflow is waiting on a trigger decision. The review set the target explicitly: lift campaign conversion from the current <strong>5 to 11 percent band to 8 to 15 percent</strong>.</li><li>Deliverables: <strong>build the tune up campaign</strong> under this Meta Ads workstream, aimed at seasonal maintenance and tune up demand rather than emergency repair. <strong>Draft campaign copy and creative and send them for marketing approval</strong> before anything goes live. Set the campaign up so its results can be read against the tune up pipeline in GHL, not only in Meta, since the conversion target is measured on booked jobs rather than on leads.</li><li>Baseline to size against: the weekly Meta reports on this account show <strong>$121.44 for 4 results</strong> for 14 to 20 August with campaigns paused part of the week, $130.21 for 7 results for 7 to 13 August, and $130.82 for 9 results for 31 July to 6 August. Set the tune up budget and expected volume against those numbers and say what you assumed.</li><li>Dependencies and constraints: <strong>do not launch before copy approval</strong>. The review found <strong>65 percent of inbound calls are missed</strong> and that unanswered calls are what push effective cost per lead up, so quote the missed call position alongside any result you report here while the intake work runs on the CRM board. Keep this separate from the 9 June retargeting lookalike list and the 13 August timely ad, which are their own subitems. Negative keyword tightening for low value calls is already handled on Google Ads Bad Calls and is not in scope here.</li><li>done = the Meta tune up campaign is live with approved copy, its results are readable against the GHL tune up pipeline, and a first read against the 8 to 15 percent conversion target is posted on this subitem.</li></ul><p><a class=\"mention\" data-mention-id=\"102221064\" data-mention-type=\"User\">@Khurram Jamil</a> <a class=\"mention\" data-mention-id=\"102221061\" data-mention-type=\"User\">@Ads Team</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-28T19:07:13.150222+00:00"
+    },
+    {
+      "id": "qualityhvac-client-report-presentation",
+      "title": "HVAC Report",
+      "note": "Audit: all four boards checked with subitems. HVAC Report (12173331658) under Reports on Web and SEO is Nacer's 2 June brief for exactly this deliverable, a one time client facing report across paid ads, organic and infrastructure, still at Start with no activity since. The review's ask for a marketing presentation and action plan is the same deliverable, so this is an update rather than a second card. The biweekly cadence ask has no done state of its own and is folded in as a constraint rather than drafted. done = the client facing document plus action plan is posted here and approved before it is sent.",
+      "status": "ready",
+      "board": "Web + SEO",
+      "group": "Quality HVAC by FIbid",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Quality HVAC, 8/27",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12173331658",
+        "itemName": "HVAC Report",
+        "updateBody": "<p>Salam,</p><ul><li>Context: the 27 August five month review closed with the client asking for a comprehensive marketing work presentation and action plan document, and for better communication with a biweekly review cadence. That deliverable is already scoped on this item: the 2 June brief here asks for a one time client facing report covering Quality HVAC performance from April 2026 to now across three tracks, paid ads, organic and infrastructure. <strong>Nothing has been posted since 2 June</strong>, so the item is nearly three months idle and the client is now asking for it directly.</li><li>Deliverables: <strong>produce the report as briefed</strong> and shape it into a document the client can be walked through rather than a raw metrics dump. <strong>Add an action plan section</strong> covering what happens next on each track with owners and rough sequencing. The review named the priorities: Fibid Google Business Profile recovery, missed call handling, and Local Service Ads cost at roughly $93 per call. <strong>Post the finished document here for approval before it goes to the client.</strong></li><li>Dependencies and constraints: <strong>reuse the numbers already reported</strong> on the weekly Meta, Google and LSA reports on the Ads board instead of rebuilding them, and state the date range on every figure. The Fibid action plan detail is being written on Fibid Google Business Profile and SEO, so cross reference it rather than writing a second version. Say plainly where a number is not yet trustworthy, since LSA calls are not tagged as LSA source in GHL and the review flagged the August Fibid organic call count as needing verification against GHL before it is quoted to the client.</li><li>Also from the review, recorded here so it is not lost: the client asked for a <strong>biweekly review cadence</strong>. That is a scheduling decision for Nacer and is not part of this deliverable, but the presentation should end with a proposed cadence rather than leaving it unanswered.</li><li>done = a client facing document covering April 2026 to now across paid ads, organic and infrastructure, with a next steps action plan per track and a proposed review cadence, posted on this item and approved before it is sent to the client.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-28T19:07:13.150222+00:00"
     }
   ]
 }
