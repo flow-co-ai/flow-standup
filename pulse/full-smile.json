@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-28T19:02:23.378Z",
+  "generated_at": "2026-08-28T21:20:50.221Z",
   "date": "2026-08-28",
   "slug": "full-smile",
   "name": "Full Smile",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Paid channels show zero spend and zero leads over the last 28 days, so all activity is organic. The biggest movement is a 75.61% drop in GBP actions week-over-week, likely driven by reduced local search visibility or a lull in seasonal demand, while the 76.92% Search Console gain suggests some organic keyword traction is building.",
+  "verdict": "Paid channels show zero spend and zero leads over the last 28 days, so all activity is organic. The biggest movement is a 75.61% drop in GBP actions week-over-week, likely driven by reduced local search visibility or a listing issue, while the 28-day GBP total still logged 210 actions (66 calls, 89 directions, 55 web clicks).",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -406,10 +406,10 @@
     }
   },
   "ghl": {
-    "contacts": 255,
+    "contacts": 257,
     "opportunities": {
       "created": {
-        "count": 95,
+        "count": 98,
         "value": 0
       },
       "won": {
@@ -577,77 +577,79 @@
     "history_line": "Digital Ocean Saturday appts fix · OpenDental appt sync to GHL fix"
   },
   "performance": {
-    "generated_at": "2026-08-28T19:06:55.747Z",
+    "generated_at": "2026-08-28T21:22:37.825Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Zero paid activity makes August's prove-it month unreachable on ads alone.",
+    "verdict": "No paid activity; organic GBP collapse threatens the only active lead channel.",
     "findings": [
       {
         "id": "F1",
-        "priority": 1,
-        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google — makes CPL analysis impossible and the August prove-it scoreboard inoperable.",
+        "priority": 2,
+        "text": "OVERDUE: Phone-match attribution gap (due 2026-08-07) and sync/contact cleanup (due 2026-08-14) both unresolved — August scoreboard is blind without them.",
         "confidence": "confirmed",
-        "channel": "paid"
+        "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Phone-match attribution gap (due 2026-08-07) still open: 66 GBP calls in 28 days cannot be tied to paid or organic source without it.",
+        "text": "OVERDUE: Renewal closed 2026-07-23 at $2,200 — no paid campaigns launched in 28 days; $0 spend against a prove-it month.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "Sync items + contact cleanup (due 2026-08-14) still open: 95 GHL opportunities created with $0 value and 0 appointments booked signals intake pipeline is not reconciled.",
+        "priority": 1,
+        "text": "Zero spend, zero leads, zero CPL across all paid channels for 28 consecutive days — no efficiency signal is possible; channel is dark.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "meta/google"
       },
       {
         "id": "F4",
-        "priority": 3,
-        "text": "GBP actions collapsed to 0 for the last 3 days (Aug 25–27), down from a 28-day total of 210; prior 3-day avg was ~2.3 — a confirmed 3-day signal, not noise.",
+        "priority": 2,
+        "text": "GBP actions collapsed to 0 for Aug 25–27 (3-day signal); prior 3 days averaged 3.0 vs earlier 28-day average of 8.3 — a confirmed downward break.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "Search Console clicks held at 2–3/day over the last 3 days vs a spike to 8 on Aug 24 — SC gain of 76.92% is real but concentrated, not sustained traction.",
+        "text": "GHL shows 98 opportunities created but 0 won and 0 appointments in 28 days — intake pipeline is stalled or contact data is not yet clean post-sync.",
         "confidence": "probable",
-        "channel": "organic"
+        "channel": "ghl"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate phone-match attribution gap immediately — 66 unattributed GBP calls in 28 days are invisible on the client's scoreboard.",
+        "text": "Audit GBP listing immediately — 0 actions for 3 straight days signals a listing suspension or info error.",
         "cites": [
-          "F2"
+          "F4"
         ],
-        "monday_item_name": "Close Phone Attribution Gap",
-        "monday_update": "The phone-match attribution gap (due 2026-08-07) remains open. 66 GBP calls logged in the last 28 days cannot be attributed to any paid or organic source without this fix, directly breaking the client's lead-to-patient scoreboard. Success check: every inbound call is matched to a channel source in GHL by 2026-09-01. Sohib to confirm with Ahmed/Ali that the fix is deployed and validated against at least one test call."
+        "monday_item_name": "GBP listing audit Aug 28",
+        "monday_update": "GBP actions dropped to 0 for Aug 25–27 after averaging 8.3/day over the prior 28 days — a 3-day confirmed break, not noise. Check listing status in Google Business Profile dashboard for suspension, address mismatch, or policy flag. Success = actions return to ≥5/day by 2026-09-01. If listing is suspended, escalate to Nacer same day."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Complete GHL contact cleanup — 95 opportunities at $0 value and 0 appointments is a pipeline integrity failure, not an ads problem.",
+        "text": "Close the phone-match attribution gap (overdue Aug 7) — without it, any leads from paid launch are unattributable to the August scoreboard.",
         "cites": [
-          "F3"
+          "F1",
+          "F2"
         ],
-        "monday_item_name": "GHL Contact Cleanup Done",
-        "monday_update": "The sync items and contact cleanup milestone (due 2026-08-14) is unresolved. 95 GHL opportunities exist with $0 pipeline value and 0 appointments recorded, meaning the client's scoreboard shows no conversion path even if leads are arriving. Success check: all open opportunities have a value, stage, and at least one associated appointment or disposition by 2026-09-01. Nacer to confirm completion and share a before/after contact count with Sohib."
+        "monday_item_name": "Attribution gap fix — Aug 7 OD",
+        "monday_update": "The phone-match attribution task was due 2026-08-07 and remains open. With $0 spend across 28 days and a prove-it renewal at $2,200, any paid campaign launched now will produce untracked leads — breaking the client's explicit scoreboard (leads → schedules → shows → new patients). Close this before any campaign goes live. Success check: at least one test call flows correctly through GHL with source attributed, confirmed by Ahmed/Ali by 2026-09-01."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions daily — 3-day zero streak on Aug 25–27 after 210 actions in 28 days; re-check Sep 1 for recovery or structural drop.",
+        "text": "Watch GHL pipeline: 98 opps created, 0 won, 0 appointments — confirm whether sync cleanup (overdue Aug 14) is blocking real intake data.",
         "cites": [
-          "F4"
+          "F5",
+          "F1"
         ],
-        "monday_item_name": "GBP Actions 3-Day Watch",
-        "monday_update": "GBP actions hit zero for three consecutive days (Aug 25–27) after averaging roughly 7.5 actions/day over the prior 28-day window totaling 210. This is a confirmed 3-day signal and may indicate a listing issue, a ranking drop, or a data-reporting lag. No action is taken this cycle. Re-check on 2026-09-01: if GBP actions remain at or near zero, escalate to a listing audit and cross-reference with the SC clicks trend for confirmation."
+        "monday_item_name": "GHL pipeline data validity check",
+        "monday_update": "GHL shows 98 opportunities created with 0 won and 0 appointments over 28 days. This may reflect the contact cleanup being incomplete (due 2026-08-14, still open) rather than true zero intake activity. Verify with Lily whether real appointments exist in OpenDental that are not reflecting in GHL. Re-check 2026-09-01: if appointments remain at 0 after sync cleanup closes, escalate as a confirmed intake leak."
       }
     ],
     "next_check": "2026-09-01"

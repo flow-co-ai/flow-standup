@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-28T19:02:15.030Z",
+  "generated_at": "2026-08-28T21:20:41.277Z",
   "date": "2026-08-28",
   "slug": "billy-doe",
   "name": "Billy Doe Meats",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "For Billy Doe Meats, the biggest movement is a 39.85% drop in Google Business Profile actions over the last 7 days (against 457 total GBP actions in the past 28 days, including 48 calls, 86 directions, and 323 web clicks), likely driven by reduced local search visibility or seasonal dip in foot traffic intent. On a positive note, GA4 sessions are up 23.18% week over week, suggesting the website itself is attracting more visitors despite the GBP decline.",
+  "verdict": "For Billy Doe Meats, the biggest movement is a 39.85% drop in GBP actions over the last 7 days, likely driven by reduced local search visibility or seasonal dip in foot traffic intent, while GA4 sessions are up 23.18%, suggesting the website itself is gaining organic momentum.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -558,44 +558,44 @@
     "history_line": "Website edits completed · Website pushed live · Website marked Done on Monday"
   },
   "performance": {
-    "generated_at": "2026-08-28T19:06:28.159Z",
+    "generated_at": "2026-08-28T21:22:11.886Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Ads dark since renewal; GBP eroding while GA4 holds — spend restart is overdue.",
+    "verdict": "Paid channels dark; organic holding but GBP is fading fast.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Meta and Google spend is $0 across all 28 days of the renewal window — no paid activity has run since Aug 1.",
+        "text": "Zero paid spend across all 28 days — Meta and Google both show $0. No ROAS or purchase data is possible in this state.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Live-Cooking Shoot 1 (due Aug 14) has no completed event — 14 days overdue, blocking fresh creative for restart.",
+        "text": "Live-Cooking Event Shoot 1 was due 2026-08-14 and has no completed event recorded — now 14 days overdue.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "GBP actions dropped -39.85% week-over-week; last 3 days show 9, 0, 0 — near-complete local intent collapse with zero paid support.",
+        "priority": 3,
+        "text": "GBP actions collapsed: last 3 days averaged 3 actions vs prior 3-day average of 23 — a 87% drop, with two consecutive zero-action days (Aug 26–27).",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GA4 sessions up 23.18% WoW and 3-day avg (271–294–238) is stable near the 28-day mean of ~265 — organic site pull is intact despite paid silence.",
+        "text": "GA4 sessions held steady: last 3 days averaged 268 vs prior 3-day average of 262 — flat, not the +23% the 7d delta implied; no paid traffic driving it.",
         "confidence": "confirmed",
         "channel": "ga4"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "Purchases and revenue read $0 across all 28 days; Shopify pixel inconsistency documented, but zero paid spend confirms zero attributable ecom activity.",
-        "confidence": "confirmed",
+        "text": "Purchases and revenue show $0 across all 28 days — likely a Shopify pixel / Meta purchase-event misfire noted in prior context, not zero actual sales.",
+        "confidence": "probable",
         "channel": "meta"
       }
     ],
@@ -603,33 +603,32 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Restart Meta campaigns at ~$33/day ($1,000/mo floor) using approved stock-footage creatives immediately.",
+        "monday_item_name": "Escalate Shoot 1 overdue",
+        "text": "Escalate Live-Cooking Shoot 1 immediately — 14 days overdue blocks creative pipeline for paid relaunch.",
         "cites": [
-          "F1",
-          "F4"
+          "F2"
         ],
-        "monday_item_name": "Restart Meta Ads Aug",
-        "monday_update": "Meta spend has been $0 since the Aug 1 renewal start — no paid activity has run for 28 days. Restart using approved stock-footage and facility-footage creatives at the SOW floor of ~$33/day ($1,000/mo). GA4 sessions are holding at ~265/day organically, giving a live audience to convert. Success check: confirmed spend delivery and first purchase attribution within 3 days of launch (by 2026-08-31)."
+        "monday_update": "Live-Cooking Event Shoot 1 was due 2026-08-14 and has no completion record as of 2026-08-28, making it 14 days overdue. This shoot feeds the real-footage creative that replaces burned-out retargeting assets — paid ads cannot relaunch effectively without it. Sohib to confirm current shoot status with Nacer and set a hard reschedule date. Success check: shoot completed and footage in Drive folder by 2026-09-05."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GBP actions daily; if 3-day avg stays at 0–9 after Meta restarts, escalate to local SEO review.",
+        "monday_item_name": "Watch GBP drop — recheck Sep 1",
+        "text": "GBP actions hit 0 for 2 straight days after averaging 23/day prior 3-day window — watch for platform data lag before actioning.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Watch GBP Action Recovery",
-        "monday_update": "GBP actions hit 0 on Aug 26 and Aug 27, down -39.85% WoW — the sharpest local intent drop in the 45-day series. Once Meta restarts (S1), check whether GBP web-clicks recover alongside paid traffic within 7 days. If the 3-day GBP avg remains below 10 by 2026-09-04, escalate to a local SEO/GBP audit."
+        "monday_update": "GBP actions dropped to zero on Aug 26 and Aug 27, against a prior 3-day average of 23 actions/day — an 87% collapse. Before treating this as a listing or visibility problem, confirm whether GBP API reporting has a 48–72 hour lag for this account. If numbers remain at or near zero by 2026-09-01, escalate to Nacer for a GBP listing audit. Success check: actions recover to ≥15/day average by 2026-09-01, or root cause identified."
       },
       {
         "id": "S3",
         "type": "fix",
-        "text": "Escalate Live-Cooking Shoot 1 to Video team — 14 days overdue, blocking creative pipeline for paid restart.",
+        "monday_item_name": "Confirm purchase pixel firing",
+        "text": "Verify Shopify–Meta purchase event pipeline; $0 purchases across 28 days is a confirmed data gap, not a sales verdict.",
         "cites": [
-          "F2"
+          "F5"
         ],
-        "monday_item_name": "Escalate Shoot 1 Overdue",
-        "monday_update": "Live-Cooking Shoot 1 was due Aug 14 and has no completed event as of Aug 28 — 14 days overdue. This shoot is the primary fresh creative input for the Meta restart and retargeting refresh planned under the renewal SOW. Escalate to Video/Content with a hard rescheduled date. Success check: shoot completed and footage in Drive by 2026-09-04."
+        "monday_update": "Purchase and revenue fields show $0 for all 28 days in the series, consistent with the known Shopify–Meta pixel misfiring issue documented in prior context. Windsor/Meta is the attribution truth source per the SOW. Khurram or the responsible tech owner should run a test purchase and confirm the Meta pixel fires correctly end-to-end. Success check: at least one verified purchase event visible in Meta Events Manager within 48 hours of a test order, confirmed by 2026-08-30."
       }
     ],
     "next_check": "2026-09-01"

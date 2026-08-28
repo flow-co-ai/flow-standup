@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-28T19:02:35.746Z",
+  "generated_at": "2026-08-28T21:20:54.094Z",
   "date": "2026-08-28",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "GBP was the standout channel this period, driving 53 total actions (33 directions, 19 web clicks, 1 call) with a 300% spike in the last 7 days, likely fueled by improved local search visibility or a seasonal uptick in demand. Paid channels (Meta and Google Ads) recorded zero spend, leads, and clicks, so all lead-gen activity is currently organic.",
+  "verdict": "The standout movement this period is GBP activity surging 300% week-over-week, driving 53 total actions (33 directions, 19 web clicks, and 1 call) over 28 days, likely fueled by improved local search visibility or a recent profile update. Paid channels (Meta and Google Ads) show zero spend and zero leads, so all traction is currently organic.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -470,62 +470,63 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-28T19:07:14.686Z",
+    "generated_at": "2026-08-28T21:22:54.030Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Organic GBP pulse is real; paid is fully dormant — no efficiency to judge.",
+    "verdict": "Organic-only account; GBP momentum is real but unconverted.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — Meta and Google Ads both report $0 spend, $0 leads. No efficiency metric is computable.",
+        "text": "Zero paid spend across all 28 days; $0 Meta, $0 Google. No CPL exists. Account is entirely organic with no paid efficiency to measure.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "paid"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP 300% spike driven almost entirely by Aug 25 (11 actions in one day vs prior 45-day avg of ~2.1/day). Burst, not sustained trend.",
-        "confidence": "probable",
-        "channel": "gbp"
+        "text": "GBP actions spiked to 11 on 2026-08-25, driving 53 total 28-day actions (+300% WoW), but 0 GA4 conversions and 0 GHL pipeline entries recorded.",
+        "confidence": "confirmed",
+        "channel": "GBP"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "3-day GA4 signal (Aug 25–27): 7, 4, 7 sessions vs prior 3-day avg (Aug 22–24): 5, 3, 13 — flat to declining; no organic momentum.",
+        "text": "3-day GA4 signal (Aug 25-27: 7+4+7=18 sessions) vs prior 3 days (Aug 22-24: 5+3+13=21 sessions) — flat to slightly declining; no conversion at any point in 45-day series.",
         "confidence": "confirmed",
-        "channel": "ga4"
+        "channel": "GA4"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GHL pipeline is null and GA4 shows 0 conversions across 192 sessions in 28 days — intake or tracking is broken regardless of lead source.",
-        "confidence": "confirmed",
-        "channel": "ga4"
+        "text": "GBP directions (33) and web clicks (19) over 28 days produce 0 tracked leads; intake or conversion path is broken, not an ads problem.",
+        "confidence": "probable",
+        "channel": "GBP"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Investigate and repair GA4 conversion tracking — 0 conversions across 192 sessions and null GHL pipeline confirm a broken intake path.",
+        "text": "Audit GA4 conversion event and GHL web form — 19 GBP web clicks produced 0 tracked conversions; fix tracking before any paid launch.",
         "cites": [
+          "F2",
           "F4"
         ],
-        "monday_item_name": "Fix GA4 Conversion Tracking",
-        "monday_update": "GA4 recorded 0 conversions across 192 sessions in the last 28 days, and the GHL pipeline is returning null — both point to a broken conversion event or intake handoff. Audit the GA4 goal/event setup and confirm GHL form integrations are firing correctly. Success is confirmed when at least 1 tracked conversion appears in GA4 and GHL shows an open opportunity within 7 days of repair. Target completion: 2026-09-04."
+        "monday_item_name": "Fix GA4/GHL conversion tracking",
+        "monday_update": "GBP drove 19 web clicks and 33 direction requests in 28 days, yet GA4 shows 0 conversions and GHL shows no pipeline entries. Audit the GA4 conversion event firing and confirm the GHL intake form is live and properly tagged. Success = at least 1 tracked conversion per 10 web clicks within 7 days of fix. Re-check by 2026-09-04."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GBP trend over next 3 days — Aug 25 spike (11 actions) may be a one-day burst, not a sustained channel lift.",
+        "text": "Watch GBP action trend — Aug 25 spike of 11 actions is a 1-day event; confirm sustained lift before attributing to a profile change.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Watch GBP Aug25 Spike",
-        "monday_update": "GBP recorded 11 actions on Aug 25 against a 45-day daily average of ~2.1, driving the reported 300% 7d delta. The following two days (Aug 26–27) returned to 0 actions, suggesting this was a burst rather than a trend. Monitor GBP daily actions through 2026-08-31; if the 3-day average returns above 4 actions/day, escalate for review. No budget action is warranted until the pattern is confirmed."
+        "monday_item_name": "Watch GBP weekly action trend",
+        "monday_update": "GBP hit 11 actions on 2026-08-25 but dropped to 0 the following two days. This looks like a single-day spike, not a sustained lift. Monitor the next 7-day GBP total; if it holds above 20 actions, investigate what triggered the spike (profile update, review, post). Re-check by 2026-09-04."
       }
     ],
-    "next_check": "2026-08-31"
+    "next_check": "2026-09-04"
   }
 }

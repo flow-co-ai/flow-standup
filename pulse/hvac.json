@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-28T19:02:48.412Z",
+  "generated_at": "2026-08-28T21:21:11.385Z",
   "date": "2026-08-28",
   "slug": "hvac",
   "name": "Quality HVAC by Fibid",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 60,
   "status": "amber",
-  "verdict": "Google Ads drove all $1,110.70 in spend over 28 days with 12 conversions, but a 50.52% week-over-week spend drop and zero tracked leads flagged in the system signal a likely conversion tracking disconnect that needs urgent review. GBP activity also fell 71.11% week-over-week, suggesting overall campaign momentum is slowing heading into the current period.",
+  "verdict": "Google Ads drove all $1,110.70 in spend over 28 days with 12 conversions, but a 50.52% week-over-week spend drop and zero tracked leads flagged in the system signal a likely conversion tracking gap rather than a true lead drought. GBP engagement also fell sharply by 71.11% week-over-week, suggesting overall demand softening that warrants an immediate audit of lead form and call tracking setup.",
   "windsor": {
     "totals": {
       "spend": 1110.7,
@@ -585,77 +585,77 @@
     "history_line": "Financing links live on both sites · FB ad manager access reinstated · Missed Call Automation QA done · Four HVAC videos posted"
   },
   "performance": {
-    "generated_at": "2026-08-28T19:07:40.695Z",
+    "generated_at": "2026-08-28T21:23:22.796Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Leads are a tracking ghost — GHL shows 46 opps but system reads zero.",
+    "verdict": "Leads are a measurement ghost — GHL has 46 opps, Google has 12 conversions, system shows zero.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "lead_drought flag is a tracking disconnect: 0 leads recorded over 28 days, yet GHL shows 46 opportunities created and 17 won. Ads are converting; the pixel is not.",
+        "text": "28-day leads tracked = 0, but GHL shows 46 opportunities created and Google Ads logged 12 conversions — attribution is broken, not demand.",
         "confidence": "confirmed",
-        "channel": "Google Ads"
+        "channel": "cross-channel"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Booking bot battle-test was due 2026-07-31 — no completed event recorded. Speed-to-lead automations unverified; Vivian (dispatch) left 7/7, intake seat may be empty.",
+        "text": "Booking bot battle-test was due 2026-07-31 — no completion event recorded; speed-to-lead automations remain unvalidated with intake seat potentially empty since 7/7.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Google spend is highly erratic: 0-spend days on 8/2–8/4, 8/6, 8/22, averaging only $20.82/day in the last 7d vs $41+/day in the prior 7d — a 50.52% drop with no Meta offset.",
+        "text": "Spend is wildly erratic: 7 zero-spend days in 45, ranging $0–$130.18/day; 3-day signal (Aug 25–27: $15.83, $10.57, $19.61) vs prior 3 (Aug 22–24: $0, $62.48, $16.46) shows low but inconsistent pacing well below the ~$46/day 28-day average.",
         "confidence": "confirmed",
-        "channel": "Google Ads"
+        "channel": "google_ads"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions collapsed to 0 on the last 3 days (8/25–8/27) vs an average of 5.3/day over the prior 14 days — a 71.11% 7d drop that tracks alongside spend cuts, not independently.",
-        "confidence": "probable",
-        "channel": "GBP"
+        "text": "GBP actions collapsed to 0 for Aug 25–27 (last 3 days), vs 8 on Aug 24 and a 28-day total of 109 — consistent with Windsor data lag flagged in SOW, but worth watching.",
+        "confidence": "hypothesis",
+        "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "Search clicks rose 41.67% week-over-week (5 clicks on 8/24, 5 on 8/25, 4 on 8/26) while GA4 sessions remain 0 across the entire 45-day series — GA4 is not firing at all.",
-        "confidence": "confirmed",
-        "channel": "Organic"
+        "text": "Search clicks rose 41.67% week-over-week (7d delta), with Aug 23–26 showing 1, 5, 5, 4 clicks — organic intent is intact while paid lead capture is broken.",
+        "confidence": "probable",
+        "channel": "search"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit and repair Google Ads conversion tracking — 0 leads recorded vs 12 conversions and 46 GHL opps confirm a pixel disconnect.",
+        "text": "Audit GHL lead source mapping and Google Ads conversion tag — 12 conversions recorded but 0 attributed; fix before any budget move.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Fix Google Ads conversion pixel",
-        "monday_update": "Google Ads reports 12 conversions and GHL shows 46 opportunities created over 28 days, yet the lead counter reads zero — the conversion tag is firing but not syncing to the lead tracking layer. Audit the Google Ads tag implementation (likely a missing or misconfigured GHL webhook/form-submit event). Success is confirmed when daily leads in the system match GHL opportunity creation within ±2 units. Resolve by 2026-09-01."
+        "monday_item_name": "Fix Lead Attribution Pipeline",
+        "monday_update": "Google Ads logged 12 conversions and GHL shows 46 opportunities created over 28 days, yet the performance system reads zero tracked leads — attribution is broken somewhere between the conversion tag and GHL source mapping. Pull the Google Ads conversion action, check the tag fires on thank-you/call events, and reconcile GHL contact sources against the 46 opp records. Success = leads_7d_pct returns a real number and GHL source breakdown shows a Google or paid channel row. Target: resolved by 2026-09-01."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Confirm who owns GHL intake seat after Vivian's 7/7 departure and complete the booking bot battle-test overdue since 2026-07-31.",
+        "text": "Confirm who owns intake in GHL since Vivian left 7/7 — speed-to-lead automations may be routing to an empty seat.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "GHL intake owner + bot test",
-        "monday_update": "Vivian left 7/7 and the speed-to-lead automations point at an unconfirmed seat; the booking bot battle-test required by 2026-07-31 has no completion record. Confirm with Xavier or Nader who now owns the GHL inbox and after-hours coverage, then run the battle-test checklist end-to-end. Success is a named owner with active GHL login and a passed bot test logged in the SOW sheet. Complete by 2026-09-03."
+        "monday_item_name": "Confirm GHL Intake Owner",
+        "monday_update": "Vivian (dispatch) left 7/7 and the booking bot battle-test due 7/31 has no completion event. Speed-to-lead automations are pointing at a seat that may be unmanned, meaning inbound leads from the 46 GHL opportunities could be going unworked. Confirm the active GHL login owner with Xavier or Nader, verify after-hours coverage is routed correctly, and run the booking bot battle-test end-to-end. Success = named owner confirmed in writing and bot test passed. Target: 2026-09-01."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch daily Google spend stabilise above $35/day for 3 consecutive days before any budget increase — erratic $0 days block scaling gate.",
+        "text": "Watch GBP actions — 3 consecutive zero days (Aug 25–27) may be Windsor lag; re-check natively on 2026-08-31.",
         "cites": [
-          "F3"
+          "F4"
         ],
-        "monday_item_name": "Watch Google spend stability",
-        "monday_update": "Google spend averaged only $20.82/day in the last 7 days with five zero-spend days in the 45-day series. The SOW scale-back-up gate explicitly prohibits raising budgets until the intake seat and tracking issues are resolved. Monitor daily spend; if three consecutive days each exceed $35 and F1/F2 fixes are confirmed, bring the budget increase recommendation to Sohib for approval. Re-check 2026-09-01."
+        "monday_item_name": "Watch GBP Aug 25–27 Drop",
+        "monday_update": "GBP actions hit zero for Aug 25, 26, and 27 after registering 8 on Aug 24 and 109 over 28 days total. The SOW flags Windsor data lag on the last 2–3 days of any GBP window, so this may not be a real drop. Pull the native GBP Insights dashboard on 2026-08-31 to confirm. Success = native GBP shows actions consistent with the prior week average (~4–5/day); if native also reads zero for 3+ days, escalate as a separate finding."
       }
     ],
     "next_check": "2026-09-01"
