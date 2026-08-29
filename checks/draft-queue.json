@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-28T19:07:13.150222+00:00",
+  "updatedAt": "2026-08-29T18:15:52.594136+00:00",
   "items": [
     {
       "id": "websEo-pricing-question",
@@ -1043,6 +1043,184 @@
       "nullReason": null,
       "priority": 2,
       "createdAt": "2026-08-28T19:07:13.150222+00:00"
+    },
+    {
+      "id": "maadilaw-minor-hipaa-conditional",
+      "title": "Minor HIPAA Conditional",
+      "note": "New at go live 8/28. Audited all four boards: Document Handling on CRM has the upload form, text line auto attach, DocuSign fallback and Document Automation subitems, none of which cover the minor and parent case. Drafted as a subitem under Document Handling.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Maadi Law, 8/28",
+      "payload": {
+        "mode": "create_subitem",
+        "boardId": "18418241405",
+        "parentItemId": "12471736810",
+        "itemName": "Minor HIPAA Conditional",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> At the Maadi Law GHL go live session on 8/28, Tracy walked through document sending on live contacts and hit a case where the client is a minor. The standard HIPAA agreement automation currently fires on every contact moved into Collect Documents, which is wrong for a minor because the parent or guardian is the one who signs, and the Northwestern Medicine HIPAA form has to go out separately from the rest of the pack.</li><li><strong>Add</strong> a minor tag and a parent tag on the contact record, and gate the automatic HIPAA agreement send on the minor tag being absent. A contact tagged minor should fall through to the manual path instead of receiving the adult agreement.</li><li><strong>Build</strong> a minor specific HIPAA template that prefills both the minor's details and the parent or guardian's details, so Tracy is not retyping them each time.</li><li><strong>Keep</strong> the manual Collect Documents route available so the Northwestern Medicine HIPAA and the representation agreement can be sent individually when the automation is suppressed.</li><li><strong>Walk Tracy through</strong> sending a contract and managing signatures inside GHL, including the minor template, during one of the weekend support sessions Sohib offered.</li><li><strong>Dependencies and constraints.</strong> Rides on the Document Automation build already open on this workstream. The tag names have to match the wider tagging scheme being tidied up for rejected, disengaged and qualified leads, so agree the exact strings first. <strong>Do not</strong> change the trigger on the existing adult HIPAA automation while doing this.</li><li><strong>Done.</strong> A contact tagged minor never receives the standard HIPAA agreement automatically, the minor template with parent and minor fields can be sent manually from Collect Documents, and Tracy has sent one through end to end without help.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 1,
+      "createdAt": "2026-08-29T18:15:52.594090+00:00"
+    },
+    {
+      "id": "maadilaw-intake-form-fields",
+      "title": "Intake Form Fields",
+      "note": "New at go live 8/28. Audited all four boards. Clio Migration has an Audit Grow intake fields subitem but that is Done and covers Clio Grow, not the GHL intake form Tracy is now using. Drafted as a subitem under Clio Migration since the GHL form is the Grow replacement.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Maadi Law, 8/28",
+      "payload": {
+        "mode": "create_subitem",
+        "boardId": "18418241405",
+        "parentItemId": "12471734017",
+        "itemName": "Intake Form Fields",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> During the 8/28 go live session Tracy created contacts and opportunities live from the GHL intake form and hit several field problems that stop her entering real leads. Email is a required field today, but a large share of the phone leads never give one. There is no way to record what kind of record a contact is, which matters for a personal injury practice where treaters and insurers sit in the same database as leads. The form also still carries a ready to sign checkbox left over from the testing phase.</li><li><strong>Make</strong> phone the only required field and email optional, so a caller with no email address can still be saved as a contact and an opportunity.</li><li><strong>Add</strong> a contact type dropdown with lead, customer, treater, insurance and health insurance as the options.</li><li><strong>Remove</strong> the ready to sign checkbox and any other leftover test fields from the form.</li><li><strong>Add</strong> language tags using the shorthand agreed in the session, AR for Arabic and SP for Spanish, so bilingual leads can be routed to a case manager who speaks the language.</li><li><strong>Dependencies and constraints.</strong> The contact type values and the language tag strings are read by the case manager routing and welcome message automations, so lock the exact strings before building either side. No dependency on the Clio Manage sync work, this can start immediately.</li><li><strong>Done.</strong> Tracy can create a contact from the intake form with no email address, pick a contact type from the dropdown, and apply an AR or SP language tag, with no test fields left on the form.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-29T18:15:52.594090+00:00"
+    },
+    {
+      "id": "maadilaw-golive-automation-triggers",
+      "title": "Speed To Lead",
+      "note": "Audited all four boards. Speed To Lead on CRM already holds the missed call text, after hours reply and follow up cadence subitems, so this goes on as an update rather than a new item. The 8/28 session found the root cause of the duplicate messaging and settled the after hours window.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Maadi Law, 8/28",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12471754243",
+        "itemName": "Speed To Lead",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> The 8/28 go live session found the root cause of the duplicate and mistimed messages Tracy has been seeing. Clio Grow was still syncing contacts into GHL, so a single lead landed twice and fired the follow up automations twice. Grow sync has now been disabled. Separately, calls placed over Zoom never touched GHL, so the missed call and unanswered lead automations had no call event to trigger from and looked broken when they were simply never fired.</li><li><strong>Route</strong> every outbound call to a lead through GHL rather than Zoom or a personal line, so the call logs and the automations have something to fire on. Confirmed with Tracy in the session and she is working this way from now on.</li><li><strong>Retrigger</strong> the missed call and unanswered lead automations off pipeline stage rather than raw call events. A lead who does not answer moves to attempted, and a reply moves the lead to contact, which is what the follow up sequences should key off.</li><li><strong>Send</strong> a second missed call text five minutes after the first to widen the engagement window before the lead goes cold.</li><li><strong>Set</strong> the after hours window to 7am until 7pm CST, with the evening cutoff moved to 7pm to match Tracy's actual day. Outside that window the lead gets an automated office closed text and a callback task is created for the next business day.</li><li><strong>Delete</strong> the draft tasks left over from the testing phase so Tracy's task list only shows real callbacks.</li><li><strong>Dependencies and constraints.</strong> Confirming the GHL sub account timezone is a prerequisite for all of the timing work. <strong>Do not</strong> test the after hours behaviour before the sub account timezone is verified, because a wrong timezone makes every one of these automations fire at the wrong local hour and looks like a logic bug. Clio Grow sync must stay off.</li><li><strong>Done.</strong> A test lead created outside business hours gets exactly one office closed text and one callback task for the next morning, and an unanswered call placed from GHL moves the lead to attempted and starts the follow up cadence with no duplicate messages.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 1,
+      "createdAt": "2026-08-29T18:15:52.594090+00:00"
+    },
+    {
+      "id": "maadilaw-case-rejected-path",
+      "title": "One click Not Qualified action and auto disqualify path",
+      "note": "Audited all four boards. Speed To Lead already has the One click Not Qualified subitem on CRM, so the 8/28 detail on separating rejected from junk and automating the rejection email goes on as an update to it rather than a new item.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Maadi Law, 8/28",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12471699430",
+        "itemName": "One click Not Qualified action and auto disqualify path",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> At the 8/28 go live Tracy was rejecting cases by hand and there is no way to tell a rejected case apart from junk. Both land in the same place today, which makes the pipeline unreadable and, worse, leaves rejected leads still receiving the follow up sequences.</li><li><strong>Add</strong> a case rejected tag that is distinct from junk, and wire the disqualification automation so applying it halts every active follow up sequence on that contact.</li><li><strong>Add</strong> a junk stage or folder so spam and marketing calls are filtered out of the working pipeline entirely rather than sitting alongside real rejections.</li><li><strong>Automate</strong> the rejection email. Tracy is sending the template she uses today to Sohib and Ahmed Memon so it can be built into the sequence instead of typed each time.</li><li><strong>Simplify</strong> the surrounding tagging so rejected, disengaged and qualified are three clear states that do not overlap, which is what makes the disqualify conditions readable.</li><li><strong>Dependencies and constraints.</strong> Waiting on Tracy at Maadi Law for the rejection email template before the email half can be finished. The tag strings must match the contact type values chosen for the intake form so the automation conditions stay consistent across the build. The tagging and disqualify work can proceed now without the template.</li><li><strong>Done.</strong> Marking a case rejected applies the case rejected tag, stops every active follow up sequence for that contact, and sends the approved rejection email exactly once.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
+        "blocked": false,
+        "needsNaz": true
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-29T18:15:52.594090+00:00"
+    },
+    {
+      "id": "maadilaw-handoff-welcome-languages",
+      "title": "Auto welcome text from case manager on handoff",
+      "note": "Audited all four boards. Case Manager Routing on CRM already carries the Auto welcome text subitem, so the trilingual requirement and the post signature trigger from 8/28 go on as an update to it.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Maadi Law, 8/28",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12471715862",
+        "itemName": "Auto welcome text from case manager on handoff",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> At the 8/28 go live this message was identified as the first personal touch a client gets after signing, and Maadi Law's caseload is trilingual. Tracy asked for it in English, Arabic and Spanish. The automation today has one version and fires on handoff generally, which risks welcoming somebody whose case has not actually been taken yet.</li><li><strong>Build</strong> three versions of the case manager welcome message in English, Arabic and Spanish, selected by the AR or SP language tag on the contact, with English as the fallback when there is no tag.</li><li><strong>Move</strong> the trigger to fire after the representation agreement is signed rather than at handoff, so no client is welcomed before the case is taken.</li><li><strong>Rewrite</strong> the copy so it reads naturally and closes open ended, which is what Tracy reports actually gets replies out of clients rather than a closed confirmation line.</li><li><strong>Dependencies and constraints.</strong> Waiting on Tracy at Maadi Law for the three approved templates. Depends on the AR and SP language tags existing on the contact record, which is being built with the intake form fields. <strong>Do not</strong> let this send before the agreement is signed.</li><li><strong>Done.</strong> A signed client tagged AR receives the Arabic case manager welcome once, an untagged signed client receives the English version once, and no client receives it more than once or before signing.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
+        "blocked": false,
+        "needsNaz": true
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-29T18:15:52.594090+00:00"
+    },
+    {
+      "id": "maadilaw-tracy-notifications",
+      "title": "Verify notifications fire to correct owner",
+      "note": "Audited all four boards. Stack Test on CRM already has the Verify notifications subitem, which is the right home for the 8/28 finding plus the two remaining alert triggers.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Maadi Law, 8/28",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12471748357",
+        "itemName": "Verify notifications fire to correct owner",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> Going into the 8/28 session Tracy was not being alerted to lead activity and it looked like a notification routing fault. It was traced to calls and texts happening outside GHL, so there was no event to notify on. With all communication now routed through GHL, notifications reach her correctly. That half is verified. What is left is proactive alerting on events she is not already looking at.</li><li><strong>Build</strong> notification triggers for a new opportunity being created and for an inbound client reply, so Tracy is not manually watching the conversations inbox to catch either.</li><li><strong>Get</strong> Tracy signed in to the GHL mobile app so the alerts actually reach her away from the desk, which is where most of the after hours leads land.</li><li><strong>Dependencies and constraints.</strong> Depends on contact owner assignment being correct, which is tracked separately on Case Manager Routing. Nothing else blocks this. Note this subitem is part of the stack test gating ad spend sign off, and the lead campaigns are turning on over the weekend of 8/29, so it wants closing quickly.</li><li><strong>Done.</strong> Creating a test opportunity and sending a test inbound reply each produce a notification to Tracy on both desktop and mobile within a minute.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-29T18:15:52.594090+00:00"
+    },
+    {
+      "id": "maadilaw-main-line-transition",
+      "title": "Provision tracking number per channel \u26d4",
+      "note": "Audited all four boards. Tracking Compliance on CRM owns the per channel numbers, so the caller ID and main line porting question from 8/28 goes on as an update there. Blocked on Maadi Law for the decision, flagged for Naz.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Maadi Law, 8/28",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12471749974",
+        "itemName": "Provision tracking number per channel \u26d4",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> Two number questions came out of the 8/28 go live. Outbound calls placed from the GHL number are at risk of being labelled as spam on the recipient's handset, which kills answer rates on exactly the callbacks the speed to lead work is built around. Separately there is an open question about whether Maadi Law's main firm line moves into GHL entirely.</li><li><strong>Set up</strong> caller ID and branded calling on the GHL outbound number so calls display as the firm rather than as an unknown or suspected spam number.</li><li><strong>Record</strong> the interim routing rule agreed in the session: leads are contacted from the GHL number until the case is signed, and the firm's main number is used after that point.</li><li><strong>Close out</strong> the main line decision with Sharif Maadi. Tracy has already raised it with him. Naz owns the conversation, nobody on the build side should chase the client directly.</li><li><strong>Dependencies and constraints.</strong> Blocked on Maadi Law for the porting decision. That decision also drives the A2P 10DLC registration and the per channel tracking numbers on this same workstream, so <strong>do not</strong> register numbers that a port would immediately throw away.</li><li><strong>Done.</strong> Outbound GHL calls show a branded verified caller ID, and there is a written decision from Sharif on whether the main business line ports into GHL or stays where it is.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
+        "blocked": true,
+        "needsNaz": true
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-08-29T18:15:52.594090+00:00"
+    },
+    {
+      "id": "maadilaw-meta-weekend-launch",
+      "title": "Meta",
+      "note": "Audited all four boards. Meta on Ads already holds Campaign Setup, Instant form Questions and Payment Method, so the weekend launch and live monitoring plan from 8/28 goes on as an update to the Meta item rather than a new one.",
+      "status": "ready",
+      "board": "Ads",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Maadi Law, 8/28",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12471071784",
+        "itemName": "Meta",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> At the 8/28 Maadi Law go live it was agreed the lead campaigns turn on over the weekend of 8/29 and the team watches lead handling live rather than waiting for the next weekly check. This is the first real traffic through the new GHL intake, so the paid side and the CRM side are being monitored together and problems are expected to surface in the first hours rather than the first week.</li><li><strong>Turn on</strong> the lead campaigns over the weekend and monitor delivery, cost per lead and lead quality live rather than on the usual reporting cadence.</li><li><strong>Verify</strong> that every lead form submission lands in GHL as a contact carrying the correct lead source tag. The Meta and Instagram lead form connections expired after a recent password reset and have only just been restored, so this is the first weekend they carry real volume.</li><li><strong>Check</strong> that geo targeting is holding to Illinois. Tracy is asking inbound callers where they are calling from, so the targeting can be checked against what leads actually say rather than against the platform's own reporting.</li><li><strong>Dependencies and constraints.</strong> Depends on the GHL intake automations being stable, which is being worked through the same weekend. Sign off to Naz before ad spend turns on is tracked on the Stack Test workstream on CRM and still applies. <strong>Do not</strong> raise budgets during the first weekend, the point of the window is to catch handling faults, not to scale.</li><li><strong>Done.</strong> Campaigns are live, every lead form submission from the launch weekend appears in GHL with a lead source tag, and no out of state leads appear in the first weekend's volume.</li></ul><p><a class=\"mention\" data-mention-id=\"102221064\" data-mention-type=\"User\">@Khurram Jamil</a> <a class=\"mention\" data-mention-id=\"102221061\" data-mention-type=\"User\">@Ads Team</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 1,
+      "createdAt": "2026-08-29T18:15:52.594090+00:00"
     }
   ]
 }
