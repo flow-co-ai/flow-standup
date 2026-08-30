@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-29T15:26:53.685Z",
-  "date": "2026-08-29",
+  "generated_at": "2026-08-30T15:11:21.052Z",
+  "date": "2026-08-30",
   "slug": "steel-forte",
   "name": "Forte Metals",
   "type": "leadgen",
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Forte Metals saw no paid activity across Meta or Google Ads in the last 28 days, making Google Business Profile the sole lead source with 77 total actions (9 calls, 45 directions, 23 web clicks). However, GBP engagement dropped 45.83% over the past 7 days, suggesting a pullback in local search visibility or demand that warrants close monitoring.",
+  "verdict": "Forte Metals saw zero paid spend and leads across Meta and Google Ads in the last 28 days, suggesting campaigns are paused or inactive. The biggest movement is a 68.97% drop in GBP actions week-over-week, likely tied to reduced organic search visibility or seasonal demand softening, while the 79 total GBP actions (including 9 calls and 47 directions) show some baseline local interest still exists.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,24 +25,24 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 77,
+          "actions": 79,
           "calls": 9,
-          "directions": 45,
+          "directions": 47,
           "web_clicks": 23
         }
       }
     },
     "organic": {
-      "gbp_actions": 77,
+      "gbp_actions": 79,
       "ig_reach": 0
     },
     "top_campaign": null,
     "search": {
-      "clicks": 31,
+      "clicks": 34,
       "impressions": 1878
     },
     "latest_day": {
-      "date": "2026-08-28",
+      "date": "2026-08-29",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -60,8 +60,8 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -45.83,
-      "sc_7d_pct": 116.67,
+      "gbp_7d_pct": -68.97,
+      "sc_7d_pct": 220,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
       "spend_per_day_7d": 0
@@ -69,7 +69,6 @@
     "flags": [],
     "series": {
       "dates": [
-        "2026-08-01",
         "2026-08-02",
         "2026-08-03",
         "2026-08-04",
@@ -96,7 +95,8 @@
         "2026-08-25",
         "2026-08-26",
         "2026-08-27",
-        "2026-08-28"
+        "2026-08-28",
+        "2026-08-29"
       ],
       "spend": [
         0,
@@ -219,7 +219,6 @@
         0
       ],
       "gbp_actions": [
-        0,
         4,
         0,
         8,
@@ -244,6 +243,7 @@
         0,
         2,
         3,
+        2,
         2,
         0,
         0
@@ -282,7 +282,6 @@
         0,
         0,
         0,
-        0,
         1,
         0,
         1,
@@ -305,7 +304,8 @@
         2,
         5,
         4,
-        0,
+        1,
+        2,
         0
       ],
       "ga4_sessions": [
@@ -409,81 +409,80 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-29T15:32:50.310Z",
+    "generated_at": "2026-08-30T15:17:10.176Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP-only lead source now fading; paid channels fully dark for 28 days.",
+    "verdict": "Paid is fully dark; only GBP organic and 3 overdue CRM milestones need action.",
     "findings": [
       {
         "id": "F1",
-        "priority": 1,
-        "text": "Zero paid spend across all 28 days — Meta and Google Ads completely dark; 100% of activity falls on organic GBP (77 actions).",
-        "confidence": "confirmed",
-        "channel": "meta/google_ads"
-      },
-      {
-        "id": "F2",
         "priority": 2,
-        "text": "OVERDUE: 1st CRM Directives (Jul 7), Tom call list (Jul 28), and dedup workbook + 126 accounts (Jul 31) all unconfirmed complete — 3 milestones past due.",
+        "text": "OVERDUE: 1st Directives (Jul 7), Tom call list (Jul 28), and dedup workbook + 126 accounts (Jul 31) — 3 CRM milestones unconfirmed complete, up to 54 days overdue.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
+        "id": "F2",
+        "priority": 1,
+        "text": "Zero paid spend and zero leads across Meta and Google for all 28 days in window — campaigns are fully dark, no efficiency to measure.",
+        "confidence": "confirmed",
+        "channel": "meta"
+      },
+      {
         "id": "F3",
-        "priority": 2,
-        "text": "GBP actions dropped 45.83% week-over-week; last 3 days (Aug 26-28) summed 2 actions vs 9 in the prior 3 days (Aug 23-25) — confirmed softening trend.",
+        "priority": 3,
+        "text": "GBP actions collapsed -68.97% week-over-week: last 3 days (Aug 27–29) summed 2 actions vs prior 3 days (Aug 24–26) summing 9 — a confirmed 3-day downtrend.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Search clicks surged 116.67% in 7d (13 clicks in last 7d vs ~6 prior), yet GBP actions fell — intent exists but GBP listing is not converting that intent.",
+        "text": "Search clicks rose +220% week-over-week (34 clicks, 1,878 impressions over 28 days) — organic search interest exists but no paid campaign is present to capture it.",
         "confidence": "probable",
-        "channel": "search"
+        "channel": "google_ads"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GA4 sessions read zero across all 28 days — tracking is either broken or not installed; directional data is entirely absent for web behaviour.",
+        "text": "GHL pipeline data is null and GA4 sessions are zero across all 28 days — intake and web tracking are dark; lead data integrity cannot be verified.",
         "confidence": "confirmed",
-        "channel": "ga4"
+        "channel": "SOW"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit GBP listing completeness and recent Q&A/posts to close the search-click-to-action conversion gap flagged in F4.",
+        "text": "Escalate 3 overdue CRM milestones to Ahmed/Dev team immediately; confirm completion status in writing.",
         "cites": [
-          "F3",
-          "F4"
+          "F1"
         ],
-        "monday_item_name": "GBP Listing Conversion Fix",
-        "monday_update": "GBP actions fell 45.83% week-over-week while search clicks rose 116.67% — searchers are finding Forte but not acting. Review the GBP listing for missing hours, photos, or posts that may suppress call/direction actions, and publish at least one fresh post or offer this week. Success check: GBP actions return to ≥5/day average across a 3-day window by 2026-09-05."
+        "monday_item_name": "Resolve 3 Overdue CRM Milestones",
+        "monday_update": "Three CRM milestones are unconfirmed complete: 1st Directives (Jul 7, 54 days overdue), Tom call list (Jul 28, 33 days overdue), and dedup workbook + 126 accounts (Jul 31, 30 days overdue). Ahmed and Dev team must confirm completion status or provide a new delivery date in writing by Sep 3. Success check: all three items marked complete with evidence (rollback files, merge workbook posted to Monday board) by Sep 6."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Verify or install GA4 tracking — zero sessions for 28 days means web behaviour is completely blind; confirm tag fires on Forte site.",
+        "text": "Confirm whether paid campaigns are intentionally paused or require reactivation; verify GHL and GA4 tracking are live before any spend resumes.",
         "cites": [
+          "F2",
           "F5"
         ],
-        "monday_item_name": "Forte GA4 Tracking Fix",
-        "monday_update": "GA4 sessions have read zero for every day in the 28-day window — this is a confirmed tracking gap, not an absence of traffic. Dev team should verify the GA4 tag is installed and firing on the Forte Metals website. Success check: at least 1 session recorded within 48 hours of tag fix, confirmed in GA4 real-time view by 2026-09-01."
+        "monday_item_name": "Confirm Paid Status & Tracking",
+        "monday_update": "Meta and Google Ads have shown zero spend across all 28 days (Aug 2–29); GHL pipeline and GA4 sessions are also null, meaning no lead intake or web data is being captured. Sohib to confirm with Nabil whether campaigns are intentionally paused or if reactivation is required. Tracking (GHL + GA4) must be verified live before any budget is deployed. Confirm status by Sep 3."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP 3-day action trend; if ≤2 actions/day persists through Sep 1, escalate to paid reactivation discussion with Sohib.",
+        "text": "Watch GBP actions: 3-day total of 2 (Aug 27–29) vs 9 prior 3 days — re-check Sep 3 for continued decline.",
         "cites": [
-          "F1",
           "F3"
         ],
-        "monday_item_name": "Forte Paid Reactivation Watch",
-        "monday_update": "Forte Metals has run zero paid spend for 28 consecutive days and is entirely dependent on GBP, which just posted a 45.83% weekly drop. If the 3-day GBP action average remains at or below 2 actions/day through 2026-09-01, bring a paid reactivation recommendation to Sohib for approval. No budget is moved until that threshold is confirmed and Sohib signs off."
+        "monday_item_name": "Watch GBP Action Decline",
+        "monday_update": "GBP actions dropped -68.97% week-over-week, and the last 3 days (Aug 27–29) produced only 2 actions versus 9 in the prior 3 days (Aug 24–26). No paid amplification is running to compensate. Monitor GBP actions daily through Sep 3; if the 3-day total remains below 5, escalate to assess GBP profile health or content freshness."
       }
     ],
-    "next_check": "2026-09-01"
+    "next_check": "2026-09-03"
   }
 }
