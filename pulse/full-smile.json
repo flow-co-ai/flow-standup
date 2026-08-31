@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T15:53:16.778Z",
+  "generated_at": "2026-08-31T17:48:53.897Z",
   "date": "2026-08-31",
   "slug": "full-smile",
   "name": "Full Smile",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, indicating campaigns are inactive or paused. GBP activity is the only source of engagement but is declining sharply, down 76.81% over the last 7 days, likely driven by reduced organic visibility or listing engagement without paid support.",
+  "verdict": "With $0 in spend and 0 leads across Meta and Google Ads over the past 28 days, paid channels are fully inactive, making GBP the only source of engagement (196 total actions, including 57 calls and 92 direction requests). The biggest concern is GBP activity dropping 76.81% over the last 7 days versus the prior 7 days, likely driven by reduced profile visibility or seasonal search demand, and this warrants immediate attention given it is the account's sole lead-generating channel.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -589,77 +589,79 @@
     "history_line": "Full Smile website launched live · OpenDental Appt Not Syncing to GHL marked Done · Digital Ocean Saturday appointments fix marked Done"
   },
   "performance": {
-    "generated_at": "2026-08-31T15:57:59.005Z",
+    "generated_at": "2026-08-31T17:50:34.381Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "No paid activity in 28 days; organic collapse accelerating — revenue clock running.",
+    "verdict": "Paid ads dead; GBP collapsing; 3 overdue milestones break the prove-it scoreboard.",
     "findings": [
       {
         "id": "F1",
-        "priority": 1,
-        "text": "Zero paid spend across all 28 days: Meta $0, Google $0. No leads generated. August prove-it month is passing with no paid engine running.",
+        "priority": 2,
+        "text": "Phone-match attribution gap (due 2026-08-07) still open — 57 GBP calls in 28 days cannot be tied to any lead record without it.",
         "confidence": "confirmed",
-        "channel": "meta, google_ads"
+        "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Overdue: Phone-match attribution gap (due 2026-08-07) still open — without it, leads arriving by phone cannot be counted toward the client's scoreboard.",
+        "text": "Sync + contact cleanup (due 2026-08-14) still open — 243 GHL contacts present but 0 appointments logged and 0 opps won, breaking the lead-to-chair scoreboard.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Overdue: Sync items + contact cleanup (due 2026-08-14) not marked complete — GHL shows 96 opps created, 0 won, 0 appointments, raising data-integrity risk.",
+        "text": "Renewal milestone (2026-07-23) not confirmed complete — prove-it month is live but account-level confirmation is missing from the record.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions collapsed to 0 on 3 of the last 3 days (Aug 28–30), vs a rolling average near 7–10. 3-day signal confirms organic freefall, not noise.",
+        "text": "GBP actions crashed 76.81% week-over-week; last 3 days (Aug 28–30) show 8, 0, 0 — a confirmed 3-day signal, not seasonal noise.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "GBP"
       },
       {
         "id": "F5",
-        "priority": 4,
-        "text": "GA4 sessions averaged only 5 over the last 3 days (Aug 28–30) vs a 45-day mean near 11 — search clicks also hit 0 for two of those days, reinforcing site visibility drop.",
+        "priority": 3,
+        "text": "Search clicks fell 28.57% week-over-week and GA4 sessions dropped 37%; last 3 days average 5 sessions vs prior 3-day average of ~9 — organic visibility eroding in parallel with GBP.",
         "confidence": "probable",
-        "channel": "ga4, search"
+        "channel": "Organic"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Immediately confirm why paid campaigns are at $0 spend and reactivate or flag for Sohib — every day costs prove-it month runway.",
+        "text": "Close phone-match attribution gap immediately; 57 unattributed GBP calls make the prove-it scoreboard unreadable.",
         "cites": [
-          "F1"
+          "F1",
+          "F4"
         ],
-        "monday_item_name": "Reactivate Paid Campaigns Now",
-        "monday_update": "Meta and Google Ads have recorded $0 spend across all 28 days through Aug 30 — no leads have been generated during Full Smile's prove-it month. Confirm whether campaigns are intentionally paused or broken, then reactivate or escalate to Sohib immediately. Success check: at least $1 of tracked spend and ≥1 lead form submission confirmed live by 2026-09-03. If campaigns cannot reactivate by Sep 2, Sohib must be informed same day."
+        "monday_item_name": "Fix Phone-Match Attribution Gap",
+        "monday_update": "The attribution gap (due 2026-08-07) is confirmed open while GBP has logged 57 calls and 92 direction requests in 28 days — none traceable to a lead record. Close the phone-match gap so every inbound call from GBP is matched to a GHL contact and a pipeline opportunity. Success check: zero unmatched GBP calls in the next weekly sync audit. Must be resolved by 2026-09-03 — any later and August's prove-it scoreboard cannot be closed."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Close the phone-match attribution gap (overdue Aug 7) — without it, phone leads are invisible on the client's scoreboard.",
+        "text": "Complete sync + contact cleanup; 0 appointments in GHL against 243 contacts signals an intake leak, not an ads failure.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Close Phone Attribution Gap",
-        "monday_update": "The phone-match attribution deliverable was due 2026-08-07 and remains open. Without it, inbound calls — which GBP logged 57 of in 28 days — cannot be credited to any campaign and are invisible on the client's lead-to-patient scoreboard. Assign to Attribution team for completion by 2026-09-03. Success check: call source is captured and tagged in GHL for all new inbound calls from that date forward."
+        "monday_item_name": "Complete GHL Sync & Cleanup",
+        "monday_update": "The sync and contact cleanup (due 2026-08-14) is still open; GHL shows 243 contacts, 96 opportunities created, 0 appointments, and 0 won — the pipeline is broken at the intake stage, not the ads stage. Complete the sync repair and patient-vs-lead tagging so appointments begin populating against the existing contact base. Success check: at least 1 verified appointment record visible in GHL by 2026-09-07, confirming the sync path is live end-to-end."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions over next 3 days; 0 actions on Aug 28–30 may signal listing suppression — re-check Sep 3.",
+        "text": "Watch GBP daily actions for 3 more days; if Aug 31–Sep 2 stay at or near 0, escalate to GBP profile audit.",
         "cites": [
-          "F4"
+          "F4",
+          "F5"
         ],
-        "monday_item_name": "Watch GBP Listing Health",
-        "monday_update": "GBP actions dropped to 0 on Aug 28, 29, and 30 — three consecutive days, which is a confirmed signal rather than noise. The 28-day total of 196 actions (57 calls, 92 directions, 47 web clicks) shows the listing was functioning, making a sudden collapse notable. Monitor GBP Insights daily and check for any listing suspension or ownership flags. Re-check on 2026-09-03; if actions remain at 0, escalate to GBP remediation immediately."
+        "monday_item_name": "Watch GBP Action Recovery",
+        "monday_update": "GBP actions hit 0 on Aug 28, 29, and 30 — a confirmed 3-day collapse from a 28-day total of 196 actions. Search clicks are also down 28.57% and sessions down 37%, suggesting a visibility problem rather than demand seasonality. Do not act on paid channels yet — paid spend is $0 and no campaign is live to shift. Re-check GBP actions on 2026-09-03; if the three-day average remains below 2 actions/day, escalate to a full GBP profile audit (suspensions check, category review, photo/post freshness)."
       }
     ],
     "next_check": "2026-09-03"

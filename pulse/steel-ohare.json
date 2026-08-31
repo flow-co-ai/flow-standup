@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T15:54:26.320Z",
+  "generated_at": "2026-08-31T17:49:41.680Z",
   "date": "2026-08-31",
   "slug": "steel-ohare",
   "name": "O'Hare Precision",
@@ -409,78 +409,78 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-31T16:01:13.810Z",
+    "generated_at": "2026-08-31T17:53:46.313Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP collapsing, paid dark 28 days; CRM delivery overdue gates recovery.",
+    "verdict": "Paid channels fully dark; organic GBP collapsing — revenue pipeline at zero.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "3 overdue CRM milestones (Jul 7, Jul 28, Jul 31) unconfirmed complete; dedup workbook of 447 groups and 126 accounts at risk of blocking Sales-i sync.",
+        "text": "OVERDUE: 3 CRM milestones unresolved since July 7 — 342 stub accounts still block Sales-i sync, killing pipeline visibility.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
+        "priority": 2,
+        "text": "OVERDUE: Tom call list flagged priority July 28 and dedup workbook (447 groups, 126 accounts) delivered July 31 — no completion event recorded for either.",
+        "confidence": "confirmed",
+        "channel": "SOW"
+      },
+      {
+        "id": "F3",
         "priority": 1,
-        "text": "Zero paid spend across Meta and Google Ads for all 28 days in window; CPL is undefined and lead volume is 0 — no efficiency to measure.",
+        "text": "Meta and Google Ads spend is $0 for all 28 days; CPL is undefined — zero paid lead volume for the entire period.",
         "confidence": "confirmed",
         "channel": "paid"
       },
       {
-        "id": "F3",
+        "id": "F4",
         "priority": 2,
-        "text": "GBP actions dropped 54.35% week-over-week; last 3 days (Aug 28–30) summed 1 action vs prior 3 days (Aug 25–27) summing 13 — a confirmed 3-day signal, not noise.",
+        "text": "GBP actions collapsed to near zero in last 3 days (Aug 28–30: 1, 0, 0) vs prior 3 (Aug 25–27: 8, 0, 1) — down from a 28-day total of 188 actions, 54.35% weekly drop confirmed.",
         "confidence": "confirmed",
         "channel": "GBP"
       },
       {
-        "id": "F4",
-        "priority": 3,
-        "text": "Search clicks held flat (sc_7d_pct = 0%, 432 clicks over 28 days) while GBP collapses — divergence suggests profile-specific visibility loss, not a demand drop.",
+        "id": "F5",
+        "priority": 2,
+        "text": "Search Console clicks show 3-day signal of 4, 0 (Aug 29–30) vs prior 3-day avg of ~22 — organic search traffic dropping sharply at month-end.",
         "confidence": "probable",
         "channel": "organic"
-      },
-      {
-        "id": "F5",
-        "priority": 4,
-        "text": "GA4 sessions are 0 for all 45 days in series; this is a data gap (likely disconnected property), not zero web traffic — directional data is missing entirely.",
-        "confidence": "confirmed",
-        "channel": "GA4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit GBP profile for suppressions, missing hours, or category changes causing the 54.35% action drop.",
+        "text": "Escalate 342 stub account reconciliation immediately — Sales-i sync and pipeline data are fully blocked until resolved.",
         "cites": [
-          "F3",
-          "F4"
+          "F1"
         ],
-        "monday_item_name": "GBP visibility audit fix",
-        "monday_update": "GBP actions fell 54.35% week-over-week and hit 1 total action over Aug 28–30 vs 13 in the prior 3 days. Search clicks remained flat at 432/28 days, pointing to a profile-level issue rather than a demand drop — check for suppression, incorrect hours, category drift, or a missing Q&A flag. Success check: GBP daily actions return above 7/day (the 28-day average) within 7 days of the fix. Re-check by 2026-09-07."
+        "monday_item_name": "Reconcile 342 CRM Stub Accounts",
+        "monday_update": "The 342 stub accounts have no Customer ID match, which means Sales-i cannot sync any activity data to Sugar for these records — the pipeline is blind on all of them. This is a confirmed blocker flagged since July 7. Ahmed to run name-based match against the authoritative customer sheet and post a reconciliation batch with rollback file to the Monday CRM board. Success check: zero stub accounts remaining with no Customer ID by 2026-09-07."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Escalate the 3 overdue CRM milestones (Jul 7, Jul 28, Jul 31) to Ahmed and Sohib; 447-group merge and 342 stub reconciliation are blocking Sales-i sync.",
+        "text": "Execute approved 447-group dedup merge workbook in audited batches — delivery was confirmed July 31 but no merge completion event recorded.",
         "cites": [
-          "F1"
+          "F2"
         ],
-        "monday_item_name": "CRM overdue milestones escalation",
-        "monday_update": "Three CRM milestones are unconfirmed complete as of 2026-08-31: 1st Directives (Jul 7), Tom call list prioritisation (Jul 28), and dedup workbook + 126 accounts delivery (Jul 31). Until the 447-group merge workbook is executed in audited batches and 342 stub accounts are reconciled, Sales-i cannot sync correctly and the inactivity automation is running on dirty data. Success check: Ahmed posts rollback files to the Monday CRM board and confirms milestone closure by 2026-09-07."
+        "monday_item_name": "Execute 447-Group Dedup Merge",
+        "monday_update": "The dedup workbook covering 447 duplicate groups (437 standard merges, 2 partial CID merges, 6 do-not-merge, 2 held for Epicor verification) was delivered July 31 but shows no completed merge event. Dev team to execute in audited batches per the approved workbook, posting rollback files to the Monday CRM board after each batch. Success check: all 437 eligible merges executed and rollback files posted by 2026-09-07."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GA4 data gap — 0 sessions for 45 days indicates a disconnected property; confirm before any paid reactivation decision.",
+        "text": "Watch GBP actions and SC clicks for 3 more days — if both remain at or near zero, profile visibility issue requires investigation.",
         "cites": [
+          "F4",
           "F5"
         ],
-        "monday_item_name": "GA4 property connection check",
-        "monday_update": "GA4 sessions have read 0 for all 45 days in the available series, which is a known possible data gap, not confirmed zero traffic. Before paid channels (Meta or Google Ads) are reactivated, the GA4 property connection must be verified so conversion tracking is reliable. Success check: at least 1 confirmed session recorded in GA4 matching a known site visit. Re-check by 2026-09-03."
+        "monday_item_name": "Watch GBP + SC Drop",
+        "monday_update": "GBP actions hit 0 on Aug 29 and Aug 30, and SC clicks dropped to 4 and 0 on the same days, against a 28-day GBP total of 188 actions and a typical daily SC range of 15–30 clicks. This may be a weekend/month-end pattern rather than a structural visibility drop. Re-check on 2026-09-03: if GBP actions and SC clicks have not recovered to prior weekly averages, escalate to a GBP profile audit and SEO review."
       }
     ],
     "next_check": "2026-09-03"

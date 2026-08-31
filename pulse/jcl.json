@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T15:53:40.165Z",
+  "generated_at": "2026-08-31T17:49:14.609Z",
   "date": "2026-08-31",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) show zero spend and zero leads over the past 28 days, suggesting campaigns are paused or inactive. GBP drove 142 total actions including 48 calls and 94 web clicks, though GBP engagement dropped 100% in the last 7 days versus the prior period, likely due to a listing issue or a sudden drop in profile activity worth investigating immediately.",
+  "verdict": "Paid channels (Meta and Google Ads) show zero spend and zero leads over the past 28 days, so organic GBP activity is carrying all engagement with 142 total actions including 48 calls and 94 web clicks. The biggest movement is a 100% drop in GBP actions over the last 7 days, likely driven by a listing issue or a pause in profile activity that cut off what had been the sole source of inbound traffic.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -573,43 +573,43 @@
     "history_line": "Meta pixel set up & test event ran · First Meta ads launched live (8/20) · CROA Relaunch Wave 1 marked Done (8/24)"
   },
   "performance": {
-    "generated_at": "2026-08-31T15:59:06.602Z",
+    "generated_at": "2026-08-31T17:51:42.423Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Campaigns fully dark 28 days; organic holding but GBP just collapsed.",
+    "verdict": "Paid ads fully dark 28 days; GBP now collapsed — organic lifeline severed.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Meta and Google spend = $0 for all 28 days in the series. Zero leads, zero CPL. Campaigns are confirmed off, not underperforming.",
+        "text": "Zero paid spend across all 28 days — Meta and Google both $0 — means the entire lead engine is offline with 0 leads generated.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions collapsed to 0 for 8 consecutive days (Aug 23–30), down from a peak of 19 on Aug 17. -100% delta confirms a listing-level event, not noise.",
+        "text": "GBP actions dropped -100% in the last 7 days; series confirms zero actions for 8 consecutive days (Aug 23–30), down from a peak of 19 on Aug 19.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "SOW extension with Marwan is open and unresolved; engagement lapsed after June. No paid work can resume without a signed contract — this gates all buyer actions.",
+        "text": "Contract extension with Marwan is open and unresolved per SOW; without it the next 3-month scope — and any paid relaunch — has no authorization to proceed.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Search clicks rose +18.92% 7d vs prior 7d (recent days show 43 clicks on Aug 24 and 26), but GBP and Meta are both dark — organic SEO is the only channel generating any signal.",
-        "confidence": "confirmed",
+        "text": "Search clicks rose +18.9% (7d delta) and GA4 sessions held near baseline (~42–64/day last week), signaling organic SEO interest exists but no paid or GBP channel is capturing it.",
+        "confidence": "probable",
         "channel": "google"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 23 contacts and 0 opportunities created in 28 days with 0 paid leads. Contacts likely residual; pipeline is effectively empty and will not self-recover without ads resuming.",
+        "text": "GHL shows 23 contacts but 0 opportunities created and 0 appointments in 28 days — with no paid leads arriving, pipeline is stale and intake cannot be evaluated.",
         "confidence": "confirmed",
         "channel": "ghl"
       }
@@ -618,23 +618,34 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Investigate and restore GBP listing immediately — 8 days of zero actions on a previously active profile signals suspension or critical error.",
+        "text": "Resolve Marwan contract extension immediately — no paid relaunch is authorized until signed.",
         "cites": [
-          "F2"
+          "F3",
+          "F1"
         ],
-        "monday_item_name": "Fix GBP listing outage",
-        "monday_update": "GBP actions dropped from 19 on Aug 17 to 0 across all 8 days Aug 23–30, a confirmed -100% collapse. Check Google Business Profile for suspension notice, ownership conflict, or policy flag and resolve immediately. Success is confirmed when daily GBP actions return to ≥5/day, consistent with the Aug 3–17 baseline. Re-check by Sep 3."
+        "monday_item_name": "Resolve Marwan Contract Extension",
+        "monday_update": "The engagement extension with Marwan is open and is blocking all paid activity. Zero spend and zero leads have been recorded across all 28 days (Meta $0, Google $0). Sohib to chase Marwan for signature this week. Success is confirmed when a signed extension is on file and the paid relaunch brief is approved — target by 2026-09-04."
       },
       {
         "id": "S2",
-        "type": "watch",
-        "text": "Hold all paid reactivation (Meta $65–75/day) until Marwan extension is signed — no budget move is in scope while contract is lapsed.",
+        "type": "fix",
+        "text": "Investigate GBP listing — 8 consecutive zero-action days after a 19-action peak on Aug 19 signals a listing suspension or profile issue.",
         "cites": [
-          "F1",
-          "F3"
+          "F2",
+          "F4"
         ],
-        "monday_item_name": "Watch: Await Marwan contract",
-        "monday_update": "Meta campaigns have been at $0 spend for the full 28-day window and the SOW extension with Marwan has lapsed. Zero paid actions are appropriate until the contract is executed. Once signed, the prior $65–75/day Meta budget and CROA campaign structure (Broad – IMGs, All Videos, GRT, Freedom ad sets) are the established reactivation blueprint. Re-check contract status by Sep 7."
+        "monday_item_name": "Fix GBP Listing Outage",
+        "monday_update": "GBP actions have been zero for 8 straight days (Aug 23–30), collapsing from 19 actions on Aug 19 — the sole remaining inbound channel is now dark. Search clicks are up 18.9% week-over-week, meaning organic demand exists but nothing is capturing it. Check Google Business Profile for suspension notices, ownership issues, or policy flags and restore the listing. Success is confirmed when daily GBP actions return above 5 for 3 consecutive days — recheck 2026-09-03."
+      },
+      {
+        "id": "S3",
+        "type": "watch",
+        "text": "Watch SC clicks trend — up 18.9% — for 3 more days to confirm sustained organic intent before any paid relaunch targeting is scoped.",
+        "cites": [
+          "F4"
+        ],
+        "monday_item_name": "Watch SC Clicks Trend",
+        "monday_update": "Search clicks rose 18.9% in the last 7-day window despite zero paid activity, suggesting sustained organic search demand. No paid budget is available to act on this yet pending contract resolution. Monitor SC clicks daily; if the trend holds above the current baseline for 3 more days, flag to Hamza/Hamdan as a targeting signal for the Meta relaunch. Recheck 2026-09-03."
       }
     ],
     "next_check": "2026-09-03"

@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-31T15:53:57.506Z",
+  "generated_at": "2026-08-31T17:49:23.332Z",
   "date": "2026-08-31",
   "slug": "liferun",
   "name": "Liferun",
   "type": "leadgen",
   "window_days": 28,
-  "score": 70,
-  "status": "amber",
-  "verdict": "Liferun spent $621.80 over 28 days across Google Ads (131 clicks, 0 conversions) with zero leads recorded, triggering a critical lead drought flag. Google Ads spend dropped 27.84% week-over-week, likely reflecting a budget pullback or bid adjustment on the top campaign \"BWS - Search Campaign - Calls\" ($344.71), yet conversion tracking or landing page issues appear to be preventing any leads from registering despite meaningful click volume.",
+  "score": 80,
+  "status": "green",
+  "verdict": "Liferun spent $621.80 across 28 days on Google Ads (led by \"BWS - Search Campaign - Calls\" at $344.71) but generated zero leads, a critical lead drought that coincides with a -27.84% week-over-week spend pullback likely reducing auction volume and conversion opportunity. GBP drove 50 actions (49 directions, 1 web click) with no calls recorded, suggesting strong local intent that paid search is failing to capture.",
   "windsor": {
     "totals": {
       "spend": 621.8,
@@ -46,8 +46,8 @@
       "conversions": 0
     },
     "search": {
-      "clicks": 47,
-      "impressions": 16037
+      "clicks": 0,
+      "impressions": 219
     },
     "latest_day": {
       "date": "2026-08-30",
@@ -69,7 +69,7 @@
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": -27.84,
       "gbp_7d_pct": -6.25,
-      "sc_7d_pct": -36.36,
+      "sc_7d_pct": null,
       "ga4_7d_pct": 2.41,
       "ig_7d_pct": null,
       "spend_per_day_7d": 12.8
@@ -289,29 +289,29 @@
         0
       ],
       "sc_clicks": [
-        3,
-        1,
-        3,
-        2,
-        3,
         0,
-        2,
-        2,
-        3,
         0,
-        4,
-        2,
-        3,
-        1,
-        4,
-        1,
-        2,
         0,
-        3,
         0,
-        1,
-        6,
-        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
         0,
         0,
         0,
@@ -411,10 +411,10 @@
     }
   },
   "ghl": {
-    "contacts": 169,
+    "contacts": 172,
     "opportunities": {
       "created": {
-        "count": 137,
+        "count": 138,
         "value": 0
       },
       "won": {
@@ -554,44 +554,44 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-31T15:59:32.375Z",
+    "generated_at": "2026-08-31T17:52:06.649Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "$622 spent, 0 leads: tracking failure is confirmed, not ad underperformance.",
+    "verdict": "Zero leads in 28 days exposes a conversion tracking or landing-page break, not just spend pullback.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero leads across all 28 days despite 131 Google clicks and 654 GA4 sessions — conversion tracking is broken, not absent demand.",
+        "text": "131 Google clicks and $621.80 spent across 28 days yielded 0 leads — confirmed conversion tracking failure or broken landing-page form, not ad performance.",
         "confidence": "confirmed",
         "channel": "google_ads"
       },
       {
         "id": "F2",
-        "priority": 1,
-        "text": "CPL is incalculable; $621.80 spent with 0 recorded conversions. 3-day spend (Aug 28–30: $21.62, $1.38, $6.86) is collapsing — budget or bidding cut likely in response to zero returns.",
+        "priority": 2,
+        "text": "SOW milestone 'Stripe Products QA'd & Done' (due 2026-07-20) has no completed-event confirmation — payment-path integrity is unverified 42 days overdue.",
         "confidence": "confirmed",
-        "channel": "google_ads"
+        "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "SOW milestone 'Stripe Products QA'd & Done' (due 2026-07-20) shows no confirmed verified event — Becklar billing drop and BWS duplicate checks remain unverified per SOW.",
-        "confidence": "probable",
-        "channel": "SOW"
-      },
-      {
-        "id": "F4",
-        "priority": 3,
-        "text": "GBP generated 49 direction requests and 0 calls in 28 days. Search clicks dropped -36.36% week-over-week (last 3 days: 0, 0, 0) — organic is also degrading.",
+        "text": "GBP drove 49 direction requests in 28 days with 0 calls recorded — strong local intent exists but no paid or organic call path is capturing it.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
+        "id": "F4",
+        "priority": 3,
+        "text": "3-day spend signal (Aug 28–30): $21.62, $1.38, $6.86 — spend collapsing to near-zero vs prior 3 days ($13.98, $19.69, $21.62), confirming budget is draining out of auction.",
+        "confidence": "confirmed",
+        "channel": "google_ads"
+      },
+      {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 137 opportunities created but 0 leads from ads and 0 appointments — pipeline likely populated by non-ad sources; intake path integrity unconfirmed.",
-        "confidence": "hypothesis",
+        "text": "GHL shows 172 contacts and 138 opportunities created with 0 won and 0 appointments — pipeline exists but no intake flow is converting; ads are not the blocker here.",
+        "confidence": "probable",
         "channel": "ghl"
       }
     ],
@@ -599,33 +599,32 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit and repair Google Ads conversion tracking immediately — 131 clicks, $621.80 spent, 0 conversions is a pixel/tag failure.",
+        "text": "Audit Google Ads conversion tag and landing-page form submission end-to-end; 131 clicks, $621.80 spent, 0 conversions recorded.",
         "cites": [
-          "F1",
-          "F2"
+          "F1"
         ],
-        "monday_item_name": "Fix Google Ads Conversion Tag",
-        "monday_update": "Google Ads has spent $621.80 over 28 days and recorded 0 conversions from 131 clicks — this is a confirmed tracking failure, not a demand problem. Action: audit the Google Ads conversion tag and GA4 goal configuration on the landing page this week; verify a test conversion fires end-to-end. Success is confirmed when at least one conversion event registers in both Google Ads and GA4 within 48 hours of the fix. Do not scale or kill any campaigns until tracking is verified."
+        "monday_item_name": "Fix Google conversion tracking",
+        "monday_update": "Run a live test click through the BWS - Search Campaign - Calls ad to the landing page and submit a test lead. Confirm the conversion fires in Google Ads and appears in GHL contacts. With 131 clicks and $621.80 spent producing 0 leads, this is either a broken pixel or a broken form — not an ad quality issue. If confirmed broken, pause spend until the tag is verified firing."
       },
       {
         "id": "S2",
-        "type": "watch",
-        "text": "Hold all budget scaling until conversion tracking is verified; re-check spend trend (Aug 28–30 avg $9.91/day) in 3 days.",
+        "type": "fix",
+        "text": "Verify Stripe Products QA milestone: run one live order through each intake path; 42 days overdue, cash leak risk.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Watch Google Spend Collapse",
-        "monday_update": "Spend has dropped sharply in the last 3 days (Aug 28: $21.62, Aug 29: $1.38, Aug 30: $6.86), averaging $9.91/day versus $19.69 on Aug 27. No scaling or budget shifts should be made until the tracking fix (S1) is confirmed live. Re-check on 2026-09-03 to assess whether spend has stabilized and whether conversions are now recording."
+        "monday_item_name": "Verify Stripe payment paths",
+        "monday_update": "Execute one test order through the WordPress/Stripe/Zapier path and one through GHL Products Payment - BWS. Confirm exactly one opportunity is created per order, fully field-mapped, with no duplicates. This milestone was marked done on 2026-07-20 but has no completed-event confirmation — 42 days of unverified payment flow is a silent cash-leak risk. Target completion and sign-off by 2026-09-05."
       },
       {
         "id": "S3",
-        "type": "fix",
-        "text": "Verify Stripe/Becklar/BWS money paths per SOW — overdue since 2026-07-20; silent cash leak risk confirmed by SOW.",
+        "type": "watch",
+        "text": "Watch GBP call volume: 49 directions, 0 calls in 28 days — confirm call button is live and tracked before any paid action.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Verify Stripe & Becklar Paths",
-        "monday_update": "The SOW milestone 'Stripe Products QA'd & Done' is overdue since July 20 and the Becklar billing drop and BWS duplicate-order checks have not been confirmed as verified. Action: run one dummy deactivation through Becklar and one live order through each intake path this week (per SOW spec). Success is confirmed when Becklar portal reflects the drop, the next invoice adjusts, and exactly one fully field-mapped opportunity exists per order. Complete before 2026-09-07."
+        "monday_item_name": "Watch GBP call tracking",
+        "monday_update": "Manually test the GBP call button from a mobile device and confirm it routes correctly and registers in GHL or the reporting dashboard. GBP generated 49 direction requests but recorded 0 calls — this gap either means the call button is broken or calls are untracked. Re-check on 2026-09-03; if calls remain at zero with direction volume holding, escalate to a fix action."
       }
     ],
     "next_check": "2026-09-03"

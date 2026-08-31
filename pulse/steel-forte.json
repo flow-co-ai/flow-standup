@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T15:54:16.529Z",
+  "generated_at": "2026-08-31T17:49:33.530Z",
   "date": "2026-08-31",
   "slug": "steel-forte",
   "name": "Forte Metals",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Forte Metals saw zero paid activity across Meta and Google Ads in the last 28 days, making GBP the sole source of engagement with 85 total actions (including 9 calls, 53 direction requests, and 23 website clicks). The biggest movement is a 26.92% drop in GBP actions over the last 7 days versus the prior 7 days, likely driven by reduced organic search visibility or seasonal dip in local demand with no paid support to compensate.",
+  "verdict": "Forte Metals saw zero paid activity across Meta and Google Ads in the last 28 days, making Google Business Profile the sole source of engagement with 85 total actions (including 9 calls, 53 direction requests, and 23 website clicks). GBP actions dropped 26.92% in the last 7 days versus the prior 7 days, likely reflecting reduced organic search demand or a seasonal dip in local intent.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,78 +409,70 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-31T16:00:20.640Z",
+    "generated_at": "2026-08-31T17:52:56.371Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "No paid activity in 28 days; GBP sliding and 3 CRM milestones overdue.",
+    "verdict": "GBP is the only active channel; 3 overdue CRM milestones now block pipeline integrity.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "OVERDUE: '1st Directives issued (CRM handoff)' milestone dated 2026-07-07 shows no completed event — 55 days past due.",
+        "text": "1st Directives (Jul 7), Tom call list (Jul 28), and dedup workbook + 126 accounts (Jul 31) — 3 CRM milestones overdue by up to 55 days with no completion event recorded.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
-        "priority": 2,
-        "text": "OVERDUE: 'Tom call list flagged priority' milestone dated 2026-07-28 and 'Dedup workbook + 126 accounts delivered' dated 2026-07-31 both unconfirmed — 30+ days overdue.",
-        "confidence": "confirmed",
-        "channel": "SOW"
-      },
-      {
-        "id": "F3",
         "priority": 1,
-        "text": "Zero paid spend across Meta and Google for the full 28-day window ($0 total); no leads, no CPL — paid channel is entirely dark.",
+        "text": "Zero paid spend across Meta and Google Ads for all 28 days in window; $0 CPL is meaningless — there is no active paid acquisition for this client.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
-        "id": "F4",
-        "priority": 2,
-        "text": "GBP actions fell 26.92% week-over-week to roughly 13 actions in the last 7 days; 3-day signal (Aug 28–30) shows 10, 0, 0 — a hard stop at end of period.",
+        "id": "F3",
+        "priority": 3,
+        "text": "GBP actions fell -26.92% week-over-week; 3-day signal (Aug 28–30) shows 10, 0, 0 actions vs prior 3 days (Aug 25–27) averaging 1.67 — sharp trailing drop.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
-        "id": "F5",
+        "id": "F4",
         "priority": 3,
-        "text": "Search clicks doubled 100% week-over-week (sc_7d_pct +100), driven by a spike to 5 clicks on Aug 25 — positive outlier against an otherwise flat organic baseline of 1–2 clicks/day.",
-        "confidence": "probable",
-        "channel": "search"
+        "text": "Search clicks doubled (+100% 7d delta) with 34 clicks and 2,006 impressions over 28 days, but GA4 sessions are zero — tracking is broken or GA4 is unlinked.",
+        "confidence": "confirmed",
+        "channel": "google_ads"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Confirm completion status of all 3 overdue CRM milestones with Ahmed/Dev team; block downstream builds until resolved.",
+        "text": "Execute approved 447-group dedup merge workbook in audited batches; unblocks Sales-i sync for 342 stub accounts.",
         "cites": [
-          "F1",
-          "F2"
+          "F1"
         ],
-        "monday_item_name": "Clear 3 Overdue CRM Milestones",
-        "monday_update": "Three CRM milestones are unconfirmed: '1st Directives issued' (due Jul 7), 'Tom call list priority' (due Jul 28), and 'Dedup workbook + 126 accounts' (due Jul 31). Ahmed and Dev 2 must post completion evidence or updated ETAs to the Monday CRM board by 2026-09-04. The 342 stub accounts and Sales-i pipeline are blocked until the dedup workbook is confirmed executed. Success check: all three items marked complete with rollback files posted by Sept 4."
+        "monday_item_name": "Execute CRM Dedup Merge Batches",
+        "monday_update": "Three SOW milestones — 1st Directives (Jul 7), Tom call list (Jul 28), and the 447-group dedup workbook + 126 accounts (Jul 31) — are overdue with no completion recorded. Ahmed to begin executing the approved merge workbook in audited batches immediately; rollback files must be posted to the Monday CRM board after each batch. The 342 stub accounts cannot receive Sales-i sync data until Customer IDs are reconciled. Success: all 447 groups actioned and rollback files posted by 2026-09-07."
       },
       {
         "id": "S2",
-        "type": "watch",
-        "text": "Watch GBP actions daily: if 3-day average stays at or below 3 actions through Sept 3, escalate GBP optimisation.",
+        "type": "fix",
+        "text": "Investigate GA4 zero-session gap against 34 confirmed search clicks — verify GA4 property linkage and tracking tag firing.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Watch GBP Action Drop",
-        "monday_update": "GBP actions dropped 26.92% last 7 days, and the final 3 days of the series (Aug 28–30) logged 10, 0, 0 — suggesting the end-of-period zero is a real drop, not noise. Monitor daily actions through Sept 3. If the 3-day average remains at or below 3 actions, flag for GBP profile review (photos, posts, Q&A freshness). No action taken this cycle; re-check Sept 3."
+        "monday_item_name": "Fix GA4 Tracking — Forte Metals",
+        "monday_update": "Forte Metals recorded 34 search clicks and 2,006 impressions over the past 28 days, but GA4 sessions are zero across the entire series — confirming a tracking or property linkage break. Dev team to audit the GA4 tag on the Forte Metals site and confirm the correct property is linked in Google Search Console. Success check: GA4 sessions begin populating within 48 hours of the fix, confirmed by 2026-09-03."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch search click momentum: if 5-click daily pace holds for 3 more days, investigate which queries are driving it before any paid layer decision.",
+        "text": "Watch GBP actions recovery — last 2 days are zero; re-check after 3 full days of data on 2026-09-03.",
         "cites": [
-          "F5"
+          "F3"
         ],
-        "monday_item_name": "Watch Search Click Spike",
-        "monday_update": "Search clicks doubled week-over-week, with a peak of 5 clicks on Aug 25 against a baseline of 1–2 clicks/day. This is a single-day outlier and not yet a confirmed trend. Monitor sc_clicks for Aug 31–Sept 3; if 3-day average exceeds 3 clicks/day, pull the Search Console query report to identify intent before considering any paid search activation. No budget move this cycle."
+        "monday_item_name": "Watch GBP Actions Recovery",
+        "monday_update": "GBP actions dropped -26.92% week-over-week and the last 2 days of the series (Aug 29–30) show zero actions, against a prior 3-day average of 1.67. No paid activity is amplifying organic demand, so this decline may reflect natural search seasonality. Re-check the 3-day signal on 2026-09-03; if actions remain below 2 per day, escalate to a GBP content or Q&A refresh discussion with Sohib."
       }
     ],
     "next_check": "2026-09-03"

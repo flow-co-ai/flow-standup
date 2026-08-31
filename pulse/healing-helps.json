@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T15:53:22.314Z",
+  "generated_at": "2026-08-31T17:48:58.663Z",
   "date": "2026-08-31",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "GBP was the standout mover this period, with 49 total actions (31 directions, 17 web clicks, 1 call) and a 57.14% week-over-week spike, likely driven by increased local search visibility or a seasonal uptick in demand. Paid channels (Meta and Google Ads) recorded zero spend, leads, and clicks over the last 28 days, so all lead-gen activity is currently organic via Google Business Profile.",
+  "verdict": "GBP was the standout channel this period, driving 49 total actions (31 directions, 17 web clicks, 1 call) and surging 57.14% over the prior 7 days, likely fueled by stronger local search visibility or seasonal demand. Paid channels (Meta and Google Ads) had zero spend and zero leads, so all lead-gen activity is currently organic.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -506,36 +506,36 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-08-31T15:58:17.440Z",
+    "generated_at": "2026-08-31T17:50:51.305Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Organic GBP holding the line; paid channels remain fully dark.",
+    "verdict": "Organic GBP is the only active channel; paid is fully dormant.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — Meta and Google both report $0, 0 leads, 0 clicks. This account is entirely dependent on organic.",
+        "text": "Zero paid spend across the full 45-day series — Meta and Google Ads have been completely inactive, producing $0 spend and 0 leads.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "meta+google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP spiked 57% week-over-week (49 total actions: 31 directions, 17 web clicks, 1 call), but last 3 days show 0 GBP actions vs 11 on 2026-08-25 — momentum has stopped.",
+        "text": "GBP drove all 49 actions in 28 days (+57.14% vs prior 7d), but the last 5 days (Aug 26–30) show 0 GBP actions — momentum has stalled.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GA4 sessions averaged 4.7/day over last 3 days (2026-08-28 to 2026-08-30) vs 8.0/day in prior 3 days — a confirmed softening in site traffic with no paid lever to compensate.",
-        "confidence": "confirmed",
+        "text": "GA4 sessions weak and declining: last 3 days (Aug 28–30) average 4.7 sessions vs prior 3 days (Aug 25–27) average 6.0 — a soft downward signal.",
+        "confidence": "probable",
         "channel": "ga4"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GA4 records 177 sessions and 147 users over 28 days but 0 conversions — site is receiving visitors but capturing no leads, pointing to a form or tracking gap.",
+        "text": "GA4 shows 177 sessions and 147 users over 28 days with 0 conversions tracked — conversion tracking appears broken or unconfigured.",
         "confidence": "probable",
         "channel": "ga4"
       }
@@ -543,23 +543,23 @@
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Monitor GBP actions daily; 3-day streak of 0 actions after a 57% spike warrants re-check before any paid reactivation.",
-        "cites": [
-          "F2"
-        ],
-        "monday_item_name": "Watch GBP action streak",
-        "monday_update": "GBP actions hit 0 for the last 3 consecutive days (2026-08-28 to 2026-08-30) after a 57% weekly spike driven by a single-day burst of 11 on 2026-08-25. No paid channel is live to backstop any further drop. Success check: if GBP actions return above 3/day average over the next 3 days, the spike is recovering; if they remain at 0 by 2026-09-03, escalate for review. Re-check 2026-09-03."
-      },
-      {
-        "id": "S2",
         "type": "fix",
-        "text": "Audit GA4 conversion event — 177 sessions, 0 conversions recorded; likely a broken form submission or missing event tag.",
+        "text": "Fix GA4 conversion tracking: 177 sessions, 0 conversions recorded across 28 days — events are not firing.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Fix GA4 conversion tracking",
-        "monday_update": "GA4 shows 177 sessions and 147 users over the last 28 days but zero conversion events recorded, meaning no lead is being captured in analytics even if the form is functional. Test the contact or intake form end-to-end and confirm the GA4 conversion event fires on submission. Success check: at least 1 confirmed conversion event visible in GA4 real-time within 48 hours of the fix. Complete by 2026-09-03."
+        "monday_item_name": "Fix GA4 Conversion Tracking",
+        "monday_update": "GA4 recorded 177 sessions and 147 users over the last 28 days but logged exactly 0 conversions — conversion events are either misconfigured or not installed. Audit GA4 goal/event setup and confirm fire on a real form submission or contact action. Success check: at least 1 confirmed conversion event recorded within 7 days of the fix. Target resolution by 2026-09-07."
+      },
+      {
+        "id": "S2",
+        "type": "watch",
+        "text": "Watch GBP: 5 consecutive zero-action days (Aug 26–30) after a +57.14% surge — confirm whether drop holds.",
+        "cites": [
+          "F2"
+        ],
+        "monday_item_name": "Watch GBP Action Drop",
+        "monday_update": "GBP actions hit 0 for each of the last 5 days (Aug 26–30) following a strong +57.14% week-on-week surge that peaked at 11 actions on Aug 25. This may be a weekend/scheduling artifact or a genuine stall. Re-check GBP action count on 2026-09-03; if still 0 for 7+ consecutive days, escalate to listing audit."
       }
     ],
     "next_check": "2026-09-03"

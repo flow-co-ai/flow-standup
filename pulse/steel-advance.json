@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T15:54:21.251Z",
+  "generated_at": "2026-08-31T17:49:37.191Z",
   "date": "2026-08-31",
   "slug": "steel-advance",
   "name": "Advance Grinding",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, so all engagement is coming entirely from Google Business Profile, which drove 129 total actions including 102 direction requests and 2 calls. However, GBP activity is trending down 26% week over week, signaling organic visibility or demand may be softening without any paid support to compensate.",
+  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, suggesting campaigns are paused or inactive. Google Business Profile is the only active source, driving 129 total actions (102 directions, 25 web clicks, 2 calls), though GBP engagement dropped 26.19% week over week, likely due to reduced organic search demand or seasonal slowdown.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -404,70 +404,70 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-31T16:00:48.596Z",
+    "generated_at": "2026-08-31T17:53:21.503Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "No paid spend; GBP is the only signal and it's softening.",
+    "verdict": "Paid channels fully dark; GBP sole signal and now fading.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — Meta $0, Google Ads $0 — means no CPL baseline exists; all ROI judgment is suspended.",
+        "text": "Zero paid spend across all 28 days — Meta and Google Ads both $0, generating 0 leads and 0 paid clicks. Campaigns are confirmed inactive.",
         "confidence": "confirmed",
-        "channel": "paid"
+        "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "OVERDUE: 1st Directives (Jul 7), Tom call list (Jul 28), and dedup workbook + 126 accounts (Jul 31) — all 3 CRM milestones unconfirmed complete as of today Aug 31.",
+        "text": "SOW OVERDUE: 1st Directives (Jul 7), Tom call list priority (Jul 28), and dedup workbook + 126 accounts (Jul 31) all show no completed event — 3 CRM milestones unverified.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 3,
-        "text": "GBP actions fell 26% week-over-week; last 3 days (Aug 28–30) totalled 0 actions vs 31 in the prior 3 (Aug 25–27), a confirmed short-term collapse.",
+        "priority": 2,
+        "text": "GBP actions dropped 26.19% week-over-week to effectively 0 actions on Aug 27–30 (last 3 days = 7, 0, 0 vs prior 3 = 8, 6, 10). 3-day signal is a confirmed decline.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "gbp"
       },
       {
         "id": "F4",
-        "priority": 4,
-        "text": "GBP 2 calls in 28 days against 102 direction requests — a 98% direction-to-call gap suggests profile traffic is not converting to inbound contact, not an ads problem.",
+        "priority": 3,
+        "text": "GA4 sessions and Search Console clicks are both 0 for all 28 days, suggesting site tracking is broken or the website is receiving no measurable organic traffic.",
         "confidence": "probable",
-        "channel": "GBP"
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate 3 overdue CRM milestones to Ahmed/Dev2; block next build phase until completion confirmed.",
+        "text": "Escalate 3 overdue CRM milestones to Ahmed/Dev team; no pipeline data integrity until 342 stub accounts and 447-group merge execute.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Clear 3 Overdue CRM Milestones",
-        "monday_update": "Three CRM milestones — 1st Directives (Jul 7), Tom call list priority (Jul 28), and dedup workbook + 126 accounts (Jul 31) — have no confirmed completion event as of Aug 31. Ahmed and Dev2 must post completion confirmation or blocker reason to the Monday CRM board by Sep 5. Success check: all three items marked done with evidence by Sep 5, 2026."
+        "monday_item_name": "Clear 3 CRM Overdue Milestones",
+        "monday_update": "Three SOW milestones (1st Directives Jul 7, Tom call list Jul 28, dedup workbook Jul 31) have no confirmed completion event and are now overdue by up to 55 days. Ahmed and Dev 2 must confirm status on the 447-group merge workbook and 342 stub reconciliation, as Sales-i sync is blocked until Customer IDs are resolved. Success check: Monday board updated with completion dates and rollback files posted by 2026-09-07. Sohib to chase Jorge on the Quote Ordered = True sync bug in the same pass."
       },
       {
         "id": "S2",
-        "type": "watch",
-        "text": "Watch GBP daily actions through Sep 3; 3 more zero-action days confirms structural visibility drop requiring investigation.",
-        "cites": [
-          "F3"
-        ],
-        "monday_item_name": "Watch GBP 3-Day Signal",
-        "monday_update": "GBP actions hit 0 on each of the last 3 logged days (Aug 28–30), down from 31 actions in the prior 3 days (Aug 25–27). No paid spend exists to compensate. Re-check Sep 3: if the 3-day total remains at or near 0, escalate to GBP profile audit. No action before then — one bad weekend is noise."
-      },
-      {
-        "id": "S3",
         "type": "fix",
-        "text": "Audit GBP call-tracking setup; 102 directions but only 2 calls in 28 days indicates a CTA or phone link issue.",
+        "text": "Investigate GA4 and Search Console zero-data — 28 days of 0 sessions and 0 clicks signals a tracking break, not zero traffic.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "GBP Call CTA Audit",
-        "monday_update": "GBP drove 102 direction requests but only 2 calls over 28 days — a conversion gap that points to a broken or missing phone CTA on the profile, not a demand problem. Verify the primary phone number, call button, and any UTM or call-tracking wrapper are correctly configured. Success check: calls-to-directions ratio above 5% within 14 days of fix (by Sep 14, 2026)."
+        "monday_item_name": "Fix GA4 & GSC Tracking",
+        "monday_update": "GA4 sessions and Search Console clicks have both returned 0 for every day in the 45-day series, which is inconsistent with 129 GBP actions driving web clicks in the same period. Dev team should verify the GA4 property is correctly tagged on the active site and that GSC is linked and verified. Success check: at least directional session data appearing in GA4 within 7 days (by 2026-09-07). This is a data integrity fix, not an ads action."
+      },
+      {
+        "id": "S3",
+        "type": "watch",
+        "text": "Watch GBP actions over next 3 days — last 3 days averaged 2.3 actions/day vs prior 3-day average of 8; confirm whether trend holds before any organic response.",
+        "cites": [
+          "F3"
+        ],
+        "monday_item_name": "Watch GBP Action Decline",
+        "monday_update": "GBP actions have dropped sharply: the last 3 days (Aug 28–30) show 7, 0, 0 actions versus 8, 6, 10 in the prior 3-day window — a 3-day confirmed signal, not noise. No paid amplification is active to compensate. Re-check on 2026-09-03; if the average remains below 3 actions/day, escalate to a GBP content or Q&A refresh to recover local visibility. No spend action is warranted until paid campaign status is clarified."
       }
     ],
     "next_check": "2026-09-03"

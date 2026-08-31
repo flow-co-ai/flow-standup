@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T15:54:11.721Z",
+  "generated_at": "2026-08-31T17:49:29.753Z",
   "date": "2026-08-31",
   "slug": "maadi-law",
   "name": "Maadi Law, LLC",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) generated zero spend, leads, or clicks over the past 28 days, suggesting campaigns are paused or inactive. Google Business Profile was the only source of engagement, driving 76 total actions (14 calls, 27 direction requests, 35 website clicks), though GBP activity dropped 86.96% in the last 7 days versus the prior 7 days, likely due to reduced profile visibility or a seasonal dip in local search demand.",
+  "verdict": "Paid channels (Meta and Google Ads) generated zero spend, leads, or clicks over the past 28 days, suggesting campaigns are paused or inactive. Google Business Profile remains the only source of engagement, driving 76 total actions (14 calls, 27 direction requests, 35 website clicks), though GBP activity dropped 86.96% week over week, which likely reflects reduced organic search demand or a listing visibility issue worth investigating.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -397,10 +397,10 @@
     }
   },
   "ghl": {
-    "contacts": 110,
+    "contacts": 111,
     "opportunities": {
       "created": {
-        "count": 17,
+        "count": 7,
         "value": 0
       },
       "won": {
@@ -626,71 +626,79 @@
     "history_line": "All campaigns live (LSA, Google, Meta) · Website shipped · Case routing completed"
   },
   "performance": {
-    "generated_at": "2026-08-31T15:59:56.342Z",
+    "generated_at": "2026-08-31T17:52:32.469Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "No ads have ever launched; 5 overdue milestones are the real crisis.",
+    "verdict": "No paid channel has ever launched; 5 overdue milestones block all revenue.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "Pre-Launch Stack Test, LSA Verification, and Site/Landing Pages were all due 2026-07-31 — now 31 days overdue with no completed event recorded.",
+        "text": "Pre-Launch Stack Test, LSA Verification, and Site/Landing Pages all missed their 2026-07-31 deadline — 31 days overdue with no completion recorded.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Ads Launch (LSA + Search) and Meta Retargeting were both due 2026-08-01 — 30 days overdue; $0 spend and 0 leads across all 28 days confirm neither is live.",
+        "text": "Ads Launch (LSA + Search) and Meta Retargeting missed 2026-08-01 go-live — 30 days overdue; $0 spend and 0 leads across all 28 days confirm campaigns never started.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 3,
-        "text": "GBP actions collapsed from ~9/day (2026-08-19 peak) to 0 for the last 3 full days (2026-08-28–30); 3-day signal is a confirmed downtrend inside an already thin 45-day baseline.",
+        "priority": 2,
+        "text": "GBP actions collapsed to 0 on 5 of the last 7 days (Aug 24–30), down from a mid-August peak of 9 — the only active channel is now effectively dark.",
         "confidence": "confirmed",
         "channel": "GBP"
       },
       {
         "id": "F4",
-        "priority": 4,
-        "text": "GHL shows 110 contacts and 17 opportunities created but 0 appointments and 0 won — with $0 paid spend, this suggests organic or direct contacts entering GHL but no intake converting them.",
+        "priority": 3,
+        "text": "GHL shows 111 contacts and 7 opportunities created but 0 appointments and 0 won — intake pipeline exists but is producing no consults, likely because no new paid traffic is feeding it.",
         "confidence": "probable",
         "channel": "GHL"
+      },
+      {
+        "id": "F5",
+        "priority": 4,
+        "text": "GA4 sessions, Search Console clicks, and IG reach are all 0 for the full 45-day series — no organic web presence is measurable, consistent with site not yet live.",
+        "confidence": "confirmed",
+        "channel": "Web"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate all 5 overdue SOW milestones to Nacer immediately; no paid spend can run until stack test and LSA verification are resolved.",
+        "text": "Escalate Pre-Launch Stack Test and site go-live to Nacer immediately — these are the hard blockers for all other work.",
         "cites": [
           "F1",
-          "F2"
+          "F2",
+          "F5"
         ],
-        "monday_item_name": "Clear 5 Overdue Launch Blockers",
-        "monday_update": "Five milestones are 30–31 days overdue: Pre-Launch Stack Test, LSA Verification, Site/Landing Pages, Ads Launch, and Meta Retargeting (all due 2026-07-31 or 2026-08-01). Zero spend and zero leads across the entire 28-day window confirm nothing is live. Success = each milestone marked complete with a verified artifact (e.g., LSA submission confirmation, live site URL, pixel test pass) by 2026-09-07. Sohib to confirm Nacer has a resolution date for each item."
+        "monday_item_name": "Unblock Pre-Launch Stack",
+        "monday_update": "The Pre-Launch Stack Test and Site/Landing Pages milestones are 31 days overdue as of 2026-08-31, and GA4, Search Console, and IG all read zero — confirming the site is not live. Nacer must sign off on stack test completion and Web must confirm page URLs are indexed before any ad accounts are activated. Success check: GA4 sessions > 0 and a confirmed stack-test pass event logged in the SOW tracker by 2026-09-05."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GHL pipeline: 17 opportunities created, 0 appointments booked — identify where the 17 contacts are stalling and confirm intake routing is functional.",
+        "text": "Submit LSA verification today if not done — 3–4 week approval window means search ads cannot launch before late September without immediate action.",
         "cites": [
-          "F4"
+          "F2"
         ],
-        "monday_item_name": "Fix GHL Intake Conversion Gap",
-        "monday_update": "GHL shows 110 contacts and 17 opportunities but 0 appointments and 0 won cases, indicating leads are entering the pipeline but not being routed or followed up correctly. Review stage-by-stage drop-off for all 17 opportunities and confirm the speed-to-lead automation (target: first contact under 5 min) is firing. Success = at least 1 appointment booked and a documented routing audit complete by 2026-09-07."
+        "monday_item_name": "LSA Verification Submit Now",
+        "monday_update": "LSA Verification was due 2026-07-31 and has no recorded completion; it is 31 days overdue. Google's approval window is 3–4 weeks, meaning every day of delay pushes the ~$5,000/month Google budget further out. The Google Ads lead must submit verification materials today and log the submission timestamp in Monday. Success check: verification status confirmed 'in review' by 2026-09-02."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Monitor GBP daily actions; if 0-action streak extends past 2026-09-03 (6 days), investigate profile suspension or visibility penalty.",
+        "text": "Watch GBP daily actions — currently 0 for 3 consecutive days; investigate listing visibility before paid launch adds dependency on it.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Watch GBP Action Drought",
-        "monday_update": "GBP actions have been 0 for the last 3 consecutive days (2026-08-28–30), down from a peak of 9 on 2026-08-19. No paid activity exists to explain the drop, so reduced organic visibility or a profile issue is the likely cause. Re-check on 2026-09-03: if daily actions remain at 0, escalate to Web/SEO to inspect the GBP listing for suspensions, duplicate listings, or category changes."
+        "monday_item_name": "GBP Visibility Monitor",
+        "monday_update": "GBP actions hit 0 on Aug 28, 29, and 30 — a confirmed 3-day signal of darkness on the only active channel. This may indicate a listing suspension, category change, or local pack suppression. Sohib should check the GBP dashboard for any policy flags or ownership issues. Re-check on 2026-09-03; if actions remain at 0, escalate to a GBP reinstatement review before paid ads launch and depend on the listing for call volume."
       }
     ],
     "next_check": "2026-09-03"
