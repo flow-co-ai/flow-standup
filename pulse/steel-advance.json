@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-30T15:11:25.330Z",
-  "date": "2026-08-30",
+  "generated_at": "2026-08-31T15:54:21.251Z",
+  "date": "2026-08-31",
   "slug": "steel-advance",
   "name": "Advance Grinding",
   "type": "leadgen",
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, so all engagement is coming entirely from Google Business Profile, which drove 125 total actions including 2 calls, 95 direction requests, and 28 website clicks. The biggest movement is GBP activity surging 51.85% in the last 7 days versus the prior 7 days, likely driven by increased local search demand or improved profile visibility.",
+  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, so all engagement is coming entirely from Google Business Profile, which drove 129 total actions including 102 direction requests and 2 calls. However, GBP activity is trending down 26% week over week, signaling organic visibility or demand may be softening without any paid support to compensate.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,20 +25,20 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 125,
+          "actions": 129,
           "calls": 2,
-          "directions": 95,
-          "web_clicks": 28
+          "directions": 102,
+          "web_clicks": 25
         }
       }
     },
     "organic": {
-      "gbp_actions": 125,
+      "gbp_actions": 129,
       "ig_reach": 0
     },
     "top_campaign": null,
     "latest_day": {
-      "date": "2026-08-29",
+      "date": "2026-08-30",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -56,7 +56,7 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": 51.85,
+      "gbp_7d_pct": -26.19,
       "sc_7d_pct": null,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
@@ -65,7 +65,6 @@
     "flags": [],
     "series": {
       "dates": [
-        "2026-08-02",
         "2026-08-03",
         "2026-08-04",
         "2026-08-05",
@@ -92,7 +91,8 @@
         "2026-08-26",
         "2026-08-27",
         "2026-08-28",
-        "2026-08-29"
+        "2026-08-29",
+        "2026-08-30"
       ],
       "spend": [
         0,
@@ -215,7 +215,6 @@
         0
       ],
       "gbp_actions": [
-        3,
         7,
         1,
         12,
@@ -241,6 +240,7 @@
         6,
         8,
         0,
+        7,
         0,
         0
       ],
@@ -404,73 +404,72 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-08-30T15:17:32.290Z",
+    "generated_at": "2026-08-31T16:00:48.596Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP momentum is real but paid silence makes lead generation structurally absent.",
+    "verdict": "No paid spend; GBP is the only signal and it's softening.",
     "findings": [
       {
         "id": "F1",
+        "priority": 1,
+        "text": "Zero paid spend across all 28 days — Meta $0, Google Ads $0 — means no CPL baseline exists; all ROI judgment is suspended.",
+        "confidence": "confirmed",
+        "channel": "paid"
+      },
+      {
+        "id": "F2",
         "priority": 2,
-        "text": "OVERDUE: 1st CRM Directives (Jul 7), Tom call list (Jul 28), and dedup workbook + 126 accounts (Jul 31) all unconfirmed complete — 3 milestones, same dept.",
+        "text": "OVERDUE: 1st Directives (Jul 7), Tom call list (Jul 28), and dedup workbook + 126 accounts (Jul 31) — all 3 CRM milestones unconfirmed complete as of today Aug 31.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
-        "id": "F2",
-        "priority": 1,
-        "text": "Zero paid spend across all 28 days and all 28 series days — Meta $0, Google $0, 0 leads generated; paid channel is structurally off, not underperforming.",
-        "confidence": "confirmed",
-        "channel": "meta"
-      },
-      {
         "id": "F3",
         "priority": 3,
-        "text": "GBP 3-day signal (Aug 27–29): 0+0+0 actions vs prior 3 days (Aug 24–26) avg 4.7 — short-term stall after the 51.85% weekly surge; could be weekend effect.",
-        "confidence": "hypothesis",
-        "channel": "gbp"
+        "text": "GBP actions fell 26% week-over-week; last 3 days (Aug 28–30) totalled 0 actions vs 31 in the prior 3 (Aug 25–27), a confirmed short-term collapse.",
+        "confidence": "confirmed",
+        "channel": "GBP"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GBP drove 95 direction requests and 2 calls in 28 days with zero paid amplification — local demand exists but no paid channel is capturing it.",
-        "confidence": "confirmed",
-        "channel": "gbp"
+        "text": "GBP 2 calls in 28 days against 102 direction requests — a 98% direction-to-call gap suggests profile traffic is not converting to inbound contact, not an ads problem.",
+        "confidence": "probable",
+        "channel": "GBP"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate 3 overdue CRM milestones to Ahmed; all 3 are Jul deliverables now 4+ weeks late.",
+        "text": "Escalate 3 overdue CRM milestones to Ahmed/Dev2; block next build phase until completion confirmed.",
         "cites": [
-          "F1"
+          "F2"
         ],
-        "monday_item_name": "Chase 3 CRM Overdue Milestones",
-        "monday_update": "Three CRM milestones are unconfirmed complete: 1st Directives (Jul 7), Tom call list (Jul 28), and dedup workbook + 126 accounts (Jul 31). Tag Ahmed and Dev 2 on Monday for status confirmation by 2026-09-02. Success check: each milestone marked complete with a deliverable link or rollback file posted to the CRM board by Sep 2."
+        "monday_item_name": "Clear 3 Overdue CRM Milestones",
+        "monday_update": "Three CRM milestones — 1st Directives (Jul 7), Tom call list priority (Jul 28), and dedup workbook + 126 accounts (Jul 31) — have no confirmed completion event as of Aug 31. Ahmed and Dev2 must post completion confirmation or blocker reason to the Monday CRM board by Sep 5. Success check: all three items marked done with evidence by Sep 5, 2026."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GBP 3-day zero-action streak (Aug 27–29); confirm weekend effect or profile issue by Sep 2.",
+        "text": "Watch GBP daily actions through Sep 3; 3 more zero-action days confirms structural visibility drop requiring investigation.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Watch GBP 3-Day Stall",
-        "monday_update": "GBP actions dropped to 0 for the last 3 days (Aug 27–29) after averaging 4.7 actions/day in the prior 3 days and posting a 51.85% weekly gain. This is likely a weekend pattern but warrants a check on Sep 2. If actions remain at or near 0 through Sep 2, escalate to a GBP profile audit."
+        "monday_item_name": "Watch GBP 3-Day Signal",
+        "monday_update": "GBP actions hit 0 on each of the last 3 logged days (Aug 28–30), down from 31 actions in the prior 3 days (Aug 25–27). No paid spend exists to compensate. Re-check Sep 3: if the 3-day total remains at or near 0, escalate to GBP profile audit. No action before then — one bad weekend is noise."
       },
       {
         "id": "S3",
-        "type": "watch",
-        "text": "Paid channel ($0 spend, 0 leads, 28 days) requires Sohib/Nabil decision on activation before any buyer action.",
+        "type": "fix",
+        "text": "Audit GBP call-tracking setup; 102 directions but only 2 calls in 28 days indicates a CTA or phone link issue.",
         "cites": [
-          "F2",
           "F4"
         ],
-        "monday_item_name": "Paid Channel Activation Decision",
-        "monday_update": "Meta and Google Ads have run at $0 spend for the full 28-day window with zero leads produced. GBP is generating local demand (95 direction requests, 2 calls) with no paid support. No buyer action is possible until Sohib or Nabil confirms whether paid activation is in scope and budgeted. Flag this for the next client call and re-check on 2026-09-06."
+        "monday_item_name": "GBP Call CTA Audit",
+        "monday_update": "GBP drove 102 direction requests but only 2 calls over 28 days — a conversion gap that points to a broken or missing phone CTA on the profile, not a demand problem. Verify the primary phone number, call button, and any UTM or call-tracking wrapper are correctly configured. Success check: calls-to-directions ratio above 5% within 14 days of fix (by Sep 14, 2026)."
       }
     ],
-    "next_check": "2026-09-02"
+    "next_check": "2026-09-03"
   }
 }

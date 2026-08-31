@@ -4,18 +4,38 @@
   "slug": "medstation",
   "name": "MedStation",
   "brief": {
-    "date": "2026-08-30",
+    "date": "2026-08-31",
     "headlines": [
       {
-        "text": "Websites live; GHL sweep underway pre-launch",
+        "text": "Tracking integration built, no API needed",
         "tone": "win"
       },
       {
-        "text": "Two CRM config loops still open, no movement",
+        "text": "GHL Weston WhatsApp config still pending call",
+        "tone": "info"
+      },
+      {
+        "text": "8 tasks in progress, none blocked or stuck",
         "tone": "info"
       }
     ],
     "workstreams": [
+      {
+        "title": "MedStation - Tracking / Integration",
+        "badge": {
+          "label": "P1 - on track",
+          "tone": "green"
+        },
+        "items": [
+          {
+            "state": "done",
+            "text": "Tracking integration built on webhook + dataLayer model, no API needed (Rafael Rolim)"
+          }
+        ],
+        "owners": [
+          "Rafael Rolim"
+        ]
+      },
       {
         "title": "MedStation - CRM / GHL",
         "badge": {
@@ -24,50 +44,57 @@
         },
         "items": [
           {
+            "state": "blocked",
+            "text": "GHL Weston WhatsApp number config pending — waiting on call to proceed"
+          },
+          {
             "state": "done",
             "text": "GHL Setup — NextGen Mirror marked Done on Monday"
           },
           {
             "state": "done",
-            "text": "NextGen access gained; External Application Setup enabled"
-          },
-          {
-            "state": "done",
-            "text": "Separate Digital Ocean machine created for HIPAA isolation"
-          },
-          {
-            "state": "done",
             "text": "Editor access granted for GHL account setup (Thainã)"
-          },
-          {
-            "state": "blocked",
-            "text": "Weston WhatsApp number config — pending scheduled call"
-          },
-          {
-            "state": "blocked",
-            "text": "Neuryn webhook timeline needed — no update in 4 days"
-          },
-          {
-            "state": "next",
-            "text": "(inferred) Schedule call to resolve Weston WhatsApp number config"
           }
         ],
         "owners": [
-          "Nacer Amrouch",
-          "Ahmed Memon",
-          "Thainã"
+          "Nacer Amrouch"
         ]
       },
       {
-        "title": "MedStation - Web",
+        "title": "MedStation - Infrastructure / Compliance",
         "badge": {
-          "label": "P1 - on track",
+          "label": "P2 - on track",
           "tone": "green"
         },
         "items": [
           {
             "state": "done",
-            "text": "MedStation and Full Smile websites launched live"
+            "text": "Separate Digital Ocean machine created for HIPAA-isolated MedStation infra (Ahmed Memon)"
+          },
+          {
+            "state": "done",
+            "text": "NextGen access gained after IT whitelisting (Nacer Amrouch)"
+          },
+          {
+            "state": "done",
+            "text": "External Application Setup access enabled for NextGen API (Gabryel IT)"
+          }
+        ],
+        "owners": [
+          "Ahmed Memon",
+          "Nacer Amrouch"
+        ]
+      },
+      {
+        "title": "MedStation - Web / SEO",
+        "badge": {
+          "label": "P2 - on track",
+          "tone": "green"
+        },
+        "items": [
+          {
+            "state": "done",
+            "text": "MedStation website launched live"
           },
           {
             "state": "done",
@@ -81,122 +108,81 @@
     ],
     "waiting_on_client": [
       {
-        "item": "Neuryn webhook timeline for GHL rollout",
-        "who": "Neuryn contact (role)",
-        "since": "8/26"
-      },
-      {
-        "item": "Weston WhatsApp number configuration — call to be scheduled",
-        "who": "Mateus / client IT",
+        "item": "GHL Weston WhatsApp number configuration — call needed to proceed",
+        "who": "Mateus / MedStation team",
         "since": "8/25"
       }
     ],
-    "launch_gate": {
-      "title": "Launch gate - clear before GHL go-live",
-      "items": [
-        {
-          "text": "Weston WhatsApp number configured",
-          "done": false
-        },
-        {
-          "text": "Neuryn webhook timeline confirmed",
-          "done": false
-        },
-        {
-          "text": "NextGen Mirror setup (GHL)",
-          "done": true
-        },
-        {
-          "text": "Digital Ocean HIPAA-isolated machine",
-          "done": true
-        },
-        {
-          "text": "Editor access granted in GHL",
-          "done": true
-        }
-      ]
-    },
+    "launch_gate": null,
     "brief_v2": {
-      "verdict": "Team is moving on GHL go-live; two client-side config items must clear first.",
-      "next_move": "Sohib: schedule Weston WhatsApp call with client — last config blocker before GHL goes live.",
+      "verdict": "Work is moving well; GHL Weston WhatsApp config is the one open loop needing a call.",
+      "next_move": "Sohib: schedule the Weston WhatsApp config call — unblocks GHL CRM go-live for that location.",
       "blocks": [
         {
-          "item": "GHL Weston WhatsApp number configuration",
+          "item": "GHL Weston WhatsApp number configuration pending call",
           "side": "client",
-          "who": "Mateus / client IT",
-          "last_activity": "Standup flags call still not scheduled, item open 5 days"
-        },
-        {
-          "item": "Neuryn webhook timeline for GHL rollout",
-          "side": "client",
-          "who": "Neuryn contact",
-          "last_activity": "Standup flags no timeline received, open 4 days"
+          "who": "Mateus / MedStation team",
+          "last_activity": "Standup card flags config pending call, stalled 6 days"
         }
       ],
       "snapshot": [
         {
           "label": "Open items",
-          "value": "8 open, all in-progress; 2 blocked on client config calls",
+          "value": "8 open, all in progress, 1 awaiting client call for Weston WhatsApp config",
           "tone": "warn"
         },
         {
           "label": "Contract",
-          "value": "Phase 1, Month 2 of 3; flat retainer $3,500–$5,000/mo",
+          "value": "Phase 1 proof-of-concept, Jul–Sep 2026, $3,500–$5,000/mo flat retainer",
           "tone": "muted"
         },
         {
           "label": "Last client word",
-          "value": "2026-08-25 — Thainã granted editor access in GHL",
+          "value": "2026-08-21 — Weston leads folder shared with access credentials",
           "tone": "plain"
         },
         {
           "label": "Judged on",
-          "value": "Booked appointments and reactivated patients",
+          "value": "Booked appointments and reactivated patients (Phase 1 benchmark)",
           "tone": "plain"
         }
       ],
-      "history_line": "MedStation & Full Smile websites launched live · GHL–NextGen Mirror marked Done · Digital Ocean HIPAA machine created"
+      "history_line": "MedStation + Full Smile websites launched live · GHL–NextGen Mirror marked Done · Separate Digital Ocean machine built for HIPAA compliance"
     }
   },
   "brief_v2": {
-    "verdict": "Team is moving on GHL go-live; two client-side config items must clear first.",
-    "next_move": "Sohib: schedule Weston WhatsApp call with client — last config blocker before GHL goes live.",
+    "verdict": "Work is moving well; GHL Weston WhatsApp config is the one open loop needing a call.",
+    "next_move": "Sohib: schedule the Weston WhatsApp config call — unblocks GHL CRM go-live for that location.",
     "blocks": [
       {
-        "item": "GHL Weston WhatsApp number configuration",
+        "item": "GHL Weston WhatsApp number configuration pending call",
         "side": "client",
-        "who": "Mateus / client IT",
-        "last_activity": "Standup flags call still not scheduled, item open 5 days"
-      },
-      {
-        "item": "Neuryn webhook timeline for GHL rollout",
-        "side": "client",
-        "who": "Neuryn contact",
-        "last_activity": "Standup flags no timeline received, open 4 days"
+        "who": "Mateus / MedStation team",
+        "last_activity": "Standup card flags config pending call, stalled 6 days"
       }
     ],
     "snapshot": [
       {
         "label": "Open items",
-        "value": "8 open, all in-progress; 2 blocked on client config calls",
+        "value": "8 open, all in progress, 1 awaiting client call for Weston WhatsApp config",
         "tone": "warn"
       },
       {
         "label": "Contract",
-        "value": "Phase 1, Month 2 of 3; flat retainer $3,500–$5,000/mo",
+        "value": "Phase 1 proof-of-concept, Jul–Sep 2026, $3,500–$5,000/mo flat retainer",
         "tone": "muted"
       },
       {
         "label": "Last client word",
-        "value": "2026-08-25 — Thainã granted editor access in GHL",
+        "value": "2026-08-21 — Weston leads folder shared with access credentials",
         "tone": "plain"
       },
       {
         "label": "Judged on",
-        "value": "Booked appointments and reactivated patients",
+        "value": "Booked appointments and reactivated patients (Phase 1 benchmark)",
         "tone": "plain"
       }
     ],
-    "history_line": "MedStation & Full Smile websites launched live · GHL–NextGen Mirror marked Done · Digital Ocean HIPAA machine created"
+    "history_line": "MedStation + Full Smile websites launched live · GHL–NextGen Mirror marked Done · Separate Digital Ocean machine built for HIPAA compliance"
   }
 }
