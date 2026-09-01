@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-31T15:52:08.605140+00:00",
+  "updatedAt": "2026-09-01T18:14:40.338212+00:00",
   "items": [
     {
       "id": "websEo-pricing-question",
@@ -1224,6 +1224,127 @@
       "nullReason": null,
       "priority": 1,
       "createdAt": "2026-08-29T18:15:52.594090+00:00"
+    },
+    {
+      "id": "medstation-golive-walkthrough-9-2",
+      "title": "GHL Setup",
+      "note": "Context: the 8/31 MedStation go live test set an internal end to end walkthrough for Wednesday 9/2 (one hour, Ahmed leading, Sohib attending) and a client demo for Friday 9/4, and made the pre go live walkthrough a standing process for this team. Deliverable: record the go live sequence on the parent workstream and run the account end to end before Wednesday. Dependencies: WhatsApp connectivity into GHL is the one open gate before the demo. Done: walkthrough run, defects logged on their own subitems, Friday demo confirmed or moved with a reason. Board audit 2026-09-01 across all four boards with subitems: GHL Setup (12665521507) is the MedStation CRM workstream parent and is the right home for the go live sequence. Everything else raised in this meeting is already covered and was deliberately not redrafted: WhatsApp connectivity by the pending medstation-whatsapp-ghl-connect card, the reschedule duplicate deletion logic by the pending medstation-appointment-sync-duplicates card, webhook booking field mappings by medstation-booking-webhook-delay on subitem 12825164498, phone consolidation by medstation-weston-number-porting on subitem 12484780179, and source tracking by subitem 12484780178 which is already Done. Nothing on Ads, Video or Web + SEO touches this.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with MedStation, 8/31",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12665521507",
+        "itemName": "GHL Setup",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> The 31 August MedStation go live test set the final sequence for this build. An internal end to end walkthrough is <strong>scheduled Wednesday 2 September</strong>, one hour, Ahmed leading and Sohib on the call, covering every workflow on the account rather than the pieces each person built. The client demo follows on <strong>Friday 4 September</strong>. This update records that sequence on the parent workstream so the go live date is visible in one place instead of living in a meeting recording.</li><li><strong>Walkthrough scope.</strong> Run the account end to end before Wednesday, not during the call. The call is a review, so arrive with a working pass already done: inbound lead capture, the messaging workflows, lead escalation, the reactivation build, review engine, source tracking, and the NextGen appointment sync all exercised against live data. Anything that does not fire cleanly gets raised Wednesday, not Friday in front of the client.</li><li><strong>Open gate before the demo.</strong> WhatsApp connectivity into GHL is still the one outstanding blocker. The messaging and lead escalation workflows cannot be demonstrated end to end until it is connected and the WhatsApp messaging fields are populated in the workflows. That build is tracked on its own WhatsApp GHL Connect draft and is deliberately not restated here. <strong>Do not</strong> schedule the Friday demo as confirmed with MedStation until WhatsApp passes a live send and receive test.</li><li><strong>Also in flight, tracked elsewhere.</strong> The webhook booking field mappings and the deletion logic that stops a rescheduled NextGen appointment leaving a stale duplicate are both live workstreams on their own subitems. Phone consolidation and source tracking need a verification pass once the integration work settles, and that verification belongs inside the Wednesday walkthrough rather than as separate work.</li><li><strong>Process change worth keeping.</strong> A full internal walkthrough before any client go live is now the standard for this team, not a one off for MedStation. It exists because onboarding confusion has come from the client seeing a workflow before anyone internally has run the whole account in one sitting.</li><li><strong>Dependencies.</strong> Depends on WhatsApp connectivity landing first, and on Sohib being available for the Wednesday hour. No client dependency for the walkthrough itself. The Friday demo depends on MedStation confirming attendance.</li><li><strong>done = </strong> the Wednesday internal walkthrough has run with every workflow on the account exercised against live data, every defect found is logged on its own subitem, and the Friday client demo is either confirmed or explicitly moved with a reason recorded here.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 1,
+      "createdAt": "2026-09-01T18:14:40.338151+00:00"
+    },
+    {
+      "id": "liferun-ghl-pricing-alignment",
+      "title": "Pricing Alignment",
+      "note": "Context: the 8/31 Liferun sales onboarding found GoHighLevel subscription and add on pricing out of step with the website, with the website named as source of truth. Sierra starts taking inbound ad calls the next day and quotes from these numbers, so a rep can quote one price while Stripe charges another. Deliverable: audit and correct every plan and add on in the GHL catalogue against the website, then verify through real test checkouts that Stripe captures the right amount. Dependencies: none external, can start immediately; Sohib's payment walkthrough for Sierra should be recorded after this lands. Done: catalogue matches the website and three test checkouts capture correctly. Board audit 2026-09-01 across all four boards with subitems: the Liferun CRM group holds HANDOFF, BWS Verification, Shippo Test, QA Reroute, Becklar Deactivation and Return Automation, none of which touch pricing or payment configuration; Liferun on Ads is Meta Ads, Google Ads and Reports, on Web + SEO is Website, Reports and GBP, and Liferun has no Video presence. Nothing matching anywhere, so this drafts as a new CRM item.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Liferun",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Liferun, 8/31",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mkwj9a1c",
+        "itemName": "Pricing Alignment",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> The 31 August Liferun sales onboarding session surfaced a live mismatch between the subscription prices configured in GoHighLevel and the prices published on the Liferun website. Sierra Felicidad joins as the sales rep taking inbound Meta and Google Ads calls and starts quoting from these numbers immediately, so a rep can currently quote one price on a call and the Stripe checkout can charge another.</li><li><strong>The website is the source of truth.</strong> Where GoHighLevel and the website disagree, the website wins and GoHighLevel gets corrected to match. <strong>Do not</strong> resolve a mismatch the other way round by editing the website to fit a GoHighLevel product.</li><li><strong>Audit and correct every plan and add on</strong> in the GoHighLevel product catalogue against the website: the monthly plan and its device fee, the annual monitoring plan sold with free device and free shipping, and the paid add ons including fall detection. Prices quoted in the session ranged from roughly $40 per month up to $359 and $479 on the annual plans, and those figures did not line up cleanly, which is exactly the gap to close. Take the current website as the reference and correct the catalogue, do not work from the numbers in this note.</li><li><strong>Verify through Stripe, not just in the catalogue view.</strong> Run a real test checkout for one monthly plan, one annual plan, and one plan with an add on attached, and confirm the amount Stripe actually captures matches the website. A corrected product record that still has a stale price object attached in Stripe will keep charging the old amount.</li><li><strong>Dependencies and constraints.</strong> No third party dependency, this can start immediately. Sohib owes Sierra a payment processing walkthrough covering subscriptions and add ons, and that walkthrough should be recorded after this correction lands rather than before, so it does not document the wrong prices. Prorated refunds and the no contract policy stay as they are, this item does not change commercial terms, only the configured amounts.</li><li><strong>done = </strong> every Liferun plan and add on in GoHighLevel matches the published website price, and a test checkout on a monthly plan, an annual plan and an add on captures the correct amount in Stripe, with the three test results posted here.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 1,
+      "createdAt": "2026-09-01T18:14:40.338151+00:00"
+    },
+    {
+      "id": "liferun-sierra-call-ownership",
+      "title": "Sales Call Routing",
+      "note": "Context: the 8/31 Liferun sales onboarding put Sierra Felicidad on every inbound Meta Ads and Google Ads sales call starting 9/1, but GoHighLevel does not yet route those calls to her and her Liferun email and GHL user still need confirming. Per the prerequisite rule in drafting-rules.md the account creation and the routing change are drafted as one item with explicit sequencing rather than as two, because assigning ownership to a user record that does not exist fails silently. Deliverable: confirm the account, set Sierra as primary owner and routing target for paid inbound, reconfirm source tagging and missed call logging, then live test through Lead Connector on her handset. Dependencies: internally blocked on Sohib issuing the email and GHL credentials. Done: live test calls on both channels ring her, tag correctly and land in her pipeline with her as owner. Board audit 2026-09-01 across all four boards with subitems: no existing Liferun item on CRM, Ads, Web + SEO or Video covers call ownership or lead routing; the CRM group's live items are HANDOFF, BWS Verification, Shippo Test, QA Reroute, Becklar Deactivation and Return Automation. Nothing matching anywhere.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Liferun",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Liferun, 8/31",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mkwj9a1c",
+        "itemName": "Sales Call Routing",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> Sierra Felicidad is joining Liferun as the sales rep who answers every inbound call generated by Meta Ads and Google Ads, and she is expected to start taking those calls from 1 September. Today those calls are not pointed at anyone in particular in GoHighLevel, so without this change her first day produces unrouted calls and leads with no owner.</li><li><strong>Step one, confirm the account exists.</strong> Sierra's new Liferun email account and her GoHighLevel user need to be created and confirmed working before anything is pointed at her. <strong>Do not start step two before step one is done</strong>, assigning ownership to a user record that does not exist yet fails silently and the calls simply go nowhere.</li><li><strong>Step two, make Sierra the owner of paid inbound.</strong> Set her as primary owner and routing target for inbound calls attributed to Meta Ads and Google Ads so those calls funnel to her rather than round robin across the account. Existing customer service traffic and returns stay with the customer service rep and must not be rerouted.</li><li><strong>Step three, confirm tagging still holds.</strong> Calls are tagged by source on arrival and missed calls are logged automatically. Confirm both still behave once ownership changes, and that a contact is still tagged as new lead or existing customer correctly, since the follow up automation of up to three touches per week keys off those tags.</li><li><strong>Step four, test on her device.</strong> Sierra takes calls through Lead Connector on her phone. Place a live test call through a Meta Ads number and a Google Ads number, confirm both ring on her handset, confirm a missed call is logged with its source, and confirm the resulting contact lands in her pipeline with her as owner.</li><li><strong>Dependencies.</strong> Blocked internally on the Liferun email account and GoHighLevel credentials being issued to Sierra, which sits with Sohib. No third party dependency beyond that. Related but separate: the subscription pricing in GoHighLevel is being corrected on its own item, and the downstream fulfillment pipeline is being verified on another, neither is in scope here.</li><li><strong>done = </strong> a live test call placed through both a Meta Ads and a Google Ads number rings Sierra on Lead Connector, the resulting contact carries the correct source tag with Sierra as owner, and a deliberately missed test call is logged against the right source.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 1,
+      "createdAt": "2026-09-01T18:14:40.338151+00:00"
+    },
+    {
+      "id": "liferun-fulfillment-pipeline-test",
+      "title": "Fulfillment Pipeline Test",
+      "note": "Context: the 8/31 Liferun sales onboarding asked for a verification pass over the automation downstream of a closed deal, covering pipeline stage transitions and notifications through payment, device activation, setup call and shipping, before real orders start flowing from Sierra's calls. Deliverable: drive one dummy contact from closed won to shipped and confirm every stage transition, notification recipient and the post sale data collection. Dependencies: the GHL pricing correction should land first so a test checkout represents a real order. Done: every stage observed and every notification confirmed delivered, pass or fail posted per stage. Board audit 2026-09-01 across all four boards with subitems: Shippo Test (12472536053, Ongoing) owns label generation, label detail, tracking writeback and the shipping SOP, which is the label mechanics rather than the pipeline stages and notifications, and Return Automation (12472536320) and Becklar Deactivation (12472536909) own the return and deactivation paths. Per the merge counter rule in drafting-rules.md these are different kinds of work from a stage and notification audit, so this drafts as a separate item with Shippo Test named explicitly as out of scope rather than folded into it. Nothing on Ads, Web + SEO or Video touches this.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Liferun",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Liferun, 8/31",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mkwj9a1c",
+        "itemName": "Fulfillment Pipeline Test",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> With Sierra taking live sales calls from 1 September, Liferun starts closing deals through the GoHighLevel pipeline again, and the automation that runs after a deal closes has not been exercised end to end since it was built. The 31 August onboarding session flagged the whole downstream path as needing a verification pass before real orders start flowing through it.</li><li><strong>Walk one test deal through every stage.</strong> Take a dummy contact from closed won through Stripe payment, device activation, the customer setup call, and shipping, and confirm the opportunity actually moves stage by stage rather than stalling in the stage it was closed in. Record which stage each transition lands in.</li><li><strong>Confirm every notification fires and reaches a real person.</strong> Each stage transition should notify whoever owns the next action, and the customer service rep handles fulfillment and follow up rather than the sales rep. A notification that fires into an unwatched inbox is the same as no notification, so check the recipient as well as the trigger.</li><li><strong>Confirm the post sale data collection runs.</strong> Emergency contact and medical information is gathered after the sale, not during it, and that collection is part of this path. A device that ships without those details on file is not a completed order.</li><li><strong>Dependencies and scope.</strong> Depends on the GoHighLevel pricing correction landing first, since a test checkout against a wrong price object will not represent a real order. <strong>Do not</strong> duplicate Shippo Test (12472536053), which owns label generation, label detail verification, tracking writeback and the shipping SOP. This item is the pipeline stages and notifications around that work, not the label mechanics themselves. Return and deactivation paths stay on Return Automation and Becklar Deactivation.</li><li><strong>done = </strong> one dummy contact has been driven from closed won to shipped with every pipeline stage transition observed, every stage notification confirmed delivered to the right owner, and the post sale data collection confirmed to have run, with the pass or fail of each stage posted here.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-09-01T18:14:40.338151+00:00"
+    },
+    {
+      "id": "waise-ebrahimi-dental-prospect",
+      "title": "Waise Ebrahimi, dental prospect not on roster",
+      "note": "unmapped-client: the 8/31 call between Sohib and Waise Ebrahimi is a real prospect conversation, but Waise Ebrahimi is not in config.json's client roster and has no group on any of the four boards, so there is nothing to audit against and no group to route to. What was discussed: a multi specialty dental practice, eight to nine dentists, roughly $11M annual revenue, strong local brand with many five star reviews and top organic ranking on branded search, but weak on unbranded high intent terms such as dental implants Manhattan. They run PPC, Meta and local ads plus social, are unhappy with their current SEO agency and will switch it if traction does not improve, and are evaluating TikTok ads. Tech stack is Care Stack with a possible move to Open Dental, and they are locked into a roughly $50,000 HubSpot contract for lead to revenue attribution, which rules out changing systems in the near term. Flow positioned itself as a fractional CMO unifying ads, SEO, CRM and EMR data into one attribution dashboard, and offered guidance on verifying the HubSpot to Care Stack integration is actually attributing correctly. Near term commitment on our side: send Waise a follow up message with direct contact information and stay available for marketing and dashboard questions during the HubSpot term. Decision point: revisit after the HubSpot contract ends, most likely as a dashboard only engagement, contingent on getting access to Care Stack or whichever PMS they land on. Needs Naz to confirm whether this becomes a tracked prospect and whether the practice name rather than the contact name should be the roster entry before anything is drafted onto a board.",
+      "status": "confirm",
+      "board": null,
+      "group": null,
+      "potentialClient": "Waise Ebrahimi",
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Waise Ebrahimi, 8/31",
+      "payload": null,
+      "nullReason": "unmapped-client",
+      "priority": 3,
+      "createdAt": "2026-09-01T18:14:40.338151+00:00"
+    },
+    {
+      "id": "steve-esposito-dental-prospect",
+      "title": "Steve Esposito, dental prospect not on roster",
+      "note": "unmapped-client: the 8/31 call between Sohib and Steve Esposito, a dental administrator, is a real prospect conversation, but Steve Esposito is not in config.json's client roster and has no group on any of the four boards, so there is nothing to audit against and no group to route to. What was discussed: two fee for service practices being merged to cut overhead, consolidating software onto Archie cloud and dropping about $3,000 a month to roughly $1,300 while unifying patient data across both sites. Deep marketing skepticism from a prior effort that spent about $30,000 and produced five patients, several of whom did not pay or were out of area. Fee for service pricing and an aging patient base limit growth, and PPOs are seen as a guaranteed 40 percent revenue loss, so marketing is treated as the risky alternative rather than the obvious one. Flow pitched an integrated in house department model at $3,500 per month plus $1,500 to $2,000 ad spend targeting 10 to 15 new patients a month, leaning on review velocity, localized content and unified ads, SEO, content and CRM under one team, in contrast to the fragmented freelancer setup that failed before. Near term commitment on our side: send a detailed pitch deck covering introduction, department structure, service offerings, timeline and expected results, with direct contact information in the follow up email. Decision point: he reviews the deck and decides whether to schedule a follow up, and he has asked for clear performance metrics, regular updates and documented ROI before committing to roughly $60,000 a year. Needs Naz to confirm whether this becomes a tracked prospect and where the pitch deck task should live before anything is drafted onto a board.",
+      "status": "confirm",
+      "board": null,
+      "group": null,
+      "potentialClient": "Steve Esposito",
+      "source": "fireflies",
+      "sourceLabel": "Meeting with Steve Esposito, 8/31",
+      "payload": null,
+      "nullReason": "unmapped-client",
+      "priority": 2,
+      "createdAt": "2026-09-01T18:14:40.338151+00:00"
     }
   ]
 }
