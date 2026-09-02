@@ -4,20 +4,48 @@
   "slug": "medstation",
   "name": "MedStation",
   "brief": {
-    "date": "2026-09-01",
+    "date": "2026-09-02",
     "headlines": [
       {
-        "text": "Websites live; tracking operational",
+        "text": "Domain access confirmed; site live in 24–48h",
         "tone": "win"
       },
       {
-        "text": "GHL Weston WhatsApp config still pending call",
+        "text": "WhatsApp number access committed by Mateus tomorrow",
+        "tone": "info"
+      },
+      {
+        "text": "GHL walkthrough scheduled Wednesday",
         "tone": "info"
       }
     ],
     "workstreams": [
       {
-        "title": "MedStation - Web / Infrastructure",
+        "title": "MedStation - CRM / GHL",
+        "badge": {
+          "label": "P1 - needs attention",
+          "tone": "amber"
+        },
+        "items": [
+          {
+            "state": "next",
+            "text": "GHL WhatsApp walkthrough — Wednesday 2026-09-03 client demo"
+          },
+          {
+            "state": "blocked",
+            "text": "WhatsApp number access — Mateus to provide first thing 2026-09-03"
+          },
+          {
+            "state": "blocked",
+            "text": "Webhook deletion logic for duplicate appointments — not yet resolved"
+          }
+        ],
+        "owners": [
+          "Sohib"
+        ]
+      },
+      {
+        "title": "MedStation - Web / SEO",
         "badge": {
           "label": "P1 - on track",
           "tone": "green"
@@ -25,100 +53,81 @@
         "items": [
           {
             "state": "done",
-            "text": "Med Station and Full Smile websites launched live"
+            "text": "Domain access confirmed; site live within 24–48 hours"
           },
           {
             "state": "done",
-            "text": "Separate Digital Ocean setup completed for HIPAA compliance"
+            "text": "New WordPress staging site built by Hashir Faiz"
           },
           {
             "state": "done",
-            "text": "Tracking integration built on webhook and dataLayer model, fully operational"
-          },
-          {
-            "state": "done",
-            "text": "Webhook errors on website forms corrected for proper lead capture"
+            "text": "Med Station website launched live"
           }
         ],
         "owners": [
-          "Rafael Rolim",
-          "Hamza Saeed"
-        ]
-      },
-      {
-        "title": "MedStation - CRM / GHL",
-        "badge": {
-          "label": "P1 - blocked",
-          "tone": "red"
-        },
-        "items": [
-          {
-            "state": "blocked",
-            "text": "GHL Weston WhatsApp number config pending — call not yet scheduled"
-          },
-          {
-            "state": "next",
-            "text": "Schedule and complete Weston WhatsApp configuration call"
-          }
-        ]
-      },
-      {
-        "title": "MedStation - Ads / LSA",
-        "badge": {
-          "label": "P2 - on track",
-          "tone": "amber"
-        },
-        "items": [
-          {
-            "state": "done",
-            "text": "LSA scheduled (due 2026-08-31)"
-          }
-        ]
-      },
-      {
-        "title": "MedStation - Patient Comms",
-        "badge": {
-          "label": "P2 - on track",
-          "tone": "green"
-        },
-        "items": [
-          {
-            "state": "done",
-            "text": "Appointment confirmations, reminders, and no-show follow-ups completed"
-          }
-        ],
-        "owners": [
-          "Thainã"
+          "Hashir Faiz"
         ]
       }
     ],
-    "waiting_on_client": [],
-    "launch_gate": null,
+    "waiting_on_client": [
+      {
+        "item": "WhatsApp number access for GHL integration",
+        "who": "Mateus",
+        "since": "9/2"
+      }
+    ],
+    "launch_gate": {
+      "title": "Launch gate - clear before GHL WhatsApp goes live",
+      "items": [
+        {
+          "text": "Mateus provides WhatsApp number access",
+          "done": false
+        },
+        {
+          "text": "GHL WhatsApp walkthrough completed (Wed 9/3)",
+          "done": false
+        },
+        {
+          "text": "Webhook deletion logic resolved (duplicate appointments)",
+          "done": false
+        },
+        {
+          "text": "Domain live (24–48h window)",
+          "done": false
+        }
+      ]
+    },
     "brief_v2": {
-      "verdict": "Team's move: GHL Weston WhatsApp config is the one live blocker awaiting a call.",
-      "next_move": "Team: schedule and run GHL Weston WhatsApp configuration call — only open CRM blocker.",
+      "verdict": "Client's move: Mateus owes WhatsApp number access tomorrow before Wednesday's GHL walkthrough.",
+      "next_move": "Sohib: confirm Mateus delivers WhatsApp access 9/3 — unlocks Wednesday GHL demo and integration.",
       "blocks": [
         {
-          "item": "GHL Weston WhatsApp number configuration pending call",
+          "item": "GHL Setup — WhatsApp number access",
+          "side": "client",
+          "who": "Mateus",
+          "last_activity": "Mateus committed to providing WhatsApp number first thing tomorrow"
+        },
+        {
+          "item": "GHL Setup — Webhook deletion logic",
           "side": "team",
-          "who": "CRM team",
-          "last_activity": "Standup card flags config pending a call, no call yet booked"
+          "who": "Sohib",
+          "last_activity": "Duplicate appointment webhook logic flagged as unresolved in standup"
         }
       ],
       "snapshot": [
         {
           "label": "Open items",
-          "value": "8 open, all in working status; 1 CRM item blocked on a pending call",
+          "value": "8 open, 2 moving this week, 1 awaiting client (WhatsApp access)",
           "tone": "warn"
         },
         {
           "label": "Contract",
-          "value": "Phase 1 proof-of-concept, July–September 2026, $3,500–$5,000/mo retainer",
-          "tone": "muted"
+          "value": "Month 3 of 3 (Phase 1 proof-of-concept, started July 1)",
+          "tone": "warn"
         },
         {
           "label": "Last client word",
-          "value": "No new client-side comms this period",
+          "value": "2026-09-02 — Mateus committed WhatsApp number access for tomorrow",
           "tone": "plain"
         },
         {
@@ -127,34 +136,40 @@
           "tone": "plain"
         }
       ],
-      "history_line": "Websites launched live · Tracking integration fully operational · Digital Ocean HIPAA setup complete"
+      "history_line": "Med Station & Full Smile websites launched live · Tracking integration built on webhook/dataLayer, fully operational · Patient confirmations, reminders & no-show follow-ups completed"
     }
   },
   "brief_v2": {
-    "verdict": "Team's move: GHL Weston WhatsApp config is the one live blocker awaiting a call.",
-    "next_move": "Team: schedule and run GHL Weston WhatsApp configuration call — only open CRM blocker.",
+    "verdict": "Client's move: Mateus owes WhatsApp number access tomorrow before Wednesday's GHL walkthrough.",
+    "next_move": "Sohib: confirm Mateus delivers WhatsApp access 9/3 — unlocks Wednesday GHL demo and integration.",
     "blocks": [
       {
-        "item": "GHL Weston WhatsApp number configuration pending call",
+        "item": "GHL Setup — WhatsApp number access",
+        "side": "client",
+        "who": "Mateus",
+        "last_activity": "Mateus committed to providing WhatsApp number first thing tomorrow"
+      },
+      {
+        "item": "GHL Setup — Webhook deletion logic",
         "side": "team",
-        "who": "CRM team",
-        "last_activity": "Standup card flags config pending a call, no call yet booked"
+        "who": "Sohib",
+        "last_activity": "Duplicate appointment webhook logic flagged as unresolved in standup"
       }
     ],
     "snapshot": [
       {
         "label": "Open items",
-        "value": "8 open, all in working status; 1 CRM item blocked on a pending call",
+        "value": "8 open, 2 moving this week, 1 awaiting client (WhatsApp access)",
         "tone": "warn"
       },
       {
         "label": "Contract",
-        "value": "Phase 1 proof-of-concept, July–September 2026, $3,500–$5,000/mo retainer",
-        "tone": "muted"
+        "value": "Month 3 of 3 (Phase 1 proof-of-concept, started July 1)",
+        "tone": "warn"
       },
       {
         "label": "Last client word",
-        "value": "No new client-side comms this period",
+        "value": "2026-09-02 — Mateus committed WhatsApp number access for tomorrow",
         "tone": "plain"
       },
       {
@@ -163,6 +178,6 @@
         "tone": "plain"
       }
     ],
-    "history_line": "Websites launched live · Tracking integration fully operational · Digital Ocean HIPAA setup complete"
+    "history_line": "Med Station & Full Smile websites launched live · Tracking integration built on webhook/dataLayer, fully operational · Patient confirmations, reminders & no-show follow-ups completed"
   }
 }
