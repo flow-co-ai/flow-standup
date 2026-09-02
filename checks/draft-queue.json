@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-02T22:50:55.959Z",
+  "updatedAt": "2026-09-02T23:17:33.512Z",
   "items": [
     {
       "id": "websEo-pricing-question",
@@ -1184,14 +1184,15 @@
         "boardId": "18418241405",
         "parentItemId": "12471736810",
         "itemName": "Minor HIPAA Conditional",
-        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> At the Maadi Law GHL go live session on 8/28, Tracy walked through document sending on live contacts and hit a case where the client is a minor. The standard HIPAA agreement automation currently fires on every contact moved into Collect Documents, which is wrong for a minor because the parent or guardian is the one who signs, and the Northwestern Medicine HIPAA form has to go out separately from the rest of the pack.</li><li><strong>Add</strong> a minor tag and a parent tag on the contact record, and gate the automatic HIPAA agreement send on the minor tag being absent. A contact tagged minor should fall through to the manual path instead of receiving the adult agreement.</li><li><strong>Build</strong> a minor specific HIPAA template that prefills both the minor's details and the parent or guardian's details, so Tracy is not retyping them each time.</li><li><strong>Keep</strong> the manual Collect Documents route available so the Northwestern Medicine HIPAA and the representation agreement can be sent individually when the automation is suppressed.</li><li><strong>Walk Tracy through</strong> sending a contract and managing signatures inside GHL, including the minor template, during one of the weekend support sessions Sohib offered.</li><li><strong>Dependencies and constraints.</strong> Rides on the Document Automation build already open on this workstream. The tag names have to match the wider tagging scheme being tidied up for rejected, disengaged and qualified leads, so agree the exact strings first. <strong>Do not</strong> change the trigger on the existing adult HIPAA automation while doing this.</li><li><strong>Done.</strong> A contact tagged minor never receives the standard HIPAA agreement automatically, the minor template with parent and minor fields can be sent manually from Collect Documents, and Tracy has sent one through end to end without help.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> At the Maadi Law GHL go live session on 8/28, Tracy walked through document sending on live contacts and hit a case where the client is a minor. The standard HIPAA agreement automation currently fires on every contact moved into Collect Documents, which is wrong for a minor because the parent or guardian is the one who signs, and the Northwestern Medicine HIPAA form has to go out separately from the rest of the pack.</li><li><strong>Add</strong> a minor tag and a parent tag on the contact record, and gate the automatic HIPAA agreement send on the minor tag being absent. A contact tagged minor should fall through to the manual path instead of receiving the adult agreement.</li><li><strong>Build</strong> a minor specific HIPAA template that prefills both the minor's details and the parent or guardian's details, so Tracy is not retyping them each time.</li><li><strong>Keep</strong> the manual Collect Documents route available so the Northwestern Medicine HIPAA and the representation agreement can be sent individually when the automation is suppressed.</li><li><strong>]Dependencies and constraints.</strong> Rides on the Document Automation build already open on this workstream. The tag names have to match the wider tagging scheme being tidied up for rejected, disengaged and qualified leads, so agree the exact strings first. <strong>Do not</strong> change the trigger on the existing adult HIPAA automation while doing this.</li><li><strong>Done.</strong> A contact tagged minor never receives the standard HIPAA agreement automatically, the minor template with parent and minor fields can be sent manually from Collect Documents, and Tracy has sent one through end to end without help.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
         "blocked": false,
         "needsNaz": false,
         "parentItemName": "Document Handling"
       },
       "nullReason": null,
       "priority": 1,
-      "createdAt": "2026-08-29T18:15:52.594090+00:00"
+      "createdAt": "2026-08-29T18:15:52.594090+00:00",
+      "updatedAt": "2026-09-02T23:17:33.510Z"
     },
     {
       "id": "maadilaw-intake-form-fields",
