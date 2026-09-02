@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-02T21:19:23.483Z",
+  "updatedAt": "2026-09-02T21:44:43.641Z",
   "items": [
     {
       "id": "websEo-pricing-question",
@@ -591,14 +591,15 @@
         "boardId": "18418241405",
         "parentItemId": "12471734017",
         "itemName": "Clio Push Button",
-        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> The 24 August go live checkin asked for a manual push button inside GHL that sends a selected contact into Clio Manage, creating both the Clio contact and the matter in one action, with an update due before the Maadi Law onboarding call. Today everything moves by hand, which is the main friction Tracy's intake flow still has.</li><li><strong>Prerequisite, and it is not confirmed.</strong> The Clio Manage integration method has been Waiting since 24 July, blocked pending a decision between the native connector, Zapier, and a custom Clio Manage API and webhook integration. The standing recommendation on that subitem is the custom API route with Clio as source of truth. The button cannot be built until that call is made, because the transport it uses is exactly what is being decided.</li><li><strong>Step one, approve the integration method.</strong> Naz or Sohib to confirm the custom Clio Manage API and webhook route, or name the alternative. <strong>Do not start step two before step one is approved.</strong></li><li><strong>Step two, build the button.</strong> It triggers on a selected GHL contact, checks first for an existing Clio Contact ID on that record, then creates the Clio contact and the associated matter, writes the returned Clio Contact ID and Matter ID back onto the GHL contact, and logs any failure visibly rather than failing silently. A second press on the same contact must update the existing Clio records rather than create a second matter.</li><li><strong>Constraints.</strong> <strong>Do not</strong> touch the historical owner mapping table that was already imported and verified on 24 July, and keep the first phase one way from GHL into Clio for this button so it does not collide with the Clio to GHL owner sync being built on the sibling subitem. Clio API credentials are needed before step two can start.</li><li><strong>done = </strong> pressing the button on a GHL contact creates exactly one matching Clio Manage contact and one matter, both ids written back onto the GHL contact, and a second press on the same contact updates rather than duplicating, verified on a test case.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> The 24 August go live checkin asked for a manual push button inside GHL that sends a selected contact into Clio Manage, creating both the Clio contact and the matter in one action, with an update due before the Maadi Law onboarding call. Today everything moves by hand, which is the main friction Tracy's intake flow still has.</li><li><strong>Build the button.</strong> It triggers on a selected GHL contact, checks first for an existing Clio Contact ID on that record, then creates the Clio contact and the associated matter, writes the returned Clio Contact ID and Matter ID back onto the GHL contact, and logs any failure visibly rather than failing silently. A second press on the same contact must update the existing Clio records rather than create a second matter.</li><li><strong>Constraints.</strong> <strong>Do not</strong> touch the historical owner mapping table that was already imported and keep the first phase one way from GHL into Clio for this button so it does not collide with the Clio to GHL owner sync being built on the sibling subitem. Clio API credentials are needed before step two can start.</li><li><strong>done = </strong> pressing the button on a GHL contact creates exactly one matching Clio Manage contact and one matter, both ids written back onto the GHL contact, and a second press on the same contact updates rather than duplicating, verified on a test case.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
         "blocked": false,
         "needsNaz": true,
         "parentItemName": "Clio Migration"
       },
       "nullReason": null,
       "priority": 1,
-      "createdAt": "2026-08-25T15:46:03.194287+00:00"
+      "createdAt": "2026-08-25T15:46:03.194287+00:00",
+      "updatedAt": "2026-09-02T21:44:43.639Z"
     },
     {
       "id": "elgin-dental-implants-prospect",
