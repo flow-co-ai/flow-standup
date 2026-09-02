@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-02T20:34:54.122Z",
+  "updatedAt": "2026-09-02T20:34:55.761Z",
   "items": [
     {
       "id": "websEo-pricing-question",
@@ -483,7 +483,7 @@
       "id": "medstation-booking-webhook-delay",
       "title": "Booking Document Tracking",
       "note": "Context: the 8/24 checkin established that the booking app webhook carries UTM and campaign data but does not create the appointment, which arrives separately via the NextGen sync, so mapping at webhook time creates a second contact. Deliverable: build a workflow that waits 30 minutes after the webhook fires then maps UTM and campaign values onto the contact the sync has created, matched on phone or email. Dependencies: still waiting on the integration spec requested from the booking vendor on 8/17 (endpoint, auth, UTM taxonomy, GTM container, confirmation event, domain), so this is blocked on a third party. Done: one contact per booking carrying its campaign values. Board audit 2026-08-25 across all four boards with subitems: Booking Document Tracking (12825164498) under GHL Setup is exactly this workstream and already holds the 8/17 spec request; nothing on Ads, Video or Web + SEO duplicates it.",
-      "status": "ready",
+      "status": "ignored",
       "board": "CRM",
       "group": "MedStation",
       "potentialClient": null,
@@ -499,7 +499,10 @@
       },
       "nullReason": null,
       "priority": 2,
-      "createdAt": "2026-08-25T15:46:03.194287+00:00"
+      "createdAt": "2026-08-25T15:46:03.194287+00:00",
+      "ignoreReason": "duplicate - 8/25 update already instructs the 30-min wait and why. Append the phone-first matching detail there instead of a second update.",
+      "ignoredAt": "2026-09-02T20:34:55.062Z",
+      "updatedAt": "2026-09-02T20:34:55.761Z"
     },
     {
       "id": "medstation-reactivation-whatsapp-gate",
