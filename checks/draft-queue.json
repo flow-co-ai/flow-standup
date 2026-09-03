@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-03T00:36:27.058Z",
+  "updatedAt": "2026-09-03T00:36:31.588Z",
   "items": [
     {
       "id": "websEo-pricing-question",
@@ -451,7 +451,7 @@
       "id": "medstation-appointment-sync-duplicates",
       "title": "NextGen Sync Fixes",
       "note": "Context: the 8/24 GHL go live checkin confirmed the NextGen to GHL appointment sync is running on the separate DigitalOcean instance that keeps MedStation PHI isolated for HIPAA, pushing appointment status every 15 minutes, but raised two defects: rescheduled appointments leave duplicate records because the sync account appears to lack delete rights on the mirror, and the sync overwrites the contact source field, destroying Google, Meta and LSA attribution. Deliverable: verify the 15 minute sync end to end, obtain delete rights and confirm reschedules no longer duplicate, stop the source overwrite and tag synced contacts Next Gen Sync. Dependencies: DigitalOcean mirror stability and MedStation IT granting delete rights. Done: one appointment record per booking after a reschedule, and source preserved with the tag applied. Board audit 2026-08-25 across all four boards with subitems: NextGen Mirror (12484780084) is the mirror build and is already Done, Source Tracking (12484780178) is Done and owns tracking configuration rather than sync behaviour, and nothing on Ads, Video or Web + SEO touches appointment sync. No existing item covers this, so it drafts as a new subitem under GHL Setup (12665521507).",
-      "status": "ready",
+      "status": "sent",
       "board": "CRM",
       "group": "MedStation",
       "potentialClient": null,
@@ -469,7 +469,7 @@
       "nullReason": null,
       "priority": 1,
       "createdAt": "2026-08-25T15:46:03.194287+00:00",
-      "updatedAt": "2026-09-03T00:36:27.058Z",
+      "updatedAt": "2026-09-03T00:36:31.580Z",
       "chatHistory": [
         {
           "role": "user",
@@ -479,7 +479,8 @@
           "role": "assistant",
           "content": "You're right — this one's doing a lot. It's really **two separate problems** that happen to touch the same sync:\n\n1. **Rescheduled appointments duplicate** (missing delete rights)\n2. **The sync destroys attribution data** (source field overwrite)\n\nThe current title \"Appointment Sync\" is too generic. A few options:\n\n**If you want to keep it as one item** (because both defects need fixing in the same sync script):\n- **NextGen Sync Fixes** (pairs well with the \"NextGen Sync\" tag mentioned in the done criteria)\n- **Appointment Sync Defects**\n\n**If you want to split it** (which I'd lean toward — different root causes, different kinds of fixes):\n- **Appointment Dedupe** (the delete-rights / reschedule problem) \n- **Source Preservation** (the attribution overwrite)\n\nThe second approach gives you cleaner done-states for each, and lets one close while the other might still be waiting on MedStation IT for delete rights.\n\nWhat's your preference — keep it together under a broader fix label, or split into two subitems under GHL Setup?"
         }
-      ]
+      ],
+      "mondayItemId": "12963841399"
     },
     {
       "id": "medstation-call-source-tagging",
