@@ -113,18 +113,24 @@ in config.json via `GOOGLE_SERVICE_ACCOUNT_JSON` — already a repo secret;
 in `inbox/whatsapp/` if present (it never is on a runner; Drive is the real
 source). Returns `{chat_name: [{"datetime", "sender", "text"}, ...]}`.
 
-**This was silently broken from the 2026-08-18 port until 2026-09-02.** The
-Drive mechanism above already existed and generate.py already used it
-successfully — the port's A4 never called it and mislabeled the gap "no
-ingestion source configured," and `draft-queue.yml` never had
-`GOOGLE_SERVICE_ACCOUNT_JSON` in its `env:` block, so even a correct call would
-have silently returned `{}` (`fetch_whatsapp_drive` returns `{}` on any
-failure, including missing creds — never raises). The three WhatsApp-sourced
-cards still in the queue from before the port (7/13, 7/23, 7/30) were the only
-evidence this ever ran. If this section ever reports zero messages again,
-confirm the secret is actually reaching this job before reporting it as "no
-new WhatsApp content" — a silent zero here has already read as "nothing new"
-once and hidden three-plus weeks of real content.
+**This was silently broken from the 2026-08-18 port until 2026-09-02 — twice
+over.** The Drive mechanism above already existed and generate.py already
+used it successfully; the port's A4 never called it at all, AND
+`draft-queue.yml` never had `GOOGLE_SERVICE_ACCOUNT_JSON` in its `env:`
+block either. Fixing the wiring fixed this one instance, not the mechanism:
+`fetch_whatsapp_drive` used to return `{}` on ANY failure, including a
+missing folder id or a missing secret — a broken fetch and a genuinely
+quiet week produced the exact same `{}`, which is what let the gap run 34
+days unnoticed. It no longer does. A missing/broken folder id or secret,
+or an outright auth/listing failure against Drive, now raises
+`fetch_whatsapp.WhatsAppConfigError` — **let it propagate. Do not catch it
+and continue.** Treat it exactly like A0's preflight failure: stop the
+entire run, do not proceed to A5, report the exact error as the thing that
+matters. A per-file problem (one corrupt zip, one undecodable export) is
+NOT this — `fetch_whatsapp_drive` still only warns and skips that one file,
+same as always, and the run continues normally with whatever else came
+back. The three WhatsApp-sourced cards still in the queue from before the
+port (7/13, 7/23, 7/30) were the only evidence this ever ran before today.
 
 For each chat, keep only messages with `datetime` after
 `state.whatsappHighWaterMark.get(chat_name)` (absent/null = every message in
@@ -327,8 +333,11 @@ what provides it now.
 
 ## Run summary
 
-If A0's preflight failed, that is the only thing worth saying. Say it, say state
-was left untouched, stop.
+If A0's preflight failed, or A4 raised `WhatsAppConfigError`, that is the only
+thing worth saying. Say it, say state was left untouched, stop. Both are the
+same class of failure: the mechanism is broken, not just quiet, and burying
+that inside a normal-looking summary is exactly how the 34-day WhatsApp gap
+went unnoticed.
 
 Otherwise, tight and scannable, no preamble:
 
@@ -336,10 +345,10 @@ Otherwise, tight and scannable, no preamble:
 2. `drafting-rules.md` version used — one line, every run, no exceptions.
 3. **JOB A** — meetings AND WhatsApp chats processed, drafts produced, clarified
    cards finalized and their outcomes. Any §19b merges or content-conflict cards,
-   naming the card id(s) involved. If A4 returned zero WhatsApp messages, say so
-   explicitly and note whether that's an empty window or a fetch/credential
-   failure — never report a silent zero as though it were the same thing as
-   "nothing new" (see A4's history). One line if nothing new.
+   naming the card id(s) involved. If A4 genuinely found zero new WhatsApp
+   messages, say so as an empty window, not a silent line item — a
+   fetch/credential failure never reaches this point at all (see the stop
+   condition above). One line if nothing new.
 4. **JOB B** — what needs attention today, by client, plus any stuck queue
    cards (no payload, 3+ days old) named by id. One sentence if nothing.
 5. Archive count, if A9 ran.

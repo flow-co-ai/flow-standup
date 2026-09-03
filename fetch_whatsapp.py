@@ -86,15 +86,37 @@ def parse_chat_file(filepath: Path, days_back: int = 7) -> list:
         return _parse_lines(fh, days_back)
 
 
+class WhatsAppConfigError(RuntimeError):
+    """The config/credential path failed -- fatal, never swallowed into {}.
+
+    A missing secret or a broken folder id means the WHOLE mechanism is
+    broken, not that there's nothing new to report -- and a silent {} reads
+    as exactly the same thing as a genuinely quiet week. That's what let the
+    2026-08-18 port's WhatsApp gap run 34 days unnoticed: draft-queue.yml
+    never had GOOGLE_SERVICE_ACCOUNT_JSON set, this function returned {}
+    either way, and nothing downstream could tell the difference. Per-file
+    problems (a corrupt zip, undecodable text) are NOT this -- those stay
+    warn-and-skip inside the loop below, same as always.
+    """
+
+
 def fetch_whatsapp_drive(config: dict, days_back: int = 7) -> dict:
     """
     Download and parse WhatsApp .txt exports from the Drive folder
-    specified by whatsapp_drive_folder_id in config. Returns {} on any failure.
+    specified by whatsapp_drive_folder_id in config.
+
+    Raises WhatsAppConfigError if the folder id or service-account secret is
+    missing, or if auth/listing against Drive fails outright. Callers (the
+    drafter via SKILL.md A4, generate.py) are expected to let this propagate
+    as a hard failure, not catch-and-degrade -- see the class docstring for
+    why a quiet {} here is never safe.
     """
     folder_id = config.get("whatsapp_drive_folder_id", "")
     sa_json_str = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON", "")
-    if not folder_id or not sa_json_str:
-        return {}
+    if not folder_id:
+        raise WhatsAppConfigError("whatsapp_drive_folder_id is not set in config.json")
+    if not sa_json_str:
+        raise WhatsAppConfigError("GOOGLE_SERVICE_ACCOUNT_JSON is not set in the environment")
 
     try:
         from google.oauth2 import service_account
@@ -116,57 +138,63 @@ def fetch_whatsapp_drive(config: dict, days_back: int = 7) -> dict:
             supportsAllDrives=True,
             includeItemsFromAllDrives=True,
         ).execute()
-
-        chats = {}
-        for file in resp.get("files", []):
-            name = file["name"]
-            lower = name.lower()
-            if not (lower.endswith(".txt") or lower.endswith(".zip")):
-                continue
-            chat_name = Path(name).stem
-            try:
-                buf = io.BytesIO()
-                downloader = MediaIoBaseDownload(
-                    buf, service.files().get_media(fileId=file["id"], supportsAllDrives=True)
-                )
-                done = False
-                while not done:
-                    _, done = downloader.next_chunk()
-                raw = buf.getvalue()
-
-                texts = []  # (chat_name, content)
-                if lower.endswith(".zip"):
-                    with zipfile.ZipFile(io.BytesIO(raw)) as zf:
-                        for zname in zf.namelist():
-                            if zname.lower().endswith(".txt"):
-                                inner = zf.read(zname).decode("utf-8", errors="replace")
-                                texts.append((chat_name, inner))
-                    if not texts:
-                        print(f"    ⚠️  '{name}': zip contains no .txt")
-                        continue
-                else:
-                    texts.append((chat_name, raw.decode("utf-8", errors="replace")))
-
-                for cname, content in texts:
-                    lines = content.splitlines(keepends=True)
-                    msgs = _parse_lines(lines, days_back)
-                    total_lines = sum(
-                        1 for ln in lines
-                        if _IOS.match(ln.rstrip("\n")) or _ANDROID.match(ln.rstrip("\n"))
-                    )
-                    print(f"    '{cname}': {total_lines} messages in file, "
-                          f"{len(msgs)} within last {days_back}d"
-                          + ("" if total_lines else "  ⚠️ format not recognised"))
-                    if msgs:
-                        chats[cname] = msgs
-            except Exception as exc:
-                print(f"    ⚠️  '{name}': {exc}")
-                chats[chat_name] = {"error": str(exc)}
-
-        return chats
     except Exception as exc:
-        print(f"  ⚠️  Drive WhatsApp unavailable: {exc}")
-        return {}
+        # Auth failure, bad/expired secret, bad folder id, SDK not installed,
+        # Drive unreachable -- all of these mean the mechanism itself is
+        # broken, same class as the missing-config checks above. Fatal.
+        raise WhatsAppConfigError(f"Drive auth/listing failed: {exc}") from exc
+
+    chats = {}
+    for file in resp.get("files", []):
+        name = file["name"]
+        lower = name.lower()
+        if not (lower.endswith(".txt") or lower.endswith(".zip")):
+            continue
+        chat_name = Path(name).stem
+        # Per-file problems only -- a corrupt zip or undecodable text is real
+        # noise in the export, not a reason to fail the whole run. Warn and
+        # move on; this is the ONE place {} (well, an {"error": ...} entry)
+        # is still the right shape, unlike the config/credential path above.
+        try:
+            buf = io.BytesIO()
+            downloader = MediaIoBaseDownload(
+                buf, service.files().get_media(fileId=file["id"], supportsAllDrives=True)
+            )
+            done = False
+            while not done:
+                _, done = downloader.next_chunk()
+            raw = buf.getvalue()
+
+            texts = []  # (chat_name, content)
+            if lower.endswith(".zip"):
+                with zipfile.ZipFile(io.BytesIO(raw)) as zf:
+                    for zname in zf.namelist():
+                        if zname.lower().endswith(".txt"):
+                            inner = zf.read(zname).decode("utf-8", errors="replace")
+                            texts.append((chat_name, inner))
+                if not texts:
+                    print(f"    ⚠️  '{name}': zip contains no .txt")
+                    continue
+            else:
+                texts.append((chat_name, raw.decode("utf-8", errors="replace")))
+
+            for cname, content in texts:
+                lines = content.splitlines(keepends=True)
+                msgs = _parse_lines(lines, days_back)
+                total_lines = sum(
+                    1 for ln in lines
+                    if _IOS.match(ln.rstrip("\n")) or _ANDROID.match(ln.rstrip("\n"))
+                )
+                print(f"    '{cname}': {total_lines} messages in file, "
+                      f"{len(msgs)} within last {days_back}d"
+                      + ("" if total_lines else "  ⚠️ format not recognised"))
+                if msgs:
+                    chats[cname] = msgs
+        except Exception as exc:
+            print(f"    ⚠️  '{name}': {exc}")
+            chats[chat_name] = {"error": str(exc)}
+
+    return chats
 
 
 def fetch_whatsapp(days_back: int = 7, config: dict | None = None) -> dict:
