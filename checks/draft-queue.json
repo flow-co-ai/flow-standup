@@ -1380,9 +1380,17 @@
         {
           "role": "assistant",
           "content": "Here's context you can copy and paste into the Auto-Reject Email item (12963781332) as a new update:\n\n```html\n<p>Salam,</p>\n<ul>\n<li><strong>Confirmed separation of rejection paths:</strong> Rejected leads (real cases that don't meet criteria) need the full template email with rejection reason and alternative resources. Junk leads (spam, wrong info, duplicates) get disqualified silently with no email sent — keeps the rejection email meaningful and protects deliverability.</li>\n<li><strong>One-click action tie-in:</strong> The \"Not Qualified\" button (subitem 12810218416) should trigger this automation when the case is genuinely rejected, not when it's being marked as junk. The button itself stays generic/fast, but the automation behind it needs to branch on whether this is a rejection (send email) or junk (silent disqualify).</li>\n<li><strong>Context from 8/28 review:</strong> Sharif confirmed the current rejection email template structure is good — reason for rejection, alternative resource suggestions, professional tone. The ask was to make sure it fires automatically on the rejected stage transition, and that junk cases bypass it entirely.</li>\n<li><strong>Done:</strong> Rejected leads get the templated email within 60 seconds of stage transition, junk leads are disqualified silently with no email sent, and the one-click button workflow correctly routes to both paths based on lead type.</li>\n</ul>\n<p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>\n```\n\nThis adds the 8/28 clarification about the rejected/junk split and ties it to the existing one-click button work without duplicating the email template itself."
+        },
+        {
+          "role": "user",
+          "content": "dnt give html code"
+        },
+        {
+          "role": "assistant",
+          "content": "Here's the context to add as a new update to Auto-Reject Email (12963781332):\n\n---\n\nSalam,\n\n• **Confirmed separation of rejection paths:** Rejected leads (real cases that don't meet criteria) need the full template email with rejection reason and alternative resources. Junk leads (spam, wrong info, duplicates) get disqualified silently with no email sent — keeps the rejection email meaningful and protects deliverability.\n\n• **One-click action tie-in:** The \"Not Qualified\" button (subitem 12810218416) should trigger this automation when the case is genuinely rejected, not when it's being marked as junk. The button itself stays generic/fast, but the automation behind it needs to branch on whether this is a rejection (send email) or junk (silent disqualify).\n\n• **Context from 8/28 review:** Sharif confirmed the current rejection email template structure is good — reason for rejection, alternative resource suggestions, professional tone. The ask was to make sure it fires automatically on the rejected stage transition, and that junk cases bypass it entirely.\n\n• **Done:** Rejected leads get the templated email within 60 seconds of stage transition, junk leads are disqualified silently with no email sent, and the one-click button workflow correctly routes to both paths based on lead type.\n\n@Ahmed Memon @Ali Shaheer\n\n---\n\nCopy and paste that directly into the update composer on Monday."
         }
       ],
-      "updatedAt": "2026-09-03T17:49:10.069Z"
+      "updatedAt": "2026-09-03T17:49:24.505Z"
     },
     {
       "id": "maadilaw-handoff-welcome-languages",
