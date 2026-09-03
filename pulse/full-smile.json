@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-03T14:51:31.735Z",
+  "generated_at": "2026-09-03T16:17:21.380Z",
   "date": "2026-09-03",
   "slug": "full-smile",
   "name": "Full Smile",
@@ -566,80 +566,79 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-09-03T14:56:01.964Z",
+    "generated_at": "2026-09-03T16:19:14.153Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Organic collapse and 5 overdue SOW milestones dwarf the zero-spend signal.",
+    "verdict": "Organic is collapsing and overdue deliverables are blocking the stay/walk decision.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "5 SOW milestones overdue: dashboard (Aug 31), scoreboard trust (Aug 31), contact cleanup (Aug 14), phone-match attribution (Aug 7), and renewal accountability (Jul 23) — all unresolved.",
+        "text": "Dashboard not live by Aug 31 deadline; 104 GHL opportunities created but 0 won and 0 appointments logged — scoreboard is unreadable.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
-        "priority": 1,
-        "text": "Zero paid spend and zero leads recorded across all 28 days — CPL is undefined; no paid channel is working because none is active.",
+        "priority": 2,
+        "text": "Phone-match attribution gap (due Aug 7) and sync/contact cleanup (due Aug 14) both overdue; renewal decision depends on trusted attribution that does not yet exist.",
         "confidence": "confirmed",
-        "channel": "Meta / Google"
+        "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Search Console clicks collapsed 70.83% week-over-week (last 3 days: 1, 0 — prior 3: 2, 0, 1); 28-day total only 61 clicks on 7,818 impressions — severe organic visibility loss.",
+        "text": "SC clicks fell 70.83% week-over-week; 3-day signal confirms: Aug 31–Sep 2 averaged 1.3 clicks/day vs 1.7 prior 3 days — trend is flat-to-declining, not recovering.",
         "confidence": "confirmed",
-        "channel": "SEO / Search Console"
+        "channel": "SEO"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions fell 40% week-over-week; last 3 days registered 0, 0, 0 actions vs prior 3-day average of ~6.3 — local presence signal has gone dark.",
+        "text": "GBP actions dropped 40% week-over-week; last 3 days (Aug 30–Sep 2) recorded 0 actions vs a prior-3-day average of 10.3 — a confirmed 3-day signal, not noise.",
         "confidence": "confirmed",
         "channel": "GBP"
       },
       {
         "id": "F5",
-        "priority": 4,
-        "text": "GHL shows 104 opportunities created (28d) but 0 won and 0 appointments — pipeline is filling but conversion to chair is untracked or broken; intake leak cannot be ruled out.",
-        "confidence": "probable",
-        "channel": "GHL"
+        "priority": 1,
+        "text": "Zero paid spend across all 28 days on Meta and Google; $0 CPL is meaningless — no paid channel is contributing any leads to the August scoreboard.",
+        "confidence": "confirmed",
+        "channel": "Paid"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit and restore GBP listing immediately — 3 consecutive zero-action days on a prove-it month is a critical local signal loss.",
+        "text": "Ship the GHL dashboard immediately; 104 open opps and 0 won means the scoreboard is dark — renewal decision is Sept.",
         "cites": [
           "F1",
-          "F4"
+          "F2"
         ],
-        "monday_item_name": "Fix GBP listing visibility drop",
-        "monday_update": "GBP actions hit 0 for 3 straight days (Sep 1–3) after a 40% week-over-week decline, on the same month the client's renewal is at stake. Nacer/SEO team must verify GBP listing status, check for suspensions or info changes, and restore any missing content or categories. Success check: GBP actions return to ≥5/day within 7 days (by 2026-09-10)."
+        "monday_item_name": "Dashboard live — renewal gate",
+        "monday_update": "The client dashboard must go live now: 104 GHL opportunities exist with 0 won and 0 appointments recorded, making the August scoreboard unreadable. Both the attribution gap (due Aug 7) and sync/contact cleanup (due Aug 14) are also overdue and are blocking trusted lead-to-patient tracking. Success check: dashboard accessible to Sohib and Dr. Jamal by 2026-09-06, showing lead → scheduled → shown → new patient counts. If not live by then, the renewal decision is made blind."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Close dashboard and attribution milestones overdue since Aug 31 — renewal decision is blocked without a trusted scoreboard.",
+        "text": "Investigate GBP 0-action streak (Aug 30–Sep 2) and SC -70.83% drop — both organic lifelines are failing simultaneously.",
         "cites": [
-          "F1",
-          "F5"
+          "F3",
+          "F4"
         ],
-        "monday_item_name": "Deliver overdue Aug dashboard",
-        "monday_update": "The client's stay/walk renewal decision depends on a live dashboard showing leads through to patients in the chair — this milestone was due Aug 31 and is undelivered. The pipeline shows 104 opportunities created but 0 won and 0 appointments logged, meaning the scoreboard is unreadable. Ahmed/Ali must ship the dashboard and phone-match attribution fix this week. Success check: dashboard live and verified by Sohib with Lily by 2026-09-10."
+        "monday_item_name": "GBP + SC drop investigation",
+        "monday_update": "GBP recorded 0 actions on Aug 30, 31, and Sep 1–2 after averaging 10.3 actions/day in the prior 3 days; Search Console clicks dropped 70.83% week-over-week. These are the only active channels with $0 paid spend across the full 28-day window. Investigate GBP listing status, any suspension flags, and whether a technical SEO issue (index drop, crawl error) explains the SC collapse. Success check: root cause identified and corrected by 2026-09-06; GBP actions resume above 5/day within 3 days of fix."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Hold all paid spend decisions until organic collapse cause is confirmed; re-check Search Console and GBP in 3 days.",
+        "text": "Watch whether paid reactivation is authorized; $0 spend for 28 days means no paid data to act on — do not scale blind.",
         "cites": [
-          "F2",
-          "F3"
+          "F5"
         ],
-        "monday_item_name": "Watch: SC/GBP drop cause",
-        "monday_update": "Paid spend is zero and organic channels are the only active source, but Search Console clicks dropped 70.83% and GBP went dark. Launching paid budget into a broken organic foundation before root cause is identified risks wasting the client's final renewal month. SEO team should diagnose ranking or indexing changes by 2026-09-06. Re-check SC clicks and GBP actions on that date before recommending any paid activation."
+        "monday_item_name": "Paid reactivation — watch only",
+        "monday_update": "No Meta or Google spend has run in 28 days, so there is no CPL baseline or campaign data to justify a budget move this cycle. Per the 7/19 call, budget shifts were directed mainly toward Google/LSA — confirm with Sohib whether paid activation is in scope for September. Do not launch or scale any paid channel until the attribution and dashboard fixes (S1) are in place, or leads will arrive with no trackable path. Re-check 2026-09-06 after SOW deliverables are resolved."
       }
     ],
     "next_check": "2026-09-06"

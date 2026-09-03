@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-03T14:52:38.541Z",
+  "generated_at": "2026-09-03T16:18:14.796Z",
   "date": "2026-09-03",
   "slug": "steel-advance",
   "name": "Advance Grinding",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, so all engagement is coming from Google Business Profile, which drove 137 total actions (102 directions, 32 web clicks, 3 calls). The biggest movement is a 59.68% drop in GBP activity over the last 7 days versus the prior 7 days, likely reflecting reduced organic search demand or a dip in profile visibility.",
+  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, meaning all engagement is coming exclusively from Google Business Profile, which itself dropped 59.68% in the last 7 days versus the prior 7 days. This steep GBP decline is likely driven by reduced search demand or a drop in profile visibility, and with no paid activity to compensate, lead generation is effectively at a standstill.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -404,77 +404,77 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-09-03T14:58:57.582Z",
+    "generated_at": "2026-09-03T16:22:11.700Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP cliff and 6 overdue SOW milestones demand immediate human decisions.",
+    "verdict": "GBP collapse is real; 6 overdue SOW milestones are the deeper crisis.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "4 CRM milestones overdue since Jul 7–Jul 31: 1st Directives, Tom call list, dedup workbook, and 126 accounts — no completion event recorded.",
+        "text": "4 CRM milestones overdue (earliest Jul 7): 342 stub reconciliation (blocker) missed Aug 31, halting Sales-i sync for all unmatched accounts.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "2 Aug 31 blockers unresolved: 342 stub reconciliation (Sales-i sync broken) and AGS+Forte contact pull (outreach gated) — both flagged overdue.",
+        "text": "Web/SEO root-cause fix and AGS+Forte contact pull both missed Aug 31 deadline, blocking outreach pipeline from launching.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Web/SEO Aug 31 blocker: root cause named + fix submitted milestone missed; no completion event found in data.",
-        "confidence": "confirmed",
-        "channel": "SOW"
-      },
-      {
-        "id": "F4",
-        "priority": 3,
-        "text": "GBP actions dropped ~60% last 7d vs prior 7d; last 3 days (Aug 30–Sep 2) show 0 actions each vs avg ~8/day the prior 3 weeks — a confirmed cliff, not noise.",
+        "text": "GBP actions fell 59.68% (7d vs prior 7d); last 3 days show 0 actions vs a prior-3-day avg of ~3.7 — a confirmed 3-day zero signal.",
         "confidence": "confirmed",
         "channel": "GBP"
       },
       {
-        "id": "F5",
-        "priority": 4,
-        "text": "Paid channels (Meta, Google Ads) at $0 spend for all 28 days; score reads green because GBP carries engagement, but zero paid pipeline is a structural gap.",
+        "id": "F4",
+        "priority": 3,
+        "text": "All paid channels (Meta, Google Ads) show $0 spend and 0 leads across the full 45-day series — no paid floor exists to buffer GBP loss.",
         "confidence": "confirmed",
         "channel": "Paid"
+      },
+      {
+        "id": "F5",
+        "priority": 4,
+        "text": "GA4, Search Console, and IG reach all read 0 for 45 days; tracking appears entirely dark, masking any organic web activity that may exist.",
+        "confidence": "probable",
+        "channel": "Organic"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Clear the 342 stub reconciliation blocker immediately — 342 accounts receive zero Sales-i sync until resolved.",
+        "text": "Escalate 342 stub reconciliation blocker to Ahmed immediately; Sales-i sync is dead for all unmatched accounts until resolved.",
         "cites": [
-          "F2"
+          "F1"
         ],
-        "monday_item_name": "Clear 342 Stub Blocker",
-        "monday_update": "The 342 stub accounts have not been reconciled against the authoritative customer sheet, blocking all Sales-i → Sugar sync for those records. Ahmed to complete name-based match and post audited batch with rollback file to Monday CRM board. Success check: zero stubs remaining unmatched and Sales-i pipeline populating `si_last_purchase_date_c` for previously-dark accounts. Target: resolved by 2026-09-10."
+        "monday_item_name": "Resolve 342 CRM Stub Blocker",
+        "monday_update": "The 342 stub account reconciliation missed its Aug 31 deadline and is blocking the entire Sales-i → Sugar data pipeline. Ahmed to complete name-based match against the authoritative customer sheet and post audited batch + rollback file to this board. Success = zero unmatched stubs in Sugar and Sales-i sync confirmed firing on at least one test account. Target: resolved by 2026-09-10."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Pull AGS + Forte contact lists immediately — outreach to those accounts is fully gated until this is done.",
+        "text": "Chase Web/SEO root-cause fix and AGS+Forte contact pull — both Aug 31 blockers are gating outreach launch.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "AGS + Forte Contact Pull",
-        "monday_update": "The AGS and Forte contact pull missed its Aug 31 deadline, meaning cold email outreach to these accounts cannot launch. Responsible party to extract and upload validated contact lists to Monday Outreach board. Success check: lists uploaded and sequence configured in outreach tool. Target: complete by 2026-09-10."
+        "monday_item_name": "Clear Aug 31 Outreach Blockers",
+        "monday_update": "Two Aug 31 milestones remain open: the Web/SEO root-cause named and fix submitted, and the AGS + Forte contact list pulled. Neither outreach nor SEO remediation can proceed without these. Responsible owners to post completion evidence (fix ticket + contact file) to this board. Success = both items marked done with deliverables attached by 2026-09-07."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP daily actions — 3 consecutive zero days (Aug 31–Sep 2) vs prior avg 8/day; re-check Sep 6 for recovery or penalty signal.",
+        "text": "Watch GBP daily actions for 3 more days; 0 actions on Aug 31–Sep 2 may reflect a Labour Day weekend dip, not structural collapse.",
         "cites": [
-          "F4"
+          "F3"
         ],
-        "monday_item_name": "Watch GBP Action Drop",
-        "monday_update": "GBP actions have run at 0 for the last 3 days (Aug 31–Sep 2), against a prior 3-week daily average of approximately 8 actions. This could indicate a profile visibility drop, a suspension flag, or a weekend/holiday effect. Check GBP dashboard for any policy notices or ranking changes. If actions remain at 0 by Sep 6, escalate to GBP audit and profile re-optimization."
+        "monday_item_name": "Watch GBP Actions Sep 6",
+        "monday_update": "GBP actions hit 0 for three consecutive days (Aug 31–Sep 2), a 59.68% 7d decline. Before escalating to a profile-visibility fix, confirm whether this is a holiday-weekend suppression by checking Sep 3–5 actuals. Success check: if actions do not recover to ≥5/day by Sep 6, treat as confirmed visibility loss and open a GBP audit task. Re-check date: 2026-09-06."
       }
     ],
     "next_check": "2026-09-06"

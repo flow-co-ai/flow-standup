@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-03T14:51:49.186Z",
+  "generated_at": "2026-09-03T16:17:37.448Z",
   "date": "2026-09-03",
   "slug": "hvac",
   "name": "Quality HVAC by Fibid",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 70,
   "status": "amber",
-  "verdict": "Google Ads drove all $1,045.48 in spend over the last 28 days, with the top Local Services campaign alone accounting for $639.06, and spend surged 22.9% week-over-week, yet zero tracked leads were recorded, flagging a likely conversion tracking issue that needs immediate investigation.",
+  "verdict": "Google Ads spend climbed 22.9% week-over-week, driven largely by the top Local Services campaign absorbing $639.06 of the $1,045.48 28-day total, yet despite 11 conversions recorded in the platform, a lead_drought flag indicates those conversions are not reaching the CRM as trackable leads, which is the most urgent issue to resolve.",
   "windsor": {
     "totals": {
       "spend": 1045.48,
@@ -406,14 +406,14 @@
     }
   },
   "ghl": {
-    "contacts": 81,
+    "contacts": 83,
     "opportunities": {
       "created": {
-        "count": 59,
+        "count": 60,
         "value": 0
       },
       "won": {
-        "count": 26,
+        "count": 27,
         "value": 0
       }
     },
@@ -574,77 +574,77 @@
     "history_line": "Four HVAC videos posted live · Financing page added to top menu · Duplicate GHL contact event removed"
   },
   "performance": {
-    "generated_at": "2026-09-03T14:56:48.961Z",
+    "generated_at": "2026-09-03T16:20:04.559Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Spend is live but conversion tracking is broken; 6 SOW milestones overdue.",
+    "verdict": "Spend is landing; 11 conversions are invisible — attribution, not ads, is broken.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero leads recorded across all 28 days despite $1,045.48 in Google spend and 11 Google Ads conversions — GHL/pixel disconnect confirmed.",
+        "text": "lead_drought confirmed: $1,045.48 spent over 28 days, 0 CRM leads recorded despite 11 Google Ads conversions — attribution pipeline is severed.",
         "confidence": "confirmed",
         "channel": "google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Intake owner overdue since 2026-08-31: Vivian left 7/7, speed-to-lead automations point at an empty seat, blocking all scale-up decisions.",
+        "text": "Intake owner unconfirmed since Vivian left 7/7 (Aug 31 deadline missed) — GHL speed-to-lead automations likely routing to an empty seat, blocking scale-up gate.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "5 additional SOW milestones overdue (Booking bot 7/31, Review Boost, Financing page, Homer Glen branch all 8/31, LSA re-enable 9/1) — none completed.",
+        "text": "5 additional overdue SOW milestones (booking bot, Review Boost, financing page, Homer Glen branch, LSA heating toggle) — all past Aug 31 / Sep 1 deadlines with no completion recorded.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions collapsed to 0 for 3 consecutive days (8/31–9/2) vs a prior 28-day total of 113 — organic visibility stalling as paid ramps.",
-        "confidence": "confirmed",
+        "text": "GBP actions fell -34.48% week-over-week; last 3 days (Aug 31–Sep 2) show 0 GBP actions vs avg 4.6/day prior 3 days — organic visibility is dropping while paid spend rose 22.9%.",
+        "confidence": "probable",
         "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 59 opportunities created and 26 won in 28 days with $0 pipeline value recorded — pipeline dollar fields unpopulated, obscuring true job revenue.",
-        "confidence": "probable",
-        "channel": "crm"
+        "text": "Google spend is highly erratic: 28-day series shows spikes to $130.18 (Aug 15) and $97.13 (Sep 1) alongside $0 days — pacing instability suggests campaign budget type or throttling misconfiguration.",
+        "confidence": "hypothesis",
+        "channel": "google_ads"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit GHL lead source mapping and Google Ads conversion tag immediately — $1,045.48 spent with 0 attributed leads is a tracking break, not a lead drought.",
+        "text": "Audit GHL webhook and Google Ads conversion action — trace why 11 platform conversions produce 0 CRM leads before next dollar is spent.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Fix GHL/Google conversion tracking",
-        "monday_update": "Pull the Google Ads conversion tag from the website and confirm it fires on the thank-you or form-submit event; cross-reference against the 11 conversions Google Ads itself recorded vs 0 in GHL. The gap — 11 tracked by Google, 0 in GHL — is the confirmation of a disconnect. Success is GHL showing leads that match or approximate the Google-reported 11 conversions. Resolve by 2026-09-06 before any budget decision is made."
+        "monday_item_name": "Fix GHL conversion attribution gap",
+        "monday_update": "Google Ads recorded 11 conversions over 28 days on $1,045.48 spend, but GHL shows 0 leads — the CRM intake pipeline is broken somewhere between the ad platform and GHL. Audit the Google Ads conversion action tag, the GHL webhook endpoint, and confirm the receiving seat is active (Vivian's replacement per F2). Success is confirmed when a test conversion fires and appears as a GHL contact within 5 minutes. Complete by 2026-09-06."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Confirm intake owner and GHL login before any budget increase — scale-up gate is explicitly blocked until this is resolved.",
+        "text": "Confirm intake owner name, GHL login, and after-hours coverage — this single gap blocks all budget scale-up per SOW gate.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Confirm intake owner + GHL login",
-        "monday_update": "Contact Sohib and Xavier to name the person who replaced Vivian on dispatch intake and confirm their GHL login is active with speed-to-lead automations tested. This is the formal scale-up gate per the SOW. Success is a named owner, verified GHL access, and one test lead routed correctly. Must be closed by 2026-09-06 or budgets stay throttled."
+        "monday_item_name": "Confirm intake owner GHL access",
+        "monday_update": "Vivian (dispatch) left 7/7 and the intake owner seat has been unconfirmed for nearly 2 months, past the Aug 31 SOW deadline. Speed-to-lead automations are pointing at a potentially empty seat, which would explain the 0-lead CRM result alongside 11 platform conversions. Get a confirmed name, active GHL login, and after-hours coverage plan from Nader or Xavier by 2026-09-05. Success: named owner confirmed in writing and verified logged into GHL."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions recovery over next 3 days — 3-day zero streak (8/31–9/2) may reflect Windsor data lag per SOW caveat, not true drop.",
+        "text": "Watch GBP actions for 3 more days; if daily average stays at 0 (vs prior 4.6/day), escalate to GBP audit.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Watch GBP actions recovery",
-        "monday_update": "GBP actions hit 0 for three consecutive days ending 9/2, down from a 28-day total of 113 actions. The SOW flags Windsor data lag on the last 2–3 days of any GBP window, so this may self-correct. Re-check on 2026-09-06: if actions remain at or near 0 for a 6-day streak, escalate as a GBP visibility issue. No action until then."
+        "monday_item_name": "Watch GBP actions drop",
+        "monday_update": "GBP actions have been 0 for the last 3 consecutive days (Aug 31–Sep 2) against a prior 3-day average of 4.6/day, and the 7-day delta is -34.48%. This may reflect posting/engagement lag or a listing issue. No action yet — monitor through 2026-09-06. If the daily total stays at 0 or below 1 by that date, escalate to a full GBP listing audit (posts, Q&A, category, suspension check)."
       }
     ],
     "next_check": "2026-09-06"

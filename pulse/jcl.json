@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-03T14:51:56.662Z",
+  "generated_at": "2026-09-03T16:17:45.497Z",
   "date": "2026-09-03",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "With zero paid spend and no leads recorded in the last 28 days, organic GBP activity is the only traffic source, and it dropped sharply by 58.93% over the past 7 days, likely driven by reduced search demand or a listing visibility issue. The 178 total GBP actions (61 calls, 117 web clicks) over 28 days show some baseline intent, but the steep week-over-week decline warrants an immediate audit of the GBP listing for suppression or category changes.",
+  "verdict": "With zero paid spend and no leads generated in the last 28 days, the account is running entirely on organic activity, where GBP engagement is the standout concern, dropping 58.93% over the past 7 days versus the prior period, likely driven by reduced search demand or a loss of local pack visibility. The 178 total GBP actions (61 calls, 117 web clicks) over 28 days represent the only meaningful traffic source, making that GBP decline the top priority to investigate.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -545,77 +545,78 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-09-03T14:57:12.167Z",
+    "generated_at": "2026-09-03T16:20:27.331Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid ads dark 28+ days; organic decay now the real risk to pipeline.",
+    "verdict": "Ads are dark; contract gap is the real emergency, not channel performance.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend and zero leads for all 28 days in window — Meta and Google both fully dark; $0 of the ~$65–75/day SOW budget is deploying.",
+        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google. No leads generated. Account is entirely dark on paid channels.",
         "confidence": "confirmed",
         "channel": "Meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "⛔ Extension with Marwan unsigned as of 2026-08-31 — no contract governs the next 3 months; all paid activity is gated behind this.",
+        "text": "⛔ Extension with Marwan overdue since 2026-08-31. No signed contract gates the next 3 months of paid activity.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "⛔ SMS automation and Zoho Voice access both overdue 2026-08-31 — contact-rate bottleneck (the stated limiting factor) cannot be resolved without these.",
+        "text": "⛔ SMS automation and Zoho Voice access both overdue since 2026-08-31; contact-rate bottleneck remains unresolved with 16 GHL contacts and 0 opportunities created.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions fell 58.93% week-over-week; last 3 days (Aug 31–Sep 2) show 0, 0, 0 vs prior 3 days (Aug 28–30) of 4, 2, 0 — listing likely suppressed or dark.",
-        "confidence": "probable",
+        "text": "GBP actions collapsed to 0 for 3 consecutive days (Aug 31–Sep 2) after averaging ~8/day earlier in August — a confirmed 3-day signal, not noise.",
+        "confidence": "confirmed",
         "channel": "GBP"
       },
       {
         "id": "F5",
-        "priority": 4,
-        "text": "GHL shows 16 contacts but 0 opportunities created and 0 appointments in 28 days — intake pipeline is structurally broken regardless of lead volume.",
-        "confidence": "confirmed",
-        "channel": "GHL"
+        "priority": 3,
+        "text": "Search clicks dropped to 0 on Sep 2 after holding 16–43/day for two weeks; sc_7d down -23.12%. Daily verdict's GBP focus is correct but understates the search-click collapse.",
+        "confidence": "probable",
+        "channel": "Organic"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate Marwan extension signature immediately — all paid reactivation (~$65/day) is blocked without it.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Chase Marwan Extension Sign",
-        "monday_update": "The engagement contract lapsed 2026-08-31 and no extension is signed. Zero paid spend ($0 vs ~$65/day SOW budget) has been the result for the entire 28-day window. Success is a countersigned extension in hand; escalate to Sohib/Nacer by 2026-09-05. Until signed, no paid reactivation should be queued."
+        "text": "Escalate Marwan extension to Sohib immediately — no paid reactivation is defensible until contract is signed.",
+        "monday_item_name": "Marwan Extension — Escalate Now",
+        "monday_update": "The engagement contract lapsed on 2026-08-31 and is still unsigned as of 2026-09-03. No paid spend ($0 across all 28 days) can be responsibly restarted until the extension is executed. Sohib to confirm signed contract with Marwan by 2026-09-05. Success check: signed document on file before any budget is reactivated."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GBP listing for suppression — 0 actions for 3 consecutive days vs 178 over the prior 28 days is anomalous.",
         "cites": [
-          "F4"
+          "F3"
         ],
-        "monday_item_name": "GBP Suppression Audit",
-        "monday_update": "GBP actions hit 0 on Aug 31, Sep 1, and Sep 2 — a confirmed 3-day signal after a 58.93% week-over-week drop. Check for listing suppression, ownership disputes, or category changes in Google Business Profile. Success check: GBP daily actions return above the trailing 28-day average of ~6/day within 7 days of fix. Re-check 2026-09-10."
+        "text": "Chase Zoho Voice access and SMS automation go-live — 16 GHL contacts with 0 opportunities confirms intake leak persists.",
+        "monday_item_name": "SMS + Zoho Voice Fix",
+        "monday_update": "SMS automation and Zoho Voice access are both overdue since 2026-08-31. GHL shows 16 contacts and 0 opportunities created in the 28-day window, confirming leads are not being worked even when they arrive. Nacer to obtain Zoho Voice credentials from Joy and confirm SMS automation is live by 2026-09-07. Success check: at least 1 opportunity created in GHL within 48 hours of reactivation."
       },
       {
         "id": "S3",
-        "type": "fix",
-        "text": "Repair GHL intake pipeline — 16 contacts, 0 opportunities created, 0 appointments is a confirmed intake leak, not an ads problem.",
+        "type": "watch",
         "cites": [
+          "F4",
           "F5"
         ],
-        "monday_item_name": "Fix GHL Intake Pipeline",
-        "monday_update": "GHL recorded 16 contacts over 28 days but zero opportunities were created and zero appointments were booked. This is a CRM workflow or access failure (Zoho Voice overdue per F3), not a lead volume issue. Action: Andrew and Joy to audit the contact-to-opportunity automation and confirm Zoho Voice access is live. Success check: opportunity creation rate moves above 0 within the next 7 days. Re-check 2026-09-10."
+        "text": "Watch GBP actions and search clicks through 2026-09-06 — 3 consecutive zero days on GBP may indicate local pack loss.",
+        "monday_item_name": "GBP Visibility Watch",
+        "monday_update": "GBP actions hit 0 for three consecutive days (Aug 31–Sep 2) after averaging ~8/day earlier in August, and search clicks also dropped to 0 on Sep 2 (down -23.12% week-over-week). This may indicate a local pack ranking drop or a Google Business Profile suspension. Check GBP dashboard for any warnings or suspensions by 2026-09-06. Success check: GBP actions return above 5/day and search clicks above 15/day within the next 3-day window."
       }
     ],
     "next_check": "2026-09-06"

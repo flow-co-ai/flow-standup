@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-03T14:52:15.865Z",
+  "generated_at": "2026-09-03T16:17:53.045Z",
   "date": "2026-09-03",
   "slug": "liferun",
   "name": "Liferun",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Google Ads spend surged 40.74% week-over-week, with the top campaign \"BWS - Search Campaign - Calls\" consuming $350.32 of the $634.24 28-day total, yet zero leads were recorded across all channels, triggering a critical lead drought that suggests a conversion tracking failure or landing page issue requiring immediate investigation.",
+  "verdict": "Google Ads spend surged 40.74% week-over-week, with the top campaign \"BWS - Search Campaign - Calls\" consuming $350.32 of the $634.24 28-day total, yet zero leads were generated across all channels, triggering a critical lead drought that suggests a likely conversion tracking failure or landing page issue requiring immediate investigation.",
   "windsor": {
     "totals": {
       "spend": 634.24,
@@ -411,10 +411,10 @@
     }
   },
   "ghl": {
-    "contacts": 154,
+    "contacts": 157,
     "opportunities": {
       "created": {
-        "count": 123,
+        "count": 125,
         "value": 0
       },
       "won": {
@@ -554,79 +554,79 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-09-03T14:57:40.041Z",
+    "generated_at": "2026-09-03T16:20:54.463Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "$634 spent across 28 days; zero leads confirms tracking or intake is broken, not ads.",
+    "verdict": "$634 spent across 28 days; zero leads confirmed — tracking or landing page is broken.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero leads recorded across all 28 days despite $634.24 Google spend and 133 clicks — conversion tracking is broken or the landing page is not capturing leads.",
+        "text": "Zero leads across all 28 days on $634.24 Google spend; 133 clicks arrived but 0 GA4 conversions recorded — conversion tracking is broken or landing page is not converting.",
         "confidence": "confirmed",
-        "channel": "google_ads"
+        "channel": "google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "5 SOW milestones overdue (Stripe QA Jul 20, GHL build gaps Aug 31, Stack re-test Aug 31, Paid landing pages Aug 31, UGC batch Aug 31) — none show a completion event.",
+        "text": "5 overdue SOW milestones (earliest Jul 20): Stripe QA, GHL gap closure, end-to-end stack re-test, paid landing pages, and UGC batch — all past due as of Aug 31.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GHL shows 123 opportunities created but 0 leads from ads and 0 appointments — 154 contacts exist with no revenue-path activity, suggesting intake is disconnected from paid traffic.",
-        "confidence": "probable",
-        "channel": "google_ads"
+        "text": "3-day spend signal (Aug 31–Sep 2): $53.34, $12.86, $20.51 vs prior 3 days ($1.38, $6.86, $53.34) — erratic daily pacing averaging $28.90, with zero lead output across both windows.",
+        "confidence": "confirmed",
+        "channel": "google"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "3-day spend signal (Aug 31–Sep 2: $86.71) is 3× the prior 3-day window (Aug 28–30: $9.10) yet leads remain zero — spend is accelerating into a confirmed black hole.",
-        "confidence": "confirmed",
-        "channel": "google_ads"
+        "text": "GBP generated 49 actions (48 directions) in 28 days with 0 calls, yet paid Google drove 0 leads — organic intent exists but the paid funnel has no working conversion path.",
+        "confidence": "probable",
+        "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GBP generated 49 actions (48 directions, 1 web click) and 0 calls over 28 days — organic intent exists but is not converting to pipeline, and paid landing pages are not yet live.",
-        "confidence": "probable",
-        "channel": "gbp"
+        "text": "GHL shows 125 opportunities created at $0 value and 0 won; 157 contacts with 0 appointments — pipeline populated by prior contacts, not current ad-driven leads.",
+        "confidence": "hypothesis",
+        "channel": "ghl"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Pause Google Ads spend immediately until conversion tracking fires at least one confirmed test lead — $634.24 spent with zero conversions in 28 days.",
+        "text": "Audit Google Ads conversion tag and paid landing page immediately; $634.24 spent with 0 leads confirms a broken conversion path.",
         "cites": [
           "F1",
-          "F4"
+          "F3"
         ],
-        "monday_item_name": "Fix Google Ads Conversion Tracking",
-        "monday_update": "Google Ads has spent $634.24 over 28 days and recorded zero conversions across 133 clicks. Pause all active campaigns and audit the conversion tag end-to-end: fire a test form submission or call, confirm a conversion event appears in Google Ads, and verify the landing page form is functional. Campaigns should not resume until at least one confirmed test conversion is recorded. Re-check by 2026-09-06."
+        "monday_item_name": "Fix Google Conversion Tracking",
+        "monday_update": "Google Ads has spent $634.24 over 28 days, including $350.32 on 'BWS - Search Campaign - Calls', with 133 clicks and zero recorded leads or GA4 conversions. Immediately audit the conversion tag on the paid landing page and verify the call-tracking number fires correctly in Google Ads. Success is confirmed when at least one test conversion registers in the Google Ads interface and GA4 within 48 hours. Re-check on 2026-09-05."
       },
       {
         "id": "S2",
-        "type": "fix",
-        "text": "Complete the 'Paid Landing Pages Live' milestone (overdue Aug 31) — without it, GBP's 48 direction actions and paid clicks have nowhere to convert.",
+        "type": "watch",
+        "text": "Hold all budget scaling until conversion tracking is verified; re-check Sept 6 after fix confirmed.",
         "cites": [
-          "F2",
-          "F5"
+          "F1",
+          "F3"
         ],
-        "monday_item_name": "Launch Paid Landing Pages",
-        "monday_update": "The paid landing pages milestone was due 2026-08-31 and shows no completion event. GBP recorded 48 direction actions and Google Ads drove 133 clicks in the 28-day window, both with zero conversions. Web team to deploy and QA the paid landing page with a live form submit test before any ad spend resumes. Confirm live URL and test submission by 2026-09-06."
+        "monday_item_name": "Hold Scaling — Tracking Fix First",
+        "monday_update": "Spend is averaging $19.47/day with zero lead output confirmed across all 28 days. No budget increase is defensible until F1 (conversion tracking) is resolved. Watch for the first confirmed lead event post-fix; if leads appear by 2026-09-06, assess CPL vs the client's own baseline before any scale decision."
       },
       {
         "id": "S3",
-        "type": "watch",
-        "text": "Watch GHL intake connection: 123 opportunities exist but zero tie to paid traffic — confirm Zapier/webhook path maps ad leads to pipeline before scaling.",
+        "type": "fix",
+        "text": "Complete the 5 overdue SOW milestones — prioritise paid landing pages and end-to-end stack re-test as scaling blockers.",
         "cites": [
-          "F3"
+          "F2"
         ],
-        "monday_item_name": "Verify GHL Ad Lead Intake",
-        "monday_update": "GHL shows 123 opportunities created and 154 contacts, but zero leads are attributed to Google Ads in the 28-day window. Run one end-to-end test: submit a form via the paid landing page and confirm the opportunity appears in GHL with full field mapping. This is a prerequisite for any scaling decision. Re-check 2026-09-06 once the landing page is live."
+        "monday_item_name": "Clear 5 Overdue SOW Milestones",
+        "monday_update": "Five SOW milestones are past due, the earliest since July 20: Stripe Products QA, GHL gap closure (all 5 items), end-to-end stack re-test, paid landing pages live, and UGC batch. Paid landing pages and the stack re-test are marked ⛔ scaling blockers — these must ship before any ad budget increase. Assign owners for each in Monday and confirm completion by 2026-09-10."
       }
     ],
     "next_check": "2026-09-06"
