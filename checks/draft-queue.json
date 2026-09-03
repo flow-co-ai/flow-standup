@@ -1372,9 +1372,17 @@
         {
           "role": "assistant",
           "content": "Yes, you're absolutely right. That Monday item **Auto-Reject Email** (12963781332) already has an update from 9/3 with the exact same email template and automation instruction for the rejected stage.\n\nThe current card in the queue is drafted as `update_only` mode, which would post a *second* update to a different item (the \"One click Not Qualified\" subitem, 12810218416). But the 8/28 source material about separating rejected from junk and automating the rejection email is already covered on 12963781332.\n\nThis is a duplicate. Should I mark this card as ignored with reason \"already handled - rejection email automation already tracked on Auto-Reject Email, 12963781332\"?"
+        },
+        {
+          "role": "user",
+          "content": "give me context to add to copy n paste into Auto-Reject Email item update"
+        },
+        {
+          "role": "assistant",
+          "content": "Here's context you can copy and paste into the Auto-Reject Email item (12963781332) as a new update:\n\n```html\n<p>Salam,</p>\n<ul>\n<li><strong>Confirmed separation of rejection paths:</strong> Rejected leads (real cases that don't meet criteria) need the full template email with rejection reason and alternative resources. Junk leads (spam, wrong info, duplicates) get disqualified silently with no email sent — keeps the rejection email meaningful and protects deliverability.</li>\n<li><strong>One-click action tie-in:</strong> The \"Not Qualified\" button (subitem 12810218416) should trigger this automation when the case is genuinely rejected, not when it's being marked as junk. The button itself stays generic/fast, but the automation behind it needs to branch on whether this is a rejection (send email) or junk (silent disqualify).</li>\n<li><strong>Context from 8/28 review:</strong> Sharif confirmed the current rejection email template structure is good — reason for rejection, alternative resource suggestions, professional tone. The ask was to make sure it fires automatically on the rejected stage transition, and that junk cases bypass it entirely.</li>\n<li><strong>Done:</strong> Rejected leads get the templated email within 60 seconds of stage transition, junk leads are disqualified silently with no email sent, and the one-click button workflow correctly routes to both paths based on lead type.</li>\n</ul>\n<p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>\n```\n\nThis adds the 8/28 clarification about the rejected/junk split and ties it to the existing one-click button work without duplicating the email template itself."
         }
       ],
-      "updatedAt": "2026-09-03T17:48:18.623Z"
+      "updatedAt": "2026-09-03T17:49:10.069Z"
     },
     {
       "id": "maadilaw-handoff-welcome-languages",
