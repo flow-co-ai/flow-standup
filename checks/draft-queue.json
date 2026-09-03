@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-03T02:29:20.586525Z",
+  "updatedAt": "2026-09-03T02:30:33.009Z",
   "items": [
     {
       "id": "websEo-pricing-question",
@@ -307,7 +307,7 @@
         },
         {
           "role": "assistant",
-          "content": "Done. Card marked **complete** and moved to Handled. \n\nWhatsApp is now confirmed connected to GHL and working \u2014 the 24-hour activation wait and payment method block are cleared, the live test passed, and this no longer gates Review Engine, Reactivation, Lead Escalation, or the Friday walkthrough. Good to ship."
+          "content": "Done. Card marked **complete** and moved to Handled. \n\nWhatsApp is now confirmed connected to GHL and working — the 24-hour activation wait and payment method block are cleared, the live test passed, and this no longer gates Review Engine, Reactivation, Lead Escalation, or the Friday walkthrough. Good to ship."
         }
       ]
     },
@@ -365,7 +365,7 @@
       "id": "medstation-lp-call-tracking",
       "title": "Landing Pages",
       "note": "Context: the 8/17 sync added two tracking requirements to the MedStation landing page set that are not on the item: the Google Ads assigned number must appear on each page, and bookings must run through a GHL form or booking link so source is captured. Page views already track (2.1K) but calls and bookings off these pages are not attributable. Deliverable: add the Google Ads numbers, route bookings through GHL, and match tracking parameters with the Ads side request from 8/17. Dependencies: Naz supplies the numbers; published clinic and GBP numbers must not change; confirm whether booking sits on the same domain. Done: numbers live per page, test call attributed in GHL, test booking captured with source. Update onto the existing Web + SEO Landing Pages item (12720959017), last touched 8/5. Assigned to: Muhammad Hashir Faiz, Zayan Faiz, Naz (landing page default tagging per rules).",
-      "status": "ready",
+      "status": "ignored",
       "board": "Web + SEO",
       "group": "MedStation",
       "potentialClient": null,
@@ -382,7 +382,9 @@
       "nullReason": null,
       "priority": 2,
       "createdAt": "2026-08-18T20:45:52.209655+00:00",
-      "updatedAt": "2026-09-03T00:52:46.729Z"
+      "updatedAt": "2026-09-03T02:30:33.009Z",
+      "ignoreReason": "already handled",
+      "ignoredAt": "2026-09-03T02:30:32.565Z"
     },
     {
       "id": "qualityhvac-intake-record-cleanup",
@@ -481,7 +483,7 @@
         },
         {
           "role": "assistant",
-          "content": "You're right \u2014 this one's doing a lot. It's really **two separate problems** that happen to touch the same sync:\n\n1. **Rescheduled appointments duplicate** (missing delete rights)\n2. **The sync destroys attribution data** (source field overwrite)\n\nThe current title \"Appointment Sync\" is too generic. A few options:\n\n**If you want to keep it as one item** (because both defects need fixing in the same sync script):\n- **NextGen Sync Fixes** (pairs well with the \"NextGen Sync\" tag mentioned in the done criteria)\n- **Appointment Sync Defects**\n\n**If you want to split it** (which I'd lean toward \u2014 different root causes, different kinds of fixes):\n- **Appointment Dedupe** (the delete-rights / reschedule problem) \n- **Source Preservation** (the attribution overwrite)\n\nThe second approach gives you cleaner done-states for each, and lets one close while the other might still be waiting on MedStation IT for delete rights.\n\nWhat's your preference \u2014 keep it together under a broader fix label, or split into two subitems under GHL Setup?"
+          "content": "You're right — this one's doing a lot. It's really **two separate problems** that happen to touch the same sync:\n\n1. **Rescheduled appointments duplicate** (missing delete rights)\n2. **The sync destroys attribution data** (source field overwrite)\n\nThe current title \"Appointment Sync\" is too generic. A few options:\n\n**If you want to keep it as one item** (because both defects need fixing in the same sync script):\n- **NextGen Sync Fixes** (pairs well with the \"NextGen Sync\" tag mentioned in the done criteria)\n- **Appointment Sync Defects**\n\n**If you want to split it** (which I'd lean toward — different root causes, different kinds of fixes):\n- **Appointment Dedupe** (the delete-rights / reschedule problem) \n- **Source Preservation** (the attribution overwrite)\n\nThe second approach gives you cleaner done-states for each, and lets one close while the other might still be waiting on MedStation IT for delete rights.\n\nWhat's your preference — keep it together under a broader fix label, or split into two subitems under GHL Setup?"
         }
       ],
       "mondayItemId": "12963841399"
@@ -1165,7 +1167,7 @@
     {
       "id": "qualityhvac-tuneup-meta-campaign",
       "title": "Spetember Tune Up Campaign",
-      "note": "Salam, / Context: Quality HVAC runs seasonal tune-up campaigns targeting existing customers twice a year (spring for AC, fall for heating). This is the text sequence to support that offer. Aiman confirmed copy and timing during the 8 / 27 meeting. / Deliverable: Build a GHL text campaign with the following messages, spaced 3 days apart, triggered when a contact is tagged \"Tune Up Campaign\": Message 1: \"Hi [First Name], it's time for your seasonal tune-up! Quality HVAC is offering $89 tune-ups this month (regularly $129). Keep your system running smoothly before the season hits. Reply YES to schedule or call us at [business phone].\" / Message 2 (if no reply): \"Just a reminder\u2014our $89 tune-up special ends soon. A quick check now can save you from expensive repairs later. Reply YES or call [business phone] to book your appointment.\" / Message 3 (if no reply): \"Last chance for $89 tune-ups! This offer expires in 3 days. Quality HVAC\u2014[business phone]. Reply STOP to opt out.\" / / Trigger: Contact receives tag \"Tune Up Campaign\" in GHL. No other prerequisites\u2014existing customers are already in the system. / Success criteria: Campaign live in GHL, all three messages scheduled correctly with 3-day intervals, tested on a dummy contact, and Aiman confirms he can see it firing as expected. / @Ahmed Memon @Ali Shaheer / Assigned to: Ahmed Memon, Ali Shaheer",
+      "note": "Salam, / Context: Quality HVAC runs seasonal tune-up campaigns targeting existing customers twice a year (spring for AC, fall for heating). This is the text sequence to support that offer. Aiman confirmed copy and timing during the 8 / 27 meeting. / Deliverable: Build a GHL text campaign with the following messages, spaced 3 days apart, triggered when a contact is tagged \"Tune Up Campaign\": Message 1: \"Hi [First Name], it's time for your seasonal tune-up! Quality HVAC is offering $89 tune-ups this month (regularly $129). Keep your system running smoothly before the season hits. Reply YES to schedule or call us at [business phone].\" / Message 2 (if no reply): \"Just a reminder—our $89 tune-up special ends soon. A quick check now can save you from expensive repairs later. Reply YES or call [business phone] to book your appointment.\" / Message 3 (if no reply): \"Last chance for $89 tune-ups! This offer expires in 3 days. Quality HVAC—[business phone]. Reply STOP to opt out.\" / / Trigger: Contact receives tag \"Tune Up Campaign\" in GHL. No other prerequisites—existing customers are already in the system. / Success criteria: Campaign live in GHL, all three messages scheduled correctly with 3-day intervals, tested on a dummy contact, and Aiman confirms he can see it firing as expected. / @Ahmed Memon @Ali Shaheer / Assigned to: Ahmed Memon, Ali Shaheer",
       "status": "sent",
       "board": "CRM",
       "group": "Quality HVAC",
@@ -1194,7 +1196,7 @@
             ]
           }
         },
-        "updateBody": "<p>Salam,</p>\n<ul>\n<li><strong>Context:</strong> Quality HVAC runs seasonal tune-up campaigns targeting existing customers twice a year (spring for AC, fall for heating). This is the text sequence to support that offer. Aiman confirmed copy and timing during the 8/27 meeting.</li>\n<li><strong>Deliverable:</strong> Build a GHL text campaign with the following messages, spaced 3 days apart:\n<ul>\n<li><strong>Message 1:</strong> \"Hi [First Name], it's time for your seasonal tune-up! Quality HVAC is offering $89 tune-ups this month (regularly $149). Keep your system running smoothly before the season hits. Reply YES to schedule or give us a call.\"</li>\n<li><strong>Message 2 (if no reply):</strong> \"Just a reminder\u2014our $89 tune-up special ends soon. A quick check now can save you from expensive repairs later. Reply YES or call us to book your appointment.\"</li>\n<li><strong>Message 3 (if no reply):</strong> \"Last chance for $89 tune-ups! This offer expires very soon! Quality HVAC\u2014[business phone]. Reply STOP to opt out.\"</li>\n</ul>\n</li>\n<li><strong>Trigger:</strong> Contact receives tag \"Tune Up Campaign\" in GHL. No other prerequisites\u2014existing customers are already in the system.</li>\n<li><strong>Success criteria:</strong> Campaign live in GHL, all three messages scheduled correctly with 3-day intervals, tested on a dummy contact, and Aiman confirms he can see it firing as expected.</li>\n</ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "updateBody": "<p>Salam,</p>\n<ul>\n<li><strong>Context:</strong> Quality HVAC runs seasonal tune-up campaigns targeting existing customers twice a year (spring for AC, fall for heating). This is the text sequence to support that offer. Aiman confirmed copy and timing during the 8/27 meeting.</li>\n<li><strong>Deliverable:</strong> Build a GHL text campaign with the following messages, spaced 3 days apart:\n<ul>\n<li><strong>Message 1:</strong> \"Hi [First Name], it's time for your seasonal tune-up! Quality HVAC is offering $89 tune-ups this month (regularly $149). Keep your system running smoothly before the season hits. Reply YES to schedule or give us a call.\"</li>\n<li><strong>Message 2 (if no reply):</strong> \"Just a reminder—our $89 tune-up special ends soon. A quick check now can save you from expensive repairs later. Reply YES or call us to book your appointment.\"</li>\n<li><strong>Message 3 (if no reply):</strong> \"Last chance for $89 tune-ups! This offer expires very soon! Quality HVAC—[business phone]. Reply STOP to opt out.\"</li>\n</ul>\n</li>\n<li><strong>Trigger:</strong> Contact receives tag \"Tune Up Campaign\" in GHL. No other prerequisites—existing customers are already in the system.</li>\n<li><strong>Success criteria:</strong> Campaign live in GHL, all three messages scheduled correctly with 3-day intervals, tested on a dummy contact, and Aiman confirms he can see it firing as expected.</li>\n</ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
         "groupId": "group_mm231wbb",
         "itemName": "Spetember Tune Up Campaign"
       },
@@ -1217,7 +1219,7 @@
         },
         {
           "role": "assistant",
-          "content": "**3 days** between each message.\n\nMessage 1 \u2192 wait 3 days \u2192 Message 2 (if no reply) \u2192 wait 3 days \u2192 Message 3 (if no reply)."
+          "content": "**3 days** between each message.\n\nMessage 1 → wait 3 days → Message 2 (if no reply) → wait 3 days → Message 3 (if no reply)."
         }
       ],
       "mondayItemId": "12961846392"
@@ -1389,7 +1391,7 @@
     },
     {
       "id": "maadilaw-main-line-transition",
-      "title": "Provision tracking number per channel \u26d4",
+      "title": "Provision tracking number per channel ⛔",
       "note": "Audited all four boards. Tracking Compliance on CRM owns the per channel numbers, so the caller ID and main line porting question from 8/28 goes on as an update there. Blocked on Maadi Law for the decision, flagged for Naz.",
       "status": "ready",
       "board": "CRM",
@@ -1400,7 +1402,7 @@
       "payload": {
         "mode": "update_only",
         "existingItemId": "12471749974",
-        "itemName": "Provision tracking number per channel \u26d4",
+        "itemName": "Provision tracking number per channel ⛔",
         "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> Two number questions came out of the 8/28 go live. Outbound calls placed from the GHL number are at risk of being labelled as spam on the recipient's handset, which kills answer rates on exactly the callbacks the speed to lead work is built around. Separately there is an open question about whether Maadi Law's main firm line moves into GHL entirely.</li><li><strong>Set up</strong> caller ID and branded calling on the GHL outbound number so calls display as the firm rather than as an unknown or suspected spam number.</li><li><strong>Record</strong> the interim routing rule agreed in the session: leads are contacted from the GHL number until the case is signed, and the firm's main number is used after that point.</li><li><strong>Close out</strong> the main line decision with Sharif Maadi. Tracy has already raised it with him. Naz owns the conversation, nobody on the build side should chase the client directly.</li><li><strong>Dependencies and constraints.</strong> Blocked on Maadi Law for the porting decision. That decision also drives the A2P 10DLC registration and the per channel tracking numbers on this same workstream, so <strong>do not</strong> register numbers that a port would immediately throw away.</li><li><strong>Done.</strong> Outbound GHL calls show a branded verified caller ID, and there is a written decision from Sharif on whether the main business line ports into GHL or stays where it is.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
         "blocked": true,
         "needsNaz": true
