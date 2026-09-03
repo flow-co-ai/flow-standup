@@ -4,130 +4,138 @@
   "slug": "medstation",
   "name": "MedStation",
   "brief": {
-    "date": "2026-09-02",
+    "date": "2026-09-03",
     "headlines": [
       {
-        "text": "Domain access confirmed; site live in 24–48h",
+        "text": "WhatsApp payment block cleared by Jonatan",
         "tone": "win"
       },
       {
-        "text": "WhatsApp number access committed by Mateus tomorrow",
+        "text": "GBP update pending; Mateus asked for status",
         "tone": "info"
       },
       {
-        "text": "GHL walkthrough scheduled Wednesday",
+        "text": "Webhook duplicate logic still unresolved",
         "tone": "info"
       }
     ],
     "workstreams": [
       {
-        "title": "MedStation - CRM / GHL",
+        "title": "MedStation - CRM / WhatsApp",
         "badge": {
           "label": "P1 - needs attention",
           "tone": "amber"
         },
         "items": [
           {
-            "state": "next",
-            "text": "GHL WhatsApp walkthrough — Wednesday 2026-09-03 client demo"
+            "state": "done",
+            "text": "Payment method removed from Weston WhatsApp (Jonatan confirmed)"
+          },
+          {
+            "state": "done",
+            "text": "WhatsApp Business Platform connected; activation pending 24 hrs"
           },
           {
             "state": "blocked",
-            "text": "WhatsApp number access — Mateus to provide first thing 2026-09-03"
-          },
-          {
-            "state": "blocked",
-            "text": "Webhook deletion logic for duplicate appointments — not yet resolved"
+            "text": "Webhook deletion logic to prevent duplicate appointments — unresolved"
           }
         ],
         "owners": [
-          "Sohib"
+          "Jonatan Herculano"
         ]
       },
       {
-        "title": "MedStation - Web / SEO",
+        "title": "MedStation - Web + SEO",
         "badge": {
-          "label": "P1 - on track",
+          "label": "P1 - blocked",
+          "tone": "red"
+        },
+        "items": [
+          {
+            "state": "blocked",
+            "text": "GBP updates awaiting response — Mateus asked for status today"
+          },
+          {
+            "state": "next",
+            "text": "Reply to Mateus on GBP update progress"
+          }
+        ],
+        "owners": []
+      },
+      {
+        "title": "MedStation - Ads",
+        "badge": {
+          "label": "P2 - on track",
           "tone": "green"
         },
         "items": [
           {
             "state": "done",
-            "text": "Domain access confirmed; site live within 24–48 hours"
+            "text": "Meta ads account access granted for Weston campaigns (Jonatan)"
           },
           {
-            "state": "done",
-            "text": "New WordPress staging site built by Hashir Faiz"
-          },
-          {
-            "state": "done",
-            "text": "Med Station website launched live"
+            "state": "next",
+            "text": "Friday walkthrough: GHL flows & pipeline (2026-09-05)"
           }
         ],
         "owners": [
-          "Hashir Faiz"
+          "Jonatan Herculano"
         ]
       }
     ],
-    "waiting_on_client": [
-      {
-        "item": "WhatsApp number access for GHL integration",
-        "who": "Mateus",
-        "since": "9/2"
-      }
-    ],
+    "waiting_on_client": [],
     "launch_gate": {
-      "title": "Launch gate - clear before GHL WhatsApp goes live",
+      "title": "Launch gate - clear before Meta & Google Ads go live",
       "items": [
         {
-          "text": "Mateus provides WhatsApp number access",
+          "text": "WhatsApp Business Platform activation confirmed (24-hr window)",
           "done": false
         },
         {
-          "text": "GHL WhatsApp walkthrough completed (Wed 9/3)",
+          "text": "Webhook duplicate appointment logic resolved",
           "done": false
         },
         {
-          "text": "Webhook deletion logic resolved (duplicate appointments)",
+          "text": "Google Business Profile updates published",
           "done": false
         },
         {
-          "text": "Domain live (24–48h window)",
-          "done": false
+          "text": "Meta ads account access granted (Weston)",
+          "done": true
         }
       ]
     },
     "brief_v2": {
-      "verdict": "Client's move: Mateus owes WhatsApp number access tomorrow before Wednesday's GHL walkthrough.",
-      "next_move": "Sohib: confirm Mateus delivers WhatsApp access 9/3 — unlocks Wednesday GHL demo and integration.",
+      "verdict": "Team's move: GBP reply to Mateus and webhook duplicate logic both need immediate owner action.",
+      "next_move": "Team: respond to Mateus on GBP update status — client is actively waiting on this thread.",
       "blocks": [
         {
-          "item": "GHL Setup — WhatsApp number access",
-          "side": "client",
-          "who": "Mateus",
-          "last_activity": "Mateus committed to providing WhatsApp number first thing tomorrow"
+          "item": "GBP (Google Business Profile)",
+          "side": "team",
+          "who": "Flow team",
+          "last_activity": "Mateus asked for GBP update status via WhatsApp today"
         },
         {
-          "item": "GHL Setup — Webhook deletion logic",
+          "item": "Webhook deletion logic — duplicate appointments",
           "side": "team",
-          "who": "Sohib",
-          "last_activity": "Duplicate appointment webhook logic flagged as unresolved in standup"
+          "who": "Flow team",
+          "last_activity": "Raised in meeting; unresolved for 2 days"
         }
       ],
       "snapshot": [
         {
           "label": "Open items",
-          "value": "8 open, 2 moving this week, 1 awaiting client (WhatsApp access)",
+          "value": "8 open, all working — GBP reply and webhook logic are the active blockers",
           "tone": "warn"
         },
         {
           "label": "Contract",
-          "value": "Month 3 of 3 (Phase 1 proof-of-concept, started July 1)",
-          "tone": "warn"
+          "value": "Phase 1 proof-of-concept, Jul–Sep 2026, $3,500–$5,000/mo flat retainer",
+          "tone": "muted"
         },
         {
           "label": "Last client word",
-          "value": "2026-09-02 — Mateus committed WhatsApp number access for tomorrow",
+          "value": "2026-09-03 — Mateus asked for Google Business Profile update status",
           "tone": "plain"
         },
         {
@@ -136,40 +144,40 @@
           "tone": "plain"
         }
       ],
-      "history_line": "Med Station & Full Smile websites launched live · Tracking integration built on webhook/dataLayer, fully operational · Patient confirmations, reminders & no-show follow-ups completed"
+      "history_line": "Med Station & Full Smile websites launched · Tracking integration live (Rafael Rolim) · Digital Ocean HIPAA setup completed"
     }
   },
   "brief_v2": {
-    "verdict": "Client's move: Mateus owes WhatsApp number access tomorrow before Wednesday's GHL walkthrough.",
-    "next_move": "Sohib: confirm Mateus delivers WhatsApp access 9/3 — unlocks Wednesday GHL demo and integration.",
+    "verdict": "Team's move: GBP reply to Mateus and webhook duplicate logic both need immediate owner action.",
+    "next_move": "Team: respond to Mateus on GBP update status — client is actively waiting on this thread.",
     "blocks": [
       {
-        "item": "GHL Setup — WhatsApp number access",
-        "side": "client",
-        "who": "Mateus",
-        "last_activity": "Mateus committed to providing WhatsApp number first thing tomorrow"
+        "item": "GBP (Google Business Profile)",
+        "side": "team",
+        "who": "Flow team",
+        "last_activity": "Mateus asked for GBP update status via WhatsApp today"
       },
       {
-        "item": "GHL Setup — Webhook deletion logic",
+        "item": "Webhook deletion logic — duplicate appointments",
         "side": "team",
-        "who": "Sohib",
-        "last_activity": "Duplicate appointment webhook logic flagged as unresolved in standup"
+        "who": "Flow team",
+        "last_activity": "Raised in meeting; unresolved for 2 days"
       }
     ],
     "snapshot": [
       {
         "label": "Open items",
-        "value": "8 open, 2 moving this week, 1 awaiting client (WhatsApp access)",
+        "value": "8 open, all working — GBP reply and webhook logic are the active blockers",
         "tone": "warn"
       },
       {
         "label": "Contract",
-        "value": "Month 3 of 3 (Phase 1 proof-of-concept, started July 1)",
-        "tone": "warn"
+        "value": "Phase 1 proof-of-concept, Jul–Sep 2026, $3,500–$5,000/mo flat retainer",
+        "tone": "muted"
       },
       {
         "label": "Last client word",
-        "value": "2026-09-02 — Mateus committed WhatsApp number access for tomorrow",
+        "value": "2026-09-03 — Mateus asked for Google Business Profile update status",
         "tone": "plain"
       },
       {
@@ -178,6 +186,6 @@
         "tone": "plain"
       }
     ],
-    "history_line": "Med Station & Full Smile websites launched live · Tracking integration built on webhook/dataLayer, fully operational · Patient confirmations, reminders & no-show follow-ups completed"
+    "history_line": "Med Station & Full Smile websites launched · Tracking integration live (Rafael Rolim) · Digital Ocean HIPAA setup completed"
   }
 }
