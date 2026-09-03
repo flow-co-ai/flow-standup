@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-03T00:33:56.284Z",
+  "updatedAt": "2026-09-03T00:34:32.186Z",
   "items": [
     {
       "id": "websEo-pricing-question",
@@ -458,19 +458,17 @@
       "source": "fireflies",
       "sourceLabel": "Meeting: GHL Go Live Checkin, 8/24",
       "payload": {
-        "mode": "create_subitem",
+        "mode": "create_item",
         "boardId": "18418241405",
-        "parentItemId": "12665521507",
-        "itemName": "Appointment Sync",
         "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> At the 24 August go live checkin the NextGen to GHL appointment sync was confirmed running on the separate DigitalOcean instance that keeps MedStation patient data isolated for HIPAA, pushing appointment status into GHL every 15 minutes. Final verification against live data is still outstanding, and this is one of the last pieces of the Weston pilot that has not been signed off.</li><li><strong>Defect one, duplicate appointments.</strong> Rescheduling in NextGen produces two appointment records in GHL instead of one. The working theory from the session is that the sync account has read and write rights on the mirror but no delete right, so the superseded appointment is never removed. The team has not yet ruled out genuine double bookings by patients, so this needs confirming with MedStation before any logic changes.</li><li><strong>Defect two, source overwrite.</strong> The sync currently writes the contact source field on contacts it touches, which wipes the original Google Ads, Meta Ads or LSA attribution the moment a patient books. Every synced contact ends up looking like it came from NextGen.</li><li><strong>Verify</strong> the appointment status sync end to end against live NextGen data and confirm each status change lands in GHL inside the 15 minute window.</li><li><strong>Request and confirm</strong> delete permission for the sync account on the NextGen mirror, then reproduce a reschedule and a cancellation and confirm GHL holds exactly one current appointment record afterwards.</li><li><strong>Modify</strong> the sync so it no longer writes contact source on an existing contact, and <strong>add</strong> the tag \"Next Gen Sync\" to every contact it touches so NextGen originated records stay identifiable without destroying campaign attribution.</li><li><strong>Dependencies.</strong> Depends on the DigitalOcean mirror connection staying stable and on MedStation IT granting delete rights, which sits outside our control. <strong>Do not</strong> change the Source Tracking configuration itself, which was verified complete on 17 August. The fix belongs in the sync, not in the tracking setup.</li><li><strong>done = </strong> a rescheduled or cancelled NextGen appointment leaves exactly one matching appointment record in GHL with no duplicate, and a contact that syncs from NextGen keeps its original source value and carries the \"Next Gen Sync\" tag.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
         "blocked": false,
         "needsNaz": false,
-        "parentItemName": "GHL Setup"
+        "groupId": "group_mm512p9w"
       },
       "nullReason": null,
       "priority": 1,
       "createdAt": "2026-08-25T15:46:03.194287+00:00",
-      "updatedAt": "2026-09-03T00:33:56.283Z"
+      "updatedAt": "2026-09-03T00:34:32.185Z"
     },
     {
       "id": "medstation-call-source-tagging",
