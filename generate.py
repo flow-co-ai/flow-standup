@@ -2113,8 +2113,13 @@ def main():
     # The one write generate.py is allowed to make to Monday: flip a
     # comms-confirmed completion's status to Done -- only when a
     # monday_item_id was confidently identified and Monday doesn't already
-    # say Done. Mirrors the same rule already live in the
-    # fireflies-monday-watch automation.
+    # say Done. This used to mirror the same narrow exception in the laptop
+    # drafter (fireflies-monday-watch); the ported drafter (GH Actions,
+    # drafter/SKILL.md) dropped that exception entirely in the 2026-08-18
+    # port -- it is now fully read-only on Monday, no write exception at
+    # all, per Naz's instruction ("write to the draft queue still for me to
+    # approve"). This function is generate.py's own privilege now, not a
+    # mirror of anything the drafter still does.
     monday_meta = build_monday_meta(monday_data)
     alerts = load_alerts()
     for c in comms_completions:

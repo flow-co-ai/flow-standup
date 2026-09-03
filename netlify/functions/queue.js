@@ -1,5 +1,6 @@
-// GET  -> the live draft queue (drafted daily by Naz's fireflies-monday-watch
-//         Cowork automation, written to checks/draft-queue.json on the state branch).
+// GET  -> the live draft queue (drafted daily by the GH Actions drafter --
+//         .github/workflows/draft-queue.yml running drafter/SKILL.md --
+//         written to checks/draft-queue.json on the state branch).
 // GET  ?action=targets&boardId=X&groupId=Y -> pickable Monday targets (items
 //         + their subitems) for the Draft Queue's per-card destination picker.
 // GET  ?action=ignore-reasons -> recent {title,client,board,reason,ignoredAt}
@@ -168,8 +169,9 @@ function applyResolvedNames(items, resolved) {
 }
 
 // Draft age is unknowable without this -- most items still reach the queue
-// via the external fireflies-monday-watch automation, which this repo can't
-// reach in to fix at the source, so this backfills it the first time any
+// via the drafter (a separate GH Actions job, .github/workflows/draft-queue.yml
+// running drafter/SKILL.md), which this Netlify function can't reach into to
+// fix at the source, so this backfills it the first time any
 // such item passes through a GET here instead. Pure function of whatever
 // state is passed in (never a stale precomputed patch) so it stays correct
 // under updateJSON's read-mutate-retry loop on a 409. Falls back to the

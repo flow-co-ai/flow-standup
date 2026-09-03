@@ -178,8 +178,8 @@ ${DRAFTING_RULES}
   week_of to tell Naz how current it actually is.
 - draft_new_item(...): draft a brand-new Daily Ops item from scratch and
   write it straight into the live draft queue, so it shows up in the Daily
-  Ops dashboard immediately -- exactly as if the fireflies-monday-watch
-  automation had drafted it. Complete the mandatory board audit above
+  Ops dashboard immediately -- exactly as if the drafter (GH Actions,
+  drafter/SKILL.md) had drafted it. Complete the mandatory board audit above
   (monday_client_overview / monday_item_detail) BEFORE calling this, to avoid
   drafting a duplicate of something that already exists. Provide:
   - client: the client's display name, e.g. "Maadi Law" -- used for the

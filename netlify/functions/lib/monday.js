@@ -8,7 +8,8 @@
 // payload.columnValues happens to contain. This is the single enforcement
 // point shared with item-chat.js (which imports these from here rather than
 // keeping its own copy) -- drafts authored anywhere (item-chat.js, the
-// fireflies-monday-watch automation, a hand-edited queue entry) all get the
+// drafter -- .github/workflows/draft-queue.yml running drafter/SKILL.md --
+// a hand-edited queue entry) all get the
 // same board-scoped default assignees and Start/Stuck status, with no way to
 // silently end up empty.
 
@@ -257,7 +258,7 @@ const BOARD_LABEL_IDS = {
   // directly, auto-tagged to Sohib (see BOARD_ASSIGNEES above). Same-day
   // follow-up: also added to BOARD_ORDER below -- initially left out on the
   // assumption this was dashboard-only, but Naz confirmed the automated
-  // pipeline (fireflies-monday-watch) and status/search queries should see
+  // pipeline (the drafter) and status/search queries should see
   // it too, not just manual dashboard writes.
 };
 
@@ -296,7 +297,7 @@ const CLIENT_GROUPS = {
   "Full Smile": { Ads: "group_mkxdznat", "Web+SEO": "group_mkxdmhbz", CRM: "group_mkxdmhbz", Video: "group_mkxd24va" },
   "Justice Consumer Law": { Ads: "group_mkqxyga2", "Web+SEO": "group_mkqxyga2", CRM: "group_mm5gdrn3", Video: "group_mkqxyga2" }, // CRM group existed live, never recorded until 2026-07-22
   Liferun: { Ads: "group_mkwj8zze", "Web+SEO": "group_mkwj9a1c", CRM: "group_mkwj9a1c", Video: "group_mkwj5qjb" },
-  "Billy Doe Meats": { Ads: "group_mm2dt8f", "Web+SEO": "group_mm2dqm7n", CRM: "group_mm5gt78e", Video: "group_mm2ddrwm" }, // key renamed 2026-07-22 from "BillyDoe Meats" (no space) -- that never matched the real Monday group title or what fireflies-monday-watch actually writes to item.group ("Billy Doe Meats", with space), so every lookup for this client silently failed. Root cause of the live "no known group" alert Naz hit.
+  "Billy Doe Meats": { Ads: "group_mm2dt8f", "Web+SEO": "group_mm2dqm7n", CRM: "group_mm5gt78e", Video: "group_mm2ddrwm" }, // key renamed 2026-07-22 from "BillyDoe Meats" (no space) -- that never matched the real Monday group title or what the drafter actually writes to item.group ("Billy Doe Meats", with space), so every lookup for this client silently failed. Root cause of the live "no known group" alert Naz hit.
   "Steel Round Bars": { Ads: "group_mm5gmpwf", "Web+SEO": "group_mkqxskcn", CRM: "group_mkqxskcn", Video: "group_mkqxskcn" }, // Ads group recreated 2026-07-22, old one had vanished
   "Flow Company": { Ads: "group_mkwjedjg", "Web+SEO": "group_mkwjem1v", CRM: "group_mm5g4pdh", Video: "group_mkwj30hd" }, // CRM group created 2026-07-22
   // Both added 2026-08-15, live-verified against Monday directly (never in

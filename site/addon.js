@@ -549,7 +549,7 @@ const NULL_REASON_LABELS = {
 };
 
 // Every field here already exists in the pipeline's own payload schema
-// (fireflies-monday-watch SKILL.md step A4h: {mode, boardId+groupId |
+// (drafter/SKILL.md's A6: {mode, boardId+groupId |
 // parentItemId | existingItemId, itemName, columnValues, updateBody}) --
 // this only surfaces Monday's own language directly on the card instead of
 // the paraphrased title/note, it doesn't generate anything new. board/group

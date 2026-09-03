@@ -5,7 +5,8 @@
 // patch: title, note, priority, dashboard status, or board-scoped reassignment).
 // Either tool writes straight onto checks/draft-queue.json on the state branch
 // (edit_item also pushes a live Monday column update if the item already has a
-// mondayItemId) -- no waiting for the next fireflies-monday-watch run.
+// mondayItemId) -- no waiting for the next drafter run (GH Actions,
+// .github/workflows/draft-queue.yml, drafter/SKILL.md).
 //
 // SYSTEM_RULES wraps DRAFTING_RULES (loaded from rules/drafting-rules.md,
 // see below) with this tool's own framing + "Your tools" section.

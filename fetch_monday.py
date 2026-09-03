@@ -168,9 +168,13 @@ def _fetch_all_items_paginated(board_id: str, headers: dict) -> list:
 
 def set_monday_status_done(board_id: str, item_id: str, status_column_id: str) -> None:
     """Sets one item/subitem's status column to "Done". This is the ONLY write
-    generate.py is allowed to make to Monday -- mirrors the same rule already
-    live in the fireflies-monday-watch automation. Raises on failure; the
-    caller is responsible for deciding whether that's fatal."""
+    generate.py is allowed to make to Monday. It used to mirror the same
+    narrow exception in the laptop drafter (fireflies-monday-watch); the
+    ported drafter (GH Actions, drafter/SKILL.md) dropped that exception in
+    the 2026-08-18 port and is now fully read-only on Monday -- this is
+    generate.py's own privilege now, not a mirror of anything the drafter
+    still does. Raises on failure; the caller is responsible for deciding
+    whether that's fatal."""
     headers = {
         "Authorization": _token(),
         "Content-Type": "application/json",

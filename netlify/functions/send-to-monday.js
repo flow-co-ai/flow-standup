@@ -1,6 +1,6 @@
 // The real "Send to Monday" action — only ever called by a human clicking the
-// button on the page, never by the automation itself (fireflies-monday-watch
-// only ever drafts; it never calls this).
+// button on the page, never by the automation itself (the drafter -- GH
+// Actions, drafter/SKILL.md -- only ever drafts; it never calls this).
 
 const { sendQueueItemToMonday } = require("./lib/monday");
 
