@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-03T16:08:31.902Z",
+  "updatedAt": "2026-09-03T16:25:22.074135+00:00",
   "items": [
     {
       "id": "websEo-pricing-question",
@@ -1387,23 +1387,24 @@
     {
       "id": "maadilaw-tracy-notifications",
       "title": "Verify notifications fire to correct owner",
-      "note": "Audited all four boards. Stack Test on CRM already has the Verify notifications subitem, which is the right home for the 8/28 finding plus the two remaining alert triggers.",
+      "note": "Section 19b axis 1 merge, not a second card. The 2 September Maadi Law Marketing chat reports the same subject as the 28 August material already on this card and targets the same Monday subitem 12471748357, so the two calls are folded into one update rather than drafted twice. New this run: notifications now do reach Tracy, but there is no working answer path for inbound ad calls and the Zoom ring is intermittent (Jiles Garret rang nowhere at all). Her mobile app is already installed, which retires the 8/28 assumption that installing it was the fix. Board audit 3 September, all four boards with subitems: Route inbound calls to contact owner once assigned (12471725319) covers owner routing and is blocked on tracking numbers, so it is not the home for the ring path problem; 12471748357 stays the right target.",
       "status": "ready",
       "board": "CRM",
       "group": "Maadi Law",
       "potentialClient": null,
       "source": "fireflies",
-      "sourceLabel": "Meeting with Maadi Law, 8/28",
+      "sourceLabel": "Meeting with Maadi Law, 8/28 + WhatsApp: Maadi Law, 9/2",
       "payload": {
         "mode": "update_only",
         "existingItemId": "12471748357",
         "itemName": "Verify notifications fire to correct owner",
-        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> Going into the 8/28 session Tracy was not being alerted to lead activity and it looked like a notification routing fault. It was traced to calls and texts happening outside GHL, so there was no event to notify on. With all communication now routed through GHL, notifications reach her correctly. That half is verified. What is left is proactive alerting on events she is not already looking at.</li><li><strong>Build</strong> notification triggers for a new opportunity being created and for an inbound client reply, so Tracy is not manually watching the conversations inbox to catch either.</li><li><strong>Get</strong> Tracy signed in to the GHL mobile app so the alerts actually reach her away from the desk, which is where most of the after hours leads land.</li><li><strong>Dependencies and constraints.</strong> Depends on contact owner assignment being correct, which is tracked separately on Case Manager Routing. Nothing else blocks this. Note this subitem is part of the stack test gating ad spend sign off, and the lead campaigns are turning on over the weekend of 8/29, so it wants closing quickly.</li><li><strong>Done.</strong> Creating a test opportunity and sending a test inbound reply each produce a notification to Tracy on both desktop and mobile within a minute.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context from the 28 August session.</strong> Tracy was not being alerted to lead activity and it looked like a notification routing fault. It was traced to calls and texts happening outside GHL, so there was no event to notify on. With all communication now routed through GHL, notifications reach her correctly. That half is verified.</li><li><strong>What 2 September adds, and this is the new part.</strong> Calls and messages are working again and Tracy now <strong>does</strong> get a notification when a call comes in off the ads, but she has no reliable way to answer it. The line rings through to Zoom only some of the time. On the Jiles Garret call it never rang at all and she ended up calling the lead back. She also confirmed the HighLevel mobile app is already installed, so the earlier assumption that she simply needed the app on her phone is no longer the gap.</li><li><strong>Establish one answer path</strong> for inbound calls on the ad numbers and make it the documented one. Decide whether the call rings in the HighLevel mobile app, on the desktop softphone, or forwards to a handset, then turn off whatever second path is competing with it. The intermittent Zoom ring is the symptom worth chasing first: two systems trying to answer the same number is the likeliest reason it lands sometimes and not others.</li><li><strong>Build</strong> the two proactive triggers still outstanding from 28 August, a new opportunity being created and an inbound client reply, so Tracy is not manually watching the conversations inbox to catch either.</li><li><strong>Prove it on a live call.</strong> Walk Tracy through the agreed answer path once on a test call and confirm on this item that she answered it. A notification she cannot act on is worse than no notification, because the lead is already on the line when it arrives.</li><li><strong>Dependencies and constraints.</strong> Depends on contact owner assignment being correct, which is tracked separately on Case Manager Routing. Do not change the ad tracking numbers themselves here, those sit on Tracking Compliance. Tracy is on the client side, so anything that needs asking of the firm goes through Naz.</li><li><strong>Done.</strong> An inbound ad call rings on one known device, Tracy answers it live in test, and new opportunity and inbound reply alerts both reach her on desktop and mobile within a minute.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
         "blocked": false,
         "needsNaz": false
       },
       "nullReason": null,
       "priority": 2,
+      "updatedAt": "2026-09-03T16:25:12.810583+00:00",
       "createdAt": "2026-08-29T18:15:52.594090+00:00"
     },
     {
@@ -1586,24 +1587,17 @@
     {
       "id": "medstation-whatsapp-number-limit",
       "title": "WhatsApp Number Limit",
-      "note": "Sources: two MedStation WhatsApp sessions on 9/2 (01M1H7CF, 01M1HW6C) plus the Medstation GoHighLevel and Medstation Marketing chats on 9/1. New fact this run: the Weston migration is blocked by a WhatsApp platform limit of one active number per business account, with no dual number setting in the Android app, so this needs a route decision rather than more configuration. Board audit 9/3 across all four boards with subitems: no WhatsApp item or subitem exists on CRM, Ads, Video or Web + SEO. The former parent GHL Setup (12665521507) is no longer on the CRM board and its old children (Weston Pilot, Review Engine, Reactivation Build, Phone Consolidation, Lead Escalation) are now top level MedStation items, so create_item in the MedStation group is the correct shape rather than create_subitem. Section 19b: no match against any non terminal card. The completed medstation-whatsapp-ghl-connect card is terminal and was deliberately not reopened. blocked true because the Meta Business Manager payment removal sits with MedStation; needsNaz true because this gates the pilot and needs a spend and device decision.",
-      "status": "ready",
+      "note": "Section 19b content conflict. Payload pulled, do not fire this card as drafted. POSITION A, this card as written on 3 September from the 9/2 MedStation sessions plus WhatsApp through 9/1: the Weston migration is blocked by a WhatsApp platform limit of one active number per business account, Jonatan Herculano still has to remove the shared payment card in Meta Business Manager, and the card asks Naz for a route decision. POSITION B, GHL Dev | Flowco on 2 September at 15:41: Sohib wrote that WhatsApp is now connected and told Ahmed Memon to proceed with updating the workflows for a live test at 8AM CST on 3 September; Ahmed confirmed done at 15:50. Ahmed's own 3 September QA update on Weston Pilot (12484780085) then reported the Weston GHL workflows, booking receivers, NextGen mirror, review automation, reactivation and lead escalation paths published and tested. WHY THEY DISAGREE: yesterday's run never saw the 2 September messages, because the WhatsApp high water mark for that chat stopped at 9/1, so the card was drafted describing a blocker that had already been cleared hours earlier. Firing it would post a resolved blocker onto CRM. DECISION NEEDED FROM NAZ: which route Weston's number actually went live on, whether it now has its own WhatsApp Business account and whether the Meta Business Manager payment removal still has to happen, or whether this card should simply be ignored as overtaken. Board audit 3 September, all four boards with subitems: still no WhatsApp item or subitem anywhere, so nothing on Monday records the answer either. Priority dropped from 1 to 2 since the blocker no longer gates the pilot.",
+      "status": "confirm",
       "board": "CRM",
       "group": "MedStation",
       "potentialClient": null,
       "source": "fireflies",
-      "sourceLabel": "Meeting with MedStation, 9/2 + WhatsApp: MedStation, 9/1",
-      "payload": {
-        "mode": "create_item",
-        "boardId": "18418241405",
-        "groupId": "group_mm512p9w",
-        "itemName": "WhatsApp Number Limit",
-        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> Weston's WhatsApp number is the last open gate before the MedStation GoHighLevel pilot can run. On 1 September the number was connected into GHL through Lead Connector by QR scan, then a shared payment method on the WhatsApp Business account blocked data flow, so the plan became to move Weston onto its own WhatsApp Business account. Jonatan Herculano on the MedStation side agreed to remove the card from that account inside Meta Business Manager. Renata Barros holds the handset and has been doing the scans.</li><li><strong>What the 2 September sessions found, and this is the new part.</strong> The migration is blocked by a platform limit, not a configuration mistake. A WhatsApp Business account accepts <strong>only one active number</strong>, and the Android app in use exposes no advanced or dual number setting, so there is no way to add Weston as a second number on the existing account and no way to run both from the same handset. Creating and linking a fresh business account also threw errors that were not resolved on the call. The team wants to keep the current phone in service, which is what makes this a decision rather than a build.</li><li><strong>Deliverable, step one.</strong> <strong>Write up the routes</strong> that actually clear the one number limit, with what each costs MedStation in money, time and disruption. The realistic set is a dedicated handset for the Weston number, moving Weston onto the WhatsApp Business Platform through a provider number instead of the phone app, or keeping the shared account and removing the payment conflict so both clinics stay on one number. Say which one you recommend and why.</li><li><strong>Deliverable, step two.</strong> Once a route is chosen, <strong>connect Weston into GHL on it</strong> and prove it with a live two way message test, inbound and outbound, logged against a real GHL contact. <strong>Do not start step two before step one is signed off</strong>, because each route puts the number on a different account and undoing that is manual.</li><li><strong>Dependencies.</strong> Removing the payment method from the Weston WhatsApp account inside Meta Business Manager sits with Jonatan Herculano at MedStation and was still open at the end of 1 September. Renata Barros is the person with the handset for any scan. Sohib is running the account work directly on the client calls, so coordinate through him rather than contacting the clinic separately.</li><li><strong>Constraints.</strong> <strong>Do not</strong> take the currently working WhatsApp number out of service while testing, and <strong>do not</strong> move the other MedStation locations onto a new account as part of this. Weston only, the same separation the pilot already assumes.</li><li><strong>done =</strong> Weston sends and receives WhatsApp through GHL on an account that shares neither a number nor a payment method with another clinic, a live two way test is recorded here, and the chosen route is written down so the remaining locations can follow it.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
-        "blocked": true,
-        "needsNaz": true
-      },
-      "nullReason": null,
-      "priority": 1,
+      "sourceLabel": "Meeting with MedStation, 9/2 + WhatsApp: MedStation, 9/1 + WhatsApp: GHL Dev, 9/2",
+      "payload": null,
+      "nullReason": "content-conflict",
+      "priority": 2,
+      "updatedAt": "2026-09-03T16:25:12.810646+00:00",
       "createdAt": "2026-09-03T02:22:40.467927+00:00"
     },
     {
@@ -1752,6 +1746,118 @@
       "ignoreReason": "already handled",
       "ignoredAt": "2026-09-03T02:34:17.775Z",
       "updatedAt": "2026-09-03T02:34:18.137Z"
+    },
+    {
+      "id": "maadilaw-signing-reminder-stop",
+      "title": "Document Automation",
+      "note": "From the Maadi Law Marketing chat on 2 September. Tracy reported agreement follow up messages still firing on already signed clients (Brandon Soto, Jaykumar Patel) and Sohib fixed the stop condition live in the same thread. Board audit 3 September, all four boards with subitems: no item or subitem anywhere mentions either contact or the stop condition, and Document Automation (12810218373) under Document Handling is the subitem that owns the automated signing reminders per its 15 August update, so this goes on as an update there. Section 19b: no match against any non terminal card. Section 29: two Maadi Law document cards have been ignored as duplicates before (maadilaw-document-automation, maadilaw-dropbox-signed-docs), both because they restated the 8/15 deliverables that were already on this subitem. This one is a new defect report plus the fix Sohib applied, not a restatement of those deliverables, which is why it is drafted rather than routed to notes.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: Maadi Law, 9/2",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12810218373",
+        "itemName": "Document Automation",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> Tracy reported on 2 September that two clients she had already signed up were still being sent the agreement follow up messages that this item's automated reminder cadence drives. She named Brandon Soto and Jaykumar Patel. The text never actually reached Brandon Soto, but only because calls and messages were down at the time, so treat both as live examples of the same defect rather than one.</li><li><strong>Cause, already identified on the call.</strong> The reminder sequence treats a document as outstanding until every signature on it is collected. On a Maadi Law representation agreement Sharif Maadi signs after the client, so a client who has signed their own half still counts as unsigned and keeps getting chased.</li><li><strong>Fix already applied on 2 September.</strong> Sohib changed the sequence to <strong>stop as soon as the contact signs</strong>, even when Sharif has not signed yet. Do not revert it. Confirm the change is on the published version of the workflow and not only on a draft copy.</li><li><strong>Verify</strong> against the two named contacts. Open Brandon Soto and Jaykumar Patel, confirm neither has a further agreement reminder enrolled or queued, and clear any enrollment that survived the change.</li><li><strong>Then cover the reverse case.</strong> A matter that still needs Sharif's signature must not fall out of view once the client chase stops. Confirm the firm still has a visible signal that the attorney signature is outstanding, whether that is the opportunity stage or a task, so this fix does not silently drop the internal follow up as well as the client one.</li><li><strong>Dependencies and constraints.</strong> No external dependency, the whole path sits inside GHL and the change is already live. Do not touch the Dropbox folder creation or the signed document routing on this item while making this fix.</li><li><strong>Done.</strong> The agreement reminder sequence stops on the client signature regardless of the attorney signature, Brandon Soto and Jaykumar Patel carry no further reminder enrollments, and an outstanding attorney signature is still visible to the firm somewhere.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-09-03T16:25:22.074073+00:00"
+    },
+    {
+      "id": "medstation-meta-pixel-access",
+      "title": "Meta",
+      "note": "From the Medstation Marketing and Paid Ads | Flowco chats on 2 September. Board audit 3 September, all four boards with subitems: MedStation has no tracking or pixel item anywhere, Ads carries Meta (12471102373, Start, last updated 8/26), Google (12471101969), LSA (12786016809) and Reports (12471121477). Meta is the existing home for this account's setup and already carries the conversion model, so this is an update on it rather than a new item or a subitem. Section 19b: no match against any non terminal card. needsNaz true because both remaining holds are client side approvals and the Friday commitment came straight from Mateus.",
+      "status": "ready",
+      "board": "Ads",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: MedStation, 9/2",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12471102373",
+        "itemName": "Meta",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> MedStation want the Weston campaigns live <strong>by Friday 4 September</strong>. Mateus said so directly in the client chat on 2 September and asked to be kept updated on plans and progress through the week. Three access and tracking items came out of that same day and all three sit in front of the launch.</li><li><strong>Get Hamza onto the MedStation ad accounts.</strong> Raheel raised the request to add Hamza to the MedStation portfolio on 2 September and it needs a second admin on the client side to approve. Sohib cannot approve it himself and has asked another MedStation admin to accept. Jonatan Herculano on the client side approved Sohib's own request the same day but could not find the ad specialist request and then could not accept it, so treat Hamza's access as <strong>still outstanding</strong> until someone confirms it inside the account rather than in chat.</li><li><strong>Confirm which business manager this sits under before moving anything.</strong> Jonatan asked whether it should be on BM Medstation 2. Sohib confirmed it is the <strong>original BM Medstation</strong>. Separately Sohib asked Jonatan's team to complete business verification on BM 2 and Jonatan agreed to request it. Do not move any asset between the two business managers on the assumption that BM 2 is the home.</li><li><strong>Create and configure the Meta pixel.</strong> Sohib asked on 2 September for Hamza to own pixel creation and setup end to end and Raheel confirmed Hamza will take it. Google Tag Manager access for MedStation was granted the same day to betawebsol555@gmail.com and receipt was confirmed, so the container is in hand and there is no reason to wait on it. Fire the pixel through GTM rather than hardcoding it into the site.</li><li><strong>Keep the Booked conversion out of the pixel.</strong> The 26 August note on this item still stands. Booked fires server side from the booking webhook, not from GHL and not from the pixel, so it has one owner and does not double count. The pixel covers the earlier funnel events only, matched to the pipeline stages already listed here.</li><li><strong>Dependencies and constraints.</strong> Hamza's ad account access and the BM 2 verification both sit with MedStation and are the only client side holds. Everything on the GTM side can start immediately. Weston location only, same as Google. Test form submissions must carry the word Test in front of the name so they are filterable out of the lead data later.</li><li><strong>Done.</strong> Hamza has working access to the MedStation ad accounts, BM 2 verification is closed out, and the Meta pixel is live through GTM with events visible in Events Manager.</li></ul><p><a class=\"mention\" data-mention-id=\"102221064\" data-mention-type=\"User\">@Khurram Jamil</a> <a class=\"mention\" data-mention-id=\"102221061\" data-mention-type=\"User\">@Ads Team</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
+        "blocked": false,
+        "needsNaz": true
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-09-03T16:25:22.074073+00:00"
+    },
+    {
+      "id": "medstation-gbp-updates-live",
+      "title": "GBP",
+      "note": "From the Medstation Marketing chat on 2 September. Progress and completion signal on an item that has looked untouched since 10 August. Board audit 3 September, all four boards with subitems: GBP (12545614773) on Web + SEO with its Posting subitem is the only GBP home for MedStation; Website (12471126370) went Done on 9/2 and Landing Pages (12720959017) is the ad lander workstream, neither is the right target. Section 19b: no match against any non terminal card.",
+      "status": "ready",
+      "board": "Web + SEO",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: MedStation, 9/2",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12545614773",
+        "itemName": "GBP",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> This item has sat at Start since the 10 August note that shared all five MedStation Google Business Profiles and scoped the engagement to SEO and GBP work only. Real movement landed on 2 September and belongs on the record here rather than only in the client chat.</li><li><strong>What shipped.</strong> Hashir sent MedStation a document setting out the Google Business Profile edits, and confirmed in the same thread that <strong>the edits are already live on the listing</strong> rather than waiting for approval. Mateus asked exactly that question and has said he will review the document carefully and come back with feedback.</li><li><strong>Attach the edit document to this item.</strong> It only exists in the client chat right now. Post it here so the change set stays auditable against the listings later, and mark which of the five locations each edit applies to.</li><li><strong>Photos and video are the next input.</strong> On 2 September Naz asked the MedStation team to send new clinic photos and videos into the group chat as they take them, tagging him, Sohib and Hashir. Ana Caroline on the client side confirmed they will. The 10 August note already flagged Weston clinic photos and video from Paulo and Carol as ready, so <strong>use what already exists for Weston first</strong> instead of waiting on the new round.</li><li><strong>Then post them.</strong> As each batch lands, add it to the matching location profile and keep the Posting subitem moving, rather than letting imagery sit unused in the chat.</li><li><strong>Dependencies and constraints.</strong> Mateus's feedback on the edit document is the only open review. New imagery depends on the client and carries no date, which is why the existing Weston material is the part to act on now. Scope is unchanged, SEO and GBP only, no new website build under this item.</li><li><strong>Done.</strong> The 2 September edit set is posted on this item and signed off by MedStation, and current photos and video are live on each confirmed location profile.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 3,
+      "createdAt": "2026-09-03T16:25:22.074073+00:00"
+    },
+    {
+      "id": "medstation-service-pages",
+      "title": "Service Pages",
+      "note": "From the Web & SEO | Flowco chat on 2 September. Board audit 3 September, all four boards with subitems: Website (12471126370) is Done as of 9/2 so it is not a target, Landing Pages (12720959017) is the Google Ads lander workstream and a different kind of work, GBP (12545614773) is listings only. No item covers the live site's broken booking links or main domain service pages, so this is a new top level item on Web + SEO. Prerequisite check per the drafting rules: step 2 assumes the WordPress site is deployed, which is not confirmed and is the subject of the pending queue card medstation-website-hosting, so both halves are drafted as one sequenced item with the dependency stated rather than as a standalone page build. Section 19b: no match; medstation-website-hosting is the prerequisite, not the same work, and is named in the body. Section 29: medstation-website-launch-punchlist was ignored once as already handled when the Website item went Done, a single ignore and a different subject (these are the live site's links, not the closed build), so it does not change the disposition.",
+      "status": "ready",
+      "board": "Web + SEO",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: MedStation, 9/2",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18099807701",
+        "groupId": "group_mm51nc9h",
+        "itemName": "Service Pages",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> On 2 September Sohib flagged that the buttons lower down the MedStation homepage are broken on the live site. Hashir traced it: those buttons point at booking pages on the <strong>book.medstation.com</strong> subdomain, all three of them are down, and we have no access to that subdomain to repair it. The affected pages are lab evaluation, weight loss and prescription refill.</li><li><strong>Step 1, repair the live links now.</strong> Hashir found the same pages resolve under <strong>book.medstation.neuryn.com</strong>, for example book.medstation.neuryn.com/book/prescription-refill, and said on 2 September he would repoint the homepage buttons straight away. Confirm on this item that all three now resolve, and sweep the rest of the live site for any other reference to the old book.medstation.com subdomain rather than checking only the homepage.</li><li><strong>Step 2, build the real pages on the main site.</strong> The homepage should be sending people to pages on the main domain, such as medstation.com/weight-loss, instead of bouncing them straight onto a booking subdomain that has no supporting content. Build a page each for <strong>weight loss</strong>, <strong>lab evaluation</strong> and <strong>prescription refill</strong>, each carrying the service content with the booking link as its call to action, then repoint the homepage buttons at those pages.</li><li><strong>Sequencing, and do not start step 2 before this is settled.</strong> The reason these pages do not exist is that MedStation's previous website builder would not create new pages properly, which is why the site was rebuilt in WordPress. The three pages can only go live once the WordPress site is deployed, and deployment is still waiting on hosting details from MedStation. Build them on <strong>staging</strong> in the meantime and take them live with the WordPress launch, exactly as Hashir set out on the call.</li><li><strong>Dependencies and constraints.</strong> Step 1 is independent and can be finished today. Step 2 depends on the WordPress site going live, which depends on the hosting answer the client has not given yet. Nothing on book.medstation.com can be fixed from our side. This is SEO service page work on the main domain, it is not the Google Ads landing page set tracked separately on Landing Pages, so do not fold the two together.</li><li><strong>Done.</strong> Every booking button on the live homepage resolves to a working page, and weight loss, lab evaluation and prescription refill pages are live on the main MedStation domain once the WordPress site launches.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-09-03T16:25:22.074073+00:00"
+    },
+    {
+      "id": "qualityhvac-recurring-disconnect",
+      "title": "Recurring Disconnect",
+      "note": "From the HVAC Marketing chat on 2 September, a chat this run saw for the first time. Board audit 3 September, all four boards with subitems: no item or subitem on CRM, Ads, Video or Web + SEO mentions a disconnect, and the closest Quality HVAC integration item, Technician Calendar Routing (12472427099), is Stuck on a different Housecall Pro problem, so this is a new top level item. Routed to CRM because a connection or session drop on this account is GHL and integration territory. Section 19b: no match against any non terminal card. The affected system is deliberately left open in the body rather than guessed, since the report came as a screenshot; that is the first deliverable, not a null reason. needsNaz true because identifying it needs a client side answer.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Quality HVAC",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: Quality HVAC, 9/2",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm231wbb",
+        "itemName": "Recurring Disconnect",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> Quality HVAC reported in the client chat on 2 September that they had <strong>been disconnected again</strong>, and asked whether this is happening every week or so. That question is the important part: it has happened before, more than once, and nothing on our side is tracking it. Sohib said he would open a support ticket and find out what is going on. A board audit on 3 September across all four boards including subitems found nothing covering this.</li><li><strong>Establish what actually disconnected.</strong> The report arrived as a screenshot rather than a named system, so this is not yet pinned down. Nate said in the same thread that he was <strong>not</strong> kicked out and is still logged in, which points at one user or one integration rather than the whole account. Getting the screenshot and the exact wording of the message from the client is the first step, not a nice to have.</li><li><strong>Check the account from our side in parallel.</strong> Work through the Housecall Pro connection, the Google and Google Business Profile connections, and per user GHL sessions in the Quality HVAC account. Record the last successful sync or login time for each, so the client's weekly pattern question can be answered from data instead of guessed at.</li><li><strong>Track the vendor ticket here.</strong> Sohib is raising it. Post the ticket reference and the vendor's reply onto this item so the history lives in one place and a repeat next week can be attached to the same thread rather than opened fresh.</li><li><strong>Dependencies and constraints.</strong> Identifying the system depends on Quality HVAC sending the screenshot. Naz owns that conversation and nobody on the build side should chase the client directly. Do not reconnect or reauthenticate anything before capturing what the broken state looks like, otherwise the evidence the vendor ticket needs is gone.</li><li><strong>Done.</strong> The disconnecting system is identified, the cause is confirmed with the vendor, and Quality HVAC runs two consecutive weeks with no repeat.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
+        "blocked": false,
+        "needsNaz": true
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-09-03T16:25:22.074073+00:00"
     }
   ]
 }
