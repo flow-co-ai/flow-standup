@@ -60,6 +60,13 @@ jobs:
           GH_STATE_TOKEN:    ${{ secrets.GH_STATE_TOKEN }}
           GH_REPO:           ${{ github.repository }}
           GH_BRANCH:         state
+          # A4's Drive-based WhatsApp fetch (fetch_whatsapp.fetch_whatsapp)
+          # needs this to authenticate to the whatsapp_drive_folder_id in
+          # config.json -- same secret standup.yml/daily-pulse.yml already use
+          # for generate.py. Missing here (silently, since fetch_whatsapp_drive
+          # returns {} rather than raising) is why this job ingested zero
+          # WhatsApp from the 2026-08-18 port until this line was added.
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           prompt: |

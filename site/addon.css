@@ -61,6 +61,17 @@
   background: rgba(222,110,76,0.18); color: #DE6E4C;
   border-radius: 999px; padding: 1px 6px;
 }
+/* No payload + stale (foIsStuck in addon.js) -- a card this can never send
+   as-is and nothing else calls that out while scanning the list. Reuses
+   the priority-1/2 red rather than the hot-pill orange so it doesn't read
+   as merely urgent-but-actionable the way HOT does. */
+.fo-stuck-pill {
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 8.5px; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(232,101,125,0.16); color: #E8657D;
+  border-radius: 999px; padding: 1px 6px;
+}
 
 /* ── list row ────────────────────────────────────────────────────────────── */
 .fo-list-row {

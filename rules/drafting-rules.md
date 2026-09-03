@@ -306,5 +306,7 @@ it matched.
 
 A single one-off ignore is not a pattern. Only a repeat changes the disposition.
 
-This applies to task-drafting judgment only — not to `potentialClient` prospect
-cards, and not to the health check.
+This applies to task-drafting judgment only — not to the health check. (An
+unsigned prospect no longer becomes a `potentialClient` card at all — see
+`SKILL.md` A5's Routing — so there's nothing of that shape left for this rule
+to carve out.)

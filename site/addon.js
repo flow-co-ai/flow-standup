@@ -331,6 +331,9 @@ function foListRow(item, section) {
     ? '<span class="fo-unread-dot" aria-label="unread"></span>' : '';
   const subMarker = item.isSub
     ? '<span class="fo-sub-marker">↳</span>' : '';
+  const stuckDays = foIsStuck(item) ? foItemAgeDays(item) : null;
+  const stuckPill = stuckDays !== null
+    ? `<span class="fo-stuck-pill" title="No payload -- can't be sent, ${stuckDays} days old">STUCK ${stuckDays}d</span>` : '';
 
   return `<div class="${cls}" data-id="${foEscape(item.id)}" onclick="foSelectItem('${foEscape(item.id)}')">
     <div class="fo-row-left">
@@ -339,6 +342,7 @@ function foListRow(item, section) {
       <span class="fo-row-title">${foEscape(title)}</span>
     </div>
     <div class="fo-row-right">
+      ${stuckPill}
       ${boardLabel}
       <span class="fo-row-status fo-b-${foEscape(statusKey)}">${foEscape(statusKey)}</span>
       ${unreadDot}
@@ -410,8 +414,10 @@ function foRenderDetailPane(item) {
     </div>` : '';
 
   const ageDays = foItemAgeDays(item);
-  const ageBadge = ageDays !== null
-    ? `<span class="fo-muted-label" title="Drafted ${foEscape(item.createdAt)}">${ageDays} days old</span>` : '';
+  const ageBadge = ageDays === null ? ''
+    : foIsStuck(item)
+    ? `<span class="fo-stuck-pill" title="Drafted ${foEscape(item.createdAt)} -- no payload, can't be sent">STUCK -- ${ageDays} days, no payload</span>`
+    : `<span class="fo-muted-label" title="Drafted ${foEscape(item.createdAt)}">${ageDays} days old</span>`;
 
   const chatMsgCount = (foItemChat[item.id] || []).length;
   const chatLog = foRenderChatMessages(item.id);
@@ -488,6 +494,21 @@ function foItemAgeDays(item) {
   if (!Number.isFinite(created)) return null;
   const days = Math.floor((Date.now() - created) / 86400000);
   return days > FO_STALE_DAYS ? days : null;
+}
+
+// A stale card (foItemAgeDays !== null) with no payload can never be sent as
+// a normal draft -- `send to monday` doesn't even render for it (see
+// sendControl above). That combination used to be invisible outside the
+// detail pane: four parse-error cards from the 8/10-8/13 run sat like this
+// for 14 days with nothing calling it out anywhere Naz would actually be
+// scanning (the list). This is the single flag both foListRow and
+// foRenderDetailPane key off of to surface it.
+function foIsStuck(item) {
+  return !item.payload
+    && !item.mondayItemId
+    && !item.dismissed
+    && !HANDLED_STATUSES.includes(item.status)
+    && foItemAgeDays(item) !== null;
 }
 
 function foGroupByClient(items) {

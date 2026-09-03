@@ -9,9 +9,9 @@ the `state` branch.
 
 Two jobs, kept separate:
 
-- **JOB A — drafting.** Does anything said in a meeting deserve to become a NEW
-  Monday task that doesn't exist yet? Output goes to the draft queue for Naz to
-  approve on Daily Ops.
+- **JOB A — drafting.** Does anything said in a meeting or a WhatsApp chat deserve
+  to become a NEW Monday task that doesn't exist yet? Output goes to the draft
+  queue for Naz to approve on Daily Ops.
 - **JOB B — health check.** Of the work ALREADY on the four boards, what's about to
   slip or is already stuck? Output goes in the run summary only.
 
@@ -105,19 +105,36 @@ Keep only transcripts where the id is not already in `state.processedIds` **and*
 
 ### A4 — WhatsApp
 
-**Out of scope for now.** The laptop version scanned `~/Claude/inbox/whatsapp/`
-for `.zip` and `.txt` exports. That folder does not exist on a runner, and the
-Business API webhook store isn't built yet.
+Fetch through the repo's existing fetcher via Bash:
+`fetch_whatsapp.fetch_whatsapp(days_back=N, config=<config.json's parsed
+content>)`, same N as A3. It reads the Drive folder at `whatsapp_drive_folder_id`
+in config.json via `GOOGLE_SERVICE_ACCOUNT_JSON` — already a repo secret;
+`standup.yml`/`daily-pulse.yml` use the same one for generate.py — and merges
+in `inbox/whatsapp/` if present (it never is on a runner; Drive is the real
+source). Returns `{chat_name: [{"datetime", "sender", "text"}, ...]}`.
 
-Until it is, say so explicitly in the run summary — *"WhatsApp not scanned — no
-ingestion source configured"* — rather than reporting zero exports as though the
-folder were empty. A silent zero reads as "nothing new" and hides real content.
-When the webhook store lands, this step reads from it and the per-chat
-high-water-mark logic returns.
+**This was silently broken from the 2026-08-18 port until 2026-09-02.** The
+Drive mechanism above already existed and generate.py already used it
+successfully — the port's A4 never called it and mislabeled the gap "no
+ingestion source configured," and `draft-queue.yml` never had
+`GOOGLE_SERVICE_ACCOUNT_JSON` in its `env:` block, so even a correct call would
+have silently returned `{}` (`fetch_whatsapp_drive` returns `{}` on any
+failure, including missing creds — never raises). The three WhatsApp-sourced
+cards still in the queue from before the port (7/13, 7/23, 7/30) were the only
+evidence this ever ran. If this section ever reports zero messages again,
+confirm the secret is actually reaching this job before reporting it as "no
+new WhatsApp content" — a silent zero here has already read as "nothing new"
+once and hidden three-plus weeks of real content.
+
+For each chat, keep only messages with `datetime` after
+`state.whatsappHighWaterMark.get(chat_name)` (absent/null = every message in
+the window is new — a chat appearing for the first time). Treat each chat's
+surviving messages as one unit, same as a transcript, and feed it into A5
+alongside the Fireflies transcripts, oldest first by earliest new message.
 
 ### A5 — relevance, routing, audit
 
-For each transcript, oldest first:
+For each transcript and each WhatsApp chat's new-message batch (A3 + A4 combined), oldest first:
 
 **Relevance.** No connection to a Flow client, internal ops, or a real prospect →
 skip silently. Permanent exclusions, never drafted or flagged as prospects:
@@ -136,8 +153,18 @@ same reason goes to Notes/FYI. One ignore is not a pattern.
 **Routing.** Per `drafting-rules.md` §8, against the current roster in
 `config.json`. Superficial resemblance is never a match — same industry, a similar
 name, a shared generic word. Route to an existing client only when the content
-unambiguously names that client. Otherwise set `potentialClient` to your best guess
-at the prospect name and leave `group` genuinely null.
+unambiguously names that client.
+
+**Not a signed client → prospect, not a card.** Daily Ops shows live clients
+only; an unsigned prospect belongs on Standup's own `potential_clients` view
+(`site/latest.json`), which `generate.py` already builds independently from the
+same Fireflies transcripts this run reads. Don't set `potentialClient` and don't
+draft a card for it — same disposition as a `done = ___` filter failure:
+Notes/FYI in the run summary, nothing written to the queue. (Until 2026-09-02
+this branch instead drafted an `unmapped-client` card, which is why four
+dental-prospect discovery calls — Elgin Dental Implants, Dilan Talsida, Waise
+Ebrahimi, Steve Esposito — sat as Daily Ops noise instead of showing up where
+they already belonged, on Standup.)
 
 `group` is the canonical client name from `drafting-rules.md`'s Client group IDs
 table, or it is null. Never `"n/a"`, never `""`, never any other placeholder —
@@ -151,10 +178,10 @@ both cases (placeholder → null, raw title → canonical) as a backstop, but if
 you find yourself about to write either, the real problem is upstream — go
 back and resolve it there instead of relying on the backstop.
 
-**Prospect dismiss check.** If a matching `potentialClient` already exists in the
-queue with `dismissed: true`, skip it entirely — unless this specific meeting
-carries a genuine conversion signal (a signed agreement, confirmed scope or
-pricing). "Still in the pipeline" is not a conversion signal.
+(Prospect dismissal is Standup's own concern now, not this run's — nothing
+here reads or writes prospect state anymore. A converted prospect becomes
+visible through the ordinary routing path above the moment content
+unambiguously names them as a real client.)
 
 **Mandatory board audit (§19) — never skipped, never deferred.** For every
 candidate, check the relevant groups across **all four boards** using
@@ -222,13 +249,16 @@ shipped eleven updates that notified nobody. **Never** include `board` or `group
 as display strings; those are for humans, and they're carried on the card, not the
 payload.
 
-Leave the payload null only for: `multi-item` (genuinely 2+ separate Monday items),
-`content-conflict` (a fact only Naz can resolve), or `unmapped-client`. Routing or
-mode uncertainty is **not** a valid null reason — the A5 audit resolves it.
+Leave the payload null only for: `multi-item` (genuinely 2+ separate Monday items)
+or `content-conflict` (a fact only Naz can resolve). Routing or mode uncertainty is
+**not** a valid null reason — the A5 audit resolves it. `unmapped-client` is no
+longer a valid reason to draft a card at all — see A5's Routing: an unsigned
+prospect gets Notes/FYI in the summary, never a card, live or null-payload.
 
 `sourceLabel` format: `"Meeting with {Client}, {M/D}"` for a single-client meeting,
-`"Meeting: {short title}, {M/D}"` for internal or multi-client. Plain language only
-— never "backfill sweep" or raw transcript jargon in anything Naz reads.
+`"Meeting: {short title}, {M/D}"` for internal or multi-client, `"WhatsApp: {Client
+or chat name}, {M/D}"` for a WhatsApp-sourced card. Plain language only — never
+"backfill sweep" or raw transcript/chat-export jargon in anything Naz reads.
 
 Then call `validate.py`'s `build_card()`. If a payload fails validation it becomes
 a `parse-error` card at `status: 'confirm'` with the failure written into its note.
@@ -248,7 +278,9 @@ this step **failed** and A8 must not run.
 ### A8 — state, only after a confirmed push
 
 Only if A7 confirmed: add processed Fireflies ids to `state.processedIds`, set
-`lastCheckedISO` to now, save.
+`lastCheckedISO` to now, set `whatsappHighWaterMark[chat_name]` to the latest
+`datetime` seen this run for every chat A4 returned anything for (leave chats
+not seen this run untouched), save.
 
 If A7 was skipped or failed: change **nothing**. Say plainly in the summary that
 state was left untouched and the same window will be re-processed next run.
@@ -281,6 +313,16 @@ Across all four boards, using the same `fetch_monday.fetch_board()` results
 Group by client, skip clients with nothing to flag. This goes in the run summary
 only — never pushed to the queue or the page.
 
+**Queue health, same idea.** Using the queue already read in A2, flag any
+NON-TERMINAL card (`ready`/`confirm`/`blocked`/`exists`) whose `payload` is
+`null` and whose `createdAt` is more than 3 days old (same threshold Daily
+Ops's own age badge uses, `FO_STALE_DAYS` in `site/addon.js`) — it can never
+be sent as-is, and nothing else points that out. Name the id, `nullReason`,
+and age for each. This is exactly the gap that let four `parse-error` cards
+from the 8/10-8/13 run sit unfireable for 14 days with nothing flagging
+them: the fail-loud status worked, the surfacing didn't exist. This check is
+what provides it now.
+
 ---
 
 ## Run summary
@@ -292,10 +334,13 @@ Otherwise, tight and scannable, no preamble:
 
 1. Any parse-error cards from A6, first.
 2. `drafting-rules.md` version used — one line, every run, no exceptions.
-3. **JOB A** — meetings processed, drafts produced, clarified cards finalized and
-   their outcomes. Any §19b merges or content-conflict cards, naming the card
-   id(s) involved. WhatsApp: state explicitly that no ingestion source is
-   configured. One line if nothing new.
-4. **JOB B** — what needs attention today, by client. One sentence if nothing.
+3. **JOB A** — meetings AND WhatsApp chats processed, drafts produced, clarified
+   cards finalized and their outcomes. Any §19b merges or content-conflict cards,
+   naming the card id(s) involved. If A4 returned zero WhatsApp messages, say so
+   explicitly and note whether that's an empty window or a fetch/credential
+   failure — never report a silent zero as though it were the same thing as
+   "nothing new" (see A4's history). One line if nothing new.
+4. **JOB B** — what needs attention today, by client, plus any stuck queue
+   cards (no payload, 3+ days old) named by id. One sentence if nothing.
 5. Archive count, if A9 ran.
 6. Whether the push succeeded and whether state was committed or left untouched.
