@@ -1190,6 +1190,8 @@ async function foSendToMonday(id, opts = {}) {
     // and leaving no way past it for the false-positive case.
     if (data.duplicate) {
       foShowDuplicateWarning(id, data.duplicate);
+    } else if (data.sibling) {
+      foShowSiblingWarning(id, data.sibling);
     } else {
       alert("Couldn't send it: " + (data.error || `HTTP ${res.status}`));
     }
@@ -1220,6 +1222,36 @@ function foShowDuplicateWarning(id, duplicate) {
         <span class="fo-preview-eyebrow">Possible duplicate -- nothing sent yet</span>
       </div>
       <p class="fo-preview-note">"${foEscape(duplicate.name)}" (Monday ${duplicate.isSubitem ? "subitem" : "item"} ${foEscape(duplicate.id)}) looks ${pct}% similar, matched on ${foEscape(duplicate.matchedOn || "")}.</p>
+      <div class="fo-preview-actions fo-actions">
+        <button type="button" class="fo-preview-cancel" id="fo-dup-cancel-btn">Cancel</button>
+        <button type="button" class="fo-primary" id="fo-dup-send-anyway-btn">Send anyway</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.getElementById("fo-dup-cancel-btn").addEventListener("click", () => overlay.remove());
+  document.getElementById("fo-dup-send-anyway-btn").addEventListener("click", () => {
+    overlay.remove();
+    foSendToMonday(id, { force: true });
+  });
+}
+
+// drafting-rules.md §19b's fire-time half: lib/monday.js's
+// findSiblingQueueCard found another non-terminal card in THIS queue (not on
+// Monday) still targeting the same existingItemId/parentItemName -- the
+// medstation-reactivation shape, caught before it ships a second time.
+function foShowSiblingWarning(id, sibling) {
+  document.getElementById("fo-dup-warning-overlay")?.remove();
+  const overlay = document.createElement("div");
+  overlay.id = "fo-dup-warning-overlay";
+  overlay.className = "fo-preview-overlay";
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) overlay.remove(); });
+
+  overlay.innerHTML = `
+    <div class="fo-preview-card" role="dialog" aria-modal="true" aria-label="Possible duplicate card">
+      <div class="fo-preview-header">
+        <span class="fo-preview-eyebrow">Pending card targets the same work -- nothing sent yet</span>
+      </div>
+      <p class="fo-preview-note">Card "${foEscape(sibling.id)}" is still ${foEscape(sibling.status)} and targets the same work. Check it before sending both.</p>
       <div class="fo-preview-actions fo-actions">
         <button type="button" class="fo-preview-cancel" id="fo-dup-cancel-btn">Cancel</button>
         <button type="button" class="fo-primary" id="fo-dup-send-anyway-btn">Send anyway</button>

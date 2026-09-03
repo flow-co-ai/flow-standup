@@ -16,6 +16,7 @@ Pure functions, no network. See state.py for the GitHub API side.
 
 from __future__ import annotations
 
+import difflib
 import json
 import re
 from datetime import datetime, timezone
@@ -42,6 +43,13 @@ FORBIDDEN = ("columnValues", "board", "group")
 
 VALID_STATUSES = ("ready", "confirm", "blocked", "exists", "sent", "done", "ignored")
 VALID_NULL_REASONS = ("multi-item", "content-conflict", "unmapped-client", "parse-error")
+
+# Cards still eligible to be matched against by the §19b pending-queue audit.
+# Excludes sent/done (already real, or already decided) and ignored (already
+# consumed separately as negative signal via ignoreReason -- see §29 and A5's
+# ignored-card check; double-counting it here would be re-litigating a
+# decision Naz already made).
+NON_TERMINAL_STATUSES = ("ready", "confirm", "blocked", "exists")
 
 
 class PayloadError(ValueError):
@@ -164,6 +172,147 @@ def build_card(
         "nullReason": null_reason,
         "priority": int(priority),
     }
+
+
+# ---------------------------------------------------------------------------
+# pending-queue audit  (drafting-rules.md §19b)
+# ---------------------------------------------------------------------------
+#
+# A third port of the same text-similarity mechanism generate.py's
+# _text_similarity and netlify/functions/lib/textSimilarity.js already carry
+# (see the header comment in textSimilarity.js). Three copies is already the
+# accepted shape for this specific piece of logic -- py-side generator,
+# js-side fire-time re-audit, and now this py-side draft-time audit each run
+# in a different process with no shared runtime, so a real import isn't an
+# option. Keep the threshold and containment rule identical across all three
+# if either ever changes.
+
+SIMILARITY_DUP_THRESHOLD = 0.6
+
+
+def _norm_similarity_text(s: str) -> str:
+    return re.sub(r"[^a-z0-9 ]", "", (s or "").lower()).strip()
+
+
+def _text_similarity(a: str, b: str) -> float:
+    """0.0-1.0. Full containment (either direction) of a non-trivial-length
+    string (8+ chars) counts as a perfect match; otherwise plain
+    difflib.SequenceMatcher ratio(). See generate.py's _text_similarity for
+    the full rationale -- this must stay behaviorally identical to it."""
+    na, nb = _norm_similarity_text(a), _norm_similarity_text(b)
+    if not na or not nb:
+        return 0.0
+    shorter, longer = (na, nb) if len(na) <= len(nb) else (nb, na)
+    if len(shorter) >= 8 and shorter in longer:
+        return 1.0
+    return difflib.SequenceMatcher(None, na, nb).ratio()
+
+
+def find_pending_queue_match(
+    *,
+    existing_item_id: str | None,
+    parent_item_name: str | None,
+    subject_text: str,
+    group: str | None,
+    compare_text: str,
+    queue_items: list[dict],
+) -> dict | None:
+    """The §19b matcher. Checks a not-yet-drafted candidate against every
+    NON_TERMINAL_STATUSES card already in the queue, strongest axis first.
+    Returns {"card": <matching card>, "axis": 1|2|3, "score": float} for the
+    single best match, or None.
+
+    subject_text/compare_text are whatever text best represents the new
+    candidate before a payload exists -- e.g. a short summary of what the
+    transcript said, and the same text (or a draft title), respectively.
+    axis 2 compares subject_text against each candidate's payload.updateBody
+    (falling back to its title); axis 3 compares compare_text against title
+    and updateBody.
+    """
+    candidates = [c for c in queue_items if c.get("status") in NON_TERMINAL_STATUSES]
+
+    if existing_item_id:
+        for card in candidates:
+            if (card.get("payload") or {}).get("existingItemId") == existing_item_id:
+                return {"card": card, "axis": 1, "score": 1.0}
+
+    best: dict | None = None
+
+    if parent_item_name:
+        for card in candidates:
+            payload = card.get("payload") or {}
+            if payload.get("parentItemName") != parent_item_name:
+                continue
+            target = payload.get("updateBody") or card.get("title") or ""
+            score = _text_similarity(subject_text, target)
+            if score >= SIMILARITY_DUP_THRESHOLD and (not best or score > best["score"]):
+                best = {"card": card, "axis": 2, "score": score}
+
+    if best:
+        return best
+
+    if group:
+        for card in candidates:
+            if card.get("group") != group:
+                continue
+            payload = card.get("payload") or {}
+            for target in (card.get("title") or "", payload.get("updateBody") or ""):
+                score = _text_similarity(compare_text, target)
+                if score >= SIMILARITY_DUP_THRESHOLD and (not best or score > best["score"]):
+                    best = {"card": card, "axis": 3, "score": score}
+
+    return best
+
+
+def merge_source_labels(existing_label: str, new_label: str) -> str:
+    """Append, never replace -- the whole point of §19b's age badge fix is
+    that the merged card's history stays visible, not overwritten."""
+    existing_label = existing_label or ""
+    if not new_label or new_label in existing_label:
+        return existing_label
+    if not existing_label:
+        return new_label
+    return f"{existing_label} + {new_label}"
+
+
+def build_merged_card(
+    *,
+    existing: dict,
+    note: str,
+    status: str,
+    new_source_label: str,
+    payload: Any = None,
+    null_reason: str | None = None,
+    priority: int | None = None,
+) -> dict:
+    """§19b's merge action. Folds new material into `existing` instead of
+    creating a second card: keeps `id` (so merge_queue's own createdAt-once
+    rule keeps counting the age badge from the FIRST call, not this one),
+    board/group/potentialClient, and appends onto sourceLabel rather than
+    replacing it. `updatedAt` is stamped to now since this card is genuinely
+    being touched again -- unlike build_card's fresh cards, which don't carry
+    one yet.
+
+    Runs the same validate_payload()/parse-error path as build_card -- a bad
+    merged payload still fails loud instead of shipping.
+    """
+    merged_label = merge_source_labels(existing.get("sourceLabel", ""), new_source_label)
+    card = build_card(
+        card_id=existing["id"],
+        title=existing.get("title", ""),
+        note=note,
+        status=status,
+        board=existing.get("board"),
+        group=existing.get("group"),
+        source=existing.get("source", "fireflies"),
+        source_label=merged_label,
+        priority=priority if priority is not None else existing.get("priority", 3),
+        payload=payload,
+        null_reason=null_reason,
+        potential_client=existing.get("potentialClient"),
+    )
+    card["updatedAt"] = datetime.now(timezone.utc).isoformat()
+    return card
 
 
 # ---------------------------------------------------------------------------
@@ -291,3 +440,67 @@ if __name__ == "__main__":
     assert card["group"] is None, "placeholder group survived"
     assert card["title"] == "Campaign Setup"
     print("ok    build_card normalizes placeholder group and syncs title")
+
+    # §19b -- the medstation-reactivation live example: two cards, same
+    # existingItemId, drafted eight days apart.
+    queue = [
+        {
+            "id": "medstation-reactivation-whatsapp-gate",
+            "status": "ready",
+            "title": "Reactivation gate",
+            "group": "MedStation",
+            "sourceLabel": "Meeting: GHL Go Live Checkin, 8/24",
+            "createdAt": "2026-08-24T12:00:00Z",
+            "payload": {
+                "mode": "update_only",
+                "existingItemId": "12484780177",
+                "itemName": "Reactivation gate",
+                "updateBody": "<p>Salam,</p><ul><li>WhatsApp gate for reactivation.</li></ul>",
+            },
+        }
+    ]
+    match = find_pending_queue_match(
+        existing_item_id="12484780177",
+        parent_item_name=None,
+        subject_text="reactivation cohort window",
+        group="MedStation",
+        compare_text="Reactivation cohort window",
+        queue_items=queue,
+    )
+    assert match and match["axis"] == 1, "axis-1 existingItemId match not found"
+
+    merged = build_merged_card(
+        existing=match["card"],
+        note="merged per §19b",
+        status="ready",
+        new_source_label="Meeting: Flow ops review, 8/26",
+        payload={
+            "mode": "update_only",
+            "existingItemId": "12484780177",
+            "itemName": "Reactivation gate",
+            "updateBody": "<p>Salam,</p><ul><li>Combined WhatsApp gate and cohort window.</li></ul>",
+        },
+    )
+    assert merged["id"] == "medstation-reactivation-whatsapp-gate", "merge must keep the original id"
+    assert merged["sourceLabel"] == (
+        "Meeting: GHL Go Live Checkin, 8/24 + Meeting: Flow ops review, 8/26"
+    ), "sourceLabel must append, not replace"
+    assert merged.get("updatedAt"), "merged card must carry a fresh updatedAt"
+    print("ok    build_merged_card keeps id, appends sourceLabel, stamps updatedAt")
+
+    conflict = build_merged_card(
+        existing=match["card"],
+        note="8/25: trigger is last-visit >45 days. 8/26: cohort described as "
+             "3+ months inactive. These select different patient populations "
+             "-- needs a decision on which trigger to use.",
+        status="confirm",
+        new_source_label="Meeting: Flow ops review, 8/26",
+        payload=None,
+        null_reason="content-conflict",
+    )
+    assert conflict["status"] == "confirm" and conflict["nullReason"] == "content-conflict"
+    assert conflict["payload"] is None
+    print("ok    build_merged_card supports the content-conflict case")
+
+    assert merge_source_labels("Meeting A, 8/24", "Meeting A, 8/24") == "Meeting A, 8/24"
+    print("ok    merge_source_labels is idempotent on a repeated label")

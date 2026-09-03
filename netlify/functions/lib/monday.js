@@ -857,6 +857,30 @@ async function ensureParentOngoing(parentItemId, boardId) {
   await updateMondayColumns(boardId, parentItemId, { [STATUS_COLUMN]: { label: "Ongoing" } });
 }
 
+// drafting-rules.md §19b, fire-time half. findLikelyDuplicate above only
+// ever looks at Monday itself -- it says nothing about a SIBLING CARD still
+// sitting unfired in this same queue that targets the same work. That's the
+// exact gap that let medstation-reactivation-whatsapp-gate (8/24) and
+// medstation-reactivation-cohort-window (8/26) both target item 12484780177
+// with neither audit ever seeing the other. Warning gate, not a hard block
+// -- same `force` escape as findLikelyDuplicate.
+function findSiblingQueueCard(item, allItems) {
+  const targetItemId = item.payload?.existingItemId;
+  const targetParentName = item.payload?.parentItemName;
+  if (!targetItemId && !targetParentName) return null;
+  return (
+    allItems.find((other) => {
+      if (other.id === item.id) return false;
+      if (["sent", "done", "ignored"].includes(other.status)) return false;
+      const p = other.payload || {};
+      return (
+        (targetItemId && p.existingItemId === targetItemId) ||
+        (targetParentName && p.parentItemName === targetParentName)
+      );
+    }) || null
+  );
+}
+
 // Shared by send-to-monday.js -- the real network fire behind the send-to-
 // Monday button (and its preview confirmation step in addon.js).
 async function sendQueueItemToMonday(id, { force = false } = {}) {
@@ -929,6 +953,13 @@ async function sendQueueItemToMonday(id, { force = false } = {}) {
       return {
         error: `possible duplicate: "${duplicate.name}" (Monday ${duplicate.isSubitem ? "subitem" : "item"} ${duplicate.id}) looks ${pct}% similar, matched on ${duplicate.matchedOn} -- if this is a false positive, send anyway from the preview.`,
         duplicate,
+      };
+    }
+    const sibling = findSiblingQueueCard(item, data.items);
+    if (sibling) {
+      return {
+        error: `another pending card, "${sibling.id}", still targets this same ${payload.existingItemId ? "item" : "parent"} -- check it before sending both. If this is a false positive, send anyway from the preview.`,
+        sibling,
       };
     }
   }

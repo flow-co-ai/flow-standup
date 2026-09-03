@@ -150,8 +150,8 @@ queue with `dismissed: true`, skip it entirely — unless this specific meeting
 carries a genuine conversion signal (a signed agreement, confirmed scope or
 pricing). "Still in the pipeline" is not a conversion signal.
 
-**Mandatory board audit — never skipped, never deferred.** For every candidate,
-check the relevant groups across **all four boards** using
+**Mandatory board audit (§19) — never skipped, never deferred.** For every
+candidate, check the relevant groups across **all four boards** using
 `fetch_monday.fetch_board()` output (it already includes subitems). Subitems are
 exactly where duplicates and already-finished work hide. Fetch each board once and
 reuse the result across candidates — do not refetch per candidate. Outcomes:
@@ -163,6 +163,30 @@ reuse the result across candidates — do not refetch per candidate. Outcomes:
 
 Skip the audit only for `potentialClient` cards — there's no roster group to audit
 against, which is why they're flagged rather than drafted.
+
+**Pending-queue audit (§19b) — runs immediately after §19, before A6.** §19 only
+ever checks Monday. It never checks the queue it's about to write into, so two
+calls about the same work can each pass a clean §19 audit and still produce two
+cards — see `drafting-rules.md` §19b for the live example. For every candidate
+that survived §19, read `checks/draft-queue.json` and call
+`validate.find_pending_queue_match()` against every NON-TERMINAL card (`ready`,
+`confirm`, `blocked`, `exists`; never `sent`/`done`/`ignored`). Full matching
+rules, merge mechanics, and the conflict case are in `drafting-rules.md` §19b —
+read it before drafting, same as §19. On a match:
+
+- **axis 1/2 (same item, or same parent + overlapping subject)** — merge, don't
+  create. Build the merged card with `validate.build_merged_card()`, passing the
+  matched card as `existing` so `id`/`createdAt`/board/group carry over untouched
+  and the new source gets appended onto `sourceLabel` instead of replacing it.
+- **axis 3 (same client, similar work)** — lowest confidence, flag don't merge:
+  draft normally but note the sibling card's id in the card's `note`.
+- **the two sources disagree** — merge via `build_merged_card()` with
+  `status='confirm'`, `null_reason='content-conflict'`, payload `None`, and a note
+  stating both positions with their dates/sources.
+
+A card produced this way still goes through A6/A7 exactly like a fresh one —
+`build_merged_card()` calls `validate_payload()` internally, so a bad merged
+payload still fails loud as a `parse-error` card rather than shipping.
 
 ### A6 — emit the payload
 
@@ -263,7 +287,8 @@ Otherwise, tight and scannable, no preamble:
 1. Any parse-error cards from A6, first.
 2. `drafting-rules.md` version used — one line, every run, no exceptions.
 3. **JOB A** — meetings processed, drafts produced, clarified cards finalized and
-   their outcomes. WhatsApp: state explicitly that no ingestion source is
+   their outcomes. Any §19b merges or content-conflict cards, naming the card
+   id(s) involved. WhatsApp: state explicitly that no ingestion source is
    configured. One line if nothing new.
 4. **JOB B** — what needs attention today, by client. One sentence if nothing.
 5. Archive count, if A9 ran.

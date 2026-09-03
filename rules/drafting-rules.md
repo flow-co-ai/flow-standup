@@ -1,4 +1,4 @@
-<!-- rules-version: 2026-08-18 -->
+<!-- rules-version: 2026-09-02 -->
 ## Two different "status" concepts -- don't confuse them
 1. **Dashboard status** (a card's workflow state in the queue: ready / confirm
    / done / ignored / sent). A freshly drafted item starts as "ready" (a real
@@ -44,7 +44,7 @@ Full audit 2026-07-22 -- every client below now has a real, live-confirmed group
 - Remedies: (no Ads group live) / (no Web+SEO group live) / no CRM group yet / group_mkwj2zbm
 If the client or its group id isn't listed here or you're unsure it's current, look it up on Monday rather than guessing -- group IDs can change, and this table has gone stale before (missed two board additions in a row -- always cross-check lib/monday.js's CLIENT_GROUPS, the real source of truth, if anything here looks off).
 
-## MANDATORY board audit before drafting anything new
+## MANDATORY board audit before drafting anything new (§19)
 Before drafting a new item, subitem, or update, you MUST query the client's
 group across ALL 4 ACTIVE BOARDS (Ads + Web+SEO + CRM + Video), WITH
 includeSubItems: true -- subitems are exactly where duplicates and
@@ -53,6 +53,68 @@ and never scope the audit to just "the board this looks like it belongs on"
 -- the same workstream can already exist on a different board than the one
 you'd guess. One good batched lookup is usually enough; don't loop forever,
 but don't skip any of the 4 boards either.
+
+## Pending-queue audit (§19b)
+§19 audits Monday. It never audits the draft queue it writes INTO -- so when
+the same work gets discussed on two separate calls and the first card was
+never fired, §19 comes back clean (the work genuinely isn't on Monday yet)
+and a second card gets drafted for the same thing. Live example:
+`medstation-reactivation-whatsapp-gate` (8/24) and
+`medstation-reactivation-cohort-window` (8/26) both ended up targeting
+Monday item 12484780177 because neither audit ever saw the other card.
+
+Runs immediately AFTER §19 and BEFORE any card is written for this
+candidate. Audit-first, draft-second still holds -- this is a second audit
+surface, not a replacement for §19.
+
+**Read.** `checks/draft-queue.json` (the `state` branch -- same source
+`queue.js` reads). Consider only cards in a NON-TERMINAL status: `ready`,
+`confirm`, `blocked`, `exists`. Explicitly exclude `sent`, `done`, `ignored`
+-- ignored cards are already consumed separately as past decisions via
+`ignoreReason` (§29); don't double-count them here.
+
+**Match, strongest axis first:**
+1. **Same target item.** This candidate's `existingItemId` equals an
+   existing card's `payload.existingItemId`. Definite match, no similarity
+   check needed.
+2. **Same parent + overlapping subject.** Same `payload.parentItemName` AND
+   the subjects overlap, per the shared text-similarity matcher
+   (`SIMILARITY_DUP_THRESHOLD`, same 0.6 bar §19's own Monday-side re-audit
+   uses).
+3. **Same client, similar work.** Same `group` AND high title/`updateBody`
+   similarity. Lowest confidence -- flag rather than auto-merge (add a note
+   pointing at the existing card's id; don't fold the two together on this
+   axis alone).
+
+**Action on a 1 or 2 match -- MERGE, do not create a second card.** Fold the
+new material into the existing card:
+- **Keep** the existing card's `id` and `createdAt`. Never reset
+  `createdAt` -- the age badge has to keep counting from the FIRST call, or
+  merging quietly hides staleness and defeats the whole point of the 3-day
+  badge.
+- **Rewrite** `updateBody` to carry both calls' content as one coherent
+  update. Do not concatenate the two -- write it the way a person would if
+  they sat through both calls.
+- **Append** the new source onto `sourceLabel`, e.g. `"Meeting: GHL Go Live
+  Checkin, 8/24 + Meeting: Flow ops review, 8/26"`.
+- **Set** `updatedAt` to now.
+- Do **not** create a second card for this candidate.
+
+**Conflict case -- merge, but don't decide.** If the two sources DISAGREE
+rather than merely overlap, never silently pick one -- that buries a
+decision that isn't the drafter's to make. Merge into one card, then:
+- `status: "confirm"`
+- `nullReason: "content-conflict"`, payload left null -- one of the three
+  valid reasons to leave payload null per SKILL.md A6, already the mechanism
+  used for any fact only Naz can resolve
+- state BOTH positions explicitly in the body, each with its date and
+  source, and name the decision Naz actually needs to make.
+
+Live example this would have caught: an 8/25 update set the reactivation
+trigger at last-visit >45 days; the 8/26 review described the cohort as 3+
+months inactive. Those select materially different patient populations. The
+correct output is one `confirm` card naming both positions, not two `ready`
+cards quietly disagreeing with each other on Monday.
 
 ## Single-item bias (fewer items, not more)
 Prefer folding new information into an EXISTING item over creating a new one:
