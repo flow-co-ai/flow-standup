@@ -33,7 +33,7 @@ A subitem (parentItemId set) belongs to whatever board its PARENT item is actual
 Full audit 2026-07-22 -- every client below now has a real, live-confirmed group on all 4 boards. No more "verify before writing" guesses; these were checked directly against each board's live group list.
 - Maadi Law: group_mm51vdbk / group_mm51tkzh / group_mm5112vv / group_mm5064vm
 - MedStation: group_mm516qss / group_mm51nc9h / group_mm512p9w / group_mm5gq0cw
-- Quality HVAC: group_mm23tg6s / group_mm231wbb / group_mm231wbb / group_mm2660b4 (CRM and Web+SEO share an id -- confirmed coincidental, not a bug)
+- Quality HVAC: group_mm23tg6s / group_mm231wbb / group_mm231wbb / group_mm2660b4 (CRM and Web+SEO share an id -- confirmed coincidental, not a bug). **The board's own group TITLE differs across boards too** -- CRM/Web+SEO display "Quality HVAC by FIbid" (capital-I typo, live on Monday, not a rendering bug), Ads/Video display "Quality HVAC." Same client. Never copy the raw title you happen to read off one board into `group` -- write the canonical name on the left ("Quality HVAC") regardless of which board's audit you found it on. This exact drift (Daily Ops silently splitting one client into two buckets: 8 cards under one spelling, 3 under the other) is why `group` now gets resolved through `config.json`'s alias table (`client_aliases.py` / `clientAliases.js`) rather than trusted as-typed -- see §19b below and `validate.py`'s `build_card()`.
 - Full Smile: group_mkxdznat / group_mkxdmhbz / group_mkxdmhbz / group_mkxd24va (CRM and Web+SEO share an id -- confirmed coincidental)
 - Justice Consumer Law: group_mkqxyga2 / group_mkqxyga2 / group_mm5gdrn3 / group_mkqxyga2
 - Liferun: group_mkwj8zze / group_mkwj9a1c / group_mkwj9a1c / group_mkwj5qjb (CRM and Web+SEO share an id -- confirmed coincidental)
@@ -82,9 +82,12 @@ surface, not a replacement for §19.
    (`SIMILARITY_DUP_THRESHOLD`, same 0.6 bar §19's own Monday-side re-audit
    uses).
 3. **Same client, similar work.** Same `group` AND high title/`updateBody`
-   similarity. Lowest confidence -- flag rather than auto-merge (add a note
-   pointing at the existing card's id; don't fold the two together on this
-   axis alone).
+   similarity. Compare `group` on its RESOLVED/canonical name, not the raw
+   string -- two cards for the same client under different board-title
+   spellings ("Quality HVAC" vs "Quality HVAC by FIbid") must still match
+   here, or this axis silently misses exactly the split it exists to catch.
+   Lowest confidence -- flag rather than auto-merge (add a note pointing at
+   the existing card's id; don't fold the two together on this axis alone).
 
 **Action on a 1 or 2 match -- MERGE, do not create a second card.** Fold the
 new material into the existing card:

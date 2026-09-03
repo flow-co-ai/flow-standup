@@ -18,9 +18,39 @@ from __future__ import annotations
 
 import difflib
 import json
+import os
 import re
+import sys
 from datetime import datetime, timezone
 from typing import Any
+
+# client_aliases.py lives at repo root; this file runs as `python
+# drafter/validate.py`, whose sys.path[0] is drafter/, not the root -- add it
+# explicitly rather than assuming cwd. Still "no network": config.json is a
+# committed repo file, same as generate.py/build_timeline.js reading it
+# directly, and client_aliases.py itself has zero dependencies (no requests,
+# no dotenv) so this stays safe to import from a module that's otherwise pure.
+_REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _REPO_ROOT not in sys.path:
+    sys.path.insert(0, _REPO_ROOT)
+from client_aliases import resolve_client as _resolve_client  # noqa: E402
+
+with open(os.path.join(_REPO_ROOT, "config.json")) as _f:
+    _CLIENTS_CONFIG = json.load(_f).get("clients", {})
+
+
+def canonical_client_name(name: str | None) -> str | None:
+    """§19b's group-match axis needs this: Monday's own group titles for one
+    client aren't even consistent with each other across boards (CRM/Web+SEO
+    show "Quality HVAC by FIbid", Ads/Video show "Quality HVAC" for the same
+    client) -- comparing raw `group` strings misses that they're the same
+    client. Resolves through the same config.json alias table generate.py
+    already uses. Falls back to the original string when nothing resolves
+    (a genuinely new/unmapped name is a real value, not an error)."""
+    if not name:
+        return name
+    resolved = _resolve_client(name, _CLIENTS_CONFIG)
+    return resolved if resolved != "Unmapped" else name
 
 
 # ---------------------------------------------------------------------------
@@ -139,6 +169,15 @@ def build_card(
     if group is not None and str(group).strip().lower() in ("n/a", "na", "none", "", "null"):
         group = None
 
+    # Quality HVAC alias fix (2026-09): a board's own group title isn't always
+    # the canonical roster name (CRM/Web+SEO show "Quality HVAC by FIbid",
+    # Ads/Video show "Quality HVAC" for the SAME client) -- writing the raw
+    # title verbatim split one client into two Daily Ops buckets (8 cards vs
+    # 3). Resolve through config.json here, at write time, so a fresh card is
+    # correct immediately instead of needing a read-time patch.
+    if group is not None:
+        group = canonical_client_name(group)
+
     if payload is not None:
         try:
             payload = validate_payload(payload)
@@ -252,8 +291,9 @@ def find_pending_queue_match(
         return best
 
     if group:
+        canon_group = canonical_client_name(group)
         for card in candidates:
-            if card.get("group") != group:
+            if canonical_client_name(card.get("group")) != canon_group:
                 continue
             payload = card.get("payload") or {}
             for target in (card.get("title") or "", payload.get("updateBody") or ""):
@@ -504,3 +544,31 @@ if __name__ == "__main__":
 
     assert merge_source_labels("Meeting A, 8/24", "Meeting A, 8/24") == "Meeting A, 8/24"
     print("ok    merge_source_labels is idempotent on a repeated label")
+
+    # Quality HVAC alias fix -- the live split was CRM/Web+SEO's raw group
+    # title ("Quality HVAC by FIbid") vs Ads/Video's ("Quality HVAC").
+    assert canonical_client_name("Quality HVAC by FIbid") == "Quality HVAC"
+    assert canonical_client_name("Quality HVAC") == "Quality HVAC"
+    hvac_card = build_card(
+        card_id="qualityhvac-something",
+        title="X", note="...", status="ready", board="CRM",
+        group="Quality HVAC by FIbid", source="fireflies",
+        source_label="Meeting, 9/1", priority=3,
+        null_reason="multi-item",
+    )
+    assert hvac_card["group"] == "Quality HVAC", "build_card must write the canonical name, not the raw title"
+    print("ok    build_card + canonical_client_name resolve Quality HVAC by FIbid -> Quality HVAC")
+
+    hvac_queue = [{
+        "id": "qualityhvac-ads-card", "status": "ready", "title": "Meta tuneup campaign",
+        "group": "Quality HVAC",
+        "payload": {"mode": "create_item", "boardId": "1", "groupId": "g", "itemName": "Meta tuneup campaign",
+                    "updateBody": "<p>Salam,</p><ul><li>Tune-up membership trigger campaign in Meta.</li></ul>"},
+    }]
+    hvac_match = find_pending_queue_match(
+        existing_item_id=None, parent_item_name=None,
+        subject_text="Tune-up membership trigger campaign", group="Quality HVAC by FIbid",
+        compare_text="Meta tuneup campaign", queue_items=hvac_queue,
+    )
+    assert hvac_match and hvac_match["axis"] == 3, "axis-3 must match across the FIbid/non-FIbid spelling split"
+    print("ok    find_pending_queue_match axis 3 matches across the Quality HVAC / FIbid spelling split")

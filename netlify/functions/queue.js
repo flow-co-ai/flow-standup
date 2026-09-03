@@ -13,6 +13,7 @@
 
 const { getJSON, updateJSON } = require("./lib/github");
 const { recentIgnoreDecisions } = require("./lib/pastDecisions");
+const { resolveClientName } = require("./lib/clientAliases");
 const {
   enforceSentInvariant,
   mondayItemNameAndParent,
@@ -179,6 +180,23 @@ function applyCreatedAtBackfill(items) {
   return items.map((it) => (it.createdAt ? it : { ...it, createdAt: it.updatedAt || new Date().toISOString() }));
 }
 
+// A card's `group` sometimes carries whatever raw Monday group title the
+// drafter's board audit happened to read, rather than the canonical roster
+// name -- CRM/Web+SEO show "Quality HVAC by FIbid", Ads/Video show "Quality
+// HVAC" for the SAME client, so one client split into two Daily Ops buckets
+// (8 cards vs 3, confirmed live 2026-09-02). Resolves through the same
+// config.json alias table generate.py already uses (clientAliases.js), so
+// this can't drift into a second hand-maintained spelling list. The drafter
+// now writes the canonical name at draft time (validate.py's build_card) --
+// this stays as a read-time backfill for cards drafted before that fix.
+function applyGroupCanonicalization(items) {
+  return items.map((it) => {
+    if (!it.group) return it;
+    const canonical = resolveClientName(it.group);
+    return canonical === it.group ? it : { ...it, group: canonical };
+  });
+}
+
 exports.handler = async (event) => {
   const json = (statusCode, obj) => ({ statusCode, headers: { "content-type": "application/json" }, body: JSON.stringify(obj) });
 
@@ -221,12 +239,15 @@ exports.handler = async (event) => {
       const { data } = await getJSON(QUEUE_PATH, EMPTY);
       const resolved = await resolveMissingMondayNames(data.items || []);
       const needsCreatedAtBackfill = (data.items || []).some((it) => !it.createdAt);
-      if (Object.keys(resolved).length || needsCreatedAtBackfill) {
+      const needsGroupCanonicalization = (data.items || []).some(
+        (it) => it.group && resolveClientName(it.group) !== it.group
+      );
+      if (Object.keys(resolved).length || needsCreatedAtBackfill || needsGroupCanonicalization) {
         try {
           const written = await updateJSON(QUEUE_PATH, (fresh) => {
-            fresh.items = applyCreatedAtBackfill(applyResolvedNames(fresh.items || [], resolved));
+            fresh.items = applyGroupCanonicalization(applyCreatedAtBackfill(applyResolvedNames(fresh.items || [], resolved)));
             return fresh;
-          }, "queue: backfill resolved Monday item/parent names + createdAt", { fallback: EMPTY });
+          }, "queue: backfill resolved Monday item/parent names + createdAt + canonical group", { fallback: EMPTY });
           return json(200, { ...written, routing: routingOptions() });
         } catch (err) {
           // The write failed (rare -- e.g. exhausted 409 retries) but the
@@ -234,7 +255,7 @@ exports.handler = async (event) => {
           // load rather than showing bare ids again; it'll just re-resolve
           // and retry the write on the next GET.
           console.error("queue.js: resolved Monday names but failed to persist them:", err);
-          data.items = applyCreatedAtBackfill(applyResolvedNames(data.items || [], resolved));
+          data.items = applyGroupCanonicalization(applyCreatedAtBackfill(applyResolvedNames(data.items || [], resolved)));
         }
       }
       return json(200, { ...data, routing: routingOptions() });

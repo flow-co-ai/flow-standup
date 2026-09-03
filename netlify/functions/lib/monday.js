@@ -14,6 +14,7 @@
 
 const { getJSON, putJSON, updateJSON } = require("./github");
 const { textSimilarity, SIMILARITY_DUP_THRESHOLD, COMPLETION_CORROBORATED_SIMILARITY_THRESHOLD } = require("./textSimilarity");
+const { resolveClientName } = require("./clientAliases");
 
 const ANTHROPIC_MODEL = "claude-sonnet-4-5"; // check docs.claude.com/en/docs/about-claude/models if this starts erroring
 
@@ -795,7 +796,12 @@ async function findLikelyDuplicate(item, payload) {
     const boardId = payload.boardId || BOARD_LABEL_IDS[item.board];
     if (!boardId) return null;
     const boardLabel = boardLabelForId(boardId);
-    const groupId = boardLabel ? (CLIENT_GROUPS[item.group] || {})[boardLabel] : null;
+    // item.group may still be a raw Monday group title (CRM/Web+SEO's
+    // "Quality HVAC by FIbid" vs Ads/Video's "Quality HVAC" for the same
+    // client) if this card hasn't passed through queue.js's GET backfill
+    // yet -- CLIENT_GROUPS is keyed by canonical name, so an unresolved
+    // title silently disabled this whole audit for every affected card.
+    const groupId = boardLabel ? (CLIENT_GROUPS[resolveClientName(item.group)] || {})[boardLabel] : null;
     if (!groupId) return null; // can't scope the audit -- not a reason to block the send
 
     let candidates;

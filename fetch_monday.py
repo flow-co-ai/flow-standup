@@ -16,50 +16,12 @@ MONDAY_API_URL = "https://api.monday.com/v2"
 
 
 # ── client resolution (shared by generate.py) ─────────────────────────────────
-
-def resolve_client(text: str, clients_config: dict, fuzzy: bool = False) -> str:
-    """
-    Map text to a canonical client name using the alias table from config.json.
-
-    fuzzy=False (default): text must exactly equal one alias (case-insensitive).
-                           Used for Monday group titles.
-    fuzzy=True:            any alias that appears as a substring of text matches.
-                           Used for meeting titles and chat file names.
-
-    Returns "Unmapped" when nothing matches.
-    """
-    needle = text.lower().strip()
-
-    # Exact equality always wins first (original strict behavior).
-    for canonical, aliases in clients_config.items():
-        for alias in aliases:
-            if needle == alias.lower().strip():
-                return canonical
-
-    # Word-boundary matching: an alias must appear as whole word(s), so
-    # "Flow" matches "Flow OS" but never "workflow". Spaced and unspaced
-    # spellings are treated as equal ("Med Station" == "MedStation").
-    matches = all_alias_matches(text, clients_config)
-    return matches[0] if matches else "Unmapped"
-
-
-def all_alias_matches(text: str, clients_config: dict) -> list[str]:
-    """All clients whose alias appears as a whole word in text, spacing-tolerant."""
-    import re
-    needle = text.lower()
-    found = []
-    for canonical, aliases in clients_config.items():
-        variants = set()
-        for alias in aliases:
-            a = alias.lower().strip()
-            if a:
-                variants.add(a)
-                variants.add(a.replace(" ", ""))
-        for v in variants:
-            if re.search(r"(?<!\w)" + re.escape(v) + r"(?!\w)", needle):
-                found.append(canonical)
-                break
-    return found
+# Moved to client_aliases.py (2026-09-02) so drafter/validate.py's §19b
+# pending-queue audit -- which can't take on this module's requests/dotenv
+# dependency -- reuses the exact same resolver instead of a second copy.
+# Re-exported here unchanged: every existing `from fetch_monday import
+# resolve_client` (or all_alias_matches) call keeps working.
+from client_aliases import resolve_client, all_alias_matches  # noqa: F401
 
 
 # ── Monday API ────────────────────────────────────────────────────────────────

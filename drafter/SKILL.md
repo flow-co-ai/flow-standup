@@ -139,11 +139,17 @@ name, a shared generic word. Route to an existing client only when the content
 unambiguously names that client. Otherwise set `potentialClient` to your best guess
 at the prospect name and leave `group` genuinely null.
 
-`group` is a real board group name or it is null. Never `"n/a"`, never `""`, never
-any other placeholder — seven live cards carried the literal string `"n/a"` in July
-and rendered as a phantom client on Daily Ops. `validate.py` normalizes these to
-null as a backstop, but if you find yourself about to write one, the real problem
-is that the existing-client-vs-prospect call hasn't resolved yet. Go back.
+`group` is the canonical client name from `drafting-rules.md`'s Client group IDs
+table, or it is null. Never `"n/a"`, never `""`, never any other placeholder —
+seven live cards carried the literal string `"n/a"` in July and rendered as a
+phantom client on Daily Ops. Never the raw title you happened to read off
+whichever board's group you audited, either — Quality HVAC's own group reads
+"Quality HVAC by FIbid" on CRM/Web+SEO and "Quality HVAC" on Ads/Video, same
+client, and copying the board's title verbatim split it into two Daily Ops
+buckets (8 cards vs 3, live 2026-09-02). `validate.py`'s `build_card()` resolves
+both cases (placeholder → null, raw title → canonical) as a backstop, but if
+you find yourself about to write either, the real problem is upstream — go
+back and resolve it there instead of relying on the backstop.
 
 **Prospect dismiss check.** If a matching `potentialClient` already exists in the
 queue with `dismissed: true`, skip it entirely — unless this specific meeting
