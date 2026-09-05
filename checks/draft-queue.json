@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-04T18:11:00.566453Z",
+  "updatedAt": "2026-09-05T17:20:01.562500+00:00",
   "items": [
     {
       "id": "websEo-pricing-question",
@@ -1935,24 +1935,25 @@
     {
       "id": "medstation-appointment-status-mapping",
       "title": "Appointment Status Sync",
-      "note": "Top action item from the 3 September MedStation GHL go live call and the first point in Sohib's recap in the GHL Dev chat the same day. No live item on any of the four boards covers it: the NextGen Sync Fixes item sent on 24 August is no longer present on the CRM board, so the audit came back clean.",
+      "note": "Section 19b axis 3 match at score 1.00 against this card\u2019s own subject, so merged rather than drafted as a second card. The 4 September go live call reports the sync as accurate while its own action list still carries fix and monitor for Confirmed, No Show and Canceled, so the item is narrowed from a fresh build to a verification pass. Priority dropped from 1 to 2 because the sync mechanism is no longer reported broken.",
       "status": "ready",
       "board": "CRM",
       "group": "MedStation",
       "potentialClient": null,
       "source": "fireflies",
-      "sourceLabel": "Meeting with MedStation, 9/3",
+      "sourceLabel": "Meeting with MedStation, 9/3 + Meeting with MedStation, 9/4",
       "payload": {
         "mode": "create_item",
         "boardId": "18418241405",
         "groupId": "group_mm512p9w",
         "itemName": "Appointment Status Sync",
-        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> At the MedStation GoHighLevel go live call on 3 September the appointment status coming across from NextGen was confirmed broken in two separate ways. Statuses arrive mostly as the default value, the <strong>Confirmed</strong> status does not map onto anything in GoHighLevel at all, and <strong>Showed</strong> is firing on appointments whose date has not happened yet. Sohib restated both as the first point of his written recap in the GHL Dev chat the same day.</li><li><strong>Why this is urgent.</strong> The review request engine keys off the appointment having actually been attended. Because Showed fires early, review asks were paused rather than launched, so the whole review workstream is sitting behind this one defect. Anything else that reads appointment state, including reporting on attendance, is reading the wrong value today.</li><li><strong>Deliverable one, fix the mapping.</strong> Work through the sync in the Digital Ocean backend and map every NextGen appointment status onto its GoHighLevel equivalent, Confirmed included. Post the full mapping table on this item so the values are written down somewhere other than the code.</li><li><strong>Deliverable two, stop Showed firing early.</strong> Showed must only be set once the appointment time has passed and NextGen reports attendance. Find why a future dated appointment currently reaches that state and correct it at the source rather than filtering it downstream in a workflow.</li><li><strong>Deliverable three, prove it on real records.</strong> Verify against at least one appointment in each state: a future booking, a confirmed booking, an attended visit and a no show. Confirm the GoHighLevel calendar and the contact record both reflect the correct state.</li><li><strong>Dependencies and constraints.</strong> The fix lives on the Digital Ocean backend, so it needs a backend deploy window rather than a workflow edit. Do <strong>not</strong> unpause the review request automation until the four verification cases above pass. Keep the reactivation logic migration out of scope here, that is being handled separately.</li><li>done = every NextGen appointment status maps to the correct GoHighLevel status, Showed only appears after the appointment time has passed, and the four verification cases are posted on this item.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
         "blocked": false,
-        "needsNaz": false
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context, where this started.</strong> At the go live call on 3 September the appointment status arriving from NextGen was confirmed broken in two separate ways. Statuses came across mostly as the default value, <strong>Confirmed</strong> did not map onto anything in GoHighLevel at all, and <strong>Showed</strong> was firing on appointments whose date had not yet happened. Review requests were paused rather than risk asking a patient about a visit they had not attended.</li><li><strong>What changed by 4 September.</strong> At the following morning\u2019s go live call the sync was reported as accurate. Duplicate records are now handled at the DigitalOcean webhook level rather than downstream, and show, no show and last visit date were described as updating in real time, which is what both the reactivation and the review triggers key off.</li><li><strong>What is still open.</strong> That same call still carries fixing and monitoring appointment status synchronisation as an action, specifically that <strong>Confirmed</strong>, <strong>No Show</strong> and <strong>Canceled</strong> all update correctly. The 3 September mapping failure was specific to Confirmed, and nothing since has reported that particular mapping as fixed. Treat the sync as improved but unverified rather than done.</li><li><strong>Deliverable, verify each status end to end.</strong> Book a test appointment and walk it through confirmed, attended, no show and cancelled in NextGen, checking after each change that GoHighLevel shows the matching status inside the sync window and that no status arrives as the default value.</li><li><strong>Then unpause the review requests</strong>, but only once <strong>Showed</strong> is confirmed to fire on the appointment date and not before it. That was the reason they were paused and it is the only condition for restarting them.</li><li><strong>Dependencies and constraints.</strong> No client dependency, this can start immediately. <strong>Do not</strong> reintroduce deduplication logic inside GoHighLevel, it is handled at the webhook now and a second layer will fight it.</li><li>done = each of the four appointment statuses set in NextGen appears correctly in GoHighLevel within the sync window on a single test appointment, none arrive as the default, and review requests are running again.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
       },
       "nullReason": null,
-      "priority": 1,
+      "priority": 2,
+      "updatedAt": "2026-09-05T17:19:39.649563+00:00",
       "createdAt": "2026-09-04T18:11:00.566405+00:00"
     },
     {
@@ -1980,24 +1981,25 @@
     {
       "id": "medstation-lead-escalation-textback",
       "title": "Lead Escalation Workflows",
-      "note": "Prior card of this shape, medstation-lead-escalation-approvals, was ignored once on 3 September with the reason 'will handle'. A single ignore is not a pattern per drafting-rules.md section 29, and the 3 September call turned it into a specified build with two named workflows, so it is drafted rather than routed to notes.",
+      "note": "Merged rather than drafted separately. The 4 September go live call added the missed message trigger condition and the business hours gate, which are refinements of the workflows this card already specifies, so per the single item bias they belong in it. The section 19b matcher returned no match because the short candidate text scores below the similarity bar against this card\u2019s long body, not because the work is distinct.",
       "status": "ready",
       "board": "CRM",
       "group": "MedStation",
       "potentialClient": null,
       "source": "fireflies",
-      "sourceLabel": "Meeting with MedStation, 9/3",
+      "sourceLabel": "Meeting with MedStation, 9/3 + Meeting with MedStation, 9/4",
       "payload": {
         "mode": "create_item",
         "boardId": "18418241405",
         "groupId": "group_mm512p9w",
         "itemName": "Lead Escalation Workflows",
-        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> The 3 September MedStation go live call moved lead escalation off user assignment triggers and onto message status triggers, and Sohib wrote the build out as point three of his recap in the GHL Dev chat the same day. Today a lead who calls and gets no answer, or texts and gets no reply, falls through with nobody told about it.</li><li><strong>Workflow one, missed call textback.</strong> Build it to the same pattern already running for Maadi Law: an inbound call that is not answered triggers an automatic message back to the caller. Reuse the Maadi Law build as the reference rather than starting from a blank workflow.</li><li><strong>Workflow two, missed message textback.</strong> Trigger on a lead sending us a message that nobody replies to inside the escalation window, and send an automatic acknowledgement. This is the half that does not exist anywhere yet, so it needs specifying as well as building. Confirm on this item what reply window you have used.</li><li><strong>Delivery channel.</strong> WhatsApp is the priority channel over SMS for both workflows, matching how MedStation patients actually reach the clinic. Where the 24 hour WhatsApp window has closed, this needs the approved re opening template that is tracked separately on this board, so wire the dependency rather than silently falling back to SMS.</li><li><strong>Internal notification.</strong> Both workflows raise an internal alert to <strong>Renata</strong> so a human picks the lead up. Confirm the alert actually reaches her rather than only appearing in the GoHighLevel activity feed. Sohib owes the Ads and CRM side sample copy for the missed call and missed message text backs.</li><li><strong>Dependencies and constraints.</strong> Depends on the 24 hour window opening template for out of window sends. Does <strong>not</strong> depend on the appointment status work. Do not reuse the old user assignment trigger, it is being retired by this change.</li><li>done = a deliberately missed test call and a deliberately unanswered test message each produce an automatic WhatsApp reply to the lead and an internal alert that Renata confirms she received, with both test results posted here.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
         "blocked": false,
-        "needsNaz": false
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> The 3 September MedStation go live call moved lead escalation off user assignment triggers and onto message status triggers, and Sohib wrote the build out as point three of his recap in the GHL Dev chat the same day. Today a lead who calls and gets no answer, or texts and gets no reply, falls through with nobody told about it. The 4 September call then specified the trigger conditions, which are carried below.</li><li><strong>Workflow one, missed call textback.</strong> Build it to the same pattern already running for Maadi Law: an inbound call that is not answered triggers an automatic message back to the caller. Reuse the Maadi Law build as the reference rather than starting from a blank workflow.</li><li><strong>Workflow two, missed message textback.</strong> Trigger on a lead sending us a message that nobody replies to inside the escalation window, and send an automatic acknowledgement. This is the half that does not exist anywhere yet, so it needs specifying as well as building.</li><li><strong>The escalation window, settled on 4 September.</strong> The internal alert must fire only when <strong>no staff reply has been sent within one hour</strong> of the patient\u2019s message. As currently built the notification triggers on the contact replying at all, which means the team is alerted even when somebody has already answered. Correct that condition, it is the specific defect named on the call.</li><li><strong>Business hours, one condition not two workflows.</strong> The one hour timer applies during business hours only, 8am to 5pm Eastern, Monday to Friday. Outside those hours the alert waits until the next business morning rather than disturbing anyone. Handle this as a condition inside each workflow, <strong>not</strong> as a separate after hours workflow, which is how the same point was decided for the other messaging workflows on this board.</li><li><strong>Delivery channel.</strong> WhatsApp is the priority channel over SMS for both workflows, matching how MedStation patients actually reach the clinic. Where the 24 hour WhatsApp window has closed, this needs the approved re opening template tracked separately on this board, so wire that dependency rather than silently falling back to SMS.</li><li><strong>Internal notification.</strong> Both workflows raise an internal alert to <strong>Renata</strong> so a human picks the lead up. Confirm the alert actually reaches her rather than only appearing in the GoHighLevel activity feed. Sohib owes the Ads and CRM side sample copy for the missed call and missed message text backs.</li><li><strong>Dependencies and constraints.</strong> Depends on the 24 hour window opening template for out of window sends. Does <strong>not</strong> depend on the appointment status work. Do not reuse the old user assignment trigger, it is being retired by this change.</li><li>done = a deliberately missed test call and a deliberately unanswered test message each produce an automatic WhatsApp reply to the lead and an internal alert that Renata confirms she received, the alert does not fire when a staff member replies inside the hour, and all test results are posted here.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
       },
       "nullReason": null,
       "priority": 1,
+      "updatedAt": "2026-09-05T17:19:39.649601+00:00",
       "createdAt": "2026-09-04T18:11:00.566405+00:00"
     },
     {
@@ -2025,25 +2027,26 @@
     {
       "id": "liferun-website-payment-sync",
       "title": "Payment Sync",
-      "note": "Adjacent to the pending queue card liferun-ghl-pricing-alignment, which is still in ready and not yet fired. The section 19b matcher returned no match, but that card owns the GoHighLevel catalogue correction while this one owns the website and Stripe side, so they are kept separate and cross referenced. Naz should note that the pricing question that card leaves open now has its answer: the website price wins.",
+      "note": "Merged rather than drafted separately. Hashir\u2019s 4 September test is the direct result of the webhook security fix this card called for, and the failure mode he lists first, the signing secret, is the thing that card had him rotate, so the two belong on one item. The section 19b matcher returned no match on either axis because the short candidate text scores below the similarity bar against this card\u2019s long body. The payload blocked flag is now set, which puts the Monday item into Stuck, and priority is raised to 1: the live checkout now takes payment and creates no order. The dashboard status stays ready.",
       "status": "ready",
       "board": "Web + SEO",
       "group": "Liferun",
       "potentialClient": null,
       "source": "whatsapp",
-      "sourceLabel": "WhatsApp: Web and SEO, 9/3",
+      "sourceLabel": "WhatsApp: Web and SEO, 9/3 + WhatsApp: Web and SEO, 9/4",
       "payload": {
         "mode": "create_subitem",
         "boardId": "18099807701",
         "parentItemId": "11927775866",
+        "parentItemName": "Website",
         "itemName": "Payment Sync",
-        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> Hashir has been working the Liferun payment sync between the website and GoHighLevel payments and on 3 September put four open questions to Sohib in the Web and SEO chat. Sohib answered all four the same morning, so the work is now unblocked and this item captures the decisions before they get lost in the chat.</li><li><strong>Decision one, Fall Detection is not an upsell.</strong> GoHighLevel will not sell a plan and Fall Detection together on a single payment link. Hashir proposed a post checkout upsell and Sohib rejected it, because Fall Detection is decided on the call at the point of purchase. Build it instead as either a <strong>10 dollars per month add on subscription</strong> attached alongside the chosen plan, or as duplicate subscription products per payment type, meaning annual with Fall Detection, semi annual with Fall Detection and monthly with Fall Detection. Pick whichever GoHighLevel supports cleanly and say which you used.</li><li><strong>Decision two, the semi annual price is wrong and the website wins.</strong> The site advertises 34.95 per month while checkout charges 37.95, which is 18 dollars extra on every semi annual order, and the same wrong figure is sitting in GoHighLevel so agents quote it too. Sohib confirmed the <strong>website price is correct</strong>. Correct the checkout and flag it to whoever is doing the GoHighLevel catalogue pass, and check whether any semi annual customer has already been overcharged.</li><li><strong>Decision three, email stays optional at checkout.</strong> Hashir asked to make email required. Sohib said no, because most Liferun buyers are elderly and do not use email, and a required field costs sales. Leave it optional and instead make sure phone alone is enough to identify and reach a buyer, since without email there is no receipt path.</li><li><strong>Stripe answers, use these rather than re investigating.</strong> No customer has been charged 1599, 879 or 303.95. A webhook endpoint pointing at liferun.com already exists and is succeeding, so do not register a second one. Sohib posted the signing secret directly into the Web and SEO chat on 3 September, so pull it from a secure store rather than the chat and <strong>rotate it in Stripe</strong> once this work lands, because a signing secret in a group chat is a live exposure.</li><li><strong>Dependencies and constraints.</strong> No third party dependency, this can start immediately. Do not change the plan structure or commercial terms, only the configured amounts and the add on mechanism. The GoHighLevel product catalogue audit is separate work and is not in scope here.</li><li>done = Fall Detection is purchasable alongside a plan without a post checkout upsell, the semi annual checkout charges 34.95 per month matching the website, email is still optional at checkout, the existing liferun.com Stripe webhook is confirmed succeeding with a rotated signing secret, and the overcharge check result is posted here.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a></p>",
-        "blocked": false,
+        "blocked": true,
         "needsNaz": false,
-        "parentItemName": "Website"
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context, and it is now urgent.</strong> This item captured four payment sync decisions Sohib settled on 3 September. On 4 September Hashir deployed the webhook security fix and tested the live checkout end to end, and it failed. That moves this from a configuration task to a <strong>live revenue defect</strong>, so the test result leads and the decisions follow it.</li><li><strong>The failing test, 4 September.</strong> Hashir ran a real purchase through the live checkout on the Monthly plan, using a temporary coupon to bring it to one dollar. The payment went through on Stripe\u2019s side and the customer was redirected to the Thank You page successfully. The order was <strong>not</strong> created in WordPress and nothing reached GoHighLevel. Liferun is therefore taking money right now and producing no order and no contact.</li><li><strong>Where to look first.</strong> The Stripe webhook call to the site is failing after payment. Open Stripe Dashboard, Developers, Webhooks, the endpoint pointing at liferun.com, and read the most recent event log entry from that test. Confirm whether it was delivered or failed, and record the exact error or response shown. <strong>Prime suspect is the signing secret</strong>, because this item had that secret rotated after it was posted into the Web and SEO chat, and a rotated secret that was not updated on the receiving end produces exactly this signature: payment succeeds, webhook rejected, no order.</li><li><strong>Decision one, Fall Detection is not an upsell.</strong> GoHighLevel will not sell a plan and Fall Detection together on a single payment link. Sohib rejected a post checkout upsell, because Fall Detection is decided on the call at the point of purchase. Build it as either a <strong>10 dollars per month add on subscription</strong> attached alongside the chosen plan, or as duplicate subscription products per payment type, meaning annual, semi annual and monthly each with Fall Detection. Pick whichever GoHighLevel supports cleanly and say which you used.</li><li><strong>Decision two, the semi annual price is wrong and the website wins.</strong> The site advertises 34.95 per month while checkout charges 37.95, which is 18 dollars extra on every semi annual order, and the same wrong figure sits in GoHighLevel so agents quote it too. The <strong>website price is correct</strong>. Correct the checkout, flag it to whoever is doing the GoHighLevel catalogue pass, and check whether any semi annual customer has already been overcharged.</li><li><strong>Decision three, email stays optional at checkout.</strong> Sohib refused making email required, because most Liferun buyers are elderly and do not use email and a required field costs sales. Leave it optional and make sure phone alone is enough to identify and reach a buyer, since without email there is no receipt path.</li><li><strong>Dependencies and constraints.</strong> <strong>Blocked</strong> on someone with Stripe Dashboard access reading the webhook event log, which is the one thing Hashir cannot do himself and the one thing that identifies the fault. Do not register a second webhook endpoint, one pointing at liferun.com already exists. Do not change plan structure or commercial terms, only the configured amounts and the add on mechanism. The GoHighLevel product catalogue audit is separate work and out of scope here.</li><li>done = a live test purchase creates the WordPress order and the GoHighLevel contact, Fall Detection is purchasable alongside a plan without a post checkout upsell, the semi annual checkout charges 34.95 per month matching the website, email is still optional, and the overcharge check result is posted here.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a></p>"
       },
       "nullReason": null,
-      "priority": 2,
+      "priority": 1,
+      "updatedAt": "2026-09-05T17:19:39.649663+00:00",
       "createdAt": "2026-09-04T18:11:00.566405+00:00"
     },
     {
@@ -2073,47 +2076,49 @@
     {
       "id": "maadilaw-migrated-contact-automations",
       "title": "Migrated Contact Suppression",
-      "note": "Drafted as a subitem under Clio Migration 12471734017, which already owns the Grow to GoHighLevel migration including the historical data subitem 12471717023.",
+      "note": "Section 19b axis 3 match at score 0.68. Sohib answered on 4 September the exact timing question this card was left open on, so the new fact is merged into it rather than drafted as a second card. Deliverable one is narrowed from reconstructing the case to confirming the mechanism and closing the remaining half, why the messages were invisible in Tracy\u2019s conversations view.",
       "status": "ready",
       "board": "CRM",
       "group": "Maadi Law",
       "potentialClient": null,
       "source": "whatsapp",
-      "sourceLabel": "WhatsApp: Maadi Law, 9/3",
+      "sourceLabel": "WhatsApp: Maadi Law, 9/3 + WhatsApp: Maadi Law, 9/4",
       "payload": {
         "mode": "create_subitem",
         "boardId": "18418241405",
         "parentItemId": "12471734017",
+        "parentItemName": "Clio Migration",
         "itemName": "Migrated Contact Suppression",
-        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> On 3 September Tracy reported that an old lead, Sandra Schneidwind, had automated texts sent to her about a week earlier, before the firm was using GoHighLevel for that lead at all. Sohib's read is that the Clio Grow switchover duplicated her as a new contact in GoHighLevel when Tracy added her to Clio, and creating that contact tripped the outbound automation.</li><li><strong>Why this is not closed by the explanation.</strong> Tracy pushed back that the lead came in mid month and she saw nothing in the conversations view at the time, so the explanation does not yet account for the timing or for why the messages were invisible to her. Until it does, every remaining historical record moved into GoHighLevel carries the same risk of messaging a client out of the blue, which is a client facing exposure for a law firm rather than an internal annoyance.</li><li><strong>Deliverable one, reconstruct the Sandra Schneidwind case.</strong> Pull the contact record and the automation history and establish exactly which trigger fired, when the contact was created, and why the sent messages did not surface in Tracy's conversations view. Post the timeline here.</li><li><strong>Deliverable two, suppress automations on migrated and backfilled contacts.</strong> Contacts created by the Grow migration, by a Clio sync, or by hand as historical backfill must not enter the new lead outbound sequences. Add a suppression condition, whether by tag, by source or by creation path, and state which mechanism you used.</li><li><strong>Deliverable three, check whether anyone else was messaged.</strong> Sweep the migrated cohort for any other contact that received an outbound automated message it should not have, and list them here so Sharif and Tracy know the real blast radius rather than assuming it was one record.</li><li><strong>Dependencies and constraints.</strong> Depends on the historical Grow migration subitem on this parent, which is at For Review with thirty held records and two identity collisions still undecided, so coordinate rather than sweeping those in blind. No client dependency. Do <strong>not</strong> switch off the new lead automations wholesale to solve this, genuine new leads must keep receiving them.</li><li><strong>Related.</strong> Tracy also asked for two new pipeline sections on 3 September, Under Referral Attorney Review and Referred Cases Accepted, and Sohib confirmed those are already done. No action needed on that, recorded here so it is not raised again.</li><li>done = the Sandra Schneidwind timeline is explained on this item, migrated and backfilled contacts are provably excluded from outbound automations with a test contact confirming it, and the list of any other wrongly messaged contacts is posted here.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
         "blocked": false,
         "needsNaz": false,
-        "parentItemName": "Clio Migration"
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> On 3 September Tracy reported that an old lead, Sandra Schneidwind, had automated texts sent to her about a week earlier, before the firm was using GoHighLevel for that lead at all. Every remaining historical record moved into GoHighLevel carries the same risk of messaging a client out of the blue, which for a law firm is a client facing exposure rather than an internal annoyance.</li><li><strong>The mechanism, confirmed on 4 September.</strong> Sohib explained that Sandra was synced automatically out of Clio Grow without anyone realising it was happening. When Tracy entered her into Grow mid month she came across into GoHighLevel as a new contact, and creating that contact tripped the outbound automation. That accounts for the timing Tracy questioned, so the cause is no longer in doubt.</li><li><strong>What is still unexplained.</strong> Tracy also saw nothing in her conversations view at the time the messages went out. The automatic Grow sync explains why the messages were sent but not why they were invisible to the person who owns intake. Sohib separately confirmed that a second contact Tracy could not find, Chiquita, does show up when searched by name, so this may be the same view or filter problem tracked on the Auto-Reject item rather than a second bug. <strong>Establish which it is</strong> and say so here.</li><li><strong>Deliverable one, suppress automations on migrated and backfilled contacts.</strong> Contacts created by the Grow migration, by an automatic Clio sync, or by hand as historical backfill must not enter the new lead outbound sequences. Add a suppression condition, whether by tag, by source or by creation path, and state on this item which mechanism you used.</li><li><strong>Deliverable two, check the blast radius.</strong> Sweep the migrated cohort for any other contact that received an outbound automated message it should not have, and list them here so Sharif and Tracy know the real number rather than assuming it was one record.</li><li><strong>Deliverable three, close the automatic sync question.</strong> The Grow to GoHighLevel sync ran without the team knowing it was live. Confirm what else it is still bringing across and whether it should stay on at all while the migration is only at For Review.</li><li><strong>Dependencies and constraints.</strong> Depends on the historical Grow migration subitem on this parent, which is at For Review with thirty held records and two identity collisions still undecided, so coordinate rather than sweeping those in blind. No client dependency. Do <strong>not</strong> switch off the new lead automations wholesale to solve this, genuine new leads must keep receiving them.</li><li>done = migrated, backfilled and Grow synced contacts are provably excluded from outbound automations with a test contact confirming it, the list of any other wrongly messaged contacts is posted here, and the conversations view question is either explained or handed to the Auto-Reject item.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
       },
       "nullReason": null,
       "priority": 2,
+      "updatedAt": "2026-09-05T17:19:39.649618+00:00",
       "createdAt": "2026-09-04T18:11:00.566405+00:00"
     },
     {
       "id": "maadilaw-rejected-case-visibility",
       "title": "Auto-Reject",
-      "note": "New information on the existing Auto-Reject item 12963781332 rather than a new item. This is the visibility defect behind the rejection path, not the rejection path build itself, which that item already covers.",
+      "note": "Section 19b axis 1 match on existingItemId 12963781332, so merged rather than drafted as a second card. Sohib confirmed on 4 September that Chiquita is findable by name search, which materially changes this card\u2019s premise: the record is not unreachable, it is missing from Tracy\u2019s default view. Deliverable one is narrowed accordingly.",
       "status": "ready",
       "board": "CRM",
       "group": "Maadi Law",
       "potentialClient": null,
       "source": "whatsapp",
-      "sourceLabel": "WhatsApp: Maadi Law, 9/3",
+      "sourceLabel": "WhatsApp: Maadi Law, 9/3 + WhatsApp: Maadi Law, 9/4",
       "payload": {
         "mode": "update_only",
         "existingItemId": "12963781332",
         "itemName": "Auto-Reject",
-        "updateBody": "<p>Salam,</p><ul><li><strong>Context, a live defect on this path.</strong> On 3 September Tracy took a slip and fall intake for Chiquita Georges, rejected the case and believed she had moved it to the correct pipeline. After that the record vanished from her view entirely, no contact card and no matter. Sharif could still find it in the conversations view, so the record exists, but the person who owns intake cannot see it.</li><li><strong>Why it matters for this item.</strong> This item is building the branching behind the Not Qualified button. If rejecting a case makes the record unreachable for the user who rejected it, then every rejection is unauditable: nobody can confirm the right email went out, nobody can reopen a case that was rejected in error, and nobody can prove what happened. That has to be settled before the one click action goes live, not after.</li><li><strong>Deliverable one, find the record.</strong> Locate the Chiquita Georges contact and matter, establish which pipeline and stage they actually landed in, and say whether the record was moved, disqualified, merged or is simply filtered out of Tracy's default view.</li><li><strong>Deliverable two, fix the visibility.</strong> Whatever the cause, a rejected or disqualified record must stay findable by the intake user through a normal contact search and through a named pipeline stage or saved view. If the cause is a permission or filter difference between Tracy's view and Sharif's, correct Tracy's view rather than asking her to work around it.</li><li><strong>Deliverable three, cover the junk path too.</strong> This item already separates genuinely rejected cases from junk that gets disqualified silently. Confirm the visibility fix holds for both branches, because the silent disqualify path is the more likely one to make a record disappear.</li><li><strong>Dependencies and constraints.</strong> No client dependency, this can start immediately. Do not resolve it by turning off the disqualify behaviour, the silent junk path is deliberate and stays. Coordinate with the Clio Migration work, since a rejected case also has to reflect correctly back through the Clio Manage sync.</li><li>done = the Chiquita Georges contact and matter are located and explained on this item, and Tracy can find a rejected case and a silently disqualified case through her own normal view, confirmed with one test record of each.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
         "blocked": false,
-        "needsNaz": false
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context, a live defect on this path.</strong> On 3 September Tracy took a slip and fall intake for Chiquita Georges, rejected the case and believed she had moved it to the correct pipeline. After that the record vanished from her view entirely, no contact card and no matter, although Sharif could still find it in the conversations view.</li><li><strong>Narrowed on 4 September.</strong> Sohib confirmed that Chiquita does show up in GoHighLevel if you search for her name. The record is therefore not lost, not merged away and not deleted. What is actually broken is narrower and more fixable: a rejected record drops out of the default view belonging to the person who owns intake, and is only reachable by knowing to search for it by name.</li><li><strong>Why it still matters for this item.</strong> This item is building the branching behind the Not Qualified button. If a rejection only stays findable by name search, then in practice nobody can confirm the right email went out, reopen a case rejected in error, or review what was rejected last week without already knowing who to look for. That has to be settled before the one click action goes live, not after.</li><li><strong>Deliverable one, fix the view rather than hunt the record.</strong> Establish which pipeline and stage a rejected case actually lands in, and why that stage falls outside Tracy\u2019s default view while remaining visible to Sharif. If it is a permission or filter difference between their two views, <strong>correct Tracy\u2019s view</strong> rather than asking her to search by name every time.</li><li><strong>Deliverable two, give rejections a home.</strong> A rejected or disqualified record must be reachable through a named pipeline stage or a saved view that the intake user can open deliberately, not only through a search that assumes she already knows the name.</li><li><strong>Deliverable three, cover the junk path too.</strong> This item already separates genuinely rejected cases from junk that gets disqualified silently. Confirm the fix holds for both branches, because the silent disqualify path is the more likely of the two to make a record disappear.</li><li><strong>Dependencies and constraints.</strong> No client dependency, this can start immediately. Do <strong>not</strong> resolve it by turning off the disqualify behaviour, the silent junk path is deliberate and stays. Coordinate with the Clio Migration work, since a rejected case also has to reflect correctly back through the Clio Manage sync, and the migrated contact item on that parent is chasing a related view question.</li><li>done = Tracy can open a saved view or pipeline stage and see both a rejected case and a silently disqualified case without searching by name, confirmed with one test record of each.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
       },
       "nullReason": null,
       "priority": 2,
+      "updatedAt": "2026-09-05T17:19:39.649644+00:00",
       "createdAt": "2026-09-04T18:11:00.566405+00:00"
     },
     {
@@ -2138,6 +2143,277 @@
       "nullReason": null,
       "priority": 2,
       "createdAt": "2026-09-04T18:11:00.566405+00:00"
+    },
+    {
+      "id": "medstation-weston-lead-assignment",
+      "title": "Weston Lead Assignment",
+      "note": "Sohib action from the 4 September team onboarding call, joined with his same day ask in the Medstation Marketing chat for the Weston sales agent list. Section 19 audit found nothing covering lead assignment on any of the four boards, and the five MedStation CRM items created 4 September cover patient ID, review routing, bilingual messaging, business hours and the 24 hour template, none of them assignment. Section 19b returned no match.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with MedStation, 9/4",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm512p9w",
+        "itemName": "Weston Lead Assignment",
+        "blocked": true,
+        "needsNaz": true,
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> At the MedStation GoHighLevel go live call on 4 September the assignment question was left open: it is not settled whether every inbound lead goes to Renata or whether leads should spread across several sales people at Weston. Today a new lead can land with no owner at all, so follow up depends on whoever happens to notice the conversation rather than on anyone being accountable for it.</li><li><strong>The client has been asked for what we need.</strong> In the Medstation Marketing chat the same day Sohib asked MedStation for a list of the Weston sales agents with their email addresses, so patients can be assigned to them automatically. Ana Caroline replied that Washigton should be included as well, since he will be running the commercial process on their side.</li><li><strong>Step one, create the users.</strong> Once the list arrives, create a GoHighLevel user for each named Weston sales agent using the email address the client supplied. <strong>Do not</strong> build any routing against guessed names or invented addresses.</li><li><strong>Step two, assign at creation.</strong> Build the rule that puts every new Weston lead onto a named agent at the moment the contact is created, so ownership is never blank and the missed message alerts have somebody real to escalate to.</li><li><strong>Step three, the fallback.</strong> Decide and build what happens when no rule matches. A lead must still land on a real person rather than sitting unassigned. Confirm with MedStation whether Renata is that fallback owner, since the 4 September call could not settle it.</li><li><strong>Dependencies and constraints.</strong> <strong>Blocked</strong> on MedStation supplying the sales agent list with email addresses. This is separate from the lead escalation workflows, which handle what happens after a lead is ignored. This item is about who owns the lead in the first place.</li><li>done = every new Weston lead is assigned automatically to a named GoHighLevel user at the moment of creation, with a confirmed fallback owner when no rule matches, verified on one test lead per agent.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>"
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-09-05T17:20:01.562429+00:00"
+    },
+    {
+      "id": "maadilaw-intake-call-drops",
+      "title": "Intake Call Drops",
+      "note": "Raised by Ahmed on the 4 September call with a Monday resolution target, with Sohib taking a test call the same hour. Section 19 audit: the Ads LSA Call Routing Fix subitem 12810179269 is Done and is a routing change, not a drop defect, and the CRM subitem 12471725319 covers routing to the contact owner. Neither covers calls dropping. Section 19b returned no match.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with MedStation, 9/4",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm5112vv",
+        "itemName": "Intake Call Drops",
+        "blocked": false,
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> On the 4 September go live call Ahmed raised bug reports against the Maadi Law intake system where inbound calls are dropping, and committed to analysing and starting the fix with resolution targeted for <strong>Monday 8 September</strong>. Sohib agreed to place a test call within the hour and report what he saw. Neither the reproduction nor the findings have been written down anywhere outside that call.</li><li><strong>Why this is urgent.</strong> Maadi Law intake runs on paid search, LSA and Meta. A dropped call is a paid lead lost with no record, no voicemail and no callback trigger, and it is invisible in reporting because the call never completes. The firm cannot tell the difference between a quiet day and a broken phone line.</li><li><strong>Deliverable one, reproduce it.</strong> Place test calls through every inbound path, meaning LSA, Google, the Meta click to call destination and the main published number, and record which paths drop and at what point in the connection the call fails.</li><li><strong>Deliverable two, fix the cause.</strong> Correct the GoHighLevel phone configuration behind whichever paths fail, covering call forwarding, ring timeout, the user devices the call is meant to reach, and the handover to voicemail.</li><li><strong>Deliverable three, write down Sohib\u2019s test.</strong> Post the findings from the test call Sohib ran on 4 September onto this item, so the diagnosis lives with the work rather than in a meeting recording.</li><li><strong>Dependencies and constraints.</strong> No dependencies, this can start immediately. It does <strong>not</strong> depend on the Clio Manage sync work or on the Number confirmation task sitting on the Ads board, and it should not wait behind either of them.</li><li>done = ten consecutive test calls across every inbound path either connect to a person or reach voicemail as designed, with none dropping mid connection, and the results posted here.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-09-05T17:20:01.562429+00:00"
+    },
+    {
+      "id": "medstation-ga4-conversion-tracking",
+      "title": "GA4 Conversion Tracking",
+      "note": "GA4 was the one item explicitly deferred at the 4 September go live call for want of credentials, and both values arrived later the same day across the GHL Dev and Web and SEO chats, so the deferral is lifted. Section 19 audit found no MedStation tracking item on any board. Section 19b returned no match. The Measurement Protocol API secret was pasted into the GHL Dev group chat and is deliberately not repeated in the payload.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: GHL Dev, 9/4",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm512p9w",
+        "itemName": "GA4 Conversion Tracking",
+        "blocked": false,
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> GA4 was the single piece deliberately deferred at the MedStation go live call on 4 September, because the measurement credentials were not available and Hashir was weighing a workaround for conversion tracking. Later the same day both values were supplied, so the deferral no longer applies and this can be built as originally intended rather than worked around.</li><li><strong>What arrived and where.</strong> The GA4 Measurement ID for the MedStation property is <strong>G-YVHHXPB3HP</strong>. The Measurement Protocol API secret was posted separately in the GHL Dev chat on 4 September under the nickname Flow Co GHL. <strong>Take the secret from that message rather than asking for it again</strong>, store it inside GoHighLevel, and do not copy it into any further chat or item.</li><li><strong>Deliverable.</strong> Wire the GoHighLevel conversion events to GA4 through the Measurement Protocol, matching the pipeline stages already agreed for MedStation: New Lead for a new inquiry, Engaged when the patient replies on WhatsApp, Booked when an appointment is made, and Attended for reporting. Booked is the stage the ad platforms optimise on, so it carries the most weight.</li><li><strong>Constraint, one owner per event.</strong> Booked already fires server side from the booking webhook. <strong>Do not</strong> add a second source for the same event out of GoHighLevel, or every booking counts twice and the campaigns optimise against inflated numbers.</li><li><strong>Dependencies.</strong> None outstanding. The property belongs to MedStation and is one they already had rather than a new one, and access was granted to us on 4 September after a short false start where a duplicate property was created and removed.</li><li>done = a test lead pushed through the pipeline produces New Lead, Engaged and Booked events visible in the MedStation GA4 property, with exactly one Booked event per booking.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
+      },
+      "nullReason": null,
+      "priority": 3,
+      "createdAt": "2026-09-05T17:20:01.562429+00:00"
+    },
+    {
+      "id": "medstation-neurin-message-consolidation",
+      "title": "Neurin Message Consolidation",
+      "note": "Two action items from the 4 September team onboarding call that are prerequisite and dependent, so per the prerequisite rule in drafting-rules.md they are drafted as one item with sequenced steps rather than two. Section 19 audit found nothing on any board covering Neurin outbound messaging. Section 19b returned no match. Naz owns the Rafael coordination per the transcript, so needsNaz is set.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with MedStation, 9/4",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm512p9w",
+        "itemName": "Neurin Message Consolidation",
+        "blocked": true,
+        "needsNaz": true,
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> MedStation patients are now receiving automated messages from two systems at once. Neurin sends its own appointment reminders, and GoHighLevel has started sending review requests, missed call replies and reactivation prompts. At the team onboarding call on 4 September this came out as a live risk on two fronts: patients getting duplicated or conflicting messages, and conversations splitting across two channels so staff never see a whole thread in one place.</li><li><strong>Step one, get the Neurin flows.</strong> Coordinate with Rafael at Neurin to obtain the exact appointment reminder messages Neurin sends, including their timing, their triggers and their language, and share them with the team so MedStation can approve the wording. Nothing here can be judged until the actual copy is in front of us.</li><li><strong>Step two, only after step one.</strong> Assess whether Neurin\u2019s Weston messages can be sent through the Weston GoHighLevel WhatsApp number instead of Neurin\u2019s own channel, so every patient conversation lands in one inbox. <strong>Do not start step two before step one is done</strong>, because the answer depends entirely on what Neurin actually sends and how it sends it.</li><li><strong>Constraint, this is an assessment first.</strong> Report what is technically possible and what it would cost in Neurin configuration <strong>before</strong> anything is switched over. Do not migrate any live reminder flow off Neurin as part of this item.</li><li><strong>Dependencies.</strong> <strong>Blocked</strong> on Rafael at Neurin, a third party, supplying the message flows. There is no internal work that unblocks it, so chase rather than wait.</li><li>done = Neurin\u2019s reminder copy is documented on this item and approved by MedStation for language, and a written answer is posted on whether those messages can route through the Weston GoHighLevel WhatsApp number.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>"
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-09-05T17:20:01.562429+00:00"
+    },
+    {
+      "id": "medstation-patient-list-merge",
+      "title": "Patient List Merge",
+      "note": "Sohib action from the 4 September team onboarding call, present in both recordings of it. Section 19 audit found nothing covering the patient list consolidation. Section 19b returned no match. Section 29 check: two reactivation shaped cards were ignored previously, medstation-reactivation-cohort-window as already handled and medstation-reactivation-whatsapp-gate as a duplicate. Those are different reasons and both concern trigger logic, whereas this is the data preparation, so it is drafted rather than routed to Notes.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with MedStation, 9/4",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm512p9w",
+        "itemName": "Patient List Merge",
+        "blocked": true,
+        "needsNaz": true,
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> Reactivation messaging for Weston is being built in GoHighLevel, but the data it has to aim at is split across two systems. NextGen holds the clinical record and the last visit date, Como holds the older patient list and the last communication date. Neither one on its own can answer the question reactivation depends on, which is who has not been seen and has not been contacted. At the team onboarding call on 4 September Sohib took the action to bring the two together.</li><li><strong>Step one, get the current list.</strong> Follow up with Leo and the MedStation team for the current NextGen lead and patient list for the Weston clinic. This has been asked for once already and has not come back, so it needs chasing rather than waiting on.</li><li><strong>Step two, merge and cross reference.</strong> Merge that list with the Como export and cross reference the two dates that matter, last visit and last communication, so every patient record carries both rather than one or the other.</li><li><strong>Step three, load it.</strong> Load the merged list into GoHighLevel with those two fields populated, so reactivation can branch on real patient dates rather than on the date the record happened to be imported.</li><li><strong>Constraint, data preparation only.</strong> <strong>Do not</strong> build or change reactivation trigger logic on this item. The criteria are still being settled separately and have moved once already, and mixing the two means the data work stalls behind a decision it does not need.</li><li><strong>Dependencies.</strong> <strong>Blocked</strong> on MedStation supplying the current NextGen Weston list.</li><li>done = one merged Weston patient list is loaded into GoHighLevel with last visit and last communication populated on every record, and the record count is posted here so the cohort size is known.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>"
+      },
+      "nullReason": null,
+      "priority": 3,
+      "createdAt": "2026-09-05T17:20:01.562429+00:00"
+    },
+    {
+      "id": "medstation-send-to-nextgen-button",
+      "title": "Send To NextGen",
+      "note": "Sohib action item and overview point from the 4 September team onboarding call. Section 19 audit: the CRM item NextGen Patient ID Mapping 12978886451 covers the inbound direction only, this is the outbound push, and per the counter rule in drafting-rules.md they are different kinds of work so they stay separate and are cross referenced instead. Section 19b returned no match.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting with MedStation, 9/4",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm512p9w",
+        "itemName": "Send To NextGen",
+        "blocked": false,
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> Patient data only moves one way today. Information flows from Neurin into NextGen and then into GoHighLevel on a fifteen minute sync, so anything captured first in GoHighLevel has to be retyped into NextGen by hand. At the team onboarding call on 4 September this was named as the main source of duplicate entry for the front desk, and the fix proposed on the call was a button rather than a further sync.</li><li><strong>Deliverable.</strong> Build a <strong>Send to NextGen</strong> action on the GoHighLevel contact record that pushes the patient into NextGen directly, so a contact created in GoHighLevel does not have to be typed a second time.</li><li><strong>Field mapping.</strong> Agree and document on this item which fields the button sends, at minimum name, phone, email, clinic and service, and confirm which of those NextGen treats as mandatory before it will accept a record at all.</li><li><strong>Constraint, never duplicate a patient.</strong> The button must not create a second NextGen record for somebody who already exists there. Match on the NextGen Patient ID where one is present, and where the match is ambiguous <strong>do not</strong> push, surface it to the user instead and let them decide.</li><li><strong>Dependencies.</strong> This depends on the NextGen Patient ID actually being populated on GoHighLevel contacts, which is the separate NextGen Patient ID Mapping item on this board. Sequence this after that item, because without a populated ID the duplicate check above has nothing to match on.</li><li>done = a contact created in GoHighLevel can be pushed into NextGen with one click, arrives with the agreed fields populated, and a repeat push on the same patient is refused rather than creating a duplicate.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
+      },
+      "nullReason": null,
+      "priority": 3,
+      "createdAt": "2026-09-05T17:20:01.562429+00:00"
+    },
+    {
+      "id": "medstation-ghl-number-not-ringing",
+      "title": "Weston Call Routing",
+      "note": "Reported by Renata at MedStation on the evening of 4 September, hours after the same morning call designed the routing. Section 19 audit found no phone or call routing item for MedStation on any of the four boards. Section 19b returned no match. Sohib asked for both the call setup and the rebilling check in the same message, so both are on this item.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: Medstation Weston, 9/4",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm512p9w",
+        "itemName": "Weston Call Routing",
+        "blocked": false,
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> On the evening of 4 September Renata at MedStation Weston reported that she called the GoHighLevel number several times and it never rang. Every attempt went straight to a voicemail message. Sohib asked for the call setup to be checked the same evening. This is hours after the go live call that morning specified calls from ads and WhatsApp ringing on staff phones through the GoHighLevel app, with a fallback to the main line when nobody answers.</li><li><strong>Why this is urgent.</strong> The Meta and Google campaigns for Weston are live and calls are a paid destination on both. A number that never rings turns every ad call into an abandoned voicemail. Neither the caller nor the clinic learns that the call was missed, so the loss does not show up anywhere until someone happens to test the line, which is exactly how this was found.</li><li><strong>Deliverable one, check the call path end to end.</strong> Work through the Weston GoHighLevel number configuration: the user phone numbers attached to the account, whether the GoHighLevel app is actually receiving calls on the staff devices, the ring timeout, and the point at which voicemail takes over. Renata reached voicemail immediately, which points at the call never being offered to a device rather than at nobody picking up.</li><li><strong>Deliverable two, confirm rebilling.</strong> Sohib asked in the same message for the rebilling setup on the account to be double checked. If calling fails because the account cannot bill for the minutes, the routing configuration is not the real problem and changing it will waste the fix.</li><li><strong>Deliverable three, confirm with Renata.</strong> Test with Renata on the line and get her to confirm directly that the number rings on the staff phones. <strong>Do not close this on an internal test alone</strong>, she is the one who reported it and the devices are hers.</li><li><strong>Dependencies.</strong> No dependencies, this can start immediately. Renata is available and already testing. A separate message about a patient receiving the wrong automated content was explained by Sohib as predating a workflow that was turned off that morning, so it is not part of this defect.</li><li>done = a call to the Weston GoHighLevel number rings on the staff phones, can be answered, and only falls through to voicemail after the configured timeout, confirmed by Renata on this item.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
+      },
+      "nullReason": null,
+      "priority": 1,
+      "createdAt": "2026-09-05T17:20:01.562429+00:00"
+    },
+    {
+      "id": "medstation-gbp-whatsapp-number",
+      "title": "GBP",
+      "note": "Completion signal from the 4 September team onboarding call plus Sohib\u2019s confirmation in the Medstation Weston chat the same day. Drafted as an update on the existing GBP item 12545614773 rather than a new item, per the single item bias. The change was made on one profile and this item covers five, which is the remaining work.",
+      "status": "ready",
+      "board": "Web + SEO",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: Medstation Weston, 9/4",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12545614773",
+        "itemName": "GBP",
+        "blocked": false,
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> MedStation has been running two WhatsApp numbers in parallel, an older one used by existing patients and the new GoHighLevel owned number used for marketing and campaigns. At the team onboarding call on 4 September the split was named as a live source of confusion, because patients reach the clinic on whichever number they find first and staff then cannot see a whole conversation in one place.</li><li><strong>What already changed.</strong> On 4 September Sohib updated the WhatsApp button on the Google Business Profile so that it now points at the GoHighLevel number, and Renata confirmed it on the Weston thread the same day.</li><li><strong>What is left on this item.</strong> That change was made on one profile. MedStation has five Google Business Profiles, Weston, Boca Raton, Coconut Creek, Metrowest and Pompano, all recorded on this item on 10 August. <strong>Check each remaining profile</strong> and point its WhatsApp or chat button at the correct GoHighLevel number for that location.</li><li><strong>Constraint.</strong> The GoHighLevel number is the marketing number and the older number stays in place for existing patient threads. <strong>Do not</strong> remove or replace the older number wherever it is already published, only change what the profile button opens.</li><li><strong>Dependencies.</strong> None. Profile access for the confirmed locations has been in hand since 10 August, and Pompano should be checked against whether that access ever completed.</li><li>done = every MedStation Google Business Profile opens WhatsApp on the correct GoHighLevel number for that location, verified by clicking the button on each live profile and posting the result here.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a></p>"
+      },
+      "nullReason": null,
+      "priority": 4,
+      "createdAt": "2026-09-05T17:20:01.562429+00:00"
+    },
+    {
+      "id": "medstation-live-site-link-fixes",
+      "title": "Service Pages",
+      "note": "New information on the existing Service Pages item 12971476311, which already owns repairing live site links that pointed at the dead booking subdomain. Three fixes landed on 4 September and one is still open. Section 19b returned no match. The WhatsApp number here is the same one carried by the pending card medstation-meta-whatsapp-number, which owns the Ads side of it.",
+      "status": "ready",
+      "board": "Web + SEO",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: Web and SEO, 9/4",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12971476311",
+        "itemName": "Service Pages",
+        "blocked": false,
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> This item was opened on 3 September to repair live MedStation site links that pointed at the dead book.medstation.com subdomain. On 4 September a further round of link work ran through the Web and SEO chat. This update records what landed and what is still outstanding, so the punchlist lives on the item rather than only in chat.</li><li><strong>Fixed, booking links open in place.</strong> Hashir changed every booking link so it opens in the same window rather than a new one, first on the rebuilt site and then on the live site the same afternoon. This was needed so campaign parameters survive the click through to the booking subdomain.</li><li><strong>Fixed, campaign parameters.</strong> Sohib confirmed the parameters still were not carrying to the booking subdomain after the window change, and resolved it through Google Tag Manager later the same day. Anyone touching these links again should check that the Tag Manager side still holds.</li><li><strong>Fixed, the Weston consultation button.</strong> The Agendar uma consultation button on the Weston page now goes to the WhatsApp number <strong>954 933 5712</strong>, which is the GoHighLevel messaging number. It is <strong>not</strong> the number published elsewhere on the site, so do not correct it back.</li><li><strong>Still open, the map links.</strong> Sohib flagged that the map links on most location pages resolve to an address near the clinic rather than to that clinic\u2019s own Google Business Profile listing. Hashir acknowledged it on 4 September and has not reported it done. <strong>Point every location map link at that location\u2019s own Google Business Profile.</strong></li><li><strong>Dependencies.</strong> No dependencies, the map link fix can start immediately. It overlaps the GBP item on this board only in that both need the correct profile per location, so use the same list rather than looking them up twice.</li><li>done = every location page map link opens that clinic\u2019s own Google Business Profile, and the three fixes above are confirmed still working on the live site after the next deploy.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a></p>"
+      },
+      "nullReason": null,
+      "priority": 3,
+      "createdAt": "2026-09-05T17:20:01.562429+00:00"
+    },
+    {
+      "id": "medstation-weston-landers-review",
+      "title": "Landing Pages",
+      "note": "Hashir delivered the two Weston landers this item asked for, plus a revised homepage, on the morning of 5 September and asked for feedback. Drafted as an update on the existing Landing Pages item 12720959017 rather than a new item. Section 19b returned no match. Review sits with Sohib, who is not tagged per the client and leadership tagging rules.",
+      "status": "ready",
+      "board": "Web + SEO",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: Web and SEO, 9/5",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12720959017",
+        "itemName": "Landing Pages",
+        "blocked": false,
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> This item asked for two Google Ads landers for Weston, one English and one Portuguese, on top of the wider location template work. On the morning of 5 September Hashir delivered both along with a revised homepage carrying the changes previously requested, and asked for feedback before these go any further.</li><li><strong>What is ready to review.</strong> The new homepage at medstation.com/new-home-page, the English Weston Google Ads lander at medstation.com/weston-clinic-en, and the Portuguese Weston lander at medstation.com/weston-clinic-pt.</li><li><strong>Check the Portuguese page against the brief already on this item.</strong> It should lead with the Cl\u00ednica brasileira em Weston headline, use the booking link as the primary call to action deep linked to Weston so the clinic chooser is skipped, keep campaign parameters alive across the hop to the booking subdomain, show the static Weston number as the secondary click to call, and stay sticky on mobile.</li><li><strong>Confirm the contact numbers on both landers.</strong> WhatsApp should be <strong>954 933 5712</strong> and calls should be <strong>954 580 5286</strong>. Those two were only settled on 3 September, which is after most of this page work started, so they are the most likely thing to be stale on a freshly built page.</li><li><strong>Dependencies.</strong> Nothing on the build side is blocked. <strong>Review sits with Sohib</strong> and the pages are built and waiting on it. The Google Ads campaigns should not be pointed at these pages until the review is done.</li><li>done = both Weston landers and the homepage are signed off, or a written change list is posted on this item, and the approved pages are the ones the live Google Ads campaigns point at.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a></p>"
+      },
+      "nullReason": null,
+      "priority": 3,
+      "createdAt": "2026-09-05T17:20:01.562429+00:00"
+    },
+    {
+      "id": "maadilaw-agreement-prefill-resolved",
+      "title": "Intake/Agreement Prefill Gaps",
+      "note": "New information on the existing Intake/Agreement Prefill Gaps item 12968553824, which already owns the location of incident custom field. Tracy hit the downstream symptom on 4 September and Sohib resolved it the same evening. Drafted as an update rather than a new item. Section 19b returned no match; the adjacent pending card maadilaw-agreement-cancellation covers voiding a sent agreement, which is a different problem on the same document flow.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: Maadi Law, 9/4",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12968553824",
+        "itemName": "Intake/Agreement Prefill Gaps",
+        "blocked": false,
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> This item covers the prefill gaps that stop a representation agreement leaving GoHighLevel without manual editing, including the custom field for location of incident. On 4 September Tracy hit the downstream consequence of one of those gaps, and it has since been resolved. This records what changed and what it leaves open.</li><li><strong>What Tracy reported.</strong> She could not retrieve a copy of a signed representation agreement out of GoHighLevel, because the document still had an outstanding field assigned to a Flow Company email address rather than to the firm. The agreement therefore never reached a completed state, so no signed copy was available to her at all.</li><li><strong>What Sohib changed on 4 September.</strong> He removed Flow Company from that field and reassigned it to the firm. From now on, when Tracy sends an agreement out she also receives an email prompting her to fill in the incident date and location, which is the firm holding its own data rather than waiting on us.</li><li><strong>Backfill already done.</strong> Sohib filled the incident date and location for Shaima, Kevin and Fadi, so those three agreements are now complete and their signed copies are sitting in the matching Dropbox folders.</li><li><strong>What this leaves on this item.</strong> <strong>Confirm the reassigned field is set the same way on every agreement template</strong>, not only the one Tracy happened to be using, and sweep the remaining document templates for any other field still pointed at a Flow Company address. One template fixed by hand is not the same as the gap being closed.</li><li><strong>Dependencies and constraints.</strong> No dependencies, this can start immediately. <strong>Do not</strong> reassign fields back to Flow Company as a convenience when a template looks incomplete, that is the exact failure this fixed.</li><li>done = every representation agreement template completes with the firm as the only party filling incident date and location, and a signed copy lands in the matter\u2019s Dropbox folder with nobody at Flow touching it.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
+      },
+      "nullReason": null,
+      "priority": 4,
+      "createdAt": "2026-09-05T17:20:01.562429+00:00"
+    },
+    {
+      "id": "medstation-website-video-footage",
+      "title": "Website Video",
+      "note": "New information on the Video item 12981268921, created 4 September with only the first footage folder. Ana Caroline shared a second folder the same afternoon and confirmed the two are all the client has. Drafted as an update rather than a new item. Section 19b returned no match. Video board default assignee is Sohib alone per section 8.",
+      "status": "ready",
+      "board": "Video",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: Paulo FlowCo, 9/4",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12981268921",
+        "itemName": "Website Video",
+        "blocked": false,
+        "needsNaz": false,
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> This item was opened on 4 September to cut a 16 by 9 video for the MedStation website from a folder of clinic footage. A second folder came through the same afternoon, along with confirmation that these two folders are everything the client actually has.</li><li><strong>The second folder.</strong> Ana Caroline shared a further Drive folder of clinic footage on 4 September at drive.google.com/drive/folders/11tiErcIeACPjoUy2uPnbUUXizJBn6YCT and said these are the only ones they have. Taken with the folder already on this item, that is the complete source material for the edit.</li><li><strong>Why it matters.</strong> The edit was handed over with one folder only. Cutting from half the available footage produces either a weaker video than the material supports, or a request for a reshoot that is not actually needed.</li><li><strong>Constraint.</strong> <strong>Do not</strong> request additional footage before both folders have been reviewed. The client has already confirmed there is no more, so a further request costs goodwill and gets the same answer.</li><li><strong>Dependencies.</strong> None, both folders are shared and accessible. This does not wait on the website hosting question, the video is deliverable independently of where the site ends up.</li><li>done = the website video is cut from both folders, delivered in 16 by 9, and posted on this item for review.</li></ul><p><a class=\"mention\" data-mention-id=\"69662034\" data-mention-type=\"User\">@Sohib Boundaoui</a></p>"
+      },
+      "nullReason": null,
+      "priority": 4,
+      "createdAt": "2026-09-05T17:20:01.562429+00:00"
     }
   ]
 }
