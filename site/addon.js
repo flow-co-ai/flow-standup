@@ -373,6 +373,51 @@ function foRenderListSection(key, label, ids, byId) {
   </div>`;
 }
 
+// --- age pill ------------------------------------------------------------
+// Age replaced the status pill on the row (status is carried by the section
+// headers now), so it has to READ as a pill, not as another muted label. At
+// 9px/0.35 alpha it was indistinguishable from .fo-row-board sitting right
+// next to it and scanned as one mumbled string.
+//
+// Tiers reuse thresholds and colours the list already speaks in: 3 days is the
+// same staleness line foIsStuck() uses, 7 borrows HOT's orange (urgent but
+// actionable), 14 borrows STUCK's red (needs a decision, not a nudge). Fresh
+// cards stay deliberately quiet — the point is that old cards get louder, not
+// that every card shouts.
+//
+// Tiers key off foRawAgeDays(), not foItemAgeDays() -- the latter is gated to
+// null below FO_STALE_DAYS (that's a staleness flag, not a display value) and
+// would collapse every card under 4 days old into a single "unknown" tier,
+// which defeats "how behind is the queue" for exactly the cards where that
+// matters most.
+const FO_AGE_TIERS = [
+  { min: 14, cls: 'fo-age-critical' },
+  { min: 7,  cls: 'fo-age-high'     },
+  { min: 3,  cls: 'fo-age-warn'     },
+  { min: 1,  cls: 'fo-age-ok'       },
+  { min: 0,  cls: 'fo-age-fresh'    },
+];
+
+function foAgeTierClass(days) {
+  if (days === null) return 'fo-age-unknown';
+  return (FO_AGE_TIERS.find(t => days >= t.min) || FO_AGE_TIERS[4]).cls;
+}
+
+// "TODAY" reads better than "0D" and is the one case worth spelling out.
+function foAgeLabel(item) {
+  const days = foRawAgeDays(item);
+  if (days === null) return 'AGE?';
+  if (days === 0) return 'TODAY';
+  return `${days}D`;
+}
+
+function foAgePill(item) {
+  const days = foRawAgeDays(item);
+  const title = item.createdAt ? `Drafted ${item.createdAt}` : 'Draft date unknown';
+  return `<span class="fo-age-pill ${foAgeTierClass(days)}" title="${foEscape(title)}">`
+       + `${foEscape(foAgeLabel(item))}</span>`;
+}
+
 function foListRow(item, section) {
   const isSelected = item.id === foSelectedId;
   const p = foPriority(item);
@@ -399,7 +444,7 @@ function foListRow(item, section) {
   const stuckDays = foIsStuck(item) ? foItemAgeDays(item) : null;
   const agePill = stuckDays !== null
     ? `<span class="fo-stuck-pill" title="No payload -- can't be sent, ${stuckDays} days old">STUCK ${stuckDays}d</span>`
-    : `<span class="fo-row-age" title="Drafted ${foEscape(item.createdAt || '')}">${foEscape(foAgeLabel(item))}</span>`;
+    : foAgePill(item);
 
   return `<div class="${cls}" data-id="${foEscape(item.id)}" onclick="foSelectItem('${foEscape(item.id)}')">
     <div class="fo-row-left">
@@ -466,7 +511,7 @@ function foRenderDetailPane(item) {
   const ageDays = foItemAgeDays(item);
   const ageBadge = foIsStuck(item)
     ? `<span class="fo-stuck-pill" title="Drafted ${foEscape(item.createdAt)} -- no payload, can't be sent">STUCK -- ${ageDays} days, no payload</span>`
-    : `<span class="fo-muted-label" title="Drafted ${foEscape(item.createdAt || '')}">${foEscape(foAgeLabel(item))}</span>`;
+    : foAgePill(item);
 
   const chatMsgCount = (foItemChat[item.id] || []).length;
   const chatLog = foRenderChatMessages(item.id);
@@ -562,14 +607,6 @@ function foRawAgeDays(item) {
   const created = item.createdAt ? new Date(item.createdAt).getTime() : NaN;
   if (!Number.isFinite(created)) return null;
   return Math.floor((Date.now() - created) / 86400000);
-}
-
-// Single formatting source for "how long has this been sitting" -- foListRow
-// and foRenderDetailPane both call this so the row and the detail pane can
-// never disagree on the number or the wording.
-function foAgeLabel(item) {
-  const days = foRawAgeDays(item);
-  return days === null ? "new" : `${days}d old`;
 }
 
 // A stale card (foItemAgeDays !== null) with no payload can never be sent as

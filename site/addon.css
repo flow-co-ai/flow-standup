@@ -73,6 +73,24 @@
   border-radius: 999px; padding: 1px 6px;
 }
 
+/* Age pill — replaces the old status pill on the row. Same geometry as
+   .fo-hot-pill / .fo-stuck-pill so the list's right edge keeps one rhythm;
+   only the colour moves with age. */
+.fo-age-pill {
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 8.5px; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 999px; padding: 1px 6px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.fo-age-fresh    { background: rgba(198,208,147,0.14); color: #C6D093; }
+.fo-age-ok       { background: rgba(220,216,200,0.10); color: rgba(220,216,200,0.55); }
+.fo-age-warn     { background: rgba(214,180,92,0.16);  color: #D6B45C; }
+.fo-age-high     { background: rgba(222,110,76,0.18);  color: #DE6E4C; }
+.fo-age-critical { background: rgba(232,101,125,0.18); color: #E8657D; }
+.fo-age-unknown  { background: rgba(220,216,200,0.08); color: rgba(220,216,200,0.4); }
+
 /* ── list row ────────────────────────────────────────────────────────────── */
 .fo-list-row {
   display: flex;
@@ -113,11 +131,6 @@
   font-family: var(--mono, 'JetBrains Mono', monospace);
   font-size: 9px; color: rgba(220,216,200,0.3);
   white-space: nowrap;
-}
-.fo-row-age {
-  font-family: var(--mono, 'JetBrains Mono', monospace);
-  font-size: 9px; letter-spacing: 0.04em;
-  color: rgba(220,216,200,0.35); white-space: nowrap;
 }
 .fo-unread-dot {
   width: 6px; height: 6px; border-radius: 50%;
