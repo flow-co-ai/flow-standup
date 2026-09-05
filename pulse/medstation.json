@@ -4,19 +4,19 @@
   "slug": "medstation",
   "name": "MedStation",
   "brief": {
-    "date": "2026-09-04",
+    "date": "2026-09-05",
     "headlines": [
       {
-        "text": "CRM QA complete across all seven items",
-        "tone": "win"
-      },
-      {
-        "text": "GBP updates published live by Hashir",
-        "tone": "win"
-      },
-      {
-        "text": "Phone Consolidation & Weston Pilot awaiting live call tests",
+        "text": "GHL Weston walkthrough today at 11am",
         "tone": "info"
+      },
+      {
+        "text": "Hosting undefined; service pages broken",
+        "tone": "shift"
+      },
+      {
+        "text": "Major CRM & web completions this week",
+        "tone": "win"
       }
     ],
     "workstreams": [
@@ -28,32 +28,33 @@
         },
         "items": [
           {
-            "state": "done",
-            "text": "Ahmed completed final QA on all seven CRM items"
+            "state": "next",
+            "text": "GHL flows & pipeline walkthrough — today 11am with Weston"
           },
           {
             "state": "blocked",
-            "text": "Phone Consolidation awaiting live carrier call tests"
-          },
-          {
-            "state": "blocked",
-            "text": "Weston Pilot sign-off pending live Ads call tests"
+            "text": "Weston location tag missing from Meta test contact (Monday item: Booking Tracking/Duplicates)"
           }
         ],
         "owners": [
-          "Ahmed Memon"
+          "Ahmed Memon",
+          "Sohib Boundaoui"
         ]
       },
       {
         "title": "MedStation - Web / SEO",
         "badge": {
-          "label": "P2 - on track",
-          "tone": "green"
+          "label": "P1 - blocked",
+          "tone": "red"
         },
         "items": [
           {
-            "state": "done",
-            "text": "Hashir published Google Business Profile updates live"
+            "state": "blocked",
+            "text": "Website hosting account undefined — deployment fully blocked"
+          },
+          {
+            "state": "blocked",
+            "text": "Service page buttons broken; book.medstation.com subdomain down"
           },
           {
             "state": "done",
@@ -61,7 +62,7 @@
           },
           {
             "state": "done",
-            "text": "New WordPress staging site built and ready for domain migration"
+            "text": "New WordPress staging site built and ready for domain migration (Hashir Faiz)"
           }
         ],
         "owners": [
@@ -71,107 +72,104 @@
       {
         "title": "MedStation - Ads",
         "badge": {
-          "label": "P1 - on track",
-          "tone": "green"
-        },
-        "items": [
-          {
-            "state": "done",
-            "text": "Meta ads account access granted for Weston campaigns"
-          },
-          {
-            "state": "done",
-            "text": "Published Google Ads, LSA, and Meta Ads call source-tracking workflows"
-          },
-          {
-            "state": "next",
-            "text": "Meta campaign launch — scheduled 2026-09-03"
-          },
-          {
-            "state": "next",
-            "text": "LSA campaign launch — scheduled 2026-09-03"
-          }
-        ],
-        "owners": [
-          "Ahmed Memon",
-          "Jonatan Herculano"
-        ]
-      },
-      {
-        "title": "MedStation - Tracking / Analytics",
-        "badge": {
           "label": "P2 - on track",
           "tone": "green"
         },
         "items": [
           {
             "state": "done",
-            "text": "Tracking integration built on webhook and dataLayer model, fully operational"
+            "text": "Meta ads account access granted for Weston (Jonatan Herculano)"
           },
           {
             "state": "done",
-            "text": "Webhook errors on website forms corrected"
+            "text": "Google Ads, LSA, and Meta call-source tracking workflows published (Ahmed Memon)"
           },
           {
-            "state": "done",
-            "text": "Google Tag Manager access granted for MedStation pixel setup"
+            "state": "queued",
+            "text": "Meta campaign launch — scheduled 2026-09-04"
+          },
+          {
+            "state": "queued",
+            "text": "Google & LSA campaign launch — scheduled 2026-09-04"
           }
         ],
         "owners": [
-          "Rafael Rolim",
-          "Sohib Boundaoui"
+          "Ahmed Memon",
+          "Jonatan Herculano"
         ]
       }
     ],
-    "waiting_on_client": [],
+    "waiting_on_client": [
+      {
+        "item": "Website hosting account decision — undefined, blocking deployment",
+        "who": "Mateus",
+        "since": "9/4"
+      }
+    ],
     "launch_gate": {
-      "title": "Launch gate - clear before Weston Pilot goes live",
+      "title": "Launch gate - clear before ads & site go live",
       "items": [
         {
-          "text": "Live carrier call tests completed for Phone Consolidation",
+          "text": "Website hosting account defined",
           "done": false
         },
         {
-          "text": "Live Ads call tests completed for Weston Pilot sign-off",
+          "text": "Service pages & book.medstation.com subdomain restored",
           "done": false
         },
         {
-          "text": "WhatsApp Business Platform activation confirmed (24-hr window)",
+          "text": "Weston location tag added to Meta test contact",
           "done": false
+        },
+        {
+          "text": "GHL walkthrough completed with Weston team",
+          "done": false
+        },
+        {
+          "text": "Meta ads account access granted",
+          "done": true
+        },
+        {
+          "text": "WhatsApp Business connected to GHL",
+          "done": true
+        },
+        {
+          "text": "Core GHL workflows (WhatsApp, routing, dedup) done for Weston",
+          "done": true
         }
       ]
     },
     "brief_v2": {
-      "verdict": "Team's move: two live call tests — Phone Consolidation and Weston Pilot — are the last gate before sign-off.",
-      "next_move": "Ahmed: complete live carrier and Ads call tests on Phone Consolidation and Weston Pilot — clears final CRM sign-off.",
+      "verdict": "Team's move on hosting and service pages; GHL walkthrough today unlocks Weston CRM go-live.",
+      "next_move": "Sohib: resolve Website Hosting account (id: 12970090689) — unblocks deployment and service pages.",
       "blocks": [
         {
-          "item": "Phone Consolidation",
-          "side": "team",
-          "who": "Ahmed Memon",
-          "last_activity": "Monday board: awaiting live carrier call tests"
+          "item": "Website Hosting [id: 12970090689]",
+          "side": "client",
+          "who": "Mateus",
+          "last_activity": "Monday flagged hosting account undefined, deployment blocked"
         },
         {
-          "item": "Weston Pilot",
+          "item": "Service Pages [id: 12971476311]",
           "side": "team",
-          "who": "Ahmed Memon",
-          "last_activity": "Monday board: sign-off pending live Ads call tests"
+          "who": "Hashir Faiz",
+          "last_activity": "Monday flagged service page buttons broken, subdomain down"
         }
       ],
       "snapshot": [
         {
           "label": "Open items",
-          "value": "14 open, all in working; Phone Consolidation and Weston Pilot awaiting live call tests",
+          "value": "16 open, all in working status; 2 blocked on hosting & service pages",
           "tone": "warn"
         },
         {
           "label": "Contract",
-          "value": "Phase 1 proof-of-concept, 3 months starting July 1; $3,500–$5,000/mo flat retainer",
+          "value": "Phase 1 proof-of-concept, Month 3 of 3, $3,500–$5,000/mo flat retainer",
           "tone": "muted"
         },
         {
           "label": "Last client word",
-          "value": "2026-09-01 — Mateus disconnected Weston WhatsApp line from Kommo for GHL migration",
+          "value": "2026-09-01 — Mateus disconnected Weston WhatsApp from Kommo for GHL migration",
           "tone": "plain"
         },
         {
@@ -180,40 +178,40 @@
           "tone": "plain"
         }
       ],
-      "history_line": "Websites launched live · Tracking integration fully operational · WhatsApp Business Platform connected to GHL"
+      "history_line": "Websites launched live · Core GHL workflows & routing done for Weston · Tracking integration fully operational"
     }
   },
   "brief_v2": {
-    "verdict": "Team's move: two live call tests — Phone Consolidation and Weston Pilot — are the last gate before sign-off.",
-    "next_move": "Ahmed: complete live carrier and Ads call tests on Phone Consolidation and Weston Pilot — clears final CRM sign-off.",
+    "verdict": "Team's move on hosting and service pages; GHL walkthrough today unlocks Weston CRM go-live.",
+    "next_move": "Sohib: resolve Website Hosting account (id: 12970090689) — unblocks deployment and service pages.",
     "blocks": [
       {
-        "item": "Phone Consolidation",
-        "side": "team",
-        "who": "Ahmed Memon",
-        "last_activity": "Monday board: awaiting live carrier call tests"
+        "item": "Website Hosting [id: 12970090689]",
+        "side": "client",
+        "who": "Mateus",
+        "last_activity": "Monday flagged hosting account undefined, deployment blocked"
       },
       {
-        "item": "Weston Pilot",
+        "item": "Service Pages [id: 12971476311]",
         "side": "team",
-        "who": "Ahmed Memon",
-        "last_activity": "Monday board: sign-off pending live Ads call tests"
+        "who": "Hashir Faiz",
+        "last_activity": "Monday flagged service page buttons broken, subdomain down"
       }
     ],
     "snapshot": [
       {
         "label": "Open items",
-        "value": "14 open, all in working; Phone Consolidation and Weston Pilot awaiting live call tests",
+        "value": "16 open, all in working status; 2 blocked on hosting & service pages",
         "tone": "warn"
       },
       {
         "label": "Contract",
-        "value": "Phase 1 proof-of-concept, 3 months starting July 1; $3,500–$5,000/mo flat retainer",
+        "value": "Phase 1 proof-of-concept, Month 3 of 3, $3,500–$5,000/mo flat retainer",
         "tone": "muted"
       },
       {
         "label": "Last client word",
-        "value": "2026-09-01 — Mateus disconnected Weston WhatsApp line from Kommo for GHL migration",
+        "value": "2026-09-01 — Mateus disconnected Weston WhatsApp from Kommo for GHL migration",
         "tone": "plain"
       },
       {
@@ -222,6 +220,6 @@
         "tone": "plain"
       }
     ],
-    "history_line": "Websites launched live · Tracking integration fully operational · WhatsApp Business Platform connected to GHL"
+    "history_line": "Websites launched live · Core GHL workflows & routing done for Weston · Tracking integration fully operational"
   }
 }

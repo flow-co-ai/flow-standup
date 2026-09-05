@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-09-04T14:41:20.253Z",
-  "date": "2026-09-04",
+  "generated_at": "2026-09-05T13:40:35.947Z",
+  "date": "2026-09-05",
   "slug": "steel-advance",
   "name": "Advance Grinding",
   "type": "leadgen",
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, meaning all 130 GBP actions (including 2 calls, 96 directions, and 32 web clicks) are coming entirely from organic presence. The biggest movement is a 60.71% drop in GBP engagement over the last 7 days versus the prior 7 days, likely driven by reduced search demand or a dip in local ranking visibility with no paid traffic to compensate.",
+  "verdict": "Paid channels (Meta and Google Ads) generated zero spend, leads, or clicks over the past 28 days, suggesting campaigns are paused or inactive. GBP drove all engagement with 130 total actions (96 directions, 32 web clicks, 2 calls), though GBP activity dropped 81.54% in the last 7 days versus the prior 7 days, likely reflecting reduced organic search demand or a listing visibility issue.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -38,7 +38,7 @@
     },
     "top_campaign": null,
     "latest_day": {
-      "date": "2026-09-03",
+      "date": "2026-09-04",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -56,7 +56,7 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -60.71,
+      "gbp_7d_pct": -81.54,
       "sc_7d_pct": null,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
@@ -65,7 +65,6 @@
     "flags": [],
     "series": {
       "dates": [
-        "2026-08-07",
         "2026-08-08",
         "2026-08-09",
         "2026-08-10",
@@ -92,7 +91,8 @@
         "2026-08-31",
         "2026-09-01",
         "2026-09-02",
-        "2026-09-03"
+        "2026-09-03",
+        "2026-09-04"
       ],
       "spend": [
         0,
@@ -215,7 +215,6 @@
         0
       ],
       "gbp_actions": [
-        0,
         3,
         0,
         1,
@@ -239,6 +238,7 @@
         10,
         1,
         11,
+        0,
         0,
         0,
         0,
@@ -404,78 +404,78 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-09-04T14:47:33.745Z",
+    "generated_at": "2026-09-05T13:46:54.097Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP cliff is real; 4 overdue SOW blockers demand human escalation now.",
+    "verdict": "GBP going dark; paid never ran; 6 SOW blockers unresolved.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "3 CRM milestones overdue since July (1st Directives, Tom call list, dedup workbook); 342-stub blocker missed Aug-31 deadline — Sales-i pipeline blocked.",
+        "text": "4 CRM milestones overdue: 1st Directives (Jul 7), Tom call list (Jul 28), dedup workbook (Jul 31), 342 stubs (Aug 31) — all unconfirmed complete.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Web/SEO root-cause fix and AGS+Forte contact pull both missed Aug-31 deadline; 2 active blockers with no logged completion event.",
+        "text": "2 additional SOW blockers overdue Aug 31: Web/SEO root cause fix and AGS + Forte outreach contact pull — both gate downstream deliverables.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "GBP actions dropped to 0 for 4 consecutive days (Aug-31 through Sep-03), versus a prior-7d average of ~5.6 actions/day — sharpest cliff in the 45-day series.",
+        "priority": 1,
+        "text": "Zero paid spend across all 28 days; Meta and Google Ads show $0 spend, 0 leads, 0 clicks — no paid efficiency can be measured.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP 7d engagement fell 60.71% vs prior 7d; 28-day total of 130 actions (only 2 calls) is the sole revenue-adjacent signal with zero paid amplification available.",
+        "text": "GBP actions collapsed to 0 for last 4 consecutive days (Sep 1–4), down from a rolling average of ~6/day Aug 8–30; -81.54% delta confirmed.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GA4, Search Console, IG reach, and all paid channels read 0 for all 28 days — no web or social traffic data available to diagnose organic-to-site conversion.",
+        "text": "GA4 sessions, Search Console clicks, and IG reach all zero for entire 45-day series — no organic web signal available to triangulate GBP drop.",
         "confidence": "confirmed",
-        "channel": "organic"
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate 342-stub reconciliation blocker immediately — Sales-i sync is dead for all unmatched accounts until resolved.",
+        "text": "Escalate 342 stub reconciliation immediately — this confirmed blocker freezes Sales-i sync for all affected accounts.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "342 Stub Reconciliation Blocker",
-        "monday_update": "The 342-stub reconciliation was due Aug-31 and has no logged completion event; Sales-i cannot push purchase data to Sugar for any of these accounts until Customer IDs are matched. Ahmed to post a status update or partial completion file to the Monday CRM board by Sep-05. Success check: rollback file posted and at least one audited batch confirmed merged by Sep-08."
+        "monday_item_name": "Resolve 342 CRM Stubs",
+        "monday_update": "The 342 stub accounts remain unreconciled past the Aug 31 deadline, blocking Sales-i from syncing data for those accounts entirely. Ahmed to prioritise the name-based match against the authoritative customer sheet this week and post audited batch files to the Monday CRM board. Success = reconciliation workbook delivered and rollback file posted by 2026-09-12. Re-check on that date."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Confirm Web/SEO root-cause fix and AGS+Forte contact pull are assigned — both Aug-31 blockers show no completion signal.",
+        "text": "Investigate GBP listing: 4 straight zero-action days after averaging 6/day — check for suspension or listing edit triggering re-review.",
         "cites": [
-          "F2"
+          "F4"
         ],
-        "monday_item_name": "Aug-31 Blockers Status Check",
-        "monday_update": "Two Aug-31 milestones — Web/SEO root-cause fix and AGS+Forte outreach contact pull — have no completion event in the data. Sohib to confirm with the responsible team member whether these are in-progress or stuck, and post an owner + revised date to Monday by Sep-05. Success check: both items have an owner, a deliverable, and a date logged before the Sep-08 re-check."
+        "monday_item_name": "Investigate GBP Listing Drop",
+        "monday_update": "GBP actions have been zero for 4 consecutive days (Sep 1–4) after averaging approximately 6 actions per day across Aug 8–30, an -81.54% weekly drop. Check Google Business Profile dashboard for any suspension notice, ownership flag, or recent edit that may have triggered a re-review. Success = listing status confirmed clean or reinstatement request submitted by 2026-09-08. Re-check on 2026-09-08."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions: 4-day zero streak (Sep-01 to Sep-03) may signal a listing issue — verify listing status by Sep-08.",
+        "text": "Watch GBP recovery over next 3 days before diagnosing cause; do not edit listing fields until status is confirmed.",
         "cites": [
-          "F3",
-          "F4"
+          "F4",
+          "F5"
         ],
-        "monday_item_name": "GBP Zero-Action Streak Watch",
-        "monday_update": "GBP actions have been zero for 4 straight days (Sep-01 through Sep-03), against a prior avg of 5.6 actions/day. This is the only lead-adjacent channel active for Advance Grinding. Check Google Business Profile for suspension flags, ownership issues, or recent edits that may have suppressed the listing. If actions remain at 0 by Sep-08, treat as a confirmed listing problem and escalate to GBP recovery as a priority fix."
+        "monday_item_name": "Watch GBP 3-Day Recovery",
+        "monday_update": "With GA4, Search Console, and IG reach all at zero, there is no cross-channel signal to distinguish a listing suspension from a seasonal demand drop. Hold all listing edits until status is confirmed to avoid resetting any pending re-review clock. Success check: if GBP actions remain at 0 on 2026-09-08, escalate to reinstatement request. Re-check date: 2026-09-08."
       }
     ],
     "next_check": "2026-09-08"
