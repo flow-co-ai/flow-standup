@@ -376,8 +376,8 @@ function foRenderListSection(key, label, ids, byId) {
 // --- age pill ------------------------------------------------------------
 // Age replaced the status pill on the row (status is carried by the section
 // headers now), so it has to READ as a pill, not as another muted label. At
-// 9px/0.35 alpha it was indistinguishable from .fo-row-board sitting right
-// next to it and scanned as one mumbled string.
+// 9px/0.35 alpha it was indistinguishable from the muted labels around it and
+// scanned as one mumbled string.
 //
 // Tiers reuse thresholds and colours the list already speaks in: 3 days is the
 // same staleness line foIsStuck() uses, 7 borrows HOT's orange (urgent but
@@ -431,8 +431,6 @@ function foListRow(item, section) {
     item.isSub ? 'fo-row-sub' : '',
   ].filter(Boolean).join(' ');
 
-  const boardLabel = item.board
-    ? `<span class="fo-row-board">${foEscape(item.board)}</span>` : '';
   const unreadDot = item.unread
     ? '<span class="fo-unread-dot" aria-label="unread"></span>' : '';
   const subMarker = item.isSub
@@ -454,7 +452,6 @@ function foListRow(item, section) {
     </div>
     <div class="fo-row-right">
       ${agePill}
-      ${boardLabel}
       ${unreadDot}
     </div>
   </div>`;
