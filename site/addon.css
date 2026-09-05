@@ -14,7 +14,7 @@
 /* ── master-detail shell ─────────────────────────────────────────────────── */
 .fo-shell {
   display: grid;
-  grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+  grid-template-columns: minmax(320px, 460px) minmax(0, 1fr);
   gap: 18px;
   align-items: start;
 }
@@ -23,7 +23,7 @@
 .fo-list {
   position: sticky;
   top: 20px;
-  max-height: calc(100vh - 260px);
+  max-height: calc(100vh - 200px);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -45,18 +45,18 @@
 }
 .fo-list-client {
   font-family: var(--mono, 'JetBrains Mono', monospace);
-  font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+  font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
   color: var(--cream, #EDE9DA);
   flex: 1; min-width: 0;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .fo-list-count {
   font-family: var(--mono, 'JetBrains Mono', monospace);
-  font-size: 9.5px; color: rgba(220,216,200,0.35);
+  font-size: 10.5px; color: rgba(220,216,200,0.35);
 }
 .fo-hot-pill {
   font-family: var(--mono, 'JetBrains Mono', monospace);
-  font-size: 8.5px; font-weight: 600; letter-spacing: 0.1em;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
   text-transform: uppercase;
   background: rgba(222,110,76,0.18); color: #DE6E4C;
   border-radius: 999px; padding: 1px 6px;
@@ -67,7 +67,7 @@
    as merely urgent-but-actionable the way HOT does. */
 .fo-stuck-pill {
   font-family: var(--mono, 'JetBrains Mono', monospace);
-  font-size: 8.5px; font-weight: 600; letter-spacing: 0.1em;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
   text-transform: uppercase;
   background: rgba(232,101,125,0.16); color: #E8657D;
   border-radius: 999px; padding: 1px 6px;
@@ -78,7 +78,7 @@
    only the colour moves with age. */
 .fo-age-pill {
   font-family: var(--mono, 'JetBrains Mono', monospace);
-  font-size: 8.5px; font-weight: 600; letter-spacing: 0.1em;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
   text-transform: uppercase;
   border-radius: 999px; padding: 1px 6px;
   white-space: nowrap;
@@ -120,7 +120,7 @@
   font-size: 10px; color: rgba(220,216,200,0.35); flex-shrink: 0;
 }
 .fo-row-title {
-  font-size: 12.5px; color: rgba(220,216,200,0.85);
+  font-size: 14.5px; color: rgba(220,216,200,0.85);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   min-width: 0;
 }
@@ -137,7 +137,7 @@
 .fo-list-section-toggle {
   background: transparent; border: none;
   font-family: var(--mono, 'JetBrains Mono', monospace);
-  font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
+  font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
   color: rgba(220,216,200,0.4); cursor: pointer;
   padding: 4px 8px; width: 100%; text-align: left;
   border-radius: 6px; transition: color 0.12s;
@@ -261,7 +261,7 @@
 }
 .fo-det-header-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .fo-det-title {
-  font-size: 15px; font-weight: 500; color: var(--cream, #EDE9DA); line-height: 1.4;
+  font-size: 17px; font-weight: 500; color: var(--cream, #EDE9DA); line-height: 1.4;
 }
 
 .fo-det-priority {
@@ -297,7 +297,7 @@
 
 .fo-priority {
   font-family: var(--mono, 'JetBrains Mono', monospace);
-  font-size: 10px; font-weight: 600; letter-spacing: 0.04em;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
   padding: 3px 8px; border-radius: 6px; white-space: nowrap;
 }
 .fo-priority-1, .fo-priority-2 { background: rgba(223,47,74,0.16); color: #E8657D; }
@@ -405,7 +405,7 @@
 /* ── update body ─────────────────────────────────────────────────────────── */
 .fo-update-body {
   font-family: var(--sans, 'Space Grotesk', sans-serif);
-  font-size: 12.5px; line-height: 1.55; color: rgba(220,216,200,0.78);
+  font-size: 14px; line-height: 1.55; color: rgba(220,216,200,0.78);
   border-radius: 6px; padding: 3px 6px; margin: 0 -6px;
   cursor: text; outline: none; transition: background 0.12s, box-shadow 0.12s;
 }
@@ -439,7 +439,7 @@
 .fo-itemchat-log:not(:empty) { margin-bottom: 8px; }
 .fo-itemchat-msg {
   padding: 6px 10px; border-radius: 8px;
-  font-size: 12.5px; max-width: 88%; line-height: 1.5; white-space: pre-wrap;
+  font-size: 13.5px; max-width: 88%; line-height: 1.5; white-space: pre-wrap;
 }
 .fo-itemchat-msg.user { align-self: flex-end; background: #141A14; border: 1px solid rgba(237,233,220,0.1); color: #EDE9DA; }
 .fo-itemchat-msg.assistant { align-self: flex-start; background: rgba(146,155,105,0.12); color: #DCD8C8; }
@@ -448,7 +448,7 @@
 .fo-itemchat-form input {
   flex: 1; background: #0C100C;
   border: 1px solid rgba(237,233,220,0.12); border-radius: 8px;
-  padding: 6px 10px; font-size: 12.5px; color: #EDE9DA;
+  padding: 6px 10px; font-size: 13.5px; color: #EDE9DA;
   font-family: var(--sans, 'Space Grotesk', sans-serif);
 }
 .fo-itemchat-form input::placeholder { color: rgba(220,216,200,0.35); }
