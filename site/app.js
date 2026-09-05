@@ -91,7 +91,6 @@ const REPO_NAME    = 'flow-standup';
 
 const KEY_PASSCODE = 'flowops-passcode';
 const localChecksKey = (weekOf) => `flowops-v4-${weekOf}`;
-const KEY_DISMISSED_ALERTS = 'flowops-dismissed-alerts';
 
 // ── state ─────────────────────────────────────────────────────────────────────
 
@@ -103,7 +102,6 @@ let copiedId  = null;
 let copyTimer = null;
 let saveTimer = null;
 let historyWeekExpanded = {}; // { `${clientName}::${isoWeek}`: true } — collapsed-by-default per card per week
-let dismissedAlerts   = loadDismissedAlerts(); // Set of alert keys already seen
 
 // ── card overrides (manual reorder / hide / rename / edit / add) ─────────────
 //
@@ -175,20 +173,6 @@ function saveLocal() {
 function getPasscode()        { return localStorage.getItem(KEY_PASSCODE) || null; }
 function storePasscode(p)     { localStorage.setItem(KEY_PASSCODE, p); }
 function clearStoredPasscode(){ localStorage.removeItem(KEY_PASSCODE); }
-
-// --- dismissed auto-completed alerts (localStorage) ---------------------------
-
-function loadDismissedAlerts() {
-  try { return new Set(JSON.parse(localStorage.getItem(KEY_DISMISSED_ALERTS) || '[]')); }
-  catch { return new Set(); }
-}
-function saveDismissedAlerts(set) {
-  try { localStorage.setItem(KEY_DISMISSED_ALERTS, JSON.stringify([...set])); } catch {}
-}
-// item+board+timestamp is stable across reloads and unique per real alert —
-// dismissing marks exactly the alerts shown at dismiss time, so a NEW alert
-// added later (different timestamp) still brings the banner back.
-function alertKey(a) { return `${a.item}|${a.board}|${a.timestamp}`; }
 
 // --- remote read (public, no auth) -------------------------------------------
 
@@ -1491,53 +1475,6 @@ function renderFooter() {
   }
 }
 
-// ── auto-completed alert banner (page-level, not per-card) ────────────────────
-//
-// generate.py's completion tracker can auto-mark an item Done on Monday from
-// comms evidence alone — GitHub Actions has no way to ping anyone directly,
-// so this banner is the notification channel for that specifically. It stays
-// dismissed (per-alert, via localStorage) once seen, but a genuinely NEW
-// alert (different item/board/timestamp) brings it back.
-
-function renderAlertBanner() {
-  const container = document.getElementById('alert-banner-container');
-  if (!container) return;
-  container.innerHTML = '';
-
-  const alerts = (standup?.auto_completed_alerts || []).filter(a => !dismissedAlerts.has(alertKey(a)));
-  if (!alerts.length) return;
-
-  const list = el('ul', { class: 'alert-banner-list' },
-    ...alerts.map(a => el('li', { class: 'alert-banner-item' },
-      el('span', { class: 'alert-banner-text', text: a.item || '' }),
-      ' ',
-      el('span', {
-        class: 'alert-banner-meta',
-        text: `(${a.board || 'Unknown'} · ${a.evidence_source || ''} · ${fmtTimestamp(a.timestamp)})`,
-      }),
-    )),
-  );
-
-  const banner = el('div', { class: 'alert-banner', role: 'alert' },
-    el('div', { class: 'alert-banner-header' },
-      el('span', { class: 'alert-banner-title', text: '⚠️ Auto-marked Done on Monday' }),
-      el('button', {
-        class: 'alert-banner-dismiss',
-        type: 'button',
-        'aria-label': 'Dismiss',
-        html: '&#10005;',
-        onclick: () => {
-          alerts.forEach(a => dismissedAlerts.add(alertKey(a)));
-          saveDismissedAlerts(dismissedAlerts);
-          renderAlertBanner();
-        },
-      }),
-    ),
-    list,
-  );
-  container.append(banner);
-}
-
 // ── aggregate ops-health trend (page-level, above the client grid) ────────────
 //
 // One graph for the whole roster, not per-client -- "is the team's overall
@@ -1912,7 +1849,6 @@ async function init() {
   // 5. First render with local state
   render();
   renderFooter();
-  renderAlertBanner();
 
   // 6. Fetch remote checks + card overrides (each replaces local/default and
   //    re-renders on arrival; independent of each other, so run in parallel).

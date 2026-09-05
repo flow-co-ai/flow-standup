@@ -45,8 +45,8 @@
 }
 .fo-list-client {
   font-family: var(--mono, 'JetBrains Mono', monospace);
-  font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
-  color: var(--cream-dim, rgba(237,233,218,0.55));
+  font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--cream, #EDE9DA);
   flex: 1; min-width: 0;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
@@ -114,10 +114,10 @@
   font-size: 9px; color: rgba(220,216,200,0.3);
   white-space: nowrap;
 }
-.fo-row-status {
+.fo-row-age {
   font-family: var(--mono, 'JetBrains Mono', monospace);
-  font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em;
-  padding: 2px 6px; border-radius: 4px; white-space: nowrap;
+  font-size: 9px; letter-spacing: 0.04em;
+  color: rgba(220,216,200,0.35); white-space: nowrap;
 }
 .fo-unread-dot {
   width: 6px; height: 6px; border-radius: 50%;
@@ -136,15 +136,6 @@
 }
 .fo-list-section-toggle:hover { color: var(--olive-bright, #C6D093); }
 .fo-list-section-body[hidden] { display: none; }
-
-/* ── prospects ───────────────────────────────────────────────────────────── */
-.fo-list-prospects { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--hairline, rgba(237,233,218,0.08)); }
-.fo-list-prospect-label {
-  font-family: var(--mono, 'JetBrains Mono', monospace);
-  font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.08em;
-  color: rgba(220,216,200,0.35); padding: 3px 8px;
-}
-.fo-list-prospect-group { margin-bottom: 6px; }
 
 /* ── empty + error + skeleton ────────────────────────────────────────────── */
 .fo-list-empty {

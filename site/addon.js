@@ -24,7 +24,6 @@ const NOT_DRAFTED_STATUSES = ["blocked", "exists"];
 const foSectionExpanded = {
   handled:    false,
   mondayed:   false,
-  dismissed:  false,
   notDrafted: false,
   other:      false,
 };
@@ -36,6 +35,16 @@ const foSectionExpanded = {
 // away, then reconciles with whatever the server actually persisted.
 let foItems = [];
 let foSelectedId = null;
+
+// Stable structural snapshot of the list pane -- which client group or
+// section each card sits in, and its position within it -- established once
+// by foComputeLayout() (explicit refresh: page load, gate unlock, the retry
+// button) and left untouched by every other render. Acting on a card, or a
+// background foLoadQueue(), only ever merges into this via foMergeLayout():
+// existing cards keep their slot, brand-new ones append. This is what keeps
+// card position stable for the session even as status/priority/etc change
+// underneath it -- see foRenderFromItems.
+let foLayout = null;
 
 // Board/group dropdown options -- same source of truth the pipeline itself
 // routes with (lib/monday.js's BOARD_LABEL_IDS/CLIENT_GROUPS), returned
@@ -165,23 +174,79 @@ function foUpdatePreview(u) {
 // the first click fires so there's only ever one write in flight per item.
 const foPending = new Set();
 
-function foRenderFromItems(items) {
-  // A dismissed prospect keeps whatever status it already had (still
-  // 'confirm', typically) -- dismissed is checked FIRST so it never also
-  // counts as active just because its status hasn't changed.
-  const active     = items.filter(it => !it.mondayItemId && !it.dismissed && ACTIVE_STATUSES.includes(it.status));
-  const handled    = items.filter(it => !it.mondayItemId && !it.dismissed && HANDLED_STATUSES.includes(it.status));
-  const mondayed   = items.filter(it => it.mondayItemId || MONDAYED_STATUSES.includes(it.status));
-  const dismissed  = items.filter(it => it.dismissed && !it.mondayItemId);
-  const notDrafted = items.filter(it => !it.mondayItemId && !it.dismissed && NOT_DRAFTED_STATUSES.includes(it.status));
+// Which region of the list pane a card belongs to -- a client group (active,
+// actionable drafts) or one of the flat catch-all sections. Anything not
+// explicitly claimed lands in 'other' (raw status shown there), so a new/
+// unknown status vocabulary can't silently swallow the queue, and a client-
+// less active card (shouldn't happen now that the drafter no longer creates
+// prospect cards) doesn't get dropped either.
+function foClassifyItem(item) {
+  if (item.mondayItemId || MONDAYED_STATUSES.includes(item.status)) return { region: "mondayed" };
+  if (HANDLED_STATUSES.includes(item.status)) return { region: "handled" };
+  if (NOT_DRAFTED_STATUSES.includes(item.status)) return { region: "notDrafted" };
+  if (ACTIVE_STATUSES.includes(item.status) && item.group) return { region: "client", client: item.group };
+  return { region: "other" };
+}
 
-  // Catch-all so no item is ever invisible again. Anything the buckets above
-  // didn't claim lands here, with its raw status shown, so a new/unknown
-  // status vocabulary can't silently swallow the queue.
-  const claimed = new Set(
-    [...active, ...handled, ...mondayed, ...dismissed, ...notDrafted].map(it => it.id)
-  );
-  const other = items.filter(it => !claimed.has(it.id));
+// Full bucketing + sort from scratch -- same grouping/ordering foRenderFromItems
+// always used to do inline, now pulled out so it only ever runs on an EXPLICIT
+// refresh (see foRenderFromItems/foMergeLayout).
+function foComputeLayout(items) {
+  const buckets = { mondayed: [], handled: [], notDrafted: [], other: [], client: [] };
+  for (const it of items) buckets[foClassifyItem(it).region].push(it);
+
+  const clientGroups = foGroupByClient(buckets.client)
+    .map(([client, list]) => ({ client, ids: list.map(it => it.id) }));
+
+  return {
+    clientGroups,
+    sections: {
+      handled:    buckets.handled.map(it => it.id),
+      mondayed:   buckets.mondayed.map(it => it.id),
+      notDrafted: buckets.notDrafted.map(it => it.id),
+      other:      buckets.other.map(it => it.id),
+    },
+  };
+}
+
+// Reconciles foLayout with the latest item data WITHOUT re-sorting or
+// re-sectioning anything that's already placed -- a card that changed status
+// (sent/done/ignored/etc) stays exactly where it was until the next explicit
+// refresh. Only two things can happen: an id that no longer exists server-side
+// is dropped, and an id that's genuinely new gets appended to wherever it
+// currently classifies (new client group appended at the end too, if needed).
+function foMergeLayout(items) {
+  if (!foLayout) { foLayout = foComputeLayout(items); return; }
+
+  const exists = new Set(items.map(it => it.id));
+
+  foLayout.clientGroups = foLayout.clientGroups
+    .map(g => ({ client: g.client, ids: g.ids.filter(id => exists.has(id)) }))
+    .filter(g => g.ids.length);
+  for (const key of Object.keys(foLayout.sections)) {
+    foLayout.sections[key] = foLayout.sections[key].filter(id => exists.has(id));
+  }
+
+  const known = new Set();
+  for (const g of foLayout.clientGroups) for (const id of g.ids) known.add(id);
+  for (const key of Object.keys(foLayout.sections)) for (const id of foLayout.sections[key]) known.add(id);
+
+  for (const it of items) {
+    if (known.has(it.id)) continue;
+    const c = foClassifyItem(it);
+    if (c.region === "client") {
+      let g = foLayout.clientGroups.find(g => g.client === c.client);
+      if (!g) { g = { client: c.client, ids: [] }; foLayout.clientGroups.push(g); }
+      g.ids.push(it.id);
+    } else {
+      foLayout.sections[c.region].push(it.id);
+    }
+  }
+}
+
+function foRenderFromItems(items, opts = {}) {
+  if (opts.recomputeLayout || !foLayout) foLayout = foComputeLayout(items);
+  else foMergeLayout(items);
 
   if (foSelectedId && !items.find(it => it.id === foSelectedId)) foSelectedId = null;
 
@@ -190,9 +255,16 @@ function foRenderFromItems(items) {
 
   document.getElementById("fo-queue-cards").innerHTML = `
     <div class="fo-shell${foSelectedId ? ' fo-detail-visible' : ''}">
-      <div class="fo-list">${foRenderListPane(active, handled, mondayed, dismissed, notDrafted, other)}</div>
+      <div class="fo-list">${foRenderListPane(items)}</div>
       <div class="fo-detail">${detailHtml}</div>
     </div>`;
+
+  // Chat is open by default (see foRenderDetailPane's <details open>) --
+  // land scrolled to the latest message rather than making that a second click too.
+  if (selectedItem) {
+    const log = document.getElementById(`fo-chat-log-${selectedItem.id}`);
+    if (log) log.scrollTop = log.scrollHeight;
+  }
 }
 
 function foSelectItem(id) {
@@ -242,71 +314,61 @@ function foRenderSkeleton() {
 
 // ── list pane rendering ───────────────────────────────────────────────────────
 
-function foRenderListPane(active, handled, mondayed, dismissed, notDrafted, other) {
-  notDrafted = notDrafted || [];
-  other      = other      || [];
-  dismissed  = dismissed  || [];
-
-  const activeReal      = active.filter(it => !!it.group);
-  const activeProspects = active.filter(it => !it.group);
+// Renders strictly from foLayout's frozen client-group/section membership and
+// order -- current item data (via byId) only ever changes how a card LOOKS
+// (status styling, age, handled treatment), never where it sits. See
+// foRenderFromItems/foComputeLayout/foMergeLayout for how that layout is kept
+// stable across everything except an explicit refresh.
+function foRenderListPane(items) {
+  const byId = new Map(items.map(it => [it.id, it]));
 
   let html = '';
+  let totalKnown = 0;
 
-  if (activeReal.length) {
-    for (const [client, items] of foGroupByClient(activeReal)) {
-      const hasHot = items.some(it => foPriority(it) <= 2);
-      html += `<div class="fo-list-group">
-        <div class="fo-list-group-header">
-          <span class="fo-list-client">${foEscape(client)}</span>
-          <span class="fo-list-count">${items.length}</span>
-          ${hasHot ? '<span class="fo-hot-pill">HOT</span>' : ''}
-        </div>
-        ${items.map(it => foListRow(it, 'active')).join('')}
-      </div>`;
-    }
-  }
-
-  if (activeProspects.length) {
-    html += `<div class="fo-list-group fo-list-prospects">
-      <div class="fo-list-group-header"><span class="fo-list-client">Potential clients</span></div>
-      ${foGroupByProspect(activeProspects).map(([name, items]) =>
-        `<div class="fo-list-prospect-group">
-          <div class="fo-list-prospect-label">${foEscape(name)} <span class="fo-list-count">${items.length}</span></div>
-          ${items.map(it => foListRow(it, 'active')).join('')}
-        </div>`
-      ).join('')}
+  for (const group of foLayout.clientGroups) {
+    const ids = group.ids.filter(id => byId.has(id));
+    if (!ids.length) continue;
+    totalKnown += ids.length;
+    const hasHot = ids.some(id => foPriority(byId.get(id)) <= 2);
+    html += `<div class="fo-list-group">
+      <div class="fo-list-group-header">
+        <span class="fo-list-client">${foEscape(group.client)}</span>
+        <span class="fo-list-count">${ids.length}</span>
+        ${hasHot ? '<span class="fo-hot-pill">HOT</span>' : ''}
+      </div>
+      ${ids.map(id => foListRow(byId.get(id), 'active')).join('')}
     </div>`;
   }
+
+  for (const key of Object.keys(foLayout.sections)) totalKnown += foLayout.sections[key].length;
 
   // Empty-state only fires when the queue is genuinely empty. Previously it
   // fired when just the active bucket was empty, which was misleading once
   // "blocked"/"exists"/unknown-status items existed but silently rendered
   // nowhere.
-  const totalCount = active.length + handled.length + mondayed.length
-    + dismissed.length + notDrafted.length + other.length;
-  if (!activeReal.length && !activeProspects.length && totalCount === 0) {
+  if (totalKnown === 0) {
     html += `<div class="fo-list-empty">nothing waiting on you.<br>
-      <span class="fo-list-empty-sub">${handled.length} handled · ${mondayed.length} mondayed</span>
+      <span class="fo-list-empty-sub">${foLayout.sections.handled.length} handled · ${foLayout.sections.mondayed.length} mondayed</span>
     </div>`;
   }
 
-  html += foRenderListSection('handled',    'handled',          handled);
-  html += foRenderListSection('mondayed',   'mondayed',         mondayed);
-  html += foRenderListSection('notDrafted', 'NOT DRAFTED',      notDrafted);
-  html += foRenderListSection('dismissed',  'hidden prospects', dismissed);
-  html += foRenderListSection('other',      'OTHER',            other);
+  html += foRenderListSection('handled',    'handled',     foLayout.sections.handled,    byId);
+  html += foRenderListSection('mondayed',   'mondayed',    foLayout.sections.mondayed,   byId);
+  html += foRenderListSection('notDrafted', 'NOT DRAFTED', foLayout.sections.notDrafted, byId);
+  html += foRenderListSection('other',      'OTHER',       foLayout.sections.other,      byId);
 
   return html;
 }
 
-function foRenderListSection(key, label, items) {
+function foRenderListSection(key, label, ids, byId) {
   const expanded = foSectionExpanded[key];
+  ids = ids.filter(id => byId.has(id));
   return `<div class="fo-list-section">
-    <button class="fo-list-section-toggle" onclick="foToggleSection('${key}')">
-      ${expanded ? '▾' : '▸'} ${label} (${items.length})
+    <button class="fo-list-section-toggle" data-section="${key}" data-label="${foEscape(label)}" data-count="${ids.length}" onclick="foToggleSection('${key}')">
+      ${expanded ? '▾' : '▸'} ${foEscape(label)} (${ids.length})
     </button>
-    <div class="fo-list-section-body" ${expanded ? '' : 'hidden'}>
-      ${items.map(it => foListRow(it, key)).join('')}
+    <div class="fo-list-section-body" data-section="${key}" ${expanded ? '' : 'hidden'}>
+      ${ids.map(id => foListRow(byId.get(id), key)).join('')}
     </div>
   </div>`;
 }
@@ -316,7 +378,6 @@ function foListRow(item, section) {
   const p = foPriority(item);
   const nameRow = item.payload ? foMondayNameRow(item) : null;
   const title = nameRow ? nameRow.value : (item.title || item.sourceLabel || '(untitled)');
-  const statusKey = item.status || 'confirm';
 
   const cls = [
     'fo-list-row',
@@ -331,9 +392,14 @@ function foListRow(item, section) {
     ? '<span class="fo-unread-dot" aria-label="unread"></span>' : '';
   const subMarker = item.isSub
     ? '<span class="fo-sub-marker">↳</span>' : '';
+  // Age replaces the status pill here -- status is still visible via which
+  // section a card sits in, plus the detail pane's own badge. Never both a
+  // stuck pill AND a plain age pill on the same row -- the stuck pill already
+  // carries the age itself.
   const stuckDays = foIsStuck(item) ? foItemAgeDays(item) : null;
-  const stuckPill = stuckDays !== null
-    ? `<span class="fo-stuck-pill" title="No payload -- can't be sent, ${stuckDays} days old">STUCK ${stuckDays}d</span>` : '';
+  const agePill = stuckDays !== null
+    ? `<span class="fo-stuck-pill" title="No payload -- can't be sent, ${stuckDays} days old">STUCK ${stuckDays}d</span>`
+    : `<span class="fo-row-age" title="Drafted ${foEscape(item.createdAt || '')}">${foEscape(foAgeLabel(item))}</span>`;
 
   return `<div class="${cls}" data-id="${foEscape(item.id)}" onclick="foSelectItem('${foEscape(item.id)}')">
     <div class="fo-row-left">
@@ -342,9 +408,8 @@ function foListRow(item, section) {
       <span class="fo-row-title">${foEscape(title)}</span>
     </div>
     <div class="fo-row-right">
-      ${stuckPill}
+      ${agePill}
       ${boardLabel}
-      <span class="fo-row-status fo-b-${foEscape(statusKey)}">${foEscape(statusKey)}</span>
       ${unreadDot}
     </div>
   </div>`;
@@ -365,7 +430,6 @@ function foRenderDetailPane(item) {
   const nameRow   = item.payload ? foMondayNameRow(item) : null;
   const title     = nameRow ? nameRow.value : (item.title || item.sourceLabel || '(untitled)');
   const section   = item.mondayItemId ? 'mondayed'
-    : item.dismissed ? 'dismissed'
     : HANDLED_STATUSES.includes(item.status) ? 'handled' : 'active';
 
   const origin = item.sourceLabel
@@ -382,28 +446,14 @@ function foRenderDetailPane(item) {
   let actionsHtml;
   if (section === 'mondayed') {
     actionsHtml = `<span class="fo-muted-label">sent to Monday${item.mondayItemId ? ` (item ${foEscape(item.mondayItemId)})` : ''}</span>`;
-  } else if (section === 'dismissed') {
-    // Parked, not rejected -- a prospect can still convert later, so this is
-    // a one-click restore back to the normal Potential Clients list, not an
-    // "undo a mistake" action the way Handled's undo is.
-    actionsHtml = `<span class="fo-muted-label">hidden from Potential Clients</span>
-      <button onclick="foPatch('${item.id}', {dismissed: false, dismissedAt: null})" ${pending ? 'disabled' : ''}>unhide</button>`;
   } else if (section === 'handled') {
     actionsHtml = `${sendControl}
       <button onclick="foPatch('${item.id}', {status:'confirm'})" ${pending ? 'disabled' : ''}>undo</button>`;
   } else {
-    // Hiding is only offered for a prospect card (potentialClient set) --
-    // ignore/done both carry a real judgment ("not a task" / "handled")
-    // that doesn't fit "this business isn't worth a card every week, park
-    // it" the way a plain dismiss does, and ignore now requires a reason
-    // per the same-shape prompt real drafts use.
-    const hideControl = item.potentialClient
-      ? `<button onclick="foPatch('${item.id}', {dismissed: true, dismissedAt: new Date().toISOString()})" ${pending ? 'disabled' : ''}>hide prospect</button>`
-      : '';
+    // Ignore now requires a reason, per the same-shape prompt real drafts use.
     actionsHtml = `${sendControl}
       <button onclick="foPatch('${item.id}', {status:'done'})" ${pending ? 'disabled' : ''}>mark done</button>
-      <button onclick="foOpenIgnorePrompt('${item.id}')" ${pending ? 'disabled' : ''}>ignore</button>
-      ${hideControl}`;
+      <button onclick="foOpenIgnorePrompt('${item.id}')" ${pending ? 'disabled' : ''}>ignore</button>`;
   }
 
   const priorityBlock = section === 'active' ? `
@@ -414,10 +464,9 @@ function foRenderDetailPane(item) {
     </div>` : '';
 
   const ageDays = foItemAgeDays(item);
-  const ageBadge = ageDays === null ? ''
-    : foIsStuck(item)
+  const ageBadge = foIsStuck(item)
     ? `<span class="fo-stuck-pill" title="Drafted ${foEscape(item.createdAt)} -- no payload, can't be sent">STUCK -- ${ageDays} days, no payload</span>`
-    : `<span class="fo-muted-label" title="Drafted ${foEscape(item.createdAt)}">${ageDays} days old</span>`;
+    : `<span class="fo-muted-label" title="Drafted ${foEscape(item.createdAt || '')}">${foEscape(foAgeLabel(item))}</span>`;
 
   const chatMsgCount = (foItemChat[item.id] || []).length;
   const chatLog = foRenderChatMessages(item.id);
@@ -435,7 +484,7 @@ function foRenderDetailPane(item) {
     </div>
     ${foBuildMondayDetails(item)}
     <div class="fo-actions fo-det-actions">${actionsHtml}</div>
-    <details class="fo-det-chat">
+    <details class="fo-det-chat" open>
       <summary class="fo-det-chat-toggle">Chat${chatMsgCount ? ` · ${chatMsgCount} msg${chatMsgCount!==1?'s':''}` : ''}</summary>
       <div class="fo-itemchat">
         <div class="fo-itemchat-log" id="fo-chat-log-${item.id}">${chatLog}</div>
@@ -447,13 +496,21 @@ function foRenderDetailPane(item) {
     </details>`;
 }
 
-async function foLoadQueue() {
+// opts.explicit (default true) marks an EXPLICIT refresh -- page load, gate
+// unlock, the retry button -- which is the only time the list pane is allowed
+// to re-sort/re-section from scratch (see foRenderFromItems/foComputeLayout).
+// Anything triggering a quiet background reload (e.g. item-chat's fallback
+// below) passes {explicit: false} so cards already on screen merge into their
+// existing slots instead of the whole pane flashing back to a skeleton and
+// reshuffling under the user.
+async function foLoadQueue(opts = {}) {
+  const explicit = opts.explicit !== false;
   const container = document.getElementById("fo-queue-cards");
   if (!localStorage.getItem("flowops-passcode")) {
     container.innerHTML = foRenderPasscodeGate();
     return;
   }
-  container.innerHTML = foRenderSkeleton();
+  if (explicit) container.innerHTML = foRenderSkeleton();
   try {
     const res = await fetch("/.netlify/functions/queue", { headers: foHeaders() });
     const data = await res.json();
@@ -469,7 +526,7 @@ async function foLoadQueue() {
         foItemChat[it.id] = it.chatHistory;
       }
     }
-    foRenderFromItems(foItems);
+    foRenderFromItems(foItems, { recomputeLayout: explicit });
   } catch (e) {
     container.innerHTML = `<div class="fo-error-state">
       <div class="fo-error-msg">couldn't reach the draft queue${e?.message ? ": " + foEscape(e.message) : ""}</div>
@@ -496,6 +553,18 @@ function foItemAgeDays(item) {
   return days > FO_STALE_DAYS ? days : null;
 }
 
+// Single formatting source for "how long has this been sitting" -- foListRow
+// and foRenderDetailPane both call this so the row and the detail pane can
+// never disagree on the number or the wording. foItemAgeDays() returns null
+// both when createdAt is missing AND when the card just isn't old enough yet
+// to flag (<= FO_STALE_DAYS) -- unreachable today (all 87 live cards clear
+// that threshold), but still rendered as something explicit rather than a
+// blank in case a fresh card ever lands here before the pipeline's next run.
+function foAgeLabel(item) {
+  const days = foItemAgeDays(item);
+  return days === null ? "new" : `${days}d old`;
+}
+
 // A stale card (foItemAgeDays !== null) with no payload can never be sent as
 // a normal draft -- `send to monday` doesn't even render for it (see
 // sendControl above). That combination used to be invisible outside the
@@ -506,7 +575,6 @@ function foItemAgeDays(item) {
 function foIsStuck(item) {
   return !item.payload
     && !item.mondayItemId
-    && !item.dismissed
     && !HANDLED_STATUSES.includes(item.status)
     && foItemAgeDays(item) !== null;
 }
@@ -514,9 +582,9 @@ function foIsStuck(item) {
 function foGroupByClient(items) {
   const groups = new Map();
   for (const item of items) {
-    // Guaranteed truthy: foRenderQueue only ever hands this function items
-    // that have a real group -- anything without one goes to
-    // foGroupByProspect instead. There is no "n/a" fallback here on purpose.
+    // Guaranteed truthy: foClassifyItem only routes a card into this bucket
+    // once it's confirmed item.group is set. There is no "n/a" fallback here
+    // on purpose.
     const key = item.group;
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(item);
@@ -534,32 +602,31 @@ function foGroupByClient(items) {
   });
 }
 
-// Cards without a real, resolvable Monday group -- whether explicitly
-// flagged potentialClient by the automation, or simply missing a group for
-// any other reason -- get grouped by that inferred prospect name here, same
-// sort as foGroupByClient. Falls back to a named bucket, never "n/a"/
-// "Unknown", for the (ideally rare) case where potentialClient itself
-// wasn't set either.
-function foGroupByProspect(items) {
-  const groups = new Map();
-  for (const item of items) {
-    const key = item.potentialClient || "Unmapped client/workstream";
-    if (!groups.has(key)) groups.set(key, []);
-    groups.get(key).push(item);
-  }
-  for (const list of groups.values()) {
-    list.sort((a, b) => foPriority(a) - foPriority(b));
-  }
-  return [...groups.entries()].sort((a, b) => a[0].localeCompare(b[0]));
-}
-
 
 
 function foToggleSection(key) {
   // Purely local UI state -- no need to round-trip the network just to
   // expand/collapse a section that's already fully loaded client-side.
   foSectionExpanded[key] = !foSectionExpanded[key];
+
+  // The section's rows are already in the DOM (just `hidden` when collapsed)
+  // -- flip that in place instead of a full foRenderFromItems(), which used
+  // to throw the whole list pane back to scrollTop 0 every time.
+  const btn  = document.querySelector(`.fo-list-section-toggle[data-section="${key}"]`);
+  const body = document.querySelector(`.fo-list-section-body[data-section="${key}"]`);
+  if (btn && body) {
+    body.hidden = !foSectionExpanded[key];
+    btn.textContent = `${foSectionExpanded[key] ? '▾' : '▸'} ${btn.dataset.label} (${btn.dataset.count})`;
+    return;
+  }
+
+  // Fallback, only if the DOM somehow doesn't match expectations -- preserve
+  // scroll position across the re-render rather than jumping back to the top.
+  const listEl = document.querySelector('.fo-list');
+  const scrollTop = listEl ? listEl.scrollTop : 0;
   foRenderFromItems(foItems);
+  const newListEl = document.querySelector('.fo-list');
+  if (newListEl) newListEl.scrollTop = scrollTop;
 }
 
 const NULL_REASON_LABELS = {
@@ -1135,7 +1202,7 @@ async function foSendItemChat(e, id) {
       else foItems.push(data.item);
       foRenderFromItems(foItems);
     } else {
-      foLoadQueue();
+      foLoadQueue({ explicit: false });
     }
   } else {
     foRenderChatLog(id);
@@ -1155,9 +1222,12 @@ async function foPatch(id, patch) {
   const idx = foItems.findIndex(it => it.id === id);
   const previous = idx !== -1 ? foItems[idx] : null;
   if (idx !== -1) {
-    // Show the result of the click immediately -- the card moves to whatever
-    // section the new status belongs in right away, rather than sitting still
-    // for the few seconds the GitHub commit round trip actually takes.
+    // Show the result of the click immediately -- status/age styling, handled
+    // treatment, disabled buttons -- rather than sitting still for the few
+    // seconds the GitHub commit round trip actually takes. Position is
+    // untouched: foRenderFromItems merges this into the existing layout, it
+    // doesn't re-section/re-sort (see foMergeLayout) -- the card stays right
+    // where it was.
     foItems[idx] = { ...previous, ...patch };
     foRenderFromItems(foItems);
   }
@@ -1192,9 +1262,9 @@ async function foSendToMonday(id, opts = {}) {
   if (idx !== -1) {
     // Can't know the real mondayItemId yet, but showing "sending..." beats
     // leaving the button looking clickable/frozen for the 5-10s the actual
-    // Monday API calls take. The card stays put (not moved to Mondayed) until
-    // the send is actually confirmed -- it's a real external side effect, not
-    // something to guess the outcome of.
+    // Monday API calls take. Position is untouched either way -- a card only
+    // moves into the Mondayed section on the next explicit refresh, not the
+    // moment this resolves (see foMergeLayout).
     foItems[idx] = { ...previous, _sending: true };
     foRenderFromItems(foItems);
   }
