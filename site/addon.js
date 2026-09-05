@@ -553,15 +553,22 @@ function foItemAgeDays(item) {
   return days > FO_STALE_DAYS ? days : null;
 }
 
+// Unconditional days-since-drafted -- unlike foItemAgeDays() above, this
+// isn't gated by FO_STALE_DAYS, since that gate exists for staleness
+// flagging, not for "how behind is the queue". null only when createdAt
+// itself is missing/unparseable (unreachable today -- all 87 live cards have
+// one), not just because a card is young.
+function foRawAgeDays(item) {
+  const created = item.createdAt ? new Date(item.createdAt).getTime() : NaN;
+  if (!Number.isFinite(created)) return null;
+  return Math.floor((Date.now() - created) / 86400000);
+}
+
 // Single formatting source for "how long has this been sitting" -- foListRow
 // and foRenderDetailPane both call this so the row and the detail pane can
-// never disagree on the number or the wording. foItemAgeDays() returns null
-// both when createdAt is missing AND when the card just isn't old enough yet
-// to flag (<= FO_STALE_DAYS) -- unreachable today (all 87 live cards clear
-// that threshold), but still rendered as something explicit rather than a
-// blank in case a fresh card ever lands here before the pipeline's next run.
+// never disagree on the number or the wording.
 function foAgeLabel(item) {
-  const days = foItemAgeDays(item);
+  const days = foRawAgeDays(item);
   return days === null ? "new" : `${days}d old`;
 }
 
