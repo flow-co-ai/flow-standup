@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-06T17:32:57.573871+00:00",
+  "updatedAt": "2026-09-07T19:04:07.072857+00:00",
   "items": [
     {
       "id": "websEo-pricing-question",
@@ -2414,6 +2414,51 @@
       "nullReason": null,
       "priority": 4,
       "createdAt": "2026-09-05T17:20:01.562429+00:00"
+    },
+    {
+      "id": "medstation-webflow-hosting-cutover",
+      "title": "Website Hosting",
+      "note": "New information on work already tracked, so drafted as an update on the Stuck Website Hosting item 12970090689 rather than a new item, per the single item bias. Section 19 audit covered MedStation groups on all four boards, section 19b returned no match. Leonardo asking whether Webflow can be dropped is the live risk here, the WordPress build still has no hosting.",
+      "status": "ready",
+      "board": "Web + SEO",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: MedStation, 9/6",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12970090689",
+        "itemName": "Website Hosting",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> On 6 September Hashir posted the refreshed Webflow login for MedStation into the Medstation Marketing group. Leonardo Chiari Silva replied asking whether the Webflow account still needs to be kept, on the understanding that the site had already been moved off Webflow onto WordPress. Hashir answered that the live site is still on Webflow. The client side now believes a cutover has happened that has not.</li><li><strong>Why this lands on this item.</strong> This item is Stuck because the WordPress build has nowhere to live until MedStation supply hosting that runs WordPress, asked for on 1 September with no answer since. Leonardo is the person on the client side asking about the website platform and holding the Webflow login, so he is the most likely person to actually have the hosting answer. <strong>Ask him directly</strong> rather than waiting on a thread that has gone quiet.</li><li><strong>Protect the live site first.</strong> Say plainly in the same reply that <strong>Webflow must stay active and paid until the WordPress build is deployed and verified</strong>. If MedStation cancel it on the assumption the move already happened, the live site goes down. Nothing about the Webflow account changes until cutover is confirmed.</li><li><strong>Deliverable.</strong> Get the hosting account details from Leonardo, confirm the plan really does run WordPress and has room for the build, then <strong>deploy the site</strong> and hand back a live URL, exactly as this item already set out. If what MedStation have cannot run WordPress, come back with what it would take.</li><li><strong>Dependencies and constraints.</strong> Blocked on MedStation supplying hosting credentials. The internal decision from 1 September still stands, deploy onto MedStation's own hosting rather than the Flow Shock Hosting account. Do not open a second hosting thread with someone else at MedStation while this one is live.</li><li><strong>Done.</strong> Done = MedStation hosting confirmed to run WordPress, the new site deployed to it with a live URL posted on this item, and Webflow only stood down after that cutover is verified.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
+        "blocked": true,
+        "needsNaz": true
+      },
+      "nullReason": null,
+      "priority": 1,
+      "createdAt": "2026-09-07T19:04:07.072812+00:00"
+    },
+    {
+      "id": "maadilaw-manual-opportunity-sms",
+      "title": "Manual Opportunity SMS",
+      "note": "Section 19 audit covered Maadi Law groups on all four boards. No existing item or subitem owns the outbound new lead sequence, so drafted as a top level CRM item rather than folded under Clio Migration or Case Manager Routing. Section 19b returned no match, but the queued card maadilaw-migrated-contact-automations touches the same sequence from the migrated contact side and is named in the body so the suppression is built once.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: Maadi Law, 9/6",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm5112vv",
+        "itemName": "Manual Opportunity SMS",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> On 6 September the Maadi Law team reported in the client group that creating a new opportunity by hand in GoHighLevel still fires the automated acknowledgement SMS, the one telling the recipient the firm has received their message and will call the next morning. Their point is that if a member of staff is creating the opportunity then the firm has already spoken to that person, so the message is wrong on arrival and reads as if nobody at the firm remembers the conversation. For a law firm that is client facing exposure, not an internal annoyance.</li><li><strong>Deliverable one, gate the sequence on how the record was created.</strong> Add a condition on entry to the new lead outbound sequence so it fires only for opportunities that arrived through an inbound path, a form, a call, a chat or an ad lead, and never for an opportunity a user created manually inside GoHighLevel. Key it on the record creation source rather than the pipeline stage, so it holds whichever pipeline the staff member drops the opportunity into.</li><li><strong>Deliverable two, settle the edge the client did not raise.</strong> Staff also create opportunities for people who arrived through a channel that never sent an acknowledgement at all. Agree with Maadi Law whether those people should still get a first touch, and if they should, send it from a separate manual action rather than putting the automatic message back into the path. Write the answer onto this item so the rule is recorded somewhere other than a chat thread.</li><li><strong>Deliverable three, answer the client.</strong> The request ended with an open ask for our thoughts and nobody has replied yet. Confirm back to the team what is changing and when it takes effect, so they know they can keep creating opportunities in the meantime.</li><li><strong>Dependencies and constraints.</strong> No client dependency and nothing to wait on, this can start immediately. <strong>Do not</strong> switch the sequence off wholesale, inbound leads must keep receiving the acknowledgement because that is the speed to lead promise the firm is paying for. Keep this consistent with the Migrated Contact Suppression work already queued for Clio Migration, which suppresses the same sequence for contacts pulled across from Clio Grow, so the two conditions are built once and not twice.</li><li><strong>Done.</strong> Done = an opportunity created by hand in GoHighLevel produces no automated acknowledgement SMS, a test inbound lead still receives one, and the change is confirmed back to Maadi Law in the client group.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "createdAt": "2026-09-07T19:04:07.072812+00:00"
     }
   ]
 }
