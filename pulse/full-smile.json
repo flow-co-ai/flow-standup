@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-09-06T13:54:29.342Z",
-  "date": "2026-09-06",
+  "generated_at": "2026-09-07T16:14:44.991Z",
+  "date": "2026-09-07",
   "slug": "full-smile",
   "name": "Full Smile",
   "type": "leadgen",
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Paid channels show zero spend and zero leads over the last 28 days, so performance is entirely organic. The biggest movement is a 95.95% drop in GBP actions week-over-week, which likely reflects a data gap or tracking disruption rather than a true decline in local engagement.",
+  "verdict": "Paid channels (Meta and Google Ads) show zero spend and zero leads over the last 28 days, indicating campaigns are inactive or paused. On the organic side, GBP activity dropped 100% week-over-week, while GA4 sessions grew 26.98%, suggesting some residual website interest despite the loss of Google Business Profile engagement.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,29 +25,29 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 202,
+          "actions": 201,
           "calls": 61,
           "directions": 84,
-          "web_clicks": 57
+          "web_clicks": 56
         }
       }
     },
     "organic": {
-      "gbp_actions": 202,
+      "gbp_actions": 201,
       "ig_reach": 0
     },
     "top_campaign": null,
     "analytics": {
-      "sessions": 311,
-      "users": 252,
+      "sessions": 315,
+      "users": 256,
       "conversions": 0
     },
     "search": {
-      "clicks": 66,
-      "impressions": 7924
+      "clicks": 67,
+      "impressions": 7914
     },
     "latest_day": {
-      "date": "2026-09-05",
+      "date": "2026-09-06",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -55,7 +55,7 @@
       "gbp_actions": 0,
       "ig_reach": 0,
       "sc_clicks": 0,
-      "ga4_sessions": 6,
+      "ga4_sessions": 8,
       "purchases": 0,
       "revenue": 0
     },
@@ -65,16 +65,15 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -95.95,
-      "sc_7d_pct": -27.78,
-      "ga4_7d_pct": 20.31,
+      "gbp_7d_pct": -100,
+      "sc_7d_pct": -18.75,
+      "ga4_7d_pct": 26.98,
       "ig_7d_pct": null,
       "spend_per_day_7d": 0
     },
     "flags": [],
     "series": {
       "dates": [
-        "2026-08-09",
         "2026-08-10",
         "2026-08-11",
         "2026-08-12",
@@ -101,7 +100,8 @@
         "2026-09-02",
         "2026-09-03",
         "2026-09-04",
-        "2026-09-05"
+        "2026-09-05",
+        "2026-09-06"
       ],
       "spend": [
         0,
@@ -224,7 +224,6 @@
         0
       ],
       "gbp_actions": [
-        1,
         6,
         12,
         4,
@@ -246,6 +245,7 @@
         12,
         16,
         3,
+        0,
         0,
         0,
         0,
@@ -284,7 +284,6 @@
         0
       ],
       "sc_clicks": [
-        0,
         7,
         4,
         3,
@@ -311,10 +310,10 @@
         4,
         4,
         0,
+        1,
         0
       ],
       "ga4_sessions": [
-        4,
         12,
         6,
         11,
@@ -341,7 +340,8 @@
         19,
         9,
         11,
-        6
+        6,
+        8
       ],
       "purchases": [
         0,
@@ -406,10 +406,10 @@
     }
   },
   "ghl": {
-    "contacts": 273,
+    "contacts": 270,
     "opportunities": {
       "created": {
-        "count": 107,
+        "count": 109,
         "value": 0
       },
       "won": {
@@ -428,14 +428,14 @@
     ]
   },
   "brief": {
-    "date": "2026-09-06",
+    "date": "2026-09-07",
     "headlines": [
       {
         "text": "No new activity this week",
         "tone": "info"
       },
       {
-        "text": "LSA billing and GHL setup still open",
+        "text": "Billing & LSA clarification still open",
         "tone": "info"
       }
     ],
@@ -443,30 +443,30 @@
       {
         "title": "Full Smile - Ads / LSA",
         "badge": {
-          "label": "P1 - needs attention",
+          "label": "P1 - blocked",
           "tone": "amber"
         },
         "items": [
           {
             "state": "blocked",
-            "text": "LSA charging clarification awaiting Lily response"
+            "text": "LSA charging clarification pending — waiting on Lily"
           },
           {
             "state": "next",
-            "text": "(inferred) Follow up with Lily on LSA charge query"
+            "text": "(inferred) Follow up with Lily on LSA charging status"
           }
         ]
       },
       {
         "title": "Full Smile - CRM / GHL",
         "badge": {
-          "label": "P1 - needs attention",
+          "label": "P1 - blocked",
           "tone": "amber"
         },
         "items": [
           {
             "state": "blocked",
-            "text": "Billing setup incomplete — no business card on file"
+            "text": "Billing setup incomplete — no business card available on client side"
           },
           {
             "state": "next",
@@ -483,169 +483,159 @@
       },
       {
         "item": "Business card for billing setup",
-        "who": "Lily / Dr. Jamal",
+        "who": "Dr. Jamal / Lily",
         "since": "9/4"
       }
     ],
     "launch_gate": null,
     "brief_v2": {
-      "verdict": "Client's move: two open items — LSA billing and GHL setup — both awaiting client-side response.",
-      "next_move": "Sohib: re-ping Lily on LSA charge and business card — both threads have gone quiet.",
+      "verdict": "Client's move: Lily owes LSA clarification and a business card for billing.",
+      "next_move": "Sohib: re-ping Lily on LSA charging and billing card — both loops are client-blocked.",
       "blocks": [
         {
           "item": "LSA charging clarification with Lily",
           "side": "client",
           "who": "Lily",
-          "last_activity": "Standup card lists as stalled; last touch via WhatsApp"
+          "last_activity": "Item stalled on Monday board, no client reply received"
         },
         {
           "item": "Billing setup incomplete; no business card available",
           "side": "client",
-          "who": "Lily / Dr. Jamal",
-          "last_activity": "Standup card flagged this week; no card provided yet"
+          "who": "Lily",
+          "last_activity": "WhatsApp thread flagged no business card available"
         }
       ],
       "snapshot": [
         {
           "label": "Open items",
-          "value": "13 open, all in-progress, 2 awaiting client reply",
+          "value": "13 open, all in working, 2 blocked awaiting client",
           "tone": "warn"
         },
         {
           "label": "Contract",
-          "value": "Month 10, prove-it month; client deciding on renewal",
-          "tone": "warn"
+          "value": "Month 10, Aug–Oct window, $2,200/mo prove-it period",
+          "tone": "muted"
         },
         {
           "label": "Last client word",
-          "value": "WhatsApp — billing card not yet available",
-          "tone": "plain"
-        },
-        {
-          "label": "Judged on",
-          "value": "Legitimate leads → scheduled → showed → new patients → revenue",
-          "tone": "plain"
+          "value": "9/4 — no business card available for billing setup",
+          "tone": "warn"
         }
       ],
       "history_line": null
     }
   },
   "brief_v2": {
-    "verdict": "Client's move: two open items — LSA billing and GHL setup — both awaiting client-side response.",
-    "next_move": "Sohib: re-ping Lily on LSA charge and business card — both threads have gone quiet.",
+    "verdict": "Client's move: Lily owes LSA clarification and a business card for billing.",
+    "next_move": "Sohib: re-ping Lily on LSA charging and billing card — both loops are client-blocked.",
     "blocks": [
       {
         "item": "LSA charging clarification with Lily",
         "side": "client",
         "who": "Lily",
-        "last_activity": "Standup card lists as stalled; last touch via WhatsApp"
+        "last_activity": "Item stalled on Monday board, no client reply received"
       },
       {
         "item": "Billing setup incomplete; no business card available",
         "side": "client",
-        "who": "Lily / Dr. Jamal",
-        "last_activity": "Standup card flagged this week; no card provided yet"
+        "who": "Lily",
+        "last_activity": "WhatsApp thread flagged no business card available"
       }
     ],
     "snapshot": [
       {
         "label": "Open items",
-        "value": "13 open, all in-progress, 2 awaiting client reply",
+        "value": "13 open, all in working, 2 blocked awaiting client",
         "tone": "warn"
       },
       {
         "label": "Contract",
-        "value": "Month 10, prove-it month; client deciding on renewal",
-        "tone": "warn"
+        "value": "Month 10, Aug–Oct window, $2,200/mo prove-it period",
+        "tone": "muted"
       },
       {
         "label": "Last client word",
-        "value": "WhatsApp — billing card not yet available",
-        "tone": "plain"
-      },
-      {
-        "label": "Judged on",
-        "value": "Legitimate leads → scheduled → showed → new patients → revenue",
-        "tone": "plain"
+        "value": "9/4 — no business card available for billing setup",
+        "tone": "warn"
       }
     ],
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-09-06T13:58:47.405Z",
+    "generated_at": "2026-09-07T16:19:02.828Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "No paid activity; 5 overdue SOW milestones now risk the renewal decision.",
+    "verdict": "Paid ads fully dark 28 days; 5 overdue SOW milestones block renewal decision.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "Renewal closed 7/23 but scoreboard milestones — dashboard live, attribution gap, sync cleanup — all overdue as of 2026-08-31, threatening stay/walk decision.",
+        "text": "Renewal closed 7/23 but scoreboard still untrusted: 0 paid leads, 0 appointments in GHL, 0 attributable new patients confirmed across 28 days.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Phone-match attribution gap (due 2026-08-07) and sync/contact cleanup (due 2026-08-14) both unresolved; 107 GHL opps created but 0 won and 0 appointments recorded — intake chain is unmeasurable.",
+        "text": "Phone-match attribution gap (due 8/7), sync/contact cleanup (due 8/14), and dashboard (due 8/31) all overdue — renewal walk-or-stay decision cannot be made without these.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "Dashboard due 2026-08-31 is not live; client's explicit scoreboard (leads → scheduled → showed → new patients) cannot be reported, making renewal argument impossible.",
+        "priority": 1,
+        "text": "Spend efficiency is unmeasurable: $0 spend across all 28 days on Meta and Google Ads; CPL is undefined with 0 leads generated.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions dropped 95.95% week-over-week (28-day total: 202 actions; last 4 days in series show 0). Daily verdict flagged a data gap — series confirms 4 consecutive zero-action days, not a single-day anomaly.",
-        "confidence": "probable",
-        "channel": "GBP"
+        "text": "GBP actions dropped to 0 for the last 7 days (prior 7d: ~58 actions); SC clicks fell -18.75% — organic presence is weakening with no paid floor beneath it.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       },
       {
         "id": "F5",
-        "priority": 3,
-        "text": "Search clicks fell 27.78% week-over-week; last 3 days avg 1.3 clicks vs prior-3-day avg of 4.7 — 3-day signal confirms softening organic search pull with zero paid support.",
-        "confidence": "confirmed",
-        "channel": "SEO"
+        "priority": 4,
+        "text": "GA4 sessions rose 26.98% 7d vs prior 7d (recent 3-day avg ~7.7 vs prior 3-day avg ~12.7 — fading); 109 GHL opportunities created but 0 won and 0 appointments, confirming intake pipeline is not converting.",
+        "confidence": "probable",
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate dashboard delivery to Nacer immediately; 0 appointments logged against 107 opps means renewal case cannot be made.",
+        "text": "Escalate all 5 overdue SOW milestones immediately; dashboard and attribution gap are renewal blockers by 2026-09-15.",
         "cites": [
-          "F2",
-          "F3"
+          "F1",
+          "F2"
         ],
-        "monday_item_name": "Dashboard Live — Renewal Blocker",
-        "monday_update": "The client dashboard showing leads → scheduled → showed → new patients is overdue since 2026-08-31 and is the explicit stay/walk condition. GHL shows 107 opportunities created and 0 won, 0 appointments — the intake chain is untracked end-to-end. Success check: dashboard accessible to Dr. Jamal and Lily with live data by 2026-09-10. Escalate to Nacer (Ops) and Ahmed Memon (CRM) today."
+        "monday_item_name": "Clear Overdue SOW Blockers",
+        "monday_update": "Five SOW milestones are past due: renewal decision (7/23), phone-match attribution (8/7), sync cleanup (8/14), and dashboard live (8/31) — all undelivered. The client's stay-or-walk decision requires a trusted scoreboard showing leads → scheduled → showed → new patient, and that dashboard does not exist yet. Success check: all 5 items marked complete in Monday with client confirmation by 2026-09-15. Nacer (Ops) owns delivery; Sohib (Account) owns client communication."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Investigate GBP tracking: 4 consecutive zero-action days in series vs 202 actions in 28-day window signals a feed or property disruption.",
+        "text": "Diagnose why Meta and Google Ads have been at $0 spend for 28 days; confirm whether campaigns are paused by client or Flow.",
         "cites": [
-          "F4"
+          "F3"
         ],
-        "monday_item_name": "GBP Tracking Gap — Investigate",
-        "monday_update": "GBP actions show 202 over the 28-day window but have logged 0 for the last 4 days in the daily series (2026-09-01 through 2026-09-04). This is consistent with a tracking disruption rather than a real drop in local engagement. Check GBP property access, verification status, and API pull in the reporting stack. Confirm data resumes or identify the break by 2026-09-09."
+        "monday_item_name": "Diagnose Paid Ads Dark Status",
+        "monday_update": "All paid channels show $0 spend across the full 28-day window with 0 leads generated — campaigns appear fully paused on both Meta and Google Ads. Before any budget or creative decision can be made, the account team must confirm with Dr. Jamal/Lily whether this pause was client-directed or an unintended lapse, and document the answer. Success check: pause reason confirmed in writing and campaign status (stay paused or reactivate) decided by 2026-09-10. Per the 7/19 call architecture, reactivation should prioritize Google/LSA."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch SC clicks 3-day signal (avg 1.3 vs prior 4.7); re-check 2026-09-09 before any organic intervention.",
+        "text": "Watch GBP actions: 0 for 7 consecutive days after averaging ~8/day prior; re-check 2026-09-14.",
         "cites": [
-          "F5"
+          "F4"
         ],
-        "monday_item_name": "SC Click Softening — Watch",
-        "monday_update": "Search clicks averaged 1.3/day over the last 3 days versus 4.7/day in the prior 3-day window — a confirmed short-term decline with zero paid activity to compensate. No action is warranted yet as three days at low volume could reflect weekend seasonality. Re-check on 2026-09-09; if the 3-day avg remains below 2.0, escalate to the SEO team for a content/indexing audit."
+        "monday_item_name": "Watch GBP Actions Recovery",
+        "monday_update": "GBP actions fell to 0 for the last 7 days after averaging roughly 8 actions per day in the prior period (201 total over 28 days). With paid ads dark, GBP is the only active lead-facing channel, making this drop significant. No action is taken this cycle because the cause is unconfirmed — could be a GBP data reporting lag or a genuine drop in local visibility. Re-check on 2026-09-14: if actions remain at 0 for a second consecutive 7-day window, escalate as a confirmed organic visibility issue."
       }
     ],
-    "next_check": "2026-09-09"
+    "next_check": "2026-09-14"
   }
 }

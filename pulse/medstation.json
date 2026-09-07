@@ -4,48 +4,80 @@
   "slug": "medstation",
   "name": "MedStation",
   "brief": {
-    "date": "2026-09-06",
+    "date": "2026-09-07",
     "headlines": [
       {
-        "text": "GHL live but review logic & call routing broken",
-        "tone": "shift"
-      },
-      {
-        "text": "NextGen patient ID missing on imported leads",
+        "text": "Website hosting and service pages still blocked",
         "tone": "info"
       },
       {
-        "text": "Website hosting & subdomain still blocked",
+        "text": "Heavy completions wave landed last week",
+        "tone": "win"
+      },
+      {
+        "text": "All 15 open items currently in working status",
         "tone": "info"
       }
     ],
     "workstreams": [
       {
+        "title": "MedStation - Web + SEO",
+        "badge": {
+          "label": "P1 - blocked",
+          "tone": "red"
+        },
+        "items": [
+          {
+            "state": "blocked",
+            "text": "Website Hosting: hosting account undefined, deployment blocked — waiting on account decision [id: 12970090689]"
+          },
+          {
+            "state": "blocked",
+            "text": "Service Pages: book.medstation.com subdomain down, service page buttons broken [id: 12971476311]"
+          },
+          {
+            "state": "done",
+            "text": "Med Station and Full Smile websites launched live (2026-08-26)"
+          },
+          {
+            "state": "done",
+            "text": "New WordPress staging site built and ready for domain migration — Hashir Faiz (2026-08-31)"
+          }
+        ],
+        "owners": [
+          "Hashir Faiz"
+        ]
+      },
+      {
         "title": "MedStation - CRM / GHL",
         "badge": {
-          "label": "P1 - needs attention",
-          "tone": "amber"
+          "label": "P2 - on track",
+          "tone": "green"
         },
         "items": [
           {
             "state": "done",
-            "text": "GHL went live; core workflows, deduplication, phone forwarding completed"
+            "text": "Core workflows including WhatsApp messaging done for Weston (2026-09-03)"
           },
           {
-            "state": "blocked",
-            "text": "Review logic broken — patient received negative message post go-live"
+            "state": "done",
+            "text": "WhatsApp Business Platform connected to GHL — Sohib Boundaoui (2026-09-01)"
           },
           {
-            "state": "blocked",
-            "text": "GHL phone number not ringing, goes straight to voicemail"
+            "state": "done",
+            "text": "Webhook field mappings for staging and production booking completed — Ahmed Memon (2026-09-01)"
           },
           {
-            "state": "blocked",
-            "text": "NextGen patient ID missing on imported GHL leads/appointments"
+            "state": "done",
+            "text": "Deduplication logic fixed to prevent duplicate contacts (2026-09-03)"
           },
           {
-            "state": "next",
-            "text": "Diagnose and fix review workflow logic and call routing"
+            "state": "done",
+            "text": "Renata Barros configured as Account Admin with active calendar — Ahmed Memon (2026-08-31)"
+          },
+          {
+            "state": "done",
+            "text": "Marked Done: Reactivation Build, Lead Escalation, NextGen Sync Fixes, Phone Consolidation (2026-09-03/04)"
           }
         ],
         "owners": [
@@ -54,39 +86,7 @@
         ]
       },
       {
-        "title": "MedStation - Web / SEO",
-        "badge": {
-          "label": "P1 - blocked",
-          "tone": "red"
-        },
-        "items": [
-          {
-            "state": "done",
-            "text": "Med Station and Full Smile websites launched live"
-          },
-          {
-            "state": "done",
-            "text": "New WordPress staging site built and ready for domain migration"
-          },
-          {
-            "state": "blocked",
-            "text": "Website hosting account undefined; deployment blocked (2d)"
-          },
-          {
-            "state": "blocked",
-            "text": "Service page buttons broken; book.medstation.com subdomain down (2d)"
-          },
-          {
-            "state": "next",
-            "text": "(inferred) Resolve hosting account ownership to unblock deployment"
-          }
-        ],
-        "owners": [
-          "Hashir Faiz"
-        ]
-      },
-      {
-        "title": "MedStation - Ads / Tracking",
+        "title": "MedStation - Tracking & Attribution",
         "badge": {
           "label": "P2 - on track",
           "tone": "green"
@@ -94,175 +94,109 @@
         "items": [
           {
             "state": "done",
-            "text": "Tracking integration (webhook + dataLayer) fully operational — Rafael Rolim"
+            "text": "Tracking integration built on webhook and dataLayer model, fully operational — Rafael Rolim (2026-08-29)"
           },
           {
             "state": "done",
-            "text": "Google Ads, LSA, Meta call source-tracking workflows published — Ahmed Memon"
+            "text": "Google Ads, LSA, and Meta Ads call source-tracking workflows published — Ahmed Memon (2026-08-31)"
           },
           {
             "state": "done",
-            "text": "Meta ads account access granted for Weston campaigns — Jonatan Herculano"
+            "text": "GTM access granted for MedStation pixel setup — Sohib Boundaoui (2026-09-02)"
           },
           {
             "state": "done",
-            "text": "Marked Done on Monday: Meta"
-          },
-          {
-            "state": "queued",
-            "text": "Landing Pages — due 2026-09-05 (past due)"
+            "text": "Webhook errors on website forms corrected — Hamza Saeed (2026-08-26)"
           }
         ],
         "owners": [
           "Rafael Rolim",
           "Ahmed Memon",
+          "Hamza Saeed"
+        ]
+      },
+      {
+        "title": "MedStation - Meta Ads",
+        "badge": {
+          "label": "P2 - on track",
+          "tone": "green"
+        },
+        "items": [
+          {
+            "state": "done",
+            "text": "Meta ads account access granted for Weston campaigns — Jonatan Herculano (2026-08-26)"
+          },
+          {
+            "state": "done",
+            "text": "Marked Done on Monday: Meta (2026-09-04)"
+          },
+          {
+            "state": "done",
+            "text": "Instagram account reconnected to Business Portfolio — It Medstation (2026-08-31)"
+          }
+        ],
+        "owners": [
           "Jonatan Herculano"
+        ]
+      },
+      {
+        "title": "MedStation - Patient Comms / Automation",
+        "badge": {
+          "label": "P2 - on track",
+          "tone": "green"
+        },
+        "items": [
+          {
+            "state": "done",
+            "text": "Patient appointment confirmations, reminders, and no-show follow-ups completed — Thainã (2026-08-25)"
+          },
+          {
+            "state": "done",
+            "text": "Phone forwarding for all clinic numbers to main line completed (2026-09-03)"
+          },
+          {
+            "state": "done",
+            "text": "Western routing set up for call handling (2026-09-03)"
+          },
+          {
+            "state": "done",
+            "text": "Marked Done on Monday: Review Engine, Booking Tracking/Duplicates (2026-09-03)"
+          }
+        ],
+        "owners": [
+          "Thainã"
         ]
       }
     ],
-    "waiting_on_client": [],
+    "waiting_on_client": [
+      {
+        "item": "Website Hosting account — hosting provider/account must be defined before deployment can proceed",
+        "who": "Mateus",
+        "since": "9/4"
+      }
+    ],
     "launch_gate": {
-      "title": "Launch gate - clear before full GHL go-live",
+      "title": "Launch gate - clear before full site go-live",
       "items": [
         {
-          "text": "Review workflow logic fixed (no negative messages to patients)",
+          "text": "Website Hosting account defined and configured",
           "done": false
         },
         {
-          "text": "GHL phone routing live and ringing (not voicemail)",
+          "text": "Service Pages subdomain (book.medstation.com) restored",
           "done": false
         },
         {
-          "text": "NextGen patient ID synced on imported leads",
-          "done": false
+          "text": "WordPress staging site domain migration completed",
+          "done": true
         },
         {
-          "text": "Website hosting account defined",
-          "done": false
-        },
-        {
-          "text": "book.medstation.com subdomain restored",
-          "done": false
-        }
-      ]
-    },
-    "brief_v2": {
-      "verdict": "GHL is live but three broken systems — review logic, call routing, and NextGen ID — need immediate fixes.",
-      "next_move": "Ahmed Memon: diagnose GHL review workflow and call routing — patients getting wrong messages and calls dropping to voicemail.",
-      "blocks": [
-        {
-          "item": "GHL review logic broken (item 12978907800)",
-          "side": "team",
-          "who": "Ahmed Memon",
-          "last_activity": "Patient received negative message after GHL went live"
-        },
-        {
-          "item": "GHL phone number not ringing",
-          "side": "team",
-          "who": "Ahmed Memon",
-          "last_activity": "WhatsApp flagged: GHL number goes straight to voicemail"
-        },
-        {
-          "item": "NextGen patient ID missing on GHL leads (item 12978886451)",
-          "side": "team",
-          "who": "Ahmed Memon",
-          "last_activity": "Monday item flagged: NextGen ID absent on imported leads/appointments"
-        },
-        {
-          "item": "Website hosting account undefined (item 12970090689)",
-          "side": "team",
-          "who": "Hashir Faiz",
-          "last_activity": "Monday item stalled: deployment blocked, hosting undefined"
-        },
-        {
-          "item": "Service page buttons broken; subdomain down (item 12971476311)",
-          "side": "team",
-          "who": "Hashir Faiz",
-          "last_activity": "Monday item stalled: book.medstation.com subdomain down"
+          "text": "Webhook field mappings for production booking verified",
+          "done": true
         }
       ],
-      "snapshot": [
-        {
-          "label": "Open items",
-          "value": "15 open, all working — 3 GHL defects and 2 web blockers active this week",
-          "tone": "warn"
-        },
-        {
-          "label": "Contract",
-          "value": "Month 3 of 3 (Phase 1), started July 1, $3,500–$5,000/mo flat retainer",
-          "tone": "warn"
-        },
-        {
-          "label": "Last client word",
-          "value": "2026-09-01 — Mateus disconnected Weston WhatsApp line for GHL migration",
-          "tone": "plain"
-        },
-        {
-          "label": "Judged on",
-          "value": "Booked appointments and reactivated patients (Phase 1 benchmark)",
-          "tone": "plain"
-        }
-      ],
-      "history_line": "GHL core workflows live · Med Station & Full Smile websites launched · Tracking integration (webhook + dataLayer) operational"
+      "note": "2 of 4 gate items remain open; both are Web + SEO blockers with no activity today."
     }
   },
-  "brief_v2": {
-    "verdict": "GHL is live but three broken systems — review logic, call routing, and NextGen ID — need immediate fixes.",
-    "next_move": "Ahmed Memon: diagnose GHL review workflow and call routing — patients getting wrong messages and calls dropping to voicemail.",
-    "blocks": [
-      {
-        "item": "GHL review logic broken (item 12978907800)",
-        "side": "team",
-        "who": "Ahmed Memon",
-        "last_activity": "Patient received negative message after GHL went live"
-      },
-      {
-        "item": "GHL phone number not ringing",
-        "side": "team",
-        "who": "Ahmed Memon",
-        "last_activity": "WhatsApp flagged: GHL number goes straight to voicemail"
-      },
-      {
-        "item": "NextGen patient ID missing on GHL leads (item 12978886451)",
-        "side": "team",
-        "who": "Ahmed Memon",
-        "last_activity": "Monday item flagged: NextGen ID absent on imported leads/appointments"
-      },
-      {
-        "item": "Website hosting account undefined (item 12970090689)",
-        "side": "team",
-        "who": "Hashir Faiz",
-        "last_activity": "Monday item stalled: deployment blocked, hosting undefined"
-      },
-      {
-        "item": "Service page buttons broken; subdomain down (item 12971476311)",
-        "side": "team",
-        "who": "Hashir Faiz",
-        "last_activity": "Monday item stalled: book.medstation.com subdomain down"
-      }
-    ],
-    "snapshot": [
-      {
-        "label": "Open items",
-        "value": "15 open, all working — 3 GHL defects and 2 web blockers active this week",
-        "tone": "warn"
-      },
-      {
-        "label": "Contract",
-        "value": "Month 3 of 3 (Phase 1), started July 1, $3,500–$5,000/mo flat retainer",
-        "tone": "warn"
-      },
-      {
-        "label": "Last client word",
-        "value": "2026-09-01 — Mateus disconnected Weston WhatsApp line for GHL migration",
-        "tone": "plain"
-      },
-      {
-        "label": "Judged on",
-        "value": "Booked appointments and reactivated patients (Phase 1 benchmark)",
-        "tone": "plain"
-      }
-    ],
-    "history_line": "GHL core workflows live · Med Station & Full Smile websites launched · Tracking integration (webhook + dataLayer) operational"
-  }
+  "brief_v2": null
 }
