@@ -4,24 +4,24 @@
   "slug": "medstation",
   "name": "MedStation",
   "brief": {
-    "date": "2026-09-07",
+    "date": "2026-09-08",
     "headlines": [
       {
         "text": "Website hosting and service pages still blocked",
         "tone": "info"
       },
       {
-        "text": "Heavy completions wave landed last week",
+        "text": "WhatsApp, GHL, and tracking setup completed",
         "tone": "win"
       },
       {
-        "text": "All 15 open items currently in working status",
+        "text": "No new activity today; open issues unchanged",
         "tone": "info"
       }
     ],
     "workstreams": [
       {
-        "title": "MedStation - Web + SEO",
+        "title": "MedStation - Web / SEO",
         "badge": {
           "label": "P1 - blocked",
           "tone": "red"
@@ -29,23 +29,16 @@
         "items": [
           {
             "state": "blocked",
-            "text": "Website Hosting: hosting account undefined, deployment blocked — waiting on account decision [id: 12970090689]"
+            "text": "Website hosting account undefined — deployment cannot proceed"
           },
           {
             "state": "blocked",
-            "text": "Service Pages: book.medstation.com subdomain down, service page buttons broken [id: 12971476311]"
+            "text": "Service page buttons broken; book.medstation.com subdomain down"
           },
           {
-            "state": "done",
-            "text": "Med Station and Full Smile websites launched live (2026-08-26)"
-          },
-          {
-            "state": "done",
-            "text": "New WordPress staging site built and ready for domain migration — Hashir Faiz (2026-08-31)"
+            "state": "next",
+            "text": "(inferred) Resolve hosting account ownership to unblock deployment"
           }
-        ],
-        "owners": [
-          "Hashir Faiz"
         ]
       },
       {
@@ -57,146 +50,176 @@
         "items": [
           {
             "state": "done",
-            "text": "Core workflows including WhatsApp messaging done for Weston (2026-09-03)"
+            "text": "WhatsApp disconnected from Kommo and connected to GHL (Mateus + Sohib, 9/1)"
           },
           {
             "state": "done",
-            "text": "WhatsApp Business Platform connected to GHL — Sohib Boundaoui (2026-09-01)"
-          },
-          {
-            "state": "done",
-            "text": "Webhook field mappings for staging and production booking completed — Ahmed Memon (2026-09-01)"
-          },
-          {
-            "state": "done",
-            "text": "Deduplication logic fixed to prevent duplicate contacts (2026-09-03)"
-          },
-          {
-            "state": "done",
-            "text": "Renata Barros configured as Account Admin with active calendar — Ahmed Memon (2026-08-31)"
-          },
-          {
-            "state": "done",
-            "text": "Marked Done: Reactivation Build, Lead Escalation, NextGen Sync Fixes, Phone Consolidation (2026-09-03/04)"
+            "text": "Webhook field mapping for Neurin booking data completed in staging and production (Ahmed Memon, 9/1)"
           }
         ],
         "owners": [
+          "Sohib Boundaoui",
           "Ahmed Memon",
+          "Mateus"
+        ]
+      },
+      {
+        "title": "MedStation - Ads / Meta",
+        "badge": {
+          "label": "P2 - on track",
+          "tone": "green"
+        },
+        "items": [
+          {
+            "state": "done",
+            "text": "Meta setup completed (8/26)"
+          },
+          {
+            "state": "done",
+            "text": "Google Tag Manager access added for pixel and tracking setup (Sohib, 9/2)"
+          }
+        ],
+        "owners": [
           "Sohib Boundaoui"
         ]
       },
       {
-        "title": "MedStation - Tracking & Attribution",
+        "title": "MedStation - Landing Pages / LSA",
         "badge": {
-          "label": "P2 - on track",
-          "tone": "green"
+          "label": "P2 - queued",
+          "tone": "amber"
         },
         "items": [
           {
-            "state": "done",
-            "text": "Tracking integration built on webhook and dataLayer model, fully operational — Rafael Rolim (2026-08-29)"
+            "state": "queued",
+            "text": "LSA — scheduled 9/7, status not confirmed"
           },
           {
-            "state": "done",
-            "text": "Google Ads, LSA, and Meta Ads call source-tracking workflows published — Ahmed Memon (2026-08-31)"
+            "state": "queued",
+            "text": "Landing Pages — scheduled 9/7, status not confirmed"
           },
           {
-            "state": "done",
-            "text": "GTM access granted for MedStation pixel setup — Sohib Boundaoui (2026-09-02)"
-          },
-          {
-            "state": "done",
-            "text": "Webhook errors on website forms corrected — Hamza Saeed (2026-08-26)"
+            "state": "queued",
+            "text": "Website Video — scheduled 9/7, status not confirmed"
           }
-        ],
-        "owners": [
-          "Rafael Rolim",
-          "Ahmed Memon",
-          "Hamza Saeed"
-        ]
-      },
-      {
-        "title": "MedStation - Meta Ads",
-        "badge": {
-          "label": "P2 - on track",
-          "tone": "green"
-        },
-        "items": [
-          {
-            "state": "done",
-            "text": "Meta ads account access granted for Weston campaigns — Jonatan Herculano (2026-08-26)"
-          },
-          {
-            "state": "done",
-            "text": "Marked Done on Monday: Meta (2026-09-04)"
-          },
-          {
-            "state": "done",
-            "text": "Instagram account reconnected to Business Portfolio — It Medstation (2026-08-31)"
-          }
-        ],
-        "owners": [
-          "Jonatan Herculano"
-        ]
-      },
-      {
-        "title": "MedStation - Patient Comms / Automation",
-        "badge": {
-          "label": "P2 - on track",
-          "tone": "green"
-        },
-        "items": [
-          {
-            "state": "done",
-            "text": "Patient appointment confirmations, reminders, and no-show follow-ups completed — Thainã (2026-08-25)"
-          },
-          {
-            "state": "done",
-            "text": "Phone forwarding for all clinic numbers to main line completed (2026-09-03)"
-          },
-          {
-            "state": "done",
-            "text": "Western routing set up for call handling (2026-09-03)"
-          },
-          {
-            "state": "done",
-            "text": "Marked Done on Monday: Review Engine, Booking Tracking/Duplicates (2026-09-03)"
-          }
-        ],
-        "owners": [
-          "Thainã"
         ]
       }
     ],
-    "waiting_on_client": [
-      {
-        "item": "Website Hosting account — hosting provider/account must be defined before deployment can proceed",
-        "who": "Mateus",
-        "since": "9/4"
-      }
-    ],
+    "waiting_on_client": [],
     "launch_gate": {
-      "title": "Launch gate - clear before full site go-live",
+      "title": "Launch gate - clear before site and ads go live",
       "items": [
         {
-          "text": "Website Hosting account defined and configured",
+          "text": "Website hosting account defined",
           "done": false
         },
         {
-          "text": "Service Pages subdomain (book.medstation.com) restored",
+          "text": "book.medstation.com subdomain restored",
           "done": false
         },
         {
-          "text": "WordPress staging site domain migration completed",
+          "text": "Service page buttons functional",
+          "done": false
+        },
+        {
+          "text": "Meta setup complete",
           "done": true
         },
         {
-          "text": "Webhook field mappings for production booking verified",
+          "text": "WhatsApp connected to GHL",
+          "done": true
+        },
+        {
+          "text": "Neurin webhook field mapping complete",
+          "done": true
+        },
+        {
+          "text": "Google Tag Manager access granted",
           "done": true
         }
+      ]
+    },
+    "brief_v2": {
+      "verdict": "Team's move: two Web blockers — hosting and service pages — are unresolved and stalling deployment.",
+      "next_move": "Team: identify and confirm website hosting account owner — unblocks deployment and service page restore.",
+      "blocks": [
+        {
+          "item": "Website Hosting (Monday #12970090689)",
+          "side": "team",
+          "who": "Flow team",
+          "last_activity": "Hosting account undefined; deployment blocked, per Monday board this week"
+        },
+        {
+          "item": "Service Pages (Monday #12971476311)",
+          "side": "team",
+          "who": "Flow team",
+          "last_activity": "Book.medstation.com subdomain down; buttons broken, per Monday board this week"
+        }
       ],
-      "note": "2 of 4 gate items remain open; both are Web + SEO blockers with no activity today."
+      "snapshot": [
+        {
+          "label": "Open items",
+          "value": "15 open, all in working status; 2 deployment blockers active in Web/SEO",
+          "tone": "warn"
+        },
+        {
+          "label": "Contract",
+          "value": "Phase 1 proof-of-concept, 3 months from July 1; flat retainer $3,500–$5,000/mo",
+          "tone": "muted"
+        },
+        {
+          "label": "Last client word",
+          "value": "2026-09-01 — Mateus disconnected WhatsApp from Kommo for GHL migration",
+          "tone": "plain"
+        },
+        {
+          "label": "Judged on",
+          "value": "Booked appointments and reactivated patients",
+          "tone": "plain"
+        }
+      ],
+      "history_line": "Meta setup completed · WhatsApp connected to GHL · Neurin webhook field mapping done"
     }
   },
-  "brief_v2": null
+  "brief_v2": {
+    "verdict": "Team's move: two Web blockers — hosting and service pages — are unresolved and stalling deployment.",
+    "next_move": "Team: identify and confirm website hosting account owner — unblocks deployment and service page restore.",
+    "blocks": [
+      {
+        "item": "Website Hosting (Monday #12970090689)",
+        "side": "team",
+        "who": "Flow team",
+        "last_activity": "Hosting account undefined; deployment blocked, per Monday board this week"
+      },
+      {
+        "item": "Service Pages (Monday #12971476311)",
+        "side": "team",
+        "who": "Flow team",
+        "last_activity": "Book.medstation.com subdomain down; buttons broken, per Monday board this week"
+      }
+    ],
+    "snapshot": [
+      {
+        "label": "Open items",
+        "value": "15 open, all in working status; 2 deployment blockers active in Web/SEO",
+        "tone": "warn"
+      },
+      {
+        "label": "Contract",
+        "value": "Phase 1 proof-of-concept, 3 months from July 1; flat retainer $3,500–$5,000/mo",
+        "tone": "muted"
+      },
+      {
+        "label": "Last client word",
+        "value": "2026-09-01 — Mateus disconnected WhatsApp from Kommo for GHL migration",
+        "tone": "plain"
+      },
+      {
+        "label": "Judged on",
+        "value": "Booked appointments and reactivated patients",
+        "tone": "plain"
+      }
+    ],
+    "history_line": "Meta setup completed · WhatsApp connected to GHL · Neurin webhook field mapping done"
+  }
 }
