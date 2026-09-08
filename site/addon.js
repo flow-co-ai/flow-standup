@@ -268,8 +268,56 @@ function foRenderFromItems(items, opts = {}) {
 }
 
 function foSelectItem(id) {
-  foSelectedId = id || null;
-  foRenderFromItems(foItems);
+  const previousId = foSelectedId;
+  const nextId = id || null;
+
+  const shell = document.querySelector('.fo-shell');
+  const detailEl = document.querySelector('.fo-detail');
+  if (!shell || !detailEl) {
+    // DOM isn't in the expected shape (shouldn't happen -- a row click implies
+    // the shell already rendered) -- fall back to a full render, preserving
+    // window/list scroll across it rather than letting it jump.
+    const scrollY = window.scrollY;
+    const listEl = document.querySelector('.fo-list');
+    const listScrollTop = listEl ? listEl.scrollTop : 0;
+    foSelectedId = nextId;
+    foRenderFromItems(foItems);
+    window.scrollTo(0, scrollY);
+    const newListEl = document.querySelector('.fo-list');
+    if (newListEl) newListEl.scrollTop = listScrollTop;
+    return;
+  }
+
+  foSelectedId = nextId;
+
+  // Swap only the detail pane and move .selected between rows directly --
+  // the list DOM is never touched, so it can't reflow/reorder and the
+  // document's height only ever changes where the detail pane actually sits,
+  // never by rebuilding everything above the fold. That's what was causing
+  // the window to jump: each card's detail body is a different length, and a
+  // full foRenderFromItems() rebuilds the whole shell (list included) just to
+  // move one row's highlight.
+  if (previousId) {
+    const prevRow = document.querySelector(`.fo-list-row[data-id="${CSS.escape(previousId)}"]`);
+    if (prevRow) prevRow.classList.remove('selected');
+  }
+  if (foSelectedId) {
+    const nextRow = document.querySelector(`.fo-list-row[data-id="${CSS.escape(foSelectedId)}"]`);
+    if (nextRow) nextRow.classList.add('selected');
+  }
+
+  shell.classList.toggle('fo-detail-visible', !!foSelectedId);
+
+  const selectedItem = foItems.find(it => it.id === foSelectedId) || null;
+  detailEl.innerHTML = selectedItem ? foRenderDetailPane(selectedItem) : foDetailEmpty();
+
+  // Chat is open by default -- land scrolled to the latest message. Scoped to
+  // the chat log element itself (bounded by its own max-height/overflow), so
+  // this can't move the document.
+  if (selectedItem) {
+    const log = document.getElementById(`fo-chat-log-${selectedItem.id}`);
+    if (log) log.scrollTop = log.scrollHeight;
+  }
 }
 
 // ── passcode gate ─────────────────────────────────────────────────────────────
