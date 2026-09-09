@@ -1,22 +1,22 @@
 {
   "week_of": "2026-09-09",
-  "executive_summary": "Nine clients flagged this week, most with multi-week stalls. CRM work is concentrated at MedStation (three workflow fixes shipped today) and Liferun (two 64-day verifications still open). Ads optimization and conversion tracking remain stalled at Billy Doe Meats, Justice Consumer Law, and Maadi Law.",
+  "executive_summary": "Eight clients remain in needs_attention with no new activity this week. Stalls range from 6 to 90 days across CRM, Ads, Video, and Web. Critical blockers include unresolved billing discrepancies, broken CRM syncs forcing manual work, and intake ownership gaps blocking scale-up.",
   "departments_overview": [
     {
       "department": "CRM",
-      "summary": "MedStation shipped three workflow fixes today; Liferun has two 64-day billing/automation verifications open; Full Smile billing setup incomplete; Maadi Law Clio sync report pending 47 days."
+      "summary": "Heavy load with sync issues at MedStation forcing manual intervention, Liferun billing verifications stalled 64 days, Full Smile billing setup incomplete 6 days, and Maadi Law Clio sync report pending 47 days."
     },
     {
       "department": "Ads",
-      "summary": "Billy Doe Meats conversion test stalled 48 days; Justice Consumer Law Meta ramp pending 20 days; Full Smile LSA clarification open 21 days; Maadi Law conversion tags incomplete 37 days."
+      "summary": "Multiple stalls: Billy Doe conversion test at 48 days and halal stamp issue at 18 days, Full Smile LSA discrepancy unresolved at 21 days, Quality HVAC billing migration unverified at 90 days, Justice Consumer Law optimization pending 20 days, Maadi Law conversion tags incomplete at 37 days."
     },
     {
       "department": "Video",
-      "summary": "Justice Consumer Law edits in progress with no delivery date (21 days); Flow Company has two videos awaiting action (19 days)."
+      "summary": "Justice Consumer Law edits in progress with no delivery date (21 days stalled), Flow Company internal videos awaiting action (19 days stalled)."
     },
     {
       "department": "Web + SEO",
-      "summary": "MedStation hosting account undefined and service page buttons broken (6 days); no other web work flagged."
+      "summary": "MedStation hosting account undefined and service page buttons broken (6 days stalled), blocking deployment and user experience."
     }
   ],
   "by_client": [
@@ -399,7 +399,7 @@
     },
     {
       "client": "Full Smile",
-      "headline": "No new activity; billing & LSA loops open",
+      "headline": "No new activity; open loops persist",
       "health": "needs_attention",
       "work_by_department": [
         {
@@ -437,7 +437,7 @@
       ],
       "status_change_suggestions": [],
       "risks": [
-        "Billing setup blocking messaging costs pass-through"
+        "Client-reported spend discrepancy unresolved; Sohib acknowledged but no follow-up yet"
       ],
       "upcoming": [],
       "next_up": null,
@@ -715,10 +715,16 @@
               "monday_item_id": null,
               "monday_url": null,
               "id": "7981a104"
-            },
+            }
+          ]
+        },
+        {
+          "department": "Ads",
+          "highlights": [],
+          "stalled_items": [
             {
               "text": "Meta billing card migration not closed-loop verified",
-              "department": "",
+              "department": "Ads",
               "source": "meeting",
               "days_stalled": 90,
               "item_name": null,
@@ -730,7 +736,9 @@
         }
       ],
       "status_change_suggestions": [],
-      "risks": [],
+      "risks": [
+        "Intake ownership gap blocks budget scale-up"
+      ],
       "upcoming": [
         {
           "text": "Trim down Meta ads - archive non-performers",
@@ -739,7 +747,7 @@
           "monday_item_id": "12972859853"
         }
       ],
-      "next_up": "Sep 8 - Trim down Meta ads - archive non-performers",
+      "next_up": "Mon Sep 8 - Trim down Meta ads - archive non-performers",
       "stats": {
         "tasks": 14,
         "todo": 0,
@@ -749,7 +757,7 @@
         "done": 0,
         "monday_msgs": 1,
         "meetings": 0,
-        "wa_msgs": 11
+        "wa_msgs": 5
       },
       "completed_this_week": [
         {
@@ -1359,7 +1367,7 @@
       ],
       "status_change_suggestions": [],
       "risks": [
-        "Two critical CRM verifications stalled 64 days; money-path integrity unconfirmed"
+        "Two critical CRM verifications stalled 64 days; money-path leaks undetected"
       ],
       "upcoming": [],
       "next_up": null,
@@ -1723,7 +1731,7 @@
     },
     {
       "client": "MedStation",
-      "headline": "Three CRM workflow fixes posted today",
+      "headline": "Four CRM sync issues documented; no resolutions",
       "health": "needs_attention",
       "work_by_department": [
         {
@@ -1739,22 +1747,22 @@
               "id": "932fc664"
             },
             {
-              "text": "Business hours logic built; Renata handled 3+ manually",
+              "text": "Business hours logic missing; Renata manually answered leads",
               "department": "CRM",
               "source": "monday",
               "monday_item_id": "12978879914",
               "days_stalled": null,
               "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12978879914",
-              "id": "87c88ea7"
+              "id": "8cf6c64e"
             },
             {
-              "text": "Appointment status sync from NextGen still broken",
+              "text": "Appointment status sync broken in two ways",
               "department": "CRM",
               "source": "monday",
               "monday_item_id": "13002597767",
               "days_stalled": null,
               "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13002597767",
-              "id": "c2cf7493"
+              "id": "d347151c"
             }
           ],
           "stalled_items": []
@@ -1786,7 +1794,7 @@
       ],
       "status_change_suggestions": [],
       "risks": [
-        "CRM automation gaps forcing manual lead handling after hours"
+        "CRM sync gaps forcing manual intervention; attribution at risk"
       ],
       "upcoming": [],
       "next_up": null,
@@ -1797,9 +1805,9 @@
         "review": 0,
         "stuck": 0,
         "done": 0,
-        "monday_msgs": 11,
+        "monday_msgs": 12,
         "meetings": 8,
-        "wa_msgs": 100
+        "wa_msgs": 94
       },
       "completed_this_week": [
         {
@@ -1887,6 +1895,30 @@
           "who": "Sohib Boundaoui",
           "source": "WA",
           "date": "2026-09-03",
+          "generated": false,
+          "monday_url": null
+        },
+        {
+          "text": "Launched GHL, Meta ads, and Google ads for Weston clinic",
+          "who": "Sohib Boundaoui",
+          "source": "WA",
+          "date": "2026-09-08",
+          "generated": false,
+          "monday_url": null
+        },
+        {
+          "text": "Updated Webflow login credentials and shared with team",
+          "who": "Hashir Faiz",
+          "source": "WA",
+          "date": "2026-09-06",
+          "generated": false,
+          "monday_url": null
+        },
+        {
+          "text": "Provided GA4 measurement details to GHL team for integration",
+          "who": "Hashir Faiz",
+          "source": "WA",
+          "date": "2026-09-04",
           "generated": false,
           "monday_url": null
         }
@@ -2309,8 +2341,8 @@
           },
           "comms_quality": {
             "score": "yellow",
-            "reason": "55% medium/high",
-            "pct_medium_high": 55
+            "reason": "58% medium/high",
+            "pct_medium_high": 58
           },
           "meeting_cadence": {
             "score": "green",
@@ -2329,32 +2361,21 @@
     },
     {
       "client": "Maadi Law",
-      "headline": "WhatsApp business account question; loops unchanged",
+      "headline": "No new activity; open loops unchanged",
       "health": "needs_attention",
       "work_by_department": [
         {
           "department": "CRM",
-          "highlights": [
-            {
-              "text": "WhatsApp business account needed for client messaging",
-              "department": "CRM",
-              "source": "whatsapp",
-              "monday_item_id": null,
-              "item_name": null,
-              "days_stalled": null,
-              "monday_url": null,
-              "id": "cf1b9ff8"
-            }
-          ],
+          "highlights": [],
           "stalled_items": [
             {
               "text": "Clio Manage two-way sync report pending",
               "department": "CRM",
               "source": "monday",
-              "monday_item_id": "12963355468",
-              "item_name": "Send to Clio",
               "days_stalled": 47,
-              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12963355468",
+              "item_name": "Send to Clio",
+              "monday_item_id": "[id: 12963355468]",
+              "monday_url": null,
               "id": "9c201493"
             }
           ]
@@ -2367,10 +2388,10 @@
               "text": "Conversion tags verification incomplete",
               "department": "Ads",
               "source": "monday",
-              "monday_item_id": "12700991621",
-              "item_name": "Tracking Setup",
               "days_stalled": 37,
-              "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12700991621",
+              "item_name": "Tracking Setup",
+              "monday_item_id": "[id: 12700991621]",
+              "monday_url": null,
               "id": "929e089f"
             }
           ]
@@ -2389,7 +2410,7 @@
         "done": 0,
         "monday_msgs": 8,
         "meetings": 0,
-        "wa_msgs": 78
+        "wa_msgs": 69
       },
       "completed_this_week": [
         {
@@ -3182,7 +3203,7 @@
       ],
       "possible_existing_client": null,
       "likelihood_percent": 15,
-      "likelihood_reason": "Recommending an external tool (higgsfield.ai) suggests they're not engaging with our offering."
+      "likelihood_reason": "Recommending external tool (higgsfield.ai) suggests they're not moving forward with our service."
     },
     {
       "name": "Paulo) | FlowCo (Sohib and team)",
@@ -3198,7 +3219,7 @@
       ],
       "possible_existing_client": null,
       "likelihood_percent": 65,
-      "likelihood_reason": "Positive tone with 'perfect thank you!' indicates satisfaction and active engagement with deliverables."
+      "likelihood_reason": "Positive tone with 'perfect thank you!' indicates satisfaction and likely progression through onboarding."
     },
     {
       "name": "Summit Bags",
@@ -3317,32 +3338,29 @@
     }
   ],
   "comms_flags": [
-    "Billy Doe Meats: Conversion test stalled 48 days; subscribe-page work blocked",
+    "Full Smile: Client-reported spend discrepancy unresolved; Sohib acknowledged but no follow-up yet",
+    "Quality HVAC: Intake ownership gap since Vivian left 7/7 blocks budget scale-up",
     "Justice Consumer Law: Meta optimization stalled 3 weeks; lead volume at risk",
-    "Liferun: Two critical CRM verifications stalled 64 days; money-path integrity unconfirmed",
-    "MedStation: CRM automation gaps forcing manual lead handling after hours",
-    "Full Smile: Billing setup blocking messaging costs pass-through",
-    "Quality HVAC: Intake owner unconfirmed since Vivian left 7/7 (64 days)"
+    "Liferun: Two critical CRM verifications stalled 64 days; money-path leaks undetected",
+    "MedStation: CRM sync gaps forcing manual intervention; attribution at risk"
   ],
   "blockers": [
-    "Billy Doe Meats: /halal-subscribe conversion test awaiting results (48d stalled)",
-    "Full Smile: Billing setup incomplete; no business card available (6d stalled)",
-    "Quality HVAC: Meta billing card migration not closed-loop verified (90d stalled)",
-    "MedStation: Website hosting account undefined; deployment blocked (6d stalled)",
-    "Liferun: Becklar billing drop verification — confirm deactivation reflects (64d stalled)"
+    "Billy Doe Meats: Conversion test stalled 48 days; subscribe-page work blocked",
+    "Quality HVAC: Meta billing card migration not closed-loop verified (90 days)",
+    "MedStation: Website hosting account undefined; deployment blocked (6 days)"
   ],
   "this_week_priorities": [
     {
-      "client": "Billy Doe Meats",
-      "text": "Billy Doe Meats: Close /halal-subscribe conversion test and halal stamp ad issue",
+      "client": "Full Smile",
+      "text": "Full Smile: Close LSA billing discrepancy loop with Lily",
       "action": null,
-      "id": "b2606640"
+      "id": "74080024"
     },
     {
-      "client": "Justice Consumer Law",
-      "text": "Justice Consumer Law: Resume Meta optimization and confirm video delivery date",
+      "client": "Quality HVAC",
+      "text": "Quality HVAC: Confirm intake owner and verify Meta billing migration",
       "action": null,
-      "id": "44a47353"
+      "id": "eeb9d1ab"
     },
     {
       "client": "Liferun",
@@ -3352,9 +3370,9 @@
     },
     {
       "client": "MedStation",
-      "text": "MedStation: Define hosting account and fix service page buttons",
+      "text": "MedStation: Resolve CRM sync issues and define hosting account for deployment",
       "action": null,
-      "id": "35dc628e"
+      "id": "d22894f4"
     }
   ],
   "auto_completed_alerts": [
