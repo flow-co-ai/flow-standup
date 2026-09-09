@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-09T15:50:54.856Z",
+  "generated_at": "2026-09-09T19:40:48.094Z",
   "date": "2026-09-09",
   "slug": "steel-forte",
   "name": "Forte Metals",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Forte Metals saw zero paid activity across Meta and Google Ads in the last 28 days, making Google Business Profile the sole source of engagement with 85 total actions (44 directions, 36 web clicks, 5 calls). The biggest concern is GBP actions dropping 100% in the last 7 days versus the prior 7 days, likely signaling a listing issue, suspension, or a sudden drop in local search visibility that needs immediate investigation.",
+  "verdict": "Paid channels (Meta and Google Ads) generated zero spend, leads, or clicks over the last 28 days, suggesting campaigns are paused or inactive. Google Business Profile remained the only source of engagement, driving 85 total actions including 5 calls, 44 direction requests, and 36 website clicks, though GBP activity dropped 100% in the last 7 days versus the prior 7 days, pointing to a likely listing issue or suspension worth investigating immediately.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,81 +409,79 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-09-09T15:54:33.447Z",
+    "generated_at": "2026-09-09T19:44:30.415Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP went dark Aug 29; organic is the only channel and it's dead.",
+    "verdict": "GBP gone dark; paid never ran; 3 SOW blockers unresolved.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "GBP actions dropped 100% in the last 7d — last recorded action was Aug 28 (12 actions); zero for 12 consecutive days. Listing issue or suspension probable.",
-        "confidence": "probable",
+        "text": "GBP dropped to 0 actions across last 11 days (Aug 29–Sep 8) after averaging ~5/day prior; listing issue or suspension likely.",
+        "confidence": "confirmed",
         "channel": "GBP"
       },
       {
         "id": "F2",
-        "priority": 1,
-        "text": "Search clicks collapsed: 3-day signal (Sep 6–8) = 0 clicks vs prior 3 days (Sep 3–5) = 4 clicks — 100% drop, inside a broader 63% 7d decline.",
+        "priority": 2,
+        "text": "OVERDUE: 342 stub accounts unreconciled as of Aug 31 blocker; Sales-i sync blind to these accounts until fixed.",
         "confidence": "confirmed",
-        "channel": "Organic Search"
+        "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "OVERDUE — 342 stub accounts (blocker, due Aug 31) unreconciled; Sales-i sync keys on Customer ID, so these accounts receive zero pipeline data until fixed.",
+        "text": "OVERDUE: Web/SEO root cause not named and fix not submitted as of Aug 31 blocker; downstream SEO work gated.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 2,
-        "text": "OVERDUE — AGS + Forte contact pull for outreach (blocker, due Aug 31) not completed; cold email/calling pipeline cannot launch without this list.",
+        "text": "OVERDUE: AGS + Forte contact pull for outreach not delivered as of Aug 31; cold email/calling pipeline has 0 contacts loaded.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F5",
-        "priority": 2,
-        "text": "OVERDUE — Web/SEO root cause named + fix submitted (blocker, due Aug 31) outstanding; likely connected to GBP dark signal starting Aug 29.",
-        "confidence": "hypothesis",
-        "channel": "SOW"
+        "priority": 3,
+        "text": "Search clicks fell from avg ~2/day (Aug 12–28) to 0 for last 3 days (Sep 6–8), a confirmed 3-day drop signal; -63.64% delta corroborates.",
+        "confidence": "confirmed",
+        "channel": "organic"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit GBP listing immediately — check suspension status, ownership, and local ranking drop that caused 12 days of zero actions.",
+        "text": "Investigate and reinstate GBP listing immediately; 0 actions for 11 consecutive days confirms suspension or critical edit.",
         "cites": [
-          "F1",
-          "F2"
+          "F1"
         ],
-        "monday_item_name": "GBP Listing Audit Forte",
-        "monday_update": "GBP actions went to zero on Aug 29 and have not recovered — 12 consecutive zero-action days as of Sep 8, down from 12 actions on Aug 28. Check the listing for suspension, ownership conflicts, or a category/address change that triggered a Google review. Success is confirmed when daily GBP actions return to the Aug 12–28 baseline of 3–12/day. Complete audit and remediation by Sep 12."
+        "monday_item_name": "Fix Forte GBP listing",
+        "monday_update": "GBP actions dropped to 0 on Aug 29 and have not recovered through Sep 8 — 11 days of zero engagement after averaging ~5 actions/day prior. Log into Google Business Profile now to check for suspension notice, unverified edits, or policy flags and resolve or appeal. Success looks like GBP actions resuming above 3/day within 7 days of reinstatement. Re-check by 2026-09-16."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Unblock 342 stub reconciliation and AGS + Forte contact pull — both are Aug 31 blockers holding Sales-i sync and outreach launch.",
+        "text": "Escalate 342 stub reconciliation to Ahmed; this blocker freezes Sales-i sync for all unmatched accounts.",
         "cites": [
-          "F3",
-          "F4"
+          "F2"
         ],
-        "monday_item_name": "Clear Aug 31 SOW Blockers",
-        "monday_update": "Two hard blockers missed their Aug 31 deadline: the 342 stub account reconciliation (Sales-i sends zero data to these accounts until Customer IDs are fixed) and the AGS + Forte contact pull needed to launch cold email and calling. Ahmed to post reconciled stub batch with rollback file to Monday board; outreach contact list to be delivered to Tom. Success check: rollback file posted and contact list delivered by Sep 16."
+        "monday_item_name": "Reconcile 342 CRM stubs",
+        "monday_update": "342 stub accounts remain unreconciled past the Aug 31 deadline, blocking Sales-i from syncing purchase and activity data for those accounts. Ahmed to run the name-based match against the authoritative customer sheet and post audited batch results with rollback files to the Monday CRM board. Success is confirmed when 0 stubs remain unmatched and Sales-i fields populate on a test account. Target completion: 2026-09-16."
       },
       {
         "id": "S3",
-        "type": "watch",
-        "text": "Watch Web/SEO root-cause finding (overdue Aug 31) — if GBP audit clears listing, SEO fix may share the same cause. Re-check Sep 12.",
+        "type": "fix",
+        "text": "Pull AGS + Forte contact lists immediately; cold outreach pipeline has 0 contacts and is fully stalled.",
         "cites": [
-          "F5"
+          "F4"
         ],
-        "monday_item_name": "Web/SEO Root Cause Watch",
-        "monday_update": "The Web/SEO root-cause submission was due Aug 31 and remains outstanding. The GBP dark signal starting Aug 29 overlaps this window and may share a common cause (e.g. site issue affecting local indexing). Hold this item until the GBP audit result is in hand. If GBP audit identifies a site-side trigger, escalate immediately; otherwise confirm the SEO root cause separately by Sep 12."
+        "monday_item_name": "Pull AGS + Forte contact lists",
+        "monday_update": "The AGS and Forte contact pull missed its Aug 31 deadline, leaving the cold email and calling pipeline with zero contacts loaded. Responsible party to extract and deliver verified contact lists to the outreach team this week. Success is the outreach team confirming sequences are loaded and first sends are scheduled. Target: 2026-09-13."
       }
     ],
-    "next_check": "2026-09-12"
+    "next_check": "2026-09-16"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-09T15:49:46.860Z",
+  "generated_at": "2026-09-09T19:39:51.617Z",
   "date": "2026-09-09",
   "slug": "full-smile",
   "name": "Full Smile",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 65,
   "status": "amber",
-  "verdict": "Leads dropped sharply over the last 7 days (down 34.37%), driving CPL up 46.68%, likely due to GBP actions falling off completely (down 100%) and reduced top-of-funnel pressure, even as the top campaign \"BWS - Instant Leads - Retargeting\" carried $405.97 of the $789.05 in 28-day Meta spend. Monitoring audience fatigue on the retargeting campaign and restoring GBP engagement should be the immediate priority.",
+  "verdict": "Leads dropped sharply over the last 7 days (-34.37%), driving CPL up 46.68%, likely due to GBP actions falling off completely (-100%) and reduced top-of-funnel pressure, even as the top campaign \"BWS - Instant Leads - Retargeting\" anchored $405.97 of the $789.05 in 28-day Meta spend. Monitoring audience fatigue on the retargeting campaign and reactivating GBP engagement should be the immediate priority.",
   "windsor": {
     "totals": {
       "spend": 789.05,
@@ -592,78 +592,79 @@
     "history_line": "Delivered May 2026 SEO update report"
   },
   "performance": {
-    "generated_at": "2026-09-09T15:52:01.484Z",
+    "generated_at": "2026-09-09T19:42:01.671Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "CPL crisis is real; GBP collapse and 5 overdue SOW blockers threaten renewal.",
+    "verdict": "CPL crisis is real; GBP collapse and 5 overdue SOW milestones compound the risk.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "CPL spiked 46.68% in 7d with spend nearly flat (-3.74%), meaning leads fell from ~19 to ~12 in the window — efficiency is broken, not budget.",
+        "text": "CPL spiked 46.68% in 7 days while spend fell only 3.74% — leads dropped 34.37%, meaning fewer conversions per dollar, not a budget cut.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
-        "priority": 1,
-        "text": "3-day signal (Sep 6–8): leads totalled 12 vs 10 in prior 3 days (Sep 3–5) — marginal uptick, but both windows are well below the Aug 12–18 daily avg of ~4.3/day. No recovery confirmed.",
-        "confidence": "probable",
-        "channel": "meta"
+        "priority": 2,
+        "text": "5 SOW milestones overdue (earliest 2026-07-23): phone-match attribution, CRM cleanup, dashboard, and August scoreboard all undelivered — renewal trust at risk.",
+        "confidence": "confirmed",
+        "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GBP actions dropped 100% for 8 consecutive days (Sep 1–8, 0 actions/day) after averaging 8.6/day Aug 12–31 — channel is dark and organic referral pressure has collapsed.",
+        "text": "GBP actions hit 0 for 8 consecutive days (Sep 1–8) after averaging ~9/day in August — a complete organic floor collapse with no paid offset.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F4",
-        "priority": 2,
-        "text": "5 SOW milestones overdue (oldest: Jul 23 renewal tracking; latest: Aug 31 dashboard + renewal decision) — scoreboard is untrusted and client walk risk is active.",
-        "confidence": "confirmed",
-        "channel": "SOW"
+        "priority": 3,
+        "text": "3-day lead signal (Sep 6–8): 6+2+4=12 leads vs prior 3 days (Sep 3–5): 4+2+0=6 — a short recovery, but CPL context makes this fragile, not a trend reversal.",
+        "confidence": "probable",
+        "channel": "meta"
       },
       {
         "id": "F5",
-        "priority": 3,
-        "text": "BWS Retargeting campaign consumed $405.97 of $789.05 (51%) in 28 days; with leads falling -34.37%, retargeting audience may be exhausted — fatigue probable on the top spend line.",
-        "confidence": "probable",
-        "channel": "meta"
+        "priority": 4,
+        "text": "GHL returned a 401 timeout error this cycle — pipeline data is unavailable; leads-to-opps conversion cannot be verified against the 109 28-day leads.",
+        "confidence": "confirmed",
+        "channel": "crm"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Restore GBP posting cadence immediately; 8 days of 0 actions is a confirmed channel outage cutting top-of-funnel.",
+        "type": "creative_refresh",
+        "text": "Introduce fresh creative into BWS Retargeting (51% of 28-day spend, $405.97) to address probable audience fatigue driving CPL +46.68%.",
         "cites": [
-          "F3"
+          "F1",
+          "F4"
         ],
-        "monday_item_name": "Restore GBP posting cadence",
-        "monday_update": "GBP actions have been zero for 8 consecutive days (Sep 1–8), down from an average of 8.6 actions/day in August — this is a confirmed channel outage, not a slow week. Assign whoever owns GBP content to publish at minimum 2 posts and verify the profile is not suspended or flagged. Success check: GBP actions > 5/day for 3 consecutive days by Sep 12."
+        "monday_item_name": "Refresh BWS Retargeting Creative",
+        "monday_update": "The BWS - Instant Leads - Retargeting campaign consumed $405.97 of $789.05 in 28-day spend while CPL rose 46.68% on a 34.37% lead drop — a classic fatigue pattern. Swap in at least 2 new ad creatives (new hook or visual) without changing audience or budget. Success check: CPL returns below the 28-day baseline of $7.24 within 7 days of launch. Re-evaluate by 2026-09-16."
       },
       {
         "id": "S2",
-        "type": "creative_refresh",
-        "text": "Inject 1–2 new Meta creatives into BWS Retargeting; $405.97 of 28-day spend on a shrinking retargeting pool signals audience exhaustion.",
+        "type": "fix",
+        "text": "Escalate GBP reactivation immediately — 0 actions for 8 days erases organic floor that previously generated ~9 actions/day and supported lead volume.",
         "cites": [
-          "F5",
-          "F1"
+          "F3"
         ],
-        "monday_item_name": "Meta Retargeting Creative Refresh",
-        "monday_update": "The BWS Instant Leads Retargeting campaign has absorbed $405.97 (51% of all Meta spend) over 28 days while leads fell 34.37% and CPL rose 46.68% — a probable fatigue pattern. Introduce 1–2 new creative variants (different hook or offer angle) without changing the audience or budget. Success check: CPL returns below the Aug 12–18 implicit baseline (~$5–7 range from series data) within 7 days of launch, i.e., by Sep 16."
+        "monday_item_name": "Reactivate GBP — 8-Day Gap",
+        "monday_update": "GBP actions have been zero since September 1 after averaging approximately 9 per day through August — this is a confirmed channel-dark event that removes a free lead source during a prove-it month. Post a minimum of 3 GBP updates or Q&A responses this week and confirm the profile is not suspended or suppressed. Success check: GBP actions return above 5/day within 7 days. Re-check 2026-09-16."
       },
       {
         "id": "S3",
         "type": "fix",
-        "text": "Escalate all 5 overdue SOW milestones to Nacer and Sohib; Aug 31 dashboard and renewal decision are 9 days past due.",
+        "text": "Resolve GHL 401 timeout and surface pipeline data — 109 leads in 28 days cannot be traced to opps or appointments without CRM access.",
         "cites": [
-          "F4"
+          "F5",
+          "F2"
         ],
-        "monday_item_name": "Escalate 5 Overdue SOW Items",
-        "monday_update": "Five milestones are overdue, the most critical being the Aug 31 dashboard live item and the August scoreboard trusted / renewal decision — both 9 days past due on a one-month prove-it contract. The client's stated walk condition is unmet scoreboards, and GHL returned a 401 error this cycle so pipeline data is also blind. Nacer and Sohib must triage all five items and confirm status by Sep 11. Success check: each milestone marked complete or rescheduled with a new committed date in Monday by Sep 11."
+        "monday_item_name": "Fix GHL 401 + Pipeline Visibility",
+        "monday_update": "GHL returned a 401 timeout error this cycle, blocking all pipeline visibility against 109 28-day leads — this directly blocks the overdue dashboard milestone (due 2026-08-31) and the August scoreboard the client needs for renewal. Ahmed/Ali to restore API auth and confirm pipeline sync is writing opps correctly. Success check: GHL pipeline data loads without error and lead-to-opp count is visible by 2026-09-12."
       }
     ],
     "next_check": "2026-09-12"

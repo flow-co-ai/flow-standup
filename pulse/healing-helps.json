@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-09T15:49:52.414Z",
+  "generated_at": "2026-09-09T19:39:55.862Z",
   "date": "2026-09-09",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) generated zero spend, leads, or clicks over the past 28 days, suggesting campaigns are paused or inactive. On the organic side, Google Business Profile drove 30 total actions including 1 call, 15 direction requests, and 14 website clicks, though GBP engagement dropped 100% in the last 7 days versus the prior 7 days, signaling a sharp recent falloff likely tied to reduced profile activity or listing visibility.",
+  "verdict": "The most significant movement this period is zero spend and zero leads across both Meta and Google Ads over the last 28 days, suggesting paid campaigns are paused or inactive. Organic GBP activity is carrying all engagement with 30 total actions (15 directions, 14 web clicks, 1 call), though GBP actions dropped 100% in the last 7 days, pointing to a likely listing visibility or engagement issue that needs immediate attention.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -517,53 +517,72 @@
     "history_line": "Website completed · Shabana Sheikh bio added to Meet Our Therapists"
   },
   "performance": {
-    "generated_at": "2026-09-09T15:52:21.439Z",
+    "generated_at": "2026-09-09T19:42:22.012Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid channels dead 28+ days; only organic GBP signal, now silent too.",
+    "verdict": "Paid is fully dark; only GBP carried this account and it just went silent.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across Meta and Google Ads for all 28 days — $0 in, $0 out. No CPL is computable; there is no active paid engine.",
+        "text": "Zero spend and zero leads across all 28 days — both Meta and Google Ads are fully paused; $0 invested, $0 returned.",
         "confidence": "confirmed",
-        "channel": "meta/google"
+        "channel": "meta+google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions fell to 0 in the last 7 days (-100% delta) after delivering 30 actions in the prior period; 3-day signal (Sep 6–8) shows 0, 0, 0 vs prior 3 days (Sep 3–5) also 0, 0, 0 — full organic stall confirmed.",
+        "text": "GBP actions dropped to 0 for the last 11 consecutive days (Sep 29–Sep 8); prior 17 days averaged ~1.8 actions/day — listing engagement has gone dark.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GA4 sessions dropped 32.2% week-over-week; last 3 days (Sep 6–8) averaged 4 sessions vs prior 3 days (Sep 3–5) averaging 6.3 — directional decay, likely tied to zero paid traffic and GBP falloff.",
-        "confidence": "probable",
+        "text": "GA4 sessions fell 32.2% week-over-week; last 3 days averaged 4 sessions vs prior 3-day average of ~14 — organic traffic is in confirmed decline.",
+        "confidence": "confirmed",
         "channel": "ga4"
+      },
+      {
+        "id": "F4",
+        "priority": 4,
+        "text": "GHL pipeline data is null — with 201 sessions over 28 days and 0 GHL records, intake tracking is either broken or disconnected entirely.",
+        "confidence": "probable",
+        "channel": "ghl"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Confirm whether paid campaigns are intentionally paused; re-check Sep 12 for any spend resumption.",
-        "cites": [
-          "F1"
-        ],
-        "monday_item_name": "Confirm paid campaign pause status",
-        "monday_update": "Meta and Google Ads recorded $0 spend across every single day in the 28-day window — this is not a data gap, it is a full stop. Before any budget action can be taken, confirm with the client whether campaigns are intentionally paused (e.g. seasonal hold, scope change) or if this is an account issue (billing, policy). Success check: spend > $0 confirmed in platform by 2026-09-12."
-      },
-      {
-        "id": "S2",
-        "type": "watch",
-        "text": "Monitor GBP for listing suppression or visibility drop; re-check Sep 12 for any action recovery.",
+        "type": "fix",
+        "text": "Audit GBP listing immediately — 11 straight zero-action days after ~1.8/day baseline signals a suspension, penalty, or listing issue.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "GBP visibility drop — watch",
-        "monday_update": "GBP delivered 30 actions in the 28-day window but dropped to 0 in the last 7 days, with the series showing zero actions from Sep 1 onward. This may indicate listing suppression, a flagged profile, or a data reporting gap. Check the GBP dashboard directly for any policy flags or ownership issues. Success check: GBP actions return above 1/day by 2026-09-12 re-check."
+        "monday_item_name": "Fix GBP listing dark issue",
+        "monday_update": "GBP actions dropped from a ~1.8/day average to zero for 11 consecutive days ending Sep 8. Check Google Business Profile for suspension notices, ownership conflicts, or listing suppression. Success is confirmed when daily GBP actions return to ≥1/day. Re-check by Sep 12."
+      },
+      {
+        "id": "S2",
+        "type": "fix",
+        "text": "Verify GHL pipeline connection — 201 sessions and 0 pipeline records over 28 days indicates intake tracking is broken, not just slow.",
+        "cites": [
+          "F4"
+        ],
+        "monday_item_name": "Fix GHL intake tracking",
+        "monday_update": "GHL shows null pipeline data despite 201 GA4 sessions in the last 28 days and 0 paid or organic leads recorded. Check the GHL form embed, webhook, or CRM integration for breaks. Success is a non-null pipeline count with at least one opportunity logged. Re-check by Sep 12."
+      },
+      {
+        "id": "S3",
+        "type": "watch",
+        "text": "Hold any paid reactivation until GBP and GHL fixes confirm organic floor is intact — no budget to diagnose against.",
+        "cites": [
+          "F1",
+          "F2",
+          "F3"
+        ],
+        "monday_item_name": "Watch: Paid reactivation hold",
+        "monday_update": "All paid channels have been at $0 spend for the full 28-day window. Reactivating before GBP visibility and GHL intake are restored means buying traffic into a broken funnel. Watch GA4 sessions trend and GBP actions; if both recover by Sep 16, escalate to Sohib for paid relaunch discussion."
       }
     ],
     "next_check": "2026-09-12"

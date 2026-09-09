@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-09-09T15:50:05.046Z",
+  "generated_at": "2026-09-09T19:40:14.247Z",
   "date": "2026-09-09",
   "slug": "hvac",
   "name": "Quality HVAC by Fibid",
   "type": "leadgen",
   "window_days": 28,
-  "score": 75,
-  "status": "amber",
-  "verdict": "Over the past 28 days, Quality HVAC by Fibid generated 8 leads at a $223.26 CPL across $1,786.10 in total spend, with Google Ads leading investment at $1,113.97. The biggest movement is a 39.23% drop in Google Ads spend over the last 7 days, likely driven by budget pacing or a manual reduction, while GBP engagement fell 100%, suggesting the profile may have been paused or lost visibility entirely.",
+  "score": 80,
+  "status": "green",
+  "verdict": "Over the past 28 days, Quality HVAC by Fibid generated 8 leads at a $223.26 CPL, with Google Ads leading spend at $1,113.97 across 133 clicks. The biggest movement is a 39.23% drop in Google Ads spend over the last 7 days, likely driven by budget pacing or campaign throttling on the top LocalServicesCampaign ($689.19 spend), which may be suppressing lead volume heading into the current period.",
   "windsor": {
     "totals": {
       "spend": 1786.1,
@@ -410,7 +410,18 @@
     }
   },
   "ghl": {
-    "error": "GHL 401: {\"statusCode\":401,\"message\":\"Command timed out\"}"
+    "contacts": 268,
+    "opportunities": {
+      "created": {
+        "count": 526,
+        "value": 565
+      },
+      "won": {
+        "count": 39,
+        "value": 565
+      }
+    },
+    "appointments": 0
   },
   "_meta": {
     "source": "windsor_api",
@@ -577,79 +588,77 @@
     "history_line": "September Tune-up Campaign done · HCP→GHL sync fixed · Lead Handling Overhaul done"
   },
   "performance": {
-    "generated_at": "2026-09-09T15:52:50.084Z",
+    "generated_at": "2026-09-09T19:42:49.208Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Six overdue milestones are throttling scale; intake gap is the core blocker.",
+    "verdict": "Six overdue milestones now block scale-up; paid spend is structurally throttled, not failing.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "Booking bot battle-test (due 2026-07-31), intake owner confirmation (due 2026-08-31), Review Boost campaign, Financing page, and Homer Glen branch all overdue; LSA re-enable due 2026-09-01 now 8 days past.",
+        "text": "Intake owner unconfirmed since Vivian left 7/7 — this SOW blocker (due 8/31) directly gates any budget scale-up per the engagement plan.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
+        "priority": 2,
+        "text": "5 additional SOW milestones overdue: Booking bot battle-test (7/31), Review Boost campaign, Financing page, Homer Glen branch (all 8/31), and LSA heating toggle (9/1).",
+        "confidence": "confirmed",
+        "channel": "SOW"
+      },
+      {
+        "id": "F3",
         "priority": 1,
-        "text": "28-day CPL is $223.26 on only 8 leads from $1,786 spend; 3-day lead signal (Sep 6–8: 0,1,1) vs prior 3 days (Sep 3–5: 2,1,0) shows no improvement — volume is structurally anemic.",
+        "text": "CPL is $223.26 over 28 days on only 8 leads; 3-day lead signal (9/6–9/8: 0+1+1=2) vs prior 3 days (9/3–9/5: 2+0+1=3) — flat, not deteriorating, but volume is critically thin.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
-        "id": "F3",
-        "priority": 2,
-        "text": "Google spend collapsed -39.23% week-over-week; last 3 days averaged $48.09/day vs $77.49 prior 3 days — sustained reduction, not a single-day anomaly.",
-        "confidence": "confirmed",
-        "channel": "google_ads"
-      },
-      {
         "id": "F4",
-        "priority": 3,
-        "text": "GBP actions hit 0 for 9 consecutive days (Aug 31–Sep 8) after averaging 4.5/day earlier in the series — profile visibility has fully collapsed, contradicting the daily verdict's 'paused' framing; this looks like a ranking drop or listing issue.",
-        "confidence": "probable",
+        "priority": 2,
+        "text": "GBP actions dropped to 0 for 8 consecutive days (9/1–9/8) after averaging ~5/day prior — organic visibility has gone dark, diverging from the paid signal.",
+        "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F5",
-        "priority": 4,
-        "text": "GHL returned a 401 timeout error; pipeline data is unavailable. With intake owner unconfirmed since Vivian left 7/7, speed-to-lead automation may be routing to an empty seat — any arriving leads are at risk of going unclaimed.",
-        "confidence": "hypothesis",
-        "channel": "SOW"
+        "priority": 3,
+        "text": "Google spend spiked to $202.25 on 9/1 then collapsed to $12–$24/day through 9/8 — erratic pacing on the LocalServicesCampaign ($689.19 top campaign) is wasting impression share.",
+        "confidence": "probable",
+        "channel": "google_ads"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Resolve GBP visibility collapse immediately; audit listing status and recent edits to restore 4.5 actions/day baseline.",
+        "text": "Confirm intake owner and GHL login immediately; without this, all scale-up gates remain blocked per SOW.",
         "cites": [
-          "F4"
+          "F1"
         ],
-        "monday_item_name": "Fix GBP Visibility Collapse",
-        "monday_update": "GBP actions have been zero for 9 consecutive days (Aug 31–Sep 8) after averaging 4.5/day earlier in the series — this is a confirmed sustained drop, not lag. Audit the listing for suspensions, ownership conflicts, or recent edits that may have triggered a review; check both the Crestwood and Fibid profiles without touching the Crestwood 145-review profile. Success = GBP actions return above 3/day within 7 days. Re-check by 2026-09-16."
+        "monday_item_name": "Confirm Intake Owner GHL",
+        "monday_update": "Vivian (dispatch) left 7/7 and the intake seat is unconfirmed — speed-to-lead automations may be routing to an empty login. Contact Xavier or Nader to name the replacement and verify their GHL access this week. Success check: named owner with confirmed GHL login documented in WhatsApp group by 2026-09-12. This unblocks the scale-back-up gate for Months 5–7."
       },
       {
         "id": "S2",
-        "type": "fix",
-        "text": "Confirm intake owner and test GHL login before any budget is raised; the scale-up gate is explicitly blocked by this gap.",
+        "type": "watch",
+        "text": "Watch GBP actions: 8 straight zero days (9/1–9/8); re-check 9/12 for recovery before assuming a listing issue.",
         "cites": [
-          "F1",
-          "F5"
+          "F4"
         ],
-        "monday_item_name": "Confirm Intake Owner GHL",
-        "monday_update": "Intake ownership has been unconfirmed since Vivian left on 7/7 — this is a hard SOW blocker (due 2026-08-31, now 9 days overdue) and directly gates any budget scale-up. Contact Xavier or Aiman to name the current intake owner, verify their GHL login is active, and confirm after-hours coverage is in place. Success = named owner confirmed in writing and GHL 401 error resolved. Must be closed before 2026-09-16 or budgets cannot responsibly increase."
+        "monday_item_name": "GBP Dark — Watch 9/12",
+        "monday_update": "GBP actions have been zero every day from 9/1 through 9/8 after averaging ~5/day in August — a hard stop, not a gradual fade. Check the listing for suspensions, edits pending review, or Windsor data lag on the last 2–3 days. Re-check on 2026-09-12; if still at zero, escalate to a listing audit. Do not attribute organic lead decline to paid campaigns until this is resolved."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch Meta CPL and Google spend daily for 3 more days before any budget move; current $223.26 CPL is too high to scale.",
+        "text": "Watch Google spend pacing: $202 spike 9/1 then $12–24/day through 9/8 — confirm no accidental budget cap before adjusting.",
         "cites": [
-          "F2",
-          "F3"
+          "F5"
         ],
-        "monday_item_name": "Watch CPL + Google Spend",
-        "monday_update": "28-day CPL stands at $223.26 on just 8 leads, and Google spend dropped -39.23% week-over-week with the 3-day average falling to $48.09/day. No budget increase is defensible until the intake gap (F1/F5) is resolved and CPL trends downward from its current level. Re-check on 2026-09-12 with fresh 3-day signal; if CPL is still above $200 and intake is unresolved, escalate the SOW blockers to Nacer."
+        "monday_item_name": "Google Pacing Spike Review",
+        "monday_update": "The LocalServicesCampaign spent $202.25 on 9/1 and then dropped to $12–24/day for the following 7 days — a pattern consistent with a daily budget cap being hit and throttled, not intentional throttling. Pull the native Google Ads export and confirm whether a budget cap or bid strategy change drove the 9/1 spike. Success check: pacing explanation documented by 2026-09-12. Do not raise budgets until the intake owner gate (S1) is resolved."
       }
     ],
     "next_check": "2026-09-12"

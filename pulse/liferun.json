@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-09T15:50:38.298Z",
+  "generated_at": "2026-09-09T19:40:36.775Z",
   "date": "2026-09-09",
   "slug": "liferun",
   "name": "Liferun",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Liferun delivered 134 leads at a $16.48 CPL over the last 28 days, with the last 7 days showing a positive trend: leads up 12.5% and CPL down 1.76% week-over-week. The biggest movement is Google Ads spend surging 29.78% in the 7-day period, likely driven by increased budget or bid scaling on the top campaign \"BWS - July - Call Campaign\" ($561.55 spend), though this has yet to convert into tracked conversions, warranting close monitoring.",
+  "verdict": "Liferun delivered 134 leads at a $16.48 CPL over the last 28 days, with the past 7 days showing positive momentum: leads up 12.5% and CPL down 1.76% week-over-week, likely driven by Meta's continued volume dominance (134 leads, $1,676.33 spend) and the top-performing \"BWS - July - Call Campaign\" at $561.55. The biggest concern is Google Ads, where a 29.78% spend increase over the last 7 days has yet to produce any recorded conversions, suggesting budget efficiency there warrants a close review.",
   "windsor": {
     "totals": {
       "spend": 2208.76,
@@ -409,10 +409,10 @@
     }
   },
   "ghl": {
-    "contacts": 170,
+    "contacts": 181,
     "opportunities": {
       "created": {
-        "count": 109,
+        "count": 114,
         "value": 0
       },
       "won": {
@@ -557,78 +557,77 @@
     "history_line": "Checkout webhook fix deployed and tested (Hashir Faiz) · Delivered May 2026 SEO update report · Added chat widget for A2P compliance"
   },
   "performance": {
-    "generated_at": "2026-09-09T15:53:40.293Z",
+    "generated_at": "2026-09-09T19:43:39.616Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Meta driving all 134 leads; Google spending $532 with zero tracked conversions.",
+    "verdict": "Meta efficient; Google burning $532 with zero conversions — fix before scaling.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Google Ads spent $532.43 over 28 days with 0 tracked conversions — $0 return on every dollar; confirmed pixel/tracking failure, not a bidding problem.",
+        "text": "Google Ads spent $532.43 over 28 days with 0 recorded conversions — confirmed budget leak; pixel or conversion action is broken.",
         "confidence": "confirmed",
-        "channel": "google"
+        "channel": "google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "5 SOW milestones overdue (oldest Jul 20): Stripe QA, GHL Build, End-to-End Stack Re-Test ⛔, Paid Landing Pages, and UGC Batch — all unconfirmed complete as of today.",
+        "text": "5 overdue SOW milestones (earliest Jul 20): GHL gaps, end-to-end stack re-test, paid landing pages, and UGC batch all unverified — each blocks attribution or scaling.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "3-day lead signal (Sep 6–8): 0+6+10=16 leads vs prior 3 days (Sep 3–5): 7+5+0=12 leads — mild improvement, but Sep 7–8 driven by a $174 spike vs normal ~$95/day.",
+        "text": "3-day signal (Sep 6–8): leads 0, 6, 10 vs prior 3 days (Sep 3–5) 7, 5, 0 — net flat; spend spiked to $174 on Sep 8 vs $8.82 on Sep 6, suggesting weekend ad delivery irregularity.",
         "confidence": "probable",
         "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GHL shows 134 leads and 170 contacts but only 109 opportunities created and 0 won — 25 contacts never entered the pipeline, suggesting an intake leak, not an ads problem.",
+        "text": "GHL shows 181 contacts but only 114 opportunities created and 0 won — 67-contact gap and zero revenue signal an intake or pipeline-progression leak, not an ads failure.",
         "confidence": "probable",
-        "channel": "GHL"
+        "channel": "CRM"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GBP actions dropped -100% in the last 7 days (from measurable engagement to 0), and IG reach has been 0 for all 28 days in the series — both organic channels are dark.",
-        "confidence": "confirmed",
-        "channel": "organic"
+        "text": "GBP actions dropped -100% in the last 7 days (from non-zero to 0) after averaging 2–11 actions/day through Aug 27; cause unknown but organic signal has gone dark.",
+        "confidence": "hypothesis",
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit and repair Google Ads conversion tracking — $532.43 spent with 0 conversions confirms a pixel/tag failure, not a performance issue.",
+        "text": "Audit Google Ads conversion action and pixel — $532.43 spent with 0 conversions over 28 days confirms tracking is broken.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Fix Google Ads Conversion Tag",
-        "monday_update": "Google Ads has spent $532.43 over 28 days with zero tracked conversions — this is a confirmed tracking failure, not a bidding or creative problem. Immediate action: audit the Google Ads conversion tag on the landing page and in GTM, confirm it fires on the call/lead event, and compare against the 115 clicks that did land. Success is defined as at least one verified conversion event firing in Google Ads within 3 days of the fix. Re-check by 2026-09-12."
+        "monday_item_name": "Fix Google Ads Conversion Tracking",
+        "monday_update": "Google Ads has spent $532.43 over the past 28 days and recorded zero conversions — the conversion action or pixel is not firing. Audit the conversion action setup in Google Ads, verify the tag fires on the thank-you or call-confirmed event, and cross-reference with GA4. Success is confirmed when at least one conversion is recorded within 3 days of the fix going live (by 2026-09-12)."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Investigate GHL intake leak: 25 of 170 contacts never created an opportunity — identify and close the pipeline entry gap.",
+        "text": "Run Becklar deactivation dummy test and BWS duplicate-order check — both ⛔ blockers are overdue since Aug 31.",
         "cites": [
-          "F4"
+          "F2"
         ],
-        "monday_item_name": "GHL Intake Leak Audit",
-        "monday_update": "GHL shows 170 contacts but only 109 opportunities created, meaning at least 25 contacts (15%) never entered the Device Fulfilment pipeline. This is a CRM intake gap, not an ads delivery problem. Action: pull the 25 contact records, identify their source and why no opportunity was triggered, and patch the automation or intake rule causing the drop. Success: opportunities created ≥ contacts received for any new leads by 2026-09-16."
+        "monday_item_name": "Verify Becklar & BWS Money Paths",
+        "monday_update": "Two cash-leaking blockers are overdue: the Becklar billing drop test (confirm device deactivates in portal and invoice reflects it) and the BWS duplicate-order check (one live order per intake path, confirm exactly one fully-mapped opportunity each). These were due Aug 31. Run both tests this week and document pass/fail in GHL. Mark done only when both paths produce a clean result with no manual intervention, by 2026-09-12."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch Sep 8 Google spend spike ($81.12 vs $10–20 norm) — confirm whether a budget change was made before scaling further.",
+        "text": "Watch GHL pipeline: 67 contacts without opportunities and 0 won deals — re-check conversion rate after intake fix on Sep 12.",
         "cites": [
-          "F1",
-          "F3"
+          "F4"
         ],
-        "monday_item_name": "Watch Google Spend Spike",
-        "monday_update": "Google spend jumped to $81.12 on Sep 8, roughly 4–6x the prior daily average of $10–20. With conversion tracking broken (F1), this elevated spend has no measurable return. Do not increase Google budget further until the conversion tag is verified firing (S1). Re-check spend level and any conversion data on 2026-09-12 — if tracking is fixed and conversions appear, re-evaluate scaling at that point."
+        "monday_item_name": "Watch GHL Pipeline Intake Gap",
+        "monday_update": "181 contacts have entered GHL but only 114 opportunities were created and 0 have been won, leaving a 67-contact gap that does not reflect in revenue. This is an intake or handoff leak, not an ads problem. No paid action is warranted yet. Re-check opportunity-creation rate and stage progression on 2026-09-12; if the gap has not closed, escalate to Nacer for CRM workflow audit."
       }
     ],
     "next_check": "2026-09-12"

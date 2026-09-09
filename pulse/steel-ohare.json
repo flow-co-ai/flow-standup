@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-09T15:51:02.826Z",
+  "generated_at": "2026-09-09T19:40:56.197Z",
   "date": "2026-09-09",
   "slug": "steel-ohare",
   "name": "O'Hare Precision",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, suggesting campaigns are paused or inactive. Google Business Profile remains the only source of engagement, driving 128 total actions (93 directions, 26 web clicks, 9 calls), though GBP activity dropped 100% in the last 7 days versus the prior 7 days, pointing to a likely listing issue or seasonal drop-off worth investigating immediately.",
+  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, suggesting campaigns are paused or inactive. On the organic side, Google Business Profile drove 128 total actions (93 directions, 9 calls, 26 web clicks), though GBP engagement dropped 100% in the last 7 days versus the prior 7 days, pointing to a likely listing issue or a sudden drop in local search visibility.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,80 +409,80 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-09-09T15:55:31.228Z",
+    "generated_at": "2026-09-09T19:45:18.978Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP gone dark; paid inactive; 6 SOW blockers unresolved—zero revenue channels live.",
+    "verdict": "Paid channels dead 28+ days; organic GBP now dark — income signal gone.",
     "findings": [
       {
         "id": "F1",
-        "priority": 2,
-        "text": "4 CRM milestones overdue since Jul 7: 1st Directives, Tom call list, dedup workbook, and 342-stub reconciliation (blocker flagged Aug 31) all unconfirmed complete.",
+        "priority": 1,
+        "text": "All paid spend is $0 across 28 days — Meta and Google Ads both fully inactive with zero leads generated.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "meta+google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "2 additional Aug-31 blockers overdue: Web/SEO root cause unfiled and AGS+Forte contact pull for outreach not delivered.",
+        "text": "3 overdue CRM milestones from July 7–31 unconfirmed complete: 1st Directives, Tom call list, dedup workbook delivery.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 3,
-        "text": "GBP actions dropped to 0 for 9 consecutive days (Sep 1–8); prior 28-day total was 128 actions. Complete dark — listing issue probable.",
-        "confidence": "probable",
-        "channel": "GBP"
+        "priority": 2,
+        "text": "3 Aug-31 blockers overdue: 342 stub reconciliation, Web/SEO root cause fix, and AGS+Forte contact pull all outstanding.",
+        "confidence": "confirmed",
+        "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Search clicks fell to 0 on Sep 7–8 after averaging ~15/day across Aug; 7d delta is -34.62%. 3-day signal (Sep 6–8: 11, 0, 0) vs prior 3 (Sep 3–5: 20, 11, 8) confirms sharp drop.",
-        "confidence": "confirmed",
-        "channel": "Organic Search"
+        "text": "GBP actions fell to 0 for 9 consecutive days (Sep 1–8) after averaging ~7/day Aug 12–30 — listing issue probable.",
+        "confidence": "probable",
+        "channel": "gbp"
       },
       {
         "id": "F5",
-        "priority": 1,
-        "text": "Paid spend is $0 across all 28 days — Meta and Google Ads fully inactive; no leads, no CPL baseline exists to protect.",
+        "priority": 3,
+        "text": "Search clicks dropped to 0 on Sep 7–8 after a 45-day average of ~14/day; 7d delta is -34.62% confirming the decline.",
         "confidence": "confirmed",
-        "channel": "Paid"
+        "channel": "organic"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "cites": [
-          "F1",
-          "F2"
-        ],
-        "text": "Escalate all 6 overdue SOW milestones to Ahmed/Sohib; 342-stub blocker gates Sales-i pipeline entirely.",
-        "monday_item_name": "Escalate 6 Overdue SOW Blockers",
-        "monday_update": "Six SOW milestones are overdue, the oldest from Jul 7 and two confirmed blockers from Aug 31 (342-stub reconciliation and AGS+Forte contact pull). The 342-stub blocker directly prevents Sales-i from syncing any data into Sugar, stalling the entire CRM automation build. Sohib to confirm completion status of each item with Ahmed and Jorge by Sep 12. Success = all 6 items marked complete or have a named owner and hard date in Monday."
-      },
-      {
-        "id": "S2",
-        "type": "fix",
-        "cites": [
-          "F3"
-        ],
-        "text": "Audit GBP listing for O'Hare Precision — 9 days of zero actions after 128-action month warrants immediate listing health check.",
-        "monday_item_name": "GBP Listing Audit O'Hare",
-        "monday_update": "GBP actions went to zero from Sep 1–8 after recording 128 actions in the 28-day window; this is not a gradual drop but a full stop. Check for a suspended listing, ownership flag, or unverified edit on Google Business Profile. Success = listing confirmed active and GBP actions resume above 5/day by Sep 13. If listing is suspended, escalate to Google support immediately."
-      },
-      {
-        "id": "S3",
-        "type": "watch",
+        "text": "Audit GBP listing immediately — 9 days of 0 actions vs prior ~7/day average signals suspension or listing error.",
         "cites": [
           "F4"
         ],
-        "text": "Watch search clicks through Sep 12: 2 zero-days may be weekend artifact; confirm 3-day average before acting.",
-        "monday_item_name": "Watch Search Clicks Sep 12",
-        "monday_update": "Search clicks hit 0 on Sep 7–8, dropping from a ~15/day August average; the 7-day delta is -34.62%. Sep 7–8 fall on a Sunday–Monday, so weekend drop-off is a plausible partial cause. Re-check the Sep 9–11 daily values on Sep 12. Success check: if clicks remain below 5/day for 3 consecutive weekdays, escalate to SEO/GSC audit."
+        "monday_item_name": "GBP Listing Audit O'Hare",
+        "monday_update": "GBP actions have been zero for 9 consecutive days (Sep 1–8), down from an average of ~7 actions/day across Aug 12–30. Check the listing for suspension flags, ownership issues, or removed content. Success is confirmed when GBP actions return to ≥5/day. Re-check by 2026-09-13."
+      },
+      {
+        "id": "S2",
+        "type": "watch",
+        "text": "Watch search clicks — 0 on Sep 7–8 after 45-day avg ~14/day; confirm whether GBP fix restores organic visibility.",
+        "cites": [
+          "F5",
+          "F4"
+        ],
+        "monday_item_name": "SC Drop Watch O'Hare",
+        "monday_update": "Search clicks hit 0 on the last 2 days of the series (Sep 7–8), with a 7-day delta of -34.62% versus prior week. This likely correlates with the GBP dark event. Monitor daily after the GBP fix; if clicks do not recover to ≥10/day within 5 days of the listing being restored, escalate to SEO investigation. Re-check 2026-09-13."
+      },
+      {
+        "id": "S3",
+        "type": "fix",
+        "text": "Clear 3 Aug-31 SOW blockers — 342 stub reconciliation, SEO root cause, AGS+Forte contacts — before any paid reactivation.",
+        "cites": [
+          "F3"
+        ],
+        "monday_item_name": "Aug Blocker Clearance CRM/SEO",
+        "monday_update": "Three priority blockers missed their Aug 31 deadline: (1) 342 stub account reconciliation — Sales-i sync is blind to all of these until fixed; (2) Web/SEO root cause named and fix submitted; (3) AGS + Forte contact list pulled for outreach. Each must be completed and signed off by Ahmed/Dev team before paid media reactivation is considered, as incoming leads would land in a broken intake. Sohib to confirm completion status with Ahmed and Jorge by 2026-09-12."
       }
     ],
-    "next_check": "2026-09-12"
+    "next_check": "2026-09-13"
   }
 }

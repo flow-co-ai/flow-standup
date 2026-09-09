@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-09T15:50:58.677Z",
+  "generated_at": "2026-09-09T19:40:52.130Z",
   "date": "2026-09-09",
   "slug": "steel-advance",
   "name": "Advance Grinding",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, meaning all 117 GBP actions (including 2 calls and 88 direction requests) are coming entirely from organic sources. The biggest concern is a 100% drop in GBP engagement over the last 7 days compared to the prior 7 days, likely driven by a sudden loss of Google Business Profile visibility or a listing issue that needs immediate investigation.",
+  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, meaning all 117 GBP actions (including 88 direction requests and 2 calls) are the only measurable activity. GBP engagement dropped 100% in the last 7 days versus the prior 7 days, likely due to a sudden loss of local visibility or a listing issue that needs immediate investigation.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -404,78 +404,77 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-09-09T15:54:57.108Z",
+    "generated_at": "2026-09-09T19:44:55.310Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP went dark 9 days ago; no paid channel has ever run.",
+    "verdict": "GBP is the only active channel and just went dark — paid is fully offline.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "GBP actions dropped to 0 for 9 consecutive days (Sep 1–8) after averaging ~6/day through Aug; sole revenue-driving channel is now silent.",
+        "text": "GBP actions collapsed to 0 for 8 consecutive days (Sep 01–08) after averaging ~6/day in Aug; the sole revenue-adjacent signal is now silent.",
         "confidence": "confirmed",
         "channel": "GBP"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "342 stub accounts unreconciled past Aug 31 deadline block Sales-i sync; Customer IDs missing means zero pipeline signal from CRM.",
+        "text": "3 CRM milestones overdue since Jul 7–31: 1st Directives, Tom call list, and dedup workbook — no completion event recorded for any.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "3 CRM milestones overdue (Tom call list Jul 28, dedup workbook Jul 31, 1st Directives Jul 7) — 447-group merge workbook unexecuted past 40 days.",
+        "text": "3 Aug-31 blockers overdue: 342 stub reconciliation (CRM), Web/SEO root-cause fix, and AGS+Forte contact pull (Outreach) — all gate downstream deliverables.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
-        "priority": 2,
-        "text": "AGS + Forte contact pull for outreach overdue since Aug 31; cold email pipeline cannot start without this list, blocking a SOW deliverable.",
+        "priority": 3,
+        "text": "Meta and Google Ads show $0 spend across all 28 days; 0 leads, 0 clicks — paid is entirely offline with no data gap explanation in the record.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "Meta / Google Ads"
       },
       {
         "id": "F5",
-        "priority": 3,
-        "text": "Zero paid spend across Meta and Google Ads for all 28 tracked days; no CPL baseline exists — efficiency cannot be measured until campaigns launch.",
-        "confidence": "confirmed",
-        "channel": "Paid"
+        "priority": 4,
+        "text": "GA4 sessions, Search Console clicks, and IG reach are all 0 for 45 days — organic web presence is unmeasured or absent alongside the paid blackout.",
+        "confidence": "probable",
+        "channel": "Organic"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit GBP listing immediately — 9 days of zero actions after averaging 6/day signals suspension or suppression.",
+        "text": "Audit GBP listing immediately — 8 days of 0 actions after ~6/day baseline signals suspension, ownership issue, or listing suppression.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Fix GBP listing outage",
-        "monday_update": "GBP actions fell to zero on Sep 1 and have logged 0 for 9 straight days, down from a 45-day average of ~6 actions/day. Check the listing for suspension, ownership conflict, or a guideline violation and file a reinstatement request if needed. Success = GBP actions return to ≥3/day. Confirm resolution by Sep 12."
+        "monday_item_name": "Fix GBP listing blackout",
+        "monday_update": "GBP actions dropped to 0 on Sep 01 and have not recovered through Sep 08 — 8 consecutive zero days after a baseline of ~6 actions/day through Aug 30. Check the listing for suspension flags, ownership conflicts, or a category/content policy violation in Google Business Profile dashboard. Success = actions return above 3/day within 7 days of the fix. Escalate to Nabil if ownership access is the blocker."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Execute 447-group dedup merge in audited batches; unblock 342 stub reconciliation now 9 days past Aug 31 deadline.",
+        "text": "Clear the 3 Aug-31 SOW blockers — 342 stub reconciliation, Web/SEO root cause, and AGS+Forte contact pull — each gates a downstream build.",
         "cites": [
-          "F2",
           "F3"
         ],
-        "monday_item_name": "CRM dedup + stub blocker",
-        "monday_update": "The 447-group merge workbook was approved but remains unexecuted; 342 stub accounts are also unreconciled, blocking Sales-i sync entirely. Ahmed to run audited batch 1 this week with rollback file posted to the Monday CRM board. Success = all 447 merges complete and stub count at 0. Target: Sep 19."
+        "monday_item_name": "Clear Aug-31 SOW blockers",
+        "monday_update": "Three deliverables marked blocker missed their Aug 31 deadline: (1) 342 stub account reconciliation in SugarCRM — Sales-i sync is blind to these accounts until fixed; (2) Web/SEO root-cause identification and fix submission; (3) AGS + Forte contact pull for outreach. Assign owners and hard deadlines in Monday this week. Success = all 3 items moved to 'complete' with rollback files or deliverable links posted by Sep 16."
       },
       {
         "id": "S3",
-        "type": "fix",
-        "text": "Pull AGS + Forte contact lists (overdue Aug 31) to unblock cold email outreach SOW deliverable.",
+        "type": "watch",
+        "text": "Watch paid channel reactivation status — $0 spend for 28+ days; confirm whether pause is intentional before any budget decision.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "AGS + Forte contact pull",
-        "monday_update": "The AGS and Forte contact pull was due Aug 31 and remains outstanding, preventing cold email sequences from launching under the retainer SOW. Sohib to confirm who owns the export and deliver the list to the outreach team by Sep 12. Success = list received and loaded into outreach tool. Confirm by Sep 12."
+        "monday_item_name": "Confirm paid channel status",
+        "monday_update": "Meta and Google Ads have recorded $0 spend for the full 28-day window with no flags or explanation in the data. Before any budget action can be recommended, confirm with Sohib whether paid is intentionally paused or represents a billing/account issue. Re-check on Sep 12 — if pause is unintentional, escalate immediately as the account has 0 leads and 0 pipeline activity."
       }
     ],
     "next_check": "2026-09-12"

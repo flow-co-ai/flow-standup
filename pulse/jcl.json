@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-09T15:50:20.628Z",
+  "generated_at": "2026-09-09T19:40:21.965Z",
   "date": "2026-09-09",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "GBP engagement dropped 100% over the last 7 days, which is the most significant movement and likely signals a data reporting gap or a pause in local profile activity rather than a true loss of traffic. Paid channels (Meta and Google Ads) show zero spend and zero leads over the 28-day window, suggesting campaigns are currently inactive and should be reviewed for reactivation.",
+  "verdict": "The biggest movement is a 100% drop in GBP activity over the last 7 days, likely driven by a tracking or listing issue that cut off all Google Business Profile engagement. Paid channels (Meta and Google Ads) show zero spend and zero leads over the 28-day window, so organic GBP actions (136 total, including 49 calls) remain the only source of inbound activity.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -572,79 +572,79 @@
     "history_line": "Delivered May 2026 SEO update report"
   },
   "performance": {
-    "generated_at": "2026-09-09T15:53:15.088Z",
+    "generated_at": "2026-09-09T19:43:14.253Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid channels dead 28+ days; organic holding but extension unsigned blocks restart.",
+    "verdict": "Paid channels fully dark 28 days; only organic GBP and search sustain inbound.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Meta and Google spend are $0 across all 28 days and the full 45-day series — zero leads, zero CPL calculable; paid engine is fully off.",
+        "text": "Meta and Google spend are $0 across all 28 days and all 45 series days — no paid leads generated; account is fully dark on paid channels.",
         "confidence": "confirmed",
-        "channel": "Meta"
+        "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "⛔ Extension with Marwan unsigned as of 2026-08-31 deadline; no active contract gates any paid restart or new 3-month commitments.",
+        "text": "⛔ Extension with Marwan unsigned past 2026-08-31 deadline; contract lapse gates the next 3-month term and all paid reactivation decisions.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "⛔ SMS automation and Zoho Voice access both overdue since 2026-08-31; intake infrastructure remains incomplete, blocking contact-rate improvement.",
+        "text": "⛔ SMS automation and Zoho Voice access both overdue since 2026-08-31; contact-rate bottleneck (flagged July) remains unresolved without these CRM tools.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions collapsed to 0 for 8 straight days (Sep 1–8) after averaging ~7/day in August — likely a data/reporting gap, not a true traffic loss, but unconfirmed.",
-        "confidence": "hypothesis",
-        "channel": "GBP"
+        "text": "GBP actions dropped -100% in the last 7 days (0 vs prior-7d baseline of ~136 total actions), and sc_clicks fell -31.6%; organic inbound has effectively stopped.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       },
       {
         "id": "F5",
-        "priority": 3,
-        "text": "Search clicks fell 31.6% week-over-week (0 clicks on Sep 7–8 in series) and GA4 sessions dropped 12.4% — organic is softening but still delivering ~27–72 sessions/day mid-series.",
+        "priority": 4,
+        "text": "GHL shows 24 contacts but 0 opportunities created and 0 appointments in 28 days; pipeline is not converting any organic inbound — intake process appears stalled.",
         "confidence": "probable",
-        "channel": "SEO"
+        "channel": "crm"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate Marwan extension signature to Sohib immediately — $0 spend for 28+ days means no paid activity can resume without it.",
+        "text": "Audit GBP listing immediately — 0 actions for 7 straight days vs 136 prior-28d signals a tracking break or listing suspension.",
         "cites": [
-          "F2",
-          "F1"
+          "F4"
         ],
-        "monday_item_name": "Marwan Extension Sign-off",
-        "monday_update": "Meta and Google have been at $0 spend for the full 28-day window with zero leads generated (F1). The engagement extension with Marwan was due 2026-08-31 and remains unsigned, blocking any paid restart (F2). Sohib to escalate directly to Marwan for signature this week. Success check: signed agreement on file by 2026-09-12, enabling campaign reactivation planning."
+        "monday_item_name": "Fix GBP listing / tracking",
+        "monday_update": "GBP actions fell to 0 for the last 7 days against a 28-day baseline of 136 total actions (49 calls), indicating a listing suspension or tracking disconnection. Assign to SEO/Ops to verify listing status, reinstate if suspended, and confirm call-tracking pixel is firing. Success check: GBP actions resume at ≥5/day within 5 days. Re-check 2026-09-14."
       },
       {
         "id": "S2",
-        "type": "fix",
-        "text": "Resolve SMS automation and Zoho Voice access — both overdue 2026-08-31; intake infrastructure must be live before paid leads resume.",
+        "type": "watch",
+        "text": "No paid budget moves possible until extension with Marwan is signed; watch contract status, re-check 2026-09-12.",
         "cites": [
-          "F3"
+          "F1",
+          "F2"
         ],
-        "monday_item_name": "CRM Blockers: SMS + Zoho Voice",
-        "monday_update": "SMS automation and Zoho Voice access are both past their 2026-08-31 deadline (F3). These tools directly govern the contact-rate bottleneck Marwan has flagged as the primary performance issue. Nacer (Ops) to confirm status and unblock access with Andrew/Joy by 2026-09-12. Success check: both items marked live in Monday with confirmation from Andrew before any paid campaign relaunch."
+        "monday_item_name": "Watch: Marwan extension gate",
+        "monday_update": "Meta and Google have been at $0 spend for all 28 tracked days and all 45 series days — no paid reactivation can be approved while the engagement contract remains unsigned past its 2026-08-31 deadline. Sohib to confirm signed extension with Marwan before any budget is restored. Success check: countersigned agreement received. Re-check 2026-09-12."
       },
       {
         "id": "S3",
-        "type": "watch",
-        "text": "Watch GBP actions and search clicks for 3 more days; if both remain at 0 by Sep 12, investigate reporting pipeline before attributing to organic decline.",
+        "type": "fix",
+        "text": "Escalate Zoho Voice access and SMS automation blockers — both overdue since Aug 31; contact-rate bottleneck cannot close without them.",
         "cites": [
-          "F4",
+          "F3",
           "F5"
         ],
-        "monday_item_name": "GBP + Search Drop Watch",
-        "monday_update": "GBP actions have read 0 for 8 consecutive days and search clicks dropped 31.6% week-over-week with 0 recorded on Sep 7–8 (F4, F5). The pattern is consistent with a data/reporting gap rather than true traffic loss, but cannot be confirmed yet. Re-check the GBP dashboard and Search Console directly on 2026-09-12. Success check: if GBP actions and search clicks return to non-zero, flag as reporting gap closed; if still 0, escalate as a technical audit item."
+        "monday_item_name": "Fix CRM blockers: Voice + SMS",
+        "monday_update": "SMS automation and Zoho Voice access missed their 2026-08-31 SOW deadline; GHL shows 24 contacts with 0 opportunities created and 0 appointments, confirming intake is stalled without these tools. Nacer to chase Joy/Andrew for Zoho Voice credentials and confirm SMS sequence is live in GHL. Success check: Zoho Voice access granted and first SMS automation triggered before 2026-09-16."
       }
     ],
     "next_check": "2026-09-12"
