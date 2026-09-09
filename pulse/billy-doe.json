@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-09T14:57:17.083Z",
+  "generated_at": "2026-09-09T15:49:35.366Z",
   "date": "2026-09-09",
   "slug": "billy-doe",
   "name": "Billy Doe Meats",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 51,
   "status": "amber",
-  "verdict": "Meta spend surged 50.99% week-over-week, driven by the \"BWS - Sales - Muslims\" campaign absorbing $846.02 of the $1,500.07 total spend, which helped lift purchases 33.33% but compressed ROAS by 62.03% as higher spend outpaced revenue efficiency.",
+  "verdict": "Meta spend surged 50.99% week-over-week, driving 35 purchases and a 4.43 ROAS ($6,648.81 revenue on $1,500.07 spend) largely fueled by the top \"BWS - Sales - Muslims\" campaign at $846.02, though ROAS dropped 62.03% vs. the prior 7 days, signaling rising costs relative to returns as spend scaled.",
   "windsor": {
     "totals": {
       "spend": 1500.07,
@@ -556,78 +556,79 @@
     "history_line": "Website launched Sep 5 · Video reworked with real meat footage"
   },
   "performance": {
-    "generated_at": "2026-09-09T15:03:39.838Z",
+    "generated_at": "2026-09-09T15:51:34.463Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "ROAS floor holding at 4.43x but spend surge is outpacing revenue per dollar.",
+    "verdict": "ROAS collapse at scale confirms spend outpaced audience depth; 5 SOW milestones overdue.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "ROAS dropped 62.03% week-over-week as $1,500.07 spend outpaced revenue; 28-day ROAS is 4.43x — still above the ~3.8x test-phase floor but trending toward it.",
+        "text": "ROAS dropped 62.03% week-over-week to 4.43 on $1,500.07 spend; revenue-per-dollar is collapsing as budget scaled, not holding.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 1,
-        "text": "3-day purchase signal (Sep 6–8): 1+2+5=8 purchases vs prior 3 days (Sep 3–5): 4+1+1=6 — modest uptick, but Sep 8 revenue of $450.98 is the highest single day in the series.",
-        "confidence": "confirmed",
+        "text": "3-day purchase signal (Sep 6–8): 1+2+5=8 purchases, $192.95+$191.02+$450.98=$834.95 revenue vs prior 3 days (Sep 3–5): 4+1+1=6 purchases — purchases ticking up but daily revenue erratic, avg order value volatile ($136–$484 range across last 7 days).",
+        "confidence": "probable",
         "channel": "meta"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GBP actions collapsed from a 30–40/day range to 0 for 9 consecutive days (Sep 1–8); gbp_7d_pct is -100%. Local organic demand signal is completely dark — cause unknown.",
+        "text": "GBP actions fell to 0 for 9 consecutive days (Sep 1–8) after averaging 28/day in August; 37 calls and 374 web clicks in the 28-day window now at full stop.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 2,
-        "text": "4 overdue SOW milestones (Pre-Launch Gate, Platform Ownership Decision, Funnel Test Closed + UTM Live, SEO Phase 1 Guardrails) all due 2026-08-31 — plus Live-Cooking Shoot 1 due 2026-08-14 — none completed.",
+        "text": "5 SOW milestones overdue: Live-Cooking Shoot 1 (Aug 14), Pre-Launch Gate, Platform Ownership Decision, Funnel Test + UTM Live, and SEO Phase 1 Guardrails (all Aug 31) — none show a completed event.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F5",
         "priority": 3,
-        "text": "IG reach is flat-to-declining (625 on Sep 8 vs 1,105 peak on Aug 25) while Meta spend held ~$60/day — classic reach compression suggesting creative fatigue on current ad set.",
-        "confidence": "probable",
+        "text": "Spend held flat at ~$61/day for 3 days (Sep 6–8: $61.46, $58.71, $61.14) while IG reach declined to 625 on Sep 8 from a 975 peak Sep 4 — possible creative fatigue on the Muslim-audience batch at $846.02 of 28-day spend.",
+        "confidence": "hypothesis",
         "channel": "meta"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Investigate GBP listing immediately — 9 days of zero actions after 30–40/day baseline signals a listing suspension or data feed break.",
-        "cites": [
-          "F3"
-        ],
-        "monday_item_name": "Fix GBP Dark — 9 Days",
-        "monday_update": "GBP actions have been zero for 9 consecutive days (Sep 1–8) after a stable 30–40 actions/day baseline, with gbp_7d_pct at -100%. Check the Google Business Profile dashboard for suspension notices, ownership issues, or a broken data connection, and restore the listing to active status. Success is confirmed when daily GBP actions return above 15 for 3 consecutive days. Resolve by 2026-09-12."
-      },
-      {
-        "id": "S2",
-        "type": "creative_refresh",
-        "text": "Inject new creative (real facility footage from Haney's July 21 Drive delivery) into Meta to counter reach compression from 1,105 to 625 over 14 days.",
-        "cites": [
-          "F5"
-        ],
-        "monday_item_name": "Meta Creative Refresh — Facility Footage",
-        "monday_update": "IG reach has compressed from a 1,105 peak on Aug 25 to 625 on Sep 8 while Meta spend remained steady at ~$60/day, indicating creative fatigue. Pull from Haney's real facility footage (delivered July 21 to Drive) per the approved stock/real-footage creative rule — no AI video. Success check: IG reach recovers above 900 and ROAS holds at or above 4.43x within 7 days of launch. Re-check 2026-09-16."
-      },
-      {
-        "id": "S3",
-        "type": "watch",
-        "text": "Watch ROAS daily; do not scale BWS - Muslims spend until ROAS stabilises above 4.43x for 3 consecutive days post creative refresh.",
+        "type": "budget_shift",
+        "text": "Cap BWS - Muslims daily budget -15% until ROAS recovers above 6x; redirect $9/day to a broader or retargeting ad set.",
         "cites": [
           "F1",
           "F2"
         ],
-        "monday_item_name": "Watch ROAS Floor — No Scale Yet",
-        "monday_update": "The 28-day ROAS is 4.43x against a ~3.8x test-phase floor, but the 7d ROAS delta is -62.03% as the $1,500.07 spend surge has outpaced revenue efficiency. Sep 8 shows a promising $450.98 revenue day (5 purchases), but 3 days is not enough to confirm a turn. Hold current daily spend (~$63.89/day) and re-evaluate scaling the BWS - Muslims campaign only if ROAS holds above 4.43x for 3 consecutive days after new creative is live. Re-check 2026-09-16."
+        "monday_item_name": "Cap Muslims Camp. -15%",
+        "monday_update": "ROAS fell 62.03% week-over-week to 4.43 on $1,500.07 total spend, with the 'BWS - Sales - Muslims' campaign consuming $846.02 of that. Reduce its daily budget by 15% and reallocate ~$9/day to a separate broad or retargeting ad set to test whether the ROAS floor recovers. Success check: ROAS at or above 6.0 on the Muslims campaign over the next 7-day window. Re-evaluate by 2026-09-16."
+      },
+      {
+        "id": "S2",
+        "type": "fix",
+        "text": "Investigate GBP account access or listing suspension; 0 actions for 9 days on a profile averaging 28/day is a confirmed data or access break.",
+        "cites": [
+          "F3"
+        ],
+        "monday_item_name": "Fix GBP 9-Day Outage",
+        "monday_update": "GBP actions dropped to zero from Sep 1–8 after averaging 28 actions/day through August, including 37 calls and 374 web clicks in the 28-day window. Check for a listing suspension, ownership change, or data-connector break in Windsor. Success check: GBP actions resume and show at least 10/day for 3 consecutive days. Confirm resolution by 2026-09-12."
+      },
+      {
+        "id": "S3",
+        "type": "watch",
+        "text": "Watch 3-day purchase trend (Sep 9–11); if Sep 8's 5-purchase day is the start of a run, scale is warranted — confirm before acting.",
+        "cites": [
+          "F2",
+          "F5"
+        ],
+        "monday_item_name": "Watch Purchase 3-Day Run",
+        "monday_update": "Sep 8 produced 5 purchases and $450.98 revenue, the strongest single day in the series, but the preceding days (Sep 6–7) showed only 1–2 purchases each. Do not scale until 3 consecutive days above 3 purchases are confirmed, as average order value has ranged from $136 to $484 and the signal is not yet stable. Re-check on 2026-09-12 with the full Sep 9–11 data in view."
       }
     ],
     "next_check": "2026-09-12"

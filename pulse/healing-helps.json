@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-09T14:57:57.994Z",
+  "generated_at": "2026-09-09T15:49:52.414Z",
   "date": "2026-09-09",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) generated zero spend, leads, or clicks over the last 28 days, suggesting campaigns may be paused or inactive. On the organic side, GBP drove 30 total actions (15 directions, 14 web clicks, 1 call), though GBP engagement dropped 100% in the last 7 days versus the prior 7 days, pointing to a likely listing issue or content gap worth investigating.",
+  "verdict": "Paid channels (Meta and Google Ads) generated zero spend, leads, or clicks over the past 28 days, suggesting campaigns are paused or inactive. On the organic side, Google Business Profile drove 30 total actions including 1 call, 15 direction requests, and 14 website clicks, though GBP engagement dropped 100% in the last 7 days versus the prior 7 days, signaling a sharp recent falloff likely tied to reduced profile activity or listing visibility.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -517,70 +517,53 @@
     "history_line": "Website completed · Shabana Sheikh bio added to Meet Our Therapists"
   },
   "performance": {
-    "generated_at": "2026-09-09T15:04:27.782Z",
+    "generated_at": "2026-09-09T15:52:21.439Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid channels fully dark; only organic GBP signal has now also flatlined.",
+    "verdict": "Paid channels dead 28+ days; only organic GBP signal, now silent too.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend and zero leads across all 28 days — Meta and Google Ads appear fully paused, producing no CPL baseline to evaluate.",
+        "text": "Zero paid spend across Meta and Google Ads for all 28 days — $0 in, $0 out. No CPL is computable; there is no active paid engine.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "meta/google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions dropped to 0 for the last 14 consecutive days (vs 11 actions on 2026-08-25 alone); -100% 7d delta confirms a hard stop, not gradual decay.",
+        "text": "GBP actions fell to 0 in the last 7 days (-100% delta) after delivering 30 actions in the prior period; 3-day signal (Sep 6–8) shows 0, 0, 0 vs prior 3 days (Sep 3–5) also 0, 0, 0 — full organic stall confirmed.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GA4 sessions 3-day signal (Sep 6–8: avg 4.0) vs prior 3 days (Sep 3–5: avg 6.3) — a 37% organic traffic drop with no paid support to explain it.",
+        "text": "GA4 sessions dropped 32.2% week-over-week; last 3 days (Sep 6–8) averaged 4 sessions vs prior 3 days (Sep 3–5) averaging 6.3 — directional decay, likely tied to zero paid traffic and GBP falloff.",
         "confidence": "probable",
-        "channel": "ga4"
-      },
-      {
-        "id": "F4",
-        "priority": 4,
-        "text": "201 GA4 sessions and 0 GA4 conversions over 28 days with zero paid spend; site conversion tracking is unconfirmed and may be broken.",
-        "confidence": "hypothesis",
         "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Investigate and resolve GBP listing issue; 0 actions for 14 days after a peak of 11 on Aug 25 requires immediate audit.",
+        "type": "watch",
+        "text": "Confirm whether paid campaigns are intentionally paused; re-check Sep 12 for any spend resumption.",
         "cites": [
-          "F2"
+          "F1"
         ],
-        "monday_item_name": "Fix GBP listing outage",
-        "monday_update": "GBP actions have been zero for 14 consecutive days (last meaningful activity: 11 actions on 2026-08-25), a confirmed hard stop per the -100% 7-day delta. Check for a suspended listing, missing business info, or a flagged review that triggered a demotion. Success is confirmed when GBP actions return to ≥3/day for 3 consecutive days. Complete audit by 2026-09-12."
+        "monday_item_name": "Confirm paid campaign pause status",
+        "monday_update": "Meta and Google Ads recorded $0 spend across every single day in the 28-day window — this is not a data gap, it is a full stop. Before any budget action can be taken, confirm with the client whether campaigns are intentionally paused (e.g. seasonal hold, scope change) or if this is an account issue (billing, policy). Success check: spend > $0 confirmed in platform by 2026-09-12."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GA4 sessions for 3 more days; if avg stays below 5/day, escalate as organic traffic collapse requiring investigation.",
+        "text": "Monitor GBP for listing suppression or visibility drop; re-check Sep 12 for any action recovery.",
         "cites": [
-          "F3"
+          "F2"
         ],
-        "monday_item_name": "Watch GA4 session trend",
-        "monday_update": "The 3-day GA4 session average (Sep 6–8) is 4.0 sessions/day, down from 6.3 the prior 3 days — a 37% drop with no paid traffic to offset it. No action yet as this is a probable signal, not confirmed. Re-check on 2026-09-12; if the 3-day average remains below 5 sessions/day, escalate to a site or SEO audit."
-      },
-      {
-        "id": "S3",
-        "type": "fix",
-        "text": "Verify GA4 conversion tracking fires correctly; 0 conversions across 201 sessions and 28 days is likely a pixel/goal configuration failure.",
-        "cites": [
-          "F4"
-        ],
-        "monday_item_name": "Audit GA4 conversion tracking",
-        "monday_update": "201 sessions and 166 users recorded over 28 days with exactly 0 conversions recorded — this is a hypothesis-level flag that conversion events are misconfigured or unfired. Test at least one form submission or contact action manually to confirm the event fires in GA4 in real time. Success is a confirmed conversion event visible in GA4 debug view. Complete by 2026-09-12."
+        "monday_item_name": "GBP visibility drop — watch",
+        "monday_update": "GBP delivered 30 actions in the 28-day window but dropped to 0 in the last 7 days, with the series showing zero actions from Sep 1 onward. This may indicate listing suppression, a flagged profile, or a data reporting gap. Check the GBP dashboard directly for any policy flags or ownership issues. Success check: GBP actions return above 1/day by 2026-09-12 re-check."
       }
     ],
     "next_check": "2026-09-12"

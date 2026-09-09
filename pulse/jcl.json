@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-09T14:59:01.520Z",
+  "generated_at": "2026-09-09T15:50:20.628Z",
   "date": "2026-09-09",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "GBP engagement dropped 100% over the last 7 days, likely due to a listing issue or suspension that cut off all profile-driven actions, while paid channels (Meta and Google Ads) show zero spend and zero leads across the full 28-day window, suggesting campaigns are paused or inactive.",
+  "verdict": "GBP engagement dropped 100% over the last 7 days, which is the most significant movement and likely signals a data reporting gap or a pause in local profile activity rather than a true loss of traffic. Paid channels (Meta and Google Ads) show zero spend and zero leads over the 28-day window, suggesting campaigns are currently inactive and should be reviewed for reactivation.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -572,43 +572,43 @@
     "history_line": "Delivered May 2026 SEO update report"
   },
   "performance": {
-    "generated_at": "2026-09-09T15:05:29.434Z",
+    "generated_at": "2026-09-09T15:53:15.088Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Campaigns fully dark 45+ days; GBP collapse confirms organic also failing.",
+    "verdict": "Paid channels dead 28+ days; organic holding but extension unsigned blocks restart.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Meta and Google spend = $0 across all 28 days and all 45 series days; zero leads generated. Campaigns appear fully paused — not a tracking gap.",
+        "text": "Meta and Google spend are $0 across all 28 days and the full 45-day series — zero leads, zero CPL calculable; paid engine is fully off.",
         "confidence": "confirmed",
         "channel": "Meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Extension with Marwan overdue since 2026-08-31; engagement is month-to-month lapsed. No contract gates next 3 months of paid activity.",
+        "text": "⛔ Extension with Marwan unsigned as of 2026-08-31 deadline; no active contract gates any paid restart or new 3-month commitments.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "SMS automation and Zoho Voice access both overdue since 2026-08-31; intake infrastructure incomplete, blocking contact-rate improvement Marwan requires.",
+        "text": "⛔ SMS automation and Zoho Voice access both overdue since 2026-08-31; intake infrastructure remains incomplete, blocking contact-rate improvement.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions dropped -100% in last 7 days (0 vs prior-period baseline of ~7–13/day); calls and web clicks ceased — listing issue or suspension probable.",
-        "confidence": "probable",
+        "text": "GBP actions collapsed to 0 for 8 straight days (Sep 1–8) after averaging ~7/day in August — likely a data/reporting gap, not a true traffic loss, but unconfirmed.",
+        "confidence": "hypothesis",
         "channel": "GBP"
       },
       {
         "id": "F5",
-        "priority": 4,
-        "text": "Search clicks fell -31.63% week-over-week and hit 0 on 2026-09-07/08; combined with GBP collapse, organic visibility is deteriorating across all touchpoints.",
+        "priority": 3,
+        "text": "Search clicks fell 31.6% week-over-week (0 clicks on Sep 7–8 in series) and GA4 sessions dropped 12.4% — organic is softening but still delivering ~27–72 sessions/day mid-series.",
         "confidence": "probable",
         "channel": "SEO"
       }
@@ -617,33 +617,34 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit and reinstate GBP listing immediately; 28-day actions total 136 confirms the profile was functional before collapse.",
+        "text": "Escalate Marwan extension signature to Sohib immediately — $0 spend for 28+ days means no paid activity can resume without it.",
         "cites": [
-          "F4"
+          "F2",
+          "F1"
         ],
-        "monday_item_name": "Fix GBP Listing Suspension",
-        "monday_update": "GBP actions dropped to 0 for 9 consecutive days (last reading 2026-09-01) after averaging ~7–13/day earlier in the window — a listing suspension or verification lapse is the probable cause. Nacer to audit GBP dashboard for suspension notice and submit reinstatement or re-verification by 2026-09-11. Success check: GBP actions return to ≥5/day within 7 days of reinstatement (confirm by 2026-09-16)."
+        "monday_item_name": "Marwan Extension Sign-off",
+        "monday_update": "Meta and Google have been at $0 spend for the full 28-day window with zero leads generated (F1). The engagement extension with Marwan was due 2026-08-31 and remains unsigned, blocking any paid restart (F2). Sohib to escalate directly to Marwan for signature this week. Success check: signed agreement on file by 2026-09-12, enabling campaign reactivation planning."
       },
       {
         "id": "S2",
-        "type": "watch",
-        "text": "Hold all paid reactivation until Marwan extension is signed; $0 spend for 45 days makes relaunch a contract decision, not a buyer call.",
-        "cites": [
-          "F1",
-          "F2"
-        ],
-        "monday_item_name": "Watch: Await Marwan Extension",
-        "monday_update": "Meta and Google have run $0 spend since at least 2026-08-12 (full 45-day series), generating 0 leads against a July average of 3 leads/day. No paid action is appropriate until the extension with Marwan is signed, as the engagement has lapsed. Sohib to confirm contract status by 2026-09-12; if signed, flag for immediate campaign reactivation review. Re-check paid readiness on 2026-09-12."
-      },
-      {
-        "id": "S3",
         "type": "fix",
-        "text": "Escalate SMS automation and Zoho Voice access to Nacer; both are overdue blockers gating intake before any lead volume can be recovered.",
+        "text": "Resolve SMS automation and Zoho Voice access — both overdue 2026-08-31; intake infrastructure must be live before paid leads resume.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Escalate SMS & Zoho Voice",
-        "monday_update": "SMS automation and Zoho Voice access were both due 2026-08-31 and remain incomplete; these directly gate contact-rate improvement, which Marwan identified as the primary bottleneck after July's 3 leads/day was hit. Nacer to chase Andrew and Joy for Zoho Voice access credentials and confirm SMS workflow live status by 2026-09-11. Success check: both items marked live in Monday by 2026-09-12."
+        "monday_item_name": "CRM Blockers: SMS + Zoho Voice",
+        "monday_update": "SMS automation and Zoho Voice access are both past their 2026-08-31 deadline (F3). These tools directly govern the contact-rate bottleneck Marwan has flagged as the primary performance issue. Nacer (Ops) to confirm status and unblock access with Andrew/Joy by 2026-09-12. Success check: both items marked live in Monday with confirmation from Andrew before any paid campaign relaunch."
+      },
+      {
+        "id": "S3",
+        "type": "watch",
+        "text": "Watch GBP actions and search clicks for 3 more days; if both remain at 0 by Sep 12, investigate reporting pipeline before attributing to organic decline.",
+        "cites": [
+          "F4",
+          "F5"
+        ],
+        "monday_item_name": "GBP + Search Drop Watch",
+        "monday_update": "GBP actions have read 0 for 8 consecutive days and search clicks dropped 31.6% week-over-week with 0 recorded on Sep 7–8 (F4, F5). The pattern is consistent with a data/reporting gap rather than true traffic loss, but cannot be confirmed yet. Re-check the GBP dashboard and Search Console directly on 2026-09-12. Success check: if GBP actions and search clicks return to non-zero, flag as reporting gap closed; if still 0, escalate as a technical audit item."
       }
     ],
     "next_check": "2026-09-12"
