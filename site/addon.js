@@ -433,11 +433,12 @@ function foRenderListSection(key, label, ids, byId) {
 // cards stay deliberately quiet — the point is that old cards get louder, not
 // that every card shouts.
 //
-// Tiers key off foRawAgeDays(), not foItemAgeDays() -- the latter is gated to
+// Tiers key off foUnverifiedDays(), not foItemAgeDays() -- the latter is gated to
 // null below FO_STALE_DAYS (that's a staleness flag, not a display value) and
 // would collapse every card under 4 days old into a single "unknown" tier,
 // which defeats "how behind is the queue" for exactly the cards where that
-// matters most.
+// matters most. foItemAgeDays/foIsStuck stay on createdAt on purpose -- see
+// the note on foUnverifiedDays.
 const FO_AGE_TIERS = [
   { min: 14, cls: 'fo-age-critical' },
   { min: 7,  cls: 'fo-age-high'     },
@@ -453,15 +454,18 @@ function foAgeTierClass(days) {
 
 // "TODAY" reads better than "0D" and is the one case worth spelling out.
 function foAgeLabel(item) {
-  const days = foRawAgeDays(item);
+  const days = foUnverifiedDays(item);
   if (days === null) return 'AGE?';
   if (days === 0) return 'TODAY';
   return `${days}D`;
 }
 
 function foAgePill(item) {
-  const days = foRawAgeDays(item);
-  const title = item.createdAt ? `Drafted ${item.createdAt}` : 'Draft date unknown';
+  const days = foUnverifiedDays(item);
+  const stamp = foVerifiedAt(item);
+  const title = stamp
+    ? `Unverified since ${stamp}${item.verifiedAt ? '' : ' (never re-checked since it was drafted)'}`
+    : 'Never verified -- no date on this card';
   return `<span class="fo-age-pill ${foAgeTierClass(days)}" title="${foEscape(title)}">`
        + `${foEscape(foAgeLabel(item))}</span>`;
 }
@@ -643,15 +647,28 @@ function foItemAgeDays(item) {
   return days > FO_STALE_DAYS ? days : null;
 }
 
-// Unconditional days-since-drafted -- unlike foItemAgeDays() above, this
-// isn't gated by FO_STALE_DAYS, since that gate exists for staleness
-// flagging, not for "how behind is the queue". null only when createdAt
-// itself is missing/unparseable (unreachable today -- all 87 live cards have
-// one), not just because a card is young.
-function foRawAgeDays(item) {
-  const created = item.createdAt ? new Date(item.createdAt).getTime() : NaN;
-  if (!Number.isFinite(created)) return null;
-  return Math.floor((Date.now() - created) / 86400000);
+// Days since this card was last checked against fresh evidence -- NOT days
+// since it was drafted. The drafter stamps `verifiedAt` at birth and bumps it
+// on every §19b pass that touches the card, including a pass that finds
+// nothing to change (see drafting-rules.md, "Still true as of"). "Drafted 9
+// days ago" isn't the thing Naz needs to know before firing; "nobody has
+// checked this against reality in 9 days" is.
+//
+// Falls back to createdAt for cards written before verifiedAt existed, which
+// is the correct reading for them: never re-verified since drafting.
+//
+// Unlike foItemAgeDays() above this is not gated by FO_STALE_DAYS, since that
+// gate exists for staleness flagging, not for "how behind is the queue".
+// null only when neither timestamp is present/parseable.
+function foVerifiedAt(item) {
+  return item.verifiedAt || item.createdAt || null;
+}
+
+function foUnverifiedDays(item) {
+  const stamp = foVerifiedAt(item);
+  const checked = stamp ? new Date(stamp).getTime() : NaN;
+  if (!Number.isFinite(checked)) return null;
+  return Math.floor((Date.now() - checked) / 86400000);
 }
 
 // A stale card (foItemAgeDays !== null) with no payload can never be sent as

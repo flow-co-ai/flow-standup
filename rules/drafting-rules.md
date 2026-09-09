@@ -1,4 +1,4 @@
-<!-- rules-version: 2026-09-02 -->
+<!-- rules-version: 2026-09-09 -->
 ## Two different "status" concepts -- don't confuse them
 1. **Dashboard status** (a card's workflow state in the queue: ready / confirm
    / done / ignored / sent). A freshly drafted item starts as "ready" (a real
@@ -103,6 +103,49 @@ new material into the existing card:
 - **Set** `updatedAt` to now.
 - Do **not** create a second card for this candidate.
 
+**Every merge asks the evidence a SECOND question.** The first question is
+"what does this add?" The second is "does this still need doing?" Until
+2026-09-09 only the first was ever asked, so when a later message said the
+work was finished, that completion got folded into the card's body and the
+card stayed `ready`. Live proof:
+`maadilaw-agreement-prefill-resolved` -- the word "resolved" is in its own
+id, its body says the issue "has since been resolved," and it sat `ready` at
+P4 for four days waiting for Naz to read it to discover it was dead.
+
+Three outcomes, not one:
+
+| the evidence... | outcome |
+| --- | --- |
+| adds detail | merge, card stays `ready` |
+| says the work is complete | merge, `status: "done"`, record which message and date said so |
+| contradicts the card | merge, `status: "confirm"`, `nullReason: "content-conflict"` |
+
+**Closing a card writes NOTHING to Monday.** The HARD RULE is untouched --
+zero Monday writes, still. Setting `done` withdraws our own proposal and
+nothing else; A9 then archives it out on the next weekly pass. The card keeps
+its payload so a wrong close is recoverable: Naz can reopen it and fire it.
+
+**Monday's status column is not evidence, and does not get consulted here.**
+Naz, explicitly: the team under-updates Monday, so a Monday "Done" can be
+wrong and a Monday "Start" can be finished work. Comms are the source of
+truth for this decision. Monday stays read-only and stays out of it.
+
+**Guard -- only an explicit completion statement closes anything.** Never an
+inference, never absence of follow-up, never "nobody has mentioned it since."
+Pass `validate.py`'s `build_merged_card(completion={...},
+evidence_text=...)`: the quote must appear VERBATIM in the message text, or
+the close is refused and the card lands as a loud `confirm` instead. Log
+every auto-close in the run summary with the card id and the triggering quote
+(`completion_log_line()` formats it). If this closes something wrong, that log
+is how it gets found.
+
+The same second question applies when the completion arrives in the SAME
+message that produced the candidate -- `maadilaw-agreement-prefill-resolved`
+was a fresh draft, not a merge, and §19b returned no match for it. Evidence
+that reports both a problem and its resolution does not become a `ready`
+card; it becomes a `done` one, or, if it genuinely leaves residual work,
+a card scoped to ONLY that residue.
+
 **Conflict case -- merge, but don't decide.** If the two sources DISAGREE
 rather than merely overlap, never silently pick one -- that buries a
 decision that isn't the drafter's to make. Merge into one card, then:
@@ -158,31 +201,56 @@ prerequisite exists, flag it for Naz rather than guessing either way.
 ## Update format (§7) -- updateBody MUST follow this exactly
 1. Open with "<p>Salam,</p>" -- nothing else, no @-tag at the start.
 2. Body as "<ul><li>...</li></ul>" bullets. Knowledgeable (don't dumb it down),
-   organized, one clear thought per bullet, more than enough detail -- assume
-   the reader has NOT seen the source meeting. A single generic sentence
+   organized, one clear thought per bullet. A single generic sentence
    ("client wants the lead form fixed") is NEVER an acceptable updateBody, no
-   matter how small the item looks. Always write MULTIPLE bullets covering,
-   at minimum:
-   - **Context**: what happened and why this is being drafted, in enough
-     detail that someone who never saw the source meeting/message understands
-     the situation, not just the headline.
+   matter how small the item looks. Cover, in as few bullets as the work
+   actually needs:
+   - **Context**: what happened and why this is being drafted. For a
+     `create_item` on a fresh workstream, assume the reader has NOT seen the
+     source meeting. For an `update_only` or a `create_subitem`, the item it
+     lands on already carries the history -- give the one line that says
+     what is new, not a recap of what is already written above it.
    - **The actual deliverable(s) or step(s)**, specific enough that the
      assignee can start executing without a follow-up question.
-   - **Dependencies/constraints**: what this is waiting on, what it depends
-     on, what NOT to touch or change. If there are genuinely none, say so
-     explicitly ("No dependencies -- can start immediately") rather than
-     dropping the point.
-   - **Done/success criterion**: what "finished" looks like for this item --
-     the same "done = ___" test used to decide whether something is a real
-     task at all.
+   - **Dependencies/constraints**: what this is waiting on, what NOT to
+     touch. If there are genuinely none, one short clause, not a bullet.
+   - **Done criterion** -- ONLY when "finished" isn't already obvious from
+     the deliverable. The `done = ___` test (§13) is a gate you apply before
+     drafting; it is not a bullet you owe every card. A `done =` clause that
+     restates the deliverable verbatim is padding, delete it.
+
+   **Length is proportional to the work, and it is capped both ways.**
+
+   - Floor, enforced at send by `lib/monday.js`'s `checkUpdateBodySubstance`:
+     at least 2 substantive lines and 20 words.
+   - Ceiling, enforced at draft by `validate.py`: **350 content words, hard.**
+     Over it, `validate_payload()` rejects the payload -- trim and re-emit,
+     don't ship it.
+   - Target for a single-deliverable card (a test, a verification, one fix):
+     **under 250 content words.** Not enforced, reported in the run summary.
+
+   Both counts ignore the Salam opener and the trailing mention-chip line.
+
+   The three padding patterns to cut first, in order, because they are what
+   the live queue was actually made of (29 ready cards on 2026-09-09 ran
+   276-847 content words, median 461, for work that is often one test):
+   1. context the item it lands on already carries;
+   2. sentences explaining why a step matters, rather than what it is;
+   3. a `done =` clause repeating the deliverable in different words.
+
+   `maadilaw-agreement-cancellation` is the worked example: 400 words to say
+   "test whether Mark as declined actually blocks signing." A verification
+   card should not read like a spec.
+
    If the source content is genuinely thin, that's a sign to ask a follow-up
    question (or look it up on Monday for more context) rather than drafting a
-   thin one-line update. This is a HARD gate, not just this instruction:
+   thin one-line update. The floor is a HARD gate, not just this instruction:
    drafting and the real send both run a code-level check (at least 2
    distinct lines with real detail, not just enough bullets to game the
    count) and will reject a too-thin updateBody with an error instead of
    saving/sending it -- if that happens, don't just resubmit the same
-   content, actually add the missing context/goal.
+   content, actually add the missing context/goal. Do not pad toward the
+   ceiling to clear the floor; they are 300 words apart on purpose.
 3. Tag people at the very bottom only, one line, exact HTML:
    <p><a class="mention" data-mention-id="USERID" data-mention-type="User">@Full Display Name</a> ...</p>
 4. NEVER use em dashes (--) or en dashes. Avoid hyphens outside canonical terms.
@@ -192,7 +260,28 @@ prerequisite exists, flag it for Naz rather than guessing either way.
 
 ## Assignment is automatic and server-enforced -- nobody sets columnValues by hand
 Status and people columns are always derived server-side from boardId +
-blocked + needsNaz, using fixed default assignees per board:
+blocked + needsNaz, using fixed default assignees per board.
+
+**The owner must resolve at DRAFT time even though it is WRITTEN at send
+time.** `validate.py` mirrors the table below and, for every `create_item`
+and `create_subitem`, rejects the payload outright when:
+- `boardId` is missing or isn't one of the four boards -- there is no default
+  assignee set to derive, so the item would land ownerless
+  (`no owner resolved`);
+- the §7 mention-chip line doesn't name exactly the people that board's rules
+  resolve to, Naz included if and only if `needsNaz` is true
+  (`owner mismatch`).
+
+That is the Billy Doe failure ("4 subitems, unassigned, no status") caught at
+draft time instead of after Naz fires the card. It is a GUARD, not a
+substitute for send-time assignment: `columnValues` stays on `validate.py`'s
+FORBIDDEN list, and `lib/monday.js` still recomputes the People and Status
+columns fresh on every create, never reading them off the payload. A
+hand-authored `columnValues` is what shipped eleven updates that notified
+nobody on 2026-08-14; writing one at draft time would reintroduce exactly
+that, and be inert besides, since the send path ignores it.
+
+Fixed default assignees per board:
 - Ads board: Khurram Jamil + Ads Team
 - Web+SEO board: Muhammad Hashir Faiz + Zayan Faiz
 - CRM board: Ahmed Memon + Ali Shaheer
@@ -294,6 +383,30 @@ Exception: a parent set to **Stuck** because the whole workstream is genuinely
 blocked stays Stuck. Stuck overrides Ongoing.
 
 Subitems keep whatever discrete status fits their state. This rule is parent-only.
+
+## "Still true as of" -- every card carries a `verifiedAt`
+
+`createdAt` answers "when was this drafted." That is not the question in
+front of Naz before he fires a card; the question is "is this still true."
+Every card carries **`verifiedAt`**: the last time it was checked against
+fresh evidence. Daily Ops's age pill reads it, so the pill means
+**unverified for N days**, not drafted N days ago.
+
+- `validate.py`'s `build_card()` stamps it at birth.
+- `build_merged_card()` refreshes it on any §19b merge.
+- `touch_verified(card)` refreshes it on a §19b pass that examined the card
+  and found nothing to change -- **that pass counts.** A card re-read against
+  today's comms and found still true is genuinely fresher than one nobody
+  has looked at since it was written, and if the stamp only moved on change,
+  the pill would keep aging cards the drafter is actively confirming.
+- Nothing here touches `createdAt`. `merge_queue()` still stamps it once and
+  never again.
+
+The stuck-card checks deliberately stay on `createdAt`, not `verifiedAt`:
+`site/addon.js`'s `foIsStuck()` and SKILL.md JOB B's null-payload sweep. A
+card that can never be sent is stale by drafting age no matter how recently
+it was re-verified, and re-pointing those at `verifiedAt` would make the four
+parse-error cards that sat unfireable for 14 days invisible all over again.
 
 ## Ignored cards are negative signal (§29)
 

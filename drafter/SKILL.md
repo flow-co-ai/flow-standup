@@ -37,8 +37,13 @@ run unattended.
 > narrow exception (JOB D / A9, marking an item Done on clear evidence). It is
 > **removed here** and its removal is deliberate — Naz's instruction, 2026-08-18:
 > "dont write directly to monday. write to the draft queue still for me to
-> approve." A completion signal now becomes an `update_only` draft like anything
-> else.
+> approve." A completion signal never marks a Monday item Done.
+>
+> What it CAN do, as of 2026-09-09, is close **our own** card: §19b's re-classify
+> path sets a draft to `done` when the evidence explicitly says the work is
+> finished (see A5). That is a proposal being withdrawn, not a Monday write —
+> nothing leaves this repo, and A9 archives the card out normally. The HARD RULE
+> above is unchanged and still absolute.
 
 ## Boards
 
@@ -223,6 +228,40 @@ read it before drafting, same as §19. On a match:
   `status='confirm'`, `null_reason='content-conflict'`, payload `None`, and a note
   stating both positions with their dates/sources.
 
+**Ask the merged evidence a SECOND question: does this still need doing?**
+Merging used to ask only "what does this add?", so a later message saying the
+work was finished got folded into the body and the card stayed `ready` —
+`maadilaw-agreement-prefill-resolved` sat that way at P4 with "has since been
+resolved" written in its own body. Three outcomes now, per `drafting-rules.md`
+§19b: adds detail → stays `ready`; **says it's complete → `done`**;
+contradicts → `confirm`/`content-conflict`.
+
+To close, pass `build_merged_card(completion={"quote", "sourceLabel",
+"statedAt"}, evidence_text=<the message text>)`. The quote must appear verbatim
+in `evidence_text` or the close is refused and the card lands as a loud
+`confirm` — **only an explicit completion statement closes anything**, never an
+inference and never absence of follow-up.
+
+**Do not read Monday's status column for this.** Naz, explicitly: the team
+under-updates Monday, so a Monday "Done" can be wrong and a Monday "Start" can
+be finished work. Comms are the source of truth here; Monday stays read-only
+and stays out of the decision. Closing a card is our own proposal being
+withdrawn — the HARD RULE is untouched, zero Monday writes, and A9 archives the
+card out on its normal pass.
+
+Apply the same second question to a **fresh** candidate whose own source
+message reports both a problem and its resolution — that's what
+`maadilaw-agreement-prefill-resolved` actually was (§19b returned no match for
+it). `build_card()` takes the same `completion=`/`evidence_text=` pair. Either
+it's `done`, or the card is scoped to only the residue that genuinely remains.
+
+**Re-stamp `verifiedAt` on every §19b pass that touches a card, including a
+pass that finds nothing to change** — use `validate.touch_verified(card)` for
+the no-change case and include it in this run's fresh cards. That stamp is what
+the Daily Ops age pill now reads, so the pill says "unverified for N days"
+instead of "drafted N days ago". A card re-read against today's comms and found
+still true is genuinely fresher than one nobody has looked at.
+
 A card produced this way still goes through A6/A7 exactly like a fresh one —
 `build_merged_card()` calls `validate_payload()` internally, so a bad merged
 payload still fails loud as a `parse-error` card rather than shipping.
@@ -255,6 +294,25 @@ shipped eleven updates that notified nobody. **Never** include `board` or `group
 as display strings; those are for humans, and they're carried on the card, not the
 payload.
 
+**Two gates `validate.py` now enforces on every payload — know them before you
+write one, not after it bounces:**
+
+- **Length, §7.** 350 content words is a hard ceiling; under 250 is the target
+  for a single-deliverable card (a test, a verification, one fix). Both counts
+  ignore the Salam opener and the mention-chip line. The live queue ran
+  276–847 words, median 461, which is why this exists. Cut in this order:
+  context the item already carries, sentences explaining why a step matters, a
+  `done =` clause restating the deliverable. Unlike other validation failures,
+  **a length rejection is always fixable in place — trim and re-emit.** Only
+  let it become a `parse-error` card if a genuine rewrite still won't fit.
+- **Owner, `create_item`/`create_subitem` only.** The `boardId` must be one of
+  the four boards, and the §7 mention-chip line must name exactly the people
+  that board resolves to (Naz iff `needsNaz`). A payload that can't name an
+  owner is rejected — that's the Billy Doe "4 subitems, unassigned, no status"
+  failure caught at draft time. It is a guard, not a substitute: the People and
+  Status columns are still written server-side at send, and `columnValues`
+  stays forbidden here.
+
 Leave the payload null only for: `multi-item` (genuinely 2+ separate Monday items)
 or `content-conflict` (a fact only Naz can resolve). Routing or mode uncertainty is
 **not** a valid null reason — the A5 audit resolves it. `unmapped-client` is no
@@ -277,6 +335,12 @@ Merge into `checks/draft-queue.json` via `validate.merge_queue()`, which enforce
 terminal cards are never downgraded, ignored cards keep `ignoreReason`/`ignoredAt`
 whole, `createdAt` is stamped once and never touched again, `awaitingFinalize`
 cards are left alone, and nothing is ever deleted here.
+
+Cards this run set to `done` and cards it only re-verified both go through the
+same call — a close is an ordinary status change on our own card, and a
+`verifiedAt` bump is an ordinary field update. Include the `touch_verified()`
+cards in `fresh` even though nothing else about them changed; that is the whole
+point of the stamp.
 
 `write_json()` confirms the commit sha landed. A non-2xx or a missing sha means
 this step **failed** and A8 must not run.
@@ -321,9 +385,14 @@ only — never pushed to the queue or the page.
 
 **Queue health, same idea.** Using the queue already read in A2, flag any
 NON-TERMINAL card (`ready`/`confirm`/`blocked`/`exists`) whose `payload` is
-`null` and whose `createdAt` is more than 3 days old (same threshold Daily
-Ops's own age badge uses, `FO_STALE_DAYS` in `site/addon.js`) — it can never
-be sent as-is, and nothing else points that out. Name the id, `nullReason`,
+`null` and whose `createdAt` is more than 3 days old — **`createdAt`, not
+`verifiedAt`, deliberately.** A card that can never be sent is stale by
+drafting age no matter how recently it was re-verified; keying this off the
+verification stamp would hide it again the moment the drafter looked at it,
+which is exactly the invisibility this check exists to end. (The Daily Ops age
+pill uses the same 3-day `FO_STALE_DAYS` threshold but reads `verifiedAt` — a
+different question, deliberately.) It can never be sent as-is, and nothing else
+points that out. Name the id, `nullReason`,
 and age for each. This is exactly the gap that let four `parse-error` cards
 from the 8/10-8/13 run sit unfireable for 14 days with nothing flagging
 them: the fail-loud status worked, the surfacing didn't exist. This check is
@@ -349,6 +418,20 @@ Otherwise, tight and scannable, no preamble:
    messages, say so as an empty window, not a silent line item — a
    fetch/credential failure never reaches this point at all (see the stop
    condition above). One line if nothing new.
+3a. **Auto-closes — every one, always, one line each.** For each card §19b set
+   to `done`, print `validate.completion_log_line(card)`: the card id, the date,
+   the source, and the verbatim quote that triggered the close. This is not
+   optional and it is not summarizable ("3 cards closed" is not this). Closing
+   is the one thing in this run that removes work from Naz's queue without him
+   reading it, so if it ever closes something wrong, **this log is the only way
+   that gets found.** Say "no auto-closes this run" when there were none.
+3b. **Verification pass** — how many non-terminal cards had their `verifiedAt`
+   re-stamped, and how many were left untouched (nothing in this window
+   mentioned them). The second number is the honest one: those cards' age pills
+   keep climbing because nobody, including this run, has re-checked them.
+3c. **Length** — any card written this run over the 250-word §7 soft target,
+   named, with its word count. Over the 350-word ceiling it never got written
+   at all, so this line is about drift, not failures.
 4. **JOB B** — what needs attention today, by client, plus any stuck queue
    cards (no payload, 3+ days old) named by id. One sentence if nothing.
 5. Archive count, if A9 ran.

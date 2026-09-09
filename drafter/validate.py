@@ -82,6 +82,122 @@ VALID_NULL_REASONS = ("multi-item", "content-conflict", "unmapped-client", "pars
 NON_TERMINAL_STATUSES = ("ready", "confirm", "blocked", "exists")
 
 
+# ---------------------------------------------------------------------------
+# body length cap  (drafting-rules.md §7)
+# ---------------------------------------------------------------------------
+#
+# The §7 rules have always had a floor (lib/monday.js's
+# checkUpdateBodySubstance, MIN_CONTENT_LINES/MIN_TOTAL_WORDS) and no ceiling,
+# and the queue drifted straight up into the gap: 29 live ready cards on
+# 2026-09-09 ran 276-847 content words, median 461, for work that is often a
+# single test. maadilaw-agreement-cancellation spent 400 words to say "check
+# whether Mark as declined actually blocks signing." The ceiling is set below
+# that card deliberately -- it is the example Naz named, so it has to fail.
+#
+# MAX_BODY_WORDS is the hard gate. SOFT_BODY_WORDS is the target a
+# single-deliverable card should land under -- not enforced here (a genuinely
+# multi-deliverable item is allowed to be longer), reported by the run summary
+# so the drift stays visible instead of silent.
+MAX_BODY_WORDS = 350
+SOFT_BODY_WORDS = 250
+
+# Fourth port of lib/monday.js's updateBodyContentLines -- same reason the
+# text-similarity matcher is ported three times (separate processes, no shared
+# runtime). Must stay behaviorally identical to it: the floor and the ceiling
+# have to count the same words, or a body can clear one parser and fail the
+# other.
+_LI_OPEN_RE = re.compile(r"<li[^>]*>", re.I)
+_LINE_BREAK_RE = re.compile(r"</li>|<br\s*/?>|</p>", re.I)
+_TAG_RE = re.compile(r"<[^>]+>")
+_ENTITIES = (("&nbsp;", " "), ("&amp;", "&"), ("&lt;", "<"), ("&gt;", ">"),
+             ("&quot;", '"'), ("&#39;", "'"))
+
+
+def body_content_lines(html: str) -> list[str]:
+    """The §7 body's real content lines -- the Salam opener and the trailing
+    mention-chip line are format, not content, and neither counts."""
+    if not html:
+        return []
+    text = _LI_OPEN_RE.sub("", html)
+    text = _LINE_BREAK_RE.sub("\n", text)
+    text = _TAG_RE.sub("", text)
+    for entity, char in _ENTITIES:
+        text = re.sub(re.escape(entity), char, text, flags=re.I)
+    lines = [ln.strip() for ln in text.split("\n")]
+    return [
+        ln for ln in lines
+        if ln and not re.match(r"^salam,?$", ln, re.I) and not ln.startswith("@")
+    ]
+
+
+def body_word_count(html: str) -> int:
+    return sum(len(ln.split()) for ln in body_content_lines(html))
+
+
+# ---------------------------------------------------------------------------
+# owner resolution  (drafting-rules.md "Assignment is automatic")
+# ---------------------------------------------------------------------------
+#
+# Mirrors lib/monday.js's BOARD_ASSIGNEES/USER_NAMES/NAZ_USER_ID. monday.js
+# stays the single enforcement point that actually writes Monday's People
+# column at send time -- this copy exists so a card whose board can't resolve
+# to an owner AT ALL fails loudly at draft time instead of being discovered
+# after Naz fires it. Deliberately NOT used to write payload.columnValues:
+# that field is still FORBIDDEN, monday.js recomputes it fresh on every create
+# regardless, and a hand-authored one is what shipped eleven updates that
+# notified nobody (2026-08-14).
+#
+# Keep in sync with lib/monday.js. If a board is added there, add it here.
+NAZ_USER_ID = 70062990
+
+BOARD_ASSIGNEES: dict[str, tuple[int, ...]] = {
+    "18405754310": (102221064, 102221061),  # Ads: Khurram Jamil + Ads Team
+    "18099807701": (69741994, 101662542),   # Web + SEO: Muhammad Hashir Faiz + Zayan Faiz
+    "18418241405": (108080159, 108080161),  # CRM: Ahmed Memon + Ali Shaheer
+    "18100257069": (69662034,),             # Video: Sohib Boundaoui (deliberate default)
+}
+
+USER_NAMES = {
+    102221064: "Khurram Jamil",
+    102221061: "Ads Team",
+    69741994: "Muhammad Hashir Faiz",
+    101662542: "Zayan Faiz",
+    108080159: "Ahmed Memon",
+    108080161: "Ali Shaheer",
+    69662034: "Sohib Boundaoui",
+    NAZ_USER_ID: "Nacer Amrouch",
+}
+
+_MENTION_ID_RE = re.compile(r'data-mention-id="(\d+)"')
+
+# Creating modes put a real item on a real board, so they must resolve to a
+# real owner. update_only creates nothing and carries no boardId by design --
+# it posts onto an item that already has its own People column.
+OWNER_REQUIRED_MODES = ("create_item", "create_subitem")
+
+
+def resolve_assignees(board_id: str | None, needs_naz: bool = False) -> list[int]:
+    """The board's default owners, Naz appended only on an explicit needsNaz.
+    Raises PayloadError when the board resolves to nobody -- that is the
+    'no owner resolved' case, and it is meant to be loud."""
+    owners = BOARD_ASSIGNEES.get(str(board_id) if board_id is not None else "")
+    if not owners:
+        raise PayloadError(
+            f"no owner resolved: boardId {board_id!r} has no default assignees "
+            f"(known boards: {', '.join(sorted(BOARD_ASSIGNEES))})"
+        )
+    return [*owners, NAZ_USER_ID] if needs_naz else list(owners)
+
+
+def mentioned_user_ids(html: str) -> set[int]:
+    return {int(m) for m in _MENTION_ID_RE.findall(html or "")}
+
+
+def _describe(ids) -> str:
+    return ", ".join(f"{USER_NAMES.get(i, 'unknown')} ({i})" for i in sorted(ids)) or "nobody"
+
+
+
 class PayloadError(ValueError):
     """Raised with a message that lands verbatim in the card's note field."""
 
@@ -131,12 +247,152 @@ def validate_payload(payload: Any) -> dict:
     if "Salam" not in body:
         raise PayloadError("updateBody does not open with the §7 Salam greeting")
 
+    # Ceiling, §7. The floor lives in lib/monday.js and fires at send time;
+    # this is the other end of the same gate and fires at draft time, because
+    # a 700-word card is only discoverable after Naz has already read it.
+    words = body_word_count(body)
+    if words > MAX_BODY_WORDS:
+        raise PayloadError(
+            f"updateBody is {words} content words, over the {MAX_BODY_WORDS}-word §7 ceiling "
+            f"(target for a single-deliverable card is under {SOFT_BODY_WORDS}). Cut the three "
+            "padding patterns before anything else: context the item already carries, "
+            "sentences explaining why a step matters, and a done clause that restates the "
+            "deliverable verbatim."
+        )
+
+    # Owner resolution. A creating mode that can't name an owner is the
+    # Billy Doe failure ("4 subitems, unassigned, no status") drafted rather
+    # than sent -- fail here, loudly, instead of shipping an ownerless item.
+    if mode in OWNER_REQUIRED_MODES:
+        expected = resolve_assignees(payload["boardId"], bool(payload.get("needsNaz")))
+        mentioned = mentioned_user_ids(body)
+        if not mentioned:
+            raise PayloadError(
+                f"no owner resolved: {mode} on board {payload['boardId']} has no §7 "
+                f"mention-chip line -- expected {_describe(expected)}"
+            )
+        if mentioned != set(expected):
+            raise PayloadError(
+                f"owner mismatch: {mode} on board {payload['boardId']} should tag "
+                f"{_describe(expected)}, body tags {_describe(mentioned)} "
+                f"(needsNaz={bool(payload.get('needsNaz'))})"
+            )
+
     # A subitem's parent lives on one board -- board and parentItemId disagreeing
     # is the documented cause of create_subitem's misleading 403.
     if mode == "create_subitem" and payload.get("groupId"):
         raise PayloadError("create_subitem takes parentItemId, never groupId")
 
     return payload
+
+
+# ---------------------------------------------------------------------------
+# completion evidence  (drafting-rules.md §19b, the close path)
+# ---------------------------------------------------------------------------
+#
+# The drafter reads comms forward only. §19b merges later messages INTO a
+# matching card, but merging only ever asked "what does this add?" -- never
+# "does this still need doing?" So a message saying the work is finished got
+# folded into the body and the card stayed `ready`. Live proof:
+# maadilaw-agreement-prefill-resolved, whose own body says the issue "has
+# since been resolved," sat ready at P4 for four days waiting for Naz to read
+# it to find out it was dead.
+#
+# Closing a card is the drafter's own proposal being withdrawn -- it writes
+# nothing to Monday. The HARD RULE is untouched. A9 then archives the card out
+# on its normal weekly pass.
+#
+# Two guards, both deliberate:
+#   1. An explicit completion STATEMENT in the evidence, quoted. Never
+#      inference, never absence of follow-up, never a Monday status column --
+#      the team under-updates Monday, so a Monday "Done" can be wrong and a
+#      Monday "Start" can be finished work. Comms are the source of truth for
+#      this decision and Monday stays out of it entirely.
+#   2. Every close is logged with the card id and the quote that triggered it.
+#      If this closes something wrong, that log is how it gets found.
+COMPLETION_MIN_QUOTE_CHARS = 12
+
+
+def validate_completion(completion: Any, *, body: str | None = None) -> dict:
+    """Return a normalized completion record, or raise PayloadError.
+
+    `body` is the evidence text the quote is supposed to come from. When it is
+    given the quote must actually appear in it -- that is what makes this an
+    explicit statement rather than a paraphrase of an inference.
+    """
+    if not isinstance(completion, dict):
+        raise PayloadError(
+            f"completion is {type(completion).__name__}, expected an object with "
+            "quote/sourceLabel/statedAt"
+        )
+
+    missing = [f for f in ("quote", "sourceLabel", "statedAt") if not completion.get(f)]
+    if missing:
+        raise PayloadError(
+            f"completion is missing {', '.join(missing)} -- a close needs the message "
+            "that said so, its source, and its date"
+        )
+
+    quote = str(completion["quote"]).strip()
+    if len(quote) < COMPLETION_MIN_QUOTE_CHARS:
+        raise PayloadError(
+            f"completion quote is {len(quote)} chars, too short to be an explicit "
+            f"completion statement (need {COMPLETION_MIN_QUOTE_CHARS}+)"
+        )
+    if body is not None and quote not in body:
+        raise PayloadError(
+            "completion quote does not appear verbatim in the evidence -- only an "
+            "explicit completion statement closes a card, never a paraphrase or an "
+            "inference from silence"
+        )
+
+    return {
+        "quote": quote,
+        "sourceLabel": str(completion["sourceLabel"]).strip(),
+        "statedAt": str(completion["statedAt"]).strip(),
+        "closedAt": completion.get("closedAt") or datetime.now(timezone.utc).isoformat(),
+    }
+
+
+def completion_note_line(evidence: dict) -> str:
+    """The audit sentence that goes on the card's note. Fixed shape so the run
+    summary and the card say the same thing."""
+    return (
+        f"Auto-closed per §19b: {evidence['sourceLabel']} on {evidence['statedAt']} "
+        f'stated this is complete -- "{evidence["quote"]}"'
+    )
+
+
+def completion_log_line(card: dict) -> str:
+    """One run-summary line per auto-close. Card id first so it is greppable."""
+    evidence = card.get("completionEvidence") or {}
+    return (
+        f"{card.get('id')} -> done | {evidence.get('statedAt', '?')} | "
+        f"{evidence.get('sourceLabel', '?')} | \"{evidence.get('quote', '?')}\""
+    )
+
+
+# ---------------------------------------------------------------------------
+# "still true as of" stamp
+# ---------------------------------------------------------------------------
+#
+# createdAt answers "when was this drafted", which is not the question Naz has
+# in front of him before firing a card. `verifiedAt` answers "when was this
+# last checked against fresh evidence" -- so the dashboard age pill can read
+# "unverified for N days" instead of "drafted N days ago". Stamped on every
+# §19b pass that touches a card, INCLUDING a pass that finds no change: a card
+# re-read against today's comms and found still true is genuinely fresher than
+# one nobody has looked at since it was written.
+#
+# createdAt keeps its own meaning untouched -- merge_queue still stamps it once
+# and never again, and the stuck-card checks (site/addon.js foIsStuck, SKILL.md
+# JOB B) deliberately stay on it, because a card that can never be sent is
+# stale by drafting age no matter how recently it was re-verified.
+
+
+def touch_verified(card: dict, *, now: str | None = None) -> dict:
+    """A §19b pass that found nothing to change still re-verified the card."""
+    return {**card, "verifiedAt": now or datetime.now(timezone.utc).isoformat()}
 
 
 def build_card(
@@ -153,15 +409,40 @@ def build_card(
     payload: Any = None,
     null_reason: str | None = None,
     potential_client: str | None = None,
+    completion: Any = None,
+    evidence_text: str | None = None,
+    verified_at: str | None = None,
 ) -> dict:
     """Assemble one queue card, validating the payload if there is one.
 
     A payload that fails validation does not sink the card -- it becomes a
     parse-error card with status 'confirm' so it surfaces prominently instead of
     vanishing. That was the point of the fail-loud rule and it stays.
+
+    `completion` is §19b's close path: pass the quote/sourceLabel/statedAt of
+    the message that said the work is finished and the card comes back `done`
+    with that evidence recorded on it. `evidence_text` is the message text the
+    quote must appear in verbatim. The payload is kept intact on a closed card
+    so a wrong auto-close is recoverable -- Naz can reopen and fire it -- and
+    so A9 archives the full record rather than a husk.
     """
     if status not in VALID_STATUSES:
         raise ValueError(f"invalid status {status!r}")
+
+    completion_evidence: dict | None = None
+    if completion is not None:
+        try:
+            completion_evidence = validate_completion(completion, body=evidence_text)
+        except PayloadError as exc:
+            # A close that can't prove itself is not a close. Fail into the
+            # same loud confirm card a bad payload produces, rather than
+            # quietly leaving the card ready and losing the signal.
+            note = f"completion-evidence rejected: {exc}"
+            status = "confirm"
+            completion_evidence = None
+        else:
+            status = "done"
+            note = f"{completion_note_line(completion_evidence)}\n\n{note}".strip()
 
     # §25: group is a real board group name or genuinely null. Never a placeholder.
     # Seven live cards carried the literal string "n/a" in 2026-07 and rendered as
@@ -210,6 +491,8 @@ def build_card(
         "payload": payload,
         "nullReason": null_reason,
         "priority": int(priority),
+        "verifiedAt": verified_at or datetime.now(timezone.utc).isoformat(),
+        "completionEvidence": completion_evidence,
     }
 
 
@@ -324,6 +607,8 @@ def build_merged_card(
     payload: Any = None,
     null_reason: str | None = None,
     priority: int | None = None,
+    completion: Any = None,
+    evidence_text: str | None = None,
 ) -> dict:
     """§19b's merge action. Folds new material into `existing` instead of
     creating a second card: keeps `id` (so merge_queue's own createdAt-once
@@ -332,6 +617,16 @@ def build_merged_card(
     replacing it. `updatedAt` is stamped to now since this card is genuinely
     being touched again -- unlike build_card's fresh cards, which don't carry
     one yet.
+
+    A merge asks the new evidence TWO questions, not one, and has three
+    outcomes (§19b):
+      - it adds detail          -> merge, status stays 'ready'
+      - it says work is done    -> merge, pass `completion`, card comes back
+                                   'done' with the quote recorded
+      - it contradicts the card -> merge with status='confirm',
+                                   null_reason='content-conflict'
+    Only the first of those existed before 2026-09-09, which is why finished
+    work kept getting folded into cards that stayed ready.
 
     Runs the same validate_payload()/parse-error path as build_card -- a bad
     merged payload still fails loud instead of shipping.
@@ -350,6 +645,8 @@ def build_merged_card(
         payload=payload,
         null_reason=null_reason,
         potential_client=existing.get("potentialClient"),
+        completion=completion,
+        evidence_text=evidence_text,
     )
     card["updatedAt"] = datetime.now(timezone.utc).isoformat()
     return card
@@ -453,17 +750,67 @@ if __name__ == "__main__":
         except PayloadError as e:
             print(f"ok    {label}: {e}")
 
+    ADS_CHIPS = (
+        '<p><a class="mention" data-mention-id="102221064" data-mention-type="User">'
+        "@Khurram Jamil</a> "
+        '<a class="mention" data-mention-id="102221061" data-mention-type="User">'
+        "@Ads Team</a></p>"
+    )
+
     good = {
         "mode": "create_item",
         "boardId": "18405754310",
         "groupId": "group_abc123",
         "itemName": "Campaign Setup",
-        "updateBody": "<p>Salam,</p><p>Adding injury-type questions.</p>",
+        "updateBody": "<p>Salam,</p><p>Adding injury-type questions.</p>" + ADS_CHIPS,
         "blocked": False,
         "needsNaz": False,
     }
     validate_payload(good)
     print("ok    valid create_item accepted")
+
+    # --- length ceiling (§7) -------------------------------------------------
+    bloated = {**good, "updateBody": "<p>Salam,</p><ul><li>"
+               + " ".join(["padding"] * (MAX_BODY_WORDS + 1))
+               + "</li></ul>" + ADS_CHIPS}
+    try:
+        validate_payload(bloated)
+        print("FAIL  length ceiling: accepted a body over the cap")
+    except PayloadError as e:
+        print(f"ok    length ceiling: {e}")
+    assert body_word_count(good["updateBody"]) == 3, body_word_count(good["updateBody"])
+    print("ok    body_word_count ignores the Salam opener and the mention-chip line")
+
+    # --- owner resolution ----------------------------------------------------
+    try:
+        validate_payload({**good, "updateBody": "<p>Salam,</p><p>No chips here.</p>"})
+        print("FAIL  owner resolution: accepted a create_item that tags nobody")
+    except PayloadError as e:
+        assert "no owner resolved" in str(e)
+        print(f"ok    owner resolution: {e}")
+
+    try:
+        validate_payload({**good, "boardId": "99999999999"})
+        print("FAIL  owner resolution: accepted an unknown board")
+    except PayloadError as e:
+        assert "no owner resolved" in str(e)
+        print(f"ok    unknown board: {e}")
+
+    try:
+        validate_payload({**good, "needsNaz": True})
+        print("FAIL  owner resolution: accepted needsNaz without Naz on the chip line")
+    except PayloadError as e:
+        assert "owner mismatch" in str(e)
+        print(f"ok    needsNaz mismatch: {e}")
+
+    # update_only creates nothing and carries no boardId -- it must stay exempt.
+    validate_payload({
+        "mode": "update_only",
+        "existingItemId": "12471734017",
+        "itemName": "Prefill Gaps",
+        "updateBody": "<p>Salam,</p><p>One more field reassigned.</p>",
+    })
+    print("ok    update_only stays exempt from the owner check")
 
     card = build_card(
         card_id="maadilaw-campaign-setup",
@@ -544,6 +891,69 @@ if __name__ == "__main__":
 
     assert merge_source_labels("Meeting A, 8/24", "Meeting A, 8/24") == "Meeting A, 8/24"
     print("ok    merge_source_labels is idempotent on a repeated label")
+
+    # §19b close path -- the live proof card. maadilaw-agreement-prefill-resolved
+    # sat `ready` at P4 with a body that says the issue "has since been resolved."
+    EVIDENCE = (
+        "Sohib, 9/4: removed Flow Company from that field and reassigned it to "
+        "the firm. This is now fully resolved and the backfill is done."
+    )
+    closed = build_merged_card(
+        existing=match["card"],
+        note="Prefill gap closed; nothing left on this item.",
+        status="ready",  # what the old merge would have kept it at
+        new_source_label="WhatsApp: Maadi Law, 9/4",
+        payload=match["card"]["payload"],
+        completion={
+            "quote": "This is now fully resolved and the backfill is done.",
+            "sourceLabel": "WhatsApp: Maadi Law, 9/4",
+            "statedAt": "2026-09-04",
+        },
+        evidence_text=EVIDENCE,
+    )
+    assert closed["status"] == "done", "explicit completion evidence must close the card"
+    assert closed["payload"] is not None, "a closed card keeps its payload so a wrong close is recoverable"
+    assert closed["completionEvidence"]["statedAt"] == "2026-09-04"
+    assert "Auto-closed per §19b" in closed["note"]
+    assert closed["id"] == match["card"]["id"], "closing must not fork a new card"
+    print("ok    build_merged_card closes on explicit completion evidence")
+    print(f"      log line: {completion_log_line(closed)}")
+
+    # Guard: inference is not evidence. A quote that isn't in the message can't
+    # close anything -- it lands as a loud confirm card instead.
+    inferred = build_merged_card(
+        existing=match["card"],
+        note="Looks finished, nobody followed up.",
+        status="ready",
+        new_source_label="WhatsApp: Maadi Law, 9/4",
+        payload=match["card"]["payload"],
+        completion={
+            "quote": "the team seems to have wrapped this up",
+            "sourceLabel": "WhatsApp: Maadi Law, 9/4",
+            "statedAt": "2026-09-04",
+        },
+        evidence_text=EVIDENCE,
+    )
+    assert inferred["status"] == "confirm", "an unquotable close must not become done"
+    assert inferred["completionEvidence"] is None
+    assert "completion-evidence rejected" in inferred["note"]
+    print("ok    a close that can't quote the evidence fails into confirm, not done")
+
+    # "still true as of" stamp
+    fresh_card = build_card(
+        card_id="x-y", title="X", note="...", status="ready", board="Ads",
+        group=None, source="fireflies", source_label="Meeting, 9/9", priority=3,
+        payload=good,
+    )
+    assert fresh_card["verifiedAt"], "every card carries a verifiedAt from birth"
+    stale = {**fresh_card, "verifiedAt": "2026-08-01T00:00:00+00:00"}
+    assert touch_verified(stale)["verifiedAt"] > stale["verifiedAt"], (
+        "a §19b pass that finds no change still re-verifies the card"
+    )
+    assert touch_verified(stale)["createdAt" if "createdAt" in stale else "id"] == stale[
+        "createdAt" if "createdAt" in stale else "id"
+    ], "re-verifying must not disturb anything else on the card"
+    print("ok    verifiedAt is stamped at birth and bumped by a no-change §19b pass")
 
     # Quality HVAC alias fix -- the live split was CRM/Web+SEO's raw group
     # title ("Quality HVAC by FIbid") vs Ads/Video's ("Quality HVAC").
