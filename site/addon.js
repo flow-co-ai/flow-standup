@@ -492,7 +492,16 @@ function foListRow(item, section) {
   // stuck pill AND a plain age pill on the same row -- the stuck pill already
   // carries the age itself.
   const stuckDays = foIsStuck(item) ? foItemAgeDays(item) : null;
-  const agePill = stuckDays !== null
+  // A sendWarning means the item is REAL on Monday but landed incomplete --
+  // e.g. a subitem created with no status/people because the follow-up push
+  // failed. That used to only ever reach a function log (see
+  // lib/monday.js's retrySubitemAssignment header) -- this is the same fix
+  // JOB B's stuck-card check made for parse-error cards, applied to the
+  // send-time equivalent: don't let a real failure sit invisible outside the
+  // detail pane.
+  const agePill = item.sendWarning
+    ? `<span class="fo-warn-pill" title="${foEscape(item.sendWarning)}">SENT, INCOMPLETE</span>`
+    : stuckDays !== null
     ? `<span class="fo-stuck-pill" title="No payload -- can't be sent, ${stuckDays} days old">STUCK ${stuckDays}d</span>`
     : foAgePill(item);
 
@@ -528,6 +537,19 @@ function foRenderDetailPane(item) {
 
   const origin = item.sourceLabel
     ? `<div class="fo-det-origin">${foEscape(item.sourceLabel)}</div>` : '';
+
+  // See foListRow's matching pill -- same signal, full text plus a retry
+  // action here since the detail pane is where a fix actually gets applied.
+  // Retrying is a plain column-write, not a re-send: it never creates
+  // anything and is safe to hit more than once (retrySubitemAssignment is
+  // unconditional/idempotent).
+  const warningBlock = item.sendWarning
+    ? `<div class="fo-det-warning">
+        <span class="fo-det-warning-label">sent, but incomplete</span>
+        <p>${foEscape(item.sendWarning)}</p>
+        <button onclick="foRetrySendWarning('${item.id}')" ${item._retrying ? 'disabled' : ''}>${item._retrying ? 'retrying…' : 'retry assignment'}</button>
+      </div>`
+    : '';
 
   const sendControl = item._sending
     ? `<button class="fo-primary" disabled>sending to monday…</button>`
@@ -569,6 +591,7 @@ function foRenderDetailPane(item) {
     <button class="fo-det-back" onclick="foSelectItem(null)">← back</button>
     <div class="fo-det-header">
       ${origin}
+      ${warningBlock}
       <div class="fo-det-header-row">
         <span class="fo-badge fo-b-${foEscape(statusKey)}">${foEscape(statusKey)}</span>
         ${ageBadge}
@@ -1394,10 +1417,39 @@ async function foSendToMonday(id, opts = {}) {
     }
     return;
   }
+  // `data.warning` used to be dropped right here -- the ONE place it was
+  // already wired all the way from lib/monday.js, and the response still
+  // got discarded the moment this function returned. `sendWarning` on the
+  // item is what the list pill and detail-pane block below both read;
+  // without carrying it into local state, the send this request just made
+  // would look clean until the next full queue reload overwrote it anyway
+  // (queue.js reads it straight off the persisted card -- see lib/monday.js).
   if (idx !== -1) {
-    foItems[idx] = { ...previous, status: "sent", mondayItemId: data.mondayItemId };
+    foItems[idx] = { ...previous, status: "sent", mondayItemId: data.mondayItemId, sendWarning: data.warning || null };
   }
   foRenderFromItems(foItems);
+}
+
+// Retries the two non-fatal Monday pushes a create_subitem send can leave
+// incomplete (status/people, parent Ongoing) -- see lib/monday.js's
+// retrySubitemAssignment. Never re-sends or re-creates anything, so this is
+// safe to click again if it fails again.
+async function foRetrySendWarning(id) {
+  const idx = foItems.findIndex(it => it.id === id);
+  const previous = idx !== -1 ? foItems[idx] : null;
+  if (idx !== -1) {
+    foItems[idx] = { ...previous, _retrying: true };
+    foRenderFromItems(foItems);
+  }
+
+  const res = await fetch("/.netlify/functions/retry-monday-assignment", { method: "POST", headers: foHeaders(), body: JSON.stringify({ id }) });
+  const data = await res.json().catch(() => ({}));
+
+  if (idx !== -1) {
+    foItems[idx] = { ...previous, _retrying: false, sendWarning: data.warning || (data.error ? previous.sendWarning : null) };
+    foRenderFromItems(foItems);
+  }
+  if (data.error) alert("Retry failed: " + data.error);
 }
 
 // lib/monday.js's findLikelyDuplicate found a live Monday item/subitem that

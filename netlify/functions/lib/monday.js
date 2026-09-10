@@ -973,6 +973,13 @@ async function sendQueueItemToMonday(id, { force = false } = {}) {
 
   const mode = payload.mode || "create_item"; // default for any older payloads without a mode field
   let resultItemId;
+  // Non-fatal problems collected along the way -- a subitem's status/people
+  // push failing, or its parent not moving to Ongoing. None of these stop the
+  // send (the item already exists for real by the time either can happen),
+  // but none of them get to just vanish into a log line either. Joined onto
+  // the response as `warning` and persisted as `sendWarning` on the card
+  // itself, so it's still visible after this one HTTP response is gone.
+  const warnings = [];
 
   try {
     if (mode === "create_item" || mode === "create_subitem") {
@@ -1019,25 +1026,41 @@ async function sendQueueItemToMonday(id, { force = false } = {}) {
         );
         resultItemId = created.create_subitem.id;
 
+        // A failed status/people push here is a separate, non-fatal problem
+        // from the create itself -- the subitem already exists for real, so
+        // treating the whole send as failed would risk a retry creating a
+        // genuine duplicate subitem. "Non-fatal" used to mean "console.error
+        // and never speak of it again" -- that's the exact Billy Doe shape
+        // (4 subitems, unassigned, no status) landing invisibly, because
+        // nothing after this point ever looked at whether it worked. It no
+        // longer just logs: every failure here is pushed onto `warnings`,
+        // which rides all the way onto the persisted card as `sendWarning`
+        // (see below) -- that's what Naz actually sees on the dashboard.
         try {
           const subitemsColumnIds = await getSubitemsColumnIds(boardId);
           const subitemColumnValues = buildSubitemColumnValues(columnValues[PEOPLE_COLUMN].personsAndTeams, blocked, subitemsColumnIds);
           if (Object.keys(subitemColumnValues).length) {
             await updateMondayColumns(subitemsColumnIds.subitemsBoardId, resultItemId, subitemColumnValues);
+          } else {
+            // Video's subitems board has neither a status nor a people
+            // column (see getSubitemsColumnIds) -- an empty result here is
+            // that board's normal shape, not a failure, and must not be
+            // reported as one.
           }
         } catch (err) {
-          // The subitem already exists for real at this point -- a failed
-          // status/people push is a separate, non-fatal problem (surfaced in
-          // logs, not failed back to the caller), not a reason to treat the
-          // whole send as failed (that would risk a retry creating a
-          // genuine duplicate subitem).
           console.error(`sendQueueItemToMonday: subitem ${resultItemId} created but status/people push failed:`, err);
+          warnings.push(
+            `subitem ${resultItemId} was created but its status/people columns failed to set (${String(err.message || err)}) -- assign it by hand or retry from the card.`
+          );
         }
 
         try {
           await ensureParentOngoing(payload.parentItemId, boardId);
         } catch (err) {
           console.error(`sendQueueItemToMonday: failed to set parent ${payload.parentItemId} to Ongoing:`, err);
+          warnings.push(
+            `parent ${payload.parentItemId} could not be set to Ongoing (${String(err.message || err)}) -- check it by hand.`
+          );
         }
       }
     } else if (mode === "update_only") {
@@ -1072,19 +1095,98 @@ async function sendQueueItemToMonday(id, { force = false } = {}) {
     const fresh = await getJSON(QUEUE_PATH, { updatedAt: null, items: [] });
     const freshIdx = fresh.data.items.findIndex((it) => it.id === id);
     if (freshIdx === -1) {
-      return { ok: true, mondayItemId: resultItemId, mode, warning: `sent to Monday, but item ${id} no longer exists in the queue to mark as sent` };
+      warnings.push(`sent to Monday, but item ${id} no longer exists in the queue to mark as sent`);
+      return { ok: true, mondayItemId: resultItemId, mode, warning: warnings.join(" ") };
     }
-    fresh.data.items[freshIdx] = { ...fresh.data.items[freshIdx], status: "sent", mondayItemId: resultItemId, updatedAt: new Date().toISOString() };
+    // `sendWarning` is what makes any of the above durable -- without it, a
+    // failed subitem push lived exactly as long as this one HTTP response:
+    // gone the moment the page refreshed, with nothing in `checks/draft-
+    // queue.json` for the dashboard, the daily run summary, or Naz to ever
+    // see again. `null` (not omitted) so a retry that succeeds can clear a
+    // previously-set one.
+    fresh.data.items[freshIdx] = {
+      ...fresh.data.items[freshIdx],
+      status: "sent",
+      mondayItemId: resultItemId,
+      sendWarning: warnings.length ? warnings.join(" ") : null,
+      updatedAt: new Date().toISOString(),
+    };
     fresh.data.updatedAt = new Date().toISOString();
     await putJSON(QUEUE_PATH, fresh.data, `send-to-monday: fired ${id} (${mode})`, fresh.sha);
 
-    return { ok: true, mondayItemId: resultItemId, mode };
+    return { ok: true, mondayItemId: resultItemId, mode, warning: warnings.length ? warnings.join(" ") : undefined };
   } catch (err) {
     // Mirrors the queue.js fix: log server-side so a Monday API failure is
     // diagnosable in the function logs, not just a silent {error} the caller drops.
     console.error("sendQueueItemToMonday error:", err);
     return { error: String(err) };
   }
+}
+
+// Retries exactly the two non-fatal pushes sendQueueItemToMonday's
+// create_subitem branch can leave incomplete: the subitem's own status/
+// people columns, and the parent's roll-up to Ongoing. Both operations are
+// idempotent (re-setting the same columns to the same values), so retrying
+// unconditionally -- without first checking what's already there -- can't
+// make anything worse than not retrying at all.
+//
+// Only meaningful for a card that already has a real `mondayItemId` -- this
+// never creates anything. Called from the dashboard's "retry assignment"
+// button, which only renders when `item.sendWarning` is set.
+async function retrySubitemAssignment(id) {
+  const { data } = await getJSON(QUEUE_PATH, { updatedAt: null, items: [] });
+  const idx = data.items.findIndex((it) => it.id === id);
+  if (idx === -1) return { error: `no item with id ${id}` };
+  const item = data.items[idx];
+  const payload = item.payload;
+  if (!item.mondayItemId) return { error: "this card was never sent -- nothing to retry" };
+  if (!payload || payload.mode !== "create_subitem") {
+    return { error: "retry-assignment only applies to a create_subitem card" };
+  }
+
+  const boardId = payload.boardId || BOARD_LABEL_IDS[item.board];
+  if (!boardId) {
+    return { error: `can't determine which board's team this belongs to -- no boardId on the payload and "${item.board}" isn't a recognized board label` };
+  }
+  const { blocked, needsNaz } = resolvePayloadFlags(payload);
+
+  const warnings = [];
+  try {
+    const columnValues = buildColumnValues(boardId, blocked, needsNaz);
+    const subitemsColumnIds = await getSubitemsColumnIds(boardId);
+    const subitemColumnValues = buildSubitemColumnValues(columnValues[PEOPLE_COLUMN].personsAndTeams, blocked, subitemsColumnIds);
+    if (Object.keys(subitemColumnValues).length) {
+      await updateMondayColumns(subitemsColumnIds.subitemsBoardId, item.mondayItemId, subitemColumnValues);
+    }
+  } catch (err) {
+    console.error(`retrySubitemAssignment: subitem ${item.mondayItemId} status/people push still failing:`, err);
+    warnings.push(`subitem ${item.mondayItemId}'s status/people columns still failed to set (${String(err.message || err)}).`);
+  }
+
+  if (payload.parentItemId) {
+    try {
+      await ensureParentOngoing(payload.parentItemId, boardId);
+    } catch (err) {
+      console.error(`retrySubitemAssignment: parent ${payload.parentItemId} still failing to set Ongoing:`, err);
+      warnings.push(`parent ${payload.parentItemId} still could not be set to Ongoing (${String(err.message || err)}).`);
+    }
+  }
+
+  const fresh = await getJSON(QUEUE_PATH, { updatedAt: null, items: [] });
+  const freshIdx = fresh.data.items.findIndex((it) => it.id === id);
+  if (freshIdx !== -1) {
+    fresh.data.items[freshIdx] = {
+      ...fresh.data.items[freshIdx],
+      sendWarning: warnings.length ? warnings.join(" ") : null,
+      updatedAt: new Date().toISOString(),
+    };
+    fresh.data.updatedAt = new Date().toISOString();
+    await putJSON(QUEUE_PATH, fresh.data, `retry-assignment: ${id}`, fresh.sha);
+  }
+
+  return warnings.length
+    ? { ok: false, warning: warnings.join(" ") }
+    : { ok: true };
 }
 
 // Pushes a status/people (or any column) change onto an item that already
@@ -1108,6 +1210,7 @@ module.exports = {
   mondayClientOverview,
   mondaySearchAllBoards,
   sendQueueItemToMonday,
+  retrySubitemAssignment,
   updateMondayColumns,
   STATUS_COLUMN,
   PEOPLE_COLUMN,

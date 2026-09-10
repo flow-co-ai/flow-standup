@@ -259,6 +259,41 @@
   font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase;
   color: var(--cream-faint, rgba(237,233,218,0.35));
 }
+/* A card that IS on Monday but landed incomplete -- a subitem whose status/
+   people push failed, or a parent that didn't roll up to Ongoing (see
+   lib/monday.js's retrySubitemAssignment). Amber, not the stuck-pill red:
+   this is a real item that already exists, not one that can never be sent. */
+.fo-warn-pill {
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(214,180,92,0.18); color: #D6B45C;
+  border-radius: 999px; padding: 1px 6px;
+  white-space: nowrap;
+}
+.fo-det-warning {
+  border: 1px solid rgba(214,180,92,0.3);
+  background: rgba(214,180,92,0.08);
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.fo-det-warning-label {
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: #D6B45C;
+}
+.fo-det-warning p { margin: 0; font-size: 12.5px; color: var(--cream, #EDE9DA); line-height: 1.4; }
+.fo-det-warning button {
+  align-self: flex-start;
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 11px; padding: 4px 10px;
+  border-radius: 6px; border: 1px solid rgba(214,180,92,0.4);
+  background: transparent; color: #D6B45C; cursor: pointer;
+}
+.fo-det-warning button:disabled { opacity: 0.5; cursor: default; }
+.fo-det-warning button:hover:not(:disabled) { background: rgba(214,180,92,0.14); }
+
 .fo-det-header-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .fo-det-title {
   font-size: 17px; font-weight: 500; color: var(--cream, #EDE9DA); line-height: 1.4;
