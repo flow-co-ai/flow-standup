@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-10T15:12:09.894Z",
+  "updatedAt": "2026-09-10T15:14:21.655Z",
   "items": [
     {
       "id": "websEo-pricing-question",
@@ -339,7 +339,7 @@
     {
       "id": "medstation-weston-lead-assignment",
       "title": "Weston Lead Assignment",
-      "note": "Sohib action from the 4 September team onboarding call, joined with his same day ask in the Medstation Marketing chat for the Weston sales agent list. Section 19 audit found nothing covering lead assignment on any of the four boards, and the five MedStation CRM items created 4 September cover patient ID, review routing, bilingual messaging, business hours and the 24 hour template, none of them assignment. Section 19b returned no match.",
+      "note": "Salam, / Configure lead assignment for the Weston location in GHL, using the sales agent list Sohib provided 4 September in the MedStation Marketing chat. / If a user is already assigned a sales agent / rep in NextGen, that same user will be assigned that same agent via the NextGen DigitalOcean sync — the sync should preserve existing agent assignments rather than overwrite them. / New leads without an existing NextGen agent assignment follow the standard Weston rotation / distribution rules. / Test end-to-end: verify that (1) a lead with a pre-existing NextGen agent is routed correctly to that same agent in GHL, and (2) a net-new Weston lead with no prior assignment lands with the correct agent per the rotation. / Done = Weston leads route to the correct sales agents in both scenarios, confirmed via test leads. / @Ahmed Memon @Ali Shaheer / Assigned to: Ahmed Memon, Ali Shaheer",
       "status": "ready",
       "board": "CRM",
       "group": "MedStation",
@@ -348,17 +348,34 @@
       "sourceLabel": "Meeting with MedStation, 9/4",
       "payload": {
         "mode": "create_item",
-        "boardId": "18418241405",
-        "groupId": "group_mm512p9w",
         "itemName": "Weston Lead Assignment",
-        "blocked": true,
-        "needsNaz": true,
-        "updateBody": "<p>Salam,</p><ul><li><strong>The client has been asked for what we need.</strong> In the Medstation Marketing chat the same day Sohib asked MedStation for a list of the Weston sales agents with their email addresses, so patients can be assigned to them automatically. Ana Caroline replied that Washigton should be included as well, since he will be running the commercial process on their side.</li><li><strong>Step one, create the users if not created.</strong> Once the list arrives, create a GoHighLevel user for each named Weston sales agent using the email address the client supplied.&nbsp;</li><li><strong>Step two, assign at creation.</strong> Build the rule that puts every new Weston lead onto a named agent at the moment the contact is created, so ownership is never blank and the missed message alerts have somebody real to escalate to.</li><li><strong>Step three, the fallback.</strong> Decide and build what happens when no rule matches. A lead must still land on a real person rather than sitting unassigned. Confirm with MedStation whether Renata is that fallback owner, since the 4 September call could not settle it.</li><li>done = every new Weston lead is assigned automatically to a named GoHighLevel user at the moment of creation, with a confirmed fallback owner when no rule matches, verified on one test lead per agent.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>"
+        "boardId": "18418241405",
+        "blocked": false,
+        "needsNaz": false,
+        "columnValues": {
+          "color_mkwb1trm": {
+            "label": "Start"
+          },
+          "multiple_person_mkwb5f2e": {
+            "personsAndTeams": [
+              {
+                "id": 108080159,
+                "kind": "person"
+              },
+              {
+                "id": 108080161,
+                "kind": "person"
+              }
+            ]
+          }
+        },
+        "updateBody": "<p>Salam,</p>\n<ul>\n<li><strong>Configure lead assignment</strong> for the Weston location in GHL, using the sales agent list Sohib provided 4 September in the MedStation Marketing chat.</li>\n<li>If a user is <strong>already assigned a sales agent/rep in NextGen</strong>, that same user will be assigned that same agent via the <strong>NextGen DigitalOcean sync</strong> — the sync should preserve existing agent assignments rather than overwrite them.</li>\n<li>New leads without an existing NextGen agent assignment follow the standard Weston rotation/distribution rules.</li>\n<li><strong>Test end-to-end:</strong> verify that (1) a lead with a pre-existing NextGen agent is routed correctly to that same agent in GHL, and (2) a net-new Weston lead with no prior assignment lands with the correct agent per the rotation.</li>\n<li>Done = Weston leads route to the correct sales agents in both scenarios, confirmed via test leads.</li>\n</ul>\n<p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "groupId": "group_mm516qss"
       },
       "nullReason": null,
       "priority": 2,
       "createdAt": "2026-09-05T17:20:01.562429+00:00",
-      "updatedAt": "2026-09-10T15:12:09.878Z"
+      "updatedAt": "2026-09-10T15:14:21.654Z"
     },
     {
       "id": "maadilaw-intake-call-drops",
