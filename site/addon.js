@@ -556,6 +556,14 @@ function foRenderDetailPane(item) {
     : item.mondayItemId
     ? `<span class="fo-muted-label">already sent (item ${foEscape(item.mondayItemId)})</span>`
     : item.payload
+    // onmousedown preventDefault stops focus leaving the update-body field
+    // on the first of what would otherwise be two clicks (click once to
+    // blur-and-save, click again to actually open the preview). The cost of
+    // that fix is that blur -- and the onblur save it triggers -- never
+    // fires when this is the very next thing clicked after an edit. See
+    // foOpenSendPreview: it reads the field's live DOM value directly rather
+    // than trusting item.payload for exactly this reason. Do not remove this
+    // preventDefault to "fix" that -- it reintroduces the two-click bug.
     ? `<button class="fo-primary" onmousedown="event.preventDefault()" onclick="foOpenSendPreview('${item.id}')">send to monday</button>`
     : '';
 
@@ -1594,7 +1602,24 @@ function foOpenSendPreview(id) {
 
   document.getElementById("fo-send-preview-overlay")?.remove();
 
-  const payload = item.payload;
+  // item.payload.updateBody can be stale: the field saves on blur, but the
+  // send button's onmousedown preventDefault (see the button's own comment)
+  // means blur never fires when Send is clicked straight out of an edit.
+  // Read the live DOM value directly instead of trusting the cached payload.
+  // Falls back to the payload only if the field somehow isn't in the DOM --
+  // shouldn't happen for a card that has a payload at all.
+  const liveBodyEl = document.getElementById(`fo-updatebody-${id}`);
+  const liveUpdateBody = liveBodyEl ? liveBodyEl.innerHTML.trim() : (item.payload.updateBody || "");
+
+  // Persist it through the exact same path a real blur would have used --
+  // same dataset.original comparison, same skip-if-unchanged, same foPatch()
+  // underneath -- so the edit survives even if the preview is cancelled, not
+  // just when it's confirmed. foPatch is async; this fires it and moves on
+  // without waiting. The preview below is built from liveUpdateBody read
+  // above, never from a read-back of this save, so it can't re-race it.
+  if (liveBodyEl) foSaveUpdateBodyEdit(liveBodyEl, id);
+
+  const payload = { ...item.payload, updateBody: liveUpdateBody };
   const isUpdateOnly = payload.mode === "update_only";
   const targetBits = [item.board, item.group].filter(Boolean);
   const targetLabel = targetBits.length ? targetBits.join(" / ") : "Unknown board/client";
@@ -1602,6 +1627,8 @@ function foOpenSendPreview(id) {
   // Surfaced here too, not just at the hard confirm-time gate below -- catch
   // it the moment the preview opens, in case it slipped through from before
   // this picker existed, rather than only discovering it after clicking confirm.
+  // Reads payload.updateBody -- the live value from above, not whatever was
+  // last saved -- so a mention typed during THIS edit is checked too.
   const fakeMentions = foFindFakeMentions(payload.updateBody);
 
   const overlay = document.createElement("div");
