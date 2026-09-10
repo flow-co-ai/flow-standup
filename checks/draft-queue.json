@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-10T20:32:11.154Z",
+  "updatedAt": "2026-09-10T20:33:59.706Z",
   "items": [
     {
       "id": "websEo-pricing-question",
@@ -429,26 +429,43 @@
     {
       "id": "medstation-ga4-conversion-tracking",
       "title": "GA4 Conversion Tracking",
-      "note": "GA4 was the one item explicitly deferred at the 4 September go live call for want of credentials, and both values arrived later the same day across the GHL Dev and Web and SEO chats, so the deferral is lifted. Section 19 audit found no MedStation tracking item on any board. Section 19b returned no match. The Measurement Protocol API secret was pasted into the GHL Dev group chat and is deliberately not repeated in the payload.",
+      "note": "GA4 was the one item explicitly deferred at the 4 September go live call for want of credentials, and both values arrived later the same day across the GHL Dev and Web and SEO chats, so the deferral is lifted. Section 19 audit found no MedStation tracking item on any board. Section 19b returned no match. The Measurement Protocol API secret was pasted into the GHL Dev group chat and is deliberately not repeated in the payload. / Assigned to: Muhammad Hashir Faiz, Zayan Faiz",
       "status": "ready",
-      "board": "CRM",
+      "board": "Web+SEO",
       "group": "MedStation",
       "potentialClient": null,
       "source": "whatsapp",
       "sourceLabel": "WhatsApp: GHL Dev, 9/4",
       "payload": {
         "mode": "create_item",
-        "boardId": "18418241405",
-        "groupId": "group_mm512p9w",
+        "boardId": "18099807701",
+        "groupId": "group_mm51nc9h",
         "itemName": "GA4 Conversion Tracking",
         "blocked": false,
         "needsNaz": false,
-        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> GA4 was the single piece deliberately deferred at the MedStation go live call on 4 September, because the measurement credentials were not available and Hashir was weighing a workaround for conversion tracking. Later the same day both values were supplied, so the deferral no longer applies and this can be built as originally intended rather than worked around.</li><li><strong>What arrived and where.</strong> The GA4 Measurement ID for the MedStation property is <strong>G-YVHHXPB3HP</strong>. The Measurement Protocol API secret was posted separately in the GHL Dev chat on 4 September under the nickname Flow Co GHL. <strong>Take the secret from that message rather than asking for it again</strong>, store it inside GoHighLevel, and do not copy it into any further chat or item.</li><li><strong>Deliverable.</strong> Wire the GoHighLevel conversion events to GA4 through the Measurement Protocol, matching the pipeline stages already agreed for MedStation: New Lead for a new inquiry, Engaged when the patient replies on WhatsApp, Booked when an appointment is made, and Attended for reporting. Booked is the stage the ad platforms optimise on, so it carries the most weight.</li><li><strong>Constraint, one owner per event.</strong> Booked already fires server side from the booking webhook. <strong>Do not</strong> add a second source for the same event out of GoHighLevel, or every booking counts twice and the campaigns optimise against inflated numbers.</li><li>done = a test lead pushed through the pipeline produces New Lead, Engaged and Booked events visible in the MedStation GA4 property, with exactly one Booked event per booking.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> GA4 was the single piece deliberately deferred at the MedStation go live call on 4 September, because the measurement credentials were not available and Hashir was weighing a workaround for conversion tracking. Later the same day both values were supplied, so the deferral no longer applies and this can be built as originally intended rather than worked around.</li><li><strong>What arrived and where.</strong> The GA4 Measurement ID for the MedStation property is <strong>G-YVHHXPB3HP</strong>. The Measurement Protocol API secret was posted separately in the GHL Dev chat on 4 September under the nickname Flow Co GHL. <strong>Take the secret from that message rather than asking for it again</strong>, store it inside GoHighLevel, and do not copy it into any further chat or item.</li><li><strong>Deliverable.</strong> Wire the GoHighLevel conversion events to GA4 through the Measurement Protocol, matching the pipeline stages already agreed for MedStation: New Lead for a new inquiry, Engaged when the patient replies on WhatsApp, Booked when an appointment is made, and Attended for reporting. Booked is the stage the ad platforms optimise on, so it carries the most weight.</li><li><strong>Constraint, one owner per event.</strong> Booked already fires server side from the booking webhook. <strong>Do not</strong> add a second source for the same event out of GoHighLevel, or every booking counts twice and the campaigns optimise against inflated numbers.</li><li>done = a test lead pushed through the pipeline produces New Lead, Engaged and Booked events visible in the MedStation GA4 property, with exactly one Booked event per booking.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a></p>",
+        "columnValues": {
+          "color_mkwb1trm": {
+            "label": "Start"
+          },
+          "multiple_person_mkwb5f2e": {
+            "personsAndTeams": [
+              {
+                "id": 69741994,
+                "kind": "person"
+              },
+              {
+                "id": 101662542,
+                "kind": "person"
+              }
+            ]
+          }
+        }
       },
       "nullReason": null,
       "priority": 3,
       "createdAt": "2026-09-05T17:20:01.562429+00:00",
-      "updatedAt": "2026-09-09T19:56:37.706Z"
+      "updatedAt": "2026-09-10T20:33:59.706Z"
     },
     {
       "id": "medstation-neurin-message-consolidation",
