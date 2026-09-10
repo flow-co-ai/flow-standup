@@ -22,6 +22,7 @@ const {
   mondayGroupItemsWithSubitems,
   BOARD_LABEL_IDS,
   CLIENT_GROUPS,
+  expectedGroupId,
   USER_NAMES,
   buildColumnValues,
   resolvePayloadFlags,
@@ -199,6 +200,43 @@ function applyGroupCanonicalization(items) {
   });
 }
 
+// Board/group pair, CLIENT_GROUPS -- the live medstation-weston-lead-
+// assignment failure: a create_item payload can carry a boardId and groupId
+// that are each individually real Monday ids but paired wrong (CRM's boardId
+// with the Ads board's MedStation groupId, group_mm516qss instead of CRM's
+// group_mm512p9w), and fail at send with a raw "Group not found" instead of
+// anything readable. drafter/validate.py now refuses to draft this as
+// `ready` at all, and lib/monday.js's send guard self-heals it if one
+// reaches send anyway -- but a card already sitting wrong in the queue
+// before either fix existed would otherwise stay wrong until Naz noticed or
+// happened to touch its board/group dropdown (which re-resolves both ids
+// correctly on any change -- site/addon.js's
+// foPatchBoardGroup/foResolveBoardGroupIds). This re-resolves the pair on
+// every GET instead, same backfill shape as applyGroupCanonicalization just
+// above.
+//
+// Only create_item has a groupId field to correct at all -- create_subitem
+// resolves its group from parentItemId, not from anything stored on the
+// payload (see lib/monday.js's create_subitem guard, which can only refuse a
+// wrong boardId there, never silently fix it).
+//
+// Terminal cards are left alone: `sent` already exists for real on Monday
+// (correcting the local record after the fact changes nothing there, and
+// risks masking what actually happened -- see sendQueueItemToMonday's own
+// persistence of a send-time correction, which is the one place a sent
+// card's groupId is allowed to change), `done`/`ignored` are closed
+// decisions, not live drafts to keep resolving.
+function applyGroupIdCorrection(items) {
+  return items.map((it) => {
+    if (["sent", "done", "ignored"].includes(it.status)) return it;
+    const p = it.payload;
+    if (!p || p.mode !== "create_item" || !p.groupId) return it;
+    const expected = expectedGroupId(it.group, p.boardId);
+    if (!expected || p.groupId === expected) return it;
+    return { ...it, payload: { ...p, groupId: expected } };
+  });
+}
+
 exports.handler = async (event) => {
   const json = (statusCode, obj) => ({ statusCode, headers: { "content-type": "application/json" }, body: JSON.stringify(obj) });
 
@@ -244,12 +282,19 @@ exports.handler = async (event) => {
       const needsGroupCanonicalization = (data.items || []).some(
         (it) => it.group && resolveClientName(it.group) !== it.group
       );
-      if (Object.keys(resolved).length || needsCreatedAtBackfill || needsGroupCanonicalization) {
+      const needsGroupIdCorrection = (data.items || []).some((it) => {
+        if (["sent", "done", "ignored"].includes(it.status)) return false;
+        const p = it.payload;
+        if (!p || p.mode !== "create_item" || !p.groupId) return false;
+        const expected = expectedGroupId(it.group, p.boardId);
+        return Boolean(expected) && p.groupId !== expected;
+      });
+      if (Object.keys(resolved).length || needsCreatedAtBackfill || needsGroupCanonicalization || needsGroupIdCorrection) {
         try {
           const written = await updateJSON(QUEUE_PATH, (fresh) => {
-            fresh.items = applyGroupCanonicalization(applyCreatedAtBackfill(applyResolvedNames(fresh.items || [], resolved)));
+            fresh.items = applyGroupIdCorrection(applyGroupCanonicalization(applyCreatedAtBackfill(applyResolvedNames(fresh.items || [], resolved))));
             return fresh;
-          }, "queue: backfill resolved Monday item/parent names + createdAt + canonical group", { fallback: EMPTY });
+          }, "queue: backfill resolved Monday item/parent names + createdAt + canonical group + board/group pair", { fallback: EMPTY });
           return json(200, { ...written, routing: routingOptions() });
         } catch (err) {
           // The write failed (rare -- e.g. exhausted 409 retries) but the
@@ -257,7 +302,7 @@ exports.handler = async (event) => {
           // load rather than showing bare ids again; it'll just re-resolve
           // and retry the write on the next GET.
           console.error("queue.js: resolved Monday names but failed to persist them:", err);
-          data.items = applyGroupCanonicalization(applyCreatedAtBackfill(applyResolvedNames(data.items || [], resolved)));
+          data.items = applyGroupIdCorrection(applyGroupCanonicalization(applyCreatedAtBackfill(applyResolvedNames(data.items || [], resolved))));
         }
       }
       return json(200, { ...data, routing: routingOptions() });

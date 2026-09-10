@@ -462,6 +462,34 @@ function boardLabelForId(boardId) {
   return entry ? entry[0] : null;
 }
 
+// The one correct groupId for (client, boardId) per CLIENT_GROUPS -- never
+// trusted from whatever a payload happens to carry. Returns null when the
+// client or board isn't recognized, or the client genuinely has no group on
+// that board (a documented gap, not an error -- see CLIENT_GROUPS's own
+// comments). Mirrors drafter/validate.py's expected_group_id() exactly --
+// keep both in sync.
+function expectedGroupId(client, boardId) {
+  const boardLabel = boardLabelForId(boardId);
+  if (!boardLabel) return null;
+  return (CLIENT_GROUPS[resolveClientName(client)] || {})[boardLabel] || null;
+}
+
+// Readable correction message for sendQueueItemToMonday's board/group guard:
+// given a groupId that turned out to be wrong for this pair, say what it
+// actually IS when it's recognizable as some OTHER client/board's group --
+// "the Ads board's MedStation group" is a lot more useful than the bare id
+// when the real mistake was pairing a valid id with the wrong everything
+// else (the medstation-weston-lead-assignment shape). Returns null when the
+// id isn't a known group at all (a typo, not a mix-up).
+function describeGroupId(groupId) {
+  for (const [client, boards] of Object.entries(CLIENT_GROUPS)) {
+    for (const [board, id] of Object.entries(boards)) {
+      if (id === groupId) return `the ${board} board's ${client} group`;
+    }
+  }
+  return null;
+}
+
 function buildColumnValues(boardId, blocked, needsNaz) {
   const assignees = BOARD_ASSIGNEES[boardId];
   if (!assignees) throw new Error(`no default assignees configured for board ${boardId}`);
@@ -980,6 +1008,11 @@ async function sendQueueItemToMonday(id, { force = false } = {}) {
   // the response as `warning` and persisted as `sendWarning` on the card
   // itself, so it's still visible after this one HTTP response is gone.
   const warnings = [];
+  // Set when create_item's board/group guard below corrects a mismatched
+  // groupId -- carried into the final persisted write so the card's own
+  // record reflects the id that was ACTUALLY sent, not the wrong one it
+  // still had on disk before this call started.
+  let correctedGroupId = null;
 
   try {
     if (mode === "create_item" || mode === "create_subitem") {
@@ -1003,6 +1036,35 @@ async function sendQueueItemToMonday(id, { force = false } = {}) {
         if (!payload.groupId || !payload.itemName) {
           return { error: "create_item payload missing groupId/itemName" };
         }
+
+        // Board/group pair, CLIENT_GROUPS -- the live medstation-weston-
+        // lead-assignment failure: CRM's boardId with the Ads board's
+        // MedStation groupId, both individually real-looking ids, paired
+        // wrong. drafter/validate.py refuses to ship this as `ready` at
+        // draft time (added alongside this guard) -- this is the last line
+        // for anything that reaches send anyway: an older payload from
+        // before that check existed, or one hand-edited via item-chat.js's
+        // tools. Correcting from CLIENT_GROUPS is safe here (the client and
+        // board are both already confirmed; the right id is directly
+        // derivable, never guessed), so this self-heals and warns rather
+        // than blocking an otherwise-fine send or letting Monday's own raw
+        // "Group not found" reach the dashboard. Skips silently when
+        // CLIENT_GROUPS has no known pair to check against at all -- same
+        // "can't verify, not a reason to block" rule findLikelyDuplicate
+        // already follows for this exact lookup.
+        const expected = expectedGroupId(item.group, boardId);
+        if (expected && payload.groupId !== expected) {
+          const was = payload.groupId;
+          const mixup = describeGroupId(was);
+          console.error(`sendQueueItemToMonday: correcting groupId for ${id} -- had ${was}, CLIENT_GROUPS says ${expected}`);
+          warnings.push(
+            `groupId was corrected: ${resolveClientName(item.group)} on ${boardLabelForId(boardId)} is ${expected}, payload had ${was}` +
+            (mixup ? ` (that's ${mixup}).` : ".")
+          );
+          payload.groupId = expected;
+          correctedGroupId = expected;
+        }
+
         const created = await mondayGraphQL(
           `mutation($board: ID!, $group: String!, $name: String!, $cols: JSON) {
              create_item(board_id: $board, group_id: $group, item_name: $name, column_values: $cols) { id }
@@ -1014,6 +1076,28 @@ async function sendQueueItemToMonday(id, { force = false } = {}) {
         if (!payload.parentItemId || !payload.itemName) {
           return { error: "create_subitem payload missing parentItemId/itemName" };
         }
+
+        // A subitem has no groupId field to correct (Monday resolves its
+        // group from parentItemId, not from anything this payload carries),
+        // so there's nothing to self-heal the way create_item's guard just
+        // did above. But a boardId with NO recorded group at all for a
+        // client CLIENT_GROUPS otherwise knows means parentItemId almost
+        // certainly points at the wrong client's item, or the wrong board
+        // entirely -- the same failure shape as create_item's, just with no
+        // safe substitute to correct it to. Fail here, readably, instead of
+        // reaching Monday and surfacing whatever cryptic error a subitem
+        // create against the wrong parent produces. Skips silently when the
+        // client itself isn't in CLIENT_GROUPS at all -- nothing to check
+        // a genuinely unmapped client against.
+        const resolvedClient = resolveClientName(item.group);
+        if (CLIENT_GROUPS[resolvedClient] && !expectedGroupId(item.group, boardId)) {
+          return {
+            error: `no known ${resolvedClient} group on ${boardLabelForId(boardId)} -- ` +
+              `this subitem's boardId looks wrong for this client (parentItemId ${payload.parentItemId} ` +
+              "would have to live in a group that doesn't exist).",
+          };
+        }
+
         // NOT the parent-board columnValues computed above -- a subitem
         // lives on a separate linked board with its own column ids (see
         // getSubitemsColumnIds). Create bare, then push status/people via a
@@ -1110,6 +1194,15 @@ async function sendQueueItemToMonday(id, { force = false } = {}) {
       mondayItemId: resultItemId,
       sendWarning: warnings.length ? warnings.join(" ") : null,
       updatedAt: new Date().toISOString(),
+      // Persist the corrected groupId too, if the board/group guard fixed
+      // one -- otherwise a sent card's own record would keep showing the
+      // wrong id it started with even though the real Monday item landed in
+      // the right group. fresh.data here is a re-read from right before this
+      // write (see the comment above the re-fetch), so spread its OWN
+      // payload, not the possibly-stale one this function started with.
+      ...(correctedGroupId && fresh.data.items[freshIdx].payload
+        ? { payload: { ...fresh.data.items[freshIdx].payload, groupId: correctedGroupId } }
+        : {}),
     };
     fresh.data.updatedAt = new Date().toISOString();
     await putJSON(QUEUE_PATH, fresh.data, `send-to-monday: fired ${id} (${mode})`, fresh.sha);
@@ -1220,6 +1313,8 @@ module.exports = {
   BOARD_LABEL_IDS,
   boardLabelForId,
   CLIENT_GROUPS,
+  expectedGroupId,
+  describeGroupId,
   buildColumnValues,
   getSubitemsColumnIds,
   buildSubitemColumnValues,

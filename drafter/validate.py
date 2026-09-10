@@ -197,16 +197,96 @@ def _describe(ids) -> str:
     return ", ".join(f"{USER_NAMES.get(i, 'unknown')} ({i})" for i in sorted(ids)) or "nobody"
 
 
+# ---------------------------------------------------------------------------
+# board/group pair resolution  (drafting-rules.md's Client group IDs table)
+# ---------------------------------------------------------------------------
+#
+# Mirrors lib/monday.js's BOARD_LABEL_IDS/CLIENT_GROUPS. CLIENT_GROUPS is the
+# single authority for a client's groupId on a given board -- lib/monday.js
+# writes Monday with it, and the dashboard's own board/group selector
+# (site/addon.js's foPatchBoardGroup/foResolveBoardGroupIds) re-resolves BOTH
+# ids through the exact same map every time either dropdown changes. Nothing
+# re-resolved a payload the drafter wrote and Naz never touched by hand --
+# that's how medstation-weston-lead-assignment shipped CRM's boardId
+# (18418241405) with the ADS board's MedStation groupId (group_mm516qss,
+# instead of CRM's group_mm512p9w) and failed at Monday with a raw
+# "ResourceNotFoundException: Group not found" dump instead of anything
+# readable. The map itself was never wrong -- this reads the wrong column out
+# of a correct map, which is exactly the class of mistake a human typing a
+# fresh payload from a transcript can make and a lookup can't.
+#
+# Keep both in sync with lib/monday.js. If a board or a client's group is
+# added/changed there, add/change it here too.
+BOARD_LABEL_IDS: dict[str, str] = {
+    "Ads": "18405754310",
+    "Web+SEO": "18099807701",
+    "Dev+SEO": "18099807701",  # alias, same board -- older label
+    "CRM": "18418241405",
+    "Video": "18100257069",
+}
+
+# First-listed label wins on a shared id (Web+SEO before its Dev+SEO alias),
+# same as lib/monday.js's boardLabelForId() -- Object.entries().find() there
+# returns the first match too.
+_BOARD_ID_TO_LABEL: dict[str, str] = {}
+for _label, _id in BOARD_LABEL_IDS.items():
+    _BOARD_ID_TO_LABEL.setdefault(_id, _label)
+del _label, _id
+
+
+def board_label_for_id(board_id: str | None) -> str | None:
+    return _BOARD_ID_TO_LABEL.get(str(board_id) if board_id is not None else "")
+
+
+# Client -> {board label: groupId}. Straight port of lib/monday.js's
+# CLIENT_GROUPS -- see that file's own header comment for how each row was
+# live-verified. A missing board key for a client is a real, confirmed
+# absence (no group exists there yet), not an oversight -- expected_group_id
+# below returns None for it rather than raising, same as a genuinely
+# unmapped client.
+CLIENT_GROUPS: dict[str, dict[str, str]] = {
+    "Maadi Law": {"Ads": "group_mm51vdbk", "Web+SEO": "group_mm51tkzh", "CRM": "group_mm5112vv", "Video": "group_mm5064vm"},
+    "MedStation": {"Ads": "group_mm516qss", "Web+SEO": "group_mm51nc9h", "CRM": "group_mm512p9w", "Video": "group_mm5gq0cw"},
+    "Quality HVAC": {"Ads": "group_mm23tg6s", "Web+SEO": "group_mm231wbb", "CRM": "group_mm231wbb", "Video": "group_mm2660b4"},
+    "Full Smile": {"Ads": "group_mkxdznat", "Web+SEO": "group_mkxdmhbz", "CRM": "group_mkxdmhbz", "Video": "group_mkxd24va"},
+    "Justice Consumer Law": {"Ads": "group_mkqxyga2", "Web+SEO": "group_mkqxyga2", "CRM": "group_mm5gdrn3", "Video": "group_mkqxyga2"},
+    "Liferun": {"Ads": "group_mkwj8zze", "Web+SEO": "group_mkwj9a1c", "CRM": "group_mkwj9a1c", "Video": "group_mkwj5qjb"},
+    "Billy Doe Meats": {"Ads": "group_mm2dt8f", "Web+SEO": "group_mm2dqm7n", "CRM": "group_mm5gt78e", "Video": "group_mm2ddrwm"},
+    "Steel Round Bars": {"Ads": "group_mm5gmpwf", "Web+SEO": "group_mkqxskcn", "CRM": "group_mkqxskcn", "Video": "group_mkqxskcn"},
+    "Flow Company": {"Ads": "group_mkwjedjg", "Web+SEO": "group_mkwjem1v", "CRM": "group_mm5g4pdh", "Video": "group_mkwj30hd"},
+    "Healing Helps": {"Web+SEO": "group_mm0qsym9", "Video": "group_mm0qsmx7"},
+    "Remedies": {"Video": "group_mkwj2zbm"},
+}
+
+
+def expected_group_id(client: str | None, board_id: str | None) -> str | None:
+    """The one correct groupId for (client, boardId) per CLIENT_GROUPS --
+    resolved from the map, never trusted from whatever a payload happens to
+    carry. Returns None when the client or board isn't recognized, or the
+    client genuinely has no group yet on that board (a documented gap, not an
+    error) -- callers must treat None as "nothing to check against", not as
+    a mismatch."""
+    canon = canonical_client_name(client)
+    label = board_label_for_id(board_id)
+    if not canon or not label:
+        return None
+    return CLIENT_GROUPS.get(canon, {}).get(label)
+
 
 class PayloadError(ValueError):
     """Raised with a message that lands verbatim in the card's note field."""
 
 
-def validate_payload(payload: Any) -> dict:
+def validate_payload(payload: Any, *, group: str | None = None) -> dict:
     """Return the payload unchanged, or raise PayloadError describing the problem.
 
     The error text is written straight onto the card so Naz sees what failed
     without opening a log.
+
+    `group` is the card's canonical client name -- passed in from build_card,
+    which is the only place that has it, since `group` itself is a FORBIDDEN
+    payload field. Only used for the board/group pair check below; every
+    other check here is payload-only, same as before.
     """
     if not isinstance(payload, dict):
         raise PayloadError(
@@ -282,6 +362,47 @@ def validate_payload(payload: Any) -> dict:
     # is the documented cause of create_subitem's misleading 403.
     if mode == "create_subitem" and payload.get("groupId"):
         raise PayloadError("create_subitem takes parentItemId, never groupId")
+
+    # Board/group pair, CLIENT_GROUPS. This is the medstation-weston-lead-
+    # assignment failure: CRM's boardId (18418241405) with the Ads board's
+    # MedStation groupId (group_mm516qss instead of CRM's group_mm512p9w) --
+    # a payload that looks internally fine (both ids real, both boardId and
+    # groupId are strings) and still fails at Monday with a raw
+    # "ResourceNotFoundException: Group not found" instead of anything a
+    # human reading the queue could act on. CLIENT_GROUPS is the authority --
+    # resolve from it rather than trusting whatever the model paired the
+    # groupId with.
+    #
+    # `group` is None whenever a caller doesn't pass it (every existing call
+    # site before this check was added, and this file's own self-check
+    # fixtures) -- skip silently rather than raise, since there is nothing to
+    # check a mismatch against. build_card always passes it.
+    if mode == "create_item" and group:
+        expected = expected_group_id(group, payload.get("boardId"))
+        actual = payload.get("groupId")
+        if expected is not None and actual != expected:
+            board_label = board_label_for_id(payload.get("boardId")) or payload.get("boardId")
+            raise PayloadError(
+                f"groupId mismatch: {canonical_client_name(group)} on {board_label} is "
+                f"{expected}, payload had {actual!r} -- CLIENT_GROUPS is the authority, "
+                "not whatever got typed"
+            )
+
+    # create_subitem carries no groupId to cross-check directly (see the
+    # rule two lines up), but a boardId this wrong for the client is the same
+    # failure shape either way -- a subitem's real parent has to live in a
+    # group on that board, and if the client has no recorded group there at
+    # all, no such parent can exist. Only raised when the client IS known
+    # (a genuinely unmapped client legitimately has no CLIENT_GROUPS entry at
+    # all -- that's A5's routing/prospect problem, not this one).
+    if mode == "create_subitem" and group:
+        canon = canonical_client_name(group)
+        if canon in CLIENT_GROUPS and expected_group_id(group, payload.get("boardId")) is None:
+            board_label = board_label_for_id(payload.get("boardId")) or payload.get("boardId")
+            raise PayloadError(
+                f"no known {canon} group on {board_label} -- wrong boardId for this "
+                "client's subitem, or CLIENT_GROUPS needs a real group id added there"
+            )
 
     return payload
 
@@ -461,7 +582,11 @@ def build_card(
 
     if payload is not None:
         try:
-            payload = validate_payload(payload)
+            # group is already canonicalized above -- validate_payload's
+            # board/group pair check needs exactly that, since CLIENT_GROUPS
+            # is keyed by canonical name, not whatever raw title a board
+            # audit happened to read (see the Quality HVAC fix just above).
+            payload = validate_payload(payload, group=group)
             null_reason = None
         except PayloadError as exc:
             note = f"parse-error: {exc}"
@@ -811,6 +936,73 @@ if __name__ == "__main__":
         "updateBody": "<p>Salam,</p><p>One more field reassigned.</p>",
     })
     print("ok    update_only stays exempt from the owner check")
+
+    # --- board/group pair (CLIENT_GROUPS) -- the live medstation-weston-
+    # lead-assignment failure: CRM's boardId with the Ads board's MedStation
+    # groupId, both individually-valid-looking strings, a mismatched pair.
+    CRM_CHIPS = (
+        '<p><a class="mention" data-mention-id="108080159" data-mention-type="User">'
+        "@Ahmed Memon</a> "
+        '<a class="mention" data-mention-id="108080161" data-mention-type="User">'
+        "@Ali Shaheer</a></p>"
+    )
+    VIDEO_CHIPS = (
+        '<p><a class="mention" data-mention-id="69662034" data-mention-type="User">'
+        "@Sohib Boundaoui</a></p>"
+    )
+
+    medstation_crm = {
+        "mode": "create_item",
+        "boardId": "18418241405",       # CRM
+        "groupId": "group_mm512p9w",    # CRM's real MedStation group
+        "itemName": "Weston Lead Assignment",
+        "updateBody": "<p>Salam,</p><p>Configure lead assignment for Weston.</p>" + CRM_CHIPS,
+    }
+    validate_payload(medstation_crm, group="MedStation")
+    print("ok    correct MedStation/CRM board+group pair accepted")
+
+    mismatched = {**medstation_crm, "groupId": "group_mm516qss"}  # Ads' MedStation group, wrong board
+    try:
+        validate_payload(mismatched, group="MedStation")
+        print("FAIL  board/group pair: accepted CRM boardId with the Ads board's MedStation groupId")
+    except PayloadError as e:
+        assert "groupId mismatch" in str(e) and "group_mm512p9w" in str(e) and "group_mm516qss" in str(e)
+        print(f"ok    board/group mismatch caught: {e}")
+
+    # No caller before this feature existed ever passed `group` -- must stay
+    # a silent skip, not a new failure mode for every payload written before
+    # this check existed.
+    validate_payload(mismatched)
+    print("ok    board/group pair check is skipped when no group is passed")
+
+    validate_payload(mismatched, group="Some Brand New Client")
+    print("ok    an unmapped client's board/group pair has nothing to check against, not an error")
+
+    # create_subitem has no groupId field to cross-check directly (the rule
+    # just above forbids it outright) -- but a boardId with no recorded group
+    # AT ALL for a known client is the same failure shape, just caught on the
+    # board instead of the group.
+    remedies_subitem_ok = {
+        "mode": "create_subitem",
+        "boardId": "18100257069",  # Video -- Remedies' only real group is here
+        "parentItemId": "99999999999",
+        "itemName": "Some Subitem",
+        "updateBody": "<p>Salam,</p><p>Real detail about the subitem.</p>" + VIDEO_CHIPS,
+    }
+    validate_payload(remedies_subitem_ok, group="Remedies")
+    print("ok    create_subitem accepted when the client has a real group on this board")
+
+    remedies_wrong_board = {
+        **remedies_subitem_ok,
+        "boardId": "18405754310",  # Ads -- Remedies has no group there at all
+        "updateBody": "<p>Salam,</p><p>Real detail about the subitem.</p>" + ADS_CHIPS,
+    }
+    try:
+        validate_payload(remedies_wrong_board, group="Remedies")
+        print("FAIL  create_subitem: accepted a boardId with no recorded group for a known client")
+    except PayloadError as e:
+        assert "no known Remedies group" in str(e)
+        print(f"ok    create_subitem board sanity check caught: {e}")
 
     card = build_card(
         card_id="maadilaw-campaign-setup",
