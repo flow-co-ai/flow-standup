@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-10T14:48:32.371Z",
+  "generated_at": "2026-09-10T15:21:59.747Z",
   "date": "2026-09-10",
   "slug": "steel-advance",
   "name": "Advance Grinding",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) generated zero spend, leads, or clicks over the past 28 days, suggesting campaigns are paused or inactive. Google Business Profile remains the only source of engagement, with 125 total actions (83 directions, 39 web clicks, 3 calls), though GBP activity dropped 89.19% in the last 7 days versus the prior 7 days, likely due to reduced profile visibility or seasonal search demand.",
+  "verdict": "Paid channels (Meta and Google Ads) generated zero spend, leads, or clicks over the past 28 days, suggesting campaigns are paused or inactive. GBP drove all engagement with 125 total actions (83 directions, 39 web clicks, 3 calls), though GBP activity dropped 89.19% in the last 7 days versus the prior 7 days, pointing to a likely listing issue or sharp drop in local search visibility.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -404,44 +404,44 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-09-10T14:54:53.775Z",
+    "generated_at": "2026-09-10T15:25:50.944Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid is entirely dark; only organic signal is collapsing too.",
+    "verdict": "GBP went dark 4 days ago; paid never ran — no money to evaluate.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend, zero leads, zero clicks across Meta and Google Ads for the full 45-day series — no paid channel is active.",
-        "confidence": "confirmed",
-        "channel": "meta+google"
+        "text": "GBP dropped to 0 actions for 4 consecutive days (Sep 6–9) after averaging 5.8/day Aug 13–Sep 5. Listing issue or suspension likely.",
+        "confidence": "probable",
+        "channel": "GBP"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions hit 0 for 4 consecutive days (Sep 6–9) after averaging 6.4/day Aug 13–Sep 5 — a confirmed 3-day signal of collapse.",
+        "text": "OVERDUE Aug 31: 342 stub accounts unreconciled — a confirmed blocker; Sales-i sync delivers nothing to these accounts until fixed.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "SOW blocker: 342 stub accounts unreconciled past Aug 31 deadline — Sales-i sync is blind to these accounts until resolved.",
+        "text": "OVERDUE Aug 31: Web/SEO root cause not named and fix not submitted — blocker status unresolved as of Sep 10.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 2,
-        "text": "SOW blocker: Web/SEO root cause identification and AGS + Forte contact pull both missed Aug 31 deadline — 2 blockers now overdue.",
+        "text": "OVERDUE Aug 31: AGS + Forte contact lists not pulled — outreach pipeline has 0 contacts loaded, halting cold email entirely.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F5",
         "priority": 2,
-        "text": "SOW: CRM milestones from Jul 7, Jul 28, and Jul 31 (dedup workbook, Tom call list, 1st Directives) show no completed event logged — 3 prior checkpoints unverified.",
-        "confidence": "confirmed",
+        "text": "Earlier SOW milestones (Jul 7 CRM handoff directives, Jul 28 Tom call list, Jul 31 dedup workbook) show no completed event logged — pattern of milestone slippage across CRM dept.",
+        "confidence": "probable",
         "channel": "SOW"
       }
     ],
@@ -449,32 +449,32 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Confirm campaign pause status for Meta and Google Ads — 45 days of $0 spend requires an explicit client decision on record.",
+        "text": "Audit GBP listing today — check for suspension or ownership issue causing 4-day zero-action streak.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Confirm paid channel pause status",
-        "monday_update": "Meta and Google Ads have recorded $0 spend across every day from Aug 13 through Sep 9 (28+ days confirmed). Sohib should confirm with Nabil whether campaigns are intentionally paused or if there is a payment/account issue. Success check: written confirmation of pause reason or campaigns reactivated by Sep 13."
+        "monday_item_name": "Fix GBP listing outage",
+        "monday_update": "GBP actions dropped to zero for Sep 6–9 after averaging 5.8 actions/day Aug 13–Sep 5 — a 100% collapse over 4 days. Check the Google Business Profile dashboard immediately for suspension notices, ownership conflicts, or content violations. Success check: GBP actions return to ≥3/day within 3 days of fix. Re-check Sep 13."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Escalate 342-stub reconciliation blocker — missed Aug 31 deadline means Sales-i is syncing zero data to affected accounts.",
+        "text": "Escalate 342 stub reconciliation to Ahmed — blocker overdue 10 days, Sales-i sync blind to all 342 accounts.",
         "cites": [
-          "F3"
+          "F2"
         ],
-        "monday_item_name": "342 Stub Reconciliation Escalation",
-        "monday_update": "The 342 stub account reconciliation was due Aug 31 and has no completed event logged. Until resolved, Sales-i cannot key on Customer ID for these accounts and the inactivity automation is blind to them. Ahmed should post a status update and revised completion date to the Monday CRM board by Sep 12. Success check: rollback file posted and merge batch confirmed by Sep 17."
+        "monday_item_name": "Reconcile 342 stub accounts",
+        "monday_update": "The 342 stub account reconciliation was due Aug 31 and remains open as of Sep 10 — Sales-i cannot sync purchase or gap data to any of these accounts until Customer IDs are matched. Ahmed to run name-based match against the authoritative customer sheet this week, with audited batch and rollback file posted to Monday CRM board. Success check: all 342 stubs assigned a Customer ID or flagged do-not-merge by Sep 17."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP: 4 consecutive zero-action days (Sep 6–9) after 6.4/day avg — re-check Sep 13 for recovery or profile visibility issue.",
+        "text": "Watch for paid channel activation — zero spend across all 28 days; no efficiency data exists to act on yet.",
         "cites": [
-          "F2"
+          "F1"
         ],
-        "monday_item_name": "GBP Zero-Action Watch Sep 13",
-        "monday_update": "GBP actions dropped to 0 for four straight days (Sep 6–9) after averaging 6.4 actions/day over the prior 24 days. This may reflect a listing visibility change, a suspension flag, or genuine seasonal demand drop. Check the GBP dashboard for any policy notices or ranking shifts. If actions remain at 0 on Sep 13, escalate to a listing audit."
+        "monday_item_name": "Watch paid channel activation",
+        "monday_update": "Meta and Google Ads have recorded $0 spend across the entire 28-day window with 0 leads generated. There is no CPL baseline to optimize against. No paid action is warranted until campaigns are confirmed active and at least 7 days of spend data exist. Re-check Sep 17 for any spend signal."
       }
     ],
     "next_check": "2026-09-13"

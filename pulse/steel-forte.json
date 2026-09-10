@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-10T14:48:27.283Z",
+  "generated_at": "2026-09-10T15:21:55.861Z",
   "date": "2026-09-10",
   "slug": "steel-forte",
   "name": "Forte Metals",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) generated zero spend, leads, or clicks over the past 28 days, suggesting campaigns are paused or inactive. The biggest movement is a 75% drop in GBP actions week-over-week, likely driven by reduced organic search visibility or a lull in local demand, though GBP still delivered 86 total actions (5 calls, 39 directions, 42 web clicks) in the 28-day window.",
+  "verdict": "Paid channels (Meta and Google Ads) generated zero spend, leads, or clicks over the past 28 days, making Google Business Profile the sole source of engagement with 86 total actions (39 directions, 42 web clicks, 5 calls). The biggest concern is GBP activity dropping 75% week-over-week, likely driven by reduced profile visibility or a drop in local search demand that warrants immediate investigation.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,69 +409,79 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-09-10T14:54:31.618Z",
+    "generated_at": "2026-09-10T15:25:27.762Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid is fully dark; organic erosion now the only signal worth watching.",
+    "verdict": "GBP collapse is confirmed; paid is dormant and overdue SOW blockers compound risk.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "All paid channels (Meta + Google Ads) show $0 spend and 0 leads across the full 28-day window — campaigns are inactive.",
+        "text": "GBP actions collapsed to 0 for 4 consecutive days (Sep 6–9), down from a 28-day total of 86 actions — sole revenue-adjacent channel is now silent.",
         "confidence": "confirmed",
-        "channel": "meta+google"
+        "channel": "GBP"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3 OVERDUE CRM milestones predate Aug 31: 1st Directives (Jul 7), Tom call list (Jul 28), dedup workbook (Jul 31) — no completion event recorded.",
+        "text": "Overdue Aug-31 blocker: 342 stub accounts unreconciled — Sales-i sync keys on Customer ID, so these accounts receive zero engagement data until fixed.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "342 stub accounts and Sales-i parser build (both Aug 31 blockers) remain unresolved — downstream BPM and inactivity automations cannot fire until fixed.",
+        "text": "Overdue Aug-31 blocker: Web/SEO root cause unnamed and fix not submitted — gates downstream SEO integrity for Forte.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 2,
-        "text": "AGS + Forte contact pull for outreach (Aug 31 blocker) shows no completion event — cold email program cannot launch without this list.",
+        "text": "Overdue Aug-31 blocker: AGS + Forte contact list not pulled — cold outreach pipeline has not started, now 10 days late.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F5",
         "priority": 3,
-        "text": "GBP actions: last 3 days (Sep 7–9) averaged 0 vs prior 3 days (Sep 4–6) average of 1.0; 28-day total is 86 but the 4-day zero streak is a confirmed drop-off.",
-        "confidence": "confirmed",
-        "channel": "gbp"
+        "text": "Search clicks fell to 0 on Sep 7–9 (3-day signal), down from a prior-3-day average of ~0.7/day; 28-day total only 33 clicks across 2,238 impressions — CTR is 1.5%, suggesting weak title/snippet pull.",
+        "confidence": "probable",
+        "channel": "Organic Search"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Surface all 6 overdue SOW milestones to Sohib/Nabil; block next sprint until Aug 31 blockers (342 stubs, Sales-i parser, contact pull) are confirmed closed.",
+        "text": "Audit GBP listing immediately — check for suspension, category change, or Q&A spam causing the 4-day zero-action streak.",
+        "cites": [
+          "F1"
+        ],
+        "monday_item_name": "GBP Forte Zero-Action Audit",
+        "monday_update": "GBP actions have been zero for 4 consecutive days (Sep 6–9), down from 86 total actions in the prior 28 days — the only active engagement channel for Forte is now dark. Check the GBP dashboard today for suspension notices, ownership conflicts, category edits, or spam flags on the listing. Success is defined as identifying a root cause and restoring at least 3 actions/day by Sep 17. Re-check Sep 13."
+      },
+      {
+        "id": "S2",
+        "type": "fix",
+        "text": "Escalate all three Aug-31 SOW blockers to Ahmed/Dev team; 342 stubs unreconciled blocks Sales-i sync for every affected account.",
         "cites": [
           "F2",
           "F3",
           "F4"
         ],
-        "monday_item_name": "Clear 6 Overdue SOW Blockers",
-        "monday_update": "Six SOW milestones are overdue, with three formally marked as blockers as of Aug 31: 342 stub account reconciliation, Sales-i export parser build, and AGS + Forte contact pull. None show a completion event in the data as of Sep 10. Sohib to confirm status of each with Ahmed and Dev 2 this week; next sprint planning should not proceed until all three blockers are closed. Success check: all six items marked complete on the Monday CRM board by 2026-09-17."
+        "monday_item_name": "Aug-31 SOW Blockers Escalate",
+        "monday_update": "Three deliverables marked blocker-level missed their Aug-31 deadline: (1) 342 stub accounts unreconciled — Sales-i cannot sync Customer IDs until done; (2) Web/SEO root cause and fix not submitted; (3) AGS + Forte contact pull for outreach not delivered, now 10 days overdue. Assign owners and post revised delivery dates to the Monday board by Sep 12. Success is a confirmed completion date from Ahmed/Dev for each item, with rollback files posted per data rules."
       },
       {
-        "id": "S2",
+        "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions: 4-day zero streak (Sep 6–9) vs 28-day total of 86 — re-check Sep 13 to distinguish seasonal lull from structural drop.",
+        "text": "Watch search clicks through Sep 13 — if 3-day average stays at 0, escalate title/meta refresh; no action yet on 1.5% CTR hypothesis.",
         "cites": [
           "F5"
         ],
-        "monday_item_name": "Watch GBP Action Drop",
-        "monday_update": "GBP actions have been zero for four consecutive days (Sep 6–9) after averaging roughly 3–4 per day earlier in the window; the 28-day total is 86 actions (5 calls, 39 directions, 42 web clicks). No paid activity is running to cross-reference, so the cause is unknown — could be seasonal B2B lull or a listing issue. Re-check on Sep 13; if the streak extends to 7 days with no recovery, escalate to a listing audit."
+        "monday_item_name": "Forte Search CTR Watch Sep13",
+        "monday_update": "Search clicks dropped to 0 on Sep 7–9 against a 28-day pool of only 33 clicks from 2,238 impressions (1.5% CTR). This is hypothesis-grade — one contributing cause may be weak title/snippet pull, but the sample is small. No action this cycle. Re-check Sep 13: if the 3-day average remains at or near 0 clicks, escalate a title and meta-description refresh for the Forte pages."
       }
     ],
     "next_check": "2026-09-13"

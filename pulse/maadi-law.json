@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-10T14:48:22.233Z",
+  "generated_at": "2026-09-10T15:21:50.758Z",
   "date": "2026-09-10",
   "slug": "maadi-law",
   "name": "Maadi Law, LLC",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "The biggest movement this week was a 600% surge in leads with CPL dropping 81.31%, driven by strong Meta performance on the \"Leads - Instant Form - Awareness\" campaign ($306.45 spend), which generated 8 leads over 28 days at $72.99 CPL. GBP activity remains a solid organic complement with 26 calls and 88 total actions, though GBP engagement dipped 70.59% week-over-week and should be monitored.",
+  "verdict": "The biggest movement this week was a 600% surge in leads alongside an 81.31% drop in CPL, driven primarily by Meta's \"Leads - Instant Form - Awareness\" campaign ($306.45 spend) delivering more efficient lead volume through the instant form format. GBP engagement pulled back 70.59% week-over-week, worth monitoring to ensure organic visibility stays healthy alongside paid efforts.",
   "windsor": {
     "totals": {
       "spend": 583.88,
@@ -621,79 +621,80 @@
     "history_line": "Prefill gaps filled in intake docs · Google Ads switched to manual bidding · Signing reminder workflow updated"
   },
   "performance": {
-    "generated_at": "2026-09-10T14:54:08.942Z",
+    "generated_at": "2026-09-10T15:24:56.478Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "SOW is 40+ days overdue; ads are live but infrastructure gaps remain critical.",
+    "verdict": "Meta CPL win is real but isolated — 5 overdue milestones stall full launch.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "5 milestones overdue since Jul 31–Aug 1: Pre-Launch Stack Test, LSA Verification, Site/Landing Pages, Ads Launch, and Meta Retargeting — no completed event recorded for any.",
+        "text": "5 SOW milestones overdue since July 31–Aug 1: Pre-Launch Stack Test, LSA Verification, Site/Landing Pages, Ads Launch, and Meta Retargeting still not confirmed complete.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 1,
-        "text": "Meta CPL dropped 81% week-over-week to $72.99 on 8 leads — efficient so far, but 28-day volume (8 leads, $584 spend) is too thin to confirm the rate holds.",
-        "confidence": "probable",
-        "channel": "meta"
+        "text": "CPL dropped 81.31% week-over-week to ~$72.99/lead (28d) as Meta instant-form leads surged 600%; efficiency gain is real but rests on only 8 leads over 28 days.",
+        "confidence": "confirmed",
+        "channel": "Meta"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "3-day signal (Sep 7–9): 4 leads, avg spend $64/day vs prior 3 days (Sep 4–6): 2 leads, avg spend $29/day — spend recovery is driving lead uptick, trend is positive.",
+        "text": "Google Ads spend is $0 across the entire 45-day series; the ~$5,000/mo Google budget is fully undeployed — LSA and Search have never launched.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "Google"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GHL shows 134 contacts and 51 opportunities but 0 appointments and 0 won — 8 paid leads against 51 opps suggests intake pipeline is not converting; possible intake leak, not an ads problem.",
+        "text": "3-day signal (Sep 7–9): leads held at 2, 1, 1 vs prior 3 days (Sep 4–6) at 1, 1, 1 — flat volume despite spend rising to $73.53 on Sep 8; no acceleration yet.",
         "confidence": "probable",
-        "channel": "GHL"
+        "channel": "Meta"
       },
       {
         "id": "F5",
-        "priority": 3,
-        "text": "Google Ads spend is $0 across all 28 days despite a ~$5,000/mo SOW budget allocation — Google channel is entirely dark with zero clicks and zero conversions.",
-        "confidence": "confirmed",
-        "channel": "google"
+        "priority": 4,
+        "text": "GHL shows 51 opportunities created but 0 won and 0 appointments; 8 paid leads vs 134 contacts suggests intake pipeline is not converting — possible intake leak, not an ads problem.",
+        "confidence": "hypothesis",
+        "channel": "GHL"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate all 5 overdue SOW milestones to Nacer immediately; LSA verification is the hardest blocker with a 3–4 week lead time.",
+        "text": "Escalate LSA verification and site/landing page sign-off immediately — Google's ~$5,000/mo budget is fully blocked.",
         "cites": [
           "F1",
-          "F5"
+          "F3"
         ],
-        "monday_item_name": "Clear SOW Launch Blockers",
-        "monday_update": "Five milestones due Jul 31–Aug 1 have no completed event recorded — Pre-Launch Stack Test, LSA Verification, Site/Landing Pages, Ads Launch, and Meta Retargeting. Google Ads has spent $0 across 28 days, meaning ~$5,000/mo of contracted budget is idle. Nacer must confirm current status of each milestone by Sep 12. Success check: at minimum LSA verification submitted and Google Ads account linked by Sep 17."
+        "monday_item_name": "Unblock LSA + Site Launch",
+        "monday_update": "Google Ads and LSA have recorded $0 spend across 45 days because LSA verification and site launch (both due July 31) are unconfirmed complete. Nacer must confirm LSA submission status and Web must confirm pages are live this week. Success = LSA verification receipt on file and at least one live landing page URL confirmed by 2026-09-14. Without this, the ~$5,000/mo Google budget remains entirely idle."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GHL intake: 51 opportunities created, 0 appointments booked — confirm routing and speed-to-lead are functioning for the 8 paid leads received.",
+        "text": "Audit GHL intake flow: 51 opportunities, 0 appointments, 0 won — confirm leads are being contacted under 5 minutes per SOW.",
         "cites": [
-          "F4"
+          "F5",
+          "F1"
         ],
-        "monday_item_name": "GHL Intake Audit",
-        "monday_update": "GHL shows 51 opportunities and 134 contacts but zero appointments and zero won cases, despite 8 paid Meta leads at $72.99 CPL. This gap is an intake process issue, not an ads issue. Check that lead routing, auto-reply, and calendar booking (per SOW Month 1 deliverables) are wired correctly. Success check: at least 50% of new paid leads should have a booked appointment within 24 hours — confirm by Sep 14."
+        "monday_item_name": "Fix GHL Intake Leak Audit",
+        "monday_update": "GHL shows 51 opportunities created and 134 contacts but zero appointments booked and zero cases won. This gap indicates routing, speed-to-lead, or follow-up cadence is broken — not an ads volume problem. Pull the last 10 lead records and confirm first-contact timestamp is under 5 minutes during business hours per SOW spec. Report findings to Sohib by 2026-09-14; success = documented contact timestamps and a clear reason for the 0-appointment figure."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch Meta CPL through Sep 13 before scaling; 8 leads is too small a sample to confirm $72.99 CPL is stable.",
+        "text": "Watch Meta CPL and lead volume over next 3 days before any budget increase; confirm 8-lead baseline is not instant-form noise.",
         "cites": [
           "F2",
-          "F3"
+          "F4"
         ],
-        "monday_item_name": "Watch Meta CPL Stability",
-        "monday_update": "Meta CPL dropped 81% to $72.99 over the last 7 days on 8 total leads — encouraging but statistically thin. The 3-day trend (Sep 7–9) shows 4 leads at ~$64/day spend, which is positive. Hold current budget (~$47/day) and re-check on Sep 13; if CPL holds below $100 with 5+ additional leads, a modest scale (+15–20% daily budget) is defensible at that point."
+        "monday_item_name": "Watch Meta CPL 3-Day",
+        "monday_update": "Meta CPL fell 81.31% week-over-week and leads surged 600%, but the 28-day base is only 8 leads — too thin to scale confidently. The 3-day signal (Sep 7–9) shows flat lead volume at 1–2/day with spend at $63–73/day. Re-check on 2026-09-13: if CPL holds below $80 and leads reach 3+ days of 2+/day, a +20% daily budget increase is defensible."
       }
     ],
     "next_check": "2026-09-13"

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-10T14:48:38.463Z",
+  "generated_at": "2026-09-10T15:22:03.389Z",
   "date": "2026-09-10",
   "slug": "steel-ohare",
   "name": "O'Hare Precision",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "O'Hare Precision's paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, suggesting campaigns are paused or inactive. The biggest movement is a 75% drop in GBP actions week-over-week, likely driven by reduced organic search visibility or a lull in local demand, though the profile still generated 138 total actions including 10 calls and 86 direction requests in the 28-day window.",
+  "verdict": "O'Hare Precision's paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, suggesting campaigns are paused or inactive. The most notable movement is a 75% drop in GBP actions week-over-week, which likely reflects reduced organic search visibility or seasonal demand softening, compounding the lack of paid traffic support.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -409,78 +409,78 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-09-10T14:55:18.848Z",
+    "generated_at": "2026-09-10T15:26:16.128Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid channels dead; GBP fading; 6 SOW milestones overdue and blocking pipeline.",
+    "verdict": "Paid is confirmed dark; organic erosion now the only live signal.",
     "findings": [
       {
         "id": "F1",
-        "priority": 2,
-        "text": "4 CRM milestones overdue (oldest July 7): 342 stub reconciliation (blocker, Aug 31) and Tom call list (Jul 28) not closed; Sugar pipeline integrity at risk.",
+        "priority": 1,
+        "text": "All paid channels show $0 spend and 0 leads across the entire 45-day series — no Meta, no Google Ads activity at all.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "meta+google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Web/SEO blocker (root cause + fix, due Aug 31) and Outreach contacts pull for AGS + Forte (due Aug 31) both overdue — downstream work is gated.",
+        "text": "3 overdue CRM blockers (342 stub reconcile, Sales-i parser, dedup workbook execution) unresolved since Jul–Aug 31; pipeline integrity at risk.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 1,
-        "text": "Zero paid spend and zero leads for all 28 days of the window; Meta and Google Ads are fully paused — no CPL is possible while both channels are dark.",
+        "priority": 2,
+        "text": "2 additional SOW blockers overdue Aug 31: Web/SEO root cause unfiled and Outreach contact pull (AGS + Forte) not delivered.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions dropped 75% week-over-week; last 3 days (Sep 7–9) show 0, 0, 0 vs prior 3-day avg of ~6 — a confirmed 3-day signal, not a single-day blip.",
+        "text": "GBP actions fell 75% week-over-week to near-zero last 3 days (Sep 7–9: 0, 0, 0) vs prior 3 days (Sep 4–6: 0, 1, 0) — broader collapse from Aug peak of 21/day.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 3,
-        "text": "Search Console clicks fell 26.92% week-over-week; Sep 9 reads 0 — last 3 days avg 8.7 vs prior 3-day avg of 15.7, confirming organic search is weakening in tandem with GBP.",
-        "confidence": "confirmed",
-        "channel": "sc"
+        "text": "Search clicks dropped 26.92% week-over-week; last 3 days avg 8.7 clicks vs prior 3-day avg of 13.3 — sustained softening, not a single-day blip.",
+        "confidence": "probable",
+        "channel": "search"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate 342 stub reconciliation and Tom call list to Ahmed immediately — both are confirmed blockers gating Sales-i sync.",
+        "text": "Escalate 342 stub reconcile and dedup workbook execution — both are confirmed blockers with no progress since Aug 31.",
         "cites": [
-          "F1"
+          "F2"
         ],
-        "monday_item_name": "Clear CRM Blocker Stubs",
-        "monday_update": "The 342 stub account reconciliation (due Aug 31) and Tom call list priority flag (due Jul 28) are both overdue and confirmed blockers — Sales-i sync keys on Customer ID, so these accounts receive no data until fixed. Ahmed to post reconciliation progress and rollback file to the Monday CRM board by 2026-09-14. Success check: reconciliation batch posted and at least 50% of 342 stubs matched by 2026-09-17."
+        "monday_item_name": "Unblock CRM stubs + dedup",
+        "monday_update": "The 342 stub reconcile and 447-group dedup workbook execution are confirmed overdue since Aug 31 and are blocking the Sales-i sync entirely. Zero paid leads are flowing, meaning the CRM pipeline has no new data to process — fixing the data floor now prevents compounding debt. Success check: rollback files posted to Monday board and at least one audited merge batch completed by 2026-09-17. Ahmed and Dev 2 to confirm batch status by end of week."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Unblock Web/SEO root-cause submission and AGS + Forte contact pull — both Aug 31 deadlines missed, gating outreach launch.",
+        "text": "Chase Web/SEO root cause submission and AGS + Forte contact pull — both confirmed overdue blockers since Aug 31.",
         "cites": [
-          "F2"
+          "F3"
         ],
-        "monday_item_name": "Fix SEO + Outreach Blockers",
-        "monday_update": "The Web/SEO root-cause fix (due Aug 31) and AGS + Forte outreach contact pull (due Aug 31) are both overdue and blocking downstream deliverables. Responsible parties to post named root cause and contact list to Monday by 2026-09-14. Success check: root-cause doc live and contact file uploaded to outreach board by 2026-09-14."
+        "monday_item_name": "SOW blockers: SEO + Outreach",
+        "monday_update": "The Web/SEO root cause has not been named or submitted, and the AGS + Forte contact pull for outreach has not been delivered — both were due Aug 31. With paid channels fully dark (F1), organic and cold outreach are the only active demand levers, making these blockers especially costly. Success check: root cause document filed in Monday and contact list delivered to the outreach team by 2026-09-17. Sohib to confirm owner on each item."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions and SC clicks for 3 more days — if both remain at 0, escalate to SEO review; do not act on paid channels until reactivation is confirmed.",
+        "text": "Watch GBP actions and search clicks for 3 more days; if both remain at or near zero, escalate organic visibility as a standalone issue.",
         "cites": [
           "F4",
           "F5"
         ],
-        "monday_item_name": "Watch GBP + SC Drop",
-        "monday_update": "GBP actions have been 0 for 3 consecutive days (Sep 7–9) and SC clicks dropped 26.92% week-over-week with Sep 9 reading 0. No paid spend is active to explain the organic drop, so this is a standalone SEO or profile signal. Re-check both metrics on 2026-09-13; if GBP actions remain at 0 and SC clicks stay below 10/day, escalate to an SEO audit of the O'Hare profile."
+        "monday_item_name": "Watch GBP + search trend",
+        "monday_update": "GBP actions have hit 0 for the last 3 days (Sep 7–9) and search clicks are down 26.92% week-over-week with a 3-day avg of 8.7 vs 13.3 prior. With no paid support active, organic is the sole traffic source — a continued zero run in GBP would confirm a visibility problem, not just seasonal softening. Re-check on 2026-09-13: if GBP actions remain at 0 and sc_clicks stay below 10/day, flag for SEO investigation within the existing retainer scope."
       }
     ],
     "next_check": "2026-09-13"

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-10T14:46:20.357Z",
+  "generated_at": "2026-09-10T15:21:07.030Z",
   "date": "2026-09-10",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) generated zero spend, leads, or clicks over the last 28 days, suggesting campaigns are paused or inactive. The only meaningful activity came from Google Business Profile, which drove 31 total actions including 2 calls, 14 direction requests, and 15 website clicks, though GA4 sessions are down 43.75% week over week, pointing to a drop in organic or direct web traffic.",
+  "verdict": "Paid channels (Meta and Google Ads) generated zero spend, leads, or clicks over the last 28 days, suggesting campaigns may be paused or inactive. Google Business Profile remained the only source of engagement, driving 31 total actions including 2 calls, 14 direction requests, and 15 website clicks, though GA4 traffic is down 43.75% week over week, pointing to softening organic interest.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -517,60 +517,61 @@
     "history_line": "Website completed · Shabana Sheikh bio added to Meet Our Therapists"
   },
   "performance": {
-    "generated_at": "2026-09-10T14:52:29.893Z",
+    "generated_at": "2026-09-10T15:23:17.192Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid is fully dark; only GBP organic signals remain active.",
+    "verdict": "All paid channels are dark; only GBP is active and fading.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across Meta and Google Ads for all 28 days; $0 spend confirms campaigns are fully paused, not underperforming.",
+        "text": "Zero spend, zero leads, zero clicks across Meta and Google Ads for the full 28-day window — paid engine is completely off.",
         "confidence": "confirmed",
         "channel": "meta+google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GA4 sessions fell 43.75% week-over-week; 3-day signal (Sep 7–9: avg 5) vs prior 3 (Sep 4–6: avg 3) shows low but stable organic floor.",
-        "confidence": "probable",
+        "text": "GA4 sessions down 43.75% week-over-week; last 3 days (Sep 7–9) averaged 5 sessions vs. prior 3 days (Sep 4–6) averaging 6.3 — organic softening is confirmed trend, not a spike.",
+        "confidence": "confirmed",
         "channel": "ga4"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GBP actions flat at 0 for the last 6 days (Sep 4–9); prior active days averaged 2–4 actions, suggesting GBP engagement has quietly stalled.",
-        "confidence": "confirmed",
+        "text": "GBP actions flat at 0% week-over-week delta but spiked to 11 on Aug 25 then dropped to 0 for the last 4 days — engagement is erratic and declining.",
+        "confidence": "probable",
         "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GA4 recorded 191 sessions over 28 days with 0 GA4 conversions; intake pipeline unknown — GHL data absent, so lead capture cannot be verified.",
+        "text": "GHL pipeline shows null — no pipeline data available. With 0 paid leads in 28 days, no intake leak diagnosis is possible; CRM health is unknown.",
         "confidence": "hypothesis",
-        "channel": "ga4"
+        "channel": "ghl"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Confirm campaign pause intent with client; no paid action warranted until reactivation is authorized.",
+        "type": "fix",
+        "text": "Confirm campaign pause status in Meta and Google Ads accounts; if paused intentionally, document the resume date.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Confirm Paid Pause Status",
-        "monday_update": "Meta and Google Ads have recorded $0 spend across all 28 days through Sep 9. Before any budget action is taken, confirm with Healing Helps whether campaigns are intentionally paused or this is a billing/access issue. Success check: written client confirmation received by Sep 13. No paid moves will be made without that confirmation."
+        "monday_item_name": "Confirm Paid Campaign Status",
+        "monday_update": "Both Meta and Google Ads show $0 spend across the full 28-day window — no leads, no clicks, no impressions. Sohib to check platform dashboards and confirm whether campaigns are intentionally paused or have a billing/account issue. Success check: confirmation of campaign status (paused vs. active) by 2026-09-12. If unintentionally dark, reactivation plan needed immediately."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GBP actions daily; 6-day zero streak from Sep 4–9 warrants recheck Sep 13.",
+        "text": "Watch GA4 sessions over next 3 days; if daily average stays below 5, organic floor may require GBP or content action.",
         "cites": [
+          "F2",
           "F3"
         ],
-        "monday_item_name": "Watch GBP Action Streak",
-        "monday_update": "GBP actions dropped to zero for the last 6 consecutive days (Sep 4–9), down from a prior average of 2–4 actions per active day. No action is taken this cycle, but if the streak extends past Sep 13, a GBP optimization review (photos, posts, Q&A) should be flagged. Recheck Sep 13."
+        "monday_item_name": "Watch GA4 Organic Trend",
+        "monday_update": "GA4 sessions are down 43.75% week-over-week and the last 3-day average is 5 sessions per day, down from 6.3 the prior 3 days. GBP actions have been 0 for 4 consecutive days. Monitor through 2026-09-13. Success check: daily sessions recover to 7+ per day; if not, escalate to GBP optimisation review."
       }
     ],
     "next_check": "2026-09-13"
