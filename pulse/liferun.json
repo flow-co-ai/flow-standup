@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11T02:29:09.224Z",
+  "generated_at": "2026-09-11T03:05:13.998Z",
   "date": "2026-09-11",
   "slug": "liferun",
   "name": "Liferun",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Liferun delivered 138 leads at a $15.83 CPL over the last 28 days, with the past 7 days showing positive momentum: leads up 8.33% and CPL down 1.08% week-over-week, likely driven by the top Meta campaign \"BWS - April End - Call Campaign\" ($562.16 spend) pulling volume efficiently. The main watch item is Google Ads, which consumed $507.22 with 0 recorded conversions, warranting a review of conversion tracking or campaign targeting.",
+  "verdict": "Leads are up 8.33% week-over-week at a CPL of $15.83, driven largely by Meta's 138 conversions from $1,677.47 in spend, while Google Ads delivered 0 conversions on $507.22 spent and GBP dropped 100% in actions this week, flagging a gap worth investigating.",
   "windsor": {
     "totals": {
       "spend": 2184.69,
@@ -28,7 +28,18 @@
           "actions": 35,
           "calls": 0,
           "directions": 35,
-          "web_clicks": 0
+          "web_clicks": 0,
+          "by_profile": [
+            {
+              "account_id": "locations/1230522329202519428",
+              "label": "Liferun",
+              "calls": 0,
+              "directions": 35,
+              "web_clicks": 0,
+              "impressions": 83,
+              "days_with_impressions": 21
+            }
+          ]
         }
       }
     },
@@ -60,7 +71,10 @@
       "sc_clicks": 0,
       "ga4_sessions": 20,
       "purchases": 0,
-      "revenue": 0
+      "revenue": 0,
+      "gbp_profiles": {
+        "locations/1230522329202519428": 0
+      }
     },
     "deltas": {
       "spend_7d_pct": 7.17,
@@ -74,7 +88,9 @@
       "ig_7d_pct": null,
       "spend_per_day_7d": 82.96
     },
-    "flags": [],
+    "flags": [
+      "gbp_no_calls_with_impressions:Liferun"
+    ],
     "series": {
       "dates": [
         "2026-08-14",
@@ -554,81 +570,79 @@
     "history_line": "Checkout webhook fix deployed and tested · Delivered May 2026 SEO update report · Added chat widget for A2P compliance"
   },
   "performance": {
-    "generated_at": "2026-09-11T02:35:20.136Z",
-    "cadence": "scheduled_3d",
+    "generated_at": "2026-09-11T03:08:29.056Z",
+    "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Meta is carrying all leads; Google and GHL pipeline are confirmed dead weight.",
+    "verdict": "Meta is carrying all leads; Google burns $507 with zero conversions for 28 days.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Google Ads consumed $507.22 over 28 days with 0 conversions and 0 leads — confirmed spend leak with zero return.",
+        "text": "Google Ads: $507.22 spent over 28 days, 0 conversions, 112 clicks — confirmed pixel/tracking failure or fundamentally wrong campaign type.",
         "confidence": "confirmed",
         "channel": "google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "5 overdue SOW milestones (GHL build, stack re-test, landing pages, UGC batch) — oldest due Jul 20, all unverified; scaling is gated.",
+        "text": "5 overdue SOW milestones (oldest: July 20) — GHL build gaps, stack re-test, paid landing pages, and UGC batch all unverified as of Sep 11.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GHL shows 130 opps created but 0 won and 0 appointments in 28 days — leads arriving but pipeline producing nothing; intake or follow-up leak.",
+        "text": "GBP: 83 impressions over 21 days, 0 calls, 0 web clicks; gbp_7d_pct = -100% — profile is visible but generating zero response actions.",
         "confidence": "confirmed",
-        "channel": "GHL"
+        "channel": "gbp"
       },
       {
         "id": "F4",
-        "priority": 2,
-        "text": "GBP actions dropped -100% in the last 7 days (35 actions prior period, 0 this week); organic local signal has gone dark.",
-        "confidence": "confirmed",
-        "channel": "GBP"
+        "priority": 3,
+        "text": "3-day Meta lead signal (Sep 8–10: 10+12+6=28 leads) vs prior 3 (Sep 5–7: 0+0+6=6) — strong 3-day recovery, but weekend zeros compress the prior window; trend is positive inside a stable 90-day shape.",
+        "confidence": "probable",
+        "channel": "meta"
       },
       {
         "id": "F5",
-        "priority": 3,
-        "text": "3-day Meta signal (Sep 8–10): leads 10+12+6=28 vs prior 3 (Sep 5–7): 0+0+6=6 — strong positive momentum; CPL trending well inside 28-day $15.83 baseline.",
+        "priority": 4,
+        "text": "GHL shows 130 opportunities created but 0 won and 0 appointments in 28 days — 138 Meta leads arriving but no pipeline progression signals an intake or follow-up leak, not an ads problem.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "ghl"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "budget_shift",
-        "text": "Shift $15/day from Google Ads to Meta immediately; Google has 0 conversions on $507.22 over 28 days.",
+        "type": "fix",
+        "text": "Audit Google Ads conversion tracking immediately; pause spend if no fix confirmed within 5 days — $507 wasted with 0 conversions.",
         "cites": [
-          "F1",
-          "F5"
+          "F1"
         ],
-        "monday_item_name": "Shift $15/day Google→Meta",
-        "monday_update": "Redirect $15/day from Google Ads to the Meta BWS Call Campaign, citing 0 conversions on $507.22 spent over 28 days versus confirmed Meta momentum (28 leads in the last 3 days). Success is defined as Meta CPL staying at or below the $15.83 baseline after 7 days of the new allocation. Re-check 2026-09-18."
+        "monday_item_name": "Fix Google Ads Conversion Tracking",
+        "monday_update": "Google Ads has spent $507.22 over 28 days with 0 recorded conversions and 112 clicks — this is either a broken pixel or a non-converting campaign type. The immediate action is to audit the conversion action setup in Google Ads and confirm the tag fires on the thank-you/confirmation page. If tracking is confirmed broken and not fixable within 5 days, pause Google spend and reallocate to Meta where CPL is $15.83 on 138 confirmed leads. Success check: at least 1 verified conversion recorded in Google Ads by 2026-09-16."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GHL pipeline: 130 opps created, 0 won, 0 appointments — confirm intake automations and follow-up sequences are firing.",
+        "text": "Investigate GHL pipeline: 130 opportunities, 0 appointments, 0 won — confirm intake automation and follow-up sequences are firing.",
         "cites": [
-          "F3",
-          "F2"
+          "F5"
         ],
-        "monday_item_name": "Fix GHL Pipeline Intake Leak",
-        "monday_update": "Review GHL automation logs for the 130 created opportunities to confirm follow-up sequences triggered and appointments were offered. The SOW Becklar and BWS duplicate-check milestones (due Aug 31) are also unverified, so run both intake paths end-to-end as part of this audit. Success is at least 1 confirmed appointment booked and all automation steps showing as fired within 7 days. Re-check 2026-09-18."
+        "monday_item_name": "GHL Pipeline Intake Audit",
+        "monday_update": "GHL shows 130 opportunities created against 138 Meta leads in 28 days, but 0 appointments booked and 0 deals won — this points to a follow-up automation failure or an intake leak, not an ads problem. Action: Nacer to run a test lead through the full GHL flow and confirm the follow-up sequence triggers and an appointment slot is offered. Also cross-check whether Becklar deactivation and BWS duplicate paths (overdue SOW milestones) are silently blocking progression. Success check: at least 1 test lead reaches appointment stage with no manual intervention by 2026-09-16."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP: -100% actions this week (from 35 to 0) — confirm listing is live and not suspended before acting.",
+        "text": "Watch Meta CPL over the next 3 days; if it holds at or below $15.83, prepare a +15% budget case for next cycle.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Watch GBP Listing Status",
-        "monday_update": "GBP actions dropped from 35 to 0 in the past 7 days — verify the listing is active, not suspended, and that the profile has not been edited in a way that triggers a re-verification hold. No paid action is warranted yet. If actions remain at 0 after 3 more days, escalate to a fix. Re-check 2026-09-14."
+        "monday_item_name": "Watch Meta CPL for Scale",
+        "monday_update": "Meta's 3-day lead signal (Sep 8–10: 28 leads) is the strongest window in the series, and CPL sits at $15.83 on 138 leads over 28 days. No scale action is taken this cycle because the Google tracking failure (F1) and pipeline leak (F5) must be resolved first — scaling spend into a broken intake system wastes the gain. Re-check on 2026-09-14: if CPL remains at or below $15.83 and pipeline is confirmed functioning, bring a +15% Meta daily budget recommendation to Sohib."
       }
     ],
-    "next_check": "2026-09-18"
+    "next_check": "2026-09-14"
   }
 }

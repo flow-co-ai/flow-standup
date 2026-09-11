@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11T02:27:48.805Z",
+  "generated_at": "2026-09-11T03:04:28.742Z",
   "date": "2026-09-11",
   "slug": "full-smile",
   "name": "Full Smile",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 50,
   "status": "amber",
-  "verdict": "Leads dropped sharply this week, down 44.83% over the prior 7 days, driving CPL up 82.85% and signaling a significant drop in Meta conversion efficiency despite steady spend. The top campaign \"BWS - Instant Leads - Retargeting\" anchored $374.99 of the $738.15 28-day spend, so any audience fatigue or creative wear-out there is the most likely driver of the lead decline.",
+  "verdict": "Over 28 days, Full Smile generated 99 leads at a $7.46 CPL across $738.15 in Meta spend, but the last 7 days show a sharp pullback with leads down 44.83% and CPL up 82.85% week-over-week, likely driven by audience fatigue or budget pacing on the top retargeting campaign \"BWS - Instant Leads - Retargeting\" ($374.99 spend), which is also reflected in GBP actions falling 51.72% in the same period.",
   "windsor": {
     "totals": {
       "spend": 738.15,
@@ -28,7 +28,18 @@
           "actions": 230,
           "calls": 75,
           "directions": 80,
-          "web_clicks": 75
+          "web_clicks": 75,
+          "by_profile": [
+            {
+              "account_id": "locations/9295260348937485711",
+              "label": "Full Smile Dental",
+              "calls": 75,
+              "directions": 80,
+              "web_clicks": 75,
+              "impressions": 428,
+              "days_with_impressions": 25
+            }
+          ]
         }
       }
     },
@@ -66,7 +77,10 @@
       "sc_clicks": 0,
       "ga4_sessions": 7,
       "purchases": 0,
-      "revenue": 0
+      "revenue": 0,
+      "gbp_profiles": {
+        "locations/9295260348937485711": 0
+      }
     },
     "deltas": {
       "spend_7d_pct": 0.88,
@@ -597,78 +611,79 @@
     "history_line": "OpenDental claim payment sync done · Voicemail + form updates completed · May SEO report delivered"
   },
   "performance": {
-    "generated_at": "2026-09-11T02:33:36.480Z",
+    "generated_at": "2026-09-11T03:06:55.368Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "CPL collapse is real; 5 overdue SOW milestones threaten the stay/walk decision.",
+    "verdict": "CPL spike is real; but 0 pipeline wins on 101 opps exposes an intake failure, not just ad fatigue.",
     "findings": [
       {
         "id": "F1",
+        "priority": 1,
+        "text": "CPL surged 82.85% week-over-week; last 3 days (Sep 8–10) produced only 6 leads on $84.90 spend vs 11 leads on $75.33 in the prior 3 days — confirmed efficiency collapse.",
+        "confidence": "confirmed",
+        "channel": "meta"
+      },
+      {
+        "id": "F2",
         "priority": 2,
-        "text": "5 SOW milestones overdue (oldest: 2026-07-23 renewal doc); dashboard, attribution gap, and CRM cleanup all missed August deadlines — scoreboard is untrusted.",
+        "text": "OVERDUE: Dashboard live and August scoreboard trusted (due 2026-08-31) — 0 pipeline wins on 101 created opportunities; renewal decision is blind without this.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
-        "id": "F2",
-        "priority": 1,
-        "text": "CPL rose 82.85% in 7d on flat spend (+0.88%); last 3 days (Sep 8–10) yielded only 6 leads vs 10 in prior 3 days (Sep 5–7), confirming efficiency collapse, not noise.",
-        "confidence": "confirmed",
-        "channel": "meta"
-      },
-      {
         "id": "F3",
-        "priority": 3,
-        "text": "Top campaign 'BWS - Instant Leads - Retargeting' consumed $374.99 of $738.15 (28d) with leads declining sharply — retargeting audience exhaustion is the probable cause.",
-        "confidence": "probable",
-        "channel": "meta"
+        "priority": 2,
+        "text": "OVERDUE: Phone-match attribution gap (due 2026-08-07) and sync/contact cleanup (due 2026-08-14) both unresolved — 75 GBP calls in 28 days are unattributed to GHL pipeline.",
+        "confidence": "confirmed",
+        "channel": "SOW"
       },
       {
         "id": "F4",
-        "priority": 4,
-        "text": "GBP actions fell 51.72% in 7d and show 0 actions for the last 4 days (Sep 7–10), moving opposite to what a healthy paid-to-organic halo would predict — organic floor is eroding.",
-        "confidence": "confirmed",
+        "priority": 3,
+        "text": "GBP actions fell 51.72% week-over-week; last 4 logged days show 0 actions (Sep 7–10), suggesting either a dark period or a data-feed gap — organic floor is eroding alongside paid.",
+        "confidence": "probable",
         "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 101 opportunities created but 0 won and 0 appointments; 340 contacts vs 99 28d leads signals an intake processing gap, not an ads-volume problem.",
+        "text": "101 opportunities created, 0 won, 0 appointments logged in GHL — leads are arriving but no intake conversion is recorded; this is a pipeline intake leak, not an ads problem.",
         "confidence": "confirmed",
-        "channel": "ghl"
+        "channel": "crm"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Escalate 5 overdue SOW milestones to Nacer immediately; dashboard and attribution gap block the August scoreboard trusted by Sep 30.",
+        "type": "creative_refresh",
+        "text": "Introduce at least 1 new creative variant into BWS Retargeting; hold spend flat while CPL is 82.85% above prior week.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Clear 5 Overdue SOW Items",
-        "monday_update": "Five SOW milestones are past due, the oldest dating to 2026-07-23; the dashboard (due 2026-08-31) and attribution gap (due 2026-08-07) are the most critical because the client's renewal decision depends on a trusted scoreboard. Nacer should assign owners and hard deadlines to all five items today. Success check: all 5 milestone items marked complete in Monday by 2026-09-19, dashboard live and confirmed with Sohib."
+        "monday_item_name": "Full Smile Retargeting Creative Refresh",
+        "monday_update": "CPL jumped 82.85% week-over-week on flat spend (+0.88%), and the last 3 days yielded only 6 leads vs 11 in the prior 3-day window — a textbook fatigue pattern on the BWS - Instant Leads - Retargeting campaign ($374.99 of 28-day spend). Launch at least one new creative variant into this campaign without increasing daily budget ($26.01/day current pace) until CPL returns below the 28-day baseline of $7.46. Success check: CPL at or below $7.46 over any 3-day window by 2026-09-17."
       },
       {
         "id": "S2",
-        "type": "creative_refresh",
-        "text": "Introduce at least 1 new creative into 'BWS - Instant Leads - Retargeting'; CPL up 82.85% on a campaign consuming $374.99 of 28d spend.",
+        "type": "fix",
+        "text": "Close the GHL intake leak: audit why 101 created opportunities show 0 won and 0 appointments logged.",
         "cites": [
-          "F2",
+          "F5",
           "F3"
         ],
-        "monday_item_name": "Refresh Retargeting Creative",
-        "monday_update": "The BWS retargeting campaign held $374.99 of the last 28-day spend while CPL jumped 82.85% week-over-week; the 3-day lead count (Sep 8–10) fell to 6 vs 10 in the prior 3 days, confirming audience fatigue. Swap in at least one new creative variant (different hook or offer framing) while holding the existing budget level — do not scale until CPL returns below the 28-day average of $7.46. Re-evaluate CPL on 2026-09-18."
+        "monday_item_name": "GHL Pipeline Intake Leak Fix",
+        "monday_update": "GHL shows 101 opportunities created with $0 won value and 0 appointments logged — leads are entering but no intake conversion is recorded anywhere in the funnel. Additionally, 75 GBP calls in the 28-day window are not attributed to any pipeline stage (phone-match gap overdue since 2026-08-07). Audit the opportunity stage workflow with Ahmed/Ali Shaheer and confirm Lily's intake process against the biweekly sync. Success check: at least 10 opportunities in a post-contact stage and appointment count > 0 in GHL by 2026-09-17."
       },
       {
         "id": "S3",
         "type": "fix",
-        "text": "Audit GHL intake flow: 101 opps created, 0 won, 0 appointments — confirm Lily or new hire is actioning leads within 24h.",
+        "text": "Escalate the 3 overdue SOW milestones to Sohib/Nacer; dashboard and scoreboard are the renewal gate.",
         "cites": [
-          "F5"
+          "F2",
+          "F3"
         ],
-        "monday_item_name": "Fix GHL Intake Processing",
-        "monday_update": "GHL shows 101 opportunities created against 340 contacts with zero won and zero appointments logged in the 28-day window; this is an intake processing gap, not an ads problem. Confirm with Lily and the new intake hire that all inbound leads are being contacted within 24 hours and that appointment outcomes are being recorded in GHL. Success check: at least 5 appointments logged in GHL by 2026-09-18, confirming the pipeline is moving."
+        "monday_item_name": "Full Smile Overdue Milestones Escalation",
+        "monday_update": "Three milestones are past due: phone-match attribution (2026-08-07), sync/contact cleanup (2026-08-14), and the dashboard + August scoreboard (2026-08-31). The client's renewal decision is explicitly tied to seeing legitimate leads flow to scheduled and shown patients — that scoreboard does not exist yet. Escalate to Sohib (Account) and Nacer (Ops) with a hard delivery date. Success check: dashboard live and scoreboard reviewed with client by 2026-09-17."
       }
     ],
     "next_check": "2026-09-14"

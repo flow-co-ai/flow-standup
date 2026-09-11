@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11T02:27:54.222Z",
+  "generated_at": "2026-09-11T03:04:33.880Z",
   "date": "2026-09-11",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) recorded zero spend and zero leads over the past 28 days, so organic Google Business Profile activity is carrying all engagement with 27 total actions including 2 calls, 14 direction requests, and 11 website clicks. The biggest movement is a 50% week-over-week lift in GBP actions, likely driven by increased local search visibility or seasonal demand, while Search Console and GA4 traffic each declined roughly 41% in the same period, suggesting the site itself may need attention.",
+  "verdict": "Healing Helps had zero paid spend or leads over the past 28 days, so all activity came from organic sources, with Google Business Profile driving 27 total actions (2 calls, 14 directions, 11 web clicks) across 25 active days. The biggest movement is a 50% week-over-week lift in GBP engagement, likely driven by increased local search visibility, though this is offset by a roughly 41% drop in both Search Console and GA4 traffic signals.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -28,7 +28,18 @@
           "actions": 27,
           "calls": 2,
           "directions": 14,
-          "web_clicks": 11
+          "web_clicks": 11,
+          "by_profile": [
+            {
+              "account_id": "locations/9257180210135267024",
+              "label": "Healing Helps Therapy PLLC",
+              "calls": 2,
+              "directions": 14,
+              "web_clicks": 11,
+              "impressions": 329,
+              "days_with_impressions": 25
+            }
+          ]
         }
       }
     },
@@ -57,7 +68,10 @@
       "sc_clicks": 0,
       "ga4_sessions": 6,
       "purchases": 0,
-      "revenue": 0
+      "revenue": 0,
+      "gbp_profiles": {
+        "locations/9257180210135267024": 0
+      }
     },
     "deltas": {
       "spend_7d_pct": null,
@@ -522,81 +536,62 @@
     "history_line": "Website completed · Shabana Sheikh bio added to Meet Our Therapists"
   },
   "performance": {
-    "generated_at": "2026-09-11T02:33:58.714Z",
+    "generated_at": "2026-09-11T03:07:14.141Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Organic GBP rising but paid is absent; site traffic collapsing.",
+    "verdict": "Organic-only footing stable; GBP up but web traffic collapsing demands attention.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — Meta and Google Ads both show $0 — meaning 100% of engagement falls on organic alone.",
+        "text": "Zero paid spend across the full 45-day series; CPL is undefined — no paid efficiency signal exists to evaluate.",
         "confidence": "confirmed",
-        "channel": "meta, google_ads"
+        "channel": "meta,google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "SC clicks fell 41.67% week-over-week; last 3 days (Sep 8–10) show 2, 0, 0 vs prior 3 days (Sep 5–7) at 1, 1, 1 — sustained organic search decay.",
-        "confidence": "confirmed",
-        "channel": "search_console"
+        "text": "SC clicks and GA4 sessions both fell ~41% week-over-week (37 clicks / 189 sessions in 28 days) while GBP impressions held at 329, suggesting a site or indexing issue, not a visibility collapse.",
+        "confidence": "probable",
+        "channel": "organic"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GA4 sessions down 41.27% week-over-week; last 3 days average 6 vs prior 3-day average of 4.7, but the Sep 1 spike of 28 sessions inflates the prior window, masking real weakness.",
-        "confidence": "probable",
-        "channel": "ga4"
-      },
-      {
-        "id": "F4",
-        "priority": 3,
-        "text": "GBP actions up 50% week-over-week (27 total over 28 days: 2 calls, 14 directions, 11 web clicks) while paid is dark — local intent exists but no paid channel is capturing it.",
+        "text": "GBP actions surged 50% week-over-week to 27 total (2 calls, 14 directions, 11 web clicks), but last-3-day GBP actions are 0 vs prior-3-day total of 0 — the spike was concentrated around Aug 25 (11 actions) and has since gone flat.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
-        "id": "F5",
-        "priority": 4,
-        "text": "GHL pipeline shows null — 0 leads recorded in 28 days means no pipeline data to evaluate; intake workflow status is unknown.",
-        "confidence": "confirmed",
-        "channel": "ghl"
+        "id": "F4",
+        "priority": 3,
+        "text": "GA4 recorded 0 conversions across 189 sessions and 28 days; with no paid traffic, conversion tracking may be misconfigured or goal events are not firing.",
+        "confidence": "hypothesis",
+        "channel": "organic"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Confirm whether paid channels are intentionally paused or dark by error before any budget move.",
+        "type": "fix",
+        "text": "Audit site and Search Console for crawl errors causing the ~41% SC/GA4 drop; no budget required.",
         "cites": [
-          "F1"
+          "F2"
         ],
-        "monday_item_name": "Confirm Paid Channel Status",
-        "monday_update": "Meta and Google Ads show $0 spend across all 28 days — this is either a deliberate pause or a configuration error. Sohib to confirm with client whether campaigns are intentionally off. If unintentional, reactivation is the priority action. Re-check on 2026-09-14 to confirm status."
+        "monday_item_name": "Fix SC/GA4 Traffic Drop",
+        "monday_update": "Search Console clicks fell ~41% week-over-week (from ~63 to 37 in 28 days) while GBP impressions held steady at 329, pointing to a site crawl or indexing issue rather than a loss of local visibility. Pull the Search Console Coverage report for crawl errors, check for any recent site changes, and confirm robots.txt or noindex tags are not blocking key pages. Success check: SC clicks recover above 60/week by 2026-09-25. Re-check on 2026-09-18."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Monitor SC clicks and GA4 sessions over next 3 days; 0, 0 close on SC is a confirmed decay signal.",
+        "text": "Watch GBP action rate daily; Aug 25 spike (11 actions) has not recurred — confirm if post/event drove it.",
         "cites": [
-          "F2",
           "F3"
         ],
-        "monday_item_name": "Watch Site Traffic Decay",
-        "monday_update": "Search Console clicks posted 0 on both Sep 9 and Sep 10, and GA4 is down 41.27% week-over-week. This is a 3-day confirmed decay signal on organic search, not noise. Watch whether sessions recover above the recent 5–7/day baseline by Sep 14. If not, a site or GSC technical audit is warranted."
-      },
-      {
-        "id": "S3",
-        "type": "fix",
-        "text": "Verify GHL pipeline is connected and receiving leads; null pipeline with 27 GBP actions signals a possible intake gap.",
-        "cites": [
-          "F4",
-          "F5"
-        ],
-        "monday_item_name": "Fix GHL Intake Check",
-        "monday_update": "GBP recorded 27 actions including 2 calls and 11 website clicks over 28 days, yet GHL shows null pipeline with zero opportunities. This suggests either the intake form or CRM connection is broken, or those contacts are not being routed into GHL at all. Confirm GHL webhook or form embed is live by Sep 14 to determine if inbound intent is being lost."
+        "monday_item_name": "Watch GBP Action Spike Cause",
+        "monday_update": "GBP actions hit 11 in a single day on Aug 25, lifting the 7-day total 50% week-over-week, but the last several days show 0 actions. Identify what content, post, or external factor drove that spike. If it was a GBP post, replicate it. Success check: average daily GBP actions return to ≥1/day by 2026-09-18. Re-check on 2026-09-18."
       }
     ],
-    "next_check": "2026-09-14"
+    "next_check": "2026-09-18"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11T02:30:17.925Z",
+  "generated_at": "2026-09-11T03:05:59.305Z",
   "date": "2026-09-11",
   "slug": "medstation",
   "name": "MedStation",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 70,
   "status": "amber",
-  "verdict": "MedStation's biggest movement is a 918.98% spike in 7-day spend (totaling $104.96 over 28 days, led by the WARM-RETARGETING campaign at $48.77), likely driven by a ramp-up in Meta activity (210 clicks, $104.96 spend) after a period of minimal investment. Despite this surge, zero leads were generated across all channels, triggering the lead drought flag and signaling a critical disconnect between spend and conversion that needs immediate attention.",
+  "verdict": "Meta spend surged 919% week-over-week driven by the WARM-RETARGETING campaign ($48.77 of $104.96 total spend), yet zero leads were generated across all channels in 28 days, triggering a lead drought that demands immediate conversion tracking and landing page review.",
   "windsor": {
     "totals": {
       "spend": 104.96,
@@ -28,7 +28,18 @@
           "actions": 83,
           "calls": 10,
           "directions": 45,
-          "web_clicks": 28
+          "web_clicks": 28,
+          "by_profile": [
+            {
+              "account_id": "locations/301736109571843428",
+              "label": "MedStation Weston",
+              "calls": 10,
+              "directions": 45,
+              "web_clicks": 28,
+              "impressions": 143,
+              "days_with_impressions": 25
+            }
+          ]
         }
       }
     },
@@ -56,7 +67,10 @@
       "sc_clicks": 0,
       "ga4_sessions": 5,
       "purchases": 0,
-      "revenue": 0
+      "revenue": 0,
+      "gbp_profiles": {
+        "locations/301736109571843428": 0
+      }
     },
     "deltas": {
       "spend_7d_pct": 918.98,
@@ -635,78 +649,78 @@
     "history_line": "Weston GHL, Meta & Google ads launched · WhatsApp connected to GHL · GA4 + GTM tracking configured"
   },
   "performance": {
-    "generated_at": "2026-09-11T02:37:39.120Z",
+    "generated_at": "2026-09-11T03:10:35.432Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "$105 spent, 0 leads — stack not built yet, not a campaign problem.",
+    "verdict": "9 overdue milestones mean campaigns shouldn't be live yet — fix infrastructure first.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "lead_drought confirmed: 0 leads from $104.96 spend across 28 days — CPL is undefined because the conversion path does not exist yet.",
+        "text": "Lead drought confirmed: 0 leads from 210 Meta clicks and $104.96 spend across 28 days — conversion tracking or landing page is broken, not the ads.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "5 of 9 SOW milestones due 2026-07-31 are overdue 42+ days: pre-launch stack test, Como→GHL migration, GBP triage, Meta CAPI, and landing pages/tracking — none show a completion event.",
+        "text": "5 of 9 SOW milestones were due 2026-07-31 and remain undelivered: stack test, Como→GHL migration, GBP triage, Meta account+CAPI, and landing pages+tracking.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "3 further milestones due 2026-08-31 to 2026-09-01 also unresolved: Meta reactivation lanes, Search campaigns, LSA verification, and nurture sequences — 10 days past due.",
+        "text": "4 additional SOW milestones overdue by Sep 1–Sep 11: Meta lanes, Search campaigns, LSA verification, and reactivation nurture sequences — all undelivered.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions collapsed to 0 for 4 straight days (Sep 7–10), down -85.71% 7d vs prior 7d — organic intent signal is now flat alongside paid.",
-        "confidence": "confirmed",
+        "text": "GBP actions collapsed to 0 for last 3 days (Sep 8–10) vs avg ~3/day prior — organic local visibility dropped sharply as paid spend rose.",
+        "confidence": "probable",
         "channel": "gbp"
       },
       {
         "id": "F5",
-        "priority": 4,
-        "text": "GA4 sessions dropped to 5 on 2026-09-10 vs a 45-day average of ~109 — probable tracking outage or tag fire failure on that date; directional only.",
+        "priority": 3,
+        "text": "GA4 sessions crashed to 5 on Sep 10 vs 154–156 the prior two days — a likely tracking or site outage, not a traffic drop.",
         "confidence": "probable",
-        "channel": "ga4"
+        "channel": "web"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Halt all Meta spend (~$13.65/day) until landing pages, tracking, and GHL intake are confirmed live — spend with no conversion path is confirmed waste.",
+        "text": "Pause all Meta spend immediately until conversion tracking and landing pages are confirmed live — $104.96 spent with 0 leads is a confirmed leak.",
         "cites": [
           "F1",
           "F2"
         ],
-        "monday_item_name": "Pause Meta — Fix Stack First",
-        "monday_update": "Meta is spending ~$13.65/day (total $104.96 over 28 days) with 0 leads generated. The pre-launch stack test, landing pages, and GHL migration are all overdue since 2026-07-31 with no completion event recorded. Pause active Meta spend immediately; resume only after one confirmed end-to-end test touch (ad click → tracked landing page → GHL opportunity created) is validated. Target stack test completion by 2026-09-18 before any budget goes back live."
+        "monday_item_name": "Fix tracking before Meta spend",
+        "monday_update": "Pause the WARM-RETARGETING campaign and all active Meta ad sets until the landing pages and pixel/CAPI conversion tracking milestone (overdue since 2026-07-31) is verified end-to-end. We have spent $104.96 with 210 clicks and zero recorded leads — money is moving with no intake. Success check: a test lead fires in GHL and GA4 before any budget is restored. Target resolution: 2026-09-14."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Investigate GA4 session collapse to 5 on Sep 10 — confirm whether tag/tracking failure, not a real traffic drop.",
+        "text": "Investigate GA4 session crash to 5 on Sep 10 — likely site or tag outage; resolve before any traffic data is trusted.",
         "cites": [
           "F5"
         ],
-        "monday_item_name": "GA4 Tag Fire Check Sep 10",
-        "monday_update": "GA4 sessions recorded only 5 on 2026-09-10 against a 45-day average of ~109 — a near-total drop inconsistent with any spend or organic change. Check GTM container firing status, GA4 measurement ID, and any site deployments on that date. Success is confirmed when Sep 11–12 sessions return to the 100+ range or a root cause (e.g. tag removed in a deploy) is documented and fixed."
+        "monday_item_name": "Diagnose GA4 Sep 10 crash",
+        "monday_update": "GA4 recorded only 5 sessions on 2026-09-10 versus 154–156 on the two preceding days. Check GTM container status, site uptime logs, and GA4 data stream health for that date. Success check: root cause identified and confirmed resolved, session counts return to 100+ baseline. Target: 2026-09-13."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions: 0 for 4 consecutive days (Sep 7–10) — re-check Sep 14 to confirm structural drop vs data delay.",
+        "text": "Watch GBP actions: 0 for 3 consecutive days (Sep 8–10) after averaging ~3/day — re-check on 2026-09-14 before escalating.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "GBP Action Drought Watch",
-        "monday_update": "GBP actions hit 0 on each of the last 4 days (Sep 7–10), a -85.71% drop vs the prior 7-day window. This could be a GBP data reporting lag or a real collapse in local organic intent. No action is warranted until the pattern holds through Sep 14. If actions remain at 0 by then, escalate GBP triage as a live milestone blocker — this milestone was already due 2026-07-31 per SOW."
+        "monday_item_name": "Watch GBP action drop",
+        "monday_update": "GBP actions for MedStation Weston fell to 0 on Sep 8, 9, and 10 after averaging roughly 3 per day across August. This could reflect a listing issue, a GBP suspension, or a data pipeline gap coinciding with the SOW GBP triage milestone being overdue. No action is taken this cycle; re-check on 2026-09-14 to determine if it is a sustained drop requiring escalation."
       }
     ],
     "next_check": "2026-09-14"

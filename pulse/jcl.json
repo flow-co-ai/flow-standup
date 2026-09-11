@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11T02:28:40.054Z",
+  "generated_at": "2026-09-11T03:04:58.514Z",
   "date": "2026-09-11",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 70,
   "status": "amber",
-  "verdict": "CPL dropped 50.45% week-over-week to $46.95 while leads rose 22.22%, suggesting the \"Leads - August Re-Launch\" campaign (sole active campaign at $1,408.56 spend) improved lead quality and conversion efficiency, though a 39.44% spend pullback and a zero-spend day flag signal delivery gaps that could stall momentum.",
+  "verdict": "Over the last 7 days, spend dropped 39.44% while leads actually rose 22.22%, driving CPL down 50.45% and signaling that the \"Leads - August Re-Launch\" campaign is delivering more efficient results despite reduced budget. The channel_dark flag on Meta and a zero-spend day warrant monitoring to ensure delivery stays consistent.",
   "windsor": {
     "totals": {
       "spend": 1408.56,
@@ -28,7 +28,18 @@
           "actions": 157,
           "calls": 55,
           "directions": 0,
-          "web_clicks": 102
+          "web_clicks": 102,
+          "by_profile": [
+            {
+              "account_id": "locations/3362232819248488877",
+              "label": "Justice Consumer Law, LLC",
+              "calls": 55,
+              "directions": 0,
+              "web_clicks": 102,
+              "impressions": 1464,
+              "days_with_impressions": 25
+            }
+          ]
         }
       }
     },
@@ -66,7 +77,10 @@
       "sc_clicks": 0,
       "ga4_sessions": 61,
       "purchases": 0,
-      "revenue": 0
+      "revenue": 0,
+      "gbp_profiles": {
+        "locations/3362232819248488877": 0
+      }
     },
     "deltas": {
       "spend_7d_pct": -39.44,
@@ -555,81 +569,81 @@
     "history_line": "Delivered May 2026 SEO update report"
   },
   "performance": {
-    "generated_at": "2026-09-11T02:34:55.144Z",
+    "generated_at": "2026-09-11T03:08:02.463Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Meta dark 2 days; pipeline shows zero opps despite 30 leads — intake is the real leak.",
+    "verdict": "CPL efficiency is real but delivery is fractured — two dark days kill the gain.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Meta spend hit $0 on Sep 9–10 (channel_dark confirmed); 28-day avg CPL $46.95 but daily delivery is now fully stopped.",
+        "text": "Meta went dark Sep 9–10 ($0 spend both days); 28-day CPL is $46.95 but recent zero-spend days erase the 50% CPL improvement.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
-        "priority": 1,
-        "text": "CPL fell 50.45% WoW to $46.95 with 22.22% more leads — efficiency gain is real but built on only $47.85/day average spend, well below $65–75/day SOW target.",
+        "priority": 2,
+        "text": "⛔ Extension with Marwan unsigned past Aug 31 deadline — engagement is month-to-month with no contract; gates next 3 months of work.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "3-day signal (Sep 7–9): leads 2,3,0 vs prior 3-day (Sep 4–6): 1,0,5 — flat to declining as spend collapsed from $94 to $40 to $0; trend is spend-driven, not creative-driven.",
+        "text": "⛔ SMS automation and Zoho Voice access both overdue Aug 31; contact rate is the stated bottleneck yet CRM tools remain unresolved.",
+        "confidence": "confirmed",
+        "channel": "SOW"
+      },
+      {
+        "id": "F4",
+        "priority": 3,
+        "text": "3-day signal (Sep 8–10): leads = 3, 0, 0 vs prior 3 days (Sep 5–7): leads = 0, 5, 2 — delivery collapse, not organic softening.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
-        "id": "F4",
-        "priority": 2,
-        "text": "GHL shows 24 contacts but 0 opportunities created and 0 appointments from 30 28-day leads — intake pipeline is completely broken; ads are not the bottleneck.",
-        "confidence": "confirmed",
-        "channel": "CRM"
-      },
-      {
         "id": "F5",
-        "priority": 2,
-        "text": "3 overdue SOW milestones as of Aug 31: extension with Marwan unsigned (gates next 3 months), SMS automation not live, Zoho Voice access not granted — all block performance infrastructure.",
+        "priority": 4,
+        "text": "GHL shows 24 contacts but 0 opportunities created in 28 days — leads arriving but not entering pipeline; intake leak, not an ads problem.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "GHL"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Restore Meta delivery immediately — 2 zero-spend days are confirmed; verify billing/account status and reactivate 'Leads - August Re-Launch' at $65/day.",
+        "text": "Diagnose and restore Meta delivery today; 2 consecutive $0 days at $47.85/day avg pace = ~$96 in lost delivery.",
         "cites": [
           "F1",
-          "F3"
+          "F4"
         ],
         "monday_item_name": "Restore Meta Delivery Now",
-        "monday_update": "Meta spend dropped to $0 on Sep 9 and Sep 10, confirmed by the daily series; the sole active campaign 'Leads - August Re-Launch' is dark. Hamza/Hamdan to check account billing status and any policy flags today and restore spend to $65/day (SOW minimum). Success check: confirmed non-zero spend reported in platform by Sep 12."
+        "monday_update": "Meta spend dropped to $0 on Sep 9 and Sep 10 after averaging $47.85/day — total estimated delivery loss is ~$96. Hamza/Hamdan to check campaign status, payment method, and ad approval queue today. Success is confirmed when spend resumes and at least 1 lead is recorded within 24 hours of restoration. Re-check Sep 12."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Fix GHL intake: 30 leads arrived in 28 days, 0 opportunities created — diagnose form-to-pipeline mapping failure before any budget increase.",
+        "text": "Escalate GHL pipeline intake leak: 24 contacts, 0 opportunities created in 28 days — leads are not entering pipeline.",
         "cites": [
-          "F4"
+          "F5"
         ],
-        "monday_item_name": "Fix GHL Lead-to-Opp Pipeline",
-        "monday_update": "GHL shows 24 contacts and zero opportunities created against 30 Meta leads in the 28-day window — this is a confirmed intake mapping failure, not an ads problem. Nacer to audit the instant-form-to-GHL workflow and opportunity-creation trigger with Andrew by Sep 14. Success check: new leads from the restored campaign appear as created opportunities in GHL within 24 hours of arrival."
+        "monday_item_name": "Fix GHL Opportunity Intake",
+        "monday_update": "GHL recorded 24 contacts over 28 days but zero opportunities were created and zero appointments set — the pipeline intake step is broken or unmanned. Nacer to confirm with Andrew whether leads are being manually actioned in Zoho instead, and wire the GHL→opportunity stage trigger. Success is at least 1 opportunity created per 3 contacts within 7 days of fix. Re-check Sep 18."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch CPL after Meta reactivation for 3 full days; $46.95 CPL efficiency gain may not hold at full $65–75/day spend level.",
+        "text": "Watch 3-day CPL after Meta restores; daily spend avg $47.85 is below $65–75 SOW target — do not scale until delivery is stable.",
         "cites": [
-          "F2",
-          "F3"
+          "F1",
+          "F4"
         ],
-        "monday_item_name": "Watch CPL Post-Reactivation",
-        "monday_update": "CPL improved 50.45% WoW to $46.95 at a reduced $47.85/day average spend — it is unclear whether this efficiency holds when budget is restored to the $65–75/day SOW target. Do not scale beyond $65/day until 3 consecutive days of data at full spend are available. Re-check CPL on Sep 15."
+        "monday_item_name": "Watch CPL Post-Restoration",
+        "monday_update": "The 7-day CPL improvement of 50.45% is encouraging but unactionable while Meta is dark. Once delivery resumes, track CPL over the next 3 full days against the 28-day baseline of $46.95. If CPL holds below $40 with consistent daily spend near the $65–75 SOW target, a scale recommendation will follow. Re-check Sep 14."
       }
     ],
-    "next_check": "2026-09-15"
+    "next_check": "2026-09-14"
   }
 }

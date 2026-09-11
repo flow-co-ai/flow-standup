@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11T02:27:21.129Z",
+  "generated_at": "2026-09-11T03:04:15.247Z",
   "date": "2026-09-11",
   "slug": "billy-doe",
   "name": "Billy Doe Meats",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 49,
   "status": "orange",
-  "verdict": "Meta spend surged 25.69% week-over-week, but that increased investment is not yet paying off as ROAS dropped 69.61% and purchases fell 21.43% in the last 7 days, suggesting the top campaign \"BWS - Sales - Muslims\" ($835.25 spend) may need creative or audience refinement to convert the added spend into revenue.",
+  "verdict": "Meta spend climbed 25.69% week-over-week to drive $7,148.81 in revenue at a 4.84 ROAS, but purchases dropped 21.43% and ROAS fell 69.61% in the last 7 days, suggesting the top campaign \"BWS - Sales - Muslims\" ($835.25 spend) is losing efficiency and needs creative or audience review.",
   "windsor": {
     "totals": {
       "spend": 1478.15,
@@ -31,7 +31,18 @@
           "actions": 656,
           "calls": 43,
           "directions": 78,
-          "web_clicks": 535
+          "web_clicks": 535,
+          "by_profile": [
+            {
+              "account_id": "locations/17076764668101686399",
+              "label": "BillyDoe Meats",
+              "calls": 43,
+              "directions": 78,
+              "web_clicks": 535,
+              "impressions": 5305,
+              "days_with_impressions": 25
+            }
+          ]
         }
       }
     },
@@ -69,7 +80,10 @@
       "sc_clicks": 0,
       "ga4_sessions": 192,
       "purchases": 1,
-      "revenue": 500
+      "revenue": 500,
+      "gbp_profiles": {
+        "locations/17076764668101686399": 0
+      }
     },
     "deltas": {
       "spend_7d_pct": 25.69,
@@ -604,81 +618,80 @@
     "history_line": "Website launched Sep 5 · Website video reworked with real footage"
   },
   "performance": {
-    "generated_at": "2026-09-11T02:33:10.088Z",
+    "generated_at": "2026-09-11T03:06:27.950Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "ROAS collapse is real but 3-day purchases recovering; spend efficiency now the test.",
+    "verdict": "ROAS structural drop masks one strong day; efficiency is fragmenting, not collapsing.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "ROAS dropped 69.61% week-over-week; 28-day blended sits at 4.84x, but last 7d revenue per dollar has cratered as spend rose 25.69%.",
+        "text": "ROAS fell 69.61% week-over-week; 3-day purchases (Sep 8–10): 5+0+1=6 vs prior 3 (Sep 5–7): 1+1+2=4 — slight uptick but revenue wildly uneven ($951 vs $520), driven by one $500 day.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 1,
-        "text": "3-day purchase signal (Sep 8–10): 5, 0, 1 = 6 purchases vs prior 3 days (Sep 5–7): 1, 1, 2 = 4 — marginal uptick but revenue volatile; Sep 9 was zero-purchase.",
-        "confidence": "probable",
+        "text": "Spend rose 25.69% to ~$57.88/day while purchases averaged 1.4/day across 28 days (36 purchases / 28 days); revenue-per-dollar is compressing unevenly with no purchase on 15 of 28 days.",
+        "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "5 overdue SOW milestones as of Aug 31: Live-Cooking Shoot, Pre-Launch Gate, Platform Ownership, Funnel Test + UTM, SEO Phase 1 — none show a completed event.",
+        "text": "4 OVERDUE MILESTONES past Aug 31: Pre-Launch Gate, Platform Ownership Decision, Funnel Test Closed + UTM Live, SEO Phase 1 Guardrails — all blocking attribution integrity and scaling confidence.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
-        "priority": 3,
-        "text": "GBP actions dropped 54.55% week-over-week; last 4 days in series show 0 GBP actions (Sep 7–10), suggesting a data feed gap or steep local-intent drop.",
-        "confidence": "probable",
-        "channel": "gbp"
+        "priority": 2,
+        "text": "Live-Cooking Event (Shoot 1) overdue since Aug 14; real facility footage was delivered Jul 21 but 10 product-creative tasks remain open — creative pipeline is the binding constraint on audience refresh.",
+        "confidence": "confirmed",
+        "channel": "SOW"
       },
       {
         "id": "F5",
         "priority": 3,
-        "text": "GA4 sessions fell from a 400+ peak (Sep 1–2, Sep 5, Sep 7) to 192 on Sep 10 — 3-day avg 237 vs prior-3 avg 328, a 28% drop aligned with spend softening.",
-        "confidence": "probable",
-        "channel": "ga4"
+        "text": "GBP actions hit 0 for Sep 6–9 (4 consecutive zero days) after averaging 28/day in prior weeks; organic local intent signal has gone dark — not an ads problem but removes a conversion floor.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "watch",
-        "text": "Hold BWS - Sales - Muslims spend flat; watch purchases Sep 11–13 to confirm 3-day recovery before any scale.",
+        "text": "Hold Meta spend flat at ~$50/day; watch purchases over next 3 days before any scale — ROAS floor unconfirmed.",
         "cites": [
           "F1",
           "F2"
         ],
-        "monday_item_name": "Watch BWS Muslims ROAS",
-        "monday_update": "ROAS fell 69.61% week-over-week while spend rose 25.69%, and the 3-day purchase count (6 buys, Sep 8–10) is only marginally above the prior 3 days (4 buys). Hold daily budget flat on BWS - Sales - Muslims and do not scale until the Sep 11–13 window shows at least 6 purchases with positive revenue-per-dollar vs the 4.84x 28-day baseline. Re-check Sep 14."
+        "monday_item_name": "Watch Meta ROAS floor",
+        "monday_update": "Meta spend is running ~$57.88/day with a 69.61% ROAS decline week-over-week and purchases on only 13 of 28 days. Hold daily budget flat — do not scale 'BWS - Sales - Muslims' until 3 consecutive purchase days are confirmed. Success check: 3+ purchases in the window Sep 12–14. Re-evaluate Sep 15."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Escalate Funnel Test + UTM milestone (overdue Aug 31); zero UTM data blocks attribution truth and purchase read.",
+        "text": "Escalate Funnel Test Closed + UTM Live milestone (overdue Aug 31) — attribution gap is blocking ROAS read reliability.",
         "cites": [
-          "F3",
-          "F1"
+          "F3"
         ],
-        "monday_item_name": "Fix UTM + Funnel Test",
-        "monday_update": "The Funnel Test Closed + UTM Live milestone was due Aug 31 and shows no completed event. Without UTMs live, the ROAS read (currently showing 4.84x 28-day, -69.61% last 7d) cannot be trusted as Windsor/Meta primary attribution remains unverified. Assign Khurram to confirm the 100%-off code test result and UTM firing status by Sep 14. Success check: at least one confirmed UTM-tagged purchase visible in Windsor by that date."
+        "monday_item_name": "Fix UTM + Funnel Test Close",
+        "monday_update": "The Funnel Test (100% off code ihbp8pmtn8) and UTM live milestone were due Aug 31 and remain open. Without UTMs firing consistently, the 4.84 ROAS figure cannot be trusted as a scaling signal — Shopify undercounts and Meta overcounts are both unresolved. Owner: Khurram (Ads board). Success check: UTM parameter confirmed firing on all Meta traffic by Sep 14."
       },
       {
         "id": "S3",
-        "type": "watch",
-        "text": "Monitor GBP actions for 3 more days; 4 consecutive zero-action days (Sep 7–10) may be a data feed issue, not true local-intent drop.",
+        "type": "fix",
+        "text": "Investigate GBP dark period (0 actions Sep 6–9); confirm profile not suspended or miscategorised before organic floor erodes further.",
         "cites": [
-          "F4"
+          "F5"
         ],
-        "monday_item_name": "Watch GBP Data Feed",
-        "monday_update": "GBP actions have read zero for four consecutive days (Sep 7–10) after averaging 25+ per day earlier in the series, and the 7-day delta is -54.55%. Before treating this as a local-intent signal, verify whether the GBP data connector is still pulling correctly. If actions remain zero through Sep 13, escalate to Nacer as a tracking fix, not an ads problem. Re-check Sep 14."
+        "monday_item_name": "Fix GBP Dark Period",
+        "monday_update": "GBP actions dropped to 0 for at least 4 consecutive days (Sep 6–9) after a 28-action/day average — this is a hard stop in local intent signals, not a gradual fade. Check Google Business Profile for suspension notice, category changes, or review flags. Success check: daily GBP actions return above 15 by Sep 14. Owner: Nacer (Ops)."
       }
     ],
-    "next_check": "2026-09-14"
+    "next_check": "2026-09-15"
   }
 }
