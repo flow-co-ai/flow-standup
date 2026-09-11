@@ -56,8 +56,7 @@ def _parse_dt(date_str: str, time_str: str) -> datetime | None:
     return None
 
 
-def _parse_lines(lines, days_back: int = 7) -> list:
-    cutoff = datetime.now(timezone.utc) - timedelta(days=days_back)
+def _parse_lines(lines) -> list:
     messages = []
     current: dict | None = None
     for raw_line in lines:
@@ -66,7 +65,7 @@ def _parse_lines(lines, days_back: int = 7) -> list:
         if m:
             date_str, time_str, sender, text = m.groups()
             dt = _parse_dt(date_str, time_str)
-            if dt and dt >= cutoff:
+            if dt:
                 current = {
                     "datetime": dt.isoformat(),
                     "sender": sender.strip(),
@@ -81,9 +80,26 @@ def _parse_lines(lines, days_back: int = 7) -> list:
     return messages
 
 
-def parse_chat_file(filepath: Path, days_back: int = 7) -> list:
+def parse_chat_file(filepath: Path) -> list:
     with open(filepath, encoding="utf-8", errors="replace") as fh:
-        return _parse_lines(fh, days_back)
+        return _parse_lines(fh)
+
+
+def _canonical_name(stem: str) -> str:
+    """Strip trailing date suffix like ' 2026-08-19' so dated snapshots merge with the base file."""
+    return re.sub(r"\s+\d{4}-\d{2}-\d{2}$", "", stem)
+
+
+def _dedup_sort(msgs: list) -> list:
+    seen: set = set()
+    out = []
+    for m in msgs:
+        key = (m["datetime"], m["sender"], m["text"])
+        if key not in seen:
+            seen.add(key)
+            out.append(m)
+    out.sort(key=lambda m: m["datetime"])
+    return out
 
 
 class WhatsAppConfigError(RuntimeError):
@@ -100,18 +116,15 @@ class WhatsAppConfigError(RuntimeError):
     """
 
 
-def fetch_whatsapp_drive(config: dict, days_back: int = 7) -> dict:
+def _collect_drive_raw(config: dict) -> dict:
     """
-    Download and parse WhatsApp .txt exports from the Drive folder
-    specified by whatsapp_drive_folder_id in config.
-
-    Raises WhatsAppConfigError if the folder id or service-account secret is
-    missing, or if auth/listing against Drive fails outright. Callers (the
-    drafter via SKILL.md A4, generate.py) are expected to let this propagate
-    as a hard failure, not catch-and-degrade -- see the class docstring for
-    why a quiet {} here is never safe.
+    Auth against Drive, list both live and processed folders, parse all txt/zip files.
+    Returns {canonical_chat_name: [all_parsed_msgs]} (undeduped, unsorted).
+    Raises WhatsAppConfigError on auth/config failure.
+    Per-file failures are warned and skipped.
     """
     folder_id = config.get("whatsapp_drive_folder_id", "")
+    processed_folder_id = config.get("whatsapp_processed_folder_id", "")
     sa_json_str = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON", "")
     if not folder_id:
         raise WhatsAppConfigError("whatsapp_drive_folder_id is not set in config.json")
@@ -129,32 +142,30 @@ def fetch_whatsapp_drive(config: dict, days_back: int = 7) -> dict:
         )
         service = build("drive", "v3", credentials=creds, cache_discovery=False)
 
-        # No mimetype filter — WhatsApp exports arrive as .txt OR .zip
-        # (iOS "Export Chat" often produces a zip), and Drive mimetypes vary.
-        resp = service.files().list(
-            q=f"'{folder_id}' in parents and trashed = false",
-            fields="files(id, name, mimeType)",
-            pageSize=100,
-            supportsAllDrives=True,
-            includeItemsFromAllDrives=True,
-        ).execute()
+        def _list(fid: str) -> list:
+            return service.files().list(
+                q=f"'{fid}' in parents and trashed = false",
+                fields="files(id, name, mimeType)",
+                pageSize=100,
+                supportsAllDrives=True,
+                includeItemsFromAllDrives=True,
+            ).execute().get("files", [])
+
+        files = _list(folder_id)
+        if processed_folder_id:
+            files += _list(processed_folder_id)
+    except WhatsAppConfigError:
+        raise
     except Exception as exc:
-        # Auth failure, bad/expired secret, bad folder id, SDK not installed,
-        # Drive unreachable -- all of these mean the mechanism itself is
-        # broken, same class as the missing-config checks above. Fatal.
         raise WhatsAppConfigError(f"Drive auth/listing failed: {exc}") from exc
 
-    chats = {}
-    for file in resp.get("files", []):
+    raw: dict[str, list] = {}
+    for file in files:
         name = file["name"]
         lower = name.lower()
         if not (lower.endswith(".txt") or lower.endswith(".zip")):
             continue
-        chat_name = Path(name).stem
-        # Per-file problems only -- a corrupt zip or undecodable text is real
-        # noise in the export, not a reason to fail the whole run. Warn and
-        # move on; this is the ONE place {} (well, an {"error": ...} entry)
-        # is still the right shape, unlike the config/credential path above.
+        canonical = _canonical_name(Path(name).stem)
         try:
             buf = io.BytesIO()
             downloader = MediaIoBaseDownload(
@@ -163,38 +174,65 @@ def fetch_whatsapp_drive(config: dict, days_back: int = 7) -> dict:
             done = False
             while not done:
                 _, done = downloader.next_chunk()
-            raw = buf.getvalue()
+            raw_bytes = buf.getvalue()
 
-            texts = []  # (chat_name, content)
+            texts = []
             if lower.endswith(".zip"):
-                with zipfile.ZipFile(io.BytesIO(raw)) as zf:
+                with zipfile.ZipFile(io.BytesIO(raw_bytes)) as zf:
                     for zname in zf.namelist():
                         if zname.lower().endswith(".txt"):
-                            inner = zf.read(zname).decode("utf-8", errors="replace")
-                            texts.append((chat_name, inner))
+                            texts.append(zf.read(zname).decode("utf-8", errors="replace"))
                 if not texts:
                     print(f"    ⚠️  '{name}': zip contains no .txt")
                     continue
             else:
-                texts.append((chat_name, raw.decode("utf-8", errors="replace")))
+                texts.append(raw_bytes.decode("utf-8", errors="replace"))
 
-            for cname, content in texts:
-                lines = content.splitlines(keepends=True)
-                msgs = _parse_lines(lines, days_back)
-                total_lines = sum(
-                    1 for ln in lines
-                    if _IOS.match(ln.rstrip("\n")) or _ANDROID.match(ln.rstrip("\n"))
+            for content in texts:
+                raw.setdefault(canonical, []).extend(
+                    _parse_lines(content.splitlines(keepends=True))
                 )
-                print(f"    '{cname}': {total_lines} messages in file, "
-                      f"{len(msgs)} within last {days_back}d"
-                      + ("" if total_lines else "  ⚠️ format not recognised"))
-                if msgs:
-                    chats[cname] = msgs
         except Exception as exc:
             print(f"    ⚠️  '{name}': {exc}")
-            chats[chat_name] = {"error": str(exc)}
 
+    return raw
+
+
+def fetch_whatsapp_drive(config: dict, days_back: int = 7) -> dict:
+    """
+    Download and parse WhatsApp .txt exports from the Drive folders
+    specified by whatsapp_drive_folder_id and whatsapp_processed_folder_id in config.
+
+    Raises WhatsAppConfigError if the live folder id or service-account secret is
+    missing, or if auth/listing against Drive fails outright. Callers (the
+    drafter via SKILL.md A4, generate.py) are expected to let this propagate
+    as a hard failure, not catch-and-degrade -- see the class docstring for
+    why a quiet {} here is never safe.
+    """
+    raw = _collect_drive_raw(config)
+    cutoff_iso = (datetime.now(timezone.utc) - timedelta(days=days_back)).isoformat()
+
+    chats = {}
+    for chat in sorted(raw):
+        msgs = _dedup_sort(raw[chat])
+        within = [m for m in msgs if m["datetime"] >= cutoff_iso]
+        first = msgs[0]["datetime"][:10] if msgs else "-"
+        last = msgs[-1]["datetime"][:10] if msgs else "-"
+        print(
+            f"    '{chat}': {len(msgs)} unique messages, "
+            f"{first} to {last}, {len(within)} in last {days_back}d"
+        )
+        if within:
+            chats[chat] = within
     return chats
+
+
+def fetch_whatsapp_history(config: dict) -> dict:
+    """
+    Returns full deduped, sorted WhatsApp history from both Drive folders with no date window.
+    """
+    raw = _collect_drive_raw(config)
+    return {chat: _dedup_sort(msgs) for chat, msgs in raw.items()}
 
 
 def fetch_whatsapp(days_back: int = 7, config: dict | None = None) -> dict:
@@ -202,12 +240,14 @@ def fetch_whatsapp(days_back: int = 7, config: dict | None = None) -> dict:
     Returns a dict keyed by chat name, value is a list of messages.
     Reads local inbox/whatsapp/ first, then merges Drive results (Drive wins on conflict).
     """
+    cutoff_iso = (datetime.now(timezone.utc) - timedelta(days=days_back)).isoformat()
+
     local_chats: dict = {}
     if WHATSAPP_INBOX.exists():
         for filepath in sorted(WHATSAPP_INBOX.glob("*.txt")):
             chat_name = filepath.stem
             try:
-                msgs = parse_chat_file(filepath, days_back)
+                msgs = [m for m in parse_chat_file(filepath) if m["datetime"] >= cutoff_iso]
                 if msgs:
                     local_chats[chat_name] = msgs
             except Exception as exc:

@@ -797,7 +797,7 @@ def build_client_prompt(
         for chat_name, msgs in chats:
             parts.append(f"**Chat: {chat_name}**")
             if isinstance(msgs, list):
-                for msg in msgs[:30]:
+                for msg in msgs[-30:]:
                     ts = (msg.get("datetime") or "")[:16]
                     parts.append(f"  [{ts}] {msg.get('sender', '?')}: {(msg.get('text') or '')[:220]}")
             parts.append("")
