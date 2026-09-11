@@ -109,7 +109,7 @@ function computeDeltas7(dailyRows, clientType) {
 
 // --- Anomaly flags ---
 
-function computeFlags(latestDay, dailyRows, gbpProfiles = []) {
+function computeFlags(latestDay, dailyRows, gbpProfiles = [], ghl = null) {
   const flags = [];
   if (!latestDay || !dailyRows.length) return flags;
 
@@ -123,7 +123,14 @@ function computeFlags(latestDay, dailyRows, gbpProfiles = []) {
     if (recent[i].leads === 0 && recent[i].spend > 0) streak++;
     else break;
   }
-  if (streak >= 3) flags.push('lead_drought');
+  if (streak >= 3) {
+    if (ghl && !ghl.error && (ghl.contacts ?? 0) > 0) {
+      // Windsor shows no leads but GHL has contacts — tracking gap, not demand collapse.
+      flags.push('attribution_gap');
+    } else {
+      flags.push('lead_drought');
+    }
+  }
 
   if (dailyRows.length >= 9) {
     const last2   = dailyRows.slice(-2);
@@ -167,6 +174,30 @@ function computeFlags(latestDay, dailyRows, gbpProfiles = []) {
   }
 
   return flags;
+}
+
+// --- Lead-source reconciliation ---
+
+function computeReconciliation(windsor, ghl) {
+  const windsorLeads   = windsor?.totals?.leads ?? null;
+  const ghlContacts    = ghl?.contacts ?? null;
+  const ghlOppsCreated = ghl?.opportunities?.created?.count ?? null;
+  const ghlOppsWon     = ghl?.opportunities?.won?.count ?? null;
+
+  let status;
+  if (!ghl || ghl.error || ghlContacts == null) {
+    status = 'ghl_unavailable';
+  } else if ((windsorLeads ?? 0) === 0 && ghlContacts === 0) {
+    status = 'both_zero';
+  } else if ((windsorLeads ?? 0) > 0 && ghlContacts === 0) {
+    status = 'windsor_only';
+  } else if ((windsorLeads ?? 0) === 0 && ghlContacts > 0) {
+    status = 'ghl_only';
+  } else {
+    status = 'both_active';
+  }
+
+  return { windsor_leads: windsorLeads, ghl_contacts: ghlContacts, ghl_opps_created: ghlOppsCreated, ghl_opps_won: ghlOppsWon, status };
 }
 
 // --- Score (0-100) ---
@@ -242,7 +273,7 @@ function buildVerdictFallback(name, deltas, flags) {
   return sentence;
 }
 
-async function callVerdict(name, clientType, totals, deltas, flags, topCampaign) {
+async function callVerdict(name, clientType, totals, deltas, flags, topCampaign, ghl, reconciliation) {
   const fallback = buildVerdictFallback(name, deltas, flags);
   if (!ANTHROPIC_KEY) return fallback;
 
@@ -251,14 +282,19 @@ async function callVerdict(name, clientType, totals, deltas, flags, topCampaign)
     Object.entries(deltas).filter(([k, v]) => v !== null && k !== 'spend_per_day_7d' && k !== 'meta_leads_7d_pct'),
   );
 
+  const ghlLine = (ghl && !ghl.error)
+    ? `GHL (direct CRM API, 28d): ${ghl.contacts ?? 0} contacts, ${ghl.opportunities?.created?.count ?? 0} opportunities created, ${ghl.opportunities?.won?.count ?? 0} won — reconciliation: ${reconciliation?.status ?? 'unknown'}`
+    : `GHL (direct CRM API, 28d): unavailable`;
+
   const prompt = [
     `Client: ${name} (${clientType})`,
     `Totals (28d): ${JSON.stringify(totals)}`,
     `7d vs prior-7d deltas (%): ${JSON.stringify(deltaSlim)}`,
+    ghlLine,
     `Flags: ${flags.join(', ') || 'none'}`,
     topCampaign?.name ? `Top campaign: "${topCampaign.name}" ($${topCampaign.spend} spend)` : null,
     '',
-    'Rules: 1-2 sentences. Name the biggest movement and its likely driver. Use exact numbers from the data. Never invent numbers not shown above. No URLs. No em dashes.',
+    'Rules: 1-2 sentences. Name the biggest movement and its likely driver. Use exact numbers from the data. Never invent numbers not shown above. No URLs. No em dashes. When Windsor and GHL show different numbers, name both and say they are unreconciled — never pick one.',
   ].filter(l => l !== null).join('\n');
 
   try {
@@ -312,6 +348,7 @@ async function processClient(client) {
   // Windsor
   let windsorOut = null;
   let sources    = [];
+  let flagInputs = null;
 
   if (client.windsor && WINDSOR_TOKEN) {
     try {
@@ -345,7 +382,7 @@ async function processClient(client) {
       }
 
       const deltas = computeDeltas7(_dailyRows, clientType);
-      const flags  = computeFlags(_latestDay, _dailyRows, gbpProfilesWithPrior);
+      flagInputs = { latestDay: _latestDay, dailyRows: _dailyRows, gbpProfiles: gbpProfilesWithPrior };
 
       const series = {
         dates:        _dailyRows.map(r => r.date),
@@ -361,7 +398,7 @@ async function processClient(client) {
         revenue:      _dailyRows.map(r => r.revenue),
       };
 
-      windsorOut = { ...metrics, latest_day: _latestDay, deltas, flags, series };
+      windsorOut = { ...metrics, latest_day: _latestDay, deltas, flags: [], series };
       console.log(`  Windsor: spend $${metrics.totals?.spend} | leads ${metrics.totals?.leads} | sources: ${sources.join(', ')}`);
 
     } catch (err) {
@@ -390,6 +427,12 @@ async function processClient(client) {
     console.warn(`  GHL_API_TOKEN not set — skipping GHL for ${client.slug}`);
   }
 
+  if (windsorOut && !windsorOut.error && flagInputs) {
+    windsorOut.flags = computeFlags(flagInputs.latestDay, flagInputs.dailyRows, flagInputs.gbpProfiles, ghl);
+  }
+
+  const reconciliation = computeReconciliation(windsorOut, ghl);
+
   if (!existsSync('pulse')) mkdirSync('pulse');
 
   const score  = computeScore(windsorOut?.deltas ?? {}, windsorOut?.flags ?? [], windsorOut, ghl, clientType);
@@ -405,6 +448,8 @@ async function processClient(client) {
         windsorOut.deltas      ?? {},
         windsorOut.flags       ?? [],
         windsorOut.top_campaign,
+        ghl,
+        reconciliation,
       );
     } catch (err) {
       console.warn(`  Verdict failed: ${err.message}`);
@@ -423,6 +468,7 @@ async function processClient(client) {
     verdict,
     windsor:      windsorOut,
     ghl,
+    reconciliation,
     _meta: {
       source:  'windsor_api',
       sources,
