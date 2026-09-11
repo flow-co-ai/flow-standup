@@ -1,9 +1,13 @@
 """
-build_facts.py — Extract durable, superseded, per-client facts from full WhatsApp history.
+build_facts.py — Extract durable, superseded, per-client facts from WhatsApp history
+and Fireflies meeting transcripts.
 
 Writes facts/[slug].json. Run before generate.py in the Daily Standup workflow.
-First run backfills all history; subsequent runs are incremental (only messages
-newer than last_processed_at are sent to the model).
+First run backfills all history; subsequent runs are incremental (only messages/meetings
+newer than last_processed_at[source] are sent to the model).
+
+Manual overrides: if facts/[slug].manual.json exists, its facts are loaded with
+source='human' and treated as newest in the supersede chain for their subject.
 """
 
 import hashlib
@@ -19,11 +23,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from fetch_whatsapp import fetch_whatsapp_history
+from fetch_fireflies import fetch_transcripts
 from client_aliases import resolve_client
 
 MODEL = "claude-sonnet-4-5"
 FACTS_DIR = Path("facts")
 CHUNK_SIZE = 75
+_FF_DAYS_BACK = 1095  # ~3 years; used when no prior Fireflies checkpoint exists
 
 # Subjects where the latest fact supersedes all prior facts on the same subject.
 SUPERSEDING_SUBJECTS = frozenset({
@@ -53,6 +59,11 @@ _CRED_RE  = re.compile(
 )
 # WhatsApp tags contacts as @<phone-digits> or @<username>
 _MENTION_RE = re.compile(r"@\d{6,}|@\S+")
+# Placeholder values the model must never emit.
+_UNKNOWN_VALUES_RE = re.compile(
+    r"^\s*(unknown|tbd|n/?a|not specified|not available|none|unspecified|unclear|to be determined)\s*$",
+    re.IGNORECASE,
+)
 
 
 def _redact(text: str) -> str:
@@ -110,7 +121,7 @@ def _call_tool(client: anthropic.Anthropic, prompt: str, tool: dict, label: str,
 
 EMIT_FACTS_TOOL = {
     "name": "emit_facts",
-    "description": "Emit durable facts about a client engagement extracted from WhatsApp messages.",
+    "description": "Emit durable facts about a client engagement extracted from messages or meeting transcripts.",
     "input_schema": {
         "type": "object",
         "required": ["facts"],
@@ -130,7 +141,7 @@ EMIT_FACTS_TOOL = {
                         },
                         "value": {
                             "type": "string",
-                            "description": "Short string stating the fact.",
+                            "description": "Short string stating the fact. Never use 'Unknown', 'TBD', 'N/A', or similar placeholders.",
                         },
                         "stated_by": {
                             "type": "string",
@@ -167,14 +178,17 @@ def _fact_id(subject: str, stated_at: str, chat: str) -> str:
     return hashlib.sha1(f"{subject}|{stated_at}|{chat}".encode()).hexdigest()[:12]
 
 
-def _build_extraction_prompt(client_name: str, chat_name: str, messages: list[dict]) -> str:
+def _build_extraction_prompt(
+    client_name: str, chat_name: str, messages: list[dict], source: str = "whatsapp"
+) -> str:
     lines = [
         f"[{(m.get('datetime') or '')[:16]}] {m.get('sender', '?')}: {m.get('text', '')}"
         for m in messages
     ]
+    source_desc = "Fireflies meeting transcripts" if source == "fireflies" else "WhatsApp messages"
     return (
         f"# Fact extraction — {client_name} — chat: {chat_name}\n\n"
-        "Extract durable facts about this marketing agency engagement from the WhatsApp messages below.\n\n"
+        f"Extract durable facts about this marketing agency engagement from the {source_desc} below.\n\n"
         "OUTPUT LIMITS: Emit at most 12 facts. Skip greetings, scheduling chatter, acknowledgements, "
         "and anything that is not a durable statement about the engagement.\n\n"
         "RECORD ONLY facts about:\n"
@@ -192,6 +206,15 @@ def _build_extraction_prompt(client_name: str, chat_name: str, messages: list[di
         "  • Never guess a value not present in the text\n"
         "  • excerpt: copy at most 20 words verbatim from the relevant message\n"
         "  • stated_at: copy the ISO datetime exactly as it appears in [brackets]\n\n"
+        "ACTION ITEM RULE:\n"
+        "  If a meeting summary or action item assigns a named person to manage intake, lead follow-up,\n"
+        "  or callbacks, emit an intake_owner fact for that person with confidence 'stated'.\n\n"
+        "DEPARTURE RULE:\n"
+        "  If a message states that a named person has left, is no longer with the client, or that a\n"
+        "  role is now vacant, emit a decision fact describing the departure.\n\n"
+        "EMPTY VALUE RULE:\n"
+        "  Never emit a value of 'Unknown', 'TBD', 'N/A', 'Not specified', or any similar placeholder.\n"
+        "  If the value is not clearly present in the text, omit the fact entirely.\n\n"
         "SUBJECT DEFINITIONS:\n"
         "  intake_owner    — person who manages client onboarding/intake for this engagement\n"
         "  primary_contact — main client-side point of contact\n"
@@ -215,8 +238,9 @@ def _extract_chunk(
     chat_name: str,
     messages: list[dict],
     chunk_idx: int,
+    source: str = "whatsapp",
 ) -> list[dict]:
-    prompt = _build_extraction_prompt(client_name, chat_name, messages)
+    prompt = _build_extraction_prompt(client_name, chat_name, messages, source)
     label = f"{client_name[:18]}/c{chunk_idx}"
     try:
         result = _call_tool(ai, prompt, EMIT_FACTS_TOOL, label=label)
@@ -230,6 +254,9 @@ def _extract_chunk(
         subject = raw.get("subject", "")
         if subject not in ALL_SUBJECTS:
             continue
+        value = raw.get("value", "")
+        if _UNKNOWN_VALUES_RE.match(value):
+            continue
         stated_at = raw.get("stated_at") or ""
         fid = _fact_id(subject, stated_at, chat_name)
         if fid in seen_ids:
@@ -238,12 +265,13 @@ def _extract_chunk(
         facts.append({
             "id": fid,
             "subject": subject,
-            "value": raw.get("value", ""),
+            "value": value,
             "stated_by": raw.get("stated_by", ""),
             "stated_at": stated_at,
             "chat": chat_name,
             "excerpt": (raw.get("excerpt") or "")[:200],
             "confidence": raw.get("confidence", "implied"),
+            "source": source,
             "superseded_by": None,
         })
     return facts
@@ -254,8 +282,11 @@ def _extract_chunk(
 def _apply_supersede(facts: list[dict]) -> list[dict]:
     """Sort by stated_at. For SUPERSEDING_SUBJECTS, each newer fact on the same
     subject sets superseded_by on the previous one. APPENDING_SUBJECTS never
-    supersede. Nothing is deleted."""
-    sorted_facts = sorted(facts, key=lambda f: f.get("stated_at") or "")
+    supersede. Human-source facts always sort last (= newest). Nothing is deleted."""
+    def _sort_key(f: dict) -> tuple:
+        return (f.get("stated_at") or "", 1 if f.get("source") == "human" else 0)
+
+    sorted_facts = sorted(facts, key=_sort_key)
     for f in sorted_facts:
         f["superseded_by"] = None
     latest: dict[str, dict] = {}
@@ -290,10 +321,55 @@ def _load(slug: str) -> dict:
     return {
         "slug": slug,
         "generated_at": None,
-        "last_processed_at": None,
+        "last_processed_at": {"whatsapp": None, "fireflies": None},
         "facts": [],
         "current": {},
     }
+
+
+def _lpa_dict(lpa) -> dict:
+    """Normalize last_processed_at to {whatsapp, fireflies}; migrates old string format."""
+    if isinstance(lpa, str):
+        return {"whatsapp": lpa, "fireflies": None}
+    if isinstance(lpa, dict):
+        return {"whatsapp": lpa.get("whatsapp"), "fireflies": lpa.get("fireflies")}
+    return {"whatsapp": None, "fireflies": None}
+
+
+def _load_manual(slug: str) -> list[dict]:
+    """Load facts/[slug].manual.json if it exists; tag each fact source='human'."""
+    path = FACTS_DIR / f"{slug}.manual.json"
+    if not path.exists():
+        return []
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        raw_facts = data.get("facts") or []
+        result = []
+        for raw in raw_facts:
+            subject = raw.get("subject", "")
+            if subject not in ALL_SUBJECTS:
+                continue
+            stated_at = raw.get("stated_at") or ""
+            chat = raw.get("chat") or slug
+            fid = _fact_id(subject, stated_at, chat)
+            result.append({
+                "id": fid,
+                "subject": subject,
+                "value": raw.get("value", ""),
+                "stated_by": raw.get("stated_by", "Manual override"),
+                "stated_at": stated_at,
+                "chat": chat,
+                "excerpt": (raw.get("excerpt") or "")[:200],
+                "confidence": raw.get("confidence", "stated"),
+                "source": "human",
+                "superseded_by": None,
+            })
+        if result:
+            print(f"  loaded {len(result)} manual fact(s) from {path.name}")
+        return result
+    except Exception as exc:
+        print(f"  ⚠️  could not load manual facts for {slug}: {exc}")
+        return []
 
 
 def _sanitize_fact(fact: dict) -> dict:
@@ -336,6 +412,56 @@ def _assert_no_pii(slug: str, facts: list[dict]) -> None:
                 )
 
 
+# ── Fireflies helpers ─────────────────────────────────────────────────────────
+
+def _fireflies_pseudo_message(meeting: dict) -> dict:
+    """Convert a Fireflies meeting dict to a pseudo message for fact extraction."""
+    summary = meeting.get("summary") or {}
+    parts: list[str] = []
+    if summary.get("overview"):
+        parts.append(summary["overview"])
+    if summary.get("action_items"):
+        parts.append("Action items: " + summary["action_items"])
+    if summary.get("keywords"):
+        kw = summary["keywords"]
+        if isinstance(kw, list):
+            kw = ", ".join(str(k) for k in kw)
+        if kw:
+            parts.append("Keywords: " + kw)
+    if not parts:
+        for s in (meeting.get("sentences") or []):
+            speaker = s.get("speaker_name", "?")
+            text = s.get("text", "")
+            if text:
+                parts.append(f"{speaker}: {text}")
+
+    date = meeting.get("date") or ""
+    title = meeting.get("title") or "Untitled"
+    return {
+        "datetime": f"{date}T00:00:00+00:00" if date else "",
+        "sender": f"Fireflies meeting: {title}",
+        "text": "\n\n".join(parts),
+    }
+
+
+def _compute_ff_days_back(slug_map: dict[str, str]) -> int:
+    """Return the minimum days_back that covers all clients' Fireflies checkpoints."""
+    now_utc = datetime.now(timezone.utc)
+    max_days = 7
+    for slug_val in slug_map.values():
+        stored = _load(slug_val)
+        lpa = _lpa_dict(stored.get("last_processed_at"))
+        ff = lpa.get("fireflies")
+        if ff is None:
+            return _FF_DAYS_BACK  # at least one client has never been processed
+        try:
+            delta = (now_utc - datetime.fromisoformat(ff)).days + 2
+            max_days = max(max_days, delta)
+        except Exception:
+            return _FF_DAYS_BACK
+    return max_days
+
+
 # ── main ──────────────────────────────────────────────────────────────────────
 
 def _process_client(
@@ -343,58 +469,97 @@ def _process_client(
     slug: str,
     client_name: str,
     chat_list: list[tuple[str, list[dict]]],
+    meetings: list[dict],
     now_iso: str,
 ) -> None:
     stored = _load(slug)
-    last_processed_at: str | None = stored.get("last_processed_at")
-    existing_facts: list[dict] = stored.get("facts", [])
+    lpa = _lpa_dict(stored.get("last_processed_at"))
+    last_wa: str | None = lpa["whatsapp"]
+    last_ff: str | None = lpa["fireflies"]
+
+    existing_facts: list[dict] = [
+        {**f, "source": f.get("source") or "whatsapp"}
+        for f in stored.get("facts", [])
+    ]
 
     new_facts: list[dict] = []
-    latest_dt: str | None = last_processed_at
+    latest_wa: str | None = last_wa
+    latest_ff: str | None = last_ff
 
+    # --- WhatsApp ---
     for chat_name, msgs in chat_list:
-        if last_processed_at:
-            msgs = [m for m in msgs if (m.get("datetime") or "") > last_processed_at]
+        if last_wa:
+            msgs = [m for m in msgs if (m.get("datetime") or "") > last_wa]
         if not msgs:
             print(f"  {chat_name}: no new messages")
             continue
 
         for msg in msgs:
             dt = msg.get("datetime") or ""
-            if dt and (latest_dt is None or dt > latest_dt):
-                latest_dt = dt
+            if dt and (latest_wa is None or dt > latest_wa):
+                latest_wa = dt
 
         redacted = [_redact_message(m) for m in msgs]
-
         for i in range(0, len(redacted), CHUNK_SIZE):
             chunk = redacted[i : i + CHUNK_SIZE]
-            chunk_facts = _extract_chunk(ai, client_name, chat_name, chunk, i // CHUNK_SIZE)
+            chunk_facts = _extract_chunk(
+                ai, client_name, chat_name, chunk, i // CHUNK_SIZE, source="whatsapp"
+            )
             new_facts.extend(chunk_facts)
 
-    if not new_facts and not existing_facts:
+    # --- Fireflies ---
+    for meeting in sorted(meetings, key=lambda m: m.get("date") or ""):
+        meeting_date = meeting.get("date") or ""
+        meeting_dt = f"{meeting_date}T00:00:00+00:00" if meeting_date else ""
+        if not meeting_dt:
+            continue
+        if last_ff and meeting_dt <= last_ff:
+            continue
+        if latest_ff is None or meeting_dt > latest_ff:
+            latest_ff = meeting_dt
+
+        title = meeting.get("title") or "Untitled"
+        pseudo_msg = _fireflies_pseudo_message(meeting)
+        if not pseudo_msg.get("text", "").strip():
+            print(f"  Fireflies '{title}': no content, skipping")
+            continue
+
+        redacted_msg = _redact_message(pseudo_msg)
+        meeting_facts = _extract_chunk(
+            ai, client_name, title, [redacted_msg], 0, source="fireflies"
+        )
+        new_facts.extend(meeting_facts)
+        if meeting_facts:
+            print(f"  Fireflies '{title}' ({meeting_date}): {len(meeting_facts)} facts")
+
+    # --- Manual override ---
+    manual_facts = _load_manual(slug)
+
+    if not new_facts and not existing_facts and not manual_facts:
         print("  no facts found")
         return
 
-    all_facts = existing_facts + new_facts
-    seen_ids: set[str] = set()
-    deduped: list[dict] = []
-    for f in all_facts:
-        if f["id"] not in seen_ids:
-            seen_ids.add(f["id"])
-            deduped.append(f)
+    # Merge: existing + new first; manual facts overwrite on ID collision.
+    merged: dict[str, dict] = {}
+    for f in existing_facts + new_facts:
+        if f["id"] not in merged:
+            merged[f["id"]] = f
+    for f in manual_facts:
+        merged[f["id"]] = f  # human always wins on collision
 
-    deduped = _apply_supersede(deduped)
+    deduped = _apply_supersede(list(merged.values()))
     current = _build_current_map(deduped)
 
     output = {
         "slug": slug,
         "generated_at": now_iso,
-        "last_processed_at": latest_dt,
+        "last_processed_at": {"whatsapp": latest_wa, "fireflies": latest_ff},
         "current": current,
         "facts": deduped,
     }
     _save(slug, output)
-    print(f"  wrote facts/{slug}.json ({len(deduped)} total facts, {len(new_facts)} new)")
+    n_new = len(new_facts) + len(manual_facts)
+    print(f"  wrote facts/{slug}.json ({len(deduped)} total facts, {n_new} new)")
 
 
 def _load_clients_slug_map() -> dict[str, str]:
@@ -439,19 +604,38 @@ def build_facts(config: dict) -> None:
     history = fetch_whatsapp_history(config)
     print(f"  {len(history)} chats loaded")
 
+    print("build_facts: fetching Fireflies transcripts...")
+    try:
+        days_back_ff = _compute_ff_days_back(slug_map)
+        all_meetings = fetch_transcripts(days_back=days_back_ff)
+        print(f"  {len(all_meetings)} meetings loaded (days_back={days_back_ff})")
+    except Exception as exc:
+        print(f"  ⚠️  Fireflies fetch failed: {exc}")
+        all_meetings = []
+
     ai = _anthropic_client()
     now_iso = datetime.now(timezone.utc).isoformat()
 
-    # Group chats by resolved canonical client name.
-    by_client: dict[str, list[tuple[str, list[dict]]]] = {}
+    # Group WhatsApp chats by resolved canonical client name.
+    by_client_wa: dict[str, list[tuple[str, list[dict]]]] = {}
     for chat_name, msgs in history.items():
         canonical = resolve_client(chat_name, clients_config, fuzzy=True)
         if canonical == "Unmapped":
-            print(f"  skip (unmapped): {chat_name}")
+            print(f"  skip WA (unmapped): {chat_name}")
             continue
-        by_client.setdefault(canonical, []).append((chat_name, msgs))
+        by_client_wa.setdefault(canonical, []).append((chat_name, msgs))
 
-    for client_name, chat_list in sorted(by_client.items()):
+    # Group Fireflies meetings by resolved canonical client name.
+    by_client_ff: dict[str, list[dict]] = {}
+    for meeting in all_meetings:
+        title = meeting.get("title") or ""
+        canonical = resolve_client(title, clients_config, fuzzy=True)
+        if canonical == "Unmapped":
+            continue
+        by_client_ff.setdefault(canonical, []).append(meeting)
+
+    all_clients = set(by_client_wa) | set(by_client_ff)
+    for client_name in sorted(all_clients):
         slug = _resolve_slug(client_name, slug_map)
         if slug is None:
             print(f"  ⚠️  skip (no clients.json match): {client_name!r}")
@@ -459,7 +643,12 @@ def build_facts(config: dict) -> None:
 
         print(f"\n── {client_name} ({slug}) ──")
         try:
-            _process_client(ai, slug, client_name, chat_list, now_iso)
+            _process_client(
+                ai, slug, client_name,
+                by_client_wa.get(client_name, []),
+                by_client_ff.get(client_name, []),
+                now_iso,
+            )
         except Exception as exc:
             print(f"  ✗ {client_name}: failed — {exc}")
 
