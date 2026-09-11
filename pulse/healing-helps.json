@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11T03:04:33.880Z",
+  "generated_at": "2026-09-11T13:50:15.700Z",
   "date": "2026-09-11",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Healing Helps had zero paid spend or leads over the past 28 days, so all activity came from organic sources, with Google Business Profile driving 27 total actions (2 calls, 14 directions, 11 web clicks) across 25 active days. The biggest movement is a 50% week-over-week lift in GBP engagement, likely driven by increased local search visibility, though this is offset by a roughly 41% drop in both Search Console and GA4 traffic signals.",
+  "verdict": "GBP activity is the standout mover, up 150% over the last 7 days, likely driven by increased local search visibility given the profile logged 329 impressions across 25 active days. Paid channels (Meta and Google Ads) show zero spend and zero leads in the last 28 days, so all lead-gen momentum is currently organic.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,26 +25,27 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 27,
+          "actions": 29,
           "calls": 2,
-          "directions": 14,
+          "directions": 16,
           "web_clicks": 11,
           "by_profile": [
             {
               "account_id": "locations/9257180210135267024",
               "label": "Healing Helps Therapy PLLC",
               "calls": 2,
-              "directions": 14,
+              "directions": 16,
               "web_clicks": 11,
               "impressions": 329,
-              "days_with_impressions": 25
+              "days_with_impressions": 25,
+              "call_rate": 0.0061
             }
           ]
         }
       }
     },
     "organic": {
-      "gbp_actions": 27,
+      "gbp_actions": 29,
       "ig_reach": 0
     },
     "top_campaign": null,
@@ -79,7 +80,7 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": 50,
+      "gbp_7d_pct": 150,
       "sc_7d_pct": -41.67,
       "ga4_7d_pct": -41.27,
       "ig_7d_pct": null,
@@ -260,7 +261,7 @@
         0,
         0,
         3,
-        0,
+        2,
         0,
         0,
         0,
@@ -536,62 +537,80 @@
     "history_line": "Website completed · Shabana Sheikh bio added to Meet Our Therapists"
   },
   "performance": {
-    "generated_at": "2026-09-11T03:07:14.141Z",
+    "generated_at": "2026-09-11T13:54:43.125Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Organic-only footing stable; GBP up but web traffic collapsing demands attention.",
+    "verdict": "Organic-only account; paid is dark, organic signals mixed.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across the full 45-day series; CPL is undefined — no paid efficiency signal exists to evaluate.",
+        "text": "Zero paid spend and zero leads across all 28 days — Meta and Google Ads are fully dark; CPL is undefined and unmeasurable.",
         "confidence": "confirmed",
-        "channel": "meta,google_ads"
+        "channel": "meta, google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "SC clicks and GA4 sessions both fell ~41% week-over-week (37 clicks / 189 sessions in 28 days) while GBP impressions held at 329, suggesting a site or indexing issue, not a visibility collapse.",
-        "confidence": "probable",
-        "channel": "organic"
-      },
-      {
-        "id": "F3",
-        "priority": 2,
-        "text": "GBP actions surged 50% week-over-week to 27 total (2 calls, 14 directions, 11 web clicks), but last-3-day GBP actions are 0 vs prior-3-day total of 0 — the spike was concentrated around Aug 25 (11 actions) and has since gone flat.",
+        "text": "GBP actions spiked to 29 in 28 days with a 150% 7d rise, but the last 7 series days show 0 actions — the spike was Aug 25 (11 actions) and is now fading.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
-        "id": "F4",
-        "priority": 3,
-        "text": "GA4 recorded 0 conversions across 189 sessions and 28 days; with no paid traffic, conversion tracking may be misconfigured or goal events are not firing.",
-        "confidence": "hypothesis",
+        "id": "F3",
+        "priority": 2,
+        "text": "Search clicks fell 41.67% week-over-week; last 3 days (Sep 8–10) average 0.67 clicks vs prior 3 days (Sep 5–7) average 1.33 — a confirmed downward 3-day signal.",
+        "confidence": "confirmed",
         "channel": "organic"
+      },
+      {
+        "id": "F4",
+        "priority": 2,
+        "text": "GA4 sessions fell 41.27% week-over-week; last 3 days average 6.0 vs prior 3 days average 6.7 — modest but consistent with the search click drop.",
+        "confidence": "probable",
+        "channel": "ga4"
+      },
+      {
+        "id": "F5",
+        "priority": 4,
+        "text": "GBP call rate is 0.0061 per impression (2 calls from 329 impressions) — profile visibility is growing but intent-to-contact conversion is extremely low.",
+        "confidence": "hypothesis",
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Audit site and Search Console for crawl errors causing the ~41% SC/GA4 drop; no budget required.",
+        "type": "watch",
+        "text": "Monitor GBP actions daily; if 0 actions persists through Sep 14, the Aug 25 spike was an anomaly requiring investigation.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Fix SC/GA4 Traffic Drop",
-        "monday_update": "Search Console clicks fell ~41% week-over-week (from ~63 to 37 in 28 days) while GBP impressions held steady at 329, pointing to a site crawl or indexing issue rather than a loss of local visibility. Pull the Search Console Coverage report for crawl errors, check for any recent site changes, and confirm robots.txt or noindex tags are not blocking key pages. Success check: SC clicks recover above 60/week by 2026-09-25. Re-check on 2026-09-18."
+        "monday_item_name": "Watch GBP action recovery",
+        "monday_update": "GBP hit 11 actions on Aug 25 but has logged 0 actions across the last 7 days of the series (Sep 4–10). No paid activity is live to attribute this to. Check GBP posting cadence and any local listing changes made around Aug 25. If actions remain at 0 through Sep 14, escalate to Sohib for profile audit."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GBP action rate daily; Aug 25 spike (11 actions) has not recurred — confirm if post/event drove it.",
+        "text": "Watch search clicks through Sep 14; 3-day average of 0.67 vs 1.33 prior — confirm if structural or transient before any SEO action.",
         "cites": [
-          "F3"
+          "F3",
+          "F4"
         ],
-        "monday_item_name": "Watch GBP Action Spike Cause",
-        "monday_update": "GBP actions hit 11 in a single day on Aug 25, lifting the 7-day total 50% week-over-week, but the last several days show 0 actions. Identify what content, post, or external factor drove that spike. If it was a GBP post, replicate it. Success check: average daily GBP actions return to ≥1/day by 2026-09-18. Re-check on 2026-09-18."
+        "monday_item_name": "Watch SC + GA4 drop",
+        "monday_update": "Search clicks are down 41.67% week-over-week and the 3-day signal (Sep 8–10 avg 0.67 clicks) confirms the direction. GA4 sessions are also down 41.27%. No paid media is running to explain a traffic source switch. Re-check on Sep 14 — if clicks remain below 1/day average, surface to Sohib for organic/SEO review."
+      },
+      {
+        "id": "S3",
+        "type": "fix",
+        "text": "Flag paid channel dark status to Sohib: $0 spend for 28+ days on a leadgen client requires explicit confirmation this is intentional.",
+        "cites": [
+          "F1"
+        ],
+        "monday_item_name": "Confirm paid ads pause intent",
+        "monday_update": "Meta and Google Ads have recorded $0 spend across all 28 days in the window and all 45 days of the daily series provided. This is a leadgen client with no active paid pipeline. Sohib should confirm whether the pause is deliberate (e.g. budget hold, client request) or an inadvertent channel-dark situation. Success check: written confirmation from client or campaign reactivation by Sep 14."
       }
     ],
-    "next_check": "2026-09-18"
+    "next_check": "2026-09-14"
   }
 }
