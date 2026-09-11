@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11T14:46:34.663Z",
+  "generated_at": "2026-09-11T15:15:38.637Z",
   "date": "2026-09-11",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "GBP engagement is the standout mover, surging 150% over the past 7 days across 29 total actions (2 calls, 16 directions, 11 web clicks) from a single active profile, likely driven by increased local search visibility given 329 impressions over 25 active days. Paid channels (Meta and Google Ads) show zero spend and zero leads for the 28-day period, so all lead activity is currently organic.",
+  "verdict": "GBP engagement is the standout mover, surging 150% over the past 7 days, likely driven by increased local search visibility across 25 active impression days and 29 total actions (2 calls, 16 directions, 11 web clicks) in the 28-day window. Paid channels (Meta and Google Ads) show zero spend and zero leads for the period, so all lead-gen activity is currently organic.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -544,68 +544,67 @@
     "history_line": "Website completed · Shabana Sheikh bio added to Meet Our Therapists"
   },
   "performance": {
-    "generated_at": "2026-09-11T14:49:11.574Z",
+    "generated_at": "2026-09-11T15:17:56.190Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP is the only engine; organic signals are now softening.",
+    "verdict": "Organic-only account; GBP surging but web traffic collapsing — no paid lever to pull.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across the entire 45-day series — CPL is undefined because no paid leads exist. All lead generation is absent from paid channels.",
+        "text": "Zero paid spend across all 28 days — Meta and Google Ads both dark. No CPL metric exists; all lead-gen activity is zero.",
         "confidence": "confirmed",
-        "channel": "meta+google"
+        "channel": "meta, google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions surged 150% 7d vs prior 7d (29 total actions: 2 calls, 16 directions, 11 web clicks), but last 3 days show zero GBP actions vs 2 average in prior 3 days — momentum stalling.",
+        "text": "GBP actions spiked to 11 on 2026-08-25 but dropped to 0 for the last 4 days (Sep 7–10), suggesting the surge is fading, not sustained.",
         "confidence": "probable",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Search clicks fell -41.67% 7d vs prior 7d; last 3 days average 0 sc_clicks vs 1.33 in prior 3 days, corroborating organic visibility pullback after a 7-click spike on 2026-09-01.",
+        "text": "Search clicks fell 41.67% (7d vs prior 7d) and GA4 sessions dropped 41.27% — last 3 days show 0, 0 clicks vs prior 3 days averaging 1.67. Traffic is contracting.",
         "confidence": "confirmed",
-        "channel": "organic"
+        "channel": "search, ga4"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GA4 sessions dropped -41.27% 7d vs prior 7d; last 3 days average 6.0 sessions vs 7.3 prior 3 days — mild but directionally consistent with the search click decline.",
+        "text": "GA4 records 0 conversions across 189 sessions in 28 days — either no conversion goal is configured or the pixel is broken.",
         "confidence": "probable",
         "channel": "ga4"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GA4 records 189 sessions and 156 users over 28 days with 0 conversions — no form fills or tracked actions converting, indicating a site conversion tracking gap or a missing intake flow.",
+        "text": "GBP call rate is 0.0061 (2 calls from 329 impressions) — very low intent-to-call conversion despite direction-seeking being strong at 16 actions.",
         "confidence": "hypothesis",
-        "channel": "ga4"
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Watch GBP and search clicks over next 3 days; if zero-action streak extends to 5 days, escalate to Sohib.",
+        "type": "fix",
+        "text": "Audit GA4 conversion goals — 0 conversions across 189 sessions over 28 days signals a broken or unconfigured goal.",
         "cites": [
-          "F2",
-          "F3"
+          "F4"
         ],
-        "monday_item_name": "Watch GBP & SC Trend",
-        "monday_update": "GBP actions hit zero for the last 3 days (2026-09-08–10) after a 150% 7d surge, and search clicks fell -41.67% in the same window. No action is warranted yet as hypothesis-grade, but if the zero-action streak reaches 5 consecutive days the GBP post cadence and profile completeness should be reviewed. Re-check on 2026-09-14."
+        "monday_item_name": "Fix GA4 Conversion Tracking",
+        "monday_update": "GA4 recorded 0 conversions across 189 sessions in the 28-day window, which means no lead or contact event is being tracked. Audit the GA4 property for missing conversion events (e.g. form submit, phone click) and verify the pixel fires correctly on the site. Success is confirmed when at least one conversion event registers within 3 days of the fix. Target resolution by 2026-09-14."
       },
       {
         "id": "S2",
-        "type": "fix",
-        "text": "Audit GA4 conversion events: 189 sessions, 0 conversions over 28 days suggests tracking is broken or no intake CTA exists.",
+        "type": "watch",
+        "text": "Watch GBP action trend — 0 actions for 4 straight days after the Aug 25 spike of 11; re-check Sep 14 to confirm recovery or fade.",
         "cites": [
-          "F5"
+          "F2"
         ],
-        "monday_item_name": "Fix GA4 Conversion Tracking",
-        "monday_update": "GA4 recorded 189 sessions and 156 users over 28 days with zero conversions tracked. Either the form/call conversion event is not firing or no CTA is present on landing pages. Confirm at least one conversion event fires on a test submission before 2026-09-14. Success = at least 1 tracked conversion event visible in GA4 real-time."
+        "monday_item_name": "Watch GBP Action Recovery",
+        "monday_update": "GBP actions spiked to 11 on 2026-08-25 but have been 0 for the last 4 recorded days (Sep 7–10). The 7d delta is +150% because of that spike, not a sustained trend. Monitor whether actions recover above the prior baseline (avg ~1–2/day) by 2026-09-14 before drawing conclusions about local visibility health."
       }
     ],
     "next_check": "2026-09-14"

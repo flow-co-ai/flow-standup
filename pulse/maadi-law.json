@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11T14:47:17.985Z",
+  "generated_at": "2026-09-11T15:16:22.297Z",
   "date": "2026-09-11",
   "slug": "maadi-law",
   "name": "Maadi Law, LLC",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "The biggest movement this period is a 1,000% spike in leads week-over-week (driven by Meta delivering all 12 of the 28-day leads at a CPL of $195.79), which also collapsed CPL by 91.32% versus the prior 7 days. Google Ads consumed the bulk of spend at $1,677.52 on the top Local Services campaign but logged only 7 conversions, suggesting Meta is currently the more efficient lead driver despite lower spend of $641.67.",
+  "verdict": "The biggest movement this period is a 1,000% spike in leads week-over-week (now 12 over 28 days), driving CPL down 91.32% to $195.79, most likely fueled by Meta's 444 clicks generating all 12 tracked leads while Google's Local Services Campaign absorbed $1,677.52 of the $2,349.44 total spend with only 7 conversions. GBP activity pulled back 68.57% week-over-week despite 26 calls and 94 total actions in the 28-day window, suggesting the lead surge was channel-concentrated rather than broad-based.",
   "windsor": {
     "totals": {
       "spend": 2349.44,
@@ -607,43 +607,43 @@
     "history_line": "GHL-to-Clio automation fixed · Signing reminder workflow updated · Referral attorney pipeline sections added"
   },
   "performance": {
-    "generated_at": "2026-09-11T14:51:07.008Z",
+    "generated_at": "2026-09-11T15:19:35.517Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Meta is the only active lead engine; Google and SOW delivery are both stalled.",
+    "verdict": "Meta is the only channel converting; Google spend unverified and SOW build critically overdue.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "5 overdue SOW milestones (due 2026-07-31 to 2026-08-01): Pre-Launch Stack Test, LSA Verification, Site/Landing Pages, Ads Launch, Meta Retargeting — none completed per event log.",
+        "text": "5 overdue SOW milestones (Pre-Launch Stack Test, LSA Verification, Site Live, Ads Launch, Meta Retargeting) — all due Jul 31–Aug 1, none completed per record.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 1,
-        "text": "Meta delivered all 12 28-day leads at CPL $53.47/lead on $641.67 spend; Google spent $1,707.77 and logged only 7 conversions — Meta is 3x more efficient per dollar.",
+        "text": "Meta generated all 12 leads on $641.67 spend (CPL $53.47); Google Ads absorbed $1,707.77 with only 7 logged conversions and 34 clicks — efficiency gap is 7x.",
         "confidence": "confirmed",
-        "channel": "Meta"
+        "channel": "Google"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "3-day lead signal accelerating: Sep 8–10 averaged 2.3 leads/day vs Sep 5–7 average of 1.0 — all from Meta; Google spend on Sep 9 was $268.11 but contributed 0 tracked leads those 3 days.",
+        "text": "3-day lead signal (Sep 8–10: 2+1+4=7 leads) vs prior 3 days (Sep 5–7: 1+1+1=3) is sharply rising, driven entirely by Meta spend averaging $64.86/day.",
         "confidence": "confirmed",
         "channel": "Meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions dropped 100% to 0 for Sep 8–10 vs prior 3-day average of 1.7 — organic local presence has gone dark in the same window leads are rising.",
+        "text": "GBP actions hit zero for 4 straight days (Sep 7–10) after averaging 4.4/day the prior 3 weeks — organic visibility has stalled with no clear cause in the data.",
         "confidence": "probable",
         "channel": "GBP"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 60 opportunities created but 0 won, 0 appointments, and GA4 records 0 conversions — 12 ad leads are not progressing to consults; intake pipeline is the leak, not ads.",
+        "text": "GHL shows 60 opportunities created but 0 won, 0 appointments, and GA4 records 0 conversions — 12 ad leads are not progressing to intake, suggesting a pipeline intake leak.",
         "confidence": "confirmed",
         "channel": "GHL"
       }
@@ -651,36 +651,38 @@
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Escalate all 5 overdue SOW milestones to Nacer immediately; LSA and tracking gaps are blocking Google attribution and launch.",
-        "cites": [
-          "F1"
-        ],
-        "monday_item_name": "Escalate 5 Overdue SOW Items",
-        "monday_update": "Five SOW milestones due 2026-07-31 through 2026-08-01 remain incomplete: Pre-Launch Stack Test, LSA Verification, Site & Landing Pages, Ads Launch, and Meta Retargeting Launch. These block proper Google/LSA attribution and mean $1,707.77 in Google spend is running without confirmed conversion tracking. Nacer must confirm completion dates for each item by 2026-09-14. Success check: all 5 items marked complete with verified event in the SOW log."
-      },
-      {
-        "id": "S2",
-        "type": "fix",
-        "text": "Fix GHL intake flow: 60 opps created, 0 appointments booked — leads arriving but no consults converting; audit routing and speed-to-lead.",
-        "cites": [
-          "F5"
-        ],
-        "monday_item_name": "Fix GHL Intake — 0 Appointments",
-        "monday_update": "GHL shows 60 opportunities created in the 28-day window with 0 appointments and 0 won deals, meaning every inbound lead is stalling at intake — this is not an ads problem. Audit the routing rules, auto-reply triggers, and calendar/booking links built per the Month 1 SOW. Target: at least 1 confirmed booked appointment per 3 leads within 7 days of fix. Re-check GHL appointment count on 2026-09-18."
-      },
-      {
-        "id": "S3",
-        "type": "budget_shift",
-        "text": "Shift $15/day from Google Search to Meta; Meta CPL is confirmed lower and 3-day lead signal is rising.",
+        "type": "scale",
+        "text": "Raise Meta daily budget +20% (~$13/day) to press $53.47 CPL while 3-day lead momentum holds.",
         "cites": [
           "F2",
           "F3"
         ],
-        "monday_item_name": "Shift $15/day to Meta",
-        "monday_update": "Meta delivered all 12 tracked leads at an effective CPL of ~$53 vs Google's $1,707 spend with only 7 unverified conversions. The 3-day signal (Sep 8–10) shows Meta averaging 2.3 leads/day, up from 1.0. Move $15/day from Google Ads to Meta — a shift of roughly 13% of current daily Google budget. Success check: Meta CPL holds below $125 and lead volume stays at 2+ per day by 2026-09-18."
+        "monday_item_name": "Scale Meta Budget +20%",
+        "monday_update": "Meta is the sole lead-generating channel at a CPL of $53.47 vs Google's implied $243.97, and the last 3 days produced 7 of the 12 28-day leads. Raise Meta daily budget by approximately $13/day (roughly +20% from the current ~$64.86/day average). Success check: CPL stays below $100 and lead pace holds at 2+ per day by 2026-09-18. If CPL climbs above $120 within 5 days, revert the increase."
+      },
+      {
+        "id": "S2",
+        "type": "fix",
+        "text": "Audit GHL pipeline: 60 opps created, 0 won, 0 appointments — confirm intake routing and speed-to-lead under 5 min.",
+        "cites": [
+          "F5",
+          "F1"
+        ],
+        "monday_item_name": "Fix GHL Intake Leak",
+        "monday_update": "GHL shows 60 opportunities created but zero appointments booked and zero won in the 28-day window, meaning leads are arriving but not converting to consultations. Nacer to audit routing rules, auto-reply triggers, and calendar booking links end-to-end. Success check: at least 5 appointments booked within 7 days of fix, confirmed in GHL by 2026-09-18."
+      },
+      {
+        "id": "S3",
+        "type": "watch",
+        "text": "Watch Google LSA spend ($1,677.52, 7 conversions) for one more 7-day window before any budget decision.",
+        "cites": [
+          "F2",
+          "F1"
+        ],
+        "monday_item_name": "Watch Google LSA Efficiency",
+        "monday_update": "Google's Local Services Campaign has absorbed $1,677.52 over 28 days with only 7 logged conversions and 34 clicks, but pixel and conversion tracking setup is listed as an overdue SOW milestone — the true conversion count may be understated. Do not kill or shift this budget until tracking is confirmed live and a clean 7-day read is available. Re-check on 2026-09-18 with verified conversion data."
       }
     ],
-    "next_check": "2026-09-14"
+    "next_check": "2026-09-18"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11T14:47:38.483Z",
+  "generated_at": "2026-09-11T15:16:36.660Z",
   "date": "2026-09-11",
   "slug": "steel-ohare",
   "name": "O'Hare Precision",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "GBP is the only active lead channel and it dropped 86% week-over-week, dragging the 28-day total to just 126 GBP actions (6 calls, 77 directions, 37 web clicks) with zero paid spend or leads recorded. The two secondary profiles, Precision Ground Bars and Precision Ground Metals, Inc., are flagged for generating a combined 358 impressions over 28 days but zero calls, suggesting profile or call-tracking issues that should be investigated.",
+  "verdict": "GBP is the only active lead channel and it dropped sharply, with total profile actions falling 86% over the last 7 days, likely driven by reduced search visibility across all three profiles. Two locations, Precision Ground Bars and Precision Ground Metals, Inc., recorded zero calls despite a combined 358 impressions over 28 days, flagging a conversion issue that warrants review of those listings.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -456,44 +456,44 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-09-11T14:52:29.175Z",
+    "generated_at": "2026-09-11T15:20:49.637Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "GBP is collapsing and 6 overdue SOW milestones are unblocking nothing.",
+    "verdict": "GBP collapse is real; two zero-call profiles need listing fixes now.",
     "findings": [
       {
         "id": "F1",
-        "priority": 2,
-        "text": "4 CRM milestones overdue since July 7–31: 1st Directives, Tom call list, dedup workbook (447 groups), 126 accounts — none show a completed event.",
+        "priority": 1,
+        "text": "GBP actions fell 86% week-over-week; last 3 days (Sep 8–10) show zero actions vs 14 avg in prior 3 days — confirmed collapse, not noise.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "GBP"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "2 August 31 blockers overdue: 342 stub reconciliation (CRM) and AGS + Forte contact pull (Outreach) — both gate downstream pipeline and email launch.",
+        "text": "342 stub accounts unreconciled as of Aug 31 blocker deadline — Sales-i sync keys on Customer ID, so these accounts receive zero pipeline data.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Web/SEO blocker overdue Aug 31: root cause named + fix submitted — no completed event recorded; 387 search clicks over 28d at risk of zero capture.",
+        "text": "3 additional CRM milestones overdue (Jul 7, Jul 28, Jul 31): 1st Directives, Tom call list, and dedup workbook — no completion event recorded for any.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
-        "priority": 3,
-        "text": "GBP actions collapsed to 0 for last 3 days (Sep 8–10) vs avg ~4/day prior 3 days — 86% weekly drop confirms a real signal, not noise.",
+        "priority": 2,
+        "text": "Aug 31 blocker: Web/SEO root cause not named + fix not submitted; Outreach AGS+Forte contact pull also missed — both gates for downstream work.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "SOW"
       },
       {
         "id": "F5",
-        "priority": 4,
-        "text": "Precision Ground Bars (266 impressions) and Precision Ground Metals, Inc. (92 impressions) show 0 calls over 28 days — call tracking or profile CTA is broken.",
-        "confidence": "probable",
+        "priority": 3,
+        "text": "Precision Ground Bars and Precision Ground Metals, Inc. recorded 0 calls from 358 combined impressions over 28 days — call_rate of 0 vs 1.13% on O'Hare main profile.",
+        "confidence": "confirmed",
         "channel": "GBP"
       }
     ],
@@ -501,32 +501,34 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate 342 stub reconciliation and AGS+Forte contact pull to Ahmed/Dev team immediately — both are confirmed blockers past Aug 31 deadline.",
+        "text": "Audit and fix GBP listings for Precision Ground Bars and Precision Ground Metals, Inc. — 0 calls from 358 impressions.",
         "cites": [
-          "F2"
+          "F1",
+          "F5"
         ],
-        "monday_item_name": "Clear Aug 31 CRM+Outreach Blockers",
-        "monday_update": "Both the 342 stub reconciliation and the AGS + Forte contact pull were due Aug 31 and show no completed event as of Sep 11. Escalate to Ahmed and the Dev team today with a hard deadline. Success is a rollback-safe stub workbook posted to the Monday CRM board and a verified contact list delivered to the outreach team. Re-check Sep 14."
+        "monday_item_name": "Fix 2 GBP zero-call listings",
+        "monday_update": "Both Precision Ground Bars and Precision Ground Metals, Inc. recorded zero calls across 358 combined impressions in the last 28 days, and GBP actions dropped 86% week-over-week with the last 3 days at zero. Review each listing for call button accuracy, category relevance, Q&A suppression, and any Google-flagged issues. Success is confirmed when call_rate on each profile exceeds 0 and weekly GBP actions return above 10. Re-check by 2026-09-18."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit call-tracking setup on Precision Ground Bars and Precision Ground Metals, Inc. — 358 combined impressions, 0 calls over 28 days is broken, not organic.",
+        "text": "Escalate 342 stub reconciliation and 3 overdue CRM milestones — blocker is freezing Sales-i pipeline data.",
         "cites": [
-          "F5"
+          "F2",
+          "F3"
         ],
-        "monday_item_name": "Fix GBP Call Tracking x2 Profiles",
-        "monday_update": "Precision Ground Bars (266 impressions, 0 calls) and Precision Ground Metals, Inc. (92 impressions, 0 calls) have a combined call rate of zero over 28 days despite active impressions. Check that the call-tracking number is correctly set as the primary phone on each profile and that forwarding is live. Success is at least 1 verified inbound call attributed to each profile within 7 days of the fix. Re-check Sep 18."
+        "monday_item_name": "Unblock 342 stubs + CRM milestones",
+        "monday_update": "The 342 stub accounts missed the Aug 31 deadline and are currently invisible to Sales-i sync, meaning pipeline data for those accounts is not flowing. Three earlier milestones (Jul 7 Directives, Jul 28 Tom call list, Jul 31 dedup workbook) also show no completion event. Ahmed/Dev 2 should confirm current status of each in Monday by Sep 14, with a revised completion date posted. Success is confirmed when the stub reconciliation batch is posted with rollback file and all four milestone items are closed or rescheduled with owner sign-off."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP daily actions on O'Hare primary profile — 0 actions for 3 consecutive days (Sep 8–10); re-check Sep 14 for recovery or structural drop.",
+        "text": "Watch search clicks — 7d down 45%; last 2 days show 0 and 0, needs 3-day confirmation before action.",
         "cites": [
-          "F4"
+          "F1"
         ],
-        "monday_item_name": "Watch GBP Action Collapse",
-        "monday_update": "The primary O'Hare Precision Metals GBP profile recorded 0 actions on Sep 8, 9, and 10 after averaging roughly 4 actions/day in the prior window — an 86% weekly decline. No paid spend is active to compensate. Monitor daily actions through Sep 14; if still at 0, escalate to a profile health audit (category, spam filter, suspension check). Success threshold is a return to 3+ actions/day by Sep 14."
+        "monday_item_name": "Watch SC clicks drop 45%",
+        "monday_update": "Search clicks fell 45% week-over-week, and the last two recorded days (Sep 9–10) show zero clicks each. This may be a data lag or a real visibility drop connected to the GBP collapse. No paid search is active, so organic and GBP are the only levers. Monitor sc_clicks for Sep 11–13; if three consecutive days remain below 5, escalate to SEO for a crawl and index check. Re-check 2026-09-14."
       }
     ],
     "next_check": "2026-09-14"
