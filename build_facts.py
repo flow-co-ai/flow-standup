@@ -297,10 +297,15 @@ def _load(slug: str) -> dict:
 
 
 def _sanitize_fact(fact: dict) -> dict:
+    def _clean(text: str) -> str:
+        text = _redact(text)
+        text = _LONG_DIGIT_RE.sub("[number]", text)
+        return text
+
     return {
         **fact,
-        "value": _LONG_DIGIT_RE.sub("[number]", fact.get("value") or ""),
-        "excerpt": _LONG_DIGIT_RE.sub("[number]", fact.get("excerpt") or ""),
+        "value": _clean(fact.get("value") or ""),
+        "excerpt": _clean(fact.get("excerpt") or ""),
     }
 
 
