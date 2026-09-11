@@ -91,7 +91,7 @@ async function safeFetch(connector, fields, cfg, dateFrom, dateTo, apiKey, pickF
 
 // ── Main export ────────────────────────────────────────────────────────────────
 
-export async function fetchWindsor(windsorCfg, apiKey) {
+export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}) {
   const { dateFrom, dateTo } = windowDates();
 
   // Fetch all six connectors in parallel.
@@ -125,7 +125,7 @@ export async function fetchWindsor(windsorCfg, apiKey) {
     ], windsorCfg.searchconsole, dateFrom, dateTo, apiKey, 'clicks'),
 
     safeFetch('google_my_business', [
-      'date', 'account_id',
+      'date', 'account_id', 'location_title',
       'impressions', 'call_clicks', 'direction_requests', 'website_clicks',
     ], windsorCfg.google_my_business, dateFrom, dateTo, apiKey, null),
   ]);
@@ -172,6 +172,30 @@ export async function fetchWindsor(windsorCfg, apiKey) {
   const gbpDirections = gmbRows.reduce((s, r) => s + toNum(r.direction_requests), 0);
   const gbpWebClicks  = gmbRows.reduce((s, r) => s + toNum(r.website_clicks), 0);
   const gbpActions    = gbpCalls + gbpDirections + gbpWebClicks;
+
+  const gbpByProfile = {};
+  for (const r of gmbRows) {
+    const id = r.account_id ?? 'unknown';
+    if (!gbpByProfile[id]) {
+      const label = (gbpLabels ?? {})[id] || (r.location_title || '').trim() || id;
+      gbpByProfile[id] = { account_id: id, label, calls: 0, directions: 0, web_clicks: 0, impressions: 0, days_with_impressions: 0 };
+    }
+    const e = gbpByProfile[id];
+    e.calls       += toNum(r.call_clicks);
+    e.directions  += toNum(r.direction_requests);
+    e.web_clicks  += toNum(r.website_clicks);
+    e.impressions += toNum(r.impressions);
+    if (toNum(r.impressions) > 0) e.days_with_impressions++;
+  }
+  const gbpProfiles = Object.values(gbpByProfile).map(e => ({
+    account_id:            e.account_id,
+    label:                 e.label,
+    calls:                 Math.round(e.calls),
+    directions:            Math.round(e.directions),
+    web_clicks:            Math.round(e.web_clicks),
+    impressions:           Math.round(e.impressions),
+    days_with_impressions: e.days_with_impressions,
+  }));
 
   // ── Instagram totals ────────────────────────────────────────────────────────
 
@@ -222,10 +246,14 @@ export async function fetchWindsor(windsorCfg, apiKey) {
     row.spend        += s;
     row.google_spend += s;
   }
+  const gbpCallsByDate = {};
   for (const r of gmbRows) {
     const row = ensureDay(r.date);
     if (!row) continue;
     row.gbp_actions += toNum(r.call_clicks) + toNum(r.direction_requests) + toNum(r.website_clicks);
+    const id = r.account_id ?? 'unknown';
+    if (!gbpCallsByDate[r.date]) gbpCallsByDate[r.date] = {};
+    gbpCallsByDate[r.date][id] = (gbpCallsByDate[r.date][id] ?? 0) + toNum(r.call_clicks);
   }
   for (const r of igRows) {
     const row = ensureDay(r.date);
@@ -243,19 +271,23 @@ export async function fetchWindsor(windsorCfg, apiKey) {
     row.ga4_sessions += toNum(r.sessions);
   }
 
-  const dailyRows = Object.values(daily).map(r => ({
-    date:         r.date,
-    spend:        round2(r.spend),
-    leads:        Math.round(r.leads),
-    meta_spend:   round2(r.meta_spend),
-    google_spend: round2(r.google_spend),
-    gbp_actions:  Math.round(r.gbp_actions),
-    ig_reach:     Math.round(r.ig_reach),
-    sc_clicks:    Math.round(r.sc_clicks),
-    ga4_sessions: Math.round(r.ga4_sessions),
-    purchases:    Math.round(r.purchases),
-    revenue:      round2(r.revenue),
-  })).sort((a, b) => a.date.localeCompare(b.date));
+  const dailyRows = Object.values(daily).map(r => {
+    const row = {
+      date:         r.date,
+      spend:        round2(r.spend),
+      leads:        Math.round(r.leads),
+      meta_spend:   round2(r.meta_spend),
+      google_spend: round2(r.google_spend),
+      gbp_actions:  Math.round(r.gbp_actions),
+      ig_reach:     Math.round(r.ig_reach),
+      sc_clicks:    Math.round(r.sc_clicks),
+      ga4_sessions: Math.round(r.ga4_sessions),
+      purchases:    Math.round(r.purchases),
+      revenue:      round2(r.revenue),
+    };
+    if (gbpCallsByDate[r.date]) row.gbp_profiles = gbpCallsByDate[r.date];
+    return row;
+  }).sort((a, b) => a.date.localeCompare(b.date));
 
   // Most recent date with any data.
   const latestDay = dailyRows.at(-1) ?? null;
@@ -295,6 +327,7 @@ export async function fetchWindsor(windsorCfg, apiKey) {
           calls:      Math.round(gbpCalls),
           directions: Math.round(gbpDirections),
           web_clicks: Math.round(gbpWebClicks),
+          by_profile: gbpProfiles,
         },
       },
     },
@@ -304,9 +337,10 @@ export async function fetchWindsor(windsorCfg, apiKey) {
     },
     top_campaign: topCampaign.name ? topCampaign : null,
     // Internal: consumed by pulse.js, stripped before writing
-    _dailyRows: dailyRows,
-    _latestDay: latestDay,
-    _sources:   sources,
+    _dailyRows:   dailyRows,
+    _latestDay:   latestDay,
+    _sources:     sources,
+    _gbpProfiles: gbpProfiles,
   };
 
   // Optional blocks — omit entirely when no data exists for that connector.

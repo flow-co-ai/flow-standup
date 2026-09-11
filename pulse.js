@@ -109,7 +109,7 @@ function computeDeltas7(dailyRows, clientType) {
 
 // --- Anomaly flags ---
 
-function computeFlags(latestDay, dailyRows) {
+function computeFlags(latestDay, dailyRows, gbpProfiles = []) {
   const flags = [];
   if (!latestDay || !dailyRows.length) return flags;
 
@@ -136,6 +136,20 @@ function computeFlags(latestDay, dailyRows) {
 
     if (hadMeta   && darkMeta)   flags.push('channel_dark:meta');
     if (hadGoogle && darkGoogle) flags.push('channel_dark:google');
+  }
+
+  if (gbpProfiles.length > 0) {
+    for (const profile of gbpProfiles) {
+      if (profile.impressions === 0 && dailyRows.length > 3) {
+        flags.push(`gbp_profile_dark:${profile.label}`);
+      } else if (profile.impressions > 0 && profile.calls === 0) {
+        if (profile.calls_prior > 0) {
+          flags.push(`gbp_conversion_break:${profile.label}`);
+        } else {
+          flags.push(`gbp_no_calls_with_impressions:${profile.label}`);
+        }
+      }
+    }
   }
 
   return flags;
@@ -178,6 +192,7 @@ function computeScore(deltas, flags, windsor, ghl, clientType) {
 
   if (flags.includes('lead_drought')) score -= 20;
   score -= flags.filter(f => f.startsWith('channel_dark')).length * 10;
+  score -= flags.filter(f => f.startsWith('gbp_conversion_break')).length * 10;
   if (ghl?.error) score -= 5;
 
   return Math.round(Math.max(0, Math.min(100, score)));
@@ -286,20 +301,37 @@ async function processClient(client) {
 
   if (client.windsor && WINDSOR_TOKEN) {
     try {
-      const raw = await fetchWindsor(client.windsor, WINDSOR_TOKEN);
+      const raw = await fetchWindsor(client.windsor, WINDSOR_TOKEN, client.gbp_labels || {});
 
       // Extract internal fields before writing.
-      const { _dailyRows, _latestDay, _sources, ...metrics } = raw;
+      const { _dailyRows, _latestDay, _sources, _gbpProfiles, ...metrics } = raw;
       sources = _sources;
 
       // Write history archive (90-day rolling); not used for delta computation.
+      let gbpProfilesWithPrior = _gbpProfiles ?? [];
       if (_latestDay) {
         if (!existsSync('history')) mkdirSync('history');
-        updateHistory(client.slug, _latestDay);
+        const history = updateHistory(client.slug, _latestDay);
+
+        // Derive per-profile calls_prior from the 90-day archive (prior period = 8–14 days back).
+        const latestDate     = new Date(_latestDay.date + 'T00:00:00Z');
+        const priorEndDate   = dateStr(new Date(latestDate.getTime() -  7 * 86400000));
+        const priorStartDate = dateStr(new Date(latestDate.getTime() - 13 * 86400000));
+        const callsPrior = {};
+        for (const row of history) {
+          if (row.date < priorStartDate || row.date > priorEndDate || !row.gbp_profiles) continue;
+          for (const [id, calls] of Object.entries(row.gbp_profiles)) {
+            callsPrior[id] = (callsPrior[id] ?? 0) + calls;
+          }
+        }
+        gbpProfilesWithPrior = (_gbpProfiles ?? []).map(p => ({
+          ...p,
+          calls_prior: callsPrior[p.account_id] ?? 0,
+        }));
       }
 
       const deltas = computeDeltas7(_dailyRows, clientType);
-      const flags  = computeFlags(_latestDay, _dailyRows);
+      const flags  = computeFlags(_latestDay, _dailyRows, gbpProfilesWithPrior);
 
       const series = {
         dates:        _dailyRows.map(r => r.date),
