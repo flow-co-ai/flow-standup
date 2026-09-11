@@ -1,22 +1,22 @@
 {
   "week_of": "2026-09-11",
-  "executive_summary": "Seven of nine clients flagged needs_attention, with aging loops across CRM, Ads, and Video. MedStation and Maadi Law show forward motion—seven CRM workflows live, five defects documented—but intake drops, billing gaps, and stalled optimizations persist elsewhere. Full Smile awaits a weekend budget decision that may determine continuation.",
+  "executive_summary": "Most clients have open loops aging beyond three weeks, with CRM, Ads, and Web deployment items stalled across the board. MedStation shipped seven workflows but faces Instagram lockout and hosting blockers. Full Smile is evaluating budget continuation this weekend.",
   "departments_overview": [
     {
       "department": "CRM",
-      "summary": "MedStation delivered seven workflows; Maadi Law intake drops missed 8 Sept target, auto-reject and SMS bugs live; Quality HVAC landline leads not receiving confirmations; Full Smile billing setup incomplete 8d; Liferun handoff and billing verifications stalled 66d."
+      "summary": "MedStation delivered seven workflows; Quality HVAC notification setup blocked on client; Liferun has two 66-day verifications unconfirmed; Maadi edge-case fixes in progress."
     },
     {
       "department": "Ads",
-      "summary": "Billy Doe halal conversion test and stamp issue both stalled 20–50d; Justice Consumer Meta optimization pending 22d post-reconnect; Quality HVAC billing card migration unverified 92d; Maadi Law conversion tags incomplete 39d; Full Smile LSA clarification stalled 23d."
+      "summary": "Billy Doe halal conversion test and stamp issue both stalled 20+ days; Full Smile LSA clarification stalled 23 days; Justice Consumer meta optimization stalled 22 days post-reconnect; Maadi conversion tags incomplete 39 days."
     },
     {
       "department": "Video",
-      "summary": "Justice Consumer edits in progress with no delivery date (23d stalled); Flow Company Ihya School Promo and Clinic SEO video both awaiting action 21d; Sohib directing Tahir on Flow Reels style."
+      "summary": "Flow Company clinic PDF delivered and Reels assigned; Ihya School Promo stalled 21 days; Justice Consumer edits in progress with no delivery date."
     },
     {
       "department": "Web + SEO",
-      "summary": "Quality HVAC hours typo fixed; MedStation hosting cleared but GoDaddy domain access still needed 8d to point to Hostinger; Nacer posted Account Review Cadence context note."
+      "summary": "Quality HVAC typo fixed and GBP posts live; MedStation hosting undefined and service buttons broken 8 days, blocking deployment."
     }
   ],
   "by_client": [
@@ -42,7 +42,7 @@
             {
               "text": "Halal stamp appearing on general ads",
               "department": "Ads",
-              "source": "monday",
+              "source": "whatsapp",
               "monday_item_id": null,
               "item_name": null,
               "days_stalled": 20,
@@ -408,8 +408,6 @@
               "department": "",
               "source": "whatsapp",
               "monday_item_id": null,
-              "item_name": null,
-              "days_stalled": null,
               "monday_url": null,
               "id": "59fcbc8a"
             },
@@ -418,26 +416,32 @@
               "department": "",
               "source": "whatsapp",
               "monday_item_id": null,
-              "item_name": null,
-              "days_stalled": null,
               "monday_url": null,
               "id": "948d1026"
             }
           ],
-          "stalled_items": []
+          "stalled_items": [
+            {
+              "text": "Billing setup incomplete; no business card available",
+              "department": "",
+              "source": "whatsapp",
+              "monday_item_id": null,
+              "days_stalled": 8,
+              "monday_url": null,
+              "id": "44b704da"
+            }
+          ]
         },
         {
           "department": "Ads",
           "highlights": [
             {
-              "text": "August review: $3,959 spend, $411/patient, 9% conversion target",
+              "text": "August spend confirmed: $3,959, $411 per patient",
               "department": "Ads",
               "source": "monday",
               "monday_item_id": "[id: 13019959853]",
-              "item_name": "August Account Review",
-              "days_stalled": null,
               "monday_url": null,
-              "id": "b0bd2461"
+              "id": "4744b00a"
             }
           ],
           "stalled_items": [
@@ -446,33 +450,16 @@
               "department": "Ads",
               "source": "whatsapp",
               "monday_item_id": null,
-              "item_name": null,
               "days_stalled": 23,
               "monday_url": null,
               "id": "0b631585"
-            }
-          ]
-        },
-        {
-          "department": "CRM",
-          "highlights": [],
-          "stalled_items": [
-            {
-              "text": "Billing setup incomplete; no business card available",
-              "department": "CRM",
-              "source": "whatsapp",
-              "monday_item_id": null,
-              "item_name": null,
-              "days_stalled": 8,
-              "monday_url": null,
-              "id": "44b704da"
             }
           ]
         }
       ],
       "status_change_suggestions": [],
       "risks": [
-        "Budget decision pending; client evaluating continuation vs alternatives"
+        "Client evaluating whether to continue ads or reduce to organic-only"
       ],
       "upcoming": [],
       "next_up": null,
@@ -541,6 +528,14 @@
           "who": "Sohib Boundaoui",
           "source": "WA",
           "date": "2026-09-09",
+          "generated": false,
+          "monday_url": null
+        },
+        {
+          "text": "Flagged and solved email verification issue",
+          "who": "Sohib Boundaoui",
+          "source": "WA",
+          "date": "2026-09-10",
           "generated": false,
           "monday_url": null
         }
@@ -748,38 +743,54 @@
     },
     {
       "client": "Quality HVAC",
-      "headline": "Three CRM gaps flagged, hours fix done",
+      "headline": "Lessen Pro notification setup stalled, awaiting client",
       "health": "needs_attention",
       "work_by_department": [
+        {
+          "department": "Web + SEO",
+          "highlights": [
+            {
+              "text": "Hours typo fixed (7a-10a → 7a-10p)",
+              "department": "Web + SEO",
+              "source": "whatsapp",
+              "monday_item_id": null,
+              "item_name": null,
+              "days_stalled": null,
+              "monday_url": null,
+              "id": "d4790995"
+            },
+            {
+              "text": "GBP posts published, more scheduled for coming days",
+              "department": "Web + SEO",
+              "source": "whatsapp",
+              "monday_item_id": "12545566882",
+              "item_name": "GBP",
+              "days_stalled": null,
+              "monday_url": "https://flowcompany.monday.com/boards/18099807701/pulses/12545566882",
+              "id": "23f96d92"
+            }
+          ],
+          "stalled_items": []
+        },
         {
           "department": "CRM",
           "highlights": [
             {
-              "text": "Landline leads not receiving confirmation messages",
-              "department": "CRM",
-              "source": "monday",
-              "monday_item_id": "13019839602",
-              "item_name": "Landline Lead Capture",
-              "days_stalled": null,
-              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13019839602",
-              "id": "438bacc0"
-            },
-            {
-              "text": "Lessen Pro schedule notifications needed for GHL sync",
+              "text": "Lessen Pro notification setup blocked on client action",
               "department": "CRM",
               "source": "monday",
               "monday_item_id": "13020057223",
               "item_name": "Schedule Notifications",
               "days_stalled": null,
               "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13020057223",
-              "id": "0b7a9cfe"
+              "id": "cca60952"
             }
           ],
           "stalled_items": [
             {
               "text": "Intake owner unconfirmed since Vivian left 7/7",
               "department": "CRM",
-              "source": "monday",
+              "source": "meeting",
               "monday_item_id": null,
               "item_name": null,
               "days_stalled": 66,
@@ -789,29 +800,13 @@
           ]
         },
         {
-          "department": "Web + SEO",
-          "highlights": [
-            {
-              "text": "Website hours typo fixed (was 7a-10a, now 7a-10p)",
-              "department": "Web + SEO",
-              "source": "whatsapp",
-              "monday_item_id": null,
-              "item_name": null,
-              "days_stalled": null,
-              "monday_url": null,
-              "id": "1a76348f"
-            }
-          ],
-          "stalled_items": []
-        },
-        {
           "department": "Ads",
           "highlights": [],
           "stalled_items": [
             {
               "text": "Meta billing card migration not closed-loop verified",
               "department": "Ads",
-              "source": "monday",
+              "source": "meeting",
               "monday_item_id": null,
               "item_name": null,
               "days_stalled": 92,
@@ -823,7 +818,7 @@
       ],
       "status_change_suggestions": [],
       "risks": [
-        "Landline leads creating opportunities but never receiving confirmation—silent drop risk"
+        "Lessen Pro → GHL appointment sync broken until client enables notifications"
       ],
       "upcoming": [
         {
@@ -1581,6 +1576,14 @@
           "date": "2026-09-04",
           "generated": false,
           "monday_url": null
+        },
+        {
+          "text": "Deployed webhook security fix and ran successful $1 test purchase through live checkout",
+          "who": "Hashir Faiz",
+          "source": "WA",
+          "date": "2026-09-08",
+          "generated": false,
+          "monday_url": null
         }
       ],
       "completed_history": [
@@ -1705,21 +1708,31 @@
     },
     {
       "client": "Flow Company",
-      "headline": "Sohib directs Tahir on Flow Reels style",
+      "headline": "Clinic video now has PDF; Flow Reels active",
       "health": "needs_attention",
       "work_by_department": [
         {
           "department": "Video",
           "highlights": [
             {
-              "text": "Sohib asks Tahir add elements, use style",
+              "text": "Clinic Overlap video: PDF now in folder",
               "department": "Video",
               "source": "monday",
-              "monday_item_id": "[id: 13019740733]",
+              "monday_item_id": "13029121662",
+              "item_name": "Youtube: Clinic Overlap",
+              "days_stalled": null,
+              "monday_url": "https://flowcompany.monday.com/boards/18100257069/pulses/13029121662",
+              "id": "3e47d829"
+            },
+            {
+              "text": "Flow Reels: Tahir assigned style & elements",
+              "department": "Video",
+              "source": "monday",
+              "monday_item_id": "13019740733",
               "item_name": "Flow Reels",
               "days_stalled": null,
-              "monday_url": null,
-              "id": "1b77eaec"
+              "monday_url": "https://flowcompany.monday.com/boards/18100257069/pulses/13019740733",
+              "id": "f6cb6c3f"
             }
           ],
           "stalled_items": [
@@ -1727,21 +1740,11 @@
               "text": "Ihya School Promo awaiting Tahir action",
               "department": "Video",
               "source": "monday",
-              "monday_item_id": "[id: 12589574123]",
+              "monday_item_id": "12589574123",
               "item_name": "Ihya School Promo (5-6 min)",
               "days_stalled": 21,
-              "monday_url": null,
+              "monday_url": "https://flowcompany.monday.com/boards/18100257069/pulses/12589574123",
               "id": "8efce7ca"
-            },
-            {
-              "text": "Clinic SEO video needs PDF placement",
-              "department": "Video",
-              "source": "monday",
-              "monday_item_id": "[id: 12968356050]",
-              "item_name": "Clinic SEO Reel Clips (3)",
-              "days_stalled": 21,
-              "monday_url": null,
-              "id": "0c2968e0"
             }
           ]
         },
@@ -1749,14 +1752,14 @@
           "department": "Web + SEO",
           "highlights": [
             {
-              "text": "Nacer posts Account Review Cadence context note",
+              "text": "Account Review Cadence: Nacer noted client attention gaps",
               "department": "Web + SEO",
               "source": "monday",
-              "monday_item_id": "[id: 13019859687]",
+              "monday_item_id": "13019859687",
               "item_name": "Account Review Cadence",
               "days_stalled": null,
-              "monday_url": null,
-              "id": "ba61f8e6"
+              "monday_url": "https://flowcompany.monday.com/boards/18099807701/pulses/13019859687",
+              "id": "2d43beeb"
             }
           ],
           "stalled_items": []
@@ -1764,23 +1767,16 @@
       ],
       "status_change_suggestions": [],
       "risks": [],
-      "upcoming": [
-        {
-          "text": "Flow Reels scheduled",
-          "when": "2026-09-11",
-          "source": "monday",
-          "monday_item_id": "[id: 13019740733]"
-        }
-      ],
-      "next_up": "Thu Sep 11 - Flow Reels scheduled",
+      "upcoming": [],
+      "next_up": null,
       "stats": {
-        "tasks": 8,
+        "tasks": 9,
         "todo": 0,
-        "working": 8,
+        "working": 9,
         "review": 0,
         "stuck": 0,
         "done": 0,
-        "monday_msgs": 3,
+        "monday_msgs": 4,
         "meetings": 0,
         "wa_msgs": 0
       },
@@ -1940,76 +1936,77 @@
     },
     {
       "client": "MedStation",
-      "headline": "Seven CRM workflows completed; domain access still open",
+      "headline": "Seven CRM workflows completed; Instagram locked",
       "health": "needs_attention",
       "work_by_department": [
         {
           "department": "CRM",
           "highlights": [
             {
-              "text": "Review routing, bilingual messaging, business hours logic completed",
+              "text": "Seven CRM workflows completed: review, bilingual, hours, escalation",
               "department": "CRM",
               "source": "monday",
-              "monday_item_id": "[id: 12978907800]",
-              "item_name": "Review Routing Interactive Rebuild",
+              "monday_item_id": null,
               "days_stalled": null,
               "monday_url": null,
-              "id": "ce3732a5"
+              "id": "24d49d0e"
             },
             {
-              "text": "Weston lead assignment safeguards live; Renata default owner",
+              "text": "Send To NextGen workflow ready for client review",
               "department": "CRM",
               "source": "monday",
-              "monday_item_id": "[id: 13017548536]",
-              "item_name": "Weston Lead Assignment",
+              "monday_item_id": "[id: 13020662201]",
               "days_stalled": null,
               "monday_url": null,
-              "id": "8c7dd29e"
+              "id": "5fd5cb3e"
             }
           ],
-          "stalled_items": [
+          "stalled_items": []
+        },
+        {
+          "department": "General",
+          "highlights": [
             {
-              "text": "Patient data merge NextGen/Como scope undefined; reactivation blocked",
-              "department": "CRM",
-              "source": "monday",
-              "monday_item_id": "[id: 13019850713]",
-              "item_name": "Patient List Merge",
-              "days_stalled": 1,
+              "text": "Weston Instagram page disappeared; locked for security",
+              "department": "",
+              "source": "whatsapp",
+              "monday_item_id": null,
+              "days_stalled": null,
               "monday_url": null,
-              "id": "5c62f899"
+              "id": "4a9f5af3"
             }
-          ]
+          ],
+          "stalled_items": []
         },
         {
           "department": "Web + SEO",
-          "highlights": [
-            {
-              "text": "Hosting access cleared; GoDaddy domain access still needed",
-              "department": "Web + SEO",
-              "source": "monday",
-              "monday_item_id": "[id: 12970090689]",
-              "item_name": "Website Hosting",
-              "days_stalled": null,
-              "monday_url": null,
-              "id": "328b950d"
-            }
-          ],
+          "highlights": [],
           "stalled_items": [
             {
-              "text": "GoDaddy domain access needed to point to Hostinger",
+              "text": "Website hosting account undefined; deployment blocked",
               "department": "Web + SEO",
               "source": "monday",
               "monday_item_id": "[id: 12970090689]",
-              "item_name": "Website Hosting",
               "days_stalled": 8,
               "monday_url": null,
-              "id": "e7fdff04"
+              "id": "5ee872f0"
+            },
+            {
+              "text": "Service page buttons broken; subdomain down",
+              "department": "Web + SEO",
+              "source": "monday",
+              "monday_item_id": "[id: 12971476311]",
+              "days_stalled": 8,
+              "monday_url": null,
+              "id": "8f0b96c1"
             }
           ]
         }
       ],
       "status_change_suggestions": [],
-      "risks": [],
+      "risks": [
+        "Instagram page locked; password reset needed to restore access"
+      ],
       "upcoming": [
         {
           "text": "Send To NextGen",
@@ -2024,7 +2021,7 @@
           "monday_item_id": "[id: 12786016809]"
         }
       ],
-      "next_up": "Thu Sep 11 - Send To NextGen & LSA",
+      "next_up": "Thu 9/11 - Send To NextGen",
       "stats": {
         "tasks": 23,
         "todo": 0,
@@ -2034,7 +2031,7 @@
         "done": 0,
         "monday_msgs": 22,
         "meetings": 4,
-        "wa_msgs": 119
+        "wa_msgs": 114
       },
       "completed_this_week": [
         {
@@ -2628,55 +2625,41 @@
     },
     {
       "client": "Maadi Law",
-      "headline": "Five CRM defects documented, fixes in progress",
-      "health": "needs_attention",
+      "headline": "Three CRM edge-case fixes documented",
+      "health": "on_track",
       "work_by_department": [
         {
           "department": "CRM",
           "highlights": [
             {
-              "text": "Intake call drops raised, fix targeted 8 Sept",
+              "text": "Intake/agreement prefill gaps documented, fix in progress",
               "department": "CRM",
               "source": "monday",
-              "monday_item_id": "13019178772",
-              "item_name": "Intake Call Drops",
+              "monday_item_id": "12968553824",
               "days_stalled": null,
-              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13019178772",
-              "id": "54dd0aa6"
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12968553824",
+              "id": "84453b93"
             },
             {
-              "text": "Auto-reject bug: rejected cases vanish from view",
-              "department": "CRM",
-              "source": "monday",
-              "monday_item_id": "12963781332",
-              "item_name": "Auto-Reject",
-              "days_stalled": null,
-              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12963781332",
-              "id": "d55d1436"
-            },
-            {
-              "text": "Manual opportunity SMS still fires unwanted acknowledgements",
+              "text": "Manual opportunity SMS firing issue logged",
               "department": "CRM",
               "source": "monday",
               "monday_item_id": "13020674172",
-              "item_name": "Manual Opportunity SMS",
               "days_stalled": null,
               "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13020674172",
-              "id": "554b1c1c"
-            }
-          ],
-          "stalled_items": [
+              "id": "3ea1bc76"
+            },
             {
-              "text": "Intake call drops unresolved past 8 Sept target",
+              "text": "Arabic automations requested, new Arabic ads live",
               "department": "CRM",
               "source": "monday",
-              "monday_item_id": "13019178772",
-              "item_name": "Intake Call Drops",
-              "days_stalled": 3,
-              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13019178772",
-              "id": "4fe727b7"
+              "monday_item_id": "13020896818",
+              "days_stalled": null,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13020896818",
+              "id": "1f176be2"
             }
-          ]
+          ],
+          "stalled_items": []
         },
         {
           "department": "Ads",
@@ -2686,19 +2669,16 @@
               "text": "Conversion tags verification incomplete",
               "department": "Ads",
               "source": "monday",
-              "monday_item_id": null,
-              "item_name": null,
+              "monday_item_id": "12700991621",
               "days_stalled": 39,
-              "monday_url": null,
+              "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12700991621",
               "id": "929e089f"
             }
           ]
         }
       ],
       "status_change_suggestions": [],
-      "risks": [
-        "Multiple live intake defects: calls dropping, rejected cases vanishing, unwanted SMS firing"
-      ],
+      "risks": [],
       "upcoming": [],
       "next_up": null,
       "stats": {
@@ -2710,7 +2690,7 @@
         "done": 0,
         "monday_msgs": 6,
         "meetings": 0,
-        "wa_msgs": 72
+        "wa_msgs": 68
       },
       "completed_this_week": [
         {
@@ -3492,22 +3472,6 @@
   ],
   "potential_clients": [
     {
-      "name": "<UNKNOWN>",
-      "sources": [
-        "meeting"
-      ],
-      "items": [
-        {
-          "source": "meeting",
-          "blurb": "This meeting record contains no overview, participants, or content details. It appears to be an untitled or empty calendar entry from September 8, 2026 associated with the nacer@flowco.ai email addres",
-          "when": "2026-09-08"
-        }
-      ],
-      "possible_existing_client": null,
-      "summary": "This meeting record contains no overview, participants, or content details. It appears to be an untitled or empty calendar entry from September 8, 2026 associated with the nacer@flowco.ai email address.",
-      "action_items": []
-    },
-    {
       "name": "CAPI Setup",
       "sources": [
         "monday_group"
@@ -3527,20 +3491,6 @@
       "possible_existing_client": null
     },
     {
-      "name": "Chiquita Georges",
-      "sources": [
-        "mention"
-      ],
-      "items": [
-        {
-          "source": "mention",
-          "blurb": "Slip and fall intake, case rejected, record vanished from Tracy's view",
-          "when": ""
-        }
-      ],
-      "possible_existing_client": null
-    },
-    {
       "name": "City Dental Studio",
       "sources": [
         "meeting"
@@ -3548,24 +3498,24 @@
       "items": [
         {
           "source": "meeting",
-          "blurb": "Sohib Boundaoui presented Flow Company's integrated marketing service to Jorge O from City Dental Studio, proposing a $3,500 monthly package that consolidates Google Ads, SEO, CRM, and lead management",
+          "blurb": "Sohib Boundaoui presented Flow Company's integrated marketing service at $3,500 per month to Jorge O, covering Google Ads, SEO, CRM integration, and lead management for City Dental Studio. The practic",
           "when": "2026-09-09"
         },
         {
           "source": "meeting",
-          "blurb": "This was a second discussion between Sohib Boundaoui and Jorge O about replacing City Dental Studio's expensive Zocdoc lead dependency with Flow Company's unified marketing system. The practice curren",
+          "blurb": "This was a follow-up discussion between Sohib Boundaoui and Jorge O about replacing City Dental Studio's expensive Zocdoc lead dependency with Flow Company's unified marketing system. The practice cur",
           "when": "2026-09-09"
         }
       ],
       "possible_existing_client": null,
-      "summary": "Sohib Boundaoui has held two discussions with Jorge O from City Dental Studio about transitioning the practice away from its heavy $10,000 monthly Zocdoc dependency to Flow Company's integrated marketing system at $3,500 per month. The proposal consolidates Google Ads, SEO, CRM, and lead management with WhatsApp coordination, targeting 10 new patients monthly by month three with $1,500–$2,000 in ad spend while expanding their local SEO reach into markets like Pembroke Pines. The practice has strong fundamentals with 5-star reviews (435 total) and ranks for 41 keywords organically but needs broader market penetration following their recent location expansion. Flow's system would integrate with their existing Open Dental and Weave platforms to automate lead recovery for missed calls and provide conversion dashboards, with an initial three-month contract focused on sustainable long-term growth.",
+      "summary": "Sohib Boundaoui has presented Flow Company's integrated marketing service to Jorge O across two meetings, proposing a $3,500 monthly fee plus $1,500–$2,000 ad spend to help City Dental Studio reduce their heavy $10,000 monthly Zocdoc dependency. The practice has strong local SEO with 435 reviews, 5-star rating, and ranks for 41 keywords organically, but needs expansion into nearby markets like Pembroke Pines and currently runs no paid ads. Flow's comprehensive proposal includes Google and Meta Ads, SEO expansion, CRM automation integrating with Open Dental and Weave, automated lead recovery, and centralized WhatsApp communication, targeting 10 new patients per month by month three with an initial three-month contract. Jorge is reviewing the proposal internally with Dr. Gabrielle Beckoff and the practice team before the scheduled follow-up meeting.",
       "action_items": [
         "Send Jorge a detailed email recap summarizing the meeting discussion and marketing proposal.",
         "Schedule and send a follow-up meeting invitation for Wednesday at 10:00 AM Miami time.",
         "Jorge to review the recap and marketing proposal with Dr. Gabrielle Beckoff and the practice team before the next meeting."
       ],
-      "likelihood_percent": 72,
-      "likelihood_reason": "Concrete follow-up scheduled for Wednesday, Jorge reviewing proposal with Dr. Beckoff before next meeting."
+      "likelihood_percent": 75,
+      "likelihood_reason": "Concrete pricing discussed ($3,500/month), follow-up scheduled for Wednesday, reviewing with decision-maker Dr. Beckoff."
     },
     {
       "name": "Liferun",
@@ -3575,7 +3525,7 @@
       "items": [
         {
           "source": "mention",
-          "blurb": "Google Business issue mentioned as example of client attention gap",
+          "blurb": "Google Business issue; cited as attention gap example",
           "when": ""
         }
       ],
@@ -3589,11 +3539,13 @@
       "items": [
         {
           "source": "mention",
-          "blurb": "Zero calls in August and September, example of lack of attention",
+          "blurb": "Zero calls in August and September; cited as attention gap example",
           "when": ""
         }
       ],
-      "possible_existing_client": null
+      "possible_existing_client": null,
+      "likelihood_percent": 20,
+      "likelihood_reason": "Zero calls received suggests campaign failure; cited only as negative example with no engagement."
     },
     {
       "name": "Summit Bags",
@@ -3608,6 +3560,22 @@
         }
       ],
       "possible_existing_client": null
+    },
+    {
+      "name": "Unknown Prospect",
+      "sources": [
+        "meeting"
+      ],
+      "items": [
+        {
+          "source": "meeting",
+          "blurb": "This meeting has no content or participants recorded beyond an email address timestamp. No discussion topics, attendees, or context are available to determine the prospect or purpose of the call.",
+          "when": "2026-09-08"
+        }
+      ],
+      "possible_existing_client": null,
+      "summary": "This meeting has no content or participants recorded beyond an email address timestamp. No discussion topics, attendees, or context are available to determine the prospect or purpose of the call.",
+      "action_items": []
     }
   ],
   "meetings_digest": [
@@ -3679,44 +3647,44 @@
     }
   ],
   "comms_flags": [
-    "Full Smile: Budget decision pending till weekend; client evaluating continuation vs alternatives",
-    "Quality HVAC: Landline leads creating opportunities but never receiving confirmation—silent drop risk",
+    "Full Smile: Client deciding this weekend whether to continue ads or reduce to organic-only",
+    "Quality HVAC: Lessen Pro → GHL appointment sync broken until client enables notifications",
     "Justice Consumer Law: Meta optimization stalled 3+ weeks; lead volume at risk",
     "Liferun: Two critical CRM verifications stalled 66 days; money-path integrity unconfirmed",
-    "Maadi Law: Multiple live intake defects: calls dropping, rejected cases vanishing, unwanted SMS firing"
+    "MedStation: Instagram page locked for security; password reset needed to restore access"
   ],
   "blockers": [
-    "Billy Doe Meats: /halal-subscribe conversion test awaiting results (50d stalled)",
+    "Billy Doe Meats: Halal conversion test awaiting results (50d stalled)",
     "Billy Doe Meats: Halal stamp appearing on general ads (20d stalled)",
-    "Full Smile: LSA charging clarification with Lily (23d stalled)",
     "Full Smile: Billing setup incomplete; no business card available (8d stalled)",
-    "Quality HVAC: Intake owner unconfirmed since Vivian left 7/7 (66d stalled)",
-    "Quality HVAC: Meta billing card migration not closed-loop verified (92d stalled)"
+    "Quality HVAC: Lessen Pro notification setup blocked on client action",
+    "MedStation: Website hosting account undefined; deployment blocked (8d stalled)",
+    "MedStation: Service page buttons broken; subdomain down (8d stalled)"
   ],
   "this_week_priorities": [
     {
-      "client": "Maadi Law",
-      "text": "Maadi Law: Resolve intake call drops and auto-reject vanishing bug",
+      "client": "Billy Doe Meats",
+      "text": "Billy Doe Meats: Close halal conversion test and stamp issue loops",
       "action": null,
-      "id": "d30ab296"
+      "id": "4493a2d0"
     },
     {
       "client": "Full Smile",
-      "text": "Full Smile: Follow up post-weekend on budget decision",
+      "text": "Full Smile: Follow up post-weekend on budget decision and close billing setup",
       "action": null,
-      "id": "f8826c5f"
+      "id": "ca80f9d6"
     },
     {
       "client": "Justice Consumer Law",
-      "text": "Justice Consumer Law: Close Meta optimization loop and confirm video delivery date",
+      "text": "Justice Consumer Law: Resume Meta optimization and confirm video delivery date",
       "action": null,
-      "id": "4fd9b2bf"
+      "id": "44a47353"
     },
     {
       "client": "MedStation",
-      "text": "MedStation: Secure GoDaddy domain access and define patient data merge scope",
+      "text": "MedStation: Resolve hosting account and restore Instagram access",
       "action": null,
-      "id": "89f7762b"
+      "id": "062b62f5"
     }
   ],
   "auto_completed_alerts": [
