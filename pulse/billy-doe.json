@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11T13:49:42.202Z",
+  "generated_at": "2026-09-11T14:46:21.356Z",
   "date": "2026-09-11",
   "slug": "billy-doe",
   "name": "Billy Doe Meats",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 49,
   "status": "orange",
-  "verdict": "Meta spend climbed 28.1% week-over-week but ROAS dropped 70.18%, with purchases falling 21.43%, suggesting the top campaign \"BWS - Sales - Muslims\" ($839.56 of $1,485.91 total spend) is scaling spend faster than it is converting. Pulling back or testing new creative on that campaign should be the immediate priority to stabilize returns.",
+  "verdict": "Billy Doe Meats drove a 4.81 ROAS on $1,485.91 Meta spend over 28 days, but the biggest concern is a 70.18% drop in ROAS week-over-week, likely driven by a 21.43% decline in purchases despite a 28.1% increase in spend, suggesting the top campaign \"BWS - Sales - Muslims\" ($839.56) is scaling into diminishing returns.",
   "windsor": {
     "totals": {
       "spend": 1485.91,
@@ -437,6 +437,13 @@
     }
   },
   "ghl": null,
+  "reconciliation": {
+    "windsor_leads": 0,
+    "ghl_contacts": null,
+    "ghl_opps_created": null,
+    "ghl_opps_won": null,
+    "status": "ghl_unavailable"
+  },
   "_meta": {
     "source": "windsor_api",
     "sources": [
@@ -619,43 +626,43 @@
     "history_line": "Website launched Sep 5 · Website video reworked with real footage"
   },
   "performance": {
-    "generated_at": "2026-09-11T13:53:52.579Z",
+    "generated_at": "2026-09-11T14:48:25.885Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "ROAS collapse is real; GBP dark 4 days compounds a paid-only channel.",
+    "verdict": "ROAS collapse is real but lumpy; revenue spikes mask thin purchase frequency.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "ROAS fell 70.18% week-over-week while spend rose 28.1%; last 3 days (Sep 8–10) show 8 purchases/$159.23 revenue vs prior 3 days (Sep 5–7) 4 purchases/$520.42 — revenue per dollar collapsing.",
+        "text": "ROAS fell 70.18% week-over-week while spend rose 28.1%; last 3 days (Sep 8–10) show only 6 purchases on $159.23 spend vs 7 purchases on $166.28 the prior 3 days — diminishing returns confirmed at current budget.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Live-Cooking Shoot 1 (due 2026-08-14), Pre-Launch Gate, Platform Ownership Decision, Funnel Test + UTM, and SEO Phase 1 Guardrails all overdue as of 2026-08-31 — 5 milestones uncleared.",
+        "text": "Live-Cooking Shoot 1 (due Aug 14), Pre-Launch Gate, Platform Ownership Decision, Funnel Test + UTM Live, and SEO Phase 1 Guardrails (all due Aug 31) show no completed event — 5 milestones overdue by 11–28 days.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GBP actions read 0 for 4 consecutive days (Sep 7–10) after averaging 26/day prior — profile appears dark or suppressed, cutting organic-to-site pipeline at 535 web clicks/28d.",
+        "text": "GBP actions hit zero on Sep 6–10 (5 consecutive days, down from 23–47/day prior) — channel_dark signal; likely a profile suspension or listing issue, not an ads problem.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Top campaign 'BWS - Sales - Muslims' consumed $839.56 of $1,485.91 (56%) in 28 days; 3-day purchase count dropped to 1 from a prior 3-day high of 5 — fatigue or audience saturation probable given known retargeting burnout history.",
-        "confidence": "probable",
+        "text": "Revenue is lumpy and spike-driven: Sep 15 alone was $1,727.93 of the 28-day $7,148.81 total; strip that day and 28-day ROAS drops below 3.5x — the 4.81x headline overstates structural performance.",
+        "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "IG reach rose 9.62% week-over-week to 20,218 (28d) while paid ROAS crashed — organic lift is not converting; paid and organic are decoupled, suggesting a landing-page or checkout friction issue.",
+        "text": "Top campaign BWS - Sales - Muslims consumed $839.56 (57% of 28-day spend); with purchase events firing inconsistently via Shopify, the 36-purchase count and 4.81x ROAS should be treated as directional, not precise.",
         "confidence": "hypothesis",
         "channel": "meta"
       }
@@ -663,34 +670,34 @@
     "suggestions": [
       {
         "id": "S1",
-        "type": "budget_shift",
-        "text": "Cut 'BWS - Sales - Muslims' daily budget by 20% (~$11/day) and hold pending 3-day ROAS recovery signal.",
+        "type": "kill",
+        "text": "Hold any further spend increases on BWS - Sales - Muslims; do not scale — freeze daily budget at current $58.98/day pending creative refresh.",
         "cites": [
           "F1",
           "F4"
         ],
-        "monday_item_name": "Trim Muslims Campaign 20%",
-        "monday_update": "Reduce 'BWS - Sales - Muslims' daily budget by 20% (approx. $11/day based on ~$57/day current run rate). This campaign is 56% of 28-day spend ($839.56) with 3-day revenue collapsing to $159.23 vs $520.42 the prior 3 days and ROAS down 70.18% week-over-week. Success check: ROAS stabilises above 3.0x within 3 days (by 2026-09-14); if not, escalate to creative refresh. Do not cut further until new creative is ready to absorb the saved budget."
+        "monday_item_name": "Freeze BWS Muslims Budget",
+        "monday_update": "ROAS dropped 70.18% week-over-week while spend rose 28.1%, and the last 3 days (Sep 8–10) produced only 6 purchases — the campaign is scaling into diminishing returns. Hold the daily budget at its current ~$58.98/day level; do not approve any increase until new creative is live. Success check: 3 consecutive days at or above the 28-day baseline ROAS of 4.81x before any upward budget move. Re-evaluate by Sep 14."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Investigate and restore GBP profile — 4 consecutive zero-action days risks losing 535 monthly web clicks from organic.",
+        "text": "Investigate GBP listing immediately — 5 dark days (Sep 6–10) from 23–47 actions/day represents a confirmed profile issue.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Fix GBP Dark Profile",
-        "monday_update": "GBP actions have read zero for 4 straight days (Sep 7–10) against a prior average of 26 actions/day and 535 web clicks in the 28-day window. Check for a suspended listing, a pending verification request, or a category/info edit that triggered a review hold. Success check: GBP actions return to ≥15/day within 3 days of the fix (by 2026-09-14)."
+        "monday_item_name": "Fix GBP Dark Listing",
+        "monday_update": "GBP actions dropped to zero for 5 consecutive days (Sep 6–10) after averaging 23–47 actions/day — this is a confirmed channel-dark event, not a seasonal dip. Nacer to check for a suspended or suppressed Google Business Profile listing today. Success check: GBP actions return to ≥15/day within 3 days of the fix being applied. Re-check Sep 14."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch Sep 7–10 purchase drop (1 purchase, $500 revenue) for 3 more days before any landing-page conclusion.",
+        "text": "Watch Funnel Test result and UTM live status (overdue Aug 31); no paid scaling or subscribe-page work until this closes.",
         "cites": [
-          "F5"
+          "F2"
         ],
-        "monday_item_name": "Watch Paid-Organic Decoupling",
-        "monday_update": "IG reach is up 9.62% but paid ROAS collapsed simultaneously, suggesting a possible landing-page or checkout friction issue rather than purely an ads problem. Only 1 purchase recorded Sep 7–10 against $159.23 revenue. Do not act on this until Sep 14 — if the pattern holds after the budget trim (S1), escalate to a funnel audit. This is hypothesis-grade only."
+        "monday_item_name": "Watch Funnel Test + UTM",
+        "monday_update": "The Funnel Test Closed + UTM Live milestone was due Aug 31 and remains open — subscribe-page web work is explicitly blocked on its results per SOW. No paid budget shift or new landing page should be approved until Khurram confirms the test is closed and UTMs are firing. Success check: confirmed closed status with UTM data visible in Windsor. Re-check Sep 14."
       }
     ],
     "next_check": "2026-09-14"

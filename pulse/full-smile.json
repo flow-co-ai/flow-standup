@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11T13:50:09.776Z",
+  "generated_at": "2026-09-11T14:46:29.576Z",
   "date": "2026-09-11",
   "slug": "full-smile",
   "name": "Full Smile",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 50,
   "status": "amber",
-  "verdict": "Leads dropped sharply over the last 7 days (down 44.83%), driving CPL up 83.46%, likely reflecting audience fatigue or saturation on the top retargeting campaign \"BWS - Instant Leads - Retargeting\" ($375.24 spend), which is leaning heavily on a warm pool that may be exhausted. GBP activity also fell 50% week-over-week, reinforcing a broader dip in demand signals worth monitoring closely.",
+  "verdict": "The biggest movement this period is a 44.83% drop in leads over the last 7 days versus the prior 7 days, which drove CPL up 83.46%, likely signaling audience fatigue or creative exhaustion on Meta (the sole active channel at $738.76 spend / 99 leads over 28 days). Note that Windsor reports 99 leads while GHL shows 102 opportunities created, and these figures are unreconciled.",
   "windsor": {
     "totals": {
       "spend": 738.76,
@@ -443,6 +443,13 @@
     },
     "appointments": 0
   },
+  "reconciliation": {
+    "windsor_leads": 99,
+    "ghl_contacts": 341,
+    "ghl_opps_created": 102,
+    "ghl_opps_won": 0,
+    "status": "both_active"
+  },
   "_meta": {
     "source": "windsor_api",
     "sources": [
@@ -612,79 +619,79 @@
     "history_line": "OpenDental claim payment sync done · Voicemail + form updates completed · May SEO report delivered"
   },
   "performance": {
-    "generated_at": "2026-09-11T13:54:20.424Z",
+    "generated_at": "2026-09-11T14:48:52.642Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "CPL collapse is structural, not a blip — creative pool exhausted on sole active channel.",
+    "verdict": "CPL collapse is real and worsening; 5 overdue milestones block the scoreboard.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "CPL spiked 83.46% week-over-week on flat spend (+1.22%), while leads fell 44.83% — 28-day CPL of $7.46 masks a deteriorating recent rate.",
+        "text": "CPL rose 83.46% in 7d on flat spend (+1.22%); last 3 days averaged 1 lead/day vs 3.67 prior 3 days — confirmed deterioration, not noise.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "OVERDUE: 5 milestones past due (earliest 2026-07-23): attribution gap, CRM cleanup, dashboard, and August renewal scoreboard — all unresolved as of today.",
+        "text": "Phone-match attribution gap (due 2026-08-07), sync/contact cleanup (due 2026-08-14), and dashboard (due 2026-08-31) all overdue — August scoreboard is untrusted.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "3-day lead signal (Sep 8–10): 4+1+1=6 leads vs prior 3 days (Sep 5–7): 6+2+4=12 — a 50% drop confirming the 7d trend is accelerating, not stabilising.",
-        "confidence": "confirmed",
-        "channel": "meta"
+        "text": "102 GHL opportunities created, 0 won, 0 appointments logged — leads arriving but pipeline shows no conversion; likely an intake/tagging gap, not an ads problem.",
+        "confidence": "probable",
+        "channel": "GHL"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Top campaign 'BWS - Instant Leads - Retargeting' consumed $375.24 of $738.76 (51%) over 28 days — flat spend into a warm pool shrinking explains the fatigue pattern.",
+        "text": "Spend has been flat (~$26/day) while leads fell from a 4–8/day peak (Aug 23–31) to 0–1/day (Sep 8–10) — classic creative fatigue pattern on a single Meta channel.",
         "confidence": "probable",
         "channel": "meta"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 102 opportunities created, 0 won, 0 appointments — leads are entering the pipeline but not converting to booked chairs; intake leak, not an ads problem.",
-        "confidence": "confirmed",
-        "channel": "GHL"
+        "text": "GBP actions dropped 50% in 7d; last 4 days show 0 GBP actions, suggesting organic/local visibility is also contracting alongside paid decline.",
+        "confidence": "probable",
+        "channel": "GBP"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "creative_refresh",
-        "text": "Inject at least 2 new creatives into 'BWS - Instant Leads - Retargeting' to counter confirmed warm-pool exhaustion; do not raise budget yet.",
+        "text": "Introduce at least 1 new creative into BWS Retargeting campaign; CPL up 83% on flat spend is probable fatigue.",
         "cites": [
           "F1",
-          "F3",
           "F4"
         ],
-        "monday_item_name": "Retargeting Creative Refresh",
-        "monday_update": "The BWS retargeting campaign has consumed $375.24 at 51% of 28-day spend while leads halved in the last 3 days (6 vs 12 prior 3 days) and CPL rose 83.46% — a confirmed warm-pool fatigue signal. Action: produce and launch 2 new ad creatives into this campaign without increasing the daily budget. Success check: CPL returns below $10 (recent baseline implied by 28-day $7.46 average) within 7 days of creative launch. Re-evaluate by 2026-09-18."
+        "monday_item_name": "Full Smile Meta Creative Refresh",
+        "monday_update": "CPL jumped 83.46% over the last 7 days while daily spend held flat at ~$26/day, and leads dropped from a peak of 6–8/day in late August to 0–1/day Sep 8–10. Push at least one new creative variant into the BWS - Instant Leads - Retargeting campaign (top campaign, $375.24 of 28-day spend). Success check: CPL returns below the 28-day baseline of $7.46 within 7 days of the new creative going live. Re-check by 2026-09-18."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Escalate the 0-appointment, 0-won pipeline in GHL — 102 opportunities stalled; confirm intake process is routing leads to Lily or the new hire.",
+        "text": "Close the intake leak: reconcile 102 GHL opps, 0 wins, 0 appointments — tag and route correctly before next lead volume push.",
         "cites": [
-          "F5"
+          "F2",
+          "F3"
         ],
-        "monday_item_name": "GHL Intake Leak — Fix Now",
-        "monday_update": "GHL shows 102 opportunities created in the 28-day window with 0 won and 0 appointments booked — leads are arriving but not reaching the chair, which is the client's stated scoreboard metric. This is an intake routing issue, not an ads problem. Action: Sohib to confirm with Lily and the new intake hire that all GHL leads are being contacted within 1 business day and appointment offers are being logged. Success check: at least 5 appointments appear in GHL within 7 days. Re-check 2026-09-18."
+        "monday_item_name": "GHL Intake Leak Fix",
+        "monday_update": "GHL shows 102 opportunities created over 28 days with 0 won and 0 appointments logged, meaning no lead-to-chair journey is being tracked — directly breaking the client's stated scoreboard (leads → schedule → show → patient). The dashboard milestone was due 2026-08-31 and is overdue. Audit opportunity stages, fix appointment tagging, and confirm the OpenDental sync is writing back correctly. Success check: at least 1 won opportunity and appointment confirmed in GHL by 2026-09-18, with dashboard visible to Sohib."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions (down 50%, 0 for last 4 days Sep 7–10) — if zero persists through Sep 14, escalate as a tracking or profile issue.",
+        "text": "Watch GBP actions for 3 more days before acting; 0 actions Sep 7–10 may reflect a data lag, not a true drop.",
         "cites": [
-          "F2"
+          "F5"
         ],
-        "monday_item_name": "GBP Actions — Watch",
-        "monday_update": "GBP actions fell 50% week-over-week and have shown 0 for the last 4 recorded days (Sep 7–10), coinciding with 5 overdue SOW milestones including the attribution gap. No action is taken this cycle as this may reflect a data-pull gap rather than a true organic drop. Monitor: if GBP actions remain at 0 through 2026-09-14, escalate to Attribution team to confirm the phone-match and GBP tracking pipeline is live. Re-check 2026-09-14."
+        "monday_item_name": "Full Smile GBP Drop Watch",
+        "monday_update": "GBP actions fell 50% week-over-week and have logged 0 for the last 4 days in the series (Sep 7–10). This could be a reporting lag in the GBP API rather than a real visibility drop. Monitor through 2026-09-14; if actions remain at 0, escalate to the SEO/GBP team for a profile audit. No budget action until confirmed."
       }
     ],
     "next_check": "2026-09-14"

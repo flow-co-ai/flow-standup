@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11T13:51:24.632Z",
+  "generated_at": "2026-09-11T14:46:57.441Z",
   "date": "2026-09-11",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 70,
   "status": "amber",
-  "verdict": "CPL dropped 50.45% week-over-week to $46.95, driven by the \"Leads - August Re-Launch\" Meta campaign delivering 30 leads despite a 39.44% pullback in spend, though a zero-spend day and Meta going dark signal budget pacing issues to watch closely.",
+  "verdict": "The biggest movement is CPL dropping 50.45% week-over-week to a 28-day average of $46.95, driven by improved lead volume (up 22.22% in the last 7 days) against lower spend (down 39.44%), all from the single active campaign \"Leads - August Re-Launch.\" However, a channel_dark:meta flag and at least one zero-spend day signal delivery instability that could reverse these gains quickly.",
   "windsor": {
     "totals": {
       "spend": 1408.56,
@@ -446,6 +446,13 @@
     },
     "appointments": 0
   },
+  "reconciliation": {
+    "windsor_leads": 30,
+    "ghl_contacts": 24,
+    "ghl_opps_created": 0,
+    "ghl_opps_won": 0,
+    "status": "both_active"
+  },
   "_meta": {
     "source": "windsor_api",
     "sources": [
@@ -570,79 +577,79 @@
     "history_line": "Delivered May 2026 SEO update report"
   },
   "performance": {
-    "generated_at": "2026-09-11T13:55:42.650Z",
+    "generated_at": "2026-09-11T14:50:05.897Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "CPL efficiency real, but zero-spend days and unsigned contract threaten continuity.",
+    "verdict": "Channel dark confirmed; 3-day spend blackout erases the CPL win.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Meta went dark Sep 9–10 (2 consecutive zero-spend days, $0); prior dark gap Aug 14–20 also cost ~6 leadless days. Pacing or payment interruption.",
+        "text": "Meta went dark Sep 9–10: $0 spend and 0 leads both days after $39.79 on Sep 8 — delivery halted mid-week, not a scheduled pause.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
-        "priority": 2,
-        "text": "Extension with Marwan unsigned as of 2026-08-31; engagement is month-to-month lapsed — next 3-month scope is blocked.",
+        "priority": 1,
+        "text": "3-day signal (Sep 8–10) vs prior 3 (Sep 5–7): spend collapsed from $232.14 to $39.79, leads from 10 to 3 — trend reversed sharply.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "meta"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "SMS automation and Zoho Voice access both overdue since 2026-08-31; contact-rate bottleneck (already flagged in SOW) remains unresolved.",
+        "text": "Extension with Marwan overdue since Aug 31 — engagement is month-to-month lapsed; all paid activity runs without a signed contract.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
-        "priority": 3,
-        "text": "3-day signal (Sep 7–8 active, Sep 9–10 dark): leads were 2–3/day when spend was $39–94, then collapsed to 0. Prior 3-day active window (Sep 4–6) averaged 2.7 leads/day at $65 avg spend — trend was holding before dark.",
+        "priority": 2,
+        "text": "SMS automation and Zoho Voice access both overdue since Aug 31; contact rate is the stated bottleneck yet CRM tools remain undelivered.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "SOW"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 24 contacts but 0 opportunities created from 30 28-day leads — intake pipeline is not converting leads to opps; this is a CRM/intake leak, not an ads problem.",
+        "text": "GHL shows 30 Meta leads but 0 opportunities created and 0 appointments — 100% of arriving leads are not reaching pipeline, an intake leak not an ads problem.",
         "confidence": "confirmed",
-        "channel": "CRM"
+        "channel": "GHL"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Restore Meta spend immediately; diagnose zero-spend cause (billing or pacing) before adjusting the $65–75/day budget.",
+        "text": "Diagnose and restore Meta delivery today — 2 consecutive $0 days on the sole active campaign requires immediate account-level investigation.",
         "cites": [
           "F1",
-          "F4"
+          "F2"
         ],
-        "monday_item_name": "Fix Meta Zero-Spend Days",
-        "monday_update": "Meta has been dark since Sep 9 with $0 spend recorded on both Sep 9 and Sep 10, halting all lead flow. Check billing status and campaign pacing settings in Ads Manager and restore delivery to the approved $65–75/day range. Success is confirmed when spend resumes and at least 2–3 leads register within the first 48 hours of restoration. Resolve by Sep 13 to avoid further lost lead days."
+        "monday_item_name": "Fix Meta Delivery Blackout",
+        "monday_update": "Meta spend dropped to $0 on Sep 9 and Sep 10 after $39.79 on Sep 8 — the 'Leads - August Re-Launch' campaign has fully stalled. Check for billing issues, policy flags, or ad set exhaustion and restore delivery today. Success is confirmed spend ≥ $45/day by Sep 12. If not resolved by then, escalate to Meta Business Support."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Fix GHL intake: 30 leads arrived 28-day, 0 opportunities created — map lead-to-opp workflow to close the intake leak.",
+        "text": "Fix GHL intake pipeline: 30 leads arrived in 28 days, 0 opportunities created — routing or assignment is broken, not ad performance.",
         "cites": [
           "F5"
         ],
-        "monday_item_name": "Fix GHL Lead-to-Opp Flow",
-        "monday_update": "GHL shows 24 contacts and 30 Meta leads over the past 28 days, yet 0 opportunities were created and 0 appointments booked. This is a CRM configuration or Andrew-side intake failure, not an ads issue. Audit the lead connector, pipeline stage triggers, and Andrew's intake process in Zoho/GHL. Success is confirmed when new leads are creating opportunities within 24 hours of arrival; re-check by Sep 18."
+        "monday_item_name": "Fix GHL Lead-to-Opportunity Routing",
+        "monday_update": "GHL received 30 Meta leads over 28 days but shows 0 opportunities created and 0 appointments booked — leads are arriving and disappearing before Andrew sees them. Audit the GHL workflow from form submission to opportunity creation and identify the broken step. Success is at least 1 opportunity created per 3 leads within 7 days of fix. Confirm with Andrew by Sep 14."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch CPL vs baseline once spend restores; current 28-day CPL of $46.95 is within prior $19–45/wk range — do not scale until 3 active days confirm.",
+        "text": "Watch CPL recovery once delivery resumes — $46.95 28-day CPL is encouraging but based on only 30 leads; confirm the rate holds over 10+ leads.",
         "cites": [
-          "F4",
-          "F1"
+          "F1",
+          "F2"
         ],
-        "monday_item_name": "Watch CPL Post-Relaunch",
-        "monday_update": "The 28-day CPL of $46.95 sits at the upper edge of the historical $19–45/week range, and the 7d CPL improvement of -50.45% is encouraging but based on an interrupted spend window. Once Meta spend is restored, monitor daily CPL for 3 consecutive active days. If CPL holds below $50 and leads reach 2–3/day, bring a scale suggestion to the next review. Re-check Sep 14."
+        "monday_item_name": "Watch CPL Post-Restart",
+        "monday_update": "The 28-day CPL of $46.95 reflects a 50.45% week-over-week drop, but the sample is only 30 leads from a single campaign. Once Meta delivery is restored, monitor CPL daily for the next 7 days to confirm the rate holds below $50. If CPL stays under $50 across 10+ leads by Sep 18, flag for a scale consideration at that check."
       }
     ],
     "next_check": "2026-09-14"

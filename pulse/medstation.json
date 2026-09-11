@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11T13:53:17.152Z",
+  "generated_at": "2026-09-11T14:47:49.101Z",
   "date": "2026-09-11",
   "slug": "medstation",
   "name": "MedStation",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 70,
   "status": "amber",
-  "verdict": "Meta spend surged 931% week-over-week driven by the WARM-RETARGETING campaign ($49.7 of $106.10 total spend), yet zero leads were captured across all channels over 28 days, signaling a critical conversion breakdown that needs immediate attention on landing page or form tracking.",
+  "verdict": "MedStation spent $106.10 across 28 days on Meta (top campaign: WARM-RETARGETING at $49.70) with 0 leads recorded, triggering a lead drought flag despite 211 clicks and 10 GBP calls. Spend spiked +931% in the last 7 days versus the prior 7, suggesting a recent budget push that has yet to convert into any tracked leads.",
   "windsor": {
     "totals": {
       "spend": 106.1,
@@ -422,6 +422,13 @@
     }
   },
   "ghl": null,
+  "reconciliation": {
+    "windsor_leads": 0,
+    "ghl_contacts": null,
+    "ghl_opps_created": null,
+    "ghl_opps_won": null,
+    "status": "ghl_unavailable"
+  },
   "_meta": {
     "source": "windsor_api",
     "sources": [
@@ -650,79 +657,80 @@
     "history_line": "Weston GHL, Meta & Google ads launched · WhatsApp connected to GHL · GA4 + GTM tracking configured"
   },
   "performance": {
-    "generated_at": "2026-09-11T13:58:16.502Z",
+    "generated_at": "2026-09-11T14:52:58.358Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "9 overdue milestones mean no campaign can be fairly judged yet.",
+    "verdict": "Money not working yet — 9 milestones overdue, zero leads on $106 spent.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "lead_drought confirmed: 0 leads across all channels over the full 28-day window despite $106.10 spent and 211 Meta clicks — conversion path is broken.",
+        "text": "lead_drought confirmed: $106.10 spent across 28 days, 211 Meta clicks recorded, 0 leads captured in any channel — CPL is undefined and uncollectable.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "Meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "5 July-31 SOW milestones overdue by 42 days: stack test, CRM migration, GBP triage, Meta account/CAPI, and landing pages/tracking — none completed per SOW record.",
+        "text": "5 milestones due 2026-07-31 are overdue: stack test, Como→GHL migration, GBP triage, Meta account & CAPI, and landing pages & tracking — all undelivered as of today.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "4 Aug–Sep SOW milestones also overdue: Meta reactivation lanes, Search campaigns, LSA verification, and nurture sequences — Phase 1 is 10 days from end with no live execution.",
+        "text": "4 additional milestones due 2026-08-31 to 2026-09-01 also overdue: search campaigns, Meta reactivation lanes, LSA verification, and nurture sequences — Phase 1 is 10+ weeks behind.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions collapsed to 0 for 3 consecutive days (Sep 8–10) after averaging ~3/day in prior weeks — organic visibility drop coincides with paid launch, not caused by it.",
+        "text": "Spend activated only 2026-09-03; 3-day signal (Sep 8–10: $10.53, $19.38, $16.56) shows rising spend with 0 leads — fatigue cannot explain zero results with no tracking live.",
         "confidence": "probable",
-        "channel": "gbp"
+        "channel": "Meta"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GA4 sessions dropped to 13 on Sep 10 vs. a 45-day average of ~110 — single-day anomaly, likely a tracking or data-pipeline issue, not a traffic collapse.",
-        "confidence": "hypothesis",
-        "channel": "ga4"
+        "text": "GBP actions dropped to 0 for Sep 7–10 (4 consecutive zero days) after averaging 4.1 actions/day Aug 14–Sep 6 — organic intent signal has gone dark coinciding with ad launch.",
+        "confidence": "probable",
+        "channel": "GBP"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Pause all Meta spend immediately until landing page and conversion tracking are confirmed live — $106.10 spent, 0 leads returned.",
+        "text": "Halt all Meta spend increases until landing pages, tracking, and CAPI are confirmed live — currently burning ~$13.82/day with 0 lead capture.",
         "cites": [
           "F1",
-          "F2"
+          "F2",
+          "F4"
         ],
-        "monday_item_name": "Pause Meta — Fix Tracking First",
-        "monday_update": "Meta has consumed $106.10 across 28 days with 211 clicks and zero leads recorded — the conversion path is confirmed broken and landing pages/tracking are listed as an overdue July-31 milestone. Pause all Meta spend now to stop the bleed. Success check: resume only after a full end-to-end stack test (lead fires → GHL opp created → appears in reporting) is completed and verified by Nacer. Target re-launch: no later than 2026-09-18 or Phase 1 is at risk of producing no attributable data whatsoever."
+        "monday_item_name": "Fix tracking before spend scales",
+        "monday_update": "Meta has spent $106.10 over 28 days and generated 0 leads because landing pages and CAPI are not live — both were due 2026-07-31 per SOW. No further daily budget increases should be approved until Nacer confirms end-to-end stack test passes (touch → GHL → reporting). Success is defined as at least 1 tracked lead appearing in GHL within 48 hours of the fix going live. Re-check by 2026-09-14."
       },
       {
         "id": "S2",
+        "type": "watch",
+        "text": "Watch GBP actions: 0 for 4 consecutive days (Sep 7–10) after 4.1/day average — confirm profile not suppressed before attributing to campaign.",
+        "cites": [
+          "F5"
+        ],
+        "monday_item_name": "Watch GBP Sep 7–10 drop",
+        "monday_update": "GBP actions hit zero for four straight days (Sep 7–10) after averaging 4.1 actions/day over the prior 24 days. Check the MedStation Weston profile for suppression, suspension, or a category policy flag. Success check: actions return above 2/day for 3 consecutive days. Re-check by 2026-09-14."
+      },
+      {
+        "id": "S3",
         "type": "fix",
-        "text": "Complete the overdue end-to-end stack test by Sep 14 — 9 milestones are past due and Phase 1 ends Oct 1.",
+        "text": "Escalate 9 overdue SOW milestones to Nacer immediately; Phase 1 proof-of-concept cannot be evaluated without a functioning stack.",
         "cites": [
           "F2",
           "F3"
         ],
-        "monday_item_name": "Stack Test — Nacer Gate Clear",
-        "monday_update": "Nine SOW milestones are overdue, the earliest by 42 days (July 31). Without a completed stack test, no channel result can be trusted and Phase 1 produces no proof for the Phase 2 conversation. Nacer to run the one end-to-end test (channel touch → tracked → GHL/NextGen EHR → report) no later than 2026-09-14. Success check: lead appears in GHL pipeline with source attribution intact. If not cleared by Sep 14, escalate to Mateus and flag Phase 1 timeline to his father before any budget commitment continues."
-      },
-      {
-        "id": "S3",
-        "type": "watch",
-        "text": "Watch GBP actions — 0 for 3 days straight vs. prior ~3/day average; re-check Sep 14 for recovery or further drop.",
-        "cites": [
-          "F4"
-        ],
-        "monday_item_name": "Watch GBP Actions Drop",
-        "monday_update": "GBP actions hit 0 on Sep 8, 9, and 10 after averaging roughly 3 per day in prior weeks — a 3-day confirmed signal, not noise. This may indicate a listing issue, suspension risk, or category change. No action yet as GBP triage is an overdue milestone (July 31) and the root cause is unknown. Re-check on 2026-09-14: if actions remain at 0, escalate to a fix (profile audit) immediately given the 10 calls and 48 directions GBP drove in the prior 28-day window."
+        "monday_item_name": "Escalate 9 overdue milestones",
+        "monday_update": "Nine SOW milestones across Ops, CRM, Meta, Google Search, and Web are overdue — the earliest by 42 days (due 2026-07-31). Without these, the $3,500–$5,000/mo retainer has no deliverable foundation and Phase 1 cannot be benchmarked on booked appointments. Sohib should surface this to Mateus and his father with a revised delivery date for each item. Confirm all milestone owners have acknowledged updated deadlines by 2026-09-18."
       }
     ],
     "next_check": "2026-09-14"
