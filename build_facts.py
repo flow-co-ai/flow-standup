@@ -46,6 +46,7 @@ _SUBJECT_ENUM = [
 
 _EMAIL_RE = re.compile(r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+")
 _PHONE_RE = re.compile(r"\b\d{10,}\b|\+\d[\d\s\-(). ]{7,}\d")
+_LONG_DIGIT_RE = re.compile(r"\d{10,}")
 _CRED_RE  = re.compile(
     r"(password|passwd|senha|api[\s_-]*key|token)\s*[=:\-]\s*\S+",
     re.IGNORECASE,
@@ -295,23 +296,39 @@ def _load(slug: str) -> dict:
     }
 
 
+def _sanitize_fact(fact: dict) -> dict:
+    return {
+        **fact,
+        "value": _LONG_DIGIT_RE.sub("[number]", fact.get("value") or ""),
+        "excerpt": _LONG_DIGIT_RE.sub("[number]", fact.get("excerpt") or ""),
+    }
+
+
 def _save(slug: str, data: dict) -> None:
     FACTS_DIR.mkdir(exist_ok=True)
+    facts = [_sanitize_fact(f) for f in data.get("facts", [])]
+    data = {**data, "facts": facts}
+    _assert_no_pii(slug, facts)
     serialized = json.dumps(data, indent=2, ensure_ascii=False) + "\n"
-    _assert_no_pii(slug, serialized)
     path = FACTS_DIR / f"{slug}.json"
     path.write_text(serialized, encoding="utf-8")
 
 
-def _assert_no_pii(slug: str, content: str) -> None:
-    if "@" in content:
-        raise AssertionError(
-            f"facts/{slug}.json contains '@' — possible email/mention leaked; check redaction"
-        )
-    if re.search(r"\d{10}", content):
-        raise AssertionError(
-            f"facts/{slug}.json contains a 10-digit run — possible phone number leaked; check redaction"
-        )
+def _assert_no_pii(slug: str, facts: list[dict]) -> None:
+    for fact in facts:
+        subject = fact.get("subject", "?")
+        chat = fact.get("chat", "?")
+        for field in ("value", "stated_by", "excerpt"):
+            val = fact.get(field) or ""
+            if "@" in val:
+                raise AssertionError(
+                    f"facts/{slug}.json [{subject}/{chat}]: {field}={val[:80]!r} — possible email/mention"
+                )
+            m = _LONG_DIGIT_RE.search(val)
+            if m:
+                raise AssertionError(
+                    f"facts/{slug}.json [{subject}/{chat}]: {field} contains {m.group()!r} — long digit run not sanitized"
+                )
 
 
 # ── main ──────────────────────────────────────────────────────────────────────
@@ -385,6 +402,30 @@ def _load_clients_slug_map() -> dict[str, str]:
         return {}
 
 
+def _resolve_slug(client_name: str, slug_map: dict[str, str]) -> str | None:
+    """Match client_name against slug_map using containment in either direction.
+    When multiple entries match, prefer the one with the longest common prefix."""
+    key = client_name.lower()
+    matches = {k: v for k, v in slug_map.items() if key in k or k in key}
+    if not matches:
+        return None
+    if len(matches) == 1:
+        return next(iter(matches.values()))
+
+    def _lcp(k: str) -> int:
+        n = min(len(k), len(key))
+        for i in range(n):
+            if k[i] != key[i]:
+                return i
+        return n
+
+    best_key = max(matches, key=_lcp)
+    print(
+        f"  ⚠️  '{client_name}': multiple slug matches {sorted(matches)} → chose '{best_key}' ({matches[best_key]})"
+    )
+    return matches[best_key]
+
+
 def build_facts(config: dict) -> None:
     clients_config = config.get("clients", {})
     slug_map = _load_clients_slug_map()
@@ -406,7 +447,7 @@ def build_facts(config: dict) -> None:
         by_client.setdefault(canonical, []).append((chat_name, msgs))
 
     for client_name, chat_list in sorted(by_client.items()):
-        slug = slug_map.get(client_name.lower())
+        slug = _resolve_slug(client_name, slug_map)
         if slug is None:
             print(f"  ⚠️  skip (no clients.json match): {client_name!r}")
             continue
