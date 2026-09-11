@@ -23,7 +23,7 @@ from client_aliases import resolve_client
 
 MODEL = "claude-sonnet-4-5"
 FACTS_DIR = Path("facts")
-CHUNK_SIZE = 150
+CHUNK_SIZE = 75
 
 # Subjects where the latest fact supersedes all prior facts on the same subject.
 SUPERSEDING_SUBJECTS = frozenset({
@@ -50,12 +50,15 @@ _CRED_RE  = re.compile(
     r"(password|passwd|senha|api[\s_-]*key|token)\s*[=:\-]\s*\S+",
     re.IGNORECASE,
 )
+# WhatsApp tags contacts as @<phone-digits> or @<username>
+_MENTION_RE = re.compile(r"@\d{6,}|@\S+")
 
 
 def _redact(text: str) -> str:
     text = _EMAIL_RE.sub("[email]", text)
     text = _PHONE_RE.sub("[phone]", text)
     text = _CRED_RE.sub(lambda m: m.group(1) + ": [credential]", text)
+    text = _MENTION_RE.sub("[mention]", text)
     return text
 
 
@@ -81,7 +84,7 @@ def _anthropic_client() -> anthropic.Anthropic:
 
 
 def _call_tool(client: anthropic.Anthropic, prompt: str, tool: dict, label: str,
-               max_tokens: int = 2000) -> dict:
+               max_tokens: int = 8000) -> dict:
     response = client.messages.create(
         model=MODEL,
         max_tokens=max_tokens,
@@ -95,7 +98,7 @@ def _call_tool(client: anthropic.Anthropic, prompt: str, tool: dict, label: str,
         f"tokens={response.usage.input_tokens}in/{response.usage.output_tokens}out"
     )
     if response.stop_reason == "max_tokens":
-        raise ValueError(f"{label}: output truncated at max_tokens")
+        print(f"  ⚠️  [{label}] truncated at max_tokens — attempting partial extraction")
     for block in response.content:
         if getattr(block, "type", None) == "tool_use" and block.name == tool["name"]:
             return block.input
@@ -171,6 +174,8 @@ def _build_extraction_prompt(client_name: str, chat_name: str, messages: list[di
     return (
         f"# Fact extraction — {client_name} — chat: {chat_name}\n\n"
         "Extract durable facts about this marketing agency engagement from the WhatsApp messages below.\n\n"
+        "OUTPUT LIMITS: Emit at most 12 facts. Skip greetings, scheduling chatter, acknowledgements, "
+        "and anything that is not a durable statement about the engagement.\n\n"
         "RECORD ONLY facts about:\n"
         "  • The engagement: who owns intake, who is the primary client contact, contract start/end dates,\n"
         "    what services are in scope, what KPIs were agreed upon\n"
@@ -292,15 +297,16 @@ def _load(slug: str) -> dict:
 
 def _save(slug: str, data: dict) -> None:
     FACTS_DIR.mkdir(exist_ok=True)
+    serialized = json.dumps(data, indent=2, ensure_ascii=False) + "\n"
+    _assert_no_pii(slug, serialized)
     path = FACTS_DIR / f"{slug}.json"
-    path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    path.write_text(serialized, encoding="utf-8")
 
 
-def _assert_no_pii(slug: str) -> None:
-    content = (FACTS_DIR / f"{slug}.json").read_text(encoding="utf-8")
+def _assert_no_pii(slug: str, content: str) -> None:
     if "@" in content:
         raise AssertionError(
-            f"facts/{slug}.json contains '@' — possible email address leaked; check redaction"
+            f"facts/{slug}.json contains '@' — possible email/mention leaked; check redaction"
         )
     if re.search(r"\d{10}", content):
         raise AssertionError(
@@ -310,8 +316,78 @@ def _assert_no_pii(slug: str) -> None:
 
 # ── main ──────────────────────────────────────────────────────────────────────
 
+def _process_client(
+    ai: anthropic.Anthropic,
+    slug: str,
+    client_name: str,
+    chat_list: list[tuple[str, list[dict]]],
+    now_iso: str,
+) -> None:
+    stored = _load(slug)
+    last_processed_at: str | None = stored.get("last_processed_at")
+    existing_facts: list[dict] = stored.get("facts", [])
+
+    new_facts: list[dict] = []
+    latest_dt: str | None = last_processed_at
+
+    for chat_name, msgs in chat_list:
+        if last_processed_at:
+            msgs = [m for m in msgs if (m.get("datetime") or "") > last_processed_at]
+        if not msgs:
+            print(f"  {chat_name}: no new messages")
+            continue
+
+        for msg in msgs:
+            dt = msg.get("datetime") or ""
+            if dt and (latest_dt is None or dt > latest_dt):
+                latest_dt = dt
+
+        redacted = [_redact_message(m) for m in msgs]
+
+        for i in range(0, len(redacted), CHUNK_SIZE):
+            chunk = redacted[i : i + CHUNK_SIZE]
+            chunk_facts = _extract_chunk(ai, client_name, chat_name, chunk, i // CHUNK_SIZE)
+            new_facts.extend(chunk_facts)
+
+    if not new_facts and not existing_facts:
+        print("  no facts found")
+        return
+
+    all_facts = existing_facts + new_facts
+    seen_ids: set[str] = set()
+    deduped: list[dict] = []
+    for f in all_facts:
+        if f["id"] not in seen_ids:
+            seen_ids.add(f["id"])
+            deduped.append(f)
+
+    deduped = _apply_supersede(deduped)
+    current = _build_current_map(deduped)
+
+    output = {
+        "slug": slug,
+        "generated_at": now_iso,
+        "last_processed_at": latest_dt,
+        "current": current,
+        "facts": deduped,
+    }
+    _save(slug, output)
+    print(f"  wrote facts/{slug}.json ({len(deduped)} total facts, {len(new_facts)} new)")
+
+
+def _load_clients_slug_map() -> dict[str, str]:
+    """Return {name.lower(): slug} from clients.json."""
+    try:
+        entries = json.loads(Path("clients.json").read_text(encoding="utf-8"))
+        return {e["name"].lower(): e["slug"] for e in entries if "name" in e and "slug" in e}
+    except Exception as exc:
+        print(f"  ⚠️  could not load clients.json: {exc}")
+        return {}
+
+
 def build_facts(config: dict) -> None:
     clients_config = config.get("clients", {})
+    slug_map = _load_clients_slug_map()
 
     print("build_facts: fetching full WhatsApp history...")
     history = fetch_whatsapp_history(config)
@@ -320,72 +396,26 @@ def build_facts(config: dict) -> None:
     ai = _anthropic_client()
     now_iso = datetime.now(timezone.utc).isoformat()
 
-    # Group chats by resolved client (slug, canonical_name).
-    by_client: dict[tuple[str, str], list[tuple[str, list[dict]]]] = {}
+    # Group chats by resolved canonical client name.
+    by_client: dict[str, list[tuple[str, list[dict]]]] = {}
     for chat_name, msgs in history.items():
         canonical = resolve_client(chat_name, clients_config, fuzzy=True)
         if canonical == "Unmapped":
             print(f"  skip (unmapped): {chat_name}")
             continue
-        key = (_slug(canonical), canonical)
-        by_client.setdefault(key, []).append((chat_name, msgs))
+        by_client.setdefault(canonical, []).append((chat_name, msgs))
 
-    for (slug, client_name), chat_list in sorted(by_client.items()):
-        print(f"\n── {client_name} ({slug}) ──")
-
-        stored = _load(slug)
-        last_processed_at: str | None = stored.get("last_processed_at")
-        existing_facts: list[dict] = stored.get("facts", [])
-
-        new_facts: list[dict] = []
-        latest_dt: str | None = last_processed_at
-
-        for chat_name, msgs in chat_list:
-            if last_processed_at:
-                msgs = [m for m in msgs if (m.get("datetime") or "") > last_processed_at]
-            if not msgs:
-                print(f"  {chat_name}: no new messages")
-                continue
-
-            for msg in msgs:
-                dt = msg.get("datetime") or ""
-                if dt and (latest_dt is None or dt > latest_dt):
-                    latest_dt = dt
-
-            # Redact before any model call.
-            redacted = [_redact_message(m) for m in msgs]
-
-            for i in range(0, len(redacted), CHUNK_SIZE):
-                chunk = redacted[i : i + CHUNK_SIZE]
-                chunk_facts = _extract_chunk(ai, client_name, chat_name, chunk, i // CHUNK_SIZE)
-                new_facts.extend(chunk_facts)
-
-        if not new_facts and not existing_facts:
-            print(f"  no facts found")
+    for client_name, chat_list in sorted(by_client.items()):
+        slug = slug_map.get(client_name.lower())
+        if slug is None:
+            print(f"  ⚠️  skip (no clients.json match): {client_name!r}")
             continue
 
-        # Merge, dedup by id (keep first occurrence — existing facts win on collision).
-        all_facts = existing_facts + new_facts
-        seen_ids: set[str] = set()
-        deduped: list[dict] = []
-        for f in all_facts:
-            if f["id"] not in seen_ids:
-                seen_ids.add(f["id"])
-                deduped.append(f)
-
-        deduped = _apply_supersede(deduped)
-        current = _build_current_map(deduped)
-
-        output = {
-            "slug": slug,
-            "generated_at": now_iso,
-            "last_processed_at": latest_dt,
-            "current": current,
-            "facts": deduped,
-        }
-        _save(slug, output)
-        _assert_no_pii(slug)
-        print(f"  wrote facts/{slug}.json ({len(deduped)} total facts, {len(new_facts)} new)")
+        print(f"\n── {client_name} ({slug}) ──")
+        try:
+            _process_client(ai, slug, client_name, chat_list, now_iso)
+        except Exception as exc:
+            print(f"  ✗ {client_name}: failed — {exc}")
 
 
 if __name__ == "__main__":
