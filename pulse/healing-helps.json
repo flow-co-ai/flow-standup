@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-09-10T15:21:07.030Z",
-  "date": "2026-09-10",
+  "generated_at": "2026-09-11T02:27:54.222Z",
+  "date": "2026-09-11",
   "slug": "healing-helps",
   "name": "Healing Helps",
   "type": "leadgen",
   "window_days": 28,
-  "score": 90,
+  "score": 80,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) generated zero spend, leads, or clicks over the last 28 days, suggesting campaigns may be paused or inactive. Google Business Profile remained the only source of engagement, driving 31 total actions including 2 calls, 14 direction requests, and 15 website clicks, though GA4 traffic is down 43.75% week over week, pointing to softening organic interest.",
+  "verdict": "Paid channels (Meta and Google Ads) recorded zero spend and zero leads over the past 28 days, so organic Google Business Profile activity is carrying all engagement with 27 total actions including 2 calls, 14 direction requests, and 11 website clicks. The biggest movement is a 50% week-over-week lift in GBP actions, likely driven by increased local search visibility or seasonal demand, while Search Console and GA4 traffic each declined roughly 41% in the same period, suggesting the site itself may need attention.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,25 +25,29 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 31,
+          "actions": 27,
           "calls": 2,
           "directions": 14,
-          "web_clicks": 15
+          "web_clicks": 11
         }
       }
     },
     "organic": {
-      "gbp_actions": 31,
+      "gbp_actions": 27,
       "ig_reach": 0
     },
     "top_campaign": null,
     "analytics": {
-      "sessions": 191,
-      "users": 158,
+      "sessions": 189,
+      "users": 156,
       "conversions": 0
     },
+    "search": {
+      "clicks": 37,
+      "impressions": 4480
+    },
     "latest_day": {
-      "date": "2026-09-09",
+      "date": "2026-09-10",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -51,7 +55,7 @@
       "gbp_actions": 0,
       "ig_reach": 0,
       "sc_clicks": 0,
-      "ga4_sessions": 4,
+      "ga4_sessions": 6,
       "purchases": 0,
       "revenue": 0
     },
@@ -61,16 +65,15 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": 0,
-      "sc_7d_pct": null,
-      "ga4_7d_pct": -43.75,
+      "gbp_7d_pct": 50,
+      "sc_7d_pct": -41.67,
+      "ga4_7d_pct": -41.27,
       "ig_7d_pct": null,
       "spend_per_day_7d": 0
     },
     "flags": [],
     "series": {
       "dates": [
-        "2026-08-13",
         "2026-08-14",
         "2026-08-15",
         "2026-08-16",
@@ -97,7 +100,8 @@
         "2026-09-06",
         "2026-09-07",
         "2026-09-08",
-        "2026-09-09"
+        "2026-09-09",
+        "2026-09-10"
       ],
       "spend": [
         0,
@@ -220,7 +224,6 @@
         0
       ],
       "gbp_actions": [
-        4,
         1,
         1,
         0,
@@ -243,6 +246,7 @@
         0,
         0,
         3,
+        0,
         0,
         0,
         0,
@@ -280,37 +284,36 @@
         0
       ],
       "sc_clicks": [
+        1,
+        1,
+        0,
+        1,
+        0,
+        2,
+        1,
+        3,
+        1,
         0,
         0,
+        1,
+        3,
+        4,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        1,
+        1,
+        1,
+        7,
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        2,
         0,
         0
       ],
       "ga4_sessions": [
-        9,
         4,
         4,
         4,
@@ -337,7 +340,8 @@
         2,
         4,
         7,
-        4
+        5,
+        6
       ],
       "purchases": [
         0,
@@ -406,6 +410,7 @@
     "source": "windsor_api",
     "sources": [
       "googleanalytics4",
+      "searchconsole",
       "google_my_business"
     ]
   },
@@ -517,63 +522,81 @@
     "history_line": "Website completed · Shabana Sheikh bio added to Meet Our Therapists"
   },
   "performance": {
-    "generated_at": "2026-09-10T15:23:17.192Z",
+    "generated_at": "2026-09-11T02:33:58.714Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "All paid channels are dark; only GBP is active and fading.",
+    "verdict": "Organic GBP rising but paid is absent; site traffic collapsing.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero spend, zero leads, zero clicks across Meta and Google Ads for the full 28-day window — paid engine is completely off.",
+        "text": "Zero paid spend across all 28 days — Meta and Google Ads both show $0 — meaning 100% of engagement falls on organic alone.",
         "confidence": "confirmed",
-        "channel": "meta+google"
+        "channel": "meta, google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GA4 sessions down 43.75% week-over-week; last 3 days (Sep 7–9) averaged 5 sessions vs. prior 3 days (Sep 4–6) averaging 6.3 — organic softening is confirmed trend, not a spike.",
+        "text": "SC clicks fell 41.67% week-over-week; last 3 days (Sep 8–10) show 2, 0, 0 vs prior 3 days (Sep 5–7) at 1, 1, 1 — sustained organic search decay.",
         "confidence": "confirmed",
-        "channel": "ga4"
+        "channel": "search_console"
       },
       {
         "id": "F3",
-        "priority": 3,
-        "text": "GBP actions flat at 0% week-over-week delta but spiked to 11 on Aug 25 then dropped to 0 for the last 4 days — engagement is erratic and declining.",
+        "priority": 2,
+        "text": "GA4 sessions down 41.27% week-over-week; last 3 days average 6 vs prior 3-day average of 4.7, but the Sep 1 spike of 28 sessions inflates the prior window, masking real weakness.",
         "confidence": "probable",
-        "channel": "gbp"
+        "channel": "ga4"
       },
       {
         "id": "F4",
+        "priority": 3,
+        "text": "GBP actions up 50% week-over-week (27 total over 28 days: 2 calls, 14 directions, 11 web clicks) while paid is dark — local intent exists but no paid channel is capturing it.",
+        "confidence": "confirmed",
+        "channel": "gbp"
+      },
+      {
+        "id": "F5",
         "priority": 4,
-        "text": "GHL pipeline shows null — no pipeline data available. With 0 paid leads in 28 days, no intake leak diagnosis is possible; CRM health is unknown.",
-        "confidence": "hypothesis",
+        "text": "GHL pipeline shows null — 0 leads recorded in 28 days means no pipeline data to evaluate; intake workflow status is unknown.",
+        "confidence": "confirmed",
         "channel": "ghl"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Confirm campaign pause status in Meta and Google Ads accounts; if paused intentionally, document the resume date.",
+        "type": "watch",
+        "text": "Confirm whether paid channels are intentionally paused or dark by error before any budget move.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Confirm Paid Campaign Status",
-        "monday_update": "Both Meta and Google Ads show $0 spend across the full 28-day window — no leads, no clicks, no impressions. Sohib to check platform dashboards and confirm whether campaigns are intentionally paused or have a billing/account issue. Success check: confirmation of campaign status (paused vs. active) by 2026-09-12. If unintentionally dark, reactivation plan needed immediately."
+        "monday_item_name": "Confirm Paid Channel Status",
+        "monday_update": "Meta and Google Ads show $0 spend across all 28 days — this is either a deliberate pause or a configuration error. Sohib to confirm with client whether campaigns are intentionally off. If unintentional, reactivation is the priority action. Re-check on 2026-09-14 to confirm status."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GA4 sessions over next 3 days; if daily average stays below 5, organic floor may require GBP or content action.",
+        "text": "Monitor SC clicks and GA4 sessions over next 3 days; 0, 0 close on SC is a confirmed decay signal.",
         "cites": [
           "F2",
           "F3"
         ],
-        "monday_item_name": "Watch GA4 Organic Trend",
-        "monday_update": "GA4 sessions are down 43.75% week-over-week and the last 3-day average is 5 sessions per day, down from 6.3 the prior 3 days. GBP actions have been 0 for 4 consecutive days. Monitor through 2026-09-13. Success check: daily sessions recover to 7+ per day; if not, escalate to GBP optimisation review."
+        "monday_item_name": "Watch Site Traffic Decay",
+        "monday_update": "Search Console clicks posted 0 on both Sep 9 and Sep 10, and GA4 is down 41.27% week-over-week. This is a 3-day confirmed decay signal on organic search, not noise. Watch whether sessions recover above the recent 5–7/day baseline by Sep 14. If not, a site or GSC technical audit is warranted."
+      },
+      {
+        "id": "S3",
+        "type": "fix",
+        "text": "Verify GHL pipeline is connected and receiving leads; null pipeline with 27 GBP actions signals a possible intake gap.",
+        "cites": [
+          "F4",
+          "F5"
+        ],
+        "monday_item_name": "Fix GHL Intake Check",
+        "monday_update": "GBP recorded 27 actions including 2 calls and 11 website clicks over 28 days, yet GHL shows null pipeline with zero opportunities. This suggests either the intake form or CRM connection is broken, or those contacts are not being routed into GHL at all. Confirm GHL webhook or form embed is live by Sep 14 to determine if inbound intent is being lost."
       }
     ],
-    "next_check": "2026-09-13"
+    "next_check": "2026-09-14"
   }
 }
