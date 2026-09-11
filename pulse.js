@@ -109,7 +109,7 @@ function computeDeltas7(dailyRows, clientType) {
 
 // --- Anomaly flags ---
 
-function computeFlags(latestDay, dailyRows, gbpProfiles = [], ghl = null) {
+function computeFlags(latestDay, dailyRows, gbpProfiles = [], ghl = null, clientType = 'leadgen') {
   const flags = [];
   if (!latestDay || !dailyRows.length) return flags;
 
@@ -118,17 +118,19 @@ function computeFlags(latestDay, dailyRows, gbpProfiles = [], ghl = null) {
 
   if (latestDay.spend === 0 && avg7dSpend > 0) flags.push('zero_spend_day');
 
-  let streak = 0;
-  for (let i = recent.length - 1; i >= 0; i--) {
-    if (recent[i].leads === 0 && recent[i].spend > 0) streak++;
-    else break;
-  }
-  if (streak >= 3) {
-    if (ghl && !ghl.error && (ghl.contacts ?? 0) > 0) {
-      // Windsor shows no leads but GHL has contacts — tracking gap, not demand collapse.
-      flags.push('attribution_gap');
-    } else {
-      flags.push('lead_drought');
+  if (clientType !== 'ecom') {
+    let streak = 0;
+    for (let i = recent.length - 1; i >= 0; i--) {
+      if (recent[i].leads === 0 && recent[i].spend > 0) streak++;
+      else break;
+    }
+    if (streak >= 3) {
+      if (ghl && !ghl.error && (ghl.contacts ?? 0) > 0) {
+        // Windsor shows no leads but GHL has contacts — tracking gap, not demand collapse.
+        flags.push('attribution_gap');
+      } else {
+        flags.push('lead_drought');
+      }
     }
   }
 
@@ -428,7 +430,7 @@ async function processClient(client) {
   }
 
   if (windsorOut && !windsorOut.error && flagInputs) {
-    windsorOut.flags = computeFlags(flagInputs.latestDay, flagInputs.dailyRows, flagInputs.gbpProfiles, ghl);
+    windsorOut.flags = computeFlags(flagInputs.latestDay, flagInputs.dailyRows, flagInputs.gbpProfiles, ghl, clientType);
   }
 
   const reconciliation = computeReconciliation(windsorOut, ghl);
