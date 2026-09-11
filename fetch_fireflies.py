@@ -35,8 +35,6 @@ def _post(query: str, variables: dict) -> dict:
         json={"query": query, "variables": variables},
         timeout=30,
     )
-    print("FIREFLIES RAW STATUS:", resp.status_code)
-    print("FIREFLIES RAW BODY:", resp.text)
     resp.raise_for_status()
     payload = resp.json()
     if "errors" in payload:

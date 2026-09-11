@@ -143,13 +143,22 @@ def _collect_drive_raw(config: dict) -> dict:
         service = build("drive", "v3", credentials=creds, cache_discovery=False)
 
         def _list(fid: str) -> list:
-            return service.files().list(
-                q=f"'{fid}' in parents and trashed = false",
-                fields="files(id, name, mimeType)",
-                pageSize=100,
-                supportsAllDrives=True,
-                includeItemsFromAllDrives=True,
-            ).execute().get("files", [])
+            results = []
+            page_token = None
+            while True:
+                resp = service.files().list(
+                    q=f"'{fid}' in parents and trashed = false",
+                    fields="nextPageToken, files(id, name, mimeType)",
+                    pageSize=1000,
+                    supportsAllDrives=True,
+                    includeItemsFromAllDrives=True,
+                    pageToken=page_token,
+                ).execute()
+                results.extend(resp.get("files", []))
+                page_token = resp.get("nextPageToken")
+                if not page_token:
+                    break
+            return results
 
         files = _list(folder_id)
         if processed_folder_id:
