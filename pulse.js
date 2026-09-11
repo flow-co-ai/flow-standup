@@ -150,6 +150,20 @@ function computeFlags(latestDay, dailyRows, gbpProfiles = []) {
         }
       }
     }
+
+    if (gbpProfiles.length >= 2) {
+      const bestRate = Math.max(...gbpProfiles.map(p => p.call_rate ?? 0));
+      if (bestRate > 0) {
+        for (const profile of gbpProfiles) {
+          if (profile.impressions < 50) continue;
+          if (profile.call_rate == null) continue;
+          if (flags.some(f => f === `gbp_no_calls_with_impressions:${profile.label}`)) continue;
+          if (profile.call_rate < bestRate / 2) {
+            flags.push(`gbp_low_call_rate:${profile.label}`);
+          }
+        }
+      }
+    }
   }
 
   return flags;

@@ -19,6 +19,7 @@ function norm(cfg) {
 }
 
 function round2(n) { return Math.round(n * 100) / 100; }
+function round4(n) { return Math.round(n * 10000) / 10000; }
 
 function toNum(val) {
   const n = typeof val === 'number' ? val : parseFloat(val);
@@ -195,6 +196,7 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}) {
     web_clicks:            Math.round(e.web_clicks),
     impressions:           Math.round(e.impressions),
     days_with_impressions: e.days_with_impressions,
+    call_rate:             e.impressions > 0 ? round4(e.calls / e.impressions) : null,
   }));
 
   // ── Instagram totals ────────────────────────────────────────────────────────
