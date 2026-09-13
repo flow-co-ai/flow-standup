@@ -67,7 +67,7 @@ _CRED_RE  = re.compile(
 _MENTION_RE = re.compile(r"@\d{6,}|@\S+")
 # Placeholder values the model must never emit.
 _UNKNOWN_VALUES_RE = re.compile(
-    r"^\s*(unknown|tbd|n/?a|not specified|not available|none|unspecified|unclear|to be determined)\s*$",
+    r"^\s*(unknown(\b.*)?|tbd|n/?a|not specified|not available|none|unspecified|unclear|to be determined)\s*$",
     re.IGNORECASE,
 )
 
@@ -368,6 +368,7 @@ def _load(slug: str) -> dict:
         "slug": slug,
         "generated_at": None,
         "last_processed_at": {"whatsapp": None, "fireflies": None},
+        "processed_transcript_ids": [],
         "facts": [],
         "current": {},
     }
@@ -637,14 +638,14 @@ def _compute_ff_days_back(slug_map: dict[str, str]) -> int:
     return max_days
 
 
-# ── team-member purge ─────────────────────────────────────────────────────────
+# ── invalid-fact purge ────────────────────────────────────────────────────────
 
-def purge_team_facts(config: dict) -> None:
-    """Remove existing intake_owner/primary_contact facts whose value is an agency
-    team member, then recompute the supersede chain and current map for each file."""
+def purge_invalid_facts(config: dict) -> None:
+    """Remove invalid facts from all facts/*.json files, then recompute supersede
+    chains and current maps. Two categories are purged:
+      1. intake_owner / primary_contact whose value is an agency team member.
+      2. Any superseding-subject fact whose value matches _UNKNOWN_VALUES_RE."""
     team = config.get("team", [])
-    if not team:
-        return
     for path in sorted(FACTS_DIR.glob("*.json")):
         if "manual" in path.name or path.name == "meeting_map.json":
             continue
@@ -654,13 +655,17 @@ def purge_team_facts(config: dict) -> None:
         kept: list[dict] = []
         dropped: list[dict] = []
         for f in facts:
-            if f.get("subject") in ("intake_owner", "primary_contact") and _is_team_member(f.get("value", ""), team):
+            subject = f.get("subject", "")
+            value = f.get("value", "")
+            if subject in ("intake_owner", "primary_contact") and team and _is_team_member(value, team):
+                dropped.append(f)
+            elif subject in SUPERSEDING_SUBJECTS and _UNKNOWN_VALUES_RE.match(value):
                 dropped.append(f)
             else:
                 kept.append(f)
         if not dropped:
             continue
-        print(f"  purge {slug}: removing {len(dropped)} team-member fact(s)")
+        print(f"  purge {slug}: removing {len(dropped)} invalid fact(s)")
         for f in dropped:
             print(f"    {f['subject']}={f.get('value')!r} ({f.get('id')})")
         reprocessed = _apply_supersede(kept)
@@ -677,6 +682,7 @@ def _process_client(
     chat_list: list[tuple[str, list[dict]]],
     meetings: list[dict],
     now_iso: str,
+    mapped_transcript_ids: set[str] | None = None,
 ) -> None:
     stored = _load(slug)
     lpa = _lpa_dict(stored.get("last_processed_at"))
@@ -687,6 +693,18 @@ def _process_client(
         {**f, "source": f.get("source") or "whatsapp"}
         for f in stored.get("facts", [])
     ]
+
+    mapped_transcript_ids = mapped_transcript_ids or set()
+    processed_ids: set[str] = set(stored.get("processed_transcript_ids") or [])
+
+    # Auto-populate: if a mapped meeting's title already appears in existing facts,
+    # mark it as processed so it is not re-extracted unnecessarily.
+    existing_chats = {f.get("chat") for f in existing_facts}
+    for meeting in meetings:
+        mid = meeting.get("id") or ""
+        if mid in mapped_transcript_ids and mid not in processed_ids:
+            if (meeting.get("title") or "Untitled") in existing_chats:
+                processed_ids.add(mid)
 
     new_facts: list[dict] = []
     latest_wa: str | None = last_wa
@@ -719,8 +737,14 @@ def _process_client(
         meeting_dt = f"{meeting_date}T00:00:00+00:00" if meeting_date else ""
         if not meeting_dt:
             continue
-        if last_ff and meeting_dt <= last_ff:
-            continue
+
+        meeting_id = meeting.get("id") or ""
+        is_mapped_new = meeting_id in mapped_transcript_ids and meeting_id not in processed_ids
+
+        if not is_mapped_new:
+            if last_ff and meeting_dt <= last_ff:
+                continue
+
         if latest_ff is None or meeting_dt > latest_ff:
             latest_ff = meeting_dt
 
@@ -728,6 +752,8 @@ def _process_client(
         pseudo_msg = _fireflies_pseudo_message(meeting)
         if not pseudo_msg.get("text", "").strip():
             print(f"  Fireflies '{title}': no content, skipping")
+            if is_mapped_new:
+                processed_ids.add(meeting_id)
             continue
 
         redacted_msg = _redact_message(pseudo_msg)
@@ -737,6 +763,10 @@ def _process_client(
         new_facts.extend(meeting_facts)
         if meeting_facts:
             print(f"  Fireflies '{title}' ({meeting_date}): {len(meeting_facts)} facts")
+
+        if is_mapped_new:
+            processed_ids.add(meeting_id)
+            print(f"  mapped transcript {meeting_id} extracted and marked processed")
 
     # --- Manual override ---
     manual_facts = _load_manual(slug)
@@ -760,6 +790,7 @@ def _process_client(
         "slug": slug,
         "generated_at": now_iso,
         "last_processed_at": {"whatsapp": latest_wa, "fireflies": latest_ff},
+        "processed_transcript_ids": sorted(processed_ids),
         "current": current,
         "facts": deduped,
     }
@@ -809,8 +840,8 @@ def build_facts(config: dict) -> None:
     clients_config = config.get("clients", {})
     slug_map = _load_clients_slug_map()
 
-    print("build_facts: purging team-member facts from existing files...")
-    purge_team_facts(config)
+    print("build_facts: purging invalid facts from existing files...")
+    purge_invalid_facts(config)
 
     print("build_facts: fetching full WhatsApp history...")
     history = fetch_whatsapp_history(config)
@@ -841,6 +872,11 @@ def build_facts(config: dict) -> None:
     # Resolve first (so meeting_map entries are identified), then dedupe per client.
     meeting_map = _load_meeting_map()
     inactive = _inactive_slugs()
+
+    # Index meeting_map by slug so we can pass mapped transcript IDs per client.
+    mapped_by_slug: dict[str, set[str]] = {}
+    for tid, slug_val in meeting_map.items():
+        mapped_by_slug.setdefault(slug_val, set()).add(tid)
     client_domains = config.get("client_domains", {})
 
     pre_dedup_by_client_ff: dict[str, list[dict]] = {}
@@ -913,6 +949,7 @@ def build_facts(config: dict) -> None:
                 by_client_wa.get(client_name, []),
                 by_client_ff.get(client_name, []),
                 now_iso,
+                mapped_transcript_ids=mapped_by_slug.get(slug, set()),
             )
         except Exception as exc:
             print(f"  ✗ {client_name}: failed — {exc}\n{traceback.format_exc()}")
