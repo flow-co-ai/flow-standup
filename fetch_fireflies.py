@@ -88,6 +88,11 @@ query Transcripts($fromDate: DateTime, $toDate: DateTime, $limit: Int, $skip: In
     id
     title
     date
+    meeting_link
+    attendees {
+      displayName
+      email
+    }
     summary {
       overview
       action_items
@@ -127,18 +132,26 @@ def fetch_transcripts(days_back: int = 7) -> list:
 
     results = []
     for t in raw:
-        summary = t.get("summary") or {}
+        raw_summary = t.get("summary") or {}
+        summary = raw_summary if isinstance(raw_summary, dict) else {}
         has_summary = bool(
             summary.get("overview")
             or summary.get("action_items")
             or summary.get("keywords")
         )
 
+        raw_date = t.get("date")
         entry = {
             "id": t.get("id"),
             "title": t.get("title") or "Untitled",
-            "date": _parse_ff_date(t.get("date")),
-            "participants": [],
+            "date": _parse_ff_date(raw_date),
+            "date_epoch": raw_date if isinstance(raw_date, (int, float)) else None,
+            "meeting_link": (t.get("meeting_link") or "").strip() or None,
+            "participants": [
+                {"displayName": a.get("displayName", ""), "email": a.get("email", "")}
+                for a in (t.get("attendees") or [])
+                if isinstance(a, dict)
+            ],
             "summary": summary,
         }
 

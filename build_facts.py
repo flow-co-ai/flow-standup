@@ -24,7 +24,7 @@ load_dotenv()
 
 from fetch_whatsapp import fetch_whatsapp_history
 from fetch_fireflies import fetch_transcripts
-from client_aliases import resolve_client
+from client_aliases import resolve_client, all_alias_matches
 
 MODEL = "claude-sonnet-4-5"
 FACTS_DIR = Path("facts")
@@ -412,11 +412,136 @@ def _assert_no_pii(slug: str, facts: list[dict]) -> None:
                 )
 
 
+# ── Fireflies client resolution ───────────────────────────────────────────────
+
+# Agency-name tokens to remove from meeting titles before client resolution so
+# internal Flow/Flowco mentions don't misdirect the match to flow-company.
+_AGENCY_STRIP_RE = re.compile(
+    r"\b(?:flow\s+company|flow\s+co|flowco|flow)\b",
+    re.IGNORECASE,
+)
+
+
+def _strip_agency_tokens(title: str) -> str:
+    s = _AGENCY_STRIP_RE.sub("", title)
+    s = re.sub(r"^\s*(?:and|or|with|[-&,])\s*", "", s, flags=re.IGNORECASE)
+    return s.strip(" ,&-")
+
+
+def _inactive_slugs() -> set[str]:
+    """Slugs where active is explicitly False in clients.json."""
+    try:
+        entries = json.loads(Path("clients.json").read_text(encoding="utf-8"))
+        return {e["slug"] for e in entries if e.get("active") is False and "slug" in e}
+    except Exception as exc:
+        print(f"  ⚠️  could not load clients.json for inactive check: {exc}")
+        return set()
+
+
+def _load_meeting_map() -> dict[str, str]:
+    """Load facts/meeting_map.json: {transcript_id: slug}."""
+    path = FACTS_DIR / "meeting_map.json"
+    if not path.exists():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        return {k: v for k, v in data.items() if isinstance(k, str) and isinstance(v, str)}
+    except Exception as exc:
+        print(f"  ⚠️  could not load meeting_map.json: {exc}")
+        return {}
+
+
+def _canonical_for_slug(slug: str, slug_map: dict[str, str], clients_config: dict) -> str | None:
+    """Return the config.json canonical name that resolves to the given slug."""
+    for canonical in clients_config:
+        if _resolve_slug(canonical, slug_map) == slug:
+            return canonical
+    return None
+
+
+def _resolve_active_ff(
+    text: str,
+    clients_config: dict,
+    slug_map: dict[str, str],
+    inactive: set[str],
+) -> str:
+    """Resolve text to a canonical, skipping any client whose slug is inactive."""
+    for canonical in all_alias_matches(text, clients_config):
+        slug = _resolve_slug(canonical, slug_map)
+        if slug not in inactive:
+            return canonical
+    return "Unmapped"
+
+
+def _resolve_by_participants(
+    meeting: dict,
+    client_domains: dict,
+    clients_config: dict,
+    slug_map: dict[str, str],
+    inactive: set[str],
+) -> str:
+    """Match participant email domains against client_domains config entries."""
+    for p in (meeting.get("participants") or []):
+        domain = (p.get("email") or "").lower().split("@", 1)[-1]
+        if not domain or "." not in domain:
+            continue
+        for canonical, domains in client_domains.items():
+            if domain in [d.lower() for d in domains]:
+                slug = _resolve_slug(canonical, slug_map)
+                if slug not in inactive:
+                    return canonical
+    return "Unmapped"
+
+
+def _dedupe_meetings(meetings: list[dict]) -> list[dict]:
+    """Dedupe on (meeting_link, date); where link is null, dedupe on (title, date)
+    within a 2-hour window. Keep the entry with the most summary content."""
+
+    def _content_len(m: dict) -> int:
+        s = m.get("summary") or {}
+        if not isinstance(s, dict):
+            s = {}
+        return sum(len(str(v or "")) for v in s.values()) + len(m.get("sentences") or []) * 10
+
+    def _bucket(m: dict) -> tuple:
+        link = (m.get("meeting_link") or "").strip()
+        date = m.get("date") or ""
+        if link:
+            return ("link", link, date)
+        title = (m.get("title") or "").lower().strip()
+        epoch = m.get("date_epoch")
+        if epoch:
+            try:
+                hour_slot = datetime.fromtimestamp(epoch / 1000, tz=timezone.utc).hour // 2
+                return ("title", title, date, hour_slot)
+            except Exception:
+                pass
+        return ("title", title, date)
+
+    groups: dict = {}
+    for m in meetings:
+        groups.setdefault(_bucket(m), []).append(m)
+
+    result = []
+    for mlist in groups.values():
+        if len(mlist) == 1:
+            result.append(mlist[0])
+        else:
+            best = max(mlist, key=_content_len)
+            print(
+                f"  dedup FF: '{best.get('title')}' ({best.get('date')}) "
+                f"— kept 1 of {len(mlist)} recordings"
+            )
+            result.append(best)
+    return result
+
+
 # ── Fireflies helpers ─────────────────────────────────────────────────────────
 
 def _fireflies_pseudo_message(meeting: dict) -> dict:
     """Convert a Fireflies meeting dict to a pseudo message for fact extraction."""
-    summary = meeting.get("summary") or {}
+    raw_summary = meeting.get("summary") or {}
+    summary = raw_summary if isinstance(raw_summary, dict) else {}
     parts: list[str] = []
     if summary.get("overview"):
         parts.append(summary["overview"])
@@ -626,12 +751,50 @@ def build_facts(config: dict) -> None:
         by_client_wa.setdefault(canonical, []).append((chat_name, msgs))
 
     # Group Fireflies meetings by resolved canonical client name.
+    meeting_map = _load_meeting_map()
+    inactive = _inactive_slugs()
+    client_domains = config.get("client_domains", {})
+    deduped_meetings = _dedupe_meetings(all_meetings)
+
     by_client_ff: dict[str, list[dict]] = {}
-    for meeting in all_meetings:
+    for meeting in deduped_meetings:
         title = meeting.get("title") or ""
-        canonical = resolve_client(title, clients_config, fuzzy=True)
-        if canonical == "Unmapped":
+        date = meeting.get("date") or ""
+        meeting_id = meeting.get("id") or ""
+
+        # 1. Manual meeting_map override (transcript_id → slug)
+        mapped_slug = meeting_map.get(meeting_id)
+        if mapped_slug:
+            canonical_override = _canonical_for_slug(mapped_slug, slug_map, clients_config)
+            if canonical_override:
+                by_client_ff.setdefault(canonical_override, []).append(meeting)
+            else:
+                print(f"  ⚠️  meeting_map slug {mapped_slug!r} has no canonical: {title!r}")
             continue
+
+        canonical = "Unmapped"
+
+        # 2. Title — strip agency tokens first so internal mentions don't misdirect
+        clean_title = _strip_agency_tokens(title)
+        if clean_title:
+            canonical = _resolve_active_ff(clean_title, clients_config, slug_map, inactive)
+
+        # 3. Participant email domains (requires client_domains in config.json)
+        if canonical == "Unmapped" and client_domains:
+            canonical = _resolve_by_participants(meeting, client_domains, clients_config, slug_map, inactive)
+
+        # 4. Summary text fallback
+        if canonical == "Unmapped":
+            s = meeting.get("summary") or {}
+            if isinstance(s, dict):
+                summary_text = " ".join(filter(None, [s.get("overview"), s.get("action_items")]))
+                if summary_text:
+                    canonical = _resolve_active_ff(summary_text, clients_config, slug_map, inactive)
+
+        if canonical == "Unmapped":
+            print(f"  skip FF (unmapped): {title!r} ({date})")
+            continue
+
         by_client_ff.setdefault(canonical, []).append(meeting)
 
     all_clients = set(by_client_wa) | set(by_client_ff)
