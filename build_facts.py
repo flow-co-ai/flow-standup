@@ -251,7 +251,14 @@ def _extract_chunk(
 
     seen_ids: set[str] = set()
     facts: list[dict] = []
-    for raw in result.get("facts") or []:
+    raw_facts = result.get("facts") or []
+    if isinstance(raw_facts, str):
+        try:
+            raw_facts = json.loads(raw_facts)
+        except Exception as exc:
+            print(f"  ⚠️  {label}: facts field is a string, JSON parse failed — {exc}; skipping chunk")
+            return []
+    for raw in raw_facts:
         if not isinstance(raw, dict):
             print(f"  ⚠️  {label}: non-dict fact item ({type(raw).__name__}): {repr(raw)[:80]}")
             continue
@@ -497,9 +504,12 @@ def _resolve_by_participants(
     return "Unmapped"
 
 
-def _dedupe_meetings(meetings: list[dict]) -> list[dict]:
+def _dedupe_meetings(meetings: list[dict], meeting_map: dict[str, str] | None = None) -> list[dict]:
     """Dedupe on (meeting_link, date); where link is null, dedupe on (title, date)
-    within a 2-hour window. Keep the entry with the most summary content."""
+    within a 2-hour window. Keep the entry with the most summary content.
+    Any meeting whose id appears in meeting_map always survives over a richer duplicate."""
+    if meeting_map is None:
+        meeting_map = {}
 
     def _content_len(m: dict) -> int:
         s = m.get("summary") or {}
@@ -531,7 +541,8 @@ def _dedupe_meetings(meetings: list[dict]) -> list[dict]:
         if len(mlist) == 1:
             result.append(mlist[0])
         else:
-            best = max(mlist, key=_content_len)
+            mapped = [m for m in mlist if m.get("id") and m["id"] in meeting_map]
+            best = mapped[0] if mapped else max(mlist, key=_content_len)
             print(
                 f"  dedup FF: '{best.get('title')}' ({best.get('date')}) "
                 f"— kept 1 of {len(mlist)} recordings"
@@ -755,13 +766,13 @@ def build_facts(config: dict) -> None:
         by_client_wa.setdefault(canonical, []).append((chat_name, msgs))
 
     # Group Fireflies meetings by resolved canonical client name.
+    # Resolve first (so meeting_map entries are identified), then dedupe per client.
     meeting_map = _load_meeting_map()
     inactive = _inactive_slugs()
     client_domains = config.get("client_domains", {})
-    deduped_meetings = _dedupe_meetings(all_meetings)
 
-    by_client_ff: dict[str, list[dict]] = {}
-    for meeting in deduped_meetings:
+    pre_dedup_by_client_ff: dict[str, list[dict]] = {}
+    for meeting in all_meetings:
         title = meeting.get("title") or ""
         date = meeting.get("date") or ""
         meeting_id = meeting.get("id") or ""
@@ -771,7 +782,7 @@ def build_facts(config: dict) -> None:
         if mapped_slug:
             canonical_override = _canonical_for_slug(mapped_slug, slug_map, clients_config)
             if canonical_override:
-                by_client_ff.setdefault(canonical_override, []).append(meeting)
+                pre_dedup_by_client_ff.setdefault(canonical_override, []).append(meeting)
             else:
                 print(f"  ⚠️  meeting_map slug {mapped_slug!r} has no canonical: {title!r}")
             continue
@@ -787,19 +798,34 @@ def build_facts(config: dict) -> None:
         if canonical == "Unmapped" and client_domains:
             canonical = _resolve_by_participants(meeting, client_domains, clients_config, slug_map, inactive)
 
-        # 4. Summary text fallback
+        # 4. Summary text fallback — only when exactly one active client matches.
+        #    Zero or multiple matches → internal/ambiguous; skip with a log line.
         if canonical == "Unmapped":
             s = meeting.get("summary") or {}
             if isinstance(s, dict):
                 summary_text = " ".join(filter(None, [s.get("overview"), s.get("action_items")]))
                 if summary_text:
-                    canonical = _resolve_active_ff(summary_text, clients_config, slug_map, inactive)
+                    active_matches = [
+                        c for c in all_alias_matches(summary_text, clients_config)
+                        if _resolve_slug(c, slug_map) not in inactive
+                    ]
+                    if len(active_matches) == 1:
+                        canonical = active_matches[0]
+                    elif len(active_matches) > 1:
+                        print(f"  skip FF (multi-client): {title!r} ({date})")
+                        continue
 
         if canonical == "Unmapped":
             print(f"  skip FF (unmapped): {title!r} ({date})")
             continue
 
-        by_client_ff.setdefault(canonical, []).append(meeting)
+        pre_dedup_by_client_ff.setdefault(canonical, []).append(meeting)
+
+    # Dedupe within each client's list, protecting meeting_map entries.
+    by_client_ff: dict[str, list[dict]] = {
+        c: _dedupe_meetings(ms, meeting_map)
+        for c, ms in pre_dedup_by_client_ff.items()
+    }
 
     all_clients = set(by_client_wa) | set(by_client_ff)
     for client_name in sorted(all_clients):
