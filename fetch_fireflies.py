@@ -88,11 +88,6 @@ query Transcripts($fromDate: DateTime, $toDate: DateTime, $limit: Int, $skip: In
     id
     title
     date
-    meeting_link
-    attendees {
-      displayName
-      email
-    }
     summary {
       overview
       action_items
@@ -141,17 +136,24 @@ def fetch_transcripts(days_back: int = 7) -> list:
         )
 
         raw_date = t.get("date")
+        date_str = _parse_ff_date(raw_date)
+        date_epoch = None
+        if date_str:
+            try:
+                date_epoch = int(
+                    datetime.strptime(date_str, "%Y-%m-%d")
+                    .replace(tzinfo=timezone.utc)
+                    .timestamp() * 1000
+                )
+            except Exception:
+                pass
         entry = {
             "id": t.get("id"),
             "title": t.get("title") or "Untitled",
-            "date": _parse_ff_date(raw_date),
-            "date_epoch": raw_date if isinstance(raw_date, (int, float)) else None,
-            "meeting_link": (t.get("meeting_link") or "").strip() or None,
-            "participants": [
-                {"displayName": a.get("displayName", ""), "email": a.get("email", "")}
-                for a in (t.get("attendees") or [])
-                if isinstance(a, dict)
-            ],
+            "date": date_str,
+            "date_epoch": date_epoch,
+            "meeting_link": None,
+            "participants": [],
             "summary": summary,
         }
 

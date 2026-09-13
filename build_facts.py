@@ -14,6 +14,7 @@ import hashlib
 import json
 import os
 import re
+import traceback
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -251,6 +252,9 @@ def _extract_chunk(
     seen_ids: set[str] = set()
     facts: list[dict] = []
     for raw in result.get("facts") or []:
+        if not isinstance(raw, dict):
+            print(f"  ⚠️  {label}: non-dict fact item ({type(raw).__name__}): {repr(raw)[:80]}")
+            continue
         subject = raw.get("subject", "")
         if subject not in ALL_SUBJECTS:
             continue
@@ -813,7 +817,7 @@ def build_facts(config: dict) -> None:
                 now_iso,
             )
         except Exception as exc:
-            print(f"  ✗ {client_name}: failed — {exc}")
+            print(f"  ✗ {client_name}: failed — {exc}\n{traceback.format_exc()}")
 
 
 if __name__ == "__main__":
