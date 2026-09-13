@@ -32,6 +32,11 @@ FACTS_DIR = Path("facts")
 CHUNK_SIZE = 75
 _FF_DAYS_BACK = 1095  # ~3 years; used when no prior Fireflies checkpoint exists
 
+# Loaded from config at runtime; guards intake_owner / primary_contact extraction.
+_TEAM_MEMBERS: list[str] = []
+# Bare single-word identifiers that always indicate the agency, not a client contact.
+_BARE_AGENCY_NAMES = frozenset({"sohib", "flow", "flowco", "flow company", "flow co"})
+
 # Subjects where the latest fact supersedes all prior facts on the same subject.
 SUPERSEDING_SUBJECTS = frozenset({
     "intake_owner", "primary_contact", "contract_start", "contract_end",
@@ -65,6 +70,21 @@ _UNKNOWN_VALUES_RE = re.compile(
     r"^\s*(unknown|tbd|n/?a|not specified|not available|none|unspecified|unclear|to be determined)\s*$",
     re.IGNORECASE,
 )
+
+
+def _is_team_member(value: str, team: list[str] | None = None) -> bool:
+    """Return True if value matches an agency team member name (should not be a client contact)."""
+    v = value.strip().lower()
+    if not v:
+        return False
+    if v in _BARE_AGENCY_NAMES:
+        return True
+    members = team if team is not None else _TEAM_MEMBERS
+    for member in members:
+        m = member.lower()
+        if m in v or v in m:
+            return True
+    return False
 
 
 def _redact(text: str) -> str:
@@ -207,9 +227,17 @@ def _build_extraction_prompt(
         "  • Never guess a value not present in the text\n"
         "  • excerpt: copy at most 20 words verbatim from the relevant message\n"
         "  • stated_at: copy the ISO datetime exactly as it appears in [brackets]\n\n"
+        "AGENCY TEAM RULE:\n"
+        "  intake_owner and primary_contact must refer to people on the CLIENT's side only — never to\n"
+        "  anyone on the agency team. The following people are agency staff; do NOT emit intake_owner\n"
+        "  or primary_contact for any of them, even if an action item is assigned to them:\n"
+        f"  {', '.join(_TEAM_MEMBERS) if _TEAM_MEMBERS else 'Sohib Boundaoui, Nacer Amrouch, Hashir Faiz, Raheel, Ahmed Memon, Muhammad Ahmed Memon, Hamza'}\n"
+        "  If an action item is assigned to one of these people, it means the agency is handling it —\n"
+        "  this tells us nothing about who on the client side owns intake.\n\n"
         "ACTION ITEM RULE:\n"
         "  If a meeting summary or action item assigns a named person to manage intake, lead follow-up,\n"
-        "  or callbacks, emit an intake_owner fact for that person with confidence 'stated'.\n\n"
+        "  or callbacks, emit an intake_owner fact for that person with confidence 'stated'.\n"
+        "  Only do this when the person is clearly on the client's side (not the agency team above).\n\n"
         "DEPARTURE RULE:\n"
         "  If a message states that a named person has left, is no longer with the client, or that a\n"
         "  role is now vacant, emit a decision fact describing the departure.\n\n"
@@ -285,7 +313,14 @@ def _extract_chunk(
             "source": source,
             "superseded_by": None,
         })
-    return facts
+    # Drop intake_owner / primary_contact that resolved to an agency team member.
+    filtered: list[dict] = []
+    for fact in facts:
+        if fact["subject"] in ("intake_owner", "primary_contact") and _is_team_member(fact["value"]):
+            print(f"  ⚠️  [{label}] dropped {fact['subject']}={fact['value']!r} — agency team member")
+            continue
+        filtered.append(fact)
+    return filtered
 
 
 # ── supersede logic (deterministic, no model) ─────────────────────────────────
@@ -602,6 +637,37 @@ def _compute_ff_days_back(slug_map: dict[str, str]) -> int:
     return max_days
 
 
+# ── team-member purge ─────────────────────────────────────────────────────────
+
+def purge_team_facts(config: dict) -> None:
+    """Remove existing intake_owner/primary_contact facts whose value is an agency
+    team member, then recompute the supersede chain and current map for each file."""
+    team = config.get("team", [])
+    if not team:
+        return
+    for path in sorted(FACTS_DIR.glob("*.json")):
+        if "manual" in path.name or path.name == "meeting_map.json":
+            continue
+        slug = path.stem
+        data = _load(slug)
+        facts = data.get("facts", [])
+        kept: list[dict] = []
+        dropped: list[dict] = []
+        for f in facts:
+            if f.get("subject") in ("intake_owner", "primary_contact") and _is_team_member(f.get("value", ""), team):
+                dropped.append(f)
+            else:
+                kept.append(f)
+        if not dropped:
+            continue
+        print(f"  purge {slug}: removing {len(dropped)} team-member fact(s)")
+        for f in dropped:
+            print(f"    {f['subject']}={f.get('value')!r} ({f.get('id')})")
+        reprocessed = _apply_supersede(kept)
+        current = _build_current_map(reprocessed)
+        _save(slug, {**data, "facts": reprocessed, "current": current})
+
+
 # ── main ──────────────────────────────────────────────────────────────────────
 
 def _process_client(
@@ -737,8 +803,14 @@ def _resolve_slug(client_name: str, slug_map: dict[str, str]) -> str | None:
 
 
 def build_facts(config: dict) -> None:
+    global _TEAM_MEMBERS
+    _TEAM_MEMBERS = config.get("team", [])
+
     clients_config = config.get("clients", {})
     slug_map = _load_clients_slug_map()
+
+    print("build_facts: purging team-member facts from existing files...")
+    purge_team_facts(config)
 
     print("build_facts: fetching full WhatsApp history...")
     history = fetch_whatsapp_history(config)
