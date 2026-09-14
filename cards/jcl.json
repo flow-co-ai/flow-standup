@@ -1,0 +1,140 @@
+{
+  "slug": "jcl",
+  "name": "Justice Consumer Law",
+  "generated_at": "2026-09-14T18:25:17.351Z",
+  "contract": {
+    "start": "2025-10-01",
+    "end": "2026-10-31",
+    "validated": true,
+    "month_of": 13,
+    "months_total": 13,
+    "days_left": 47,
+    "basis": {
+      "type": "observed",
+      "source": "timeline/plan",
+      "window": "engagement"
+    }
+  },
+  "status": "warn",
+  "lanes": {
+    "organic": {
+      "state": "green",
+      "headline": "64 calls",
+      "sentence": "Justice Consumer Law, LLC took 64 calls on 1572 impressions.",
+      "basis": {
+        "type": "observed",
+        "source": "Windsor GBP",
+        "window": "28d"
+      },
+      "flags": [],
+      "detail": {
+        "profiles": [
+          {
+            "account_id": "locations/3362232819248488877",
+            "label": "Justice Consumer Law, LLC",
+            "calls": 64,
+            "directions": 0,
+            "web_clicks": 127,
+            "impressions": 1572,
+            "days_with_impressions": 25,
+            "call_rate": 0.0407
+          }
+        ],
+        "flagged_profiles": [],
+        "total_calls": 64,
+        "total_profiles": 1
+      }
+    },
+    "paid": {
+      "state": "green",
+      "headline": "$1,408.56",
+      "sentence": "Meta $1,408.56 spend, 30 leads.",
+      "basis": {
+        "type": "observed",
+        "source": "Windsor Paid",
+        "window": "28d"
+      },
+      "flags": [
+        "channel_dark:meta"
+      ],
+      "detail": {
+        "meta": {
+          "spend": 1408.56,
+          "leads": 30,
+          "clicks": 746
+        },
+        "google_ads": null,
+        "total_spend": 1408.56,
+        "reconciliation": null
+      }
+    },
+    "crm": {
+      "state": "amber",
+      "headline": "1 waiting 618h",
+      "sentence": "Andrew King, as of 2026-06-16 per fireflies. 1 client thread awaiting Flow, oldest 618h.",
+      "basis": {
+        "type": "observed",
+        "source": "GHL / WhatsApp",
+        "window": "14d"
+      },
+      "flags": [
+        "awaiting_flow:1"
+      ],
+      "detail": {
+        "intake_owner": "Andrew King",
+        "intake_owner_basis": {
+          "type": "fact",
+          "source": "fireflies",
+          "window": "2026-06-16"
+        },
+        "awaiting_flow": 1,
+        "oldest_unanswered_hours": 618,
+        "threads": {
+          "messages_scanned": 204,
+          "threads": 4,
+          "awaiting_flow": 1,
+          "awaiting_client": 0,
+          "client_update": 2,
+          "settled": 1,
+          "abandoned": 19,
+          "stale_over_24h": 1
+        },
+        "ghl": {
+          "contacts": 24,
+          "opportunities": {
+            "created": {
+              "count": 0,
+              "value": 0
+            },
+            "won": {
+              "count": 0,
+              "value": 0
+            }
+          },
+          "appointments": 0
+        }
+      }
+    }
+  },
+  "scope_out": [],
+  "needs_you": [
+    {
+      "text": "1 thread awaiting Flow, oldest 618h.",
+      "severity": "medium",
+      "age_days": 26,
+      "basis": {
+        "type": "observed",
+        "source": "GHL / WhatsApp",
+        "window": "14d"
+      }
+    }
+  ],
+  "sources_read": {
+    "pulse": true,
+    "facts": true,
+    "comms": true,
+    "plan": true,
+    "timeline": true,
+    "inbox": true
+  }
+}

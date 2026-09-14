@@ -1,0 +1,188 @@
+{
+  "slug": "hvac",
+  "name": "Quality HVAC by Fibid",
+  "generated_at": "2026-09-14T18:25:17.350Z",
+  "contract": {
+    "start": "2026-05-01",
+    "end": "2026-10-31",
+    "validated": true,
+    "month_of": 6,
+    "months_total": 6,
+    "days_left": 47,
+    "basis": {
+      "type": "observed",
+      "source": "timeline/plan",
+      "window": "engagement"
+    }
+  },
+  "status": "warn",
+  "lanes": {
+    "organic": {
+      "state": "amber",
+      "headline": "2 of 3 dead",
+      "sentence": "Fibid Heating & Air Conditioning took 1 calls on 118 impressions; Quality HVAC by Fibid took 0 calls on 206 impressions.",
+      "basis": {
+        "type": "observed",
+        "source": "Windsor GBP",
+        "window": "28d"
+      },
+      "flags": [
+        "gbp_no_calls_with_impressions:Quality HVAC by Fibid",
+        "gbp_low_call_rate:Fibid Heating & Air Conditioning"
+      ],
+      "detail": {
+        "profiles": [
+          {
+            "account_id": "locations/935628167137586436",
+            "label": "Fibid Heating & Air Conditioning",
+            "calls": 1,
+            "directions": 0,
+            "web_clicks": 5,
+            "impressions": 118,
+            "days_with_impressions": 25,
+            "call_rate": 0.0085
+          },
+          {
+            "account_id": "locations/9013300148944922826",
+            "label": "Quality HVAC by Fibid",
+            "calls": 0,
+            "directions": 0,
+            "web_clicks": 7,
+            "impressions": 206,
+            "days_with_impressions": 25,
+            "call_rate": 0
+          },
+          {
+            "account_id": "locations/6129595594309014752",
+            "label": "Quality HVAC Solutions",
+            "calls": 26,
+            "directions": 51,
+            "web_clicks": 48,
+            "impressions": 1085,
+            "days_with_impressions": 26,
+            "call_rate": 0.024
+          }
+        ],
+        "flagged_profiles": [
+          {
+            "label": "Fibid Heating & Air Conditioning",
+            "flags": [
+              "gbp_low_call_rate"
+            ]
+          },
+          {
+            "label": "Quality HVAC by Fibid",
+            "flags": [
+              "gbp_no_calls_with_impressions"
+            ]
+          }
+        ],
+        "total_calls": 27,
+        "total_profiles": 3
+      }
+    },
+    "paid": {
+      "state": "green",
+      "headline": "$1,624.32",
+      "sentence": "Meta $692.53 spend, 7 leads; Google Ads $931.79 spend, 10 conversions.",
+      "basis": {
+        "type": "observed",
+        "source": "Windsor Paid",
+        "window": "28d"
+      },
+      "flags": [],
+      "detail": {
+        "meta": {
+          "spend": 692.53,
+          "leads": 7,
+          "clicks": 565
+        },
+        "google_ads": {
+          "spend": 931.79,
+          "convs": 10,
+          "clicks": 134
+        },
+        "total_spend": 1624.32,
+        "reconciliation": null
+      }
+    },
+    "crm": {
+      "state": "amber",
+      "headline": "1 waiting 546h",
+      "sentence": "Luis Valencia, as of 2026-08-13 per fireflies. 1 client thread awaiting Flow, oldest 546h.",
+      "basis": {
+        "type": "observed",
+        "source": "GHL / WhatsApp",
+        "window": "14d"
+      },
+      "flags": [
+        "awaiting_flow:1"
+      ],
+      "detail": {
+        "intake_owner": "Luis Valencia",
+        "intake_owner_basis": {
+          "type": "fact",
+          "source": "fireflies",
+          "window": "2026-08-13"
+        },
+        "awaiting_flow": 1,
+        "oldest_unanswered_hours": 545.5,
+        "threads": {
+          "messages_scanned": 627,
+          "threads": 7,
+          "awaiting_flow": 1,
+          "awaiting_client": 0,
+          "client_update": 2,
+          "settled": 4,
+          "abandoned": 29,
+          "stale_over_24h": 1
+        },
+        "ghl": {
+          "contacts": 267,
+          "opportunities": {
+            "created": {
+              "count": 679,
+              "value": 565
+            },
+            "won": {
+              "count": 44,
+              "value": 565
+            }
+          },
+          "appointments": 0
+        }
+      }
+    }
+  },
+  "scope_out": [],
+  "needs_you": [
+    {
+      "text": "1 thread awaiting Flow, oldest 546h.",
+      "severity": "medium",
+      "age_days": 23,
+      "basis": {
+        "type": "observed",
+        "source": "GHL / WhatsApp",
+        "window": "14d"
+      }
+    },
+    {
+      "text": "GBP issue (amber): Fibid Heating & Air Conditioning, Quality HVAC by Fibid.",
+      "severity": "medium",
+      "age_days": null,
+      "basis": {
+        "type": "observed",
+        "source": "Windsor GBP",
+        "window": "28d"
+      }
+    }
+  ],
+  "sources_read": {
+    "pulse": true,
+    "facts": true,
+    "comms": true,
+    "plan": true,
+    "timeline": true,
+    "inbox": true
+  }
+}

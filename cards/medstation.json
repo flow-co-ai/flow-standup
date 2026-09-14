@@ -1,0 +1,147 @@
+{
+  "slug": "medstation",
+  "name": "MedStation",
+  "generated_at": "2026-09-14T18:25:17.353Z",
+  "contract": {
+    "start": "2026-07-01",
+    "end": "2026-09-30",
+    "validated": true,
+    "month_of": 3,
+    "months_total": 3,
+    "days_left": 16,
+    "basis": {
+      "type": "observed",
+      "source": "timeline/plan",
+      "window": "engagement"
+    }
+  },
+  "status": "critical",
+  "lanes": {
+    "organic": {
+      "state": "green",
+      "headline": "11 calls",
+      "sentence": "MedStation Weston took 11 calls on 159 impressions.",
+      "basis": {
+        "type": "observed",
+        "source": "Windsor GBP",
+        "window": "28d"
+      },
+      "flags": [],
+      "detail": {
+        "profiles": [
+          {
+            "account_id": "locations/301736109571843428",
+            "label": "MedStation Weston",
+            "calls": 11,
+            "directions": 47,
+            "web_clicks": 31,
+            "impressions": 159,
+            "days_with_impressions": 26,
+            "call_rate": 0.0692
+          }
+        ],
+        "flagged_profiles": [],
+        "total_calls": 11,
+        "total_profiles": 1
+      }
+    },
+    "paid": {
+      "state": "red",
+      "headline": "$142.84",
+      "sentence": "Meta $142.84 spend, 0 leads.",
+      "basis": {
+        "type": "observed",
+        "source": "Windsor Paid",
+        "window": "28d"
+      },
+      "flags": [
+        "lead_drought"
+      ],
+      "detail": {
+        "meta": {
+          "spend": 142.84,
+          "leads": 0,
+          "clicks": 294
+        },
+        "google_ads": null,
+        "total_spend": 142.84,
+        "reconciliation": null
+      }
+    },
+    "crm": {
+      "state": "red",
+      "headline": "16 waiting 575h",
+      "sentence": "Paulo from Agencia WeMark, as of 2026-07-15 per fireflies. 16 client threads awaiting Flow, oldest 575h.",
+      "basis": {
+        "type": "observed",
+        "source": "GHL / WhatsApp",
+        "window": "14d"
+      },
+      "flags": [
+        "awaiting_flow:16"
+      ],
+      "detail": {
+        "intake_owner": "Paulo from Agencia WeMark",
+        "intake_owner_basis": {
+          "type": "fact",
+          "source": "fireflies",
+          "window": "2026-07-15"
+        },
+        "awaiting_flow": 16,
+        "oldest_unanswered_hours": 575.4,
+        "threads": {
+          "messages_scanned": 443,
+          "threads": 37,
+          "awaiting_flow": 16,
+          "awaiting_client": 2,
+          "client_update": 13,
+          "settled": 6,
+          "abandoned": 0,
+          "stale_over_24h": 16
+        },
+        "ghl": null
+      }
+    }
+  },
+  "scope_out": [],
+  "needs_you": [
+    {
+      "text": "16 threads awaiting Flow, oldest 575h.",
+      "severity": "high",
+      "age_days": 24,
+      "basis": {
+        "type": "observed",
+        "source": "GHL / WhatsApp",
+        "window": "14d"
+      }
+    },
+    {
+      "text": "Paid issue (red): lead_drought.",
+      "severity": "high",
+      "age_days": null,
+      "basis": {
+        "type": "observed",
+        "source": "Windsor Paid",
+        "window": "28d"
+      }
+    },
+    {
+      "text": "Contract ends in 16 days (2026-09-30).",
+      "severity": "high",
+      "age_days": null,
+      "basis": {
+        "type": "observed",
+        "source": "timeline/plan",
+        "window": "engagement"
+      }
+    }
+  ],
+  "sources_read": {
+    "pulse": true,
+    "facts": true,
+    "comms": true,
+    "plan": true,
+    "timeline": true,
+    "inbox": true
+  }
+}

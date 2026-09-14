@@ -1,0 +1,125 @@
+{
+  "slug": "billy-doe",
+  "name": "Billy Doe Meats",
+  "generated_at": "2026-09-14T18:25:17.349Z",
+  "contract": {
+    "start": "2026-08-01",
+    "end": "2027-01-31",
+    "validated": true,
+    "month_of": 3,
+    "months_total": 6,
+    "days_left": 139,
+    "basis": {
+      "type": "observed",
+      "source": "timeline/plan",
+      "window": "engagement"
+    }
+  },
+  "status": "warn",
+  "lanes": {
+    "organic": {
+      "state": "green",
+      "headline": "45 calls",
+      "sentence": "BillyDoe Meats took 45 calls on 5699 impressions.",
+      "basis": {
+        "type": "observed",
+        "source": "Windsor GBP",
+        "window": "28d"
+      },
+      "flags": [],
+      "detail": {
+        "profiles": [
+          {
+            "account_id": "locations/17076764668101686399",
+            "label": "BillyDoe Meats",
+            "calls": 45,
+            "directions": 96,
+            "web_clicks": 564,
+            "impressions": 5699,
+            "days_with_impressions": 26,
+            "call_rate": 0.0079
+          }
+        ],
+        "flagged_profiles": [],
+        "total_calls": 45,
+        "total_profiles": 1
+      }
+    },
+    "paid": {
+      "state": "green",
+      "headline": "$1,482.15",
+      "sentence": "Meta $1,482.15 spend, 0 leads.",
+      "basis": {
+        "type": "observed",
+        "source": "Windsor Paid",
+        "window": "28d"
+      },
+      "flags": [],
+      "detail": {
+        "meta": {
+          "spend": 1482.15,
+          "leads": 0,
+          "clicks": 1001
+        },
+        "google_ads": null,
+        "total_spend": 1482.15,
+        "reconciliation": null
+      }
+    },
+    "crm": {
+      "state": "amber",
+      "headline": "1 waiting 408h",
+      "sentence": "Haney Noureldin, as of 2026-07-17 per fireflies. 1 client thread awaiting Flow, oldest 408h.",
+      "basis": {
+        "type": "observed",
+        "source": "GHL / WhatsApp",
+        "window": "14d"
+      },
+      "flags": [
+        "awaiting_flow:1"
+      ],
+      "detail": {
+        "intake_owner": "Haney Noureldin",
+        "intake_owner_basis": {
+          "type": "fact",
+          "source": "fireflies",
+          "window": "2026-07-17"
+        },
+        "awaiting_flow": 1,
+        "oldest_unanswered_hours": 408.1,
+        "threads": {
+          "messages_scanned": 222,
+          "threads": 4,
+          "awaiting_flow": 1,
+          "awaiting_client": 0,
+          "client_update": 1,
+          "settled": 2,
+          "abandoned": 17,
+          "stale_over_24h": 1
+        },
+        "ghl": null
+      }
+    }
+  },
+  "scope_out": [],
+  "needs_you": [
+    {
+      "text": "1 thread awaiting Flow, oldest 408h.",
+      "severity": "medium",
+      "age_days": 17,
+      "basis": {
+        "type": "observed",
+        "source": "GHL / WhatsApp",
+        "window": "14d"
+      }
+    }
+  ],
+  "sources_read": {
+    "pulse": true,
+    "facts": true,
+    "comms": true,
+    "plan": true,
+    "timeline": true,
+    "inbox": true
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "slug": "steel-ohare",
+  "name": "O'Hare Precision",
+  "generated_at": "2026-09-14T18:25:17.353Z",
+  "contract": {
+    "start": "2026-05-01",
+    "end": "2026-10-31",
+    "validated": true,
+    "month_of": 6,
+    "months_total": 6,
+    "days_left": 47,
+    "basis": {
+      "type": "observed",
+      "source": "timeline/plan",
+      "window": "engagement"
+    }
+  },
+  "status": "warn",
+  "lanes": {
+    "organic": {
+      "state": "amber",
+      "headline": "2 of 3 dead",
+      "sentence": "Precision Ground Metals, Inc took 0 calls on 100 impressions; Precision Ground Bars took 0 calls on 303 impressions.",
+      "basis": {
+        "type": "observed",
+        "source": "Windsor GBP",
+        "window": "28d"
+      },
+      "flags": [
+        "gbp_no_calls_with_impressions:Precision Ground Metals, Inc",
+        "gbp_no_calls_with_impressions:Precision Ground Bars"
+      ],
+      "detail": {
+        "profiles": [
+          {
+            "account_id": "locations/13271763853568185062",
+            "label": "Precision Ground Metals, Inc",
+            "calls": 0,
+            "directions": 17,
+            "web_clicks": 2,
+            "impressions": 100,
+            "days_with_impressions": 22,
+            "call_rate": 0
+          },
+          {
+            "account_id": "locations/5934730863857931795",
+            "label": "Precision Ground Bars",
+            "calls": 0,
+            "directions": 10,
+            "web_clicks": 4,
+            "impressions": 303,
+            "days_with_impressions": 26,
+            "call_rate": 0
+          },
+          {
+            "account_id": "locations/8971866041567639876",
+            "label": "O'Hare Precision Metals, LLC",
+            "calls": 5,
+            "directions": 58,
+            "web_clicks": 37,
+            "impressions": 605,
+            "days_with_impressions": 26,
+            "call_rate": 0.0083
+          }
+        ],
+        "flagged_profiles": [
+          {
+            "label": "Precision Ground Metals, Inc",
+            "flags": [
+              "gbp_no_calls_with_impressions"
+            ]
+          },
+          {
+            "label": "Precision Ground Bars",
+            "flags": [
+              "gbp_no_calls_with_impressions"
+            ]
+          }
+        ],
+        "total_calls": 5,
+        "total_profiles": 3
+      }
+    },
+    "paid": {
+      "state": "quiet",
+      "headline": "no paid",
+      "sentence": "No paid channels configured.",
+      "basis": {
+        "type": "not_found",
+        "source": "clients.json",
+        "window": "config"
+      },
+      "flags": [],
+      "detail": {}
+    },
+    "crm": {
+      "state": "green",
+      "headline": "no owner",
+      "sentence": "No intake owner found in known sources.",
+      "basis": {
+        "type": "observed",
+        "source": "GHL / WhatsApp",
+        "window": "14d"
+      },
+      "flags": [],
+      "detail": {
+        "intake_owner": null,
+        "intake_owner_basis": {
+          "type": "unavailable",
+          "source": "facts",
+          "window": "current"
+        },
+        "awaiting_flow": 0,
+        "oldest_unanswered_hours": 0,
+        "threads": {
+          "messages_scanned": 0,
+          "threads": 0,
+          "awaiting_flow": 0,
+          "awaiting_client": 0,
+          "client_update": 0,
+          "settled": 0,
+          "abandoned": 0,
+          "stale_over_24h": 0
+        },
+        "ghl": null
+      }
+    }
+  },
+  "scope_out": [
+    "paid"
+  ],
+  "needs_you": [
+    {
+      "text": "GBP issue (amber): Precision Ground Metals, Inc, Precision Ground Bars.",
+      "severity": "medium",
+      "age_days": null,
+      "basis": {
+        "type": "observed",
+        "source": "Windsor GBP",
+        "window": "28d"
+      }
+    }
+  ],
+  "sources_read": {
+    "pulse": true,
+    "facts": false,
+    "comms": true,
+    "plan": true,
+    "timeline": true,
+    "inbox": false
+  }
+}

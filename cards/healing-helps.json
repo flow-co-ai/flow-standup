@@ -1,0 +1,118 @@
+{
+  "slug": "healing-helps",
+  "name": "Healing Helps",
+  "generated_at": "2026-09-14T18:25:17.350Z",
+  "contract": {
+    "start": null,
+    "end": null,
+    "validated": false,
+    "month_of": null,
+    "months_total": null,
+    "days_left": null,
+    "basis": {
+      "type": "unavailable",
+      "source": "timeline/plan",
+      "window": "engagement"
+    }
+  },
+  "status": "warn",
+  "lanes": {
+    "organic": {
+      "state": "green",
+      "headline": "2 calls",
+      "sentence": "Healing Helps Therapy PLLC took 2 calls on 341 impressions.",
+      "basis": {
+        "type": "observed",
+        "source": "Windsor GBP",
+        "window": "28d"
+      },
+      "flags": [],
+      "detail": {
+        "profiles": [
+          {
+            "account_id": "locations/9257180210135267024",
+            "label": "Healing Helps Therapy PLLC",
+            "calls": 2,
+            "directions": 25,
+            "web_clicks": 10,
+            "impressions": 341,
+            "days_with_impressions": 26,
+            "call_rate": 0.0059
+          }
+        ],
+        "flagged_profiles": [],
+        "total_calls": 2,
+        "total_profiles": 1
+      }
+    },
+    "paid": {
+      "state": "quiet",
+      "headline": "no paid",
+      "sentence": "No paid channels configured.",
+      "basis": {
+        "type": "not_found",
+        "source": "clients.json",
+        "window": "config"
+      },
+      "flags": [],
+      "detail": {}
+    },
+    "crm": {
+      "state": "amber",
+      "headline": "1 waiting 503h",
+      "sentence": "No intake owner found in whatsapp, fireflies. 1 client thread awaiting Flow, oldest 503h.",
+      "basis": {
+        "type": "observed",
+        "source": "GHL / WhatsApp",
+        "window": "14d"
+      },
+      "flags": [
+        "awaiting_flow:1"
+      ],
+      "detail": {
+        "intake_owner": null,
+        "intake_owner_basis": {
+          "type": "not_found",
+          "source": "facts",
+          "window": "current"
+        },
+        "awaiting_flow": 1,
+        "oldest_unanswered_hours": 502.6,
+        "threads": {
+          "messages_scanned": 17,
+          "threads": 3,
+          "awaiting_flow": 1,
+          "awaiting_client": 0,
+          "client_update": 0,
+          "settled": 2,
+          "abandoned": 0,
+          "stale_over_24h": 1
+        },
+        "ghl": null
+      }
+    }
+  },
+  "scope_out": [
+    "paid"
+  ],
+  "needs_you": [
+    {
+      "text": "1 thread awaiting Flow, oldest 503h.",
+      "severity": "medium",
+      "age_days": 21,
+      "basis": {
+        "type": "observed",
+        "source": "GHL / WhatsApp",
+        "window": "14d"
+      }
+    }
+  ],
+  "sources_read": {
+    "pulse": true,
+    "facts": true,
+    "comms": true,
+    "plan": false,
+    "timeline": false,
+    "inbox": false
+  }
+}

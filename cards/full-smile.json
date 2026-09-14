@@ -1,0 +1,154 @@
+{
+  "slug": "full-smile",
+  "name": "Full Smile",
+  "generated_at": "2026-09-14T18:25:17.349Z",
+  "contract": {
+    "start": "2025-10-27",
+    "end": "2026-10-31",
+    "validated": true,
+    "month_of": 12,
+    "months_total": 12,
+    "days_left": 47,
+    "basis": {
+      "type": "observed",
+      "source": "timeline/plan",
+      "window": "engagement"
+    }
+  },
+  "status": "warn",
+  "lanes": {
+    "organic": {
+      "state": "green",
+      "headline": "77 calls",
+      "sentence": "Full Smile Dental took 77 calls on 447 impressions.",
+      "basis": {
+        "type": "observed",
+        "source": "Windsor GBP",
+        "window": "28d"
+      },
+      "flags": [],
+      "detail": {
+        "profiles": [
+          {
+            "account_id": "locations/9295260348937485711",
+            "label": "Full Smile Dental",
+            "calls": 77,
+            "directions": 90,
+            "web_clicks": 73,
+            "impressions": 447,
+            "days_with_impressions": 26,
+            "call_rate": 0.1723
+          }
+        ],
+        "flagged_profiles": [],
+        "total_calls": 77,
+        "total_profiles": 1
+      }
+    },
+    "paid": {
+      "state": "amber",
+      "headline": "$695.90",
+      "sentence": "Meta $695.90 spend, 94 leads; Google Ads $0.00 spend, 0 conversions.",
+      "basis": {
+        "type": "observed",
+        "source": "Windsor Paid",
+        "window": "28d"
+      },
+      "flags": [
+        "channel_dark:meta"
+      ],
+      "detail": {
+        "meta": {
+          "spend": 695.9,
+          "leads": 94,
+          "clicks": 703
+        },
+        "google_ads": {
+          "spend": 0,
+          "convs": 0,
+          "clicks": 0
+        },
+        "total_spend": 695.9,
+        "reconciliation": null
+      }
+    },
+    "crm": {
+      "state": "amber",
+      "headline": "2 waiting 618h",
+      "sentence": "Muhammad Tahir, as of 2026-08-14 per fireflies. 2 client threads awaiting Flow, oldest 618h.",
+      "basis": {
+        "type": "observed",
+        "source": "GHL / WhatsApp",
+        "window": "14d"
+      },
+      "flags": [
+        "awaiting_flow:2"
+      ],
+      "detail": {
+        "intake_owner": "Muhammad Tahir",
+        "intake_owner_basis": {
+          "type": "fact",
+          "source": "fireflies",
+          "window": "2026-08-14"
+        },
+        "awaiting_flow": 2,
+        "oldest_unanswered_hours": 618,
+        "threads": {
+          "messages_scanned": 460,
+          "threads": 7,
+          "awaiting_flow": 2,
+          "awaiting_client": 1,
+          "client_update": 1,
+          "settled": 3,
+          "abandoned": 58,
+          "stale_over_24h": 2
+        },
+        "ghl": {
+          "contacts": 341,
+          "opportunities": {
+            "created": {
+              "count": 92,
+              "value": 350.04
+            },
+            "won": {
+              "count": 0,
+              "value": 0
+            }
+          },
+          "appointments": 0
+        }
+      }
+    }
+  },
+  "scope_out": [],
+  "needs_you": [
+    {
+      "text": "2 threads awaiting Flow, oldest 618h.",
+      "severity": "medium",
+      "age_days": 26,
+      "basis": {
+        "type": "observed",
+        "source": "GHL / WhatsApp",
+        "window": "14d"
+      }
+    },
+    {
+      "text": "Paid issue (amber): channel_dark:meta.",
+      "severity": "medium",
+      "age_days": null,
+      "basis": {
+        "type": "observed",
+        "source": "Windsor Paid",
+        "window": "28d"
+      }
+    }
+  ],
+  "sources_read": {
+    "pulse": true,
+    "facts": true,
+    "comms": true,
+    "plan": true,
+    "timeline": true,
+    "inbox": true
+  }
+}
