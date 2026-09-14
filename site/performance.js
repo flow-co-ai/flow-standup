@@ -6,20 +6,24 @@ const CARDS_BASE = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/re
 // Maps standup client display names → pulse slug (covers known aliases).
 // Inactive clients (active: false in clients.json) are omitted.
 const PULSE_SLUG = {
-  'Billy Doe Meats':       'billy-doe',
-  'Full Smile':            'full-smile',
-  'Healing Helps':         'healing-helps',
-  'HVAC':                  'hvac',
-  'Quality HVAC':          'hvac',
-  'Quality HVAC by Fibid': 'hvac',
-  'Justice Consumer Law':  'jcl',
-  'Liferun':               'liferun',
-  'Maadi Law':             'maadi-law',
-  'Maadi Law, LLC':        'maadi-law',
-  'Steel Round Bars':      'steel-ohare',   // legacy standup name; ohare is the umbrella slug
-  'Forte Metals':          'steel-forte',
-  'Advance Grinding':      'steel-advance',
-  "O'Hare Precision":      'steel-ohare',
+  'Billy Doe Meats':          'billy-doe',
+  'Full Smile':               'full-smile',
+  'Healing Helps':            'healing-helps',
+  'HVAC':                     'hvac',
+  'Quality HVAC':             'hvac',
+  'Quality HVAC by Fibid':    'hvac',
+  'Justice Consumer Law':     'jcl',
+  'Liferun':                  'liferun',
+  'Maadi Law':                'maadi-law',
+  'Maadi Law, LLC':           'maadi-law',
+  'Steel Round Bars':         'steel-ohare',   // legacy standup name; ohare is the umbrella slug
+  'Forte Metals':             'steel-forte',
+  'Forte Precision Metals':   'steel-forte',
+  'Advance Grinding':         'steel-advance',
+  'Advance Grinding Services':'steel-advance',
+  "O'Hare Precision":         'steel-ohare',
+  "O'Hare Precision Metals":  'steel-ohare',
+  'MedStation':               'medstation',
 };
 
 // Pulse-only clients that may not appear in the standup (inactive excluded).
@@ -651,9 +655,17 @@ async function loadStandup() {
 async function init() {
   const app = document.getElementById('perf-app');
 
-  const standup = await loadStandup();
+  const [standup, clientsJson] = await Promise.all([
+    loadStandup(),
+    fetch(`clients.json?t=${Date.now()}`).then(r => r.ok ? r.json() : []).catch(() => []),
+  ]);
+
+  const activeNames = clientsJson.length
+    ? new Set(clientsJson.filter(c => c.active !== false).map(c => c.name))
+    : null;
+
   const standupClients = (standup?.by_client || [])
-    .filter(c => c.client !== 'Unmapped')
+    .filter(c => c.client !== 'Unmapped' && (!activeNames || activeNames.has(c.client)))
     .map(c => c.client);
 
   // Build ordered client list: standup clients first, then pulse-only extras.

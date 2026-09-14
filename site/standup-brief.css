@@ -1335,3 +1335,57 @@ body.sb3-active #app {
 }
 
 .sb3-footnote > div + div { margin-top: 4px; }
+
+
+/* ── sb3-card light-background overrides ─────────────────────────────────────
+   flow-ui.css tokens (.card-lane-*, .card-needs-you-*, .mini-needs-you, etc.)
+   are dark-theme foreground colours. Override them here for the #fbfaf5 card. */
+
+.sb3-card .mini-needs-you {
+  color: rgba(20,22,15,0.72) !important;
+}
+.sb3-card .mini-needs-you.nothing {
+  color: rgba(20,22,15,0.38) !important;
+}
+.sb3-card .mini-days-left {
+  color: var(--sb3-amber) !important;
+}
+.sb3-card .card-lane {
+  background: rgba(20,22,15,0.03) !important;
+  border-color: rgba(20,22,15,0.08) !important;
+}
+.sb3-card .card-lane-head {
+  color: rgba(20,22,15,0.45) !important;
+}
+.sb3-card .card-lane-headline {
+  color: rgba(20,22,15,0.9) !important;
+}
+.sb3-card .card-lane-sentence {
+  color: rgba(20,22,15,0.72) !important;
+}
+.sb3-card .card-lane-sentence.basis-not_found,
+.sb3-card .card-lane-sentence.basis-unavailable {
+  color: rgba(20,22,15,0.4) !important;
+}
+.sb3-card .card-lane-basis {
+  color: rgba(20,22,15,0.5) !important;
+}
+.sb3-card .card-lane-basis.basis-fact {
+  color: rgba(170,120,20,0.85) !important;
+}
+.sb3-card .card-lane-basis.basis-not_found,
+.sb3-card .card-lane-basis.basis-unavailable {
+  color: rgba(20,22,15,0.35) !important;
+}
+.sb3-card .card-needs-you-label {
+  color: rgba(20,22,15,0.45) !important;
+}
+.sb3-card .card-needs-you-item {
+  color: rgba(20,22,15,0.72) !important;
+  border-top-color: rgba(20,22,15,0.08) !important;
+}
+.sb3-card .card-contract-line,
+.sb3-card .card-contract-unvalidated,
+.sb3-card .card-scope-out {
+  color: rgba(20,22,15,0.5) !important;
+}
