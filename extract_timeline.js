@@ -199,9 +199,39 @@ async function callExtract(slug, playbook) {
   return toolUse.input;
 }
 
+// ── validate-existing mode ────────────────────────────────────────────────────
+
+function validateExisting() {
+  console.log('=== Validate existing plans ===');
+  if (!existsSync('timeline')) { console.log('  timeline/ does not exist'); return; }
+
+  const files = readdirSync('timeline').filter(f => f.endsWith('.plan.json'));
+  if (!files.length) { console.log('  No plan files found'); return; }
+
+  let passed = 0, failed = 0;
+  for (const file of files) {
+    const slug    = file.replace(/\.plan\.json$/, '');
+    const path    = `timeline/${file}`;
+    const plan    = readJSON(path);
+    if (!plan) { console.log(`  ✗ ${slug}: could not parse JSON`); failed++; continue; }
+
+    const reason = validatePlan(plan);
+    if (reason) {
+      console.log(`  ✗ ${slug}: ${reason}`);
+      failed++;
+    } else {
+      writeFileSync(path, JSON.stringify({ ...plan, validated: true, validated_at: new Date().toISOString() }, null, 2));
+      console.log(`  ✓ ${slug}`);
+      passed++;
+    }
+  }
+  console.log(`\nDone: ${passed} validated, ${failed} failed.`);
+}
+
 // ── main ──────────────────────────────────────────────────────────────────────
 
 async function main() {
+  if (process.argv.includes('--validate-existing')) { validateExisting(); return; }
   console.log('=== Extract timeline plans ===');
 
   if (!existsSync('playbooks')) {
