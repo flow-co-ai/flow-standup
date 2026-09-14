@@ -80,12 +80,18 @@ const EMIT_PLAN = {
         },
       },
       engagement: {
-        type: 'object',
-        required: ['start', 'end'],
-        properties: {
-          start: { type: 'string', description: 'ISO date YYYY-MM-DD' },
-          end:   { type: 'string', description: 'ISO date YYYY-MM-DD' },
-        },
+        description: 'Overall engagement date range, or null if the playbook contains no usable dates.',
+        anyOf: [
+          { type: 'null' },
+          {
+            type: 'object',
+            required: ['start', 'end'],
+            properties: {
+              start: { type: 'string', description: 'ISO date YYYY-MM-DD' },
+              end:   { type: 'string', description: 'ISO date YYYY-MM-DD' },
+            },
+          },
+        ],
       },
     },
   },
@@ -117,10 +123,53 @@ Rules:
 - engagement.start and engagement.end are the overall engagement dates stated at the top of the playbook.
 - Milestones are named deliverables with a specific due date (launch, go-live, approval). Pull from the "Sequence at a glance" table or explicit deadline text.
 - Keep labels concise (≤8 words).
-- If the playbook contains no usable date information at all, return empty arrays and set engagement to today ± 90 days.
+- If the playbook contains no usable date information at all, return empty arrays and set engagement to null. A null engagement is a valid output and means the plan cannot be paced.
 
 PLAYBOOK:
 ${playbook}`;
+}
+
+// ── plan validation ───────────────────────────────────────────────────────────
+
+function validatePlan(plan) {
+  const { engagement, milestones = [], departments = [] } = plan;
+
+  if (engagement === null) return null; // null engagement is valid
+
+  const ISO_RE = /^\d{4}-\d{2}-\d{2}$/;
+  if (!engagement?.start || !ISO_RE.test(engagement.start)) return 'engagement.start is not a valid ISO date';
+  if (!engagement?.end   || !ISO_RE.test(engagement.end))   return 'engagement.end is not a valid ISO date';
+
+  const start = new Date(engagement.start);
+  const end   = new Date(engagement.end);
+  if (isNaN(start) || isNaN(end)) return 'engagement dates do not parse';
+  if (end <= start) return `end (${engagement.end}) is not after start (${engagement.start})`;
+
+  const spanDays = (end - start) / 86400000;
+  if (spanDays < 30)  return `engagement span ${Math.round(spanDays)} days is under 30`;
+  if (spanDays > 730) return `engagement span ${Math.round(spanDays)} days exceeds 730`;
+
+  if (start < new Date('2024-01-01')) return `engagement.start ${engagement.start} is before 2024-01-01`;
+
+  const twoYearsOut = new Date();
+  twoYearsOut.setFullYear(twoYearsOut.getFullYear() + 2);
+  if (end > twoYearsOut) return `engagement.end ${engagement.end} is more than two years from today`;
+
+  for (const m of milestones) {
+    if (m.date < engagement.start || m.date > engagement.end)
+      return `milestone "${m.label}" date ${m.date} is outside engagement range`;
+  }
+
+  for (const d of departments) {
+    for (const bar of d.bars || []) {
+      if (bar.start < engagement.start || bar.start > engagement.end)
+        return `bar "${bar.label}" start ${bar.start} is outside engagement range`;
+      if (bar.end < engagement.start || bar.end > engagement.end)
+        return `bar "${bar.label}" end ${bar.end} is outside engagement range`;
+    }
+  }
+
+  return null; // valid
 }
 
 // ── API call ──────────────────────────────────────────────────────────────────
@@ -200,9 +249,19 @@ async function main() {
     try {
       console.log(`  ${slug}: extracting…`);
       const plan = await callExtract(slug, playbookText);
+
+      const rejection = validatePlan(plan);
+      if (rejection) {
+        console.log(`  ✗ ${slug}: plan rejected — ${rejection}`);
+        skipped++;
+        continue;
+      }
+
       writeFileSync(planPath, JSON.stringify({
         source_hash:  newHash,
         extracted_at: new Date().toISOString(),
+        validated:    true,
+        validated_at: new Date().toISOString(),
         ...plan,
       }, null, 2));
       console.log(`  ${slug}: ✓ ${plan.departments?.length ?? 0} depts, ${plan.milestones?.length ?? 0} milestones`);

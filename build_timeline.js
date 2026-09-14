@@ -695,11 +695,20 @@ async function main() {
       const labels = completedEvents.map(e => e.label.toLowerCase());
       return labels.some(l => l.includes(m.label.toLowerCase()) || m.label.toLowerCase().includes(l));
     }).length;
-    const actualPct  = computeActualPct(plan.milestones, completedEvents);
-    const plannedPct = computePlannedPct(plan.engagement, today);
-    const pace       = computePace(actualPct, plannedPct);
-    const nextUp     = nextUpMilestones(plan.milestones, today);
-    const insight    = computeInsight(pulseSlugs, pace.label, plan.milestones, completedEvents);
+    const actualPct = computeActualPct(plan.milestones, completedEvents);
+    const nextUp    = nextUpMilestones(plan.milestones, today);
+
+    const isValidated = plan.validated === true && plan.engagement !== null;
+    let plannedPct, pace, insight;
+    if (isValidated) {
+      plannedPct = computePlannedPct(plan.engagement, today);
+      pace       = computePace(actualPct, plannedPct);
+      insight    = computeInsight(pulseSlugs, pace.label, plan.milestones, completedEvents);
+    } else {
+      plannedPct = null;
+      pace       = { label: 'NOT VALIDATED', color: null };
+      insight    = 'Plan dates missing or rejected; pace cannot be computed';
+    }
 
     const engStart = plan.engagement?.start || '';
     const engEnd   = plan.engagement?.end   || '';
@@ -726,7 +735,9 @@ async function main() {
     const actualPctFinal = lensMatches
       ? (planTaskCount > 0 ? Math.round(doneMatched / planTaskCount * 100) + '%' : '0%')
       : actualPct;
-    const paceFinal = lensMatches ? computePace(actualPctFinal, plannedPct) : pace;
+    const paceFinal = (isValidated && lensMatches)
+      ? computePace(actualPctFinal, plannedPct)
+      : pace;
 
     const out = {
       generated_at: new Date().toISOString(),
