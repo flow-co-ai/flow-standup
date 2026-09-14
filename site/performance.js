@@ -665,7 +665,12 @@ async function init() {
     : null;
 
   const standupClients = (standup?.by_client || [])
-    .filter(c => c.client !== 'Unmapped' && (!activeNames || activeNames.has(c.client)))
+    .filter(c => {
+      if (c.client === 'Unmapped') return false;
+      if (activeNames) return activeNames.has(c.client);
+      // clients.json unavailable — fall back to clients with a known pulse slug.
+      return !!PULSE_SLUG[c.client];
+    })
     .map(c => c.client);
 
   // Build ordered client list: standup clients first, then pulse-only extras.

@@ -778,7 +778,7 @@
   }
 
   async function loadV3Data() {
-    let activeClients = [];
+    let activeClients = null;
     try {
       const res = await fetch(`clients.json?t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
@@ -787,10 +787,23 @@
       }
     } catch {}
 
-    const entries = await Promise.all(activeClients.map(async (c) => {
-      const card = await fetchCard(c.slug);
-      return { slug: c.slug, name: c.name, card, latestEntry: null };
-    }));
+    let entries;
+    if (activeClients && activeClients.length) {
+      entries = await Promise.all(activeClients.map(async (c) => {
+        const card = await fetchCard(c.slug);
+        return { slug: c.slug, name: c.name, card, latestEntry: null };
+      }));
+    } else {
+      // clients.json unavailable — fall back to by_client entries that have a card file.
+      const latest = await fetchLatest();
+      const byClient = (latest?.by_client || []).filter(c => c.client !== 'Unmapped');
+      const candidates = await Promise.all(byClient.map(async (c) => {
+        const slug = slugFor(c.client);
+        const card = await fetchCard(slug);
+        return card ? { slug, name: c.client, card, latestEntry: null } : null;
+      }));
+      entries = candidates.filter(Boolean);
+    }
 
     v3Data.entries = entries;
     v3Data.loaded  = true;
