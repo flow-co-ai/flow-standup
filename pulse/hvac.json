@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-14T16:46:05.421Z",
+  "generated_at": "2026-09-14T17:25:36.613Z",
   "date": "2026-09-14",
   "slug": "hvac",
   "name": "Quality HVAC by Fibid",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "The biggest movement this period is a 45% drop in Google Ads spend over the last 7 days (down from the prior week), likely driven by budget pacing or campaign throttling on the top campaign \"LocalServicesCampaign:SystemGenerated:0005fc228eede686\" which alone consumed $506.18 of the $931.79 Google total. Despite 28-day paid leads tracking at just 7 (CPL $232.05), GHL shows 43 won opportunities out of 677 created across 264 contacts, suggesting strong downstream pipeline activity that paid channel tracking alone does not capture.",
+  "verdict": "Over the past 28 days, Quality HVAC by Fibid spent $1,624.32 across Meta and Google Ads, generating 7 tracked leads at a $232.05 CPL, though GHL CRM shows 679 opportunities and 44 won in the same period, which is unreconciled with the 7 ad-platform leads. The biggest movement is a 45% drop in Google Ads spend over the last 7 days, which is likely pulling overall CPL down 28.57% in tandem, while the \"Quality HVAC by Fibid\" GBP profile is flagged for zero calls despite 206 impressions and warrants an immediate listing audit.",
   "windsor": {
     "totals": {
       "spend": 1624.32,
@@ -450,14 +450,14 @@
     }
   },
   "ghl": {
-    "contacts": 264,
+    "contacts": 267,
     "opportunities": {
       "created": {
-        "count": 677,
+        "count": 679,
         "value": 565
       },
       "won": {
-        "count": 43,
+        "count": 44,
         "value": 565
       }
     },
@@ -465,9 +465,9 @@
   },
   "reconciliation": {
     "windsor_leads": 7,
-    "ghl_contacts": 264,
-    "ghl_opps_created": 677,
-    "ghl_opps_won": 43,
+    "ghl_contacts": 267,
+    "ghl_opps_created": 679,
+    "ghl_opps_won": 44,
     "status": "both_active"
   },
   "_meta": {
@@ -652,79 +652,80 @@
     "history_line": "Tune Up Campaign done · Website hours fixed · GBP posts published"
   },
   "performance": {
-    "generated_at": "2026-09-14T16:52:15.476Z",
+    "generated_at": "2026-09-14T17:28:08.457Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Six overdue milestones and a zero-call GBP profile stall the scale-up gate.",
+    "verdict": "GHL's 679 opps vs. 7 ad leads confirms an intake gap, not an ads gap.",
     "findings": [
       {
         "id": "F1",
-        "priority": 2,
-        "text": "6 SOW milestones overdue (oldest: Booking bot battle-test, due 2026-07-31); intake owner still unconfirmed, blocking all budget scale-up per engagement plan.",
+        "priority": 1,
+        "text": "679 GHL opportunities vs. 7 tracked ad leads in 28 days: CRM intake is capturing volume ads attribution is missing — this is a tracking/intake gap, not an ad performance failure.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "GHL"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "LSA re-enable (heating toggles) was due 2026-09-01 — 13 days overdue; no LSA spend visible in series, meaning heating-season demand window is eroding daily.",
+        "text": "Intake owner unconfirmed (due 2026-08-31, 14 days overdue): Vivian left 7/7 and speed-to-lead automations may point at an empty seat, blocking all scale-up decisions per SOW gate.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 1,
-        "text": "28-day CPL is $232.05 on only 7 tracked paid leads; 3-day spend (Sep 11–13) averages $36.59/day vs prior 3-day (Sep 8–10) $53.04 — efficiency looks better but volume is near zero.",
-        "confidence": "probable",
-        "channel": "meta"
+        "priority": 2,
+        "text": "5 milestones overdue (booking bot, intake owner, review boost, financing page, Homer Glen branch, LSA re-enable by 2026-09-01): none show a completed event; LSA heating toggle is now 13 days overdue.",
+        "confidence": "confirmed",
+        "channel": "SOW"
       },
       {
         "id": "F4",
-        "priority": 4,
-        "text": "Quality HVAC by Fibid GBP: 206 impressions over 25 days, 0 calls, 0 directions — a 0.0% call rate against a live profile is a confirmed engagement failure.",
+        "priority": 3,
+        "text": "Quality HVAC by Fibid GBP: 206 impressions, 0 calls, 0 directions over 28 days (call rate 0.000) — listing likely has a broken or missing phone number; Fibid Heating & Air also low at 0.0085 call rate.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "GBP"
       },
       {
         "id": "F5",
-        "priority": 4,
-        "text": "GHL shows 677 opportunities created vs 43 won (6.4% win rate) across 264 contacts; 0 appointments logged — leads arriving but no appointment capture suggests intake leak, not an ads problem.",
+        "priority": 3,
+        "text": "3-day spend signal (Sep 11–13): $44.69 + $32.79 + $32.29 = $109.77 vs. prior 3 days (Sep 8–10): $47.59 + $71.73 + $40.79 = $160.11 — Google spend contracting (-45% 7d delta) while lead volume holds at 0–1/day; not yet a confirmed efficiency loss but trend warrants watch.",
         "confidence": "probable",
-        "channel": "crm"
+        "channel": "Google Ads"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Confirm intake owner and GHL seat assignment — unblocks scale-up gate per SOW; no budget moves until resolved.",
+        "text": "Audit Quality HVAC by Fibid GBP phone number immediately — 0 calls from 206 impressions is a broken listing.",
         "cites": [
-          "F1"
+          "F4"
         ],
-        "monday_item_name": "Confirm Intake Owner GHL",
-        "monday_update": "Vivian left 7/7 and the intake owner seat is still unconfirmed as of 2026-09-14, per the SOW blocker. Identify who owns the GHL dispatch login and after-hours coverage, and document it in the account. Success check: named owner with verified GHL login confirmed by 2026-09-21. Until this is cleared, no budget increases can be approved per the engagement plan."
+        "monday_item_name": "Fix Fibid GBP Phone Number",
+        "monday_update": "The Quality HVAC by Fibid GBP profile recorded 206 impressions but zero calls and zero direction requests over 28 days (call rate 0.000), strongly indicating a missing or broken phone number on the listing. Action: log into the GBP dashboard, verify the primary phone number is present and correct, and check for any suppressed edits or listing suspensions. Success is confirmed when the call rate on this profile rises above 0.010 within the next 14 days (by 2026-09-28)."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Escalate LSA heating-toggle re-enable immediately — 13 days overdue, heating season demand is live now.",
+        "text": "Confirm intake owner and GHL seat assignment — scale-up gate is 14 days overdue; automations may be routing to an empty seat.",
         "cites": [
-          "F2"
+          "F2",
+          "F1"
         ],
-        "monday_item_name": "LSA Heating Toggle Re-enable",
-        "monday_update": "The LSA heating toggle re-enable was due 2026-09-01 and is 13 days overdue as of today. Re-enable the heating service toggles in the native LSA dashboard and confirm impressions are flowing within 48 hours. Success check: LSA shows active heating impressions by 2026-09-16. Delay costs real heating-season search volume that cannot be recovered."
+        "monday_item_name": "Confirm Intake Owner GHL Seat",
+        "monday_update": "Vivian (dispatch) left on 7/7 and the intake owner milestone was due 2026-08-31. With 679 GHL opportunities logged against only 7 ad-attributed leads, speed-to-lead automations routing to an unmanned seat would explain the reconciliation gap and block all budget scale-up per SOW gate. Action: confirm with Xavier or Nader who owns intake now, verify their GHL login is active, and confirm after-hours coverage is assigned. Success is a named owner with a confirmed active GHL login reported to Sohib by 2026-09-17."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch Quality HVAC by Fibid GBP 0-call issue — verify profile completeness and category before any paid GBP action.",
+        "text": "Watch Google spend contraction — if 3-day daily average stays below $15 by Sep 17, escalate to budget-floor review.",
         "cites": [
-          "F4"
+          "F5"
         ],
-        "monday_item_name": "GBP Zero-Call Profile Audit",
-        "monday_update": "Quality HVAC by Fibid GBP recorded 0 calls and 0 directions from 206 impressions over 25 days (0.0% call rate). Before any spend is directed here, audit the profile for correct primary category, phone number, service area, and photo completeness. Re-check call rate after 7 days of corrections — target at least matching the Fibid Heating profile's 0.85% rate by 2026-09-21."
+        "monday_item_name": "Watch Google Spend Contraction",
+        "monday_update": "Google Ads spend dropped 45% over the last 7 days; the most recent 3-day average is $36.59/day vs. $53.37 in the prior 3 days. This may reflect intentional throttling per the SOW demand-control narrative, but no approved decision confirms it. Watch the Google daily spend figure through 2026-09-17; if the daily average remains below $15 for 3 consecutive days without a documented pause rationale, bring it to Sohib for a budget-floor decision before the LSA re-enable milestone (already 13 days overdue) further complicates attribution."
       }
     ],
-    "next_check": "2026-09-21"
+    "next_check": "2026-09-17"
   }
 }

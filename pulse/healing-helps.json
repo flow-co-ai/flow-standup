@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-14T16:45:27.136Z",
+  "generated_at": "2026-09-14T17:25:08.395Z",
   "date": "2026-09-14",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Healing Helps saw zero paid spend and zero leads over the past 28 days, making GBP the only active channel with 37 total actions (2 calls, 25 directions, 10 web clicks) driven by 341 impressions across 26 active days. The biggest movement is a 76.92% drop in GBP actions over the last 7 days versus the prior 7 days, likely reflecting reduced local search visibility or seasonal demand softening.",
+  "verdict": "Healing Helps saw zero paid spend and zero leads over the past 28 days, making GBP the only active channel with 37 total actions (2 calls, 25 directions, 10 web clicks) driven by 341 impressions across 26 active days. The biggest movement is a sharp 76.92% drop in GBP actions over the last 7 days versus the prior 7 days, likely reflecting reduced local search visibility or seasonal demand softening.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -544,68 +544,63 @@
     "history_line": "Website completed · Shabana Sheikh bio added to Meet Our Therapists"
   },
   "performance": {
-    "generated_at": "2026-09-14T16:51:50.365Z",
+    "generated_at": "2026-09-14T17:27:40.081Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP is collapsing; organic the only channel — zero paid activity distorts score.",
+    "verdict": "GBP collapse and organic fade confirm paid restart is now urgent.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days; CPL is undefined. No Meta, Google, or paid channel is active — there is nothing to efficiency-rate.",
+        "text": "Zero paid spend and zero leads for all 28 days — no CPL metric possible; the account has no active paid engine whatsoever.",
         "confidence": "confirmed",
-        "channel": "cross-channel"
+        "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions dropped 76.92% last 7d vs prior 7d. 3-day signal (Sep 11–13) = 0 actions vs prior 3 days (Sep 8–10) = 3 actions — confirms collapse, not noise.",
+        "text": "GBP actions dropped 76.92% week-over-week; last 3 days (Sep 11–13) show 0, 0, 0 actions vs 2, 1, 0 in the prior 3 — confirmed 3-day collapse, not noise.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Search clicks fell 35.71% (7d delta); last 3 days (Sep 11–13) = 3 clicks vs prior 3 (Sep 8–10) = 5 clicks. Organic search visibility is also softening.",
-        "confidence": "probable",
+        "text": "Search clicks fell 35.71% (7d delta) and GA4 sessions dropped 48.44%; last 3 days: 2, 1, 0 clicks and 7, 3, 1 sessions — organic demand erosion compounding paid absence.",
+        "confidence": "confirmed",
         "channel": "organic"
       },
       {
         "id": "F4",
-        "priority": 2,
-        "text": "GA4 sessions dropped 48.44% (7d delta); last 3 days (Sep 11–13) = 11 sessions vs prior 3 (Sep 8–10) = 18 sessions — corroborates declining inbound interest across all touchpoints.",
-        "confidence": "probable",
-        "channel": "GA4"
-      },
-      {
-        "id": "F5",
         "priority": 3,
-        "text": "GBP call rate is 0.59% against 341 impressions (28d). Even when GBP was active, calls were nearly absent — 2 calls total — suggesting profile or offer friction pre-dates the current drop.",
-        "confidence": "hypothesis",
-        "channel": "GBP"
+        "text": "GBP call rate is only 0.59% on 341 impressions over 26 days — even when visible, the profile is not converting searchers to calls.",
+        "confidence": "probable",
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "watch",
-        "text": "Monitor GBP actions daily for 3 more days; re-check Sep 17 before any profile intervention.",
+        "text": "No paid budget to shift or scale; watch GBP actions and SC clicks daily for 3 consecutive non-zero days before any paid restart decision.",
         "cites": [
-          "F2"
+          "F1",
+          "F2",
+          "F3"
         ],
-        "monday_item_name": "GBP Action Drop Watch",
-        "monday_update": "GBP actions collapsed from 13 in the prior 7 days to 3 in the last 7 days (−76.92%), with 0 actions in the last 3 days (Sep 11–13). No paid channel is active to compensate. Watch GBP daily through Sep 17; if actions remain at 0 for the full window, escalate to a profile audit (photos, categories, Q&A freshness). Success check: any return to ≥2 actions/day by Sep 17."
+        "monday_item_name": "Watch GBP & Organic Recovery",
+        "monday_update": "Healing Helps has had $0 paid spend for 28 consecutive days and GBP actions hit 0 for the last 3 days (Sep 11–13), down 76.92% week-over-week. SC clicks dropped 35.71% and GA4 sessions 48.44% in the same window. Success signal: 3 consecutive days of GBP actions ≥ 2 and SC clicks ≥ 2 — if that returns by Sep 17, flag for paid restart discussion. Re-check Sep 17."
       },
       {
         "id": "S2",
-        "type": "watch",
-        "text": "Watch SC and GA4 through Sep 17 to confirm whether organic softening is trend or weekend artifact.",
+        "type": "fix",
+        "text": "Audit and refresh GBP profile (photos, hours, posts) to address 0.59% call rate on 341 impressions — no spend required.",
         "cites": [
-          "F3",
-          "F4"
+          "F4",
+          "F2"
         ],
-        "monday_item_name": "Organic Traffic Trend Watch",
-        "monday_update": "Search clicks dropped 35.71% and GA4 sessions dropped 48.44% over the last 7 days. The last 3 days (Sep 11–13) include a Sunday and Monday, which historically compress traffic for local therapy practices. Re-check the 3-day signal on Sep 17 using weekday-comparable days. Success check: SC and GA4 stabilize or recover to prior-3-day levels (5 clicks, 18 sessions) by Sep 17."
+        "monday_item_name": "Fix GBP Profile Conversion Rate",
+        "monday_update": "The GBP profile generated only 2 calls from 341 impressions over 26 active days — a 0.59% call rate that signals the listing is underperforming even when found. Action: audit profile completeness (photos, service descriptions, posts, Q&A) and publish at least one new post this week. Success check: call count ≥ 1 per week by Sep 21 re-check."
       }
     ],
     "next_check": "2026-09-17"
