@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-14T17:25:42.657Z",
+  "generated_at": "2026-09-14T18:45:57.917Z",
   "date": "2026-09-14",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 53,
   "status": "amber",
-  "verdict": "Meta spend dropped 75.09% week-over-week (flagged channel_dark:meta with at least one zero-spend day), which is the dominant story here and likely explains the 58.33% decline in leads over the same period. The 28-day totals show 30 leads at a $46.95 CPL from $1,408.56 in spend, but Windsor reports 30 leads while GHL shows only 24 contacts and 0 opportunities created, and these figures are unreconciled.",
+  "verdict": "Meta spend dropped 75.09% week-over-week (triggering a zero-spend day and channel-dark flag), which is the dominant story here, likely caused by a campaign pause or budget exhaustion on \"Leads - August Re-Launch.\" Despite $1,408.56 spent over 28 days generating 30 leads at a $46.95 CPL, GHL recorded only 24 contacts and 0 opportunities created, meaning Windsor and GHL are unreconciled on lead volume and pipeline conversion remains a critical gap.",
   "windsor": {
     "totals": {
       "spend": 1408.56,
@@ -577,78 +577,78 @@
     "history_line": "SEO update for May 2026 completed"
   },
   "performance": {
-    "generated_at": "2026-09-14T17:28:34.558Z",
+    "generated_at": "2026-09-14T18:49:14.735Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Meta dark since Sep 9 — zero spend 5 days straight, restart is the only move.",
+    "verdict": "Meta is dark 5 days; pipeline shows zero opps — money cannot work right now.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "channel_dark:meta confirmed — zero spend Sep 9–13 (5 consecutive days); $0 delivered vs $65–75/day SOW target. All leads have stopped.",
+        "text": "Meta has been $0 spend for 5 consecutive days (Sep 9–13); zero_spend_day and channel_dark flags confirm a full campaign stop.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
-        "priority": 2,
-        "text": "⛔ Extension with Marwan overdue Aug 31 — engagement is month-to-month lapsed; no signed contract gates next 3 months of activity.",
+        "priority": 1,
+        "text": "CPL was $46.95 over 28 days — above the July range of $19–45/wk high; with Meta dark, no efficiency recovery is possible while spend is $0.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "meta"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "⛔ SMS automation and Zoho Voice access both overdue Aug 31 — contact rate is the stated bottleneck yet CRM intake tools remain undeployed.",
+        "text": "3 overdue SOW blockers as of Aug 31: Extension with Marwan unsigned, SMS automation not live, Zoho Voice access not granted — all gate next quarter.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GHL pipeline shows 0 opportunities created from 24 contacts vs 30 Windsor leads — intake leak: leads arriving but no opps, not an ads problem.",
+        "text": "GHL shows 24 contacts and 0 opportunities from 30 Meta leads (28d); 6-lead gap plus zero opps signals a broken intake handoff, not an ads problem.",
         "confidence": "confirmed",
         "channel": "GHL"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "28-day CPL of $46.95 is above the July range of $19–45/wk high end; 3-day trend (Sep 11–13) shows $0 spend — efficiency is unreadable until Meta restarts.",
+        "text": "Search clicks fell 34.27% week-over-week and GBP actions dropped 11.9%; organic is softening in parallel with paid going dark — no single-channel offset.",
         "confidence": "probable",
-        "channel": "meta"
+        "channel": "organic"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Diagnose and restart Meta 'Leads - August Re-Launch' at $65/day immediately — 5 zero-spend days are a full stop.",
+        "text": "Immediately diagnose and reactivate 'Leads - August Re-Launch' campaign; confirm budget, policy, or payment caused the Sep 9 stop.",
         "cites": [
-          "F1"
+          "F1",
+          "F2"
         ],
-        "monday_item_name": "Restart Meta — channel dark",
-        "monday_update": "Meta has been completely dark since Sep 9, recording $0 spend for 5 consecutive days against a $65–75/day SOW target. Hamza/Hamdan to check account status, payment method, and campaign approval today and restore the 'Leads - August Re-Launch' campaign to $65/day. Success check: confirmed spend showing in Meta Ads Manager by Sep 15, and at least 1 lead recorded in Windsor within 48 hours of restart. If the account is flagged or restricted, escalate to Sohib immediately — do not attempt workarounds without approval."
+        "monday_item_name": "Reactivate Meta Campaign Now",
+        "monday_update": "Meta spend has been $0 for 5 consecutive days (Sep 9–13), confirmed by the zero_spend_day and channel_dark flags. Hamza/Hamdan must pull the account rejection or budget-exhaustion reason from Meta Ads Manager today and restore 'Leads - August Re-Launch' at the last active daily budget (~$65–75/day). Success check: spend resumes within 24 hours and at least 1 lead registers in GHL by Sep 16. If a policy violation caused the pause, escalate to Sohib before relaunching copy."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Fix GHL intake: 24 contacts, 0 opportunities created — pipeline is not converting leads to opps at all.",
+        "text": "Repair GHL intake: 30 Meta leads produced 0 opportunities; fix form-to-pipeline mapping before next lead volume arrives.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Fix GHL Opp Creation Gap",
-        "monday_update": "Windsor reports 30 leads over 28 days but GHL shows only 24 contacts and 0 opportunities created — this is a CRM intake leak, not an ads underperformance issue. Nacer/CRM team to audit the GHL workflow: confirm lead form submissions are triggering opportunity creation and that Andrew's intake step is connected. Success check: every new inbound Meta lead creates a GHL opportunity within 24 hours, confirmed by Sep 18 pipeline review. This is separate from SMS automation (F3) but both must be resolved together to unblock Marwan's case-count metric."
+        "monday_item_name": "Fix GHL Lead-to-Opp Pipeline",
+        "monday_update": "Over the 28-day window, 30 Meta leads entered the system but GHL recorded only 24 contacts and 0 opportunities created. Andrew must audit the GHL workflow connecting Meta instant-form submissions to opportunity creation and confirm the Zoho sync. Success check: the next 5 leads that arrive post-relaunch each generate a GHL opportunity within 1 hour. Verify by Sep 17."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch CPL vs $45 ceiling once Meta restarts — 3-day signal is unreadable at $0 spend; re-check Sep 17.",
+        "text": "Watch organic softening (SC -34.27%, GBP -11.9%); re-check on Sep 17 once Meta is back and cross-channel baseline restores.",
         "cites": [
-          "F5",
-          "F1"
+          "F5"
         ],
-        "monday_item_name": "CPL Watch — Post-Restart",
-        "monday_update": "The 28-day CPL of $46.95 sits above the July weekly high of $45, but the last 5 days of zero spend make trend analysis impossible. Once Meta is restored (S1), monitor CPL over the first 3 live days against the $45 ceiling. If CPL holds at or below $45 by Sep 17, no further action needed this cycle. If CPL runs above $45 for 3 consecutive days post-restart, flag for a budget or creative review at the next check."
+        "monday_item_name": "Watch Organic Signal Sep 17",
+        "monday_update": "Search clicks dropped 34.27% and GBP actions fell 11.9% week-over-week, softening in parallel with Meta going dark. This may be noise tied to the paid-traffic collapse rather than an independent organic issue. No action is taken this cycle. Re-check on Sep 17: if SC clicks remain below 20/day after Meta reactivates, escalate as a separate organic finding."
       }
     ],
     "next_check": "2026-09-17"

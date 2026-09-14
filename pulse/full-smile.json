@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-14T17:25:03.455Z",
+  "generated_at": "2026-09-14T18:45:21.053Z",
   "date": "2026-09-14",
   "slug": "full-smile",
   "name": "Full Smile",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 30,
   "status": "orange",
-  "verdict": "The biggest movement is a 66.67% drop in leads over the last 7 days, which drove CPL up 168.88%, likely caused by Meta going dark (channel_dark:meta flag) and at least one zero-spend day disrupting delivery on the top campaign \"BWS - Instant Leads - Awareness\" ($360.03 of the $695.90 28d spend). Windsor reports 94 leads while GHL shows 92 opportunities created from 341 contacts, and these figures are unreconciled.",
+  "verdict": "The biggest movement is a 66.67% drop in leads over the last 7 days, which drove CPL up 168.88%, likely caused by Meta going dark (channel_dark:meta flag) and at least one zero-spend day disrupting delivery. Over 28 days, Meta generated 94 leads at a $7.40 CPL on $695.90 spend, while GHL recorded 92 opportunities created from 346 contacts, with 0 won.",
   "windsor": {
     "totals": {
       "spend": 695.9,
@@ -433,7 +433,7 @@
     }
   },
   "ghl": {
-    "contacts": 341,
+    "contacts": 346,
     "opportunities": {
       "created": {
         "count": 92,
@@ -448,7 +448,7 @@
   },
   "reconciliation": {
     "windsor_leads": 94,
-    "ghl_contacts": 341,
+    "ghl_contacts": 346,
     "ghl_opps_created": 92,
     "ghl_opps_won": 0,
     "status": "both_active"
@@ -636,78 +636,78 @@
     "history_line": "OpenDental sync fields completed (Sohib, Sep 9) · All GHL tasks completed except go-live approval (Ahmed, Sep 8) · OpenDental claim payments synced into GHL"
   },
   "performance": {
-    "generated_at": "2026-09-14T17:27:21.648Z",
+    "generated_at": "2026-09-14T18:48:03.661Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Meta dark 2 days; every lead and dollar stalled — restore or redirect now.",
+    "verdict": "Meta dark 2 days kills volume; 5 overdue SOW items threaten renewal.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Meta went dark Sep 12–13 (spend $0 both days), killing all leads; zero_spend_day flag confirmed. CPL spiked 168.88% on zero delivery — not efficiency collapse, it's a full stop.",
+        "text": "Meta went dark Sep 12–13 (2 consecutive zero-spend days); leads dropped 66.67% WoW, pushing CPL from ~$7.40 to ~$19.85 in the 7d window.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
-        "priority": 1,
-        "text": "7-day leads dropped 66.67% and CPL hit ~$7.40 28d avg, but the prior-3-day signal is 0 leads vs prior 3-day avg of ~1.7 — trend is total flatline, not gradual decline.",
-        "confidence": "confirmed",
-        "channel": "meta"
-      },
-      {
-        "id": "F3",
         "priority": 2,
-        "text": "OVERDUE: 5 milestones past due (Jul 23–Aug 31): phone attribution gap, sync/contact cleanup, dashboard, and Aug scoreboard decision — all unresolved as of Sep 14.",
+        "text": "5 SOW milestones overdue (oldest: Jul 23 renewal doc; latest: Aug 31 dashboard + renewal decision) — none show a completed event.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
+        "id": "F3",
+        "priority": 2,
+        "text": "GHL shows 92 opps created from 346 contacts, 0 won and 0 appointments — 94 Meta leads are not converting inside CRM, signaling an intake leak, not an ads problem.",
+        "confidence": "confirmed",
+        "channel": "GHL"
+      },
+      {
         "id": "F4",
         "priority": 3,
-        "text": "GHL shows 92 opportunities from 341 contacts with 0 appointments won and $0 pipeline value — 249 contacts produced no opportunity, and 0 of 92 opps converted, signaling an intake or tagging failure.",
-        "confidence": "probable",
-        "channel": "GHL"
+        "text": "3-day signal (Sep 11–13): leads = 0, spend = $37.85 → $0 → $0; vs prior 3 days (Sep 8–10): leads = 5, spend = $85.52 — confirmed delivery collapse, not a single bad day.",
+        "confidence": "confirmed",
+        "channel": "meta"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GBP actions fell 38.71% week-over-week; ig_reach dropped to 2 and 1 on Sep 12–13, mirroring Meta outage — organic amplification has also collapsed alongside paid.",
-        "confidence": "confirmed",
-        "channel": "organic"
+        "text": "GBP actions fell 38.71% WoW and registered 0 on Sep 12–13, mirroring Meta dark days — organic signal is collateral, not an independent decline.",
+        "confidence": "probable",
+        "channel": "GBP"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Diagnose and restore Meta campaign delivery immediately; $0 spend Sep 12–13 means zero leads for 2+ days.",
+        "text": "Restore Meta delivery immediately — 2 zero-spend days confirmed; diagnose billing/policy hold before any budget change.",
         "cites": [
           "F1",
-          "F2"
+          "F4"
         ],
-        "monday_item_name": "Restore Meta delivery Sep 14",
-        "monday_update": "Meta spent $0 on Sep 12 and Sep 13, dropping 7-day leads by 66.67% and pushing CPL up 168.88%. The immediate action is to identify the account-level block — payment failure, policy flag, or campaign-level error — and restore delivery today. Success is confirmed when spend resumes above $22/day (the recent daily floor) and at least 1 lead is recorded by Sep 17. If delivery cannot resume within 48 hours, escalate to Nacer and flag to Sohib as a client-trust risk given the August prove-it context."
+        "monday_item_name": "Fix Meta Dark — Restore Delivery",
+        "monday_update": "Meta spend hit $0 on Sep 12 and Sep 13, causing a confirmed 66.67% lead drop and CPL spike to ~$19.85 vs the 28-day baseline of $7.40. First action is to identify the cause — billing lapse, ad account flag, or policy hold — and restore delivery today. Success is confirmed when spend returns to the prior daily average of ~$27–$34 and leads resume within 48 hours. Re-check Sep 16."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GHL pipeline: 249 contacts with no opportunity created signals an intake tagging leak, not an ads problem.",
+        "text": "Fix CRM intake leak: 94 Meta leads produced 0 won opps and 0 appointments in GHL — tag and routing audit needed now.",
         "cites": [
-          "F4"
+          "F3"
         ],
-        "monday_item_name": "GHL intake audit — 249 contacts",
-        "monday_update": "GHL shows 341 contacts but only 92 opportunities created, meaning 249 contacts (73%) were never tagged as opportunities; additionally, 0 of 92 opps show any won value or appointments. Ahmed/Ali should audit whether these 249 are duplicates, non-leads, or leads that bypassed the opportunity-creation step. Success is a documented count of true lead contacts versus non-lead contacts, and a corrected opportunity count, by Sep 17. This is separate from the ads performance issue and must be resolved before the dashboard milestone can be trusted."
+        "monday_item_name": "GHL Intake Leak Audit",
+        "monday_update": "GHL shows 92 opportunities created from 346 contacts with 0 won and 0 appointments recorded against 94 Meta leads in the 28-day window. This is an intake routing or follow-up failure, not an ads problem. Audit lead-to-opp tagging, Lily's intake workflow, and the new hire onboarding status to confirm leads are being actioned. Success is at least 1 won opp or 1 confirmed appointment appearing in GHL within 7 days of fix."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions recovery after Meta restore; 38.71% drop may reverse once paid traffic resumes by Sep 17.",
+        "text": "Watch GBP action recovery after Meta is restored; 38.71% WoW drop is likely collateral — re-check Sep 17.",
         "cites": [
           "F5"
         ],
-        "monday_item_name": "Watch GBP recovery Sep 17",
-        "monday_update": "GBP actions fell 38.71% week-over-week and dropped to 0 on Sep 12–13, coinciding exactly with Meta going dark. No independent GBP fix is warranted yet — the organic drop is likely a downstream effect of paid traffic loss reducing profile visibility. Re-check GBP actions on Sep 17 after Meta delivery is restored; if GBP actions remain below 5/day by then, treat as an independent organic issue and escalate separately."
+        "monday_item_name": "Watch GBP Recovery Sep 17",
+        "monday_update": "GBP actions fell 38.71% WoW and showed 0 on the same 2 days Meta went dark, suggesting the drop is collateral rather than an independent organic decline. No action is warranted until Meta delivery is confirmed restored. Re-check GBP 7-day trend on Sep 17; if actions remain below the prior 7-day baseline after Meta is live, escalate as a separate finding."
       }
     ],
     "next_check": "2026-09-17"

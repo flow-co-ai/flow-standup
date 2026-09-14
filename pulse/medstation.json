@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-14T17:26:22.028Z",
+  "generated_at": "2026-09-14T18:46:58.453Z",
   "date": "2026-09-14",
   "slug": "medstation",
   "name": "MedStation",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 70,
   "status": "amber",
-  "verdict": "MedStation generated 0 leads from $142.84 in Meta spend over 28 days, triggering a lead drought flag despite 294 clicks, which points to a likely landing page or form conversion breakdown. Meta spend surged 120.63% week-over-week on the \"WARM-RETARGETING\" campaign ($59.01), but GBP actions dropped 44.44%, suggesting offline intent is also cooling while paid budget scales up with no measurable return.",
+  "verdict": "MedStation spent $142.84 on Meta over 28 days and generated zero tracked leads, triggering a lead drought despite 294 clicks and 89 GBP actions (including 11 calls), suggesting strong ad spend with a broken or missing conversion event. The top concern is a 120.63% spike in 7-day spend driven by the \"WARM-RETARGETING\" campaign ($59.01), while GBP actions dropped 44.44% in the same window, meaning more money is going out just as organic engagement is falling.",
   "windsor": {
     "totals": {
       "spend": 142.84,
@@ -637,43 +637,43 @@
     "history_line": "Instagram restored · LSA submitted · NextGen patient ID mapping widened"
   },
   "performance": {
-    "generated_at": "2026-09-14T17:31:05.388Z",
+    "generated_at": "2026-09-14T18:51:48.537Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "9 milestones overdue; $142.84 spent with zero leads — infrastructure not live.",
+    "verdict": "Zero tracked leads after $142.84 spent; SOW is 45+ days overblocked.",
     "findings": [
       {
         "id": "F1",
-        "priority": 2,
-        "text": "5 of 9 SOW milestones due 2026-07-31 are overdue: stack test, Como→GHL migration, GBP triage, Meta account/CAPI, and landing pages — all unconfirmed complete.",
+        "priority": 1,
+        "text": "Zero leads across all 28 days despite $142.84 Meta spend and 294 clicks — conversion event is absent or broken, making CPL undefined and every dollar unaccountable.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "4 additional SOW milestones due Aug–Sep 1 are overdue: Meta reactivation lanes, Search campaigns, LSA submission, and nurture sequences — none marked live.",
+        "text": "5 of 9 SOW milestones due 2026-07-31 are overdue (stack test, GHL migration, GBP triage, Meta account/CAPI, landing pages/tracking) — 45+ days past deadline, directly causing F1.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 1,
-        "text": "294 Meta clicks and $142.84 spend over 28 days produced 0 leads and 0 GA4 conversions — CPL is undefined; full funnel conversion is broken at or before the form.",
+        "priority": 2,
+        "text": "3 additional SOW milestones due 2026-08-31 to 2026-09-01 also overdue: Meta reactivation lanes, Search campaigns, LSA verification, and GHL nurture sequences — Phase 1 is not executing.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions fell to 0 for 3 consecutive days (Sep 11–13) after averaging ~2–4/day earlier in the window — offline intent stalling as paid spend scales.",
-        "confidence": "confirmed",
+        "text": "GBP actions fell from a prior-7d baseline to near-zero last 3 days (0, 0, 0 vs prior 3-day avg of ~1.3); spend spiked 120.63% in same window — organic and paid moving in opposite directions.",
+        "confidence": "probable",
         "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 3,
-        "text": "GA4 sessions dropped from a 3-day avg of ~155 (Sep 10–12) to 71 and 67 on Sep 12–13, a 57% 3-day decline — site traffic decelerating sharply.",
+        "text": "GA4 sessions dropped to 71 and 67 on the last 2 days of the series, vs a prior-3-day avg of ~163 — a 3-day declining signal suggesting site or tracking degradation, not ad performance.",
         "confidence": "probable",
         "channel": "ga4"
       }
@@ -682,34 +682,34 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Pause WARM-RETARGETING Meta spend ($59.01 top campaign) until landing page and form conversion are confirmed tracking and converting.",
-        "cites": [
-          "F3",
-          "F1"
-        ],
-        "monday_item_name": "Pause Meta — fix funnel first",
-        "monday_update": "Pause the WARM-RETARGETING campaign and all active Meta spend immediately. $142.84 has been spent over 28 days producing 0 leads and 0 GA4 conversions, confirming a broken funnel — not an ads problem. Success check: landing page loads, form submits, lead appears in GHL (or interim system), and GA4 records a conversion event. Re-evaluate spend resumption by 2026-09-21."
-      },
-      {
-        "id": "S2",
-        "type": "fix",
-        "text": "Complete overdue end-to-end stack test: one touch → tracked → GHL → reporting; all 9 milestones are 14–46 days past due.",
+        "text": "Pause all Meta spend immediately until conversion tracking is confirmed firing — $14.04/day is burning with zero measurable return.",
         "cites": [
           "F1",
           "F2"
         ],
-        "monday_item_name": "Complete overdue stack test",
-        "monday_update": "Run the end-to-end stack test that was due 2026-07-31 per Nacer's milestone. A test lead must travel from ad click → landing page form → GHL (or active CRM) → appear in reporting with a timestamp. This unblocks all 4 execution departments. Confirm completion and share the test record with Sohib by 2026-09-21."
+        "monday_item_name": "Pause Meta — fix tracking",
+        "monday_update": "All Meta spend (currently ~$14.04/day, $142.84 over 28 days) should be paused until the landing page and conversion event confirmed in the SOW milestone are live and verified firing. The due date for landing pages and tracking was 2026-07-31 — 45 days overdue. Success check: at least one test lead recorded in GHL before spend resumes. Target resolution: 2026-09-21."
+      },
+      {
+        "id": "S2",
+        "type": "fix",
+        "text": "Escalate 5 overdue July-31 SOW milestones to Nacer and Sohib — unblock stack test and CAPI before any budget is restored.",
+        "cites": [
+          "F2",
+          "F3"
+        ],
+        "monday_item_name": "Escalate Overdue SOW Milestones",
+        "monday_update": "Nine SOW milestones across Ops, CRM, Meta, Google, and Web are past due — the oldest by 45 days (2026-07-31). No paid channel can produce accountable results until the end-to-end stack test passes and conversion tracking is live. Nacer (Ops) and Sohib (Account) must confirm a revised completion date for each milestone. Success check: stack test completed and first tracked lead appears in GHL by 2026-09-21."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions: 0 for 3 straight days (Sep 11–13); re-check Sep 17 to confirm trend or one-time drop.",
+        "text": "Watch GA4 sessions: 3-day drop to avg ~69 may signal tracking breakage — confirm before interpreting GBP or paid trends.",
         "cites": [
-          "F4"
+          "F5"
         ],
-        "monday_item_name": "Watch GBP action drop",
-        "monday_update": "GBP actions hit 0 for three consecutive days (Sep 11–13) after averaging 2–4/day earlier in the window. No action is warranted yet, but if the zero streak extends past Sep 17, investigate profile health and category accuracy for MedStation Weston (159 impressions over 26 days, 11 calls in 28-day window). Re-check 2026-09-17."
+        "monday_item_name": "Watch GA4 Session Drop",
+        "monday_update": "GA4 sessions fell to 71 and 67 on the last two days of the series, down from a prior-3-day average of ~163. This may be a tracking issue rather than real traffic loss, especially given the known GA4 double-count caveat. Monitor for 3 more days; if sessions remain below 80, flag for technical audit. Re-check: 2026-09-17."
       }
     ],
     "next_check": "2026-09-17"

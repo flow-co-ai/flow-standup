@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-14T17:25:08.395Z",
+  "generated_at": "2026-09-14T18:45:28.378Z",
   "date": "2026-09-14",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Healing Helps saw zero paid spend and zero leads over the past 28 days, making GBP the only active channel with 37 total actions (2 calls, 25 directions, 10 web clicks) driven by 341 impressions across 26 active days. The biggest movement is a sharp 76.92% drop in GBP actions over the last 7 days versus the prior 7 days, likely reflecting reduced local search visibility or seasonal demand softening.",
+  "verdict": "Healing Helps had zero paid spend and zero tracked leads over the past 28 days, making GBP the only active channel with 37 total actions (2 calls, 25 directions, 10 web clicks) driven by 341 impressions across 26 active days. The biggest movement is a sharp 76.92% drop in GBP actions over the last 7 days versus the prior 7 days, likely reflecting reduced local search visibility or seasonal demand softening.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -544,63 +544,61 @@
     "history_line": "Website completed · Shabana Sheikh bio added to Meet Our Therapists"
   },
   "performance": {
-    "generated_at": "2026-09-14T17:27:40.081Z",
+    "generated_at": "2026-09-14T18:48:19.294Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP collapse and organic fade confirm paid restart is now urgent.",
+    "verdict": "GBP collapse and organic fade signal real demand drop, not just ad inactivity.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend and zero leads for all 28 days — no CPL metric possible; the account has no active paid engine whatsoever.",
+        "text": "Zero paid spend and zero leads for 28 consecutive days; CPL is undefined because no paid channel is active.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions dropped 76.92% week-over-week; last 3 days (Sep 11–13) show 0, 0, 0 actions vs 2, 1, 0 in the prior 3 — confirmed 3-day collapse, not noise.",
+        "text": "GBP actions collapsed 76.92% week-over-week; last 3 days (Sep 11–13) show 0 actions vs 3 in the prior 3 days (Sep 8–10).",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Search clicks fell 35.71% (7d delta) and GA4 sessions dropped 48.44%; last 3 days: 2, 1, 0 clicks and 7, 3, 1 sessions — organic demand erosion compounding paid absence.",
-        "confidence": "confirmed",
-        "channel": "organic"
+        "text": "Search clicks fell 35.71% 7d vs prior 7d; last 3 days average 1.0 clicks/day vs 1.67 prior 3 days — organic demand softening.",
+        "confidence": "probable",
+        "channel": "search"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP call rate is only 0.59% on 341 impressions over 26 days — even when visible, the profile is not converting searchers to calls.",
+        "text": "GA4 sessions dropped 48.44% 7d vs prior 7d; last 3 days average 3.7 sessions/day vs 6.0 prior 3 days, corroborating F3.",
         "confidence": "probable",
-        "channel": "gbp"
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "watch",
-        "text": "No paid budget to shift or scale; watch GBP actions and SC clicks daily for 3 consecutive non-zero days before any paid restart decision.",
+        "text": "Watch GBP actions for 3 more days; if zero actions persist through Sep 17, escalate to profile audit.",
         "cites": [
-          "F1",
-          "F2",
-          "F3"
+          "F2"
         ],
-        "monday_item_name": "Watch GBP & Organic Recovery",
-        "monday_update": "Healing Helps has had $0 paid spend for 28 consecutive days and GBP actions hit 0 for the last 3 days (Sep 11–13), down 76.92% week-over-week. SC clicks dropped 35.71% and GA4 sessions 48.44% in the same window. Success signal: 3 consecutive days of GBP actions ≥ 2 and SC clicks ≥ 2 — if that returns by Sep 17, flag for paid restart discussion. Re-check Sep 17."
+        "monday_item_name": "Watch GBP Action Collapse",
+        "monday_update": "GBP actions hit 0 for 3 consecutive days (Sep 11–13) after a 76.92% weekly drop. No paid channels are active to compensate. If actions remain at 0 through Sep 17, flag for a GBP profile audit — check for a suspended listing, removed categories, or a knowledge panel issue. Re-check on Sep 17."
       },
       {
         "id": "S2",
-        "type": "fix",
-        "text": "Audit and refresh GBP profile (photos, hours, posts) to address 0.59% call rate on 341 impressions — no spend required.",
+        "type": "watch",
+        "text": "Watch GA4 sessions and search clicks through Sep 17; confirm whether sub-4-session days are a trend or noise.",
         "cites": [
-          "F4",
-          "F2"
+          "F3",
+          "F4"
         ],
-        "monday_item_name": "Fix GBP Profile Conversion Rate",
-        "monday_update": "The GBP profile generated only 2 calls from 341 impressions over 26 active days — a 0.59% call rate that signals the listing is underperforming even when found. Action: audit profile completeness (photos, service descriptions, posts, Q&A) and publish at least one new post this week. Success check: call count ≥ 1 per week by Sep 21 re-check."
+        "monday_item_name": "Watch Organic Session Drop",
+        "monday_update": "GA4 sessions averaged 3.7/day over the last 3 days, down from 6.0 the prior 3 days, and search clicks fell 35.71% week-over-week. This cross-channel alignment makes a real demand or visibility dip probable rather than a tracking glitch. If the 3-day average stays below 4 sessions/day through Sep 17, escalate for an organic/technical review. Re-check Sep 17."
       }
     ],
     "next_check": "2026-09-17"
