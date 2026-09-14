@@ -399,36 +399,32 @@ def build_comms(config: dict) -> None:
 
     now = datetime.now(timezone.utc)
 
-    # Group chats by slug. Try canonical first; fall back to chat name so that
-    # clients like the three Steel entries (whose config canonical "Steel Round Bars"
-    # has no containment match in clients.json) still resolve via their individual
-    # chat names (e.g. "Forte Metals Group" → "forte metals" → steel-forte).
-    by_slug: dict[str, list[tuple[str, list[dict]]]] = {}
+    # Group chats by resolved canonical client name (mirrors build_facts.py).
+    by_client: dict[str, list[tuple[str, list[dict]]]] = {}
     for chat_name, msgs in history.items():
         canonical = resolve_client(chat_name, clients_config, fuzzy=True)
         if canonical == "Unmapped":
             print(f"  skip (unmapped): {chat_name}")
             continue
-
-        slug = _resolve_slug(canonical, slug_map) or _resolve_slug(chat_name, slug_map)
-        if slug is None:
-            print(f"  skip (no slug): {chat_name!r} (canonical={canonical!r})")
-            continue
-
-        print(f"  chat {chat_name!r} → {canonical} → {slug}")
-        by_slug.setdefault(slug, []).append((chat_name, msgs))
+        by_client.setdefault(canonical, []).append((chat_name, msgs))
 
     written: set[str] = set()
 
-    # Process slugs that have chats
-    for slug in sorted(by_slug):
-        if slug not in active_clients:
-            print(f"  skip (inactive slug): {slug}")
+    for client_name in sorted(by_client):
+        slug = _resolve_slug(client_name, slug_map)
+        if slug is None:
+            print(f"  ⚠️  skip (no clients.json match): {client_name!r}")
             continue
+        if slug not in active_clients:
+            print(f"  skip (inactive): {slug}")
+            continue
+
         tz_str = tz_map.get(slug, DEFAULT_TZ)
         print(f"\n── {slug} (tz={tz_str}) ──")
+        for chat_name, msgs in by_client[client_name]:
+            print(f"  '{chat_name}' -> {slug} ({len(msgs)} messages)")
         try:
-            output = _process_client(slug, by_slug[slug], tz_str, team, now)
+            output = _process_client(slug, by_client[client_name], tz_str, team, now)
             _save(slug, output)
             written.add(slug)
             c = output["counts"]
