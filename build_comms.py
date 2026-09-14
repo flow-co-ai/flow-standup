@@ -20,6 +20,7 @@ from client_aliases import resolve_client
 
 COMMS_DIR = Path("comms")
 WINDOW_DAYS = 14
+ABANDONED_DAYS = 60
 THREAD_GAP_HOURS = 6
 TEXT_CAP = 160
 DEFAULT_TZ = "America/Chicago"
@@ -37,6 +38,21 @@ _MENTION_RE = re.compile(r"@\d{6,}|@\S+")
 # iOS exports prepend ~ and Unicode direction/isolation marks to sender names
 _SENDER_PREFIX_RE = re.compile(
     r"^[~‎‏‪‫‬‭‮⁦⁧⁨⁩\s]+"
+)
+
+# WhatsApp forward header: *Name:* at the start of a message
+_FWD_MARKER_RE = re.compile(r"^\*[^*\n]+\*\s*")
+
+# State classification for last-client-message threads
+_REQUEST_RE = re.compile(
+    r"\?|can you|could you|please|need|any update|let me know|when|how|what|why"
+    r"|pode|poderia|por favor|precisa|alguma atualiza[çc][aã]o|quando|como",
+    re.IGNORECASE,
+)
+_ACK_RE = re.compile(
+    r"^(thanks|thank\s+you|ok|okay|perfect|got\s+it|sounds\s+good"
+    r"|obrigad\w*|perfeito|[oó]timo|beleza|blz)[!.,\s]*$",
+    re.IGNORECASE,
 )
 
 
@@ -59,6 +75,33 @@ def _redact_name(name: str) -> str:
     t = _LONG_DIGIT_RE.sub("[number]", t)
     t = _MENTION_RE.sub("[mention]", t)
     return t
+
+
+# ── text cleanup ──────────────────────────────────────────────────────────────
+
+def _strip_fwd(text: str) -> str:
+    """Remove *Name:* forward headers from the start of message text."""
+    return _FWD_MARKER_RE.sub("", text).strip()
+
+
+def _is_emoji_only(text: str) -> bool:
+    return bool(text.strip()) and not re.search(r"[a-zA-Z0-9]", text)
+
+
+# ── state classification ──────────────────────────────────────────────────────
+
+def _classify_last_client_msg(text: str) -> str:
+    """
+    Returns 'awaiting_flow', 'settled', or 'client_update' for the last
+    client message in a thread.
+    """
+    if _REQUEST_RE.search(text):
+        return "awaiting_flow"
+    stripped = text.strip()
+    words = stripped.split()
+    if len(words) < 8 and (_ACK_RE.match(stripped) or _is_emoji_only(stripped)):
+        return "settled"
+    return "client_update"
 
 
 # ── sender resolution ─────────────────────────────────────────────────────────
@@ -110,6 +153,20 @@ def _load_clients_slug_map() -> dict[str, str]:
         return {}
 
 
+def _load_active_clients() -> dict[str, str]:
+    """Return {slug: name} for all clients where active is not explicitly False."""
+    try:
+        entries = json.loads(Path("clients.json").read_text(encoding="utf-8"))
+        return {
+            e["slug"]: e.get("name", e["slug"])
+            for e in entries
+            if "slug" in e and e.get("active") is not False
+        }
+    except Exception as exc:
+        print(f"  ⚠️  could not load clients.json for active list: {exc}")
+        return {}
+
+
 def _resolve_slug(client_name: str, slug_map: dict[str, str]) -> str | None:
     key = client_name.lower()
     matches = {k: v for k, v in slug_map.items() if key in k or k in key}
@@ -126,6 +183,9 @@ def _resolve_slug(client_name: str, slug_map: dict[str, str]) -> str | None:
         return n
 
     best_key = max(matches, key=_lcp)
+    print(
+        f"  ⚠️  '{client_name}': multiple slug matches {sorted(matches)} → chose '{best_key}' ({matches[best_key]})"
+    )
     return matches[best_key]
 
 
@@ -213,16 +273,23 @@ def _process_client(
             participants = sorted({m["sender"] for m in group if m["sender"]})
             total_flags = sum(m["redaction_flags"] for m in group)
 
-            # State
             last_side = last["side"]
             unanswered_since: str | None = None
             unanswered_hours: float | None = None
+            state: str
 
             if last_side == "client":
-                state = "awaiting_flow"
-                unanswered_since = last_at
                 delta = now - last["local_dt"].astimezone(timezone.utc)
-                unanswered_hours = round(delta.total_seconds() / 3600, 1)
+                hours = round(delta.total_seconds() / 3600, 1)
+                if hours > ABANDONED_DAYS * 24:
+                    state = "abandoned"
+                    unanswered_since = last_at
+                    unanswered_hours = hours
+                else:
+                    state = _classify_last_client_msg(last["redacted_text"])
+                    if state == "awaiting_flow":
+                        unanswered_since = last_at
+                        unanswered_hours = hours
             elif flow_msgs:
                 last_two_flow = flow_msgs[-2:]
                 if any(m["redacted_text"].rstrip().endswith("?") for m in last_two_flow):
@@ -234,6 +301,9 @@ def _process_client(
                     state = "settled"
             else:
                 state = "settled"
+
+            first_text = _strip_fwd(group[0]["redacted_text"])[:TEXT_CAP]
+            last_text = _strip_fwd(group[-1]["redacted_text"])[:TEXT_CAP]
 
             all_threads.append({
                 "id": _thread_id(chat_name, opened_at),
@@ -247,22 +317,22 @@ def _process_client(
                 "client_msgs": len(client_msgs),
                 "flow_msgs": len(flow_msgs),
                 "participants": participants,
-                "first_text": group[0]["redacted_text"][:TEXT_CAP],
-                "last_text": group[-1]["redacted_text"][:TEXT_CAP],
+                "first_text": first_text,
+                "last_text": last_text,
                 "redaction_flags": total_flags,
                 "state": state,
                 "unanswered_since": unanswered_since,
                 "unanswered_hours": unanswered_hours,
             })
 
-    # Window: last 14 days, plus any awaiting_flow regardless of age
+    # Window: last 14 days, plus any awaiting_flow regardless of age (already capped at 60d)
     cutoff = now - timedelta(days=WINDOW_DAYS)
     output_threads = [
         t for t in all_threads
         if t["_last_at_dt"] >= cutoff or t["state"] == "awaiting_flow"
     ]
 
-    # Sort: longest-unanswered first; settled (None) at the end
+    # Sort: longest-unanswered first; settled/client_update/None at the end
     output_threads.sort(
         key=lambda t: (
             t["unanswered_hours"] is None,
@@ -280,6 +350,8 @@ def _process_client(
         if t["state"] == "awaiting_flow" and t["unanswered_hours"] is not None
     ]
 
+    abandoned_count = sum(1 for t in all_threads if t["state"] == "abandoned")
+
     return {
         "slug": slug,
         "generated_at": now.isoformat(),
@@ -290,9 +362,12 @@ def _process_client(
             "threads": len(output_threads),
             "awaiting_flow": sum(1 for t in output_threads if t["state"] == "awaiting_flow"),
             "awaiting_client": sum(1 for t in output_threads if t["state"] == "awaiting_client"),
+            "client_update": sum(1 for t in output_threads if t["state"] == "client_update"),
             "settled": sum(1 for t in output_threads if t["state"] == "settled"),
+            "abandoned": abandoned_count,
             "stale_over_24h": sum(
-                1 for t in output_threads if (t["unanswered_hours"] or 0) > 24
+                1 for t in output_threads
+                if t["state"] == "awaiting_flow" and (t["unanswered_hours"] or 0) > 24
             ),
         },
         "oldest_unanswered_hours": max(af_hours) if af_hours else None,
@@ -316,6 +391,7 @@ def build_comms(config: dict) -> None:
     clients_config = config.get("clients", {})
     slug_map = _load_clients_slug_map()
     tz_map = _load_client_timezones()
+    active_clients = _load_active_clients()
 
     print("build_comms: fetching full WhatsApp history...")
     history = fetch_whatsapp_history(config)
@@ -323,34 +399,60 @@ def build_comms(config: dict) -> None:
 
     now = datetime.now(timezone.utc)
 
-    by_client: dict[str, list[tuple[str, list[dict]]]] = {}
+    # Group chats by slug. Try canonical first; fall back to chat name so that
+    # clients like the three Steel entries (whose config canonical "Steel Round Bars"
+    # has no containment match in clients.json) still resolve via their individual
+    # chat names (e.g. "Forte Metals Group" → "forte metals" → steel-forte).
+    by_slug: dict[str, list[tuple[str, list[dict]]]] = {}
     for chat_name, msgs in history.items():
         canonical = resolve_client(chat_name, clients_config, fuzzy=True)
         if canonical == "Unmapped":
             print(f"  skip (unmapped): {chat_name}")
             continue
-        by_client.setdefault(canonical, []).append((chat_name, msgs))
 
-    for client_name in sorted(by_client):
-        slug = _resolve_slug(client_name, slug_map)
+        slug = _resolve_slug(canonical, slug_map) or _resolve_slug(chat_name, slug_map)
         if slug is None:
-            print(f"  ⚠️  skip (no clients.json match): {client_name!r}")
+            print(f"  skip (no slug): {chat_name!r} (canonical={canonical!r})")
             continue
 
-        tz_str = tz_map.get(slug, DEFAULT_TZ)
-        print(f"\n── {client_name} ({slug}, tz={tz_str}) ──")
+        print(f"  chat {chat_name!r} → {canonical} → {slug}")
+        by_slug.setdefault(slug, []).append((chat_name, msgs))
 
+    written: set[str] = set()
+
+    # Process slugs that have chats
+    for slug in sorted(by_slug):
+        if slug not in active_clients:
+            print(f"  skip (inactive slug): {slug}")
+            continue
+        tz_str = tz_map.get(slug, DEFAULT_TZ)
+        print(f"\n── {slug} (tz={tz_str}) ──")
         try:
-            output = _process_client(slug, by_client[client_name], tz_str, team, now)
+            output = _process_client(slug, by_slug[slug], tz_str, team, now)
             _save(slug, output)
+            written.add(slug)
             c = output["counts"]
             print(
                 f"  wrote comms/{slug}.json "
                 f"({c['threads']} threads, {c['awaiting_flow']} awaiting_flow, "
-                f"{c['awaiting_client']} awaiting_client)"
+                f"{c['awaiting_client']} awaiting_client, {c['client_update']} client_update)"
             )
         except Exception as exc:
-            print(f"  ✗ {client_name}: failed — {exc}\n{traceback.format_exc()}")
+            print(f"  ✗ {slug}: failed — {exc}\n{traceback.format_exc()}")
+
+    # Write empty files for active clients with no matching chats, so absence
+    # is visible rather than silent.
+    for slug in sorted(active_clients):
+        if slug in written:
+            continue
+        tz_str = tz_map.get(slug, DEFAULT_TZ)
+        print(f"\n── {slug} (tz={tz_str}) — no chats found, writing empty file ──")
+        try:
+            output = _process_client(slug, [], tz_str, team, now)
+            _save(slug, output)
+            written.add(slug)
+        except Exception as exc:
+            print(f"  ✗ {slug}: failed — {exc}\n{traceback.format_exc()}")
 
 
 if __name__ == "__main__":
