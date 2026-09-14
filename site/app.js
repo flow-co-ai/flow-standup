@@ -89,6 +89,33 @@ const STALE_DAYS   = 8;
 const REPO_OWNER   = 'flow-co-ai';
 const REPO_NAME    = 'flow-standup';
 
+const CARDS_BASE = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/refs/heads/main/cards';
+
+const APP_SLUG_MAP = {
+  'Billy Doe Meats':       'billy-doe',
+  'Full Smile':            'full-smile',
+  'Healing Helps':         'healing-helps',
+  'HVAC':                  'hvac',
+  'Quality HVAC':          'hvac',
+  'Quality HVAC by Fibid': 'hvac',
+  'Justice Consumer Law':  'jcl',
+  'Liferun':               'liferun',
+  'Maadi Law':             'maadi-law',
+  'Maadi Law, LLC':        'maadi-law',
+  'Steel Round Bars':      'steel-ohare',
+  'Forte Metals':          'steel-forte',
+  'Advance Grinding':      'steel-advance',
+  "O'Hare Precision":      'steel-ohare',
+  'MedStation':            'medstation',
+};
+
+function slugFor(name) {
+  return APP_SLUG_MAP[name] ||
+    name.toLowerCase().replace(/[',&.]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+const CARD_STATUS_RANK = { critical: 0, warn: 1, ok: 2, unknown: 3 };
+
 const KEY_PASSCODE = 'flowops-passcode';
 const localChecksKey = (weekOf) => `flowops-v4-${weekOf}`;
 
@@ -97,6 +124,7 @@ const localChecksKey = (weekOf) => `flowops-v4-${weekOf}`;
 let standup      = null;
 let scoresHistory = []; // scores-history.json — flat rows, {date, client, composite_health, composite_label, sub_scores}
 let inboxData    = { generated_at: null, by_client: {} }; // inbox.json — per-client Monday item read/reply state
+let cardsBySlug  = {}; // cards/{slug}.json — keyed by slug
 let handled   = {};       // { rowId: true }  — only checked rows stored
 let copiedId  = null;
 let copyTimer = null;
@@ -242,10 +270,33 @@ function sortByOverride(items, keyFn) {
 // since that's the real Monday/roster identity, not something a rename
 // should ever affect.
 function effectiveByClient() {
+  const overrides = standupOverrides.overrides || {};
   const items = (standup?.by_client || []).filter(e => e.client !== 'Unmapped');
-  return sortByOverride(items, e => clientKey(e.client))
+  return items
+    .map((item, naturalIndex) => {
+      const key = clientKey(item.client);
+      const ov = overrides[key] || {};
+      const card = cardsBySlug[slugFor(item.client)] || null;
+      return { item, key, ov, card, naturalIndex, rank: Number.isFinite(ov.rank) ? ov.rank : Infinity };
+    })
     .filter(({ ov }) => !ov.hidden)
-    .map(({ item, key, ov }) => ({ ...item, _key: key, displayName: ov.name ?? item.client, headline: ov.headline ?? item.headline }));
+    .sort((a, b) => {
+      const ra = CARD_STATUS_RANK[a.card?.status] ?? 3;
+      const rb = CARD_STATUS_RANK[b.card?.status] ?? 3;
+      if (ra !== rb) return ra - rb;
+      const na = (a.card?.needs_you || []).length;
+      const nb = (b.card?.needs_you || []).length;
+      if (na !== nb) return nb - na;
+      const da = a.card?.contract?.days_left ?? Infinity;
+      const db = b.card?.contract?.days_left ?? Infinity;
+      if (da !== db) return da - db;
+      return (a.rank - b.rank) || (a.naturalIndex - b.naturalIndex);
+    })
+    .map(({ item, key, ov }) => ({
+      ...item, _key: key,
+      displayName: ov.name ?? item.client,
+      headline: ov.headline ?? item.headline,
+    }));
 }
 
 function hiddenClients() {
@@ -850,18 +901,16 @@ function effectiveHealthBadge(entry) {
 }
 
 function buildMiniCard(entry, orderKeys) {
-  const h = effectiveHealthBadge(entry);
   const key = entry._key;
-
   const displayName = entry.displayName || entry.client;
+  const clientCard = cardsBySlug[slugFor(entry.client)] || null;
+  const status = clientCard?.status || 'unknown';
 
   const card = el('article', {
     class: 'mini-card',
     role: 'button',
     tabindex: '0',
     'aria-label': `Open ${displayName}`,
-    // Routing always uses the real entry.client (Monday/roster identity) --
-    // never displayName, which is purely a cosmetic override.
     onclick: () => openClient(entry.client),
     onkeydown: (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openClient(entry.client); }
@@ -871,28 +920,10 @@ function buildMiniCard(entry, orderKeys) {
 
   card.append(buildCardControls(key));
 
-  // The composite is the headline number for this card -- bold and labeled
-  // so it reads as the primary signal, not a small aside next to the status
-  // badge (which just names the bucket the composite already puts it in).
-  const composite = entry.scores && entry.scores.composite;
-  const opsScoreBlock = composite != null
-    ? el('div', { class: 'ops-score-block' },
-        el('span', { class: 'ops-score-value', style: { color: h.accent }, text: `${composite}` }),
-        el('span', { class: 'ops-score-label', text: 'OPS SCORE' }),
-      )
-    : null;
-
   card.append(el('div', { class: 'mini-top-row' },
-    el('div', { class: 'mini-state' },
-      el('span', { class: 'mini-dot', style: { background: h.accent, boxShadow: `0 0 8px ${h.glow}` } }),
-      el('span', { class: 'mini-state-label', style: { color: h.accent }, text: h.label }),
-    ),
-    opsScoreBlock,
+    el('span', { class: `card-status-chip ${status}`, text: status }),
   ));
 
-  // Editable in place -- a display-only rename (health/highlights/stalled/
-  // completed are all structured pipeline data keyed off the real
-  // entry.client, which this never touches; see effectiveByClient).
   card.append(el('h2', {
     class: 'mini-name',
     contenteditable: 'true',
@@ -904,45 +935,13 @@ function buildMiniCard(entry, orderKeys) {
     text: displayName,
   }));
 
-  // Editable in place too, same UX -- the other field a real client card
-  // can override (health/highlights/stalled/completed are all structured
-  // pipeline data, not freely-editable text).
-  const headline = entry.headline || 'No activity recorded this week.';
-  card.append(el('p', {
-    class: 'mini-micro',
-    contenteditable: 'true',
-    spellcheck: 'false',
-    'data-original': headline,
-    onclick: (e) => e.stopPropagation(),
-    onkeydown: editableCardKeydown,
-    onblur: (e) => onCardFieldBlur(e, key, 'headline', false),
-    text: headline,
-  }));
+  const ny = clientCard?.needs_you || [];
+  const nyText = ny.length > 0 ? ny[0].text : 'Nothing needs you';
+  card.append(el('p', { class: ny.length > 0 ? 'mini-needs-you' : 'mini-needs-you nothing', text: nyText }));
 
-  if (entry.scores) {
-    const compactRow = el('div', { class: 'subscore-row subscore-row-compact' });
-    ['task_stalling', 'comms_quality', 'meeting_cadence'].forEach(k => {
-      compactRow.append(buildSubScoreChip(k, entry.scores.sub_scores && entry.scores.sub_scores[k], true));
-    });
-    card.append(compactRow);
-  }
-
-  const s = entry.stats || {};
-  if (s.tasks > 0 || s.monday_msgs > 0 || s.meetings > 0 || s.wa_msgs > 0) {
-    const statsEl = el('div', { class: 'mini-stats' });
-    const chip = (n, label, warn) => el('span', { class: `mini-stat${warn ? ' stat-warn' : ''}` },
-      el('span', { class: 'mini-stat-n', text: String(n) }),
-      ` ${label}`,
-    );
-    if (s.tasks)      statsEl.append(chip(s.tasks, 'tasks', false));
-    if (s.working)    statsEl.append(chip(s.working, 'working', false));
-    if (s.review)     statsEl.append(chip(s.review, 'review', false));
-    if (s.stuck)      statsEl.append(chip(s.stuck, 'stuck', true));
-    if (s.done)       statsEl.append(chip(s.done, 'done', false));
-    if (s.monday_msgs) statsEl.append(chip(s.monday_msgs, 'msgs', false));
-    if (s.meetings)   statsEl.append(chip(s.meetings, 'mtgs', false));
-    if (s.wa_msgs)    statsEl.append(chip(s.wa_msgs, 'wa', false));
-    card.append(statsEl);
+  const daysLeft = clientCard?.contract?.days_left;
+  if (daysLeft != null && daysLeft < 60) {
+    card.append(el('div', { class: 'mini-days-left', text: `${daysLeft}d left` }));
   }
 
   return card;
@@ -1179,83 +1178,81 @@ function buildScoreSection(entry) {
   return sec;
 }
 
-function buildCard(entry, priorities, displayName) {
-  const h = effectiveHealthBadge(entry);
+// buildCardLane renders one of the three card lanes (organic / paid / crm).
+function buildCardLane(lane, label) {
+  const basis = lane.basis;
+  const basisType = basis?.type || '';
+  const isAbsent = basisType === 'not_found' || basisType === 'unavailable';
+  const isFact   = basisType === 'fact';
 
-  const highlights = (entry.work_by_department || []).flatMap(d => d.highlights    || []);
-  const stalled    = (entry.work_by_department || []).flatMap(d => d.stalled_items || []);
-  const clientPrio = findPriorityForClient(priorities, entry);
+  const laneEl = el('div', { class: 'card-lane' });
+  laneEl.append(el('div', { class: 'card-lane-head', text: label }));
+  laneEl.append(el('div', { class: 'card-lane-headline', text: lane.headline || '' }));
+  laneEl.append(el('div', {
+    class: `card-lane-sentence${isAbsent ? ` basis-${basisType}` : ''}`,
+    text: lane.sentence || '',
+  }));
+  if (basis) {
+    const basisText = `${basis.type} · ${basis.source} · ${basis.window}`;
+    laneEl.append(el('div', {
+      class: `card-lane-basis${isFact ? ' basis-fact' : isAbsent ? ` basis-${basisType}` : ''}`,
+      text: basisText,
+    }));
+  }
+  return laneEl;
+}
 
+function buildCard(entry, priorities, displayName, clientCard) {
+  const status = clientCard?.status || 'unknown';
   const card = el('article', { class: 'client-card' });
 
   card.append(el('div', { class: 'card-header' },
     el('span', { class: 'client-name', text: displayName || entry.client }),
-    el('span', {
-      class: 'health-chip',
-      style: { color: h.accent, borderColor: h.chipBorder, background: h.chipBg },
-      text: h.label,
-    }),
+    el('span', { class: `card-status-chip ${status}`, text: status }),
   ));
 
   const sections = el('div', { class: 'card-sections' });
 
-  const scoreSection = buildScoreSection(entry);
-  if (scoreSection) sections.append(scoreSection);
-
-  if (highlights.length) {
-    const sec = el('div', { class: 'card-section' });
-    sec.append(el('span', { class: 'section-label', text: "What's Happening" }));
-    highlights.forEach(h => { const r = buildRow(h, false); if (r) sec.append(r); });
-    sections.append(sec);
+  if (!clientCard) {
+    sections.append(el('p', { class: 'mini-micro', text: 'Card data not available.' }));
+    card.append(sections);
+    return card;
   }
 
-  if (stalled.length) {
-    const sec = el('div', { class: 'card-section' });
-    sec.append(el('span', { class: 'section-label stalled-label', text: 'Stalled' }));
-    stalled.forEach(s => { const r = buildRow(s, true); if (r) sec.append(r); });
-    sections.append(sec);
+  // Three lanes
+  const lanes = clientCard.lanes || {};
+  const lanesEl = el('div', { class: 'card-lanes' });
+  [['organic', 'Organic'], ['paid', 'Paid'], ['crm', 'CRM']].forEach(([key, label]) => {
+    if (lanes[key]) lanesEl.append(buildCardLane(lanes[key], label));
+  });
+  sections.append(lanesEl);
+
+  // needs_you
+  const ny = clientCard.needs_you || [];
+  if (ny.length > 0) {
+    const nyEl = el('div', { class: 'card-section card-needs-you' });
+    nyEl.append(el('span', { class: 'card-needs-you-label', text: 'Needs you' }));
+    ny.forEach(item => nyEl.append(el('div', { class: 'card-needs-you-item', text: item.text })));
+    sections.append(nyEl);
   }
 
-  const completedThisWeek = entry.completed_this_week || [];
-  // Rolling window of the most recently finished prior weeks (newest first),
-  // capped server-side at HISTORY_WINDOW_WEEKS -- weeks with nothing for
-  // this client are skipped rather than rendered as empty toggles.
-  const completedHistory = (entry.completed_history || []).filter(wk => (wk.items || []).length);
-
-  if (completedThisWeek.length || completedHistory.length) {
-    const sec = el('div', { class: 'card-section' });
-    sec.append(el('span', { class: 'section-label completed-label', text: 'Completed' }));
-    completedThisWeek.forEach(c => { const r = buildCompletedRow(c); if (r) sec.append(r); });
-
-    completedHistory.forEach(wk => {
-      const expandKey = `${entry.client}::${wk.week_of}`;
-      const expanded  = !!historyWeekExpanded[expandKey];
-      const rangeLabel = isoWeekToDateRange(wk.week_of) || 'prior week';
-      const toggle = el('button', {
-        class: 'prior-week-toggle',
-        type: 'button',
-        onclick: () => { historyWeekExpanded[expandKey] = !expanded; render(); },
-      },
-        el('span', { class: 'prior-week-caret', text: expanded ? '▾' : '▸' }),
-        ` ${rangeLabel} (${wk.items.length})`,
-      );
-      sec.append(toggle);
-
-      if (expanded) {
-        const priorList = el('div', { class: 'prior-week-list' });
-        wk.items.forEach(c => { const r = buildCompletedRow(c); if (r) priorList.append(r); });
-        sec.append(priorList);
-      }
-    });
-    sections.append(sec);
+  // Contract line
+  const contract = clientCard.contract;
+  if (contract) {
+    if (!contract.validated) {
+      sections.append(el('div', { class: 'card-contract-unvalidated', text: 'Plan not validated — contract dates may be approximate.' }));
+    } else {
+      const endFmt = contract.end ? contract.end.slice(0, 10) : '';
+      sections.append(el('div', { class: 'card-contract-line', text: `Month ${contract.month_of} of ${contract.months_total} · ends ${endFmt} · ${contract.days_left} days` }));
+    }
   }
 
-  if (clientPrio) {
-    const sec = el('div', { class: 'card-section' });
-    sec.append(el('span', { class: 'section-label', text: 'Next' }));
-    const r = buildNextRow(clientPrio);
-    if (r) sec.append(r);
-    sections.append(sec);
+  // scope_out
+  const scopeOut = clientCard.scope_out;
+  if (Array.isArray(scopeOut) && scopeOut.length > 0) {
+    sections.append(el('div', { class: 'card-scope-out', text: scopeOut.join(' · ') }));
+  } else if (typeof scopeOut === 'string' && scopeOut) {
+    sections.append(el('div', { class: 'card-scope-out', text: scopeOut }));
   }
 
   card.append(sections);
@@ -1635,14 +1632,13 @@ function render() {
       onclick: backToGrid,
     }));
     const entry = (standup.by_client || []).find(c => c.client === viewClient);
-    // Display name only -- buildCard still receives the real entry (client
-    // routing/priority-matching there is keyed off entry.client untouched).
     const displayName = (standupOverrides.overrides || {})[clientKey(viewClient)]?.name;
     if (entry) {
       fetchLiveInboxForClient(viewClient); // fire-and-forget; re-renders itself on completion if still viewing this client
+      const clientCard = cardsBySlug[slugFor(viewClient)] || null;
       const split = el('div', { class: 'client-detail-split' });
       split.append(el('div', { class: 'client-detail-pane client-detail-pane-summary' },
-        buildCard(entry, priorities, displayName)));
+        buildCard(entry, priorities, displayName, clientCard)));
       split.append(el('div', { class: 'client-detail-pane client-detail-pane-inbox' },
         buildInboxPane(viewClient)));
       app.append(split);
@@ -1806,7 +1802,21 @@ async function init() {
     return;
   }
 
-  // 1b. Score history for the trend line -- optional (may not exist yet on a
+  // 1b. Card data for all clients — fetched in parallel, failures silently null.
+  {
+    const clients = (standup?.by_client || []).filter(c => c.client !== 'Unmapped');
+    const results = await Promise.all(clients.map(async (c) => {
+      const slug = slugFor(c.client);
+      try {
+        const res = await fetch(`${CARDS_BASE}/${slug}.json?t=${Date.now()}`, { cache: 'no-store' });
+        if (!res.ok) return [slug, null];
+        return [slug, await res.json()];
+      } catch { return [slug, null]; }
+    }));
+    cardsBySlug = Object.fromEntries(results);
+  }
+
+  // 1c. Score history for the trend line -- optional (may not exist yet on a
   // fresh deploy before generate.py has written it), so a missing/failed
   // fetch just means no trend line rather than a page-level error.
   scoresHistory = await (async () => {
@@ -1818,7 +1828,7 @@ async function init() {
     } catch { return []; }
   })();
 
-  // 1c. Inbox state (Monday item read/reply status) -- optional, same
+  // 1d. Inbox state (Monday item read/reply status) -- optional, same
   // no-flicker/optional pattern as scores-history above.
   inboxData = await (async () => {
     try {

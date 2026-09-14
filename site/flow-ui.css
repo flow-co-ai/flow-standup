@@ -187,3 +187,126 @@
   background: rgba(220,167,70,0.06);
   color: var(--amber);
 }
+
+/* ── card status signal tokens ──────────────────────────────────────────────
+   Two new tokens for states the existing palette had no name for.
+   Existing --green / --amber / --coral cover ok / warn / critical.       */
+:root {
+  --status-quiet:   rgba(140,140,130,0.55);  /* unknown / no card data */
+}
+
+/* ── card status label chip (standup grid + detail header) ──────────────── */
+.card-status-chip {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+.card-status-chip.ok       { color: var(--green);  background: rgba(140,190,110,0.08); border: 1px solid rgba(140,190,110,0.25); }
+.card-status-chip.warn     { color: var(--amber);  background: rgba(220,167,70,0.08);  border: 1px solid rgba(220,167,70,0.25); }
+.card-status-chip.critical { color: var(--coral);  background: rgba(222,110,76,0.1);   border: 1px solid rgba(222,110,76,0.3);  }
+.card-status-chip.unknown  { color: var(--status-quiet); background: rgba(140,140,130,0.06); border: 1px solid rgba(140,140,130,0.18); }
+
+/* ── three-lane card detail layout ─────────────────────────────────────── */
+.card-lanes { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+
+.card-lane {
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: rgba(237,233,218,0.03);
+  border: 1px solid var(--hairline);
+}
+.card-lane-head {
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--cream-faint);
+  margin-bottom: 4px;
+}
+.card-lane-headline { font-size: 15px; font-weight: 500; color: var(--cream); margin-bottom: 4px; }
+.card-lane-sentence { font-size: 13px; color: var(--cream-dim); margin-bottom: 6px; }
+.card-lane-sentence.basis-not_found,
+.card-lane-sentence.basis-unavailable { color: var(--status-quiet); font-style: italic; }
+.card-lane-basis { font-family: var(--mono); font-size: 9px; color: var(--cream-faint); }
+.card-lane-basis.basis-fact        { color: rgba(220,167,70,0.65); }
+.card-lane-basis.basis-not_found,
+.card-lane-basis.basis-unavailable { color: var(--status-quiet); opacity: 0.7; }
+
+/* ── needs_you in detail ────────────────────────────────────────────────── */
+.card-needs-you { margin-top: 16px; }
+.card-needs-you-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--cream-faint);
+  margin-bottom: 6px;
+  display: block;
+}
+.card-needs-you-item {
+  font-size: 13px;
+  color: var(--cream-dim);
+  padding: 7px 0;
+  border-top: 1px solid var(--hairline);
+}
+
+/* ── contract line + scope_out in detail ────────────────────────────────── */
+.card-contract-line {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--cream-faint);
+  margin-top: 14px;
+}
+.card-contract-unvalidated {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--status-quiet);
+  font-style: italic;
+  margin-top: 14px;
+}
+.card-scope-out {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--cream-faint);
+  margin-top: 8px;
+  opacity: 0.6;
+}
+
+/* ── mini-card: needs_you line ──────────────────────────────────────────── */
+.mini-needs-you        { font-size: 12px; color: var(--cream-dim); margin-top: 4px; }
+.mini-needs-you.nothing { color: var(--status-quiet); font-style: italic; }
+.mini-days-left {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--amber);
+  margin-top: 4px;
+}
+
+/* ── v3 rail: needs_you ranked list ─────────────────────────────────────── */
+.sb3-needs-you-empty { font-size: 13px; color: var(--cream-faint); padding: 16px 0; }
+.sb3-needs-you-row   { padding: 10px 0; border-top: 1px solid var(--hairline); }
+.sb3-needs-you-client {
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--cream-faint);
+  margin-bottom: 3px;
+}
+.sb3-needs-you-text { font-size: 12px; color: var(--cream-dim); margin-bottom: 2px; }
+.sb3-needs-you-age  { font-family: var(--mono); font-size: 9px; color: var(--status-quiet); }
+
+/* ── performance: status chip in scan strip ─────────────────────────────── */
+.perf-status-chip { font-family: var(--mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; }
+.perf-status-chip.ok       { color: var(--green); }
+.perf-status-chip.warn     { color: var(--amber); }
+.perf-status-chip.critical { color: var(--coral); }
+.perf-status-chip.unknown  { color: var(--status-quiet); }
+
+/* ── performance: paid lane sentence + basis ────────────────────────────── */
+.perf-lane-sentence { font-size: 13px; color: var(--cream-dim); margin-bottom: 4px; }
+.perf-lane-basis    { font-family: var(--mono); font-size: 9px; color: var(--cream-faint); margin-bottom: 12px; }

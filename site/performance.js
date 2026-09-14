@@ -1,6 +1,7 @@
 // Performance tab — fetches daily pulse JSONs and renders the scan strip + client cards.
 
 const PULSE_BASE = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/refs/heads/main/pulse';
+const CARDS_BASE = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/refs/heads/main/cards';
 
 // Maps standup client display names → pulse slug (covers known aliases).
 // Inactive clients (active: false in clients.json) are omitted.
@@ -240,15 +241,12 @@ function showClient(slug) {
 
 // ── Scan strip ────────────────────────────────────────────────────
 
-function buildScanStrip(entries) {
+function buildScanStrip(entries, cardMap) {
   const strip = el('div', { class: 'perf-scan-strip' });
 
   for (const { name, cardId, hasFeed, pulse } of entries) {
-    const score   = hasFeed ? pulse?.score : null;
-    const deltas  = pulse?.windsor?.deltas;
-    const type    = pulse?.type || 'leadgen';
-    const bd      = hasFeed ? biggestScanDelta(deltas, type) : null;
     const chipName = STEEL_CHIP_LABEL[cardId] || name;
+    const cardStatus = (cardMap[cardId] || cardMap[pulse?.slug])?.status || null;
 
     const chip = el('div', {
       class: 'fui-chip' + (hasFeed ? '' : ' disabled'),
@@ -258,23 +256,11 @@ function buildScanStrip(entries) {
       } : {}),
     });
 
-    chip.append(statusDot(score, 6));
     chip.append(el('span', { class: 'perf-scan-name', text: chipName }));
 
-    if (hasFeed && score != null) {
-      chip.append(el('span', {
-        class: 'perf-scan-score',
-        style: { color: statusColor(score) },
-        text: String(score),
-      }));
-      if (bd) {
-        const val = deltas[bd.key];
-        chip.append(el('span', {
-          class: 'perf-scan-delta',
-          text: `${bd.label} ${fmtPct(val)}`,
-        }));
-      }
-    } else {
+    if (cardStatus) {
+      chip.append(el('span', { class: `perf-status-chip ${cardStatus}`, text: cardStatus }));
+    } else if (!hasFeed) {
       chip.append(el('span', { class: 'perf-scan-nofeed', text: 'no feed' }));
     }
 
@@ -467,9 +453,10 @@ function buildLensBlock(perf, slug, clientName, decidedIds) {
 
 // ── Main card ─────────────────────────────────────────────────────
 
-function buildCard(entry, decidedIds = new Set()) {
+function buildCard(entry, decidedIds = new Set(), cardMap = {}) {
   const { name, cardId, hasFeed, pulse } = entry;
   const slug = pulse?.slug || cardId;
+  const clientCard = cardMap[slug] || cardMap[cardId] || null;
   const card = el('article', {
     class: 'perf-card' + (hasFeed ? '' : ' perf-card--nofeed'),
     id: `perf-card-${slug}`,
@@ -490,7 +477,6 @@ function buildCard(entry, decidedIds = new Set()) {
     return card;
   }
 
-  const score   = pulse.score;
   const type    = pulse.type || 'leadgen';
   const windsor = pulse.windsor || {};
   const ghl     = pulse.ghl;
@@ -499,19 +485,16 @@ function buildCard(entry, decidedIds = new Set()) {
   const totals  = windsor.totals || {};
   const flags   = windsor.flags  || [];
 
-  // ── Header ──
+  // ── Header (no score number) ──
   const dateStr = fmtDate(pulse.date);
   const stamp   = (dateStr ? dateStr + ' · ' : '') + '7D VS PRIOR 7D';
 
   const header = el('div', { class: 'perf-card-header' },
     el('div', { class: 'perf-card-header-left' },
-      statusDot(score, 8),
+      statusDot(pulse.score, 8),
       el('span', { class: 'perf-client-name', text: name })
     ),
     el('div', { class: 'perf-card-header-right' },
-      score != null
-        ? el('span', { class: 'perf-score', style: { color: statusColor(score) }, text: `${score}/100` })
-        : null,
       el('span', { class: 'perf-stamp', text: stamp }),
     )
   );
@@ -520,9 +503,15 @@ function buildCard(entry, decidedIds = new Set()) {
   // ── Body (collapses) ──
   const body = el('div', { class: 'perf-card-body' });
 
-  // ── Verdict ──
-  const verdictText = pulse.verdict || buildVerdictFallback(name, deltas, flags);
-  if (verdictText) body.append(el('p', { class: 'perf-verdict', text: verdictText }));
+  // ── Paid lane sentence + basis (from card), no score number ──
+  const paidLane = clientCard?.lanes?.paid;
+  if (paidLane?.sentence) {
+    body.append(el('p', { class: 'perf-lane-sentence', text: paidLane.sentence }));
+    if (paidLane.basis) {
+      const { type: btype, source, window: win } = paidLane.basis;
+      body.append(el('div', { class: 'perf-lane-basis', text: `${btype} · ${source} · ${win}` }));
+    }
+  }
 
   // ── Hero grid + channel rows (only when Windsor data is present) ──
   let chWrap = null;
@@ -682,15 +671,23 @@ async function init() {
     }
   }
 
-  // Fetch all pulse JSONs + past decisions in parallel.
+  // Fetch all pulse JSONs, card JSONs, and past decisions in parallel.
   const pulseMap = {};
+  const cardMap  = {};
+  const uniqueSlugs = [...new Set(allClients.map(c => c.slug).filter(Boolean))];
   const [, decidedIds] = await Promise.all([
-    Promise.all(
-      [...new Set(allClients.map(c => c.slug).filter(Boolean))].map(async slug => {
+    Promise.all([
+      ...uniqueSlugs.map(async slug => {
         try { pulseMap[slug] = await fetchPulse(slug); }
         catch (e) { pulseMap[slug] = { _fetchError: e.message }; }
-      })
-    ),
+      }),
+      ...uniqueSlugs.map(async slug => {
+        try {
+          const res = await fetch(`${CARDS_BASE}/${slug}.json?t=${Date.now()}`);
+          cardMap[slug] = res.ok ? await res.json() : null;
+        } catch { cardMap[slug] = null; }
+      }),
+    ]),
     fetchDecidedIds(),
   ]);
 
@@ -705,7 +702,7 @@ async function init() {
   app.innerHTML = '';
 
   // Scan strip — original order (matches standup + PULSE_ONLY order).
-  app.append(buildScanStrip(entries));
+  app.append(buildScanStrip(entries, cardMap));
 
   // Cards — lowest score first, no-feed last.
   const withFeed = entries
@@ -716,7 +713,7 @@ async function init() {
   const cardList = el('div', { class: 'perf-list' });
 
   for (const e of [...withFeed, ...noFeed]) {
-    const card = buildCard(e, decidedIds);
+    const card = buildCard(e, decidedIds, cardMap);
     card.style.display = 'none';   // hidden until showClient is called
     cardList.append(card);
   }

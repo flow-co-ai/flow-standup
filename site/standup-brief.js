@@ -9,6 +9,7 @@
   const PULSE_BASE    = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/refs/heads/main/pulse';
   const PLAYBOOK_BASE = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/refs/heads/main/playbooks';
   const TIMELINE_BASE = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/refs/heads/main/timeline';
+  const CARDS_BASE    = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/refs/heads/main/cards';
 
   // ── Slug map ─────────────────────────────────────────────────────────────────
 
@@ -73,6 +74,7 @@
   const pulseCache    = new Map();
   const playbookCache = new Map();
   const timelineCache = new Map();
+  const cardCache     = new Map();
   let   latestCache   = null;
   let   inboxCache    = null;
 
@@ -146,6 +148,17 @@
       inboxCache = await res.json();
       return inboxCache;
     } catch { return null; }
+  }
+
+  async function fetchCard(slug) {
+    if (cardCache.has(slug)) return cardCache.get(slug);
+    try {
+      const res = await fetch(`${CARDS_BASE}/${slug}.json?t=${Date.now()}`, { cache: 'no-store' });
+      if (!res.ok) { cardCache.set(slug, null); return null; }
+      const data = await res.json();
+      cardCache.set(slug, data);
+      return data;
+    } catch { cardCache.set(slug, null); return null; }
   }
 
   // ── Unhide hidden clients ────────────────────────────────────────────────────
@@ -620,33 +633,17 @@
     injectedFor = clientName;
 
     const slug = slugFor(clientName);
-
-    const [pulse, md, latest, inbox, timeline] = await Promise.all([
-      fetchPulse(slug),
-      fetchPlaybook(slug),
-      fetchLatest(),
-      fetchInbox(),
-      fetchTimeline(slug),
-    ]);
+    const clientCard = await fetchCard(slug);
 
     if (!document.querySelector('.client-detail-split')) return;
     if (injectedFor !== clientName) return;
 
-    const entry       = latest?.by_client?.find(c => c.client === clientName) || null;
-    const clientInbox = clientInboxItems(inbox, clientName);
-
     document.querySelector('.sb-v2-detail')?.remove();
 
-    const detail   = el('div', 'sb-v2-detail');
-    const paceBar  = buildPaceBar(timeline);
+    if (!clientCard) return;
 
-    detail.append(buildContractHeader(md));
-    if (paceBar) detail.append(paceBar);
-    detail.append(
-      buildVerdictBlock(pulse, entry),
-      buildDeptLanes(entry, clientInbox, timeline),
-      buildGroundStrip(clientInbox),
-    );
+    const detail = el('div', 'sb-v2-detail');
+    detail.append(buildCardDetailFromCard(clientCard));
 
     const app = document.getElementById('app');
     app?.classList.add('sb-v2');
@@ -680,16 +677,16 @@
     { key: 'WEB-SEO', aliases: ['web + seo', 'web', 'seo', 'website'] },
   ];
 
-  const STATUS_MAP = {
-    green:  { label: 'ON TRACK',        color: '#7da05c' },
-    amber:  { label: 'NEEDS ATTENTION', color: '#c9a13b' },
-    orange: { label: 'AT RISK',         color: '#a8563f' },
-    red:    { label: 'AT RISK',         color: '#a8563f' },
+  // Card status → dot color (used in pills strip).
+  const CARD_STATUS_COLOR = {
+    critical: '#DE6E4C',
+    warn:     '#DCA746',
+    ok:       '#A9B478',
+    unknown:  'rgba(140,140,130,0.55)',
   };
-  const STATUS_UNKNOWN = { label: 'NO DATA', color: '#9ea295' };
 
-  // Card sort rank: at-risk < needs-attention < on-track < unknown.
-  const STATUS_RANK = { orange: 0, red: 0, amber: 1, green: 2 };
+  // Card sort rank: critical first, then warn, ok, unknown.
+  const CARD_STATUS_RANK = { critical: 0, warn: 1, ok: 2, unknown: 3 };
 
   // ── v3 state ─────────────────────────────────────────────────────────────────
 
@@ -737,10 +734,15 @@
 
   function sortEntries(entries) {
     return [...entries].sort((a, b) => {
-      const ra = STATUS_RANK[a.pulse?.status] ?? 3;
-      const rb = STATUS_RANK[b.pulse?.status] ?? 3;
+      const ra = CARD_STATUS_RANK[a.card?.status] ?? 3;
+      const rb = CARD_STATUS_RANK[b.card?.status] ?? 3;
       if (ra !== rb) return ra - rb;
-      return a.name.localeCompare(b.name);
+      const na = (a.card?.needs_you || []).length;
+      const nb = (b.card?.needs_you || []).length;
+      if (na !== nb) return nb - na;
+      const da = a.card?.contract?.days_left ?? Infinity;
+      const db = b.card?.contract?.days_left ?? Infinity;
+      return da - db;
     });
   }
 
@@ -777,18 +779,13 @@
 
   async function loadV3Data() {
     const latest = await fetchLatest();
-    v3Data.summary = await fetchSummary();
 
     const clients = (latest?.by_client || []).filter(c => c.client && c.client !== 'Unmapped');
 
     const entries = await Promise.all(clients.map(async (c) => {
       const slug = slugFor(c.client);
-      const [pulse, timeline, playbook] = await Promise.all([
-        fetchPulse(slug),
-        fetchTimeline(slug),
-        fetchPlaybook(slug),
-      ]);
-      return { slug, name: c.client, pulse, timeline, playbook, latestEntry: c };
+      const card = await fetchCard(slug);
+      return { slug, name: c.client, card, latestEntry: c };
     }));
 
     v3Data.entries = entries;
@@ -797,22 +794,11 @@
 
   // ── v3 renderers: header + pills + grid ─────────────────────────────────────
 
-  // Header:
-  //   All-clients view: date line + subline (block counts). NO hero — headlines
-  //   are per-client and live on the selected card.
-  //   Solo view: date line + the client's own brief_v2.verdict as the hero.
-  function renderHeader(summary, entries, selectedEntry) {
+  function renderHeader(entries) {
     const header = el('div', 'sb3-header');
-    const totalBlocks = entries.reduce((s, e) => s + blocksFor(e.pulse).length, 0);
-    header.append(el('div', 'sb3-date-line', todayDateLine(entries.length, totalBlocks)));
-
-    if (selectedEntry) {
-      const verdict = briefV2Of(selectedEntry.pulse)?.verdict;
-      if (verdict) header.append(el('div', 'sb3-hero', verdict));
-      // No verdict: skip. Do not fabricate.
-    } else if (summary?.subline) {
-      header.append(el('div', 'sb3-subline', summary.subline));
-    }
+    const opts = { weekday: 'long', month: 'long', day: 'numeric' };
+    const dateLine = new Date().toLocaleDateString('en-US', opts).toUpperCase();
+    header.append(el('div', 'sb3-date-line', `${dateLine} · ${entries.length} CLIENTS`));
     return header;
   }
 
@@ -834,10 +820,9 @@
     pills.append(allPill);
 
     for (const e of entries) {
-      const status = statusFor(e.pulse);
       const pill = el('button', 'sb3-pill');
       const dot = el('span', 'sb3-pill-dot');
-      dot.style.background = status.color;
+      dot.style.background = CARD_STATUS_COLOR[e.card?.status] || CARD_STATUS_COLOR.unknown;
       pill.append(dot, document.createTextNode(e.name));
       pill.addEventListener('click', () => {
         v3State.selected = e.slug;
@@ -861,9 +846,8 @@
   // ── v3 renderers: card ───────────────────────────────────────────────────────
 
   function renderCardV3(entry) {
-    const { name, slug, pulse } = entry;
-    const status = statusFor(pulse);
-    const v2  = briefV2Of(pulse);
+    const { name, slug, card: clientCard } = entry;
+    const status = clientCard?.status || 'unknown';
     const isOpen = v3State.selected === slug;
 
     const card = el('div', `sb3-card${isOpen ? ' open' : ' clickable'}`);
@@ -874,67 +858,101 @@
       });
     }
 
-    // Top row: dot + state label / ops score
+    // Status chip
     const top = el('div', 'sb3-card-top');
-    const statusWrap = el('span', 'sb3-card-status');
-    const dot = el('span', 'sb3-dot');
-    dot.style.background = status.color;
-    statusWrap.append(dot, el('span', 'sb3-state-label', status.label));
-
-    const scoreEl = el('span', 'sb3-card-score', pulse?.score != null ? String(pulse.score) : '—');
-    if (pulse?.score != null) scoreEl.style.color = status.color;
-
-    top.append(statusWrap, scoreEl);
+    top.append(el('span', `card-status-chip ${status}`, status));
     card.append(top);
 
-    // Name + sub
+    // Name
     card.append(el('div', 'sb3-card-name', name));
-    if (pulse?.type) card.append(el('div', 'sb3-card-sub', pulse.type));
 
-    // Verdict — hidden on open (the hero shows it) to avoid duplication.
-    if (!isOpen) {
-      const verdict = v2?.verdict;
-      card.append(el('div', verdict ? 'sb3-card-verdict' : 'sb3-card-verdict muted',
-        verdict || 'No brief generated yet'));
+    // needs_you[0].text or "Nothing needs you"
+    const ny = clientCard?.needs_you || [];
+    const nyText = ny.length > 0 ? ny[0].text : 'Nothing needs you';
+    card.append(el('div', ny.length > 0 ? 'mini-needs-you' : 'mini-needs-you nothing', nyText));
+
+    // days_left when under 60
+    const daysLeft = clientCard?.contract?.days_left;
+    if (daysLeft != null && daysLeft < 60) {
+      card.append(el('div', 'mini-days-left', `${daysLeft}d left`));
     }
 
-    // Footer: move line only. Card click drives selection; no toggle button.
-    const footer = el('div', 'sb3-card-footer');
-    footer.append(el('span', 'sb3-move-line', moveLine(blocksFor(pulse))));
-    card.append(footer);
-
-    // Detail
     if (isOpen) card.append(renderCardDetailV3(entry));
 
     return card;
   }
 
-  // ── v3 renderers: card detail (snapshot / streams / contract / history) ─────
+  // ── card detail: shared lane + section builder ───────────────────────────
+
+  function buildLaneBlock(lane, label) {
+    const basis = lane.basis;
+    const basisType = basis?.type || '';
+    const isAbsent = basisType === 'not_found' || basisType === 'unavailable';
+    const isFact   = basisType === 'fact';
+
+    const laneEl = el('div', 'card-lane');
+    laneEl.append(el('div', 'card-lane-head', label));
+    laneEl.append(el('div', 'card-lane-headline', lane.headline || ''));
+    laneEl.append(el('div', `card-lane-sentence${isAbsent ? ` basis-${basisType}` : ''}`, lane.sentence || ''));
+    if (basis) {
+      const basisText = `${basis.type} · ${basis.source} · ${basis.window}`;
+      laneEl.append(el('div', `card-lane-basis${isFact ? ' basis-fact' : isAbsent ? ` basis-${basisType}` : ''}`, basisText));
+    }
+    return laneEl;
+  }
+
+  function buildCardDetailFromCard(clientCard) {
+    const wrap = el('div', 'sb3-detail');
+
+    if (!clientCard) {
+      wrap.append(el('div', 'sb3-contract-empty', 'Card data not available.'));
+      return wrap;
+    }
+
+    // Three lanes: organic · paid · crm
+    const lanes = clientCard.lanes || {};
+    const lanesEl = el('div', 'card-lanes');
+    [['organic', 'Organic'], ['paid', 'Paid'], ['crm', 'CRM']].forEach(([key, label]) => {
+      if (lanes[key]) lanesEl.append(buildLaneBlock(lanes[key], label));
+    });
+    wrap.append(lanesEl);
+
+    // needs_you list
+    const ny = clientCard.needs_you || [];
+    if (ny.length > 0) {
+      const nyWrap = el('div', 'card-needs-you');
+      nyWrap.append(el('div', 'card-needs-you-label', 'Needs you'));
+      for (const item of ny) nyWrap.append(el('div', 'card-needs-you-item', item.text));
+      wrap.append(nyWrap);
+    }
+
+    // Contract line
+    const contract = clientCard.contract;
+    if (contract) {
+      if (!contract.validated) {
+        wrap.append(el('div', 'card-contract-unvalidated', 'Plan not validated — contract dates may be approximate.'));
+      } else {
+        const endFmt = contract.end ? contract.end.slice(0, 10) : '';
+        wrap.append(el('div', 'card-contract-line',
+          `Month ${contract.month_of} of ${contract.months_total} · ends ${endFmt} · ${contract.days_left} days`));
+      }
+    }
+
+    // scope_out
+    const scopeOut = clientCard.scope_out;
+    if (Array.isArray(scopeOut) && scopeOut.length > 0) {
+      wrap.append(el('div', 'card-scope-out', scopeOut.join(' · ')));
+    } else if (typeof scopeOut === 'string' && scopeOut) {
+      wrap.append(el('div', 'card-scope-out', scopeOut));
+    }
+
+    return wrap;
+  }
+
+  // ── v3 renderers: card detail ────────────────────────────────────────────
 
   function renderCardDetailV3(entry) {
-    const { pulse, latestEntry, timeline, playbook } = entry;
-    const v2 = briefV2Of(pulse);
-
-    const detail = el('div', 'sb3-detail');
-
-    // CONTRACT — deterministic, from the playbook header. Anchor section.
-    detail.append(renderContractFromPlaybook(playbook));
-
-    // SNAPSHOT — render only if source array has rows
-    const snap = v2?.snapshot || [];
-    if (snap.length) detail.append(renderSnapshotSection(snap));
-
-    // STREAMS — always render section; individual lanes fall back to "Not in scope."
-    detail.append(renderStreamsSection(latestEntry));
-
-    // AGAINST THE CONTRACT
-    detail.append(renderContractSection(timeline));
-
-    // history_line footer (spans full detail row)
-    const hl = v2?.history_line;
-    if (hl) detail.append(el('div', 'sb3-detail-history', hl));
-
-    return detail;
+    return buildCardDetailFromCard(entry.card || null);
   }
 
   // ── Playbook extractor (v3 CONTRACT section — deterministic, no LLM) ────────
@@ -1340,48 +1358,44 @@
   function renderRail(entries) {
     const rail = el('div', 'sb3-rail');
 
-    const scopedSlug = railScope();
-    const scoped = scopedSlug ? entries.find(e => e.slug === scopedSlug) : null;
-    const source = scoped ? [scoped] : entries;
-
-    const allBlocks = [];
-    for (const e of source) {
-      for (const b of blocksFor(e.pulse)) allBlocks.push({ ...b, client: e.name });
+    // Collect all needs_you entries across all cards.
+    const allNeeds = [];
+    for (const e of entries) {
+      for (const ny of (e.card?.needs_you || [])) {
+        allNeeds.push({ ...ny, client: e.name });
+      }
     }
+
+    // Sort: severity high/critical first, then age_days descending.
+    const SEV_RANK = { critical: 0, high: 1, medium: 2, low: 3 };
+    allNeeds.sort((a, b) => {
+      const ra = SEV_RANK[a.severity] ?? 4;
+      const rb = SEV_RANK[b.severity] ?? 4;
+      if (ra !== rb) return ra - rb;
+      return (b.age_days ?? -1) - (a.age_days ?? -1);
+    });
+
+    const checked = entries.filter(e => e.card != null).length;
 
     const header = el('div', 'sb3-rail-header');
-    header.append(
-      el('span', 'sb3-rail-title', scoped ? `BLOCKS · ${scoped.name.toUpperCase()}` : 'BLOCKS'),
-      el('span', 'sb3-rail-count', `${allBlocks.length} OPEN`),
-    );
+    header.append(el('span', 'sb3-rail-title', `${allNeeds.length} need you · ${checked} checked`));
     rail.append(header);
 
-    const groups = [
-      { key: 'you',    label: 'Yours to clear',       accent: '#c9a13b' },
-      { key: 'team',   label: 'Your team',            accent: '#a8563f' },
-      { key: 'client', label: 'Sitting with clients', accent: '#c3cbb4' },
-    ];
-
-    for (const g of groups) {
-      const rows = allBlocks.filter(b => b.side === g.key);
-      if (!rows.length) continue;
-
-      const group = el('div', 'sb3-block-group');
-      group.style.setProperty('--sb3-group-accent', g.accent);
-      group.append(el('div', 'sb3-group-label', g.label));
-
-      for (const r of rows) {
-        const row = el('div', 'sb3-block-row');
-        row.append(el('div', 'sb3-block-client', r.client));
-        row.append(el('div', 'sb3-block-item', r.item || ''));
-        if (r.who) row.append(el('div', 'sb3-block-who', r.who));
-        if (r.last_activity) row.append(el('div', 'sb3-block-activity', r.last_activity));
-        group.append(row);
-      }
-      rail.append(group);
+    if (allNeeds.length === 0) {
+      rail.append(el('div', 'sb3-needs-you-empty', 'Nothing needs you today'));
+      return rail;
     }
 
-    rail.append(renderFootnote(entries));
+    for (const ny of allNeeds) {
+      const row = el('div', 'sb3-needs-you-row');
+      row.append(el('div', 'sb3-needs-you-client', ny.client));
+      row.append(el('div', 'sb3-needs-you-text', ny.text));
+      if (ny.age_days != null) {
+        row.append(el('div', 'sb3-needs-you-age', `${ny.age_days}d`));
+      }
+      rail.append(row);
+    }
+
     return rail;
   }
 
@@ -1406,11 +1420,7 @@
     const layout = el('div', 'sb3-layout');
     const main   = el('div', 'sb3-main');
 
-    const selectedEntry = v3State.selected
-      ? v3Data.entries.find(e => e.slug === v3State.selected) || null
-      : null;
-
-    main.append(renderHeader(v3Data.summary, v3Data.entries, selectedEntry));
+    main.append(renderHeader(v3Data.entries));
     main.append(renderPillsOrBack(v3Data.entries));
     main.append(renderGrid(v3Data.entries));
 
