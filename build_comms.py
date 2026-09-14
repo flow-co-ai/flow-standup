@@ -379,9 +379,12 @@ def _process_client(
 
 def _save(slug: str, data: dict) -> None:
     serialized = json.dumps(data, indent=2, ensure_ascii=False) + "\n"
-    _assert_no_pii(slug, serialized)
+    # Belt-and-braces: whole-document pass catches anything field-level missed
+    scrubbed, _ = _redact_count(serialized)
+    scrubbed = _LONG_DIGIT_RE.sub("[number]", scrubbed)
+    _assert_no_pii(slug, scrubbed)
     COMMS_DIR.mkdir(exist_ok=True)
-    (COMMS_DIR / f"{slug}.json").write_text(serialized, encoding="utf-8")
+    (COMMS_DIR / f"{slug}.json").write_text(scrubbed, encoding="utf-8")
 
 
 # ── main ──────────────────────────────────────────────────────────────────────
@@ -434,7 +437,16 @@ def build_comms(config: dict) -> None:
                 f"{c['awaiting_client']} awaiting_client, {c['client_update']} client_update)"
             )
         except Exception as exc:
-            print(f"  ✗ {slug}: failed — {exc}\n{traceback.format_exc()}")
+            print(f"  ✗ {slug}: failed — {exc}")
+            print(traceback.format_exc())
+            COMMS_DIR.mkdir(exist_ok=True)
+            (COMMS_DIR / f"{slug}.json").write_text(
+                json.dumps(
+                    {"slug": slug, "generated_at": now.isoformat(), "error": str(exc), "counts": None, "threads": []},
+                    indent=2, ensure_ascii=False,
+                ) + "\n",
+                encoding="utf-8",
+            )
 
     # Write empty files for active clients with no matching chats, so absence
     # is visible rather than silent.
@@ -448,7 +460,16 @@ def build_comms(config: dict) -> None:
             _save(slug, output)
             written.add(slug)
         except Exception as exc:
-            print(f"  ✗ {slug}: failed — {exc}\n{traceback.format_exc()}")
+            print(f"  ✗ {slug}: failed — {exc}")
+            print(traceback.format_exc())
+            COMMS_DIR.mkdir(exist_ok=True)
+            (COMMS_DIR / f"{slug}.json").write_text(
+                json.dumps(
+                    {"slug": slug, "generated_at": now.isoformat(), "error": str(exc), "counts": None, "threads": []},
+                    indent=2, ensure_ascii=False,
+                ) + "\n",
+                encoding="utf-8",
+            )
 
 
 if __name__ == "__main__":
