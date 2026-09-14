@@ -34,6 +34,11 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python build_facts.py
 
+      - name: Build comms layer
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: python build_comms.py
+
       - name: Generate standup report
         env:
           MONDAY_API_TOKEN: ${{ secrets.MONDAY_API_TOKEN }}
@@ -70,6 +75,9 @@ jobs:
           # pathspec is fatal (exit 128), so only add these once they exist.
           if [ -d facts/ ]; then
             git add facts/
+          fi
+          if [ -d comms/ ]; then
+            git add comms/
           fi
           if [ -d history/ ]; then
             git add history/
