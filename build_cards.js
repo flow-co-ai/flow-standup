@@ -119,7 +119,7 @@ function buildOrganicLane(client, pulse) {
 
   const headline = flaggedProfiles.length > 0
     ? `${flaggedProfiles.length} of ${totalProfiles} dead`
-    : `${totalCalls} calls`;
+    : `${totalCalls} call${totalCalls !== 1 ? 's' : ''}`;
 
   const sentenceProfiles = flaggedProfiles.length > 0 ? flaggedProfiles : allProfiles;
   const sentence = sentenceProfiles.length
@@ -202,8 +202,12 @@ function buildPaidLane(client, pulse) {
   if (recon?.status === 'both_active') {
     const w = recon.windsor_leads ?? '?';
     const c = recon.ghl_contacts  ?? '?';
-    const o = recon.opportunities ?? '?';
+    const o = recon.ghl_opps_created ?? '?';
     sentence += ` Windsor ${w} leads, GHL ${c} contacts, ${o} opportunities, unreconciled.`;
+  } else if (recon?.status === 'ghl_only') {
+    sentence += ` Windsor reporting no leads; GHL active.`;
+  } else if (recon?.status === 'windsor_only') {
+    sentence += ` GHL reporting no contacts; Windsor active.`;
   }
 
   return {
