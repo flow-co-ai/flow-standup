@@ -42,6 +42,8 @@ const RECORD_FILTER_PATTERNS = [
   /\bmeeting notes?\b/i,
   /\bcheck.?in\b/i,
   /\brecap\b/i,
+  /^\s*reports?\s*$/i,     // whole-name match only — "Fake Review Report" survives
+  /^\s*updates\s*$/i,      // whole-name match only
   /^\s*\d{1,2}[\/\-]\d{1,2}([\/\-]\d{2,4})?\s*$/,   // bare date "8/12"
   /^\s*\d{4}-\d{2}-\d{2}\s*$/,                         // bare ISO date
 ];
@@ -81,14 +83,19 @@ function canonicalBoard(raw) {
 // Any value not in this map → 'unknown'.
 // ⛔ in the item name always overrides to 'blocked' (blocked_reason: "name").
 const STATUS_STATE_MAP = {
-  'done':        'done',
-  'stuck':       'blocked',
-  'working':     'live',
-  'start':       'unknown',
-  'in review':   'building',
-  'review':      'building',
-  'pending':     'building',
-  '':            'unknown',
+  '':              'queued',
+  'start':         'queued',
+  'in progress':   'live',
+  'working on it': 'live',
+  'working':       'live',
+  'ongoing':       'live',
+  'for review':    'review',
+  'in review':     'review',
+  'review':        'review',
+  'pending':       'review',
+  'stuck':         'blocked',
+  'waiting':       'blocked',
+  'done':          'done',
 };
 
 function deriveState(itemName, statusRaw) {
@@ -98,8 +105,8 @@ function deriveState(itemName, statusRaw) {
   }
   const key = (statusRaw || '').trim().toLowerCase();
   const state = STATUS_STATE_MAP[key] ?? 'unknown';
-  // blocked from status column gets blocked_reason "status"
-  const blocked_reason = (state === 'blocked') ? 'status' : null;
+  // blocked_reason records the actual Monday status word (e.g. "Stuck", "Waiting"), or "name" for ⛔
+  const blocked_reason = (state === 'blocked') ? ((statusRaw || '').trim() || 'status') : null;
   return { state, blocked_reason };
 }
 
@@ -240,10 +247,9 @@ if (mondaySnap) {
 }
 
 // ─── Board-balanced cap ───────────────────────────────────────────────────────
-// Fill the 10-slot window as follows:
-//   1. Blocked items first (all boards, sorted by movement recency).
-//   2. Round-robin across boards in BOARD_ORDER, most-recent-movement first per board,
-//      so each board gets representation before any board takes a second pass.
+// Tier order: blocked → review → live → everything else.
+// Within each tier: board-balanced round-robin (BOARD_ORDER first, then others),
+// most-recent-movement first per board.
 // Returns { visible: workstream[], hiddenByBoard: {board: count} }.
 
 const MOVEMENT_RANK = { moved_7d: 3, slow_30d: 2, stale_30d_plus: 1 };
@@ -254,21 +260,13 @@ function movSort(a, b) {
   return (b.last_movement || '').localeCompare(a.last_movement || '');
 }
 
-function boardBalancedCap(workstreams, maxTotal = 10) {
-  const blocked = workstreams.filter(w => w.state === 'blocked').sort(movSort);
-  const rest    = workstreams.filter(w => w.state !== 'blocked');
-
-  // Group non-blocked by primary board, sorted by movement
+function boardBalancedTier(items, maxSlots) {
   const byBoard = {};
-  for (const w of rest) {
+  for (const w of items) {
     const board = (w.boards || [])[0] || 'Unknown';
     (byBoard[board] ??= []).push(w);
   }
   for (const arr of Object.values(byBoard)) arr.sort(movSort);
-
-  // Build visible: blocked first, then round-robin
-  const visible = blocked.slice(0, maxTotal);
-  let slots = maxTotal - visible.length;
 
   const boardKeys = [
     ...BOARD_ORDER.filter(b => byBoard[b]),
@@ -276,14 +274,15 @@ function boardBalancedCap(workstreams, maxTotal = 10) {
   ];
   const pointers = Object.fromEntries(boardKeys.map(b => [b, 0]));
 
+  const visible = [];
+  let slots = maxSlots;
   while (slots > 0) {
     let added = 0;
     for (const board of boardKeys) {
       if (slots <= 0) break;
-      const arr = byBoard[board];
-      const p   = pointers[board];
-      if (p < arr.length) {
-        visible.push(arr[p]);
+      const p = pointers[board];
+      if (p < byBoard[board].length) {
+        visible.push(byBoard[board][p]);
         pointers[board]++;
         slots--;
         added++;
@@ -291,21 +290,31 @@ function boardBalancedCap(workstreams, maxTotal = 10) {
     }
     if (!added) break;
   }
+  return visible;
+}
 
-  // hidden per board
-  const visibleSet  = new Set(visible.map(w => w._key));
-  const hiddenByBoard = {};
+function boardBalancedCap(workstreams, maxTotal = 10) {
+  const TIER_STATES = ['blocked', 'review', 'live'];
+  const tiers = [
+    workstreams.filter(w => w.state === 'blocked'),
+    workstreams.filter(w => w.state === 'review'),
+    workstreams.filter(w => w.state === 'live'),
+    workstreams.filter(w => !TIER_STATES.includes(w.state)),
+  ];
 
-  // blocked that didn't fit
-  for (const w of blocked.slice(maxTotal)) {
-    const b = (w.boards || [])[0] || 'Unknown';
-    hiddenByBoard[b] = (hiddenByBoard[b] || 0) + 1;
+  const visible = [];
+  for (const tier of tiers) {
+    if (visible.length >= maxTotal) break;
+    visible.push(...boardBalancedTier(tier, maxTotal - visible.length));
   }
-  // non-blocked that didn't fit
-  for (const [board, arr] of Object.entries(byBoard)) {
-    const used = pointers[board] || 0;
-    const leftover = arr.length - used;
-    if (leftover > 0) hiddenByBoard[board] = (hiddenByBoard[board] || 0) + leftover;
+
+  const visibleSet = new Set(visible.map(w => w._key));
+  const hiddenByBoard = {};
+  for (const w of workstreams) {
+    if (!visibleSet.has(w._key)) {
+      const b = (w.boards || [])[0] || 'Unknown';
+      hiddenByBoard[b] = (hiddenByBoard[b] || 0) + 1;
+    }
   }
 
   return { visible, hiddenByBoard };
@@ -386,7 +395,7 @@ function buildWorkstreams(mondayName) {
       ex.movement      = c.movement;
       ex.owner         = c.owner;
     }
-    const rank = { blocked: 4, live: 3, building: 2, done: 1, unknown: 0 };
+    const rank = { blocked: 4, review: 3, live: 2, done: 1, queued: 0, unknown: 0 };
     if ((rank[c.state] || 0) > (rank[ex.state] || 0)) {
       ex.state         = c.state;
       ex.blocked_reason = c.blocked_reason;
