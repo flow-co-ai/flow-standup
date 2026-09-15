@@ -942,7 +942,6 @@
     return laneEl;
   }
 
-  const WS_MV_LABEL = { moved_7d: 'active', slow_30d: 'slow', stale_30d_plus: 'stale' };
 
   function normWords(s) {
     return (s || '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim()
@@ -974,7 +973,7 @@
         const row = el('div', 'ws-row');
         row.append(el('span', 'ws-name', ws.name));
         row.append(el('span', `ws-state ws-state-${ws.state}`, ws.state));
-        row.append(el('span', `ws-movement ws-mv-${ws.movement}`, WS_MV_LABEL[ws.movement] || ws.movement));
+        row.append(el('span', `ws-movement ws-mv-${ws.movement}`, ws.age_days != null ? `${ws.age_days}d` : ''));
         if (ws.boards?.length) row.append(el('span', 'ws-board', ws.boards[0]));
         wsBlock.append(row);
       }

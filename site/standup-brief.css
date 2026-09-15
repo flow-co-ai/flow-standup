@@ -1389,3 +1389,50 @@ body.sb3-active #app {
 .sb3-card .card-scope-out {
   color: rgba(20,22,15,0.5) !important;
 }
+
+/* ── Grid card: lane headlines + workstream count ── */
+.sb3-card .mini-lane {
+  color: rgba(20,22,15,0.82) !important;
+}
+.sb3-card .mini-ws-count {
+  color: rgba(20,22,15,0.45) !important;
+}
+
+/* ── Card detail: collapsed lane labels + text ── */
+.sb3-card .card-lane-collapsed-head {
+  color: rgba(20,22,15,0.42) !important;
+}
+.sb3-card .card-lane-collapsed-text {
+  color: rgba(20,22,15,0.85) !important;
+}
+
+/* ── Card detail: workstream block ── */
+.sb3-card .ws-block-label {
+  color: rgba(20,22,15,0.38) !important;
+}
+.sb3-card .ws-row {
+  border-top-color: rgba(20,22,15,0.08) !important;
+}
+.sb3-card .ws-name {
+  color: rgba(20,22,15,0.9) !important;
+}
+.sb3-card .ws-board {
+  color: rgba(20,22,15,0.45) !important;
+}
+.sb3-card .ws-hidden {
+  color: rgba(20,22,15,0.38) !important;
+  opacity: 1 !important;
+}
+
+/* ws-state badges remapped for light card background */
+.sb3-card .ws-state-live    { background: rgba(61,122,26,0.09)  !important; color: #3a7a1a !important; }
+.sb3-card .ws-state-queued  { background: rgba(20,22,15,0.05)   !important; color: rgba(20,22,15,0.5) !important; }
+.sb3-card .ws-state-review  { background: rgba(180,130,0,0.10)  !important; color: #a07a1e !important; }
+.sb3-card .ws-state-blocked { background: rgba(184,50,0,0.08)   !important; color: #b83200 !important; }
+.sb3-card .ws-state-done    { background: rgba(20,22,15,0.05)   !important; color: rgba(20,22,15,0.4) !important; }
+.sb3-card .ws-state-unknown { background: rgba(20,22,15,0.03)   !important; color: rgba(20,22,15,0.35) !important; }
+
+/* ws-movement age label: neutral ≤7d, amber ≤30d, coral beyond */
+.sb3-card .ws-mv-moved_7d       { color: rgba(20,22,15,0.45) !important; }
+.sb3-card .ws-mv-slow_30d       { color: #a07a1e !important; }
+.sb3-card .ws-mv-stale_30d_plus { color: #b83200 !important; opacity: 1 !important; }
