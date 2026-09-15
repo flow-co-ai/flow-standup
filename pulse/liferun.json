@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-15T15:27:15.867Z",
+  "generated_at": "2026-09-15T18:31:19.011Z",
   "date": "2026-09-15",
   "slug": "liferun",
   "name": "Liferun",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Liferun delivered 140 leads at a $16.01 CPL over 28 days, with Meta carrying the full lead load ($1,733.89 spend, 140 leads) while Google Ads generated zero conversions despite $507.73 in spend. The biggest movement is Google's 49.35% week-over-week spend increase with no corresponding conversions, suggesting budget is scaling on a channel that isn't converting and warrants immediate review.",
+  "verdict": "Liferun delivered 140 leads over 28 days at a $16.01 CPL across $2,241.62 in spend, with Meta carrying all lead volume while Google Ads generated 0 conversions from $507.73 spent. The biggest movement is the 49.35% week-over-week spike in Google spend with still zero conversions returned, suggesting budget is scaling on a channel that has not yet proven conversion ability and warrants immediate review.",
   "windsor": {
     "totals": {
       "spend": 2241.62,
@@ -424,10 +424,10 @@
     }
   },
   "ghl": {
-    "contacts": 182,
+    "contacts": 190,
     "opportunities": {
       "created": {
-        "count": 138,
+        "count": 147,
         "value": 0
       },
       "won": {
@@ -439,8 +439,8 @@
   },
   "reconciliation": {
     "windsor_leads": 140,
-    "ghl_contacts": 182,
-    "ghl_opps_created": 138,
+    "ghl_contacts": 190,
+    "ghl_opps_created": 147,
     "ghl_opps_won": 0,
     "status": "both_active"
   },
@@ -589,44 +589,44 @@
     "history_line": "Webhook fixed — orders syncing · SEO update May 2026 · Chat widget for A2P compliance"
   },
   "performance": {
-    "generated_at": "2026-09-15T15:33:11.531Z",
+    "generated_at": "2026-09-15T18:34:21.401Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Google burning $507 with zero conversions; Meta efficient but pipeline intake unverified.",
+    "verdict": "Google's $507 spend is confirmed waste; Meta CPL holds but pipeline is hollow.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Google Ads spent $507.73 over 28 days with 0 conversions and 0 leads; 49.35% spend increase last 7d compounds a confirmed zero-return leak.",
+        "text": "Google Ads spent $507.73 over 28 days and returned 0 conversions; 49.35% spend spike last 7d makes this an accelerating leak, not a slow bleed.",
         "confidence": "confirmed",
         "channel": "google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "5 overdue SOW milestones (Stripe QA Jul 20, GHL Build Aug 31, Stack Re-Test Aug 31, Paid Landing Pages Aug 31, UGC Batch Aug 31) — all unconfirmed completed, blocking attribution and scaling.",
+        "text": "5 overdue SOW milestones (earliest Jul 20): Stripe QA, GHL build gaps, stack re-test, paid landing pages, and UGC batch — all unverified as complete.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GHL shows 182 contacts but only 138 opportunities created and 0 won; 28-day lead count is 140 — ~4 leads are not entering the pipeline at all, and 0 appointments suggests intake or follow-up is stalled.",
-        "confidence": "probable",
+        "text": "GHL shows 147 opportunities created, 0 won, 0 appointments — 140 leads arriving but pipeline is fully stalled; this is an intake/CRM process leak, not an ads problem.",
+        "confidence": "confirmed",
         "channel": "GHL"
       },
       {
         "id": "F4",
         "priority": 2,
-        "text": "GBP actions dropped 90.48% week-over-week (from ~21 to ~2 in last 7d); last 7 series days show 0 GBP actions — profile may have gone dark or lost visibility.",
+        "text": "GBP actions collapsed 90.48% week-over-week (from ~21 actions to ~2); last 7 series days show 0 GBP actions, suggesting a profile or listing issue.",
         "confidence": "probable",
         "channel": "GBP"
       },
       {
         "id": "F5",
-        "priority": 2,
-        "text": "Meta CPL is holding near $16 baseline (28d CPL $16.01, cpl_7d_pct +1.97%) with 3-day lead signal of 4 leads (Sep 12–14) vs 22 leads prior 3 days (Sep 9–11) — weekend zero-spend pattern explains dip, not fatigue.",
-        "confidence": "confirmed",
+        "priority": 3,
+        "text": "3-day Meta lead signal (Sep 12–14): 0+0+4 leads vs prior 3 days (Sep 9–11): 12+6+4 — a 73% drop in the last window; spend held at ~$85/day, flagging early fatigue.",
+        "confidence": "probable",
         "channel": "meta"
       }
     ],
@@ -634,34 +634,34 @@
       {
         "id": "S1",
         "type": "kill",
-        "text": "Pause Google Ads immediately — $507.73 spent over 28 days with confirmed 0 conversions and 0 leads.",
+        "text": "Pause Google Ads immediately — $507.73 spent, 0 conversions over 28 days and worsening; reallocate to Meta.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Pause Google Ads — Zero ROI",
-        "monday_update": "Google Ads has spent $507.73 over 28 days and generated zero conversions and zero leads, with spend up 49.35% last week — money is actively accelerating into a confirmed dead channel. Pause all Google campaigns now and hold the budget until paid landing pages are live (SOW milestone, overdue Aug 31) and conversion tracking is verified end-to-end. Success check: zero further Google spend until Sohib confirms landing page + pixel are live. Review by 2026-09-22."
+        "monday_item_name": "Pause Google Ads — Zero Conv",
+        "monday_update": "Google Ads has spent $507.73 over 28 days with 0 conversions recorded, and the spend rate jumped 49.35% last week with the same zero result. Pause all Google campaigns now and redirect that daily budget (~$18/day) to Meta where all 140 leads originated. Success check: no further Google spend loss by Sep 18; Meta CPL remains at or below $16.01 within 7 days of reallocation."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GHL intake: 182 contacts vs 138 opportunities means ~44 leads not creating opps; fix mapping or automation rule.",
+        "text": "Fix GHL pipeline intake: 147 opps created, 0 won, 0 appointments signals a broken follow-up or assignment process — audit immediately.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Fix GHL Lead-to-Opp Gap",
-        "monday_update": "28-day data shows 182 GHL contacts against only 138 opportunities created and 0 appointments booked — this is an intake automation gap, not an ads problem. Ahmed/Ali to audit the contact-to-opportunity trigger rules and confirm BWS duplicate-check path (SOW item, overdue Aug 31). Success check: opportunity count within 5% of lead count within 7 days. Re-check 2026-09-22."
+        "monday_item_name": "Fix GHL Pipeline Intake Leak",
+        "monday_update": "GHL shows 147 opportunities created and 190 contacts over 28 days, but 0 appointments booked and 0 deals won — leads are arriving and going cold inside the CRM. Audit the lead assignment, automation triggers, and follow-up sequences in GHL this week. Success check: at least 10 appointments booked within 7 days of fix (by Sep 22), confirming the intake path is functional."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP: actions dropped 90.48% last 7 days — confirm profile is active before any organic/local action.",
+        "text": "Watch Meta 3-day lead drop (73% decline Sep 9–14 vs prior 3 days) — if trend holds through Sep 18, escalate to creative_refresh.",
         "cites": [
-          "F4"
+          "F5"
         ],
-        "monday_item_name": "Watch GBP Profile Drop",
-        "monday_update": "GBP actions fell 90.48% week-over-week, with the last 7 series days showing 0 actions — this may indicate a profile suspension, listing edit under review, or a data-pull gap. Nacer to manually verify the Liferun GBP profile is live and showing impressions. Success check: GBP actions return above 5/week within the next 7-day window. Re-check 2026-09-22."
+        "monday_item_name": "Watch Meta Lead Drop Sep 18",
+        "monday_update": "Meta leads dropped 73% in the Sep 12–14 window versus the prior 3 days (Sep 9–11), while spend held steady at ~$85/day — a classic early fatigue signal. No action yet; one bad window is not confirmation. Re-check on Sep 18: if leads-per-day remain below 5 with flat spend, escalate to a creative refresh on the top campaign (BWS - July - Call Campaign - Retarget, $582.91 spend)."
       }
     ],
-    "next_check": "2026-09-22"
+    "next_check": "2026-09-18"
   }
 }

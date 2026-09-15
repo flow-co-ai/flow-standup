@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-15T15:26:34.780Z",
+  "generated_at": "2026-09-15T18:30:58.826Z",
   "date": "2026-09-15",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 81,
   "status": "green",
-  "verdict": "The biggest movement is a 74% week-over-week spend drop (down to roughly 25% of the prior week's budget), which likely reflects a deliberate budget pullback or pacing adjustment on the \"Leads - August Re-Launch\" campaign, the sole active Meta campaign accounting for all $1,505.39 in 28-day spend. Despite the spend cut, CPL improved 64% week-over-week, though lead volume is down 29% and GHL recorded only 29 contacts against 37 platform-reported leads, with 0 opportunities created, so pipeline conversion remains a concern to watch.",
+  "verdict": "The biggest movement is a 74% week-over-week spend drop (Meta pulled back sharply in the last 7 days), which likely drove the 29% lead decline, though CPL improved 64% as a result. GHL recorded 29 contacts against 37 Meta-reported leads — these are unreconciled — and 0 opportunities were created from either count, signaling a conversion handoff issue worth investigating.",
   "windsor": {
     "totals": {
       "spend": 1505.39,
@@ -574,78 +574,79 @@
     "history_line": "SEO update for May 2026 completed"
   },
   "performance": {
-    "generated_at": "2026-09-15T15:32:42.279Z",
+    "generated_at": "2026-09-15T18:33:54.013Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "CPL efficiency is real, but a 5-day spend blackout and 0 GHL opps expose structural gaps the score missed.",
+    "verdict": "Zero-opportunity pipeline is the real crisis; $96 spend restart is secondary.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Spend went dark Sep 9–13 (5 consecutive $0 days), then resumed at $96.83 on Sep 14 — cause unknown, not a pacing pattern.",
+        "text": "GHL shows 0 opportunities created from 29 contacts and 37 Meta leads over 28 days — intake is broken, not the ads.",
         "confidence": "confirmed",
-        "channel": "Meta"
+        "channel": "GHL"
       },
       {
         "id": "F2",
-        "priority": 1,
-        "text": "CPL improved to ~$13.83 in the last active 3 days (Sep 6–8: $232.14 spend, 10 leads) vs $55+ baseline — efficiency gain is real but on thin volume.",
-        "confidence": "probable",
-        "channel": "Meta"
-      },
-      {
-        "id": "F3",
         "priority": 2,
-        "text": "GHL shows 0 opportunities created against 37 platform leads in 28 days — leads are arriving but none converting to pipeline; intake leak, not an ads problem.",
-        "confidence": "confirmed",
-        "channel": "CRM"
-      },
-      {
-        "id": "F4",
-        "priority": 2,
-        "text": "3 overdue SOW milestones as of Aug 31: extension with Marwan unsigned, SMS automation not live, Zoho Voice access not granted — all block performance accountability.",
+        "text": "⛔ Extension with Marwan unsigned since Aug 31 — engagement is month-to-month lapsed; gates next 3 months and budget authority.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
+        "id": "F3",
+        "priority": 2,
+        "text": "⛔ SMS automation and Zoho Voice access both overdue since Aug 31 — contact-rate bottleneck cannot be resolved without these CRM tools.",
+        "confidence": "confirmed",
+        "channel": "SOW"
+      },
+      {
+        "id": "F4",
+        "priority": 2,
+        "text": "Spend went dark Sep 9–13 (5 consecutive $0 days), then recovered to $96.83 on Sep 14 — 'Leads - August Re-Launch' is the sole active campaign.",
+        "confidence": "confirmed",
+        "channel": "Meta"
+      },
+      {
         "id": "F5",
         "priority": 3,
-        "text": "IG reach collapsed 80% week-over-week (from ~2,400 to ~470 reach) during the same blackout window — organic presence dropped in lockstep with paid pause.",
-        "confidence": "probable",
-        "channel": "Instagram"
+        "text": "3-day signal (Sep 12–14 vs Sep 9–11): spend $96.83 vs $0, leads 7 vs 0 — restart looks real but is a single data point, not a trend.",
+        "confidence": "hypothesis",
+        "channel": "Meta"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Diagnose and confirm root cause of 5-day spend blackout Sep 9–13; verify campaign status and billing before scaling anything.",
+        "text": "Audit GHL intake pipeline immediately — 0 opps from 29 contacts confirms a handoff break, not a lead volume problem.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Diagnose Meta Spend Blackout",
-        "monday_update": "Meta spend ran $0 for 5 consecutive days (Sep 9–13) with no flagged reason in triage — this must be explained before any budget decision is made. Check campaign status, ad account billing, and policy flags in Ads Manager. Success check: confirmed root cause documented by Sep 17. No budget moves until this is resolved."
+        "monday_item_name": "Fix GHL Intake Pipeline",
+        "monday_update": "GHL recorded 29 contacts and 37 Meta leads over 28 days but created 0 opportunities — the handoff from contact to opportunity is broken. Nacer to pull the GHL workflow with Andrew and identify where the lead stops (form routing, assignment rule, or Zoho sync). Success = at least 1 opportunity created per 3 new contacts within 7 days. Confirm by 2026-09-22."
       },
       {
         "id": "S2",
-        "type": "fix",
-        "text": "Fix GHL intake: 37 platform leads, 29 contacts, 0 opportunities — diagnose form-to-pipeline mapping and CRM assignment rules.",
+        "type": "watch",
+        "text": "Watch Sep 14 restart ($96.83 spend, 7 leads in one day) for 3 full days before any budget decision on 'Leads - August Re-Launch'.",
         "cites": [
-          "F3"
+          "F4",
+          "F5"
         ],
-        "monday_item_name": "Fix GHL Intake Pipeline",
-        "monday_update": "28-day data shows 37 Meta leads reported, only 29 GHL contacts, and 0 opportunities created — this is an intake leak, not an ads problem. Andrew to audit GHL form webhook, pipeline stage triggers, and lead assignment rules. Success check: at least 1 opportunity created per 3 leads within 7 days of fix, confirmed by Sep 22."
+        "monday_item_name": "Watch Meta Restart 3 Days",
+        "monday_update": "Spend resumed at $96.83 on Sep 14 after 5 zero-spend days (Sep 9–13), producing 7 leads in one day. This is a single data point and cannot yet be distinguished from a burst vs. a stable restart. Hold budget at current level and re-check on Sep 18; if CPL stays below the 28-day baseline of $40.69 across 3 consecutive days, escalate to a scale suggestion."
       },
       {
         "id": "S3",
-        "type": "watch",
-        "text": "Watch Sep 14 relaunch ($96.83, 7 leads) over next 3 days — if CPL holds below $20, scale budget +20%.",
+        "type": "fix",
+        "text": "Escalate Marwan extension signature and Zoho Voice access to Sohib immediately — both are blocking CRM and contract authority.",
         "cites": [
-          "F1",
-          "F2"
+          "F2",
+          "F3"
         ],
-        "monday_item_name": "Watch Meta Relaunch CPL",
-        "monday_update": "Sep 14 produced 7 leads at an implied CPL of ~$13.83 on $96.83 spend — the strongest single day in the series. Monitor Sep 15–17 for CPL consistency below $20 before any scale decision. If 3-day CPL holds under $20, recommend +20% daily budget increase at next check. Re-check date: Sep 18."
+        "monday_item_name": "Chase Marwan Extension + Zoho",
+        "monday_update": "The Marwan extension has been unsigned since Aug 31, lapsing the engagement and blocking budget authority for the next 3-month term. SMS automation and Zoho Voice access are also overdue since Aug 31, directly preventing resolution of the contact-rate bottleneck Marwan tracks. Sohib to send a deadline email to Marwan and Joy by 2026-09-17. Success = signed extension and Zoho Voice credentials received by 2026-09-22."
       }
     ],
     "next_check": "2026-09-18"

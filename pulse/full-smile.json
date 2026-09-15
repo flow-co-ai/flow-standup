@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-15T15:25:33.129Z",
+  "generated_at": "2026-09-15T18:30:19.908Z",
   "date": "2026-09-15",
   "slug": "full-smile",
   "name": "Full Smile",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 60,
   "status": "amber",
-  "verdict": "The biggest movement is a 66.67% drop in leads over the last 7 days, which drove CPL up 179.4%, likely caused by ad fatigue or audience saturation on Meta (the sole active channel), where the top campaign \"BWS - Instant Leads - Awareness\" is carrying $370.69 of the $699.98 28-day spend. GHL shows 85 opportunities created against 86 Meta-reported leads, which are reconciled as both_active, but 0 opportunities won signals a conversion pipeline issue worth investigating.",
+  "verdict": "The biggest movement is a 66.67% drop in leads over the last 7 days, which drove CPL up 179.4% week-over-week, likely caused by reduced Meta delivery efficiency as spend only dipped 6.87% while lead volume collapsed. The top campaign \"BWS - Instant Leads - Awareness\" consumed $370.69 of the $699.98 28-day spend, and with 85 GHL opportunities created against 86 Meta-reported leads, counts are closely aligned, though 0 opportunities won signals a conversion or follow-up issue worth investigating.",
   "windsor": {
     "totals": {
       "spend": 699.98,
@@ -430,11 +430,11 @@
     }
   },
   "ghl": {
-    "contacts": 345,
+    "contacts": 351,
     "opportunities": {
       "created": {
         "count": 85,
-        "value": 770.29
+        "value": 895.86
       },
       "won": {
         "count": 0,
@@ -445,7 +445,7 @@
   },
   "reconciliation": {
     "windsor_leads": 86,
-    "ghl_contacts": 345,
+    "ghl_contacts": 351,
     "ghl_opps_created": 85,
     "ghl_opps_won": 0,
     "status": "both_active"
@@ -659,80 +659,81 @@
     "history_line": "OpenDental sync completed (last visit, patient value, appt status) · All GHL tasks done pending approval · Claim payments synced into GHL"
   },
   "performance": {
-    "generated_at": "2026-09-15T15:31:34.351Z",
+    "generated_at": "2026-09-15T18:32:41.796Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Lead collapse is confirmed creative fatigue, but 0 GHL wins is the real crisis.",
+    "verdict": "Lead collapse is real and worsening; 0-lead streak now 4 days, not noise.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "CPL spiked +179.4% in 7d as leads fell 66.67% on near-flat spend (-6.87%); series shows 0 leads on Sep 11–13 — confirmed 3-day drought.",
+        "text": "CPL spiked 179.4% week-over-week; last 3 days (Sep 12–14) show 0 leads on $38.94 spend Sep 14 — confirmed efficiency collapse, not a blip.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "5 overdue SOW milestones (earliest Jul 23): dashboard not live, attribution gap open, sync cleanup pending — August scoreboard untrusted, renewal at risk.",
+        "text": "5 overdue milestones (oldest: Jul 23 renewal, latest: Aug 31 dashboard + scoreboard decision) unresolved; no completed event logged against any of them.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GHL shows 85 opportunities created, 0 won, 0 appointments — leads are arriving but pipeline is producing nothing; intake conversion is broken, not ads.",
+        "text": "3-day signal (Sep 12–14): 0 leads, 0 GBP actions, $38.94 spend on Sep 14 only — all-channel stall vs prior 3 days (Sep 9–11) averaging 0.67 leads/day.",
         "confidence": "confirmed",
-        "channel": "GHL"
+        "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "BWS - Instant Leads - Awareness carries $370.69 of $699.98 28-day spend while leads collapse — flat-budget + falling results pattern matches creative fatigue.",
+        "text": "Spend flat (~$23/day avg) while leads collapsed from ~4.6/day (Aug 18–24) to 0/day (Sep 12–14) — classic creative fatigue pattern with no tracking change noted.",
         "confidence": "probable",
         "channel": "meta"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GBP generated 80 calls and 252 actions in 28 days — organic floor is holding while paid collapses, suggesting brand demand exists but paid creative is exhausted.",
-        "confidence": "probable",
-        "channel": "GBP"
+        "text": "85 GHL opportunities created, 0 won, 0 appointments logged — leads arriving but pipeline conversion is zero; this is an intake/follow-up leak, not an ads problem.",
+        "confidence": "confirmed",
+        "channel": "GHL"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "creative_refresh",
-        "text": "Introduce new Meta creative into BWS campaign; existing assets drove 0 leads over 3 days on $37.85 spend Sep 12–14.",
+        "text": "Inject at least 2 new creatives into BWS campaign; 4-day 0-lead streak on $370.69 28-day spend confirms fatigue.",
         "cites": [
           "F1",
+          "F3",
           "F4"
         ],
-        "monday_item_name": "Meta Creative Refresh BWS",
-        "monday_update": "The BWS - Instant Leads - Awareness campaign produced 0 leads across Sep 11–13 while spending ~$37.85, a confirmed 3-day drought signalling creative exhaustion. Launch at least 2 new ad variants (new hook, new visual) into the existing campaign without changing budget or audience. Success check: CPL returns below the 28-day baseline of $8.14 within 7 days (by Sep 22). If CPL remains above $15 after 7 days, escalate to audience or offer review."
+        "monday_item_name": "BWS Creative Refresh — 2 Ads",
+        "monday_update": "The BWS - Instant Leads - Awareness campaign has produced 0 leads over the last 4 days (Sep 11–14) while spending ~$38.94 on Sep 14 alone, and CPL rose 179.4% week-over-week — a confirmed creative fatigue signal. Action: deploy a minimum of 2 new ad creatives into the BWS campaign by Sep 17. Success check: ≥3 leads in the 3 days following creative launch (by Sep 20), with CPL returning below the 28-day baseline of $8.14. If CPL stays above $20 by Sep 20, escalate to Sohib for budget review."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Investigate GHL pipeline: 85 opportunities created, 0 won, 0 appointments — confirm intake process is actively working leads.",
-        "cites": [
-          "F3"
-        ],
-        "monday_item_name": "GHL Intake Pipeline Audit",
-        "monday_update": "GHL records 85 opportunities and 0 appointments won in the 28-day window — leads are entering the system but not being contacted or scheduled. Audit the intake workflow with Lily: confirm GHL notifications are firing, call attempts are logged, and the new intake hire is actioning leads. Success check: at least 5 appointments booked and visible in GHL within 7 days (by Sep 22). This is an intake operations issue, not an ads problem."
-      },
-      {
-        "id": "S3",
-        "type": "watch",
-        "text": "Watch all 5 overdue SOW milestones; dashboard must be live before renewal decision — re-check Sep 22.",
+        "text": "Escalate 5 overdue SOW milestones to Sohib immediately; Aug scoreboard and dashboard are past-due and renewal trust is at risk.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "SOW Overdue Milestones Watch",
-        "monday_update": "Five milestones are overdue, the oldest from Jul 23, including the August scoreboard dashboard and attribution gap closure — both are explicit renewal blockers per the client's stated criteria. No paid action is appropriate until the dashboard is live and the scoreboard is trusted. Re-check all milestone statuses on Sep 22 and escalate to Sohib and Nacer immediately if the dashboard remains undelivered."
+        "monday_item_name": "SOW Overdue Milestones — Escalate",
+        "monday_update": "Five milestones are overdue with no completion event recorded: renewal accountability (Jul 23), phone-match attribution (Aug 7), contact cleanup (Aug 14), dashboard live (Aug 31), and scoreboard trusted for renewal decision (Aug 31). This directly threatens the client's stay/walk decision, which they made explicit on 7/23. Action: Sohib to convene a same-week sync with Nacer to triage each item and assign hard-close dates. Success check: all 5 items have an owner and a close date logged in Monday by Sep 17."
+      },
+      {
+        "id": "S3",
+        "type": "fix",
+        "text": "Audit GHL intake workflow; 85 opps created, 0 won, 0 appointments — confirmed follow-up or intake process leak, not an ads failure.",
+        "cites": [
+          "F5"
+        ],
+        "monday_item_name": "GHL Intake Leak Audit",
+        "monday_update": "GHL shows 85 opportunities created against 86 Meta leads in 28 days, yet 0 are won and 0 appointments are recorded — the leads are arriving but dying in the pipeline. This is the core of the client's complaint (<20 attributable new patients over 7–8 months). Action: Ahmed/Ali to pull the GHL pipeline stage breakdown and identify the drop-off stage by Sep 17; Lily sync to confirm whether leads are being contacted within 24 hours. Success check: at least 1 stage-level drop-off identified and a response protocol in place by Sep 19."
       }
     ],
-    "next_check": "2026-09-22"
+    "next_check": "2026-09-18"
   }
 }

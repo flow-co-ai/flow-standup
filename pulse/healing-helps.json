@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-15T15:25:38.667Z",
+  "generated_at": "2026-09-15T18:30:24.382Z",
   "date": "2026-09-15",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, meaning all engagement is organic, led by 41 GBP actions (31 directions, 2 calls, 8 web clicks) from a single profile. The biggest movement is a 77.78% drop in GBP actions over the last 7 days versus the prior 7 days, likely driven by reduced search demand or a loss of map pack visibility rather than any paid activity.",
+  "verdict": "Healing Helps had zero paid spend and zero tracked leads over the past 28 days, making GBP the only active channel with 41 total actions (2 calls, 31 directions, 8 web clicks). The biggest movement is a 77.78% drop in GBP actions over the last 7 days versus the prior 7 days, likely driven by a sharp decline in map/search visibility given impressions were already limited to 355 over 25 days.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -544,44 +544,44 @@
     "history_line": "Website completed · Shabana Sheikh bio added to Meet Our Therapists"
   },
   "performance": {
-    "generated_at": "2026-09-15T15:31:52.844Z",
+    "generated_at": "2026-09-15T18:33:01.800Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Organic-only account; GBP and search both contracting sharply now.",
+    "verdict": "GBP is the only signal; its collapse confirms organic reach is failing fast.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend, leads, or CPL exists across all 28 days — no paid efficiency to measure; account is fully organic.",
+        "text": "Zero paid spend and zero leads across all 28 days; no CPL can be computed — account is effectively dark on all paid channels.",
         "confidence": "confirmed",
-        "channel": "meta,google_ads"
+        "channel": "meta/google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions collapsed: last 3 days (Sep 12–14) total 0 vs prior 3 days (Sep 9–11) total 2, inside a 28-day total of only 41.",
+        "text": "GBP actions collapsed 77.78% last 7d vs prior 7d; last 3 days (Sep 12–14) show 0, 0, 0 vs prior 3 days (Sep 9–11) of 1, 1, 0 — confirming the drop, not a blip.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Search clicks dropped -42.86% week-over-week; last 3 days (Sep 12–14) show 1 click vs 5 in the prior 3 days (Sep 9–11).",
+        "text": "Search clicks fell 42.86% (7d delta) and last 3 days show 1, 0, 0 vs prior 3 days of 0, 3, 2 — organic search visibility is contracting in parallel with GBP.",
         "confidence": "confirmed",
-        "channel": "search"
+        "channel": "organic"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GA4 sessions fell -37.1% week-over-week; last 3 days averaged 4.7 sessions vs 6.0 prior 3 days — corroborates organic demand contraction.",
+        "text": "GA4 sessions down 37.1% week-over-week; last 3 days average 4.7 vs prior 3-day average of 5.3 — mild directional corroboration of shrinking top-of-funnel.",
         "confidence": "probable",
         "channel": "ga4"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GBP call rate is 0.56% against 355 impressions; 2 calls in 28 days suggests profile conversion is structurally weak, not just low-traffic.",
-        "confidence": "hypothesis",
+        "text": "GBP call rate is 0.56% on only 355 impressions over 25 days — low impression volume, not poor conversion, is the binding constraint on GBP actions.",
+        "confidence": "confirmed",
         "channel": "gbp"
       }
     ],
@@ -589,25 +589,25 @@
       {
         "id": "S1",
         "type": "watch",
-        "text": "Monitor GBP actions and search clicks daily for 7 days; re-evaluate if 3-day total stays at 0.",
+        "text": "Monitor GBP impressions daily for 7 days; if impressions remain near 355/25-day rate, escalate to GBP optimisation review.",
         "cites": [
           "F2",
-          "F3"
+          "F5"
         ],
-        "monday_item_name": "Watch GBP & Search Decline",
-        "monday_update": "GBP actions hit 0 for 3 consecutive days (Sep 12–14) and search clicks fell -42.86% week-over-week, signalling a possible map-pack visibility drop or seasonal demand trough. No paid activity is present to offset this. Check GBP impressions and ranking position daily; if the 3-day GBP total remains 0 after Sep 18, escalate to a GBP optimisation review. Re-check on 2026-09-18."
+        "monday_item_name": "Watch GBP Impression Collapse",
+        "monday_update": "GBP actions dropped 77.78% last 7 days, and the last 3 days show zero actions against a profile limited to 355 impressions over 25 days. No paid spend is active to compensate. Success check: impressions recover above a 7-day rolling rate of ~15/day by 2026-09-22, or this escalates to a GBP optimisation task (category review, photo refresh, Q&A update). Re-check 2026-09-22."
       },
       {
         "id": "S2",
-        "type": "fix",
-        "text": "Audit GBP profile completeness and recent review activity; call rate of 0.56% on 355 impressions is structurally low.",
+        "type": "watch",
+        "text": "Track search clicks for 7 more days; 3-day signal of 1, 0, 0 clicks is early but consistent with F3 — confirm before any organic action.",
         "cites": [
-          "F5"
+          "F3"
         ],
-        "monday_item_name": "Fix GBP Profile Conversion",
-        "monday_update": "The Healing Helps Therapy PLLC profile generated only 2 calls from 355 impressions (0.56% call rate) over 28 days, indicating the listing may be missing key conversion triggers such as updated hours, photos, or recent reviews. Review profile completeness against Google's checklist and request a client review push this week. Success is defined as call rate rising above 1% within 28 days of changes. Re-check 2026-10-13."
+        "monday_item_name": "Watch Search Click Decline",
+        "monday_update": "Search clicks fell 42.86% week-over-week and the last 3 days show 1, 0, 0 clicks. This is consistent with shrinking GBP visibility but needs one more 3-day window to confirm it is not seasonal noise. If clicks remain below a 3-day average of 1 by 2026-09-22, flag for SEO/GBP category audit. No paid action is warranted until the paid channel status is clarified."
       }
     ],
-    "next_check": "2026-09-18"
+    "next_check": "2026-09-22"
   }
 }

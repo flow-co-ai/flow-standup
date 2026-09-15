@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-15T15:28:23.667Z",
+  "generated_at": "2026-09-15T18:31:46.766Z",
   "date": "2026-09-15",
   "slug": "medstation",
   "name": "MedStation",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 70,
   "status": "amber",
-  "verdict": "MedStation has spent $159.10 across 28 days on Meta with 308 clicks but zero tracked leads, triggering a lead drought flag that points to a likely conversion tracking or landing page breakdown. Spend surged 66.81% in the last 7 days (led by \"MDST-WES-AWARE-WHTAPP\" at $67.39) while GBP actions dropped 57.14%, suggesting budget is scaling into awareness with no bottom-funnel capture in place.",
+  "verdict": "MedStation recorded $159.10 in Meta spend over 28 days with zero tracked leads, triggering a lead drought flag, while GBP engagement dropped 57.14% week-over-week suggesting reduced local visibility despite 12 calls and 48 direction requests from the Weston profile. The top campaign \"MDST-WES-AWARE-WHTAPP\" consumed $67.39 of that budget, pointing to awareness-stage creative that is not yet converting to CRM-trackable leads.",
   "windsor": {
     "totals": {
       "spend": 159.1,
@@ -633,80 +633,79 @@
     "history_line": "Instagram restored after security block · LSA submitted for approval — Raheel · Patient ID mapping widened for NextGen"
   },
   "performance": {
-    "generated_at": "2026-09-15T15:35:16.338Z",
+    "generated_at": "2026-09-15T18:36:22.424Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Nine overdue milestones mean ads are spending blind — fix infra before buying more.",
+    "verdict": "9 overdue milestones, not ad performance, are the real blocker.",
     "findings": [
       {
         "id": "F1",
-        "priority": 2,
-        "text": "5 of 9 SOW milestones due 2026-07-31 are undelivered: stack test, CRM migration, GBP triage, Meta account/CAPI, and landing pages — all 46+ days overdue.",
+        "priority": 1,
+        "text": "lead_drought confirmed: $159.10 spent across 28 days on Meta with 0 tracked leads and 0 GHL pipeline entries — CPL is undefined because no conversion path exists yet.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "4 further SOW milestones due Aug 31–Sep 1 also undelivered: Meta reactivation lanes, Search campaigns, LSA submission, and nurture sequences.",
+        "text": "9 SOW milestones are overdue as of today 2026-09-15; earliest due 2026-07-31 (stack test, GHL migration, GBP triage, Meta account/CAPI, landing pages). No tracking or CRM layer is confirmed live.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 1,
-        "text": "Lead drought confirmed: $159.10 spent on Meta over 28 days, 308 clicks, 0 tracked leads and 0 GA4 conversions — conversion tracking or landing page capture is broken.",
+        "priority": 2,
+        "text": "Search campaigns, LSA verification, and reactivation nurture sequences were due 2026-08-31 / 2026-09-01; Google spend is $0 across all 28 days — these lanes are dark, not underperforming.",
         "confidence": "confirmed",
-        "channel": "Meta"
+        "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Spend rose +66.81% in the last 7 days (top campaign MDST-WES-AWARE-WHTAPP at $67.39) while GBP actions fell -57.14% — budget scaling into awareness with no bottom-funnel in place.",
-        "confidence": "confirmed",
-        "channel": "Meta"
+        "text": "3-day spend signal (Sep 12–14: $6.63, $18.06, $16.26) is volatile but active; GBP actions hit 0 on both Sep 13–14 after averaging ~2.5/day prior 3 days — local visibility declining in parallel with paid ramp.",
+        "confidence": "probable",
+        "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GBP 3-day signal: 0 actions on Sep 12–13 vs avg ~3/day in prior 3 days (Sep 9–11 avg 2.0) — organic local intent softening, though sample is small.",
-        "confidence": "hypothesis",
-        "channel": "GBP"
+        "text": "GA4 sessions average 128/day last 7 days but 0 conversions tracked across 3,275 sessions in 28 days — either no conversion events are configured or landing pages have no form/CTA firing.",
+        "confidence": "confirmed",
+        "channel": "web"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Pause Meta spend immediately until landing page conversion tracking fires at least 1 confirmed lead event.",
-        "cites": [
-          "F3",
-          "F1"
-        ],
-        "monday_item_name": "Fix Meta conversion tracking",
-        "monday_update": "Meta has spent $159.10 with 308 clicks and zero tracked leads or GA4 conversions over 28 days — this is a confirmed tracking or landing-page capture failure, not an audience problem. Pause all active Meta ad sets until the end-to-end stack test (overdue since 2026-07-31) is completed and at least 1 lead event fires in GHL and GA4. Success check: a test submission from each landing page appears in GHL and GA4 as a conversion before any spend resumes. Target resolution: 2026-09-19."
-      },
-      {
-        "id": "S2",
-        "type": "fix",
-        "text": "Complete the overdue pre-launch stack test (due 2026-07-31): one touch per channel → GHL → EHR → reporting, before any channel relaunches.",
+        "text": "Pause Meta spend at current $14.21/day until end-to-end stack test (F2) is confirmed complete — every dollar now is untrackable.",
         "cites": [
           "F1",
           "F2"
         ],
-        "monday_item_name": "Complete pre-launch stack test",
-        "monday_update": "Nine SOW milestones are undelivered, with 5 already 46+ days past their 2026-07-31 deadline. No channel should resume spend until the mandatory end-to-end stack test passes: a contact enters from each active channel, routes through GHL, appears in NextGen EHR, and surfaces in reporting. Nacer owns gate sign-off. Success check: documented pass for each channel leg by 2026-09-19."
+        "monday_item_name": "Pause Meta — Fix Stack First",
+        "monday_update": "Pause the active Meta campaigns (currently ~$14.21/day, $159.10 spent with 0 leads) until the overdue pre-launch stack test and GHL migration are verified complete. Cited: 0 leads from $159.10 spend, 9 milestones overdue since 2026-07-31. Success is confirmed when one end-to-end test touch (ad → tracked lead → GHL opportunity) passes. Re-evaluate by 2026-09-22."
+      },
+      {
+        "id": "S2",
+        "type": "fix",
+        "text": "Configure at least one GA4 conversion event on the landing page — 3,275 sessions and 0 conversions tracked is a broken pixel, not real behaviour.",
+        "cites": [
+          "F5",
+          "F2"
+        ],
+        "monday_item_name": "GA4 Conversion Event Setup",
+        "monday_update": "Landing pages are receiving sessions (3,275 over 28 days) but GA4 reports 0 conversions, consistent with no conversion event configured or a broken tracking implementation — a known overdue milestone since 2026-07-31. Action: Nacer/Web team to verify form-submit or CTA events fire and appear in GA4 real-time within 48 hours. Success check: at least 1 conversion event confirmed in GA4 by 2026-09-18."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions over the next 3 days; if daily average stays below 1, escalate as a local-presence gap requiring GBP triage (F1 milestone).",
+        "text": "Watch GBP actions: 0 on Sep 13–14 after GBP dropped 57.14% week-over-week — recheck Sep 18 before attributing to paid suppression or listing issue.",
         "cites": [
-          "F5",
-          "F1"
+          "F4"
         ],
-        "monday_item_name": "Watch GBP action trend",
-        "monday_update": "GBP actions hit 0 on Sep 12 and 13 after averaging ~2–3/day earlier in the month. This is a hypothesis-grade signal — 2 days is not a confirmed trend. Monitor through 2026-09-18; if the 3-day average remains below 1 action/day, treat it as a local-presence issue linked to the overdue GBP triage milestone (due 2026-07-31) and escalate to Nacer for immediate action. No paid budget change warranted yet."
+        "monday_item_name": "Watch GBP Action Drop",
+        "monday_update": "GBP actions fell to 0 on Sep 13–14, and the 7-day window shows a -57.14% decline versus the prior week. This may reflect the overdue GBP triage milestone or a listing quality issue, not ad performance. No action until 3 more days of data are available. Recheck 2026-09-18: if actions remain at 0, escalate GBP listing audit as a blocking issue."
       }
     ],
     "next_check": "2026-09-18"

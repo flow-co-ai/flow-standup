@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-15T15:27:37.266Z",
+  "generated_at": "2026-09-15T18:31:28.438Z",
   "date": "2026-09-15",
   "slug": "maadi-law",
   "name": "Maadi Law, LLC",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "The biggest movement this period is a 250% surge in leads week-over-week (from roughly 4 to 19 tracked leads), likely driven by Meta's 602 clicks generating all 19 attributed leads at a $160.63 CPL, while Google Ads contributed 7 conversions on $2,257.98 spend. GBP is down 55.1% week-over-week but still delivered 26 calls and 128 total actions over 28 days, suggesting the lead spike is a Meta-driven event worth monitoring for sustainability.",
+  "verdict": "The biggest movement this period is a 250% surge in leads week-over-week (from the prior 7-day baseline), driving CPL down 68.83%, likely fueled by Meta's 19 leads at $794.06 spend outperforming Google's $2,257.98 for 7 conversions. GBP actions dropped 55.1% week-over-week, worth monitoring as the Local Services campaign (\"LocalServicesCampaign:SystemGenerated:000656b9a9b1ed48\") consumed $1,677.52 of the $3,052.04 total 28-day spend.",
   "windsor": {
     "totals": {
       "spend": 3052.04,
@@ -430,10 +430,10 @@
     }
   },
   "ghl": {
-    "contacts": 207,
+    "contacts": 211,
     "opportunities": {
       "created": {
-        "count": 82,
+        "count": 81,
         "value": 0
       },
       "won": {
@@ -445,8 +445,8 @@
   },
   "reconciliation": {
     "windsor_leads": 19,
-    "ghl_contacts": 207,
-    "ghl_opps_created": 82,
+    "ghl_contacts": 211,
+    "ghl_opps_created": 81,
     "ghl_opps_won": 0,
     "status": "both_active"
   },
@@ -638,43 +638,43 @@
     "history_line": "FB ads reporting synced to GHL · Prefill gaps fixed in GHL agreements · Automated acknowledgement SMS disabled for manual opps"
   },
   "performance": {
-    "generated_at": "2026-09-15T15:33:37.975Z",
+    "generated_at": "2026-09-15T18:34:47.480Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Meta driving all 19 leads; Google spend unaccountable, pipeline intake broken.",
+    "verdict": "Meta driving all leads; Google spend unaccountable and pipeline intake broken.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "5 overdue SOW milestones (Pre-Launch Stack, LSA Verification, Site Live, Ads Launch, Meta Retargeting) remain uncleared as of 2026-09-15, blocking attribution integrity.",
-        "confidence": "confirmed",
-        "channel": "SOW"
-      },
-      {
-        "id": "F2",
-        "priority": 2,
-        "text": "Google Ads consumed $2,257.98 over 28 days; GA4 records 0 conversions and GHL shows 0 won opportunities — spend is unaccountable to any signed-case signal.",
+        "text": "Meta produced all 19 28-day leads at $41.79 CPL ($794.06 spend); Google spent $2,257.98 and delivered 7 conversions with 0 GA4 conversion events — attribution is broken, not the channel.",
         "confidence": "confirmed",
         "channel": "Google Ads"
       },
       {
-        "id": "F3",
+        "id": "F2",
         "priority": 2,
-        "text": "CPL collapsed 68.8% week-over-week to $160.63, driven entirely by Meta's 19 leads on $794.06 spend; 3-day lead signal (Sep 12–14: 4 leads) vs prior 3 days (Sep 9–11: 8 leads) shows a pullback, suggesting the surge may not hold.",
-        "confidence": "probable",
-        "channel": "Meta"
+        "text": "5 overdue milestones (Pre-Launch Stack Test, LSA Verification, Site/Landing Pages, Ads Launch, Meta Retargeting) all past due by 2026-07-31–08-01 — engagement is 2.5 months in with no confirmed launch.",
+        "confidence": "confirmed",
+        "channel": "SOW"
       },
       {
-        "id": "F4",
-        "priority": 3,
-        "text": "GHL shows 82 opportunities created but 0 appointments and 0 won cases; 207 contacts vs 19 tracked leads implies intake routing or speed-to-lead is broken, not an ads volume problem.",
+        "id": "F3",
+        "priority": 2,
+        "text": "GHL shows 81 opportunities created but 0 won, 0 appointments, and 0 pipeline value — 19 paid leads are entering but none advancing; intake process is the leak, not ad volume.",
         "confidence": "confirmed",
         "channel": "GHL"
       },
       {
+        "id": "F4",
+        "priority": 3,
+        "text": "3-day Meta lead signal (Sep 12–14: 2+1+1=4 leads) is weaker than prior 3 days (Sep 9–11: 1+4+3=8 leads) on flat ~$50–53/day spend — early fatigue signal after the 250% spike.",
+        "confidence": "probable",
+        "channel": "Meta"
+      },
+      {
         "id": "F5",
         "priority": 4,
-        "text": "GBP actions fell 55.1% week-over-week; last 2 days in series show 0 GBP actions, while IG reach held at 767–884 — organic search presence is softening independent of paid.",
+        "text": "GBP actions fell 55.1% week-over-week; last 2 days in series show 0 GBP actions — organic local visibility is declining while paid spend holds, suggesting GBP profile maintenance gap.",
         "confidence": "probable",
         "channel": "GBP"
       }
@@ -683,32 +683,32 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate 5 overdue SOW milestones to Nacer immediately; no scale decisions are defensible without attribution stack live.",
+        "text": "Repair Google Ads conversion tracking via GTM/pixel audit — $2,257.98 spend is unaccountable until GA4 shows non-zero conversions.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Clear 5 Overdue SOW Milestones",
-        "monday_update": "Five SOW milestones due July–August 2026 remain undelivered, including LSA Verification, Site Live, and Ads Launch. No paid scaling decision is defensible until the pre-launch stack test passes and conversion events are wired end-to-end. Success check: all 5 items marked complete in Monday with Nacer sign-off by 2026-09-22. Sohib to confirm client-side blockers at next sync."
+        "monday_item_name": "Fix Google Conversion Tracking",
+        "monday_update": "Google Ads consumed $2,257.98 over 28 days but GA4 shows 0 conversion events — we cannot confirm or deny ROI until pixel/GTM fires correctly. Audit the Google tag and conversion actions in GTM; confirm events fire on the thank-you or form-submit page end-to-end. Success = at least one verified conversion event visible in GA4 and Google Ads within 48 hours of fix. Complete by 2026-09-19."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Fix GHL intake routing: 82 opportunities, 0 appointments signals leads are not being worked — repair before adding volume.",
+        "text": "Escalate GHL intake: 81 opportunities, 0 appointments, 0 won — leads are arriving but no case progression; fix routing or speed-to-lead before scaling spend.",
         "cites": [
-          "F4"
+          "F3"
         ],
-        "monday_item_name": "Fix GHL Intake Routing Zero Appts",
-        "monday_update": "GHL shows 82 opportunities created and 207 contacts but 0 appointments booked and 0 cases won over 28 days. This is an intake routing or speed-to-lead failure, not an ads problem. Action: audit GHL pipeline stages, assignment rules, and calendar/booking setup this week. Success check: at least 5 appointments booked within 7 days of fix going live; re-check by 2026-09-22."
+        "monday_item_name": "Fix GHL Intake Routing",
+        "monday_update": "GHL shows 81 opportunities created against 0 appointments and 0 pipeline value — paid leads are entering the CRM but stalling immediately after intake. Confirm that routing rules, auto-reply, and calendar booking links are live and functional per the SOW speed-to-lead spec (under 5 min in business hours). Success = at least 3 appointments booked within 7 days of fix. Verify by 2026-09-22."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch Meta CPL over next 3 days; 3-day lead count dropped from 8 to 4 — hold budget until trend confirms or fades.",
+        "text": "Watch Meta CPL over next 3 days — lead rate halved (8 leads Sep 9–11 vs 4 leads Sep 12–14) on flat spend; pause creative refresh decision until confirmed.",
         "cites": [
-          "F3"
+          "F4"
         ],
-        "monday_item_name": "Watch Meta Lead Trend Sep 18",
-        "monday_update": "Meta generated all 19 tracked leads this period at $160.63 CPL, but the 3-day signal (Sep 12–14) shows only 4 leads versus 8 in the prior 3 days, suggesting the surge is softening. Hold Meta budget flat and do not scale until 3 consecutive days at or above the Sep 9–11 pace. Re-check on 2026-09-18; if trend holds, bring a scale suggestion at that review."
+        "monday_item_name": "Watch Meta Lead Rate",
+        "monday_update": "Meta delivered 8 leads Sep 9–11 but only 4 leads Sep 12–14 on similar daily spend (~$50/day) — a probable fatigue signal but not yet confirmed across 3 full days. No creative change this cycle. Re-check the 3-day lead rate on 2026-09-18; if leads per day stay below 1.5 on equal or rising spend, escalate to creative_refresh."
       }
     ],
     "next_check": "2026-09-18"
