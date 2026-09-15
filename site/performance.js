@@ -35,6 +35,16 @@ const PULSE_ONLY = [
   { client: "O'Hare Precision", slug: 'steel-ohare' },
 ];
 
+// Human-readable labels for Windsor anomaly flag keys.
+// Keys with no entry here are silently dropped — never printed raw.
+const FLAG_LABELS = {
+  lead_drought:          'no leads recorded this period',
+  zero_spend_day:        'zero spend today',
+  attribution_gap:       'attribution gap',
+  'channel_dark:meta':   'Meta went dark',
+  'channel_dark:google': 'Google went dark',
+};
+
 // Short labels for steel sub-clients in the scan strip.
 const STEEL_CHIP_LABEL = {
   'steel-forte':   "STEEL · FORTE",
@@ -205,19 +215,12 @@ function buildVerdictFallback(name, deltas, flags) {
   const val = deltas[top.key];
   const dir = val > 0 ? 'up' : 'down';
   let text = `${name} ${top.label} is ${dir} ${Math.abs(val)}% vs the prior 7 days.`;
-  if ((flags || []).includes('lead_drought')) text += ' Lead drought flag is active.';
+  if ((flags || []).includes('lead_drought')) text += ` ${FLAG_LABELS.lead_drought}.`;
   return text;
 }
 
-// Human-readable flag labels.
 function flagLabel(f) {
-  const MAP = {
-    'zero_spend_day':      'zero spend today',
-    'lead_drought':        'lead drought',
-    'channel_dark:meta':   'Meta went dark',
-    'channel_dark:google': 'Google went dark',
-  };
-  return MAP[f] ?? f.replace(/_/g, ' ');
+  return FLAG_LABELS[f] ?? null;
 }
 
 // ── Status dot ────────────────────────────────────────────────────
@@ -620,8 +623,11 @@ function buildCard(entry, decidedIds = new Set(), cardMap = {}) {
   // ── Flags ──
   if (flags.length) {
     const flagsEl = el('div', { class: 'perf-flags-row' });
-    for (const f of flags) flagsEl.append(el('span', { class: 'perf-flag-chip', text: flagLabel(f) }));
-    body.append(flagsEl);
+    for (const f of flags) {
+      const label = flagLabel(f);
+      if (label != null) flagsEl.append(el('span', { class: 'perf-flag-chip', text: label }));
+    }
+    if (flagsEl.children.length) body.append(flagsEl);
   }
 
   // ── Analyst + Buyer (performance lens) ──

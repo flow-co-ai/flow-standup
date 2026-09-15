@@ -389,15 +389,23 @@ function buildNeedsYou(lanes, contract, commsData) {
   }
 
   if (lanes.paid.state === 'red' || lanes.paid.state === 'amber') {
-    const flagDesc = lanes.paid.flags.length
-      ? lanes.paid.flags.join(', ')
-      : (lanes.paid.state === 'red' ? 'lead drought' : 'zero rows or attribution gap');
-    items.push({
-      text:     `Paid issue (${lanes.paid.state}): ${flagDesc}.`,
-      severity: lanes.paid.state === 'red' ? 'high' : 'medium',
-      age_days: null,
-      basis:    lanes.paid.basis,
-    });
+    if (lanes.paid.flags.length) {
+      items.push({
+        text:     `Paid issue (${lanes.paid.state})`,
+        flags:    lanes.paid.flags,
+        severity: lanes.paid.state === 'red' ? 'high' : 'medium',
+        age_days: null,
+        basis:    lanes.paid.basis,
+      });
+    } else {
+      const fallback = lanes.paid.state === 'red' ? 'lead drought' : 'zero rows or attribution gap';
+      items.push({
+        text:     `Paid issue (${lanes.paid.state}): ${fallback}.`,
+        severity: lanes.paid.state === 'red' ? 'high' : 'medium',
+        age_days: null,
+        basis:    lanes.paid.basis,
+      });
+    }
   }
 
   if (lanes.crm.state === 'red' || lanes.crm.state === 'amber') {

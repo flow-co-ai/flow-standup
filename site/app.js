@@ -67,6 +67,23 @@ const SUB_SCORE_LABELS_COMPACT = {
 // aggregate ops-health trend -- mirrors scoring.py's SCORE_VALUE exactly.
 const SCORE_NUMERIC = { red: 20, yellow: 60, green: 100 };
 
+// Plain-English labels for Windsor anomaly flag keys rendered at display time.
+// Keys with no entry: use flag.description if present, otherwise drop the item.
+const FLAG_LABELS = {
+  lead_drought:          'no leads recorded this period',
+  zero_spend_day:        'zero spend today',
+  attribution_gap:       'attribution gap',
+  'channel_dark:meta':   'Meta went dark',
+  'channel_dark:google': 'Google went dark',
+};
+
+function resolveNeedsYouText(item) {
+  if (!item.flags || !item.flags.length) return item.text || null;
+  const labels = item.flags.map(f => FLAG_LABELS[f] ?? item.description ?? null).filter(Boolean);
+  if (!labels.length) return null;
+  return `${item.text}: ${labels.join(', ')}.`;
+}
+
 // Aggregate ops-health trend line colors (docs/scoring-spec-draft.md §4).
 // Deliberately NOT red/yellow/green -- those already carry status meaning
 // everywhere else in this app (health chips, sub-score chips), so reusing
@@ -936,7 +953,7 @@ function buildMiniCard(entry, orderKeys) {
   }));
 
   const ny = clientCard?.needs_you || [];
-  const nyText = ny.length > 0 ? ny[0].text : 'Nothing needs you';
+  const nyText = ny.length > 0 ? (resolveNeedsYouText(ny[0]) ?? 'Nothing needs you') : 'Nothing needs you';
   card.append(el('p', { class: ny.length > 0 ? 'mini-needs-you' : 'mini-needs-you nothing', text: nyText }));
 
   const daysLeft = clientCard?.contract?.days_left;
@@ -1232,7 +1249,10 @@ function buildCard(entry, priorities, displayName, clientCard) {
   if (ny.length > 0) {
     const nyEl = el('div', { class: 'card-section card-needs-you' });
     nyEl.append(el('span', { class: 'card-needs-you-label', text: 'Needs you' }));
-    ny.forEach(item => nyEl.append(el('div', { class: 'card-needs-you-item', text: item.text })));
+    ny.forEach(item => {
+      const text = resolveNeedsYouText(item);
+      if (text != null) nyEl.append(el('div', { class: 'card-needs-you-item', text }));
+    });
     sections.append(nyEl);
   }
 
