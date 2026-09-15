@@ -78,10 +78,11 @@ const FLAG_LABELS = {
 };
 
 function resolveNeedsYouText(item) {
-  if (!item.flags || !item.flags.length) return item.text || null;
+  const base = item.text || null;
+  if (!item.flags || !item.flags.length) return base;
   const labels = item.flags.map(f => FLAG_LABELS[f] ?? item.description ?? null).filter(Boolean);
-  if (!labels.length) return null;
-  return `${item.text}: ${labels.join(', ')}.`;
+  if (!labels.length) return base;
+  return base ? `${base}: ${labels.join(', ')}.` : labels.join(', ') + '.';
 }
 
 // Aggregate ops-health trend line colors (docs/scoring-spec-draft.md §4).

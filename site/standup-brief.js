@@ -1003,7 +1003,8 @@
       ...['organic', 'paid', 'crm'].map(k => lanes[k]?.headline),
     ].filter(Boolean);
     const nyItems = (clientCard.needs_you || []).map(item => {
-      const cleaned = (item.text || '').replace(/^needs\s+you[:\s]+/i, '').trim();
+      const resolved = resolveNeedsYouText(item);
+      const cleaned = (resolved || '').replace(/^needs\s+you[:\s]+/i, '').trim();
       return cleaned || null;
     }).filter(t => t && !nyRefTexts.some(ref => substantiallySame(t, ref)));
     if (nyItems.length) {
@@ -1476,7 +1477,7 @@
     for (const ny of allNeeds) {
       const row = el('div', 'sb3-needs-you-row');
       row.append(el('div', 'sb3-needs-you-client', ny.client));
-      row.append(el('div', 'sb3-needs-you-text', ny.text));
+      row.append(el('div', 'sb3-needs-you-text', resolveNeedsYouText(ny) ?? ny.text));
       if (ny.age_days != null) {
         row.append(el('div', 'sb3-needs-you-age', `${ny.age_days}d`));
       }
