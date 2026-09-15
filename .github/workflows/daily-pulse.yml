@@ -91,11 +91,15 @@ jobs:
       - name: Build cards
         run: node build_cards.js
 
+      - name: Build workstreams
+        run: node build_workstreams.js
+
       - name: Commit pulse and history
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add pulse/ history/ reports/ playbooks/ timeline/ standups/ cards/
+          git add site/monday-items.json workstreams/*.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Nothing changed — skipping commit."
             exit 0
