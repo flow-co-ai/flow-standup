@@ -1,54 +1,47 @@
 {
-  "updatedAt": "2026-09-14T19:50:47.948196+00:00",
+  "updatedAt": "2026-09-15T18:58:48.201129+00:00",
   "items": [
     {
       "id": "fullsmile-workflows-golive-approval",
       "title": "Patient Workflows",
-      "note": "Section 19 audit covered Full Smile groups on all four boards. Patient Workflows 12714615372 on CRM is exactly the item Ahmed is describing: it specifies the instant form reply, the two stage reminders with C and X logic, the Open Dental status writeback, the review request trigger and the call to Opportunity routing, and it has been at For Review since 4 August with its date column set to 8 September. Voicemail and Form Update 12472102513 and the Open Dental claim payment sync 12757916031 are both Done and cover different work. Drafted as an update on 12714615372 rather than a new item. needsNaz set because the blocker is an approval only Naz or Sohib can give. Section 19b returned no match.",
-      "status": "ready",
+      "note": "CONTENT CONFLICT, two sources disagree and the decision is not the drafter's to make.\n\nPosition A, 8 September, WhatsApp GHL Dev: Ahmed reported the Full Smile workflows built and blocked on a single approval to make them live, and asked for that approval so he can enable them. That is what this card was drafted to deliver, as an update on Patient Workflows 12714615372.\n\nPosition B, 14 September, WhatsApp Full Smile Management: Dr Jamal Sahloul asked to strip the engagement down, saying the practice is building more infrastructure than it needs, that neither he nor Lily will use the attribution GoHighLevel provides, and that at 750 a month GoHighLevel is not worth it against Flex Dental at 264 which already integrates with Open Dental. Naz then wrote the scope back to the client for confirmation: pause Google LSA, Meta Ads and ALL GoHighLevel operations and workflows, continue Web and SEO, Google Business Profile and organic, at 500 a month. Lily backed pausing Google/LSA for a month. Jamal asked whether the Google number reverts to the main office line, and Adham asked for a written description of what the 500 covers before they commit. As of the end of 14 September the client had NOT yet approved, and Naz said he will only flag the teams to pause once he has approval.\n\nThe decision Naz needs to make: does Full Smile GoHighLevel work go live, or get withdrawn? Firing this card as drafted would tell Ahmed to enable GoHighLevel workflows for a client who asked the same week to stop paying for GoHighLevel. The five deliverables this card was going to post are not lost: they are already specified on Monday item 12714615372 in its 4 August update.\n\nTwo sibling cards are governed by the same decision and should be resolved with it, not separately: fullsmile-booked-showed-sync (Open Dental appointment value definition, the exact attribution Jamal said he will not use) and fullsmile-intake-speed-audit (intake measurement out of the GoHighLevel account).\n\nRecorded honestly: find_pending_queue_match returned NO lexical match between the 14 September scope message and this card, because the conflict is semantic rather than textual. Raising it was a drafter judgment call under 19b's conflict rule, so it is reviewable as one. Priority raised to 1: nothing else on Full Smile GoHighLevel can move until this is settled, and the client is waiting on Adham's question. Monday's status column was not consulted.",
+      "status": "confirm",
       "board": "CRM",
       "group": "Full Smile",
       "potentialClient": null,
       "source": "whatsapp",
-      "sourceLabel": "WhatsApp: GHL Dev, 9/8",
-      "payload": {
-        "mode": "update_only",
-        "existingItemId": "12714615372",
-        "itemName": "Patient Workflows",
-        "blocked": false,
-        "needsNaz": true,
-        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> On 8 September in the GHL Dev group Ahmed reported that all Full Smile tasks are complete with <strong>one item left pending approval to make it live</strong>, asked for a review and a comment on Monday, and then asked separately for approval on the Full Smile workflows so he can enable those as well. Sohib said he would check at 8AM CST on 9 September. This item is where that approval belongs, since it is the item that specifies the workflows and it has sat at For Review since 4 August.</li><li><strong>What is waiting for a decision.</strong> This item covers the instant form reply, the two stage appointment confirmation SMS with C and X reply logic, the Open Dental status writeback where green means confirmed and yellow means reminder sent, the review request trigger on the Request Review pipeline stage, and Google and LSA inbound calls creating Opportunities rather than only contacts. <strong>Confirm which of those are built and which one is the single outstanding approval</strong>, because Ahmed's message says one pending item and this item lists five deliverables.</li><li><strong>Deliverable one, review and approve or reject, in writing on this item.</strong> Ahmed is blocked on a yes or no and will not enable anything until he gets it. An approval given only in WhatsApp leaves the board showing For Review indefinitely, which is exactly the state this item has been in for five weeks.</li><li><strong>Deliverable two, enable and prove each workflow.</strong> Once approved, enable the workflows and post a test result per workflow: a test form submission returning the instant reply, a test appointment producing the two day and two hour reminders with C and X both handled, a pipeline move firing the review request, and a test call from Google or LSA landing as an Opportunity.</li><li><strong>Deliverable three, tell the client.</strong> Full Smile are mid renewal conversation and were told the conversion gap is where the work is going. Automated reminders and instant replies are that work, so the fact they are live belongs in the next client message.</li><li><strong>Dependencies and constraints.</strong> Blocked on internal approval only, nothing external. <strong>Do not</strong> enable the appointment reminders before confirming the A2P and messaging position on this account, because Full Smile also have an open messaging block over a payment method on the GoHighLevel location, and enabling automated SMS into an account that cannot send produces silent failures rather than errors.</li><li>done = the outstanding workflow is approved or rejected in writing here, every approved workflow is enabled with a passing test result posted per workflow, and the client has been told what is now live.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>"
-      },
-      "nullReason": null,
-      "priority": 2,
-      "createdAt": "2026-09-09T16:02:48.566779+00:00",
-      "verifiedAt": "2026-09-10T15:35:43.365247+00:00"
+      "sourceLabel": "WhatsApp: GHL Dev, 9/8 + WhatsApp: Full Smile, 9/14",
+      "payload": null,
+      "nullReason": "content-conflict",
+      "priority": 1,
+      "verifiedAt": "2026-09-15T18:58:48.200421+00:00",
+      "completionEvidence": null,
+      "updatedAt": "2026-09-15T18:58:48.200422+00:00",
+      "createdAt": "2026-09-09T16:02:48.566779+00:00"
     },
     {
       "id": "fullsmile-booked-showed-sync",
-      "title": "Appointment Value",
-      "note": "Section 19b matched this card on axis 3 at a containment score of 1.0. Merged rather than flagged, same call and same reason as the 9 September pass: Ahmed's 10 September message is this card's own deliverable one being answered defect by defect, not similar work. It names all three faults the card records, the reversed direction, the overwritten contact source and the duplicate opportunities, and reports each fixed with counts. SECOND QUESTION, NOT CLOSED. Deliverable one is explicitly complete and the 9 September contradiction from Sohib is resolved by it. Deliverable two, whether reported appointment value means insurance billed or payout, was never addressed by anyone and is untouched. Per A5 the card is rescoped to only the residue that genuinely remains, so itemName moves from Booked Showed Sync to Appointment Value and the sync remediation is kept as context with its numbers. No completion evidence passed, because the card as a whole is not complete. Priority dropped from 1 to 2: live records are no longer being altered under an unconfirmed direction, but Full Smile are deciding their scope this week off these figures. Monday's status column was not consulted.",
+      "title": "Sync Open Dental claim payments into GHL on \"Received\" status",
+      "note": "Section 19b matched this card on axis 3 at a containment score of 1.0. Merged rather than flagged, same call and same reason as the 9 September pass: Ahmed's 10 September message is this card's own deliverable one being answered defect by defect, not similar work. It names all three faults the card records, the reversed direction, the overwritten contact source and the duplicate opportunities, and reports each fixed with counts. SECOND QUESTION, NOT CLOSED. Deliverable one is explicitly complete and the 9 September contradiction from Sohib is resolved by it. Deliverable two, whether reported appointment value means insurance billed or payout, was never addressed by anyone and is untouched. Per A5 the card is rescoped to only the residue that genuinely remains, so itemName moves from Booked Showed Sync to Appointment Value and the sync remediation is kept as context with its numbers. No completion evidence passed, because the card as a whole is not complete. Priority dropped from 1 to 2: live records are no longer being altered under an unconfirmed direction, but Full Smile are deciding their scope this week off these figures. Monday's status column was not consulted.\n\n14 SEPTEMBER, FLAGGED NOT MERGED. This card's own constraint said Full Smile were deciding their scope this week off these two value fields. They decided, against it: on 14 September Jamal Sahloul said neither he nor Lily will spend time on that level of attribution and asked to pause all GoHighLevel operations, and Naz has put that scope to the client for approval. Not merged and not closed, because nothing says this work is complete and the pause is not approved yet. The decision sits on fullsmile-workflows-golive-approval, now confirm/content-conflict. Resolve that before firing this. Payload re-emitted in the A6 update_only shape, dropping the inert boardId and groupId it was carrying; body unchanged.",
       "status": "ready",
       "board": "CRM",
       "group": "Full Smile",
       "potentialClient": null,
       "source": "whatsapp",
-      "sourceLabel": "WhatsApp: Full Smile, 9/8 + WhatsApp: GHL Dev, 9/9 + WhatsApp: Full Smile, 9/9 + WhatsApp: GHL Dev, 9/10",
+      "sourceLabel": "WhatsApp: Full Smile, 9/8 + WhatsApp: GHL Dev, 9/9 + WhatsApp: Full Smile, 9/9 + WhatsApp: GHL Dev, 9/10 + WhatsApp: Full Smile, 9/14",
       "payload": {
         "mode": "update_only",
-        "boardId": "18418241405",
-        "groupId": "group_mkxdmhbz",
+        "existingItemId": "12757916031",
         "itemName": "Sync Open Dental claim payments into GHL on \"Received\" status",
         "updateBody": "<p>Salam,</p><ul><li><strong>Context, the sync half is settled.</strong> On 10 September Ahmed reported the Open Dental corrections complete. The live direction is Open Dental to Digital Ocean to GoHighLevel only, the reverse workflows sit in Draft and the published Appointments into Open Dental workflow is unpublished. The claim payment sync no longer stamps contact source, and <strong>84 contacts</strong> carrying the wrong source were corrected with their original marketing sources restored. <strong>101</strong> opportunities the payment sync had created were removed and <strong>61</strong> legitimate ones kept. Production ran with zero errors on the five minute schedule.</li><li><strong>What is left, and it has never been answered.</strong> That sync writes last visit amount and total patient value onto every contact, which picked a definition of appointment value by accident. Nobody has said whether those figures mean <strong>insurance billed</strong> or <strong>actual payout</strong>. They are different numbers and Full Smile judge this account on whichever one reaches them.</li><li><strong>Deliverable.</strong> Settle the definition in writing on this item, then confirm which Open Dental field each of the two value fields actually reads and whether that matches the definition chosen. Where it does not, correct the mapping and post how many contacts were restated.</li><li><strong>Constraint.</strong> Full Smile are deciding their scope with us this week and every figure in front of them comes off these two fields. <strong>Do not</strong> send another account report until this is fixed here.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a>&nbsp;</p>",
         "blocked": false,
-        "needsNaz": true,
-        "existingItemId": "12757916031"
+        "needsNaz": true
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-09-11T18:18:01.103120+00:00",
+      "verifiedAt": "2026-09-15T18:58:48.200467+00:00",
       "completionEvidence": null,
-      "updatedAt": "2026-09-14T13:57:27.329Z",
+      "updatedAt": "2026-09-15T18:58:48.200471+00:00",
       "createdAt": "2026-09-09T16:02:48.566779+00:00"
     },
     {
@@ -73,18 +66,18 @@
       "nullReason": null,
       "priority": 2,
       "createdAt": "2026-09-09T16:02:48.566779+00:00",
-      "verifiedAt": "2026-09-11T18:18:01.103294+00:00"
+      "verifiedAt": "2026-09-15T18:58:48.200685+00:00"
     },
     {
       "id": "medstation-reactivation-import-suppression",
       "title": "Import Suppression",
-      "note": "Section 19 audit covered MedStation groups on all four boards. Patient List Merge 13019850713 on CRM is the parent: it owns getting the Weston list, merging it with the Como export and loading it into GoHighLevel, and it scopes itself to data preparation only. Nothing on it, or anywhere else on the four boards, covers suppressing the live messaging automations during that load, which is exactly what Sohib asked Ahmed for on 10 September. Maadi Law carries the same shape as its own subitem, Migrated Contact Suppression 13019897000 under Clio Migration, so drafted the same way here rather than as an update. Note for the parent: its step one blocker is resolved, the list came back from Leo and Sohib cleaned it on 10 September, so its Stuck status is now stale. Section 19b returned no match.",
-      "status": "ready",
+      "note": "Auto-closed per \u00a719b: WhatsApp: GHL Dev, 9/14 on 2026-09-14 stated this is complete -- \"the MedStation historical patient import is complete\"\n\nSection 19b matched this card at a containment score of 1.0 on axis 3 rather than axis 2, because the paraphrased subject did not clear 0.6 against this card's own long body, but the parent is identical (Patient List Merge 13019850713) and the evidence is this card's own deliverables being reported on, not similar work. Merged rather than flagged, same call and same reason recorded on fullsmile-booked-showed-sync. SECOND QUESTION, CLOSED. Ahmed's 14 September message reports the import complete with all 595 contacts tagged patient, migrated and medstation-historical-import, and states he audited the workflows first and confirmed those tags trigger no active messaging automation. That is deliverable one (suppress before loading) and deliverable two (load without firing anything) satisfied at the mechanism level, which is stronger than the outbound count the card asked for. Deliverable three (restore) is moot because nothing was unpublished; Ahmed said separately the same afternoon that he is enabling the MedStation workflows. Residue not covered by this close: 5 rejected records and 30 shared-phone records remain excluded and still need review. Monday's status column was not consulted. Payload kept intact so this is recoverable if the close is wrong.",
+      "status": "done",
       "board": "CRM",
       "group": "MedStation",
       "potentialClient": null,
       "source": "whatsapp",
-      "sourceLabel": "WhatsApp: GHL Dev, 9/10",
+      "sourceLabel": "WhatsApp: GHL Dev, 9/10 + WhatsApp: GHL Dev, 9/14",
       "payload": {
         "mode": "create_subitem",
         "boardId": "18418241405",
@@ -97,8 +90,14 @@
       },
       "nullReason": null,
       "priority": 1,
-      "verifiedAt": "2026-09-12T17:53:02.717659+00:00",
-      "completionEvidence": null,
+      "verifiedAt": "2026-09-15T18:58:48.200352+00:00",
+      "completionEvidence": {
+        "quote": "the MedStation historical patient import is complete",
+        "sourceLabel": "WhatsApp: GHL Dev, 9/14",
+        "statedAt": "2026-09-14",
+        "closedAt": "2026-09-15T18:58:48.200028+00:00"
+      },
+      "updatedAt": "2026-09-15T18:58:48.200356+00:00",
       "createdAt": "2026-09-11T18:18:14.765654+00:00"
     },
     {
@@ -172,7 +171,7 @@
       },
       "nullReason": null,
       "priority": 3,
-      "verifiedAt": "2026-09-12T17:52:54.207798+00:00",
+      "verifiedAt": "2026-09-15T18:58:48.200688+00:00",
       "completionEvidence": null,
       "createdAt": "2026-09-12T17:53:02.717713+00:00"
     },
@@ -301,28 +300,152 @@
     },
     {
       "id": "maadilaw-empty-customer-contacts",
-      "title": "Intake Form Fields",
-      "note": "Section 19 audit covered Maadi Law groups on all four boards. Intake Form Fields 12964344103 on CRM is the item that owns the contact type field: its 3 September update specifies the contact type dropdown with lead, customer, treater, insurance and health insurance as the values, and records that those strings are read by the case manager routing and welcome message automations. It is still at Start, so the empty records typed as Customer are a live defect on work this item has not finished. Drafted as an update on it rather than a new item, per the single item bias. Auto-Reject 12963781332 covers rejected and junk records dropping out of Tracy's default view, which is a different defect on a different path. Nothing on Ads, Video or Web + SEO touches contact typing. Section 19b returned no match; the closest queue card is maadilaw-ghl-duplicate-contacts, which covers duplicate sets under Clio Migration. Same contact list, different defect, so drafted separately rather than merged.",
+      "title": "Duplicate Contacts",
+      "note": "Section 19b matched on axis 1: this candidate targets existingItemId 13041132236, the same item this card already points at. Merged rather than drafted second. SECOND QUESTION, NOT CLOSED. Ahmed's 14 September message answers deliverable one (it names the Clio integration batch as the creator) and Sohib gave the go-ahead to proceed, but Ahmed states plainly that he has not deleted or modified any existing records yet, so the fix and the cleanup are both still outstanding. No completion evidence passed. Body rewritten to carry both calls as one update rather than concatenated, with deliverable one folded into context now that it is answered and the three named sync fixes promoted into it. Priority held at 2: authorised and root caused, but records are still accumulating. Monday's status column was not consulted.",
       "status": "ready",
       "board": "CRM",
       "group": "Maadi Law",
       "potentialClient": null,
       "source": "whatsapp",
-      "sourceLabel": "WhatsApp: GHL Dev, 9/12",
+      "sourceLabel": "WhatsApp: GHL Dev, 9/12 + WhatsApp: GHL Dev, 9/14",
       "payload": {
         "mode": "update_only",
         "existingItemId": "13041132236",
         "itemName": "Duplicate Contacts",
+        "updateBody": "<p>Salam,</p><ul><li><strong>What is new, the source is now named.</strong> On 14 September Ahmed checked the Maadi Law contacts in GoHighLevel and reported that the empty and incomplete Customer records were created by the Clio integration in a single batch that day. Some carry no identifying information at all, others only a phone number, and contact source is blank on all of them. That answers deliverable one as it was written.</li><li><strong>Deliverable one, harden the sync.</strong> Ahmed named three changes and Sohib approved them the same afternoon: reject incomplete records at the sync boundary, stop classifying every synced contact as Customer, and deduplicate on Clio ID, email and phone. Build all three and say which path was writing Customer.</li><li><strong>Deliverable two, clear what is already there.</strong> Reclassify or remove the existing empty records so Tracy has a usable contact list, and post how many you touched. Nothing has been deleted or modified yet, so the batch is still intact for reference.</li><li><strong>Constraints.</strong> The contact type values are read by the case manager routing and welcome message automations, so <strong>lock the exact strings before changing any of them</strong>. A record carrying conversation history must be <strong>reclassified, not deleted</strong>.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
         "blocked": false,
-        "needsNaz": false,
-        "updateBody": "<p>Salam,</p><ul><li><strong>What is new.</strong> On 12 September Sohib posted a screenshot of the Maadi Law contact list showing <strong>empty records typed as Customer</strong>, and said the client list is filling with junk. This item owns the contact type field, so the defect lands here rather than on a new item.</li><li><strong>Deliverable one, find where they come from.</strong> Take a sample of the empty Customer records and report what created each one, the intake form, the Clio Grow sync, or a workflow. Give the creation date and the source for at least five.</li><li><strong>Deliverable two, fix the default.</strong> Nothing should be written as Customer unless a person sets it. Set the default to <strong>lead</strong> on every path that creates a contact, and say which path was writing Customer.</li><li><strong>Deliverable three, clear what is already there.</strong> Reclassify or remove the existing empty records so Tracy has a usable contact list, and say how many you touched.</li><li><strong>Constraint.</strong> The contact type values are read by the case manager routing and the welcome message automations, so <strong>lock the exact strings</strong> before changing any of them. A record carrying conversation history must be reclassified, <strong>not deleted</strong>.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
+        "needsNaz": false
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-09-13T17:59:36.622250+00:00",
+      "verifiedAt": "2026-09-15T18:58:48.200413+00:00",
       "completionEvidence": null,
-      "createdAt": "2026-09-13T17:59:48.876150+00:00",
-      "updatedAt": "2026-09-14T16:00:51.483Z"
+      "updatedAt": "2026-09-15T18:58:48.200415+00:00",
+      "createdAt": "2026-09-13T17:59:48.876150+00:00"
+    },
+    {
+      "id": "maadilaw-reopened-matter-routing",
+      "title": "Reopened Matter Routing",
+      "note": "Section 19 audit covered Maadi Law groups on all four boards. Clio Migration 12471734017 on CRM is the parent that owns Clio to GoHighLevel behaviour, and it already carries Determine Clio Manage integration method and Migrated Contact Suppression 13019897000 as subitems, so this is drafted as a subitem there rather than a new top level item. Migrated Contact Suppression covers suppressing messaging to migrated contacts, which is a different defect on a different object; this one is opportunity pipeline stage. Duplicate Contacts 13041132236 and Auto-Reject 12963781332 are contact record defects, not stage routing. Nothing on Ads, Video or Web + SEO touches Clio. Section 19b returned no match; the nearest queue card is maadilaw-empty-customer-contacts, same integration but record hygiene rather than stage routing, kept separate per the merge counter rule. needsNaz set because deliverable two is a client confirmation and per section 6 the firm is chased through Naz.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: Maadi Law, 9/14 + WhatsApp: GHL Dev, 9/14",
+      "payload": {
+        "mode": "create_subitem",
+        "boardId": "18418241405",
+        "parentItemId": "12471734017",
+        "parentItemName": "Clio Migration",
+        "itemName": "Reopened Matter Routing",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> On 14 September Tracy at Maadi Law reported that changing a Clio Manage case status from closed back to open created a GoHighLevel opportunity and dropped it straight into Case Accepted. The case was Angel Rivera, a client of the firm from long before GoHighLevel existed. Sharif confirmed he had set the status to closed by mistake and corrected it, and said the firm does not want this distorting the data going forward.</li><li><strong>The mechanism is already known.</strong> Ahmed located it the same day: a Zapier automation named Maadi Law Clio Matter Opened to Case Accepted is active, and on every Clio matter_opened event it moves the matching opportunity into Maadi Law Intake, Case Accepted. It cannot tell a genuinely new matter from a re-opened one.</li><li><strong>Deliverable one, stop the misrouting.</strong> Make that automation distinguish a first time matter from a re-opened one, and keep re-opened matters out of Case Accepted.</li><li><strong>Deliverable two, confirm the destination first.</strong> Naz proposed re-opened cases land under New Lead so Tracy can run messaging and document collection from there. <strong>Get that confirmed with the firm before building</strong>, then route to whatever they agree.</li><li><strong>Deliverable three, check the blast radius.</strong> List any contact already moved into Case Accepted by a re-open, and say whether stage triggered messaging fired at them.</li><li><strong>Constraint.</strong> Entry at the wrong stage can send automated messages to existing clients, so <strong>do not test on live matters</strong>.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
+        "blocked": false,
+        "needsNaz": true
+      },
+      "nullReason": null,
+      "priority": 2,
+      "verifiedAt": "2026-09-15T18:58:48.200525+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-09-15T18:58:48.201034+00:00"
+    },
+    {
+      "id": "medstation-purchase-value-capture",
+      "title": "Purchase Value",
+      "note": "Section 19 audit covered MedStation groups on all four boards. NextGen Patient ID Mapping 12978886451 on CRM is Done and its five synced fields are booking clinic, service category, appointment status, first visit date and Patient ID, none of which is a money field. Appointment Status Sync 13002597767 and Send To NextGen 13020662201 move appointment state, not value. GA4 Conversion Tracking 13021300803 on Web + SEO is web side conversion counting. Ads Reports 12471121477 and its Meta and Google subitems are platform spend reports. Nothing owns revenue on the record, so drafted as a new CRM item. Section 19b returned no match; the nearest queue card is medstation-weston-lead-attribution, which splits Weston leads by origin. That counts leads, this attaches money to sales, and per the merge counter rule they are different kinds of work rather than one deliverable, so kept separate.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: MedStation, 9/14",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm512p9w",
+        "itemName": "Purchase Value",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> On 14 September Jonatan at MedStation asked whether revenue from repeat purchases can be traced back to the original acquisition source, so the account is judged on lifetime value and return rather than first conversion. Sohib confirmed the structure is already right: the source is stamped the first time a patient is seen and stays on the record permanently, and every later sale sits on that same contact as a new opportunity rather than a new contact.</li><li><strong>What is missing, and it was promised to the client.</strong> Sohib told MedStation the same day that the one gap is <strong>pulling the purchase amount onto each sale</strong>, and that it goes into the team queue this week. Without a value on the record the cohort reports return patient counts and no money, which is not what was asked for.</li><li><strong>Deliverable one, land the value.</strong> Write the purchase amount onto every sale or appointment the NextGen and Neuryn sync creates, on the existing contact record.</li><li><strong>Deliverable two, prove the cohort report.</strong> Produce revenue by original acquisition source at 30, 90 and 180 days for one real cohort and post the figures here, so the reporting Jonatan described can be shown to work end to end.</li><li><strong>Constraint.</strong> Source attribution already works and 84 wrongly stamped records were recently repaired on another account, so <strong>do not re-stamp contact source on any existing record</strong> while adding the value field.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "verifiedAt": "2026-09-15T18:58:48.200572+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-09-15T18:58:48.201034+00:00"
+    },
+    {
+      "id": "qualityhvac-lessenpro-schedule-feed",
+      "title": "Schedule Notifications",
+      "note": "Section 19 audit covered Quality HVAC groups on all four boards. Schedule Notifications 13020057223 on CRM is exactly this workstream and is Stuck: its 11 September updates ask the client to confirm that Schedule Updated notifications are enabled, name the destination inbox, and supply Lessen Pro admin credentials. Xavier's 14 September message answers the first of those three directly, so drafted as an update on that item rather than anything new. Re-run all Completed Jobs into GHL 12743073197 is the HouseCall Pro feed and is separate. Landline Lead Capture 13019839602 is Done and covers capture, not scheduling. Section 19b returned no match; qualityhvac-missed-call-rate is about whether calls are answered and explicitly scopes itself away from the Lessen Pro item. Priority 1 because it depends on client side access and double booking is happening now.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Quality HVAC",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: Quality HVAC, 9/14",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "13020057223",
+        "itemName": "Schedule Notifications",
+        "updateBody": "<p>Salam,</p><ul><li><strong>What is new, and it answers half of what this item is Stuck on.</strong> On 14 September Xavier at Quality HVAC said the Lessen Pro Schedule Updated notifications were <strong>only ever switched off for Nate</strong>, because they were flooding his inbox, and that the regular account still has everything enabled. This item has been Stuck since 11 September partly waiting to learn whether those notifications were on at all.</li><li><strong>The cost is live.</strong> Quality HVAC reported the same morning that they are <strong>double booking</strong>, because the on site schedule is not visible in GoHighLevel and staff cannot see both portals. Sohib confirmed the Lessen Pro email confirmations are the only link carrying those appointments across, and the client agreed to turning them back on provided they are routed away from Nate's inbox.</li><li><strong>Deliverable one.</strong> Confirm which mailbox the regular account's Schedule Updated emails reach today and whether the parser into GoHighLevel reads it. Run one real schedule change end to end and prove it lands on the matching contact.</li><li><strong>Deliverable two.</strong> Re-enable the notifications for Nate with delivery routed to the parser mailbox rather than his own inbox, so the flooding that caused this does not return.</li><li><strong>Still outstanding.</strong> Lessen Pro admin access, requested on 11 September and not supplied. Naz owns that chase with the client.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
+        "blocked": false,
+        "needsNaz": true
+      },
+      "nullReason": null,
+      "priority": 1,
+      "verifiedAt": "2026-09-15T18:58:48.200613+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-09-15T18:58:48.201034+00:00"
+    },
+    {
+      "id": "qualityhvac-gbp-product-focus",
+      "title": "Posting",
+      "note": "Section 19 audit covered Quality HVAC groups on all four boards. GBP 12545566882 on Web + SEO carries Posting 12545592455 at Start, which is the item that owns profile posts for this account, so drafted as an update there and nothing new was created. GBP Fix List 12133590566 under Website 11929334401 is listing corrections rather than posting. Nothing on Ads, CRM or Video covers profile content. Section 19b returned no match; qualityhvac-photo-library is about sourcing client images and names a Google Business Profile post as one of its outputs, so if both fire, use the same confirmed product focus. needsNaz set because deliverable one is a client confirmation.",
+      "status": "ready",
+      "board": "Web + SEO",
+      "group": "Quality HVAC",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: Web and SEO team, 9/14",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12545592455",
+        "itemName": "Posting",
+        "updateBody": "<p>Salam,</p><ul><li><strong>What is new.</strong> On 14 September Hashir put a set of Google Business Profile posts for Quality HVAC in front of the team for review. Naz asked whether the account runs Bryant or Goodman product lines, and Sohib answered that <strong>Goodman is the main focus</strong> while the drafted posts are acceptable as they stand.</li><li><strong>Deliverable one, confirm with the client.</strong> Sohib asked that the product focus be confirmed with Quality HVAC before anything is published, since the posts name equipment brands the client sells against. Get that confirmation in writing.</li><li><strong>Deliverable two, publish.</strong> Once confirmed, publish the approved set to the profile and post the live links on this item.</li><li><strong>Constraint.</strong> Lead with Goodman in any further posts unless the client says otherwise.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
+        "blocked": false,
+        "needsNaz": true
+      },
+      "nullReason": null,
+      "priority": 3,
+      "verifiedAt": "2026-09-15T18:58:48.200646+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-09-15T18:58:48.201034+00:00"
+    },
+    {
+      "id": "medstation-manager-account-access",
+      "title": "Manager Account",
+      "note": "Section 19 audit covered MedStation groups on all four boards. No item on any of the four covers GoHighLevel user provisioning or access for this account: CRM holds Weston build items, Ads holds campaign items, Web + SEO holds the site and hosting, Video holds the website video. There is no sensible parent to hang it off, so drafted as a new top level CRM item despite being small. Section 19b returned no match. Drafted because the request was made directly by the client and went unanswered, which is exactly the kind of thing that disappears in a busy chat.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: MedStation Weston, 9/14",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm512p9w",
+        "itemName": "Manager Account",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> On 14 September Jonatan Herculano at MedStation asked in the Weston group for a <strong>manager level GoHighLevel user account</strong> on medstationoficial@gmail.com. The request got no reply in the chat. MedStation are taking on more of the day to day themselves as the Weston build hands over, and Jonatan is the person asking the reporting and tracking questions, so he needs his own login rather than answers relayed through Sohib.</li><li><strong>Deliverable.</strong> Create the user at manager level on the MedStation location, send the invite to that address, and confirm on this item once Jonatan has logged in successfully.</li><li><strong>Constraint.</strong> Manager level, <strong>not admin</strong>. Check what that role can reach before issuing it, because the same location now holds the imported historical patient list and the live Weston messaging workflows.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "verifiedAt": "2026-09-15T18:58:48.200682+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-09-15T18:58:48.201034+00:00"
     }
   ]
 }
