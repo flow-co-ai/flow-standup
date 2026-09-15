@@ -9,7 +9,8 @@
   const PULSE_BASE    = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/refs/heads/main/pulse';
   const PLAYBOOK_BASE = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/refs/heads/main/playbooks';
   const TIMELINE_BASE = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/refs/heads/main/timeline';
-  const CARDS_BASE    = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/refs/heads/main/cards';
+  const CARDS_BASE        = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/refs/heads/main/cards';
+  const WORKSTREAMS_BASE  = 'https://raw.githubusercontent.com/flow-co-ai/flow-standup/refs/heads/main/workstreams';
 
   // ── Slug map ─────────────────────────────────────────────────────────────────
 
@@ -74,7 +75,8 @@
   const pulseCache    = new Map();
   const playbookCache = new Map();
   const timelineCache = new Map();
-  const cardCache     = new Map();
+  const cardCache         = new Map();
+  const workstreamsCache  = new Map();
   let   latestCache   = null;
   let   inboxCache    = null;
 
@@ -159,6 +161,17 @@
       cardCache.set(slug, data);
       return data;
     } catch { cardCache.set(slug, null); return null; }
+  }
+
+  async function fetchWorkstream(slug) {
+    if (workstreamsCache.has(slug)) return workstreamsCache.get(slug);
+    try {
+      const res = await fetch(`${WORKSTREAMS_BASE}/${slug}.json?t=${Date.now()}`, { cache: 'no-store' });
+      if (!res.ok) { workstreamsCache.set(slug, null); return null; }
+      const data = await res.json();
+      workstreamsCache.set(slug, data);
+      return data;
+    } catch { workstreamsCache.set(slug, null); return null; }
   }
 
   // ── Unhide hidden clients ────────────────────────────────────────────────────
@@ -790,8 +803,8 @@
     let entries;
     if (activeClients && activeClients.length) {
       entries = await Promise.all(activeClients.map(async (c) => {
-        const card = await fetchCard(c.slug);
-        return { slug: c.slug, name: c.name, card, latestEntry: null };
+        const [card, workstream] = await Promise.all([fetchCard(c.slug), fetchWorkstream(c.slug)]);
+        return { slug: c.slug, name: c.name, card, workstream, latestEntry: null };
       }));
     } else {
       // clients.json unavailable — fall back to by_client entries that have a card file.
@@ -799,8 +812,8 @@
       const byClient = (latest?.by_client || []).filter(c => c.client !== 'Unmapped');
       const candidates = await Promise.all(byClient.map(async (c) => {
         const slug = slugFor(c.client);
-        const card = await fetchCard(slug);
-        return card ? { slug, name: c.client, card, latestEntry: null } : null;
+        const [card, workstream] = await Promise.all([fetchCard(slug), fetchWorkstream(slug)]);
+        return card ? { slug, name: c.client, card, workstream, latestEntry: null } : null;
       }));
       entries = candidates.filter(Boolean);
     }
@@ -883,10 +896,21 @@
     // Name
     card.append(el('div', 'sb3-card-name', name));
 
-    // needs_you[0].text or "Nothing needs you"
-    const ny = clientCard?.needs_you || [];
-    const nyText = ny.length > 0 ? ny[0].text : 'Nothing needs you';
-    card.append(el('div', ny.length > 0 ? 'mini-needs-you' : 'mini-needs-you nothing', nyText));
+    // One line per lane (organic, paid)
+    const lanes = clientCard?.lanes || {};
+    if (lanes.organic?.headline) card.append(el('div', 'mini-lane', lanes.organic.headline));
+    if (lanes.paid?.headline)    card.append(el('div', 'mini-lane', lanes.paid.headline));
+
+    // Workstream count
+    const ws = entry.workstream;
+    if (ws) {
+      const total   = ws.workstream_count ?? (ws.workstreams?.length ?? 0);
+      const blocked = (ws.workstreams || []).filter(w => w.state === 'blocked').length;
+      const countText = blocked > 0
+        ? `${total} workstreams · ${blocked} blocked`
+        : `${total} workstreams`;
+      card.append(el('div', 'mini-ws-count', countText));
+    }
 
     // days_left when under 60
     const daysLeft = clientCard?.contract?.days_left;
@@ -918,7 +942,22 @@
     return laneEl;
   }
 
-  function buildCardDetailFromCard(clientCard) {
+  const WS_MV_LABEL = { moved_7d: 'active', slow_30d: 'slow', stale_30d_plus: 'stale' };
+
+  function normWords(s) {
+    return (s || '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim()
+      .split(' ').filter(w => w.length > 2);
+  }
+
+  function substantiallySame(a, b) {
+    const wa = normWords(a), wb = normWords(b);
+    if (!wa.length || !wb.length) return false;
+    const sb = new Set(wb);
+    const overlap = wa.filter(w => sb.has(w)).length;
+    return overlap / Math.min(wa.length, wb.length) > 0.6;
+  }
+
+  function buildCardDetailFromCard(clientCard, workstream) {
     const wrap = el('div', 'sb3-detail');
 
     if (!clientCard) {
@@ -926,20 +965,52 @@
       return wrap;
     }
 
-    // Three lanes: organic · paid · crm
-    const lanes = clientCard.lanes || {};
-    const lanesEl = el('div', 'card-lanes');
-    [['organic', 'Organic'], ['paid', 'Paid'], ['crm', 'CRM']].forEach(([key, label]) => {
-      if (lanes[key]) lanesEl.append(buildLaneBlock(lanes[key], label));
-    });
-    wrap.append(lanesEl);
+    // Workstreams block (first)
+    const wsItems = workstream?.workstreams || [];
+    if (wsItems.length) {
+      const wsBlock = el('div', 'ws-block');
+      wsBlock.append(el('div', 'ws-block-label', 'Workstreams'));
+      for (const ws of wsItems) {
+        const row = el('div', 'ws-row');
+        row.append(el('span', 'ws-name', ws.name));
+        row.append(el('span', `ws-state ws-state-${ws.state}`, ws.state));
+        row.append(el('span', `ws-movement ws-mv-${ws.movement}`, WS_MV_LABEL[ws.movement] || ws.movement));
+        if (ws.boards?.length) row.append(el('span', 'ws-board', ws.boards[0]));
+        wsBlock.append(row);
+      }
+      for (const [board, count] of Object.entries(workstream.hidden_by_board || {})) {
+        if (count > 0) wsBlock.append(el('div', 'ws-hidden', `+${count} hidden in ${board}`));
+      }
+      wrap.append(wsBlock);
+    }
 
-    // needs_you list
-    const ny = clientCard.needs_you || [];
-    if (ny.length > 0) {
+    // Lanes: one line each
+    const lanes = clientCard.lanes || {};
+    const lanesEl = el('div', 'card-lanes-collapsed');
+    [['organic', 'Organic'], ['paid', 'Paid'], ['crm', 'CRM']].forEach(([key, label]) => {
+      const lane = lanes[key];
+      if (!lane?.headline) return;
+      const row = el('div', 'card-lane-collapsed');
+      row.append(el('span', 'card-lane-collapsed-head', label));
+      row.append(el('span', 'card-lane-collapsed-text', lane.headline));
+      lanesEl.append(row);
+    });
+    if (lanesEl.children.length) wrap.append(lanesEl);
+
+    // needs_you — strip "Needs you" prefix, then drop lines that substantially
+    // duplicate the card name or any collapsed lane headline
+    const nyRefTexts = [
+      clientCard.name,
+      ...['organic', 'paid', 'crm'].map(k => lanes[k]?.headline),
+    ].filter(Boolean);
+    const nyItems = (clientCard.needs_you || []).map(item => {
+      const cleaned = (item.text || '').replace(/^needs\s+you[:\s]+/i, '').trim();
+      return cleaned || null;
+    }).filter(t => t && !nyRefTexts.some(ref => substantiallySame(t, ref)));
+    if (nyItems.length) {
       const nyWrap = el('div', 'card-needs-you');
       nyWrap.append(el('div', 'card-needs-you-label', 'Needs you'));
-      for (const item of ny) nyWrap.append(el('div', 'card-needs-you-item', item.text));
+      for (const text of nyItems) nyWrap.append(el('div', 'card-needs-you-item', text));
       wrap.append(nyWrap);
     }
 
@@ -969,7 +1040,7 @@
   // ── v3 renderers: card detail ────────────────────────────────────────────
 
   function renderCardDetailV3(entry) {
-    return buildCardDetailFromCard(entry.card || null);
+    return buildCardDetailFromCard(entry.card || null, entry.workstream || null);
   }
 
   // ── Playbook extractor (v3 CONTRACT section — deterministic, no LLM) ────────

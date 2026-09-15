@@ -286,6 +286,101 @@
   margin-top: 4px;
 }
 
+/* ── mini-card: lane previews + workstream count ─────────────────────────── */
+.mini-lane {
+  font-size: 12px;
+  color: var(--cream-dim);
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mini-ws-count {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--cream-faint);
+  margin-top: 6px;
+}
+
+/* ── workstreams block in card detail ───────────────────────────────────── */
+.ws-block { margin-bottom: 18px; }
+.ws-block-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--cream-faint);
+  margin-bottom: 6px;
+}
+.ws-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-top: 1px solid var(--hairline);
+}
+.ws-name {
+  flex: 1;
+  font-size: 12px;
+  color: var(--cream-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ws-state {
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.ws-state-live    { background: rgba(140,190,110,0.12); color: var(--green); }
+.ws-state-queued  { background: rgba(237,233,218,0.05); color: var(--cream-faint); }
+.ws-state-review  { background: rgba(220,167,70,0.12);  color: var(--amber); }
+.ws-state-blocked { background: rgba(222,110,76,0.12);  color: var(--coral); }
+.ws-state-done    { background: rgba(140,140,130,0.08); color: var(--status-quiet); }
+.ws-state-unknown { background: rgba(140,140,130,0.05); color: var(--status-quiet); }
+.ws-movement {
+  font-family: var(--mono);
+  font-size: 9px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.ws-mv-moved_7d      { color: var(--green); }
+.ws-mv-slow_30d      { color: var(--amber); }
+.ws-mv-stale_30d_plus { color: var(--coral); opacity: 0.7; }
+.ws-board {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--cream-faint);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.ws-hidden {
+  font-size: 11px;
+  color: var(--cream-faint);
+  opacity: 0.45;
+  padding: 4px 0;
+  font-style: italic;
+}
+
+/* ── collapsed lanes in card detail ─────────────────────────────────────── */
+.card-lanes-collapsed { display: flex; flex-direction: column; gap: 5px; margin-bottom: 16px; }
+.card-lane-collapsed  { display: flex; align-items: baseline; gap: 10px; }
+.card-lane-collapsed-head {
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--cream-faint);
+  flex-shrink: 0;
+  width: 52px;
+}
+.card-lane-collapsed-text { font-size: 13px; color: var(--cream-dim); }
+
 /* ── v3 rail: needs_you ranked list ─────────────────────────────────────── */
 .sb3-needs-you-empty { font-size: 13px; color: var(--cream-faint); padding: 16px 0; }
 .sb3-needs-you-row   { padding: 10px 0; border-top: 1px solid var(--hairline); }
