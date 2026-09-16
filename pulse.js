@@ -364,7 +364,13 @@ async function processClient(client) {
       let gbpProfilesWithPrior = _gbpProfiles ?? [];
       if (_latestDay) {
         if (!existsSync('history')) mkdirSync('history');
-        const history = updateHistory(client.slug, _latestDay);
+        // Update every day in the 28-day fetch window, not just yesterday.
+        // A config change (e.g. meta_leads_field) self-corrects on the next
+        // run without a separate backfill step.
+        let history = [];
+        for (const row of _dailyRows) {
+          history = updateHistory(client.slug, row);
+        }
 
         // Derive per-profile calls_prior from the 90-day archive (prior period = 8–14 days back).
         const latestDate     = new Date(_latestDay.date + 'T00:00:00Z');
@@ -396,8 +402,12 @@ async function processClient(client) {
         ig_reach:     _dailyRows.map(r => r.ig_reach),
         sc_clicks:    _dailyRows.map(r => r.sc_clicks),
         ga4_sessions: _dailyRows.map(r => r.ga4_sessions),
-        purchases:    _dailyRows.map(r => r.purchases),
-        revenue:      _dailyRows.map(r => r.revenue),
+        purchases:        _dailyRows.map(r => r.purchases),
+        revenue:          _dailyRows.map(r => r.revenue),
+        ctc_call_confirm: _dailyRows.map(r => r.ctc_call_confirm || 0),
+        ctc_call_placed:  _dailyRows.map(r => r.ctc_call_placed  || 0),
+        ctc_20s_connect:  _dailyRows.map(r => r.ctc_20s_connect  || 0),
+        ctc_60s_connect:  _dailyRows.map(r => r.ctc_60s_connect  || 0),
       };
 
       windsorOut = { ...metrics, latest_day: _latestDay, deltas, flags: [], series };

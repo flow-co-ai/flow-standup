@@ -228,7 +228,7 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}) {
 
   const ensureDay = d => {
     if (!d) return null;
-    if (!daily[d]) daily[d] = { date: d, spend: 0, leads: 0, meta_spend: 0, google_spend: 0, gbp_actions: 0, ig_reach: 0, sc_clicks: 0, ga4_sessions: 0, purchases: 0, revenue: 0 };
+    if (!daily[d]) daily[d] = { date: d, spend: 0, leads: 0, meta_spend: 0, google_spend: 0, gbp_actions: 0, ig_reach: 0, sc_clicks: 0, ga4_sessions: 0, purchases: 0, revenue: 0, ctc_call_confirm: 0, ctc_call_placed: 0, ctc_20s_connect: 0, ctc_60s_connect: 0 };
     return daily[d];
   };
 
@@ -238,8 +238,12 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}) {
     row.spend      += toNum(r.spend);
     row.meta_spend += toNum(r.spend);
     row.leads      += toNum(r[metaLeadsField]);
-    row.purchases  += toNum(r.actions_purchase);
-    row.revenue    += toNum(r.action_values_purchase);
+    row.purchases        += toNum(r.actions_purchase);
+    row.revenue          += toNum(r.action_values_purchase);
+    row.ctc_call_confirm += toNum(r.actions_click_to_call_call_confirm);
+    row.ctc_call_placed  += toNum(r.actions_click_to_call_native_call_placed);
+    row.ctc_20s_connect  += toNum(r.actions_click_to_call_native_20s_call_connect);
+    row.ctc_60s_connect  += toNum(r.actions_click_to_call_native_60s_call_connect);
   }
   for (const r of gadsRows) {
     const row = ensureDay(r['segments.date']);
@@ -284,8 +288,12 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}) {
       ig_reach:     Math.round(r.ig_reach),
       sc_clicks:    Math.round(r.sc_clicks),
       ga4_sessions: Math.round(r.ga4_sessions),
-      purchases:    Math.round(r.purchases),
-      revenue:      round2(r.revenue),
+      purchases:        Math.round(r.purchases),
+      revenue:          round2(r.revenue),
+      ctc_call_confirm: Math.round(r.ctc_call_confirm),
+      ctc_call_placed:  Math.round(r.ctc_call_placed),
+      ctc_20s_connect:  Math.round(r.ctc_20s_connect),
+      ctc_60s_connect:  Math.round(r.ctc_60s_connect),
     };
     if (gbpCallsByDate[r.date]) row.gbp_profiles = gbpCallsByDate[r.date];
     return row;

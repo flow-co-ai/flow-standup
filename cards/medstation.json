@@ -1,13 +1,13 @@
 {
   "slug": "medstation",
   "name": "MedStation",
-  "generated_at": "2026-09-16T15:28:15.980Z",
+  "generated_at": "2026-09-16T20:56:53.831Z",
   "contract": {
     "start": "2026-07-01",
     "end": "2026-09-30",
     "validated": true,
-    "month_of": 2,
-    "months_total": 2,
+    "month_of": 3,
+    "months_total": 3,
     "days_left": 14,
     "basis": {
       "type": "observed",
@@ -19,7 +19,7 @@
   "lanes": {
     "organic": {
       "state": "green",
-      "headline": "11 calls",
+      "headline": "11 calls · 28d",
       "sentence": "MedStation Weston took 11 calls on 146 impressions.",
       "basis": {
         "type": "observed",
@@ -46,21 +46,19 @@
       }
     },
     "paid": {
-      "state": "red",
-      "headline": "$171.14",
-      "sentence": "Meta $171.14 spend, 0 leads.",
+      "state": "green",
+      "headline": "$171 · 29 conversations · $6 per conversation · 14d",
+      "sentence": "Meta $171.14 spend, 29 conversations.",
       "basis": {
         "type": "observed",
         "source": "Windsor Paid",
-        "window": "28d"
+        "window": "14d"
       },
-      "flags": [
-        "lead_drought"
-      ],
+      "flags": [],
       "detail": {
         "meta": {
           "spend": 171.14,
-          "leads": 0,
+          "leads": 29,
           "clicks": 342
         },
         "google_ads": null,
@@ -70,8 +68,8 @@
     },
     "crm": {
       "state": "red",
-      "headline": "17 waiting 598h",
-      "sentence": "Paulo from Agencia WeMark, as of 2026-07-15 per fireflies. 17 client threads awaiting Flow, oldest 598h.",
+      "headline": "17 waiting 622h",
+      "sentence": "Paulo from Agencia WeMark, as of 2026-07-15 per fireflies. 17 client threads awaiting Flow, oldest 622h.",
       "basis": {
         "type": "observed",
         "source": "GHL / WhatsApp",
@@ -88,14 +86,14 @@
           "window": "2026-07-15"
         },
         "awaiting_flow": 17,
-        "oldest_unanswered_hours": 598,
+        "oldest_unanswered_hours": 621.8,
         "threads": {
-          "messages_scanned": 465,
-          "threads": 37,
+          "messages_scanned": 475,
+          "threads": 36,
           "awaiting_flow": 17,
           "awaiting_client": 2,
-          "client_update": 13,
-          "settled": 5,
+          "client_update": 14,
+          "settled": 3,
           "abandoned": 0,
           "stale_over_24h": 17
         },
@@ -106,26 +104,13 @@
   "scope_out": [],
   "needs_you": [
     {
-      "text": "17 threads awaiting Flow, oldest 598h.",
+      "text": "17 threads awaiting Flow, oldest 622h.",
       "severity": "high",
-      "age_days": 25,
+      "age_days": 26,
       "basis": {
         "type": "observed",
         "source": "GHL / WhatsApp",
         "window": "14d"
-      }
-    },
-    {
-      "text": "Paid issue (red)",
-      "flags": [
-        "lead_drought"
-      ],
-      "severity": "high",
-      "age_days": null,
-      "basis": {
-        "type": "observed",
-        "source": "Windsor Paid",
-        "window": "28d"
       }
     },
     {

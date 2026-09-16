@@ -30,6 +30,26 @@ function fmt$(n) {
   return '$' + Number(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
+function fmtInt$(n) {
+  if (n == null || isNaN(n)) return '$0';
+  return '$' + Math.round(Number(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function readHistory(slug) {
+  return readJSON(`history/${slug}.json`) || [];
+}
+
+// 14d paid metrics from history. Returns { spend, leads, cpl, days } or null.
+function paid14d(slug) {
+  const rows = readHistory(slug).slice(-14);
+  if (!rows.length) return null;
+  const spend     = rows.reduce((s, r) => s + (r.spend        || 0), 0);
+  const leads     = rows.reduce((s, r) => s + (r.leads        || 0), 0);
+  const metaSpend = rows.reduce((s, r) => s + (r.meta_spend   || 0), 0);
+  const gadSpend  = rows.reduce((s, r) => s + (r.google_spend || 0), 0);
+  return { spend, leads, cpl: leads > 0 ? spend / leads : null, days: rows.length, meta_spend: metaSpend, gad_spend: gadSpend };
+}
+
 function daysBetween(a, b) {
   return Math.round((new Date(b) - new Date(a)) / 86400000);
 }
@@ -117,9 +137,11 @@ function buildOrganicLane(client, pulse) {
   else if (totalProfiles > 0) state = 'green';
   else                        state = 'unknown';
 
-  const headline = flaggedProfiles.length > 0
-    ? `${flaggedProfiles.length} of ${totalProfiles} dead`
-    : `${totalCalls} call${totalCalls !== 1 ? 's' : ''}`;
+  const callsHeadline = `${totalCalls} call${totalCalls !== 1 ? 's' : ''}`;
+  const activeCount   = totalProfiles - flaggedProfiles.length;
+  const headline = (flaggedProfiles.length > 0 && totalProfiles > 1)
+    ? `${activeCount} of ${totalProfiles} profiles active`
+    : callsHeadline;
 
   const sentenceProfiles = flaggedProfiles.length > 0 ? flaggedProfiles : allProfiles;
   const sentence = sentenceProfiles.length
@@ -146,7 +168,7 @@ function buildOrganicLane(client, pulse) {
 
 // ── paid lane ─────────────────────────────────────────────────────────────────
 
-function buildPaidLane(client, pulse) {
+function buildPaidLane(client, pulse, slug) {
   const hasMeta = (client.windsor?.facebook || []).length > 0;
   const hasGAds = (client.windsor?.google_ads || []).length > 0;
 
@@ -194,9 +216,21 @@ function buildPaidLane(client, pulse) {
   else if (totalSpend > 0)                     state = 'green';
   else                                         state = 'unknown';
 
+  const h14         = paid14d(slug);
+  const labelPlural = client.meta_leads_label || 'leads';
+  const labelSing   = labelPlural.replace(/s$/, '');
+
+  // Sentence must use the same window and label as the headline.
+  // When h14 is the headline source (14d history), sentence uses h14 too.
+  // When h14 is absent, both fall back to 28d Windsor totals.
   const parts = [];
-  if (hasMeta) parts.push(`Meta ${fmt$(metaSpend)} spend, ${metaLeads} leads`);
-  if (hasGAds) parts.push(`Google Ads ${fmt$(gadSpend)} spend, ${gadConvs} conversions`);
+  if (h14) {
+    if (hasMeta) parts.push(`Meta ${fmt$(h14.meta_spend)} spend, ${h14.leads} ${h14.leads === 1 ? labelSing : labelPlural}`);
+    if (hasGAds) parts.push(`Google Ads ${fmt$(h14.gad_spend)} spend`);
+  } else {
+    if (hasMeta) parts.push(`Meta ${fmt$(metaSpend)} spend, ${metaLeads} ${metaLeads === 1 ? labelSing : labelPlural}`);
+    if (hasGAds) parts.push(`Google Ads ${fmt$(gadSpend)} spend, ${gadConvs} conversions`);
+  }
   let sentence = parts.join('; ') + '.';
 
   if (recon?.status === 'both_active') {
@@ -210,11 +244,20 @@ function buildPaidLane(client, pulse) {
     sentence += ` GHL reporting no contacts; Windsor active.`;
   }
 
+  let paidHeadline;
+  if (h14) {
+    paidHeadline = h14.leads > 0
+      ? `${fmtInt$(h14.spend)} · ${h14.leads} ${h14.leads === 1 ? labelSing : labelPlural} · ${fmtInt$(h14.cpl)} per ${labelSing}`
+      : `${fmtInt$(h14.spend)} · no ${labelPlural}`;
+  } else {
+    paidHeadline = fmtInt$(totalSpend);
+  }
+
   return {
     state,
-    headline: fmt$(totalSpend),
+    headline: paidHeadline,
     sentence,
-    basis:  { type: 'observed', source: 'Windsor Paid', window: '28d' },
+    basis:  { type: 'observed', source: 'Windsor Paid', window: h14 ? '14d' : '28d' },
     flags:  allFlags.filter(f => f === 'lead_drought' || f === 'attribution_gap' || f.startsWith('channel_dark:')),
     detail: {
       meta:          hasMeta ? { spend: metaSpend, leads: metaLeads, clicks: metaClicks } : null,
@@ -311,6 +354,19 @@ function buildCrmLane(client, factsData, commsData, pulse) {
       threads:                 commsData?.counts || {},
       ghl:                     pulse?.ghl || null,
     },
+  };
+}
+
+// ── dormant lane (no signal this week) ───────────────────────────────────────
+
+function buildDormantLane() {
+  return {
+    state:    'dormant',
+    headline: 'no activity this week',
+    sentence: '',
+    basis:    { type: 'not_found', source: 'Monday / Fireflies / WhatsApp', window: '7d' },
+    flags:    [],
+    detail:   {},
   };
 }
 
@@ -455,7 +511,8 @@ function main() {
 
   mkdirSync('cards', { recursive: true });
 
-  const inbox = readJSON('site/inbox.json');
+  const inbox     = readJSON('site/inbox.json');
+  const quietSet  = new Set(readJSON('site/quiet_this_week.json') || []);
   const today = isoToday();
   let built   = 0;
 
@@ -482,8 +539,16 @@ function main() {
       inbox:    inboxItems.length > 0,
     };
 
-    const organicLane = buildOrganicLane(client, pulse);
-    const paidLane    = buildPaidLane(client, pulse);
+    const isQuiet     = quietSet.has(slug);
+    const organicLane = isQuiet ? buildDormantLane() : buildOrganicLane(client, pulse);
+    const paidLane    = isQuiet ? buildDormantLane() : buildPaidLane(client, pulse, slug);
+
+    // When organic and paid report different windows, label both headlines
+    // so they are never read as comparable.
+    if (!isQuiet && organicLane.basis.window !== paidLane.basis.window) {
+      organicLane.headline += ` · ${organicLane.basis.window}`;
+      paidLane.headline    += ` · ${paidLane.basis.window}`;
+    }
     const crmLane     = buildCrmLane(client, factsData, commsData, pulse);
     const lanes       = { organic: organicLane, paid: paidLane, crm: crmLane };
 

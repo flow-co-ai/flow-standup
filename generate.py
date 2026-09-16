@@ -2019,17 +2019,45 @@ def main():
         print(f"  chat '{chat_name}' ({n} msgs) → {c}")
         chats_by_client.setdefault(c, []).append((chat_name, msgs))
 
-    # Clients with any signal this week (Monday items OR meetings OR chats),
-    # in config order. Unmapped Monday groups and unmatched meetings/chats no
-    # longer get force-merged into a signed client's card or a full pulse call
-    # of their own -- they feed build_potential_clients below instead.
+    # All active clients from clients.json get a card, regardless of weekly
+    # signal. Only clients explicitly marked active:false are excluded.
+    _clients_json_data: list = []
+    try:
+        with open("clients.json") as _f:
+            _clients_json_data = json.load(_f)
+    except Exception:
+        pass
+
+    _inactive_client_names: set[str] = {
+        e["name"] for e in _clients_json_data if e.get("active") is False
+    }
+    _name_to_slug: dict[str, str] = {
+        e["name"]: e.get("slug", "") for e in _clients_json_data
+    }
+
     active: list[str] = []
     for c in clients_config:
-        if c in grouped or c in meetings_by_client or c in chats_by_client:
+        if c not in _inactive_client_names:
             active.append(c)
     for c in grouped:
         if c not in active and c != "Unmapped":
             active.append(c)
+
+    # Write quiet-marker for build_cards.js: clients with no signal this week.
+    def _resolve_slug(canonical: str) -> str | None:
+        if canonical in _name_to_slug:
+            return _name_to_slug[canonical]
+        for alias in (clients_config.get(canonical) or []):
+            if alias in _name_to_slug:
+                return _name_to_slug[alias]
+        return None
+
+    _quiet_slugs = sorted(
+        slug for c in active
+        if c not in grouped and c not in meetings_by_client and c not in chats_by_client
+        if (slug := _resolve_slug(c))
+    )
+    (Path("site") / "quiet_this_week.json").write_text(json.dumps(_quiet_slugs))
 
     # potential_clients is assembled further below, after the per-client Claude
     # calls -- it also folds in other_entities_mentioned, content those calls

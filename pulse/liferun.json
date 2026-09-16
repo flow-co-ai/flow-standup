@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-16T15:18:12.527Z",
+  "generated_at": "2026-09-16T20:56:41.851Z",
   "date": "2026-09-16",
   "slug": "liferun",
   "name": "Liferun",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 78,
   "status": "amber",
-  "verdict": "Over the past 28 days, Liferun generated 141 leads at a $15.63 CPL across $2,203.80 in spend, with Meta carrying all lead volume while Google Ads delivered 0 conversions from $495.93 in spend. The biggest movement is the 7-day GBP drop of -95.65%, likely driven by a near-complete loss of local profile engagement, and Google spend also fell -40.42% week-over-week, suggesting budget pacing or pausing on that channel.",
+  "verdict": "Liferun search clicks is down 100% vs the prior 7 days.",
   "windsor": {
     "totals": {
       "spend": 2203.8,
@@ -73,6 +73,10 @@
       "ga4_sessions": 27,
       "purchases": 0,
       "revenue": 0,
+      "ctc_call_confirm": 8,
+      "ctc_call_placed": 18,
+      "ctc_20s_connect": 5,
+      "ctc_60s_connect": 0,
       "gbp_profiles": {
         "locations/1230522329202519428": 0
       }
@@ -420,29 +424,136 @@
         0,
         0,
         0
+      ],
+      "ctc_call_confirm": [
+        12,
+        8,
+        8,
+        0,
+        0,
+        3,
+        8,
+        4,
+        7,
+        5,
+        0,
+        0,
+        8,
+        8,
+        8,
+        7,
+        5,
+        0,
+        0,
+        6,
+        10,
+        12,
+        6,
+        4,
+        0,
+        0,
+        4,
+        8
+      ],
+      "ctc_call_placed": [
+        10,
+        13,
+        13,
+        0,
+        0,
+        9,
+        13,
+        13,
+        14,
+        12,
+        0,
+        0,
+        14,
+        11,
+        14,
+        14,
+        14,
+        0,
+        0,
+        14,
+        19,
+        25,
+        21,
+        12,
+        0,
+        0,
+        19,
+        18
+      ],
+      "ctc_20s_connect": [
+        3,
+        3,
+        2,
+        0,
+        0,
+        2,
+        3,
+        3,
+        2,
+        5,
+        0,
+        0,
+        4,
+        3,
+        3,
+        0,
+        1,
+        0,
+        0,
+        1,
+        5,
+        5,
+        7,
+        4,
+        0,
+        0,
+        4,
+        5
+      ],
+      "ctc_60s_connect": [
+        1,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        2,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        2,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
       ]
     }
   },
-  "ghl": {
-    "contacts": 187,
-    "opportunities": {
-      "created": {
-        "count": 148,
-        "value": 0
-      },
-      "won": {
-        "count": 0,
-        "value": 0
-      }
-    },
-    "appointments": 0
-  },
+  "ghl": null,
   "reconciliation": {
     "windsor_leads": 141,
-    "ghl_contacts": 187,
-    "ghl_opps_created": 148,
-    "ghl_opps_won": 0,
-    "status": "both_active"
+    "ghl_contacts": null,
+    "ghl_opps_created": null,
+    "ghl_opps_won": null,
+    "status": "ghl_unavailable"
   },
   "_meta": {
     "source": "windsor_api",
@@ -572,81 +683,5 @@
       }
     ],
     "history_line": "Webhook fix restored online order sync · HANDOFF marked Done · SEO update May 2026 completed"
-  },
-  "performance": {
-    "generated_at": "2026-09-16T15:24:11.724Z",
-    "cadence": "scheduled_3d",
-    "stale": false,
-    "verdict": "Meta efficient at $15.63 CPL; Google burns $496 with zero conversions — fix first.",
-    "findings": [
-      {
-        "id": "F1",
-        "priority": 1,
-        "text": "Google Ads spent $495.93 over 28 days with 0 conversions and 111 clicks — confirmed dead channel for lead capture.",
-        "confidence": "confirmed",
-        "channel": "google_ads"
-      },
-      {
-        "id": "F2",
-        "priority": 2,
-        "text": "5 SOW milestones overdue by 2–8 weeks: Stripe QA (Jul 20), GHL 5-gap build, End-to-End Stack Re-Test ⛔, Paid Landing Pages, UGC Batch — none show a completed event.",
-        "confidence": "confirmed",
-        "channel": "SOW"
-      },
-      {
-        "id": "F3",
-        "priority": 2,
-        "text": "GHL shows 148 opportunities created but 0 won, $0 pipeline value, 0 appointments — 141 leads entering a pipeline with no conversion output signals an intake or follow-up leak.",
-        "confidence": "probable",
-        "channel": "GHL"
-      },
-      {
-        "id": "F4",
-        "priority": 3,
-        "text": "3-day lead signal (Sep 13–15: 0+4+8=12 leads) vs prior 3 days (Sep 10–12: 12+6+4=22) is down 45% — Meta spend also dipped to $0/$0/$85.75 on Sep 13–14 before recovering.",
-        "confidence": "probable",
-        "channel": "meta"
-      },
-      {
-        "id": "F5",
-        "priority": 4,
-        "text": "GBP actions collapsed -95.65% week-over-week; last 7 days show 1 action total vs 23 in the prior week — local profile engagement near-zero.",
-        "confidence": "confirmed",
-        "channel": "gbp"
-      }
-    ],
-    "suggestions": [
-      {
-        "id": "S1",
-        "type": "budget_shift",
-        "text": "Shift $10/day from Google Ads to Meta — Google delivered 0 conversions on $495.93; protect CPL floor.",
-        "cites": [
-          "F1"
-        ],
-        "monday_item_name": "Shift Google budget to Meta",
-        "monday_update": "Reduce Google Ads daily budget by $10/day and add that amount to the top Meta campaign. Google Ads spent $495.93 over 28 days with zero conversions while Meta generated all 141 leads at a $15.63 CPL. Success is confirmed if Meta CPL holds at or below $17 after 7 days (by Sep 23). Sohib to approve before any change executes."
-      },
-      {
-        "id": "S2",
-        "type": "fix",
-        "text": "Fix GHL intake leak: 148 opps created, 0 won, 0 appointments — confirm follow-up automation is firing.",
-        "cites": [
-          "F3"
-        ],
-        "monday_item_name": "GHL Pipeline Intake Fix",
-        "monday_update": "Audit the GHL automation sequence to confirm that each new opportunity triggers a follow-up call task or SMS within the defined SLA. Data shows 148 opportunities created and 0 won with $0 pipeline value — leads are entering but no conversion action is recorded. Success check: at least 1 appointment booked and 1 opportunity moved to a next stage within 7 days of the fix (by Sep 23). Nacer/Ahmed to action."
-      },
-      {
-        "id": "S3",
-        "type": "watch",
-        "text": "Watch 5 overdue SOW milestones — Paid Landing Pages and End-to-End Stack Re-Test ⛔ are scaling blockers; re-check Sep 19.",
-        "cites": [
-          "F2"
-        ],
-        "monday_item_name": "SOW Milestones Overdue Review",
-        "monday_update": "Five milestones are overdue by 2–8 weeks with no completed event recorded: Stripe QA (due Jul 20), GHL 5-gap build, End-to-End Stack Re-Test, Paid Landing Pages, and UGC Batch (all due Aug 31). The End-to-End Stack Re-Test and Paid Landing Pages are marked ⛔ scaling blockers — no budget scale is defensible until these are verified. Re-check status on Sep 19; each unresolved item must have an owner and a completion date assigned by then."
-      }
-    ],
-    "next_check": "2026-09-19"
   }
 }
