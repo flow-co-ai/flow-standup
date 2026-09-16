@@ -137,6 +137,11 @@ function pulseIdFromUrl(url) {
   return m ? m[1] : null;
 }
 
+function boardIdFromUrl(url) {
+  const m = String(url || '').match(/\/boards\/(\d+)/);
+  return m ? m[1] : null;
+}
+
 function daysSince(isoDate) {
   if (!isoDate) return null;
   const ms = Date.parse(String(isoDate).slice(0, 10));
@@ -362,6 +367,9 @@ function buildWorkstreams(mondayName) {
       blocked_reason,
       movement,
       owner:         ownerByItemId.get(idStr) || null,
+      item_id:       item.monday_item_id || null,
+      board_id:      boardIdFromUrl(item.monday_url),
+      url:           item.monday_url || null,
       item_count:    1,
       subitem_count: (item.subitems || []).length,
       subitem_done:  subitemDone,
@@ -381,7 +389,12 @@ function buildWorkstreams(mondayName) {
       continue;
     }
     const ex = byNormKey.get(key);
-    if (c.name.length > ex.name.length) ex.name = c.name;
+    if (c.name.length > ex.name.length) {
+      ex.name     = c.name;
+      ex.item_id  = c.item_id;
+      ex.board_id = c.board_id;
+      ex.url      = c.url;
+    }
     for (const b of c.boards) if (!ex.boards.includes(b)) ex.boards.push(b);
     ex._key = `${ex.boards[0]}::${key}`;  // rekey to first board
     ex.item_count    += c.item_count;

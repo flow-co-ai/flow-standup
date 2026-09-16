@@ -971,7 +971,15 @@
       wsBlock.append(el('div', 'ws-block-label', 'Workstreams'));
       for (const ws of wsItems) {
         const row = el('div', 'ws-row');
-        row.append(el('span', 'ws-name', ws.name));
+        if (ws.url) {
+          const a = el('a', 'ws-name', ws.name);
+          a.href = ws.url;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          row.append(a);
+        } else {
+          row.append(el('span', 'ws-name', ws.name));
+        }
         row.append(el('span', `ws-state ws-state-${ws.state}`, ws.state));
         row.append(el('span', `ws-movement ws-mv-${ws.movement}`, ws.age_days != null ? `${ws.age_days}d` : ''));
         if (ws.boards?.length) row.append(el('span', 'ws-board', ws.boards[0]));
