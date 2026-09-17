@@ -984,6 +984,12 @@
         row.append(el('span', `ws-movement ws-mv-${ws.movement}`, ws.age_days != null ? `${ws.age_days}d` : ''));
         if (ws.boards?.length) row.append(el('span', 'ws-board', ws.boards[0]));
         wsBlock.append(row);
+        if (ws.latest_update?.summary) {
+          const lu = ws.latest_update;
+          const firstName = (lu.author || '').split(' ')[0] || lu.author;
+          const agePart = lu.age_days != null ? `, ${lu.age_days}d` : '';
+          wsBlock.append(el('div', 'ws-update-line', `${lu.summary} · ${firstName}${agePart}`));
+        }
         for (const sub of ws.recent || []) {
           const subRow = el('div', 'ws-sub-row');
           if (sub.url) {
