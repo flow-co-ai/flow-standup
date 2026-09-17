@@ -165,7 +165,8 @@ function summarizeUpdate(rawHtml) {
   // Strip all HTML tags
   text = text.replace(/<[^>]+>/g, ' ');
 
-  // Decode common HTML entities and remove BOM
+  // Decode common HTML entities; strip only the leading BOM for now —
+  // inline BOMs (﻿) are Monday's mention terminators and must survive until after the loop.
   text = text
     .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
@@ -173,22 +174,46 @@ function summarizeUpdate(rawHtml) {
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
     .replace(/&nbsp;/g, ' ')
-    .replace(/﻿/g, '');
+    .replace(/^﻿+/, '');
 
-  // Normalize whitespace
-  text = text.replace(/[\r\n\t]+/g, ' ').replace(/\s{2,}/g, ' ').trim();
+  // Normalize whitespace — use [ \t] rather than \s so inline BOMs survive.
+  text = text.replace(/[\r\n\t]+/g, ' ').replace(/[ \t]{2,}/g, ' ').trim();
 
-  // Strip leading boilerplate (iterate until stable)
+  // Pre-scan: collect capitalized words immediately following plain-text @mentions
+  // (no BOM = non-Monday source). Used to strip no-BOM mention residue after the
+  // @word itself is removed (e.g. "@Ads Team here…" → after stripping "@Ads",
+  // "Team" is recognised as a display-name part and stripped too).
+  const mentionNameWords = new Set(
+    [...text.matchAll(/@\w+[ \t]+([A-Z]\w*)/g)].map(m => m[1])
+  );
+
+  // Strip leading boilerplate — whole tokens only (iterate until stable).
+  // Greeting rule: strip a greeting only when what immediately follows starts with
+  // an uppercase letter (a sentence that stands on its own). If the first word
+  // after the greeting is lowercase, the greeting is part of the phrase — keep it.
+  // @mention rule: Monday encodes display names as "@word word…﻿" (BOM-terminated).
+  // Without a BOM (plain-text sources) only the @word is stripped, then any
+  // immediately following word that is a known mention display-name part is also
+  // stripped (mentionNameWords set built above).
   let prev;
   do {
     prev = text;
-    text = text.replace(/^(?:Salam|Salaam)[,\s]*/i, '').trim();
-    text = text.replace(/^@\w+(?:\s+\w+){0,2}[,\s]*/i, '').trim();  // @mention name
-    text = text.replace(/^Context\.\s*/i, '').trim();
+    text = text.replace(/^(?:Salam|Salaam)[,\s]*(?=[A-Z@\d]|$)/, '').trim();
+    text = text.replace(/^(?:Hi|Hello)[,\s]*(?=[A-Z@\d]|$)/, '').trim();
+    const beforeMention = text;
+    text = text.replace(/^@\w+(?:[^﻿@\n]*?﻿)?[﻿,\s]*/i, '').trim();  // @mention ± BOM display name
+    if (text !== beforeMention && mentionNameWords.size > 0) {
+      const pat = [...mentionNameWords].map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+      text = text.replace(new RegExp(`^(?:${pat})[﻿,\\s]*`), '').trim();
+    }
+    text = text.replace(/^Context[:.]\s*/i, '').trim();
     text = text.replace(/^What\s+is\s+new\.\s*/i, '').trim();
     text = text.replace(/^New\s+on\s+[^.]{1,30}\.\s*/i, '').trim();
     text = text.replace(/^\d+\.\s*/, '').trim();                       // leading list number
   } while (text !== prev);
+
+  // Remove remaining inline BOMs and collapse any newly adjacent whitespace.
+  text = text.replace(/﻿/g, '').replace(/\s{2,}/g, ' ').trim();
 
   if (!text) return hasUrl ? 'link shared' : null;
 
