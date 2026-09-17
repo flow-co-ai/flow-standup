@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-17T17:53:03.013Z",
+  "generated_at": "2026-09-17T18:47:47.515Z",
   "date": "2026-09-17",
   "slug": "billy-doe",
   "name": "Billy Doe Meats",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 75,
   "status": "amber",
-  "verdict": "Billy Doe Meats drove a 5.36 ROAS on $1,494.11 Meta spend over 28 days, generating $8,009.23 in revenue from 39 purchases. The biggest movement is a 50% drop in purchases week-over-week, likely tied to the 6.96% spend pullback, though ROAS improved 31.61% suggesting the remaining spend is converting more efficiently.",
+  "verdict": "Billy Doe Meats drove a 5.36 ROAS on $1,494.11 Meta spend over 28 days, generating $8,009.23 in revenue across 39 purchases. The biggest movement is a 50% drop in purchases week-over-week, likely tied to the 6.96% spend pullback, though ROAS actually improved 31.61% in the same period, suggesting the remaining spend is converting more efficiently.",
   "windsor": {
     "totals": {
       "spend": 1494.11,
@@ -724,43 +724,43 @@
     "history_line": "Completed website work"
   },
   "performance": {
-    "generated_at": "2026-09-17T17:55:39.373Z",
+    "generated_at": "2026-09-17T18:49:44.316Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "ROAS holding at 5.36x but purchase volume collapse is the real threat.",
+    "verdict": "ROAS floor holding but purchase volume collapse signals conversion friction, not spend.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "3-day purchase signal: 3 purchases Sep 14–16 vs 3 purchases Sep 11–13 — volume flat at near-zero; 28-day average is 1.4 purchases/day, last 3 days average 1.0.",
+        "text": "3-day purchase signal: Sep 14–16 = 0+3+0 = 3 purchases vs Sep 11–13 = 2+0+1 = 3 — volume flat at floor; 28-day ROAS 5.36x holds but on only 39 purchases across 45 days.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
-        "priority": 1,
-        "text": "50% purchase drop week-over-week with spend down only 6.96%; daily spend ~$60 is consistent but producing 0 purchases on Sep 14 and Sep 16 — revenue conversion is unreliable, not spend-starved.",
+        "priority": 2,
+        "text": "OVERDUE: Funnel test (100%-off code) and UTM tracking were due Aug 31 — still open; without UTM live, purchase attribution via Shopify remains unreliable across all campaigns.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "SOW overdue Aug 31: Funnel test closed + UTM live (Ads — Meta) — open conversion test (code ihbp8pmtn8) has no confirmed close date; attribution gap continues.",
+        "text": "OVERDUE: Pre-launch gate (Admin) and Platform ownership audit (CRM) both missed Aug 31 deadline — blocking renewal-phase go-live and attribution integrity.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 2,
-        "text": "SOW overdue Aug 14/Aug 31: Live-cooking event (Video/Content), Pre-launch gate (Admin), and Platform ownership audit (CRM) all unresolved — 3 blockers past due by 17+ days.",
+        "text": "OVERDUE: Aug 14 live-cooking event content (Video/Content) has no completed record — a planned acquisition asset is missing from the renewal-phase creative pool.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F5",
         "priority": 3,
-        "text": "GBP actions dropped 48.45% week-over-week; last 3 series days show zero GBP actions (Sep 14–16) vs 14–27/day prior week — organic demand signal is weakening alongside paid.",
+        "text": "GBP actions dropped 48.45% week-over-week and read zero for Sep 14–16 — 3 consecutive dark days on a profile averaging 27 actions/day; likely a data pull failure or profile issue.",
         "confidence": "probable",
         "channel": "gbp"
       }
@@ -769,34 +769,33 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Close ihbp8pmtn8 funnel test and activate UTM tracking; purchases are unmeasurable without it.",
+        "text": "Close funnel test and activate UTM parameters immediately; every purchase report is unreliable until this is live.",
         "cites": [
-          "F3",
           "F2"
         ],
-        "monday_item_name": "Close Funnel Test UTM Live",
-        "monday_update": "The /halal-subscribe conversion test (code ihbp8pmtn8) has no confirmed close date and UTM tracking is not live — this is a SOW milestone that was due Aug 31. Without it, purchase attribution through Meta's 7-day-click window cannot be reconciled against Shopify, and the 50% purchase drop (7d) cannot be diagnosed as ads or funnel. Action: Khurram closes the test, confirms UTM parameters are firing on all purchase events, and reports result to Nacer. Success check: Windsor shows UTM-tagged purchases within 3 days of go-live, by Sep 20."
+        "monday_item_name": "Close funnel test, UTM live",
+        "monday_update": "The 100%-off conversion test (code ihbp8pmtn8) and UTM tracking were due Aug 31 and remain open, per F2. Every Shopify purchase number reported since then carries unknown attribution error. Khurram to close the test, confirm UTM firing on all Meta ad URLs, and verify Windsor is receiving tagged sessions. Success check: Windsor shows UTM-sourced sessions matching Meta click volume within 20% by 2026-09-20."
       },
       {
         "id": "S2",
-        "type": "creative_refresh",
-        "text": "Inject new real-footage creative into BWS - Sales - Muslims ($844.99 spend); purchase rate has collapsed despite stable spend.",
+        "type": "watch",
+        "text": "Watch GBP profile for 3 more days; if actions remain zero through Sep 19, escalate as a platform or verification issue.",
         "cites": [
-          "F1",
-          "F2"
+          "F5"
         ],
-        "monday_item_name": "Refresh Muslims Campaign Creative",
-        "monday_update": "BWS - Sales - Muslims has consumed $844.99 of the 28-day budget and is the dominant spend line, yet the last 3 days produced 1 purchase on $178.75 spend (~$178/purchase vs the 28-day average implied ROAS of 5.36x). Flat spend with collapsing purchases is the fatigue pattern documented from the test phase (frequency burnout). Action: pull one new real-facility or product creative from the Haney July 21 Drive folder and rotate into this campaign. Success check: purchase rate returns above 1.4/day over a 3-day window by Sep 24."
+        "monday_item_name": "GBP dark days — watch",
+        "monday_update": "GBP actions read zero on Sep 14, 15, and 16 against a 45-day average of ~27 actions/day, per F5. This is a 3-day confirmed gap that may indicate a profile suspension, a data pull failure, or a Google verification lapse. No paid action is warranted yet. Re-check on 2026-09-20: if actions remain at zero, treat as a platform fix (P1) and notify Nacer."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions recovery; if zero-action streak extends past Sep 20, escalate as organic demand drop.",
+        "text": "Hold spend at ~$55/day; do not scale BWS-Sales-Muslims ($844.99 of 28d spend) until UTM and funnel test are resolved.",
         "cites": [
-          "F5"
+          "F1",
+          "F2"
         ],
-        "monday_item_name": "Watch GBP Actions Sep 20",
-        "monday_update": "GBP actions fell 48.45% week-over-week and the last 3 series days (Sep 14–16) show zero logged actions, down from 14–47/day earlier in the series. This could be a data lag or a genuine local-demand softening coinciding with the paid purchase collapse. No action taken this cycle. Re-check Sep 20: if GBP actions remain at or near zero for 6 consecutive days, escalate as a cross-channel demand finding and consider GBP post activity or a local promotion to reactivate."
+        "monday_item_name": "Hold spend, await UTM fix",
+        "monday_update": "The 28-day ROAS of 5.36x on $1,494.11 looks healthy, but purchase volume is at a floor (3 purchases across Sep 14–16) and attribution is compromised until UTM is live (F2). Scaling the top campaign before the funnel test closes risks inflating spend against untracked conversions. Maintain current ~$55/day until S1 is confirmed complete by 2026-09-20, then reassess scale eligibility."
       }
     ],
     "next_check": "2026-09-20"

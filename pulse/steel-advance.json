@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-17T17:54:51.146Z",
+  "generated_at": "2026-09-17T18:49:01.563Z",
   "date": "2026-09-17",
   "slug": "steel-advance",
   "name": "Advance Grinding Services",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) generated zero spend, leads, or clicks over the past 28 days, so all measurable activity came from organic sources. Google Business Profile drove 169 total actions including 126 direction requests and 3 calls, though Search Console impressions dropped 41.86% over the last 7 days versus the prior 7, signaling a notable decline in organic search visibility worth monitoring.",
+  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, suggesting campaigns are paused or inactive. The GBP profile remains the sole source of engagement, generating 169 total actions including 3 calls, 126 direction requests, and 40 website clicks across 25 active days, though Search Console impressions dropped 41.86% week-over-week, pointing to declining organic search visibility.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -555,43 +555,43 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-09-17T17:58:59.215Z",
+    "generated_at": "2026-09-17T18:53:12.666Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid is dormant; organic holding but Search visibility eroding fast.",
+    "verdict": "No paid spend active; GBP organic eroding — revenue channel risk rising.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend, leads, or clicks across all 28 days — Meta and Google Ads are fully dark; no efficiency to measure.",
+        "text": "All paid channels (Meta + Google) show $0 spend and 0 leads across the full 28-day window and every day in the 45-day series.",
         "confidence": "confirmed",
-        "channel": "meta+google"
+        "channel": "meta/google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "342 stub accounts unreconciled (blocker due 2026-08-31): Sales-i sync is blind to these accounts, stalling pipeline data integrity.",
+        "text": "4 CRM overdue milestones pre-date Aug 31: 342 stub reconciliation (blocker), Tom call list priority flag (Jul 28), 1st Directives (Jul 7), and dedup workbook delivery (Jul 31) — all unconfirmed complete.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Web/SEO root cause fix and AGS+Forte contact pull both overdue since 2026-08-31 — two separate blockers with no completed event recorded.",
+        "text": "2 additional Aug 31 blockers overdue: Web/SEO root cause fix not submitted; AGS + Forte contact pull for outreach not delivered.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
-        "priority": 3,
-        "text": "Search Console clicks collapsed to 0 on Sep 14–16 (3-day signal); prior 3-day avg was ~3/day; 7d delta -41.86% confirms the drop is structural, not noise.",
+        "priority": 2,
+        "text": "Search Console clicks dropped 41.86% week-over-week (133 clicks over 28 days); last 3 days show 9, 0, 0 — a confirmed 3-day declining signal vs prior 3-day average of ~3.7.",
         "confidence": "confirmed",
         "channel": "organic"
       },
       {
         "id": "F5",
-        "priority": 4,
-        "text": "GBP actions hit 0 for 3 consecutive days (Sep 14–16) after averaging ~5–10/day earlier in September; 407 impressions over 28 days but call rate only 0.74%.",
+        "priority": 3,
+        "text": "GBP actions zeroed for the last 3 days (Sep 14–16: 0, 0, 0) vs prior 3-day average of ~3.3, and 407 impressions total suggest very limited local search exposure with no paid amplification.",
         "confidence": "probable",
         "channel": "gbp"
       }
@@ -600,33 +600,34 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate 342 stub reconciliation to Ahmed immediately — blocker gates Sales-i sync for all affected accounts.",
+        "text": "Escalate 342 stub reconciliation blocker to Ahmed immediately — Sales-i pipeline is blind on all 342 accounts until resolved.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Reconcile 342 CRM Stub Accounts",
-        "monday_update": "The 342 stub accounts remain unreconciled as of 2026-09-17, past the 2026-08-31 deadline. Sales-i cannot sync Customer IDs to these accounts until the name-based match against the authoritative customer sheet is complete, breaking the inactivity automation pipeline. Success check: rollback file posted to Monday board and stub count confirmed at zero by 2026-09-24. Ahmed to confirm progress by EOD 2026-09-18."
+        "monday_item_name": "Unblock 342 Stub Reconciliation",
+        "monday_update": "The 342 stub accounts remain unreconciled as of Sep 17, 2026 — a confirmed blocker from the Aug 31 deadline. Sales-i cannot key on Customer ID for these accounts, meaning all inactivity signals and BPM automations are blind to them. Ahmed to provide a reconciliation status update and revised completion date by Sep 20. Success check: rollback file posted to Monday CRM board and stubs matched against the authoritative customer sheet."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Identify cause of Search Console 3-day zero-click signal; submit Web/SEO root cause fix overdue since Aug 31.",
+        "text": "Confirm Web/SEO root cause fix and AGS + Forte contact pull status — both are Aug 31 blockers with no completion record.",
         "cites": [
-          "F4",
-          "F3"
+          "F3",
+          "F4"
         ],
-        "monday_item_name": "AGS Search Visibility Root Cause Fix",
-        "monday_update": "Search Console clicks dropped to 0 for Sep 14–16 and the 7-day delta is -41.86% versus the prior period — this is a confirmed 3-day signal, not noise. The Web/SEO root cause finding and fix were due 2026-08-31 and remain unsubmitted. Action: Dev/SEO team to diagnose ranking or indexation issue and post a written root cause with fix plan to Monday by 2026-09-20. Success check: sc_clicks return to prior 3-day avg of ~3/day within 7 days of fix deployment."
+        "monday_item_name": "Clear Aug 31 SOW Blockers",
+        "monday_update": "Two Aug 31 blockers have no confirmed completion: the Web/SEO root cause identification and fix submission, and the AGS + Forte contact pull for outreach. Search Console clicks are down 41.86% week-over-week, which may be connected to the unresolved Web/SEO issue. Sohib to confirm status from the relevant team leads by Sep 19. Success check: both items marked complete with deliverable links on the Monday board."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions: 3 consecutive zero days (Sep 14–16) after 5–10/day norm — re-check at next run on Sep 20.",
+        "text": "Watch GBP actions and Search Console clicks over the next 3 days — both are at zero; confirm if Sep 14–16 dip is a weekend artifact.",
         "cites": [
+          "F4",
           "F5"
         ],
-        "monday_item_name": "Watch AGS GBP Action Drop",
-        "monday_update": "GBP actions fell to 0 for three consecutive days (Sep 14–16) after averaging 5–10/day earlier in September. This could reflect the same search visibility decline driving the Search Console drop, or a GBP profile issue. No action is taken this cycle — hypothesis grade only. Re-check on 2026-09-20: if actions remain at or near 0, escalate to a profile audit."
+        "monday_item_name": "Watch GBP + SC 3-Day Signal",
+        "monday_update": "GBP actions hit 0 for three consecutive days (Sep 14–16) and Search Console clicks were 9, 0, 0 over the same window. With zero paid spend amplifying organic, any further organic erosion becomes the sole lead source risk. Re-check on Sep 20 to determine if this is a weekend pattern or a sustained drop. If GBP actions remain at 0 and SC clicks stay below 3/day, escalate to an SEO fix action."
       }
     ],
     "next_check": "2026-09-20"

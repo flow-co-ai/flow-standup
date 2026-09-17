@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-17T17:54:22.670Z",
+  "generated_at": "2026-09-17T18:48:25.642Z",
   "date": "2026-09-17",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "The biggest movement this period is CPL dropping 45.11% week-over-week while leads rose 30.77%, both driven by improved efficiency in the \"Leads - August Re-Launch\" Meta campaign ($1,715.79 spend, 47 leads at $36.51 CPL). Note that Meta/Windsor reports 47 leads over 28 days while GHL shows only 39 contacts, and these figures are unreconciled.",
+  "verdict": "The biggest movement is CPL dropping 45.11% week-over-week while leads rose 30.77%, both driven by improved efficiency in the \"Leads - August Re-Launch\" Meta campaign, which is the sole active channel at $1,715.79 spend. Note that Meta reports 47 leads over 28 days while GHL shows only 39 contacts, and these figures are unreconciled.",
   "windsor": {
     "totals": {
       "spend": 1715.79,
@@ -736,81 +736,81 @@
     "history_line": "Facebook page restored & ads live · Meta Ads — New Video Ads marked Done · SEO update for May 2026 completed"
   },
   "performance": {
-    "generated_at": "2026-09-17T17:57:14.038Z",
+    "generated_at": "2026-09-17T18:51:19.456Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "CPL breakthrough is real, but 5-day blackout and intake leak dilute it.",
+    "verdict": "CPL win is real, but zero-opp pipeline and 3 blockers threaten continuity.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "CPL fell 45% WoW to ~$36.51 and leads rose 30.77%, but spend dropped 28% — efficiency gain may partly reflect underspend, not pure optimization.",
-        "confidence": "probable",
+        "text": "CPL fell 45.11% week-over-week to ~$36.51/28d avg while leads rose 30.77% — confirmed efficiency gain in August Re-Launch campaign.",
+        "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3-day signal (Sep 14–16): 17 leads at $307.23 spend vs prior 3 days (Sep 11–13): 0 leads, $0 spend — 5-day zero-spend blackout (Sep 9–13) broke the campaign's momentum window.",
+        "text": "⛔ Extension with Marwan unsigned past 2026-08-31 deadline; contract is month-to-month lapsed, gating next 3 months of work.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "⛔ Extension with Marwan overdue since Aug 31 — engagement is month-to-month lapsed; all scaling decisions are gated until contract is signed.",
+        "text": "⛔ SMS automation and Zoho Voice access both overdue since 2026-08-31; contact rate is named bottleneck, yet CRM tooling remains unresolved.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 2,
-        "text": "⛔ SMS automation and Zoho Voice access both overdue since Aug 31 — 0 CTC calls placed in 45-day series; leads arriving with no automated follow-up confirms intake leak, not an ads problem.",
+        "text": "GHL shows 0 opportunities created from 39 contacts over 28 days — leads arriving but no pipeline formed, indicating an intake leak, not an ads problem.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "crm"
       },
       {
         "id": "F5",
-        "priority": 4,
-        "text": "GHL shows 39 contacts vs Meta's 47 leads over 28 days — 8-lead gap is unreconciled; GHL also shows 0 opportunities created, meaning no leads are entering the pipeline.",
+        "priority": 2,
+        "text": "5-day spend blackout Sep 9–13 (5 consecutive zero-spend days) preceded the current recovery; 17 leads lost vs prior-week pace at ~$36 CPL.",
         "confidence": "confirmed",
-        "channel": "crm"
+        "channel": "meta"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Hold budget at current ~$43.89/day and monitor CPL over next 3 days; do not scale until extension is signed.",
+        "type": "fix",
+        "text": "Fix GHL intake: map Meta leads to opportunities; 39 contacts and 0 opps is a broken pipeline, not a volume problem.",
         "cites": [
-          "F1",
+          "F4",
           "F3"
         ],
-        "monday_item_name": "Watch Meta CPL — Contract Gate",
-        "monday_update": "Meta CPL dropped to $36.51 and leads rose 30.77% WoW, but the engagement extension with Marwan has been lapsed since Aug 31. No budget increase is defensible until the contract is signed. Re-check on Sep 20 — if CPL holds below $40 and extension is confirmed, a scale move becomes actionable."
+        "monday_item_name": "Fix GHL Lead-to-Opp Mapping",
+        "monday_update": "Meta delivered 47 leads over 28 days but GHL shows 0 opportunities created from 39 contacts — the pipeline is broken at intake. Action: audit GHL workflow to ensure every new Meta contact auto-creates an opportunity; cross-check with Andrew's Zoho setup. SMS automation (overdue since Aug 31) must also be live to close the speed-to-contact gap. Success check: at least 1 opportunity created per 2 contacts by 2026-09-24."
       },
       {
         "id": "S2",
-        "type": "fix",
-        "text": "Escalate SMS automation and Zoho Voice access blockers to Nacer immediately — 0 calls placed in 45 days confirms zero intake follow-up.",
+        "type": "scale",
+        "text": "Raise August Re-Launch daily budget +20% (from ~$44/day to ~$53/day) on confirmed CPL efficiency at $36.51.",
         "cites": [
-          "F4",
+          "F1",
           "F5"
         ],
-        "monday_item_name": "Fix CRM Intake — SMS + Zoho Voice",
-        "monday_update": "Both SMS automation and Zoho Voice access are overdue since Aug 31, and the 45-day series shows 0 CTC calls placed against 47 Meta leads. GHL shows 0 opportunities created, meaning every lead is entering a dead pipeline. Nacer to confirm access and automation live status by Sep 20; success check is at least 1 CTC call placed and 1 opportunity created in GHL within 72 hours of fix."
+        "monday_item_name": "Scale Re-Launch Budget +20%",
+        "monday_update": "CPL dropped 45.11% week-over-week while leads rose 30.77%, confirming the August Re-Launch campaign is working. The 5-day blackout (Sep 9–13) cost approximately 17 leads at ~$36 CPL each. Raise the daily budget from ~$44 to ~$53 (+20%) to recover lost volume while efficiency holds. Success check: CPL remains below $50 and leads average ≥3/day by 2026-09-24."
       },
       {
         "id": "S3",
-        "type": "fix",
-        "text": "Reconcile 8-lead gap (Meta 47 vs GHL 39) — identify whether missing leads are form errors, webhook failures, or duplicate filtering.",
+        "type": "watch",
+        "text": "Watch contract status: if Marwan extension is unsigned by 2026-09-24, flag for Sohib — all scaling is contingent on renewal.",
         "cites": [
-          "F5"
+          "F2"
         ],
-        "monday_item_name": "Fix Meta→GHL Lead Sync Gap",
-        "monday_update": "Meta/Windsor reports 47 leads over 28 days while GHL shows only 39 contacts — an 8-lead discrepancy that is unreconciled. Hamza/Hamdan to pull the Meta lead form delivery log and compare against GHL contact timestamps to identify where the 8 leads dropped. Success is a confirmed match rate of 100% or a documented reason for each gap, by Sep 20."
+        "monday_item_name": "Watch: Marwan Extension Deadline",
+        "monday_update": "The engagement extension with Marwan has been overdue since 2026-08-31 and gates the next 3 months of work. No paid scaling decision is irreversible until the contract is signed. Sohib to confirm status with Marwan by 2026-09-24; if still unsigned, pause any further budget increases and escalate."
       }
     ],
-    "next_check": "2026-09-20"
+    "next_check": "2026-09-24"
   }
 }

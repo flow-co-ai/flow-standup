@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-17T17:54:33.098Z",
+  "generated_at": "2026-09-17T18:48:34.378Z",
   "date": "2026-09-17",
   "slug": "liferun",
   "name": "Liferun",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 63,
   "status": "amber",
-  "verdict": "The biggest movement this week is a 35% drop in leads and a 30.17% rise in CPL week-over-week, likely driven by a 15.39% pullback in spend and a near-total collapse in GBP actions (down 95% 7d vs prior 7d). Google Ads also produced 0 conversions on $501.02 in spend over 28 days, making it a non-contributing channel that warrants immediate review.",
+  "verdict": "The biggest movement this period is a 35% drop in leads over the last 7 days alongside a 30.17% rise in CPL, likely driven by a 34.32% pullback in Google Ads spend and a near-total collapse in GBP-driven actions (down 95%). Meta remains the sole lead-generating channel at 133 leads on $1,691.77 spend, while Google Ads delivered 0 conversions on $501.02, suggesting budget reallocation or campaign pausing is hurting overall volume efficiency.",
   "windsor": {
     "totals": {
       "spend": 2192.79,
@@ -718,81 +718,80 @@
     "history_line": "Webhook fixed — orders syncing · Monthly Stripe checkout built & tested · HANDOFF + Meta Ads Campaign Restructure marked Done"
   },
   "performance": {
-    "generated_at": "2026-09-17T17:57:42.368Z",
+    "generated_at": "2026-09-17T18:51:47.237Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "CPL crisis is real; Google dead weight and GBP collapse compound Meta's efficiency loss.",
+    "verdict": "Google zero conversions confirms budget waste; Meta CPL rising — no safe scale yet.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "CPL rose 30.17% week-over-week to ~$16.49 average; 3-day lead total (Sep 14–16) is 16 vs 22 prior 3 days — efficiency and volume both deteriorating together.",
+        "text": "CPL rose 30.17% in 7d; Meta delivered 133 leads at $16.49 CPL (28d) but 3-day lead avg (Sep 14-16: 4,8,4=5.3/day) is below prior 3-day (Sep 11-13: 6,4,0=3.3/day) — short recovery, no confirmed turnaround.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
-        "priority": 2,
-        "text": "5 OVERDUE SOW milestones (earliest Jul 20): Stripe QA, GHL gap closure, end-to-end stack re-test, paid landing pages, and UGC batch — all blocking scale and attribution.",
+        "priority": 1,
+        "text": "Google Ads spent $501.02 over 28 days and recorded 0 conversions; 7d spend dropped 34.32% yet results were already zero — spend is pure waste regardless of budget level.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "google"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Google Ads has spent $501.02 over 28 days and recorded 0 conversions and only 109 clicks — confirmed non-contributing channel; $7.95–$31.93/day leaking with zero return.",
+        "text": "5 overdue milestones (GHL build gaps, end-to-end stack re-test, paid landing pages, UGC batch) unresolved as of 2026-08-31 — scaling is blocked per SOW and attribution is untrusted.",
         "confidence": "confirmed",
-        "channel": "google_ads"
+        "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions collapsed 95% week-over-week (54 actions over 28 days, last 3 days show 0 each); call rate 0.99% — organic local intent has effectively vanished.",
-        "confidence": "confirmed",
-        "channel": "gbp"
+        "text": "GHL shows 154 opportunities created vs 133 ad leads (28d) but 0 appointments and 0 won — intake is receiving leads but pipeline is converting nothing, pointing to a CRM/follow-up process gap, not an ads problem.",
+        "confidence": "probable",
+        "channel": "CRM"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 154 opportunities created but 0 won and 0 appointments in 28 days — leads are arriving but pipeline intake is not converting, pointing to a CRM/intake process leak, not an ads problem.",
-        "confidence": "probable",
-        "channel": "ghl"
+        "text": "GBP actions collapsed 95% in 7d (54 total over 28d, last 7 days near zero); search clicks hit 0 in 7d — organic discovery has effectively stopped.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "kill",
-        "text": "Pause Google Ads entirely — $501.02 spent, 0 conversions, 0 qualified leads over 28 days confirms dead weight.",
+        "text": "Pause Google Ads entirely: $501.02 spent over 28 days with 0 conversions is confirmed waste.",
         "cites": [
-          "F3"
+          "F2"
         ],
-        "monday_item_name": "Pause Google Ads — Zero ROI",
-        "monday_update": "Google Ads has spent $501.02 over the past 28 days and produced exactly 0 conversions and 0 leads across 109 clicks. Pause all Google Ads campaigns immediately and redirect the ~$10–$82/day in daily Google spend to Meta, where all 133 leads over the same period originated. Success check: Meta daily spend increases by the reallocated amount by Sep 19, and CPL returns below $13 (its pre-decline baseline) within 7 days. Re-evaluate Google only after paid landing pages are live (overdue SOW milestone)."
+        "monday_item_name": "Pause Google Ads — 0 Conversions",
+        "monday_update": "Google Ads has spent $501.02 across 28 days and recorded zero conversions on 109 clicks, with a 7d spend of ~$97 also returning nothing. Pause all Google campaigns immediately to stop confirmed spend leakage. Success check: zero Google spend on next daily report by 2026-09-18. Revisit only after paid landing pages are live (overdue SOW milestone) and pixel/conversion tracking is verified end-to-end."
       },
       {
         "id": "S2",
-        "type": "budget_shift",
-        "text": "Shift Google's ~$18/day average to Meta — keep total spend flat, improve CPL by concentrating budget on the only working channel.",
+        "type": "fix",
+        "text": "Escalate 5 overdue SOW milestones to Nacer; no paid scale is defensible until end-to-end stack is verified.",
         "cites": [
-          "F1",
-          "F3"
+          "F3",
+          "F4"
         ],
-        "monday_item_name": "Shift Google Budget to Meta",
-        "monday_update": "Meta is the sole lead-generating channel (133 leads / 28 days at $16.49 CPL), while Google has generated 0 leads on $501.02. Move Google's average daily allocation (~$18/day) into Meta to defend lead volume without increasing total spend. Confirm the shift by Sep 19. Success is measured by Meta daily spend rising to ~$90–$95/day and CPL trending back toward $12–$13 by Sep 24 — re-check at that date."
+        "monday_item_name": "Escalate Overdue SOW Milestones",
+        "monday_update": "Five milestones are overdue (oldest: Stripe QA July 20; most recent: GHL build, stack re-test, paid landing pages, UGC batch — all August 31). GHL shows 0 appointments and 0 won opportunities from 154 created opps, meaning the pipeline cannot be trusted for scale decisions. Nacer to confirm completion status on all 5 items no later than 2026-09-19. Success check: each milestone marked done with a verification Loom or written confirmation in Monday."
       },
       {
         "id": "S3",
-        "type": "fix",
-        "text": "Escalate GHL intake leak: 154 opportunities, 0 won, 0 appointments — confirm pipeline stages and automation triggers are firing correctly.",
+        "type": "watch",
+        "text": "Watch Meta CPL: 3-day avg is 5.3 leads/day at rising CPL — hold budget, re-check Sep 20.",
         "cites": [
-          "F5",
-          "F2"
+          "F1"
         ],
-        "monday_item_name": "Fix GHL Pipeline Intake Leak",
-        "monday_update": "GHL shows 154 opportunities created with 0 won and 0 appointments booked in 28 days — leads are entering the CRM but no downstream action is occurring. This must be diagnosed alongside the overdue end-to-end stack re-test (due Aug 31, still open): check that automation triggers, appointment booking links, and follow-up sequences are firing on new contacts. Success is confirmed when at least one end-to-end test contact moves from created opportunity to appointment within the current workflow, verified by Nacer/Ahmed by Sep 24."
+        "monday_item_name": "Watch Meta CPL — Sep 20 Check",
+        "monday_update": "Meta CPL rose 30.17% in the last 7 days and the 3-day lead average (Sep 14-16) sits at 5.3 leads/day with no confirmed recovery. Hold the current Meta budget (approx $85/day) and do not scale until CPL stabilises back toward the 28-day baseline of $16.49. Re-check on 2026-09-20 with the next 3-day window. If CPL holds flat or falls by then, a modest scale of up to 15% daily budget is defensible."
       }
     ],
-    "next_check": "2026-09-24"
+    "next_check": "2026-09-20"
   }
 }

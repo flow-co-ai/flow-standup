@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-17T17:54:00.541Z",
+  "generated_at": "2026-09-17T18:48:00.793Z",
   "date": "2026-09-17",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "GBP actions are the only measurable activity this period, with 42 total actions (2 calls, 31 direction requests, 9 web clicks) across 24 active days, but the biggest movement is a sharp 86.67% drop in GBP engagement over the last 7 days versus the prior 7 days, likely driven by reduced profile visibility or seasonal demand softening. Paid channels (Meta and Google Ads) show zero spend and zero leads for the 28-day window, meaning all lead-gen activity is currently organic.",
+  "verdict": "GBP engagement is the only active channel, generating 42 total actions (2 calls, 31 direction requests, 9 web clicks) over 28 days, but the biggest movement is a sharp 86.67% drop in GBP actions over the last 7 days versus the prior 7 days, likely driven by a significant fall in impressions given the profile averaged only 328 over the full period. Paid channels (Meta and Google Ads) show zero spend, zero leads, and zero clicks, meaning all organic GBP activity is the sole source of engagement for Healing Helps right now.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -599,63 +599,62 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-09-17T17:56:23.238Z",
+    "generated_at": "2026-09-17T18:50:32.167Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid is fully dark; only GBP sustains signal, now collapsing.",
+    "verdict": "GBP is the only signal; its 87% collapse demands investigation before any paid activation.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend and zero leads across all 28 days — no CPL exists because no paid channel is active.",
+        "text": "Zero paid spend, zero leads, zero CPL across all 28 days — no paid channel is active; GBP is the sole engagement source.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "meta+google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions dropped 86.67% last 7d vs prior 7d; last 3 days show 0 actions vs avg 4.3 in prior 3 days.",
+        "text": "GBP actions collapsed 86.67% in the last 7 days vs prior 7; last 3 days (Sep 14–16) show 0, 0, 0 actions vs 1, 0, 1 prior — a confirmed 3-day zero run.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "328 GBP impressions over 24 days yielded only 2 calls (call_rate 0.006) — profile conversion is structurally weak.",
-        "confidence": "probable",
-        "channel": "gbp"
+        "text": "GA4 sessions rose 18.92% week-over-week (191 sessions, 163 users over 28 days) with 0 conversions — website traffic is arriving but converting nothing.",
+        "confidence": "confirmed",
+        "channel": "ga4"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GA4 sessions +18.92% (last 7d: ~28 sessions on 2026-09-01 spike visible), but GA4 conversions read zero — tracking not firing.",
+        "text": "Search clicks flat at 0% delta (40 clicks, 4,383 impressions over 28 days); click-through rate is ~0.91%, suggesting weak listing appeal or irrelevant queries.",
         "confidence": "probable",
-        "channel": "ga4"
+        "channel": "search"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Fix GA4 conversion event — sessions exist (~191 over 28d) but zero conversions tracked; confirm goal fires on form submit.",
+        "text": "Audit GBP profile for suspension, edits under review, or category changes causing the 3-day zero-action streak.",
         "cites": [
-          "F4"
+          "F2"
         ],
-        "monday_item_name": "Fix GA4 Conversion Tracking",
-        "monday_update": "GA4 recorded 191 sessions and 163 users over 28 days but zero conversions, meaning the conversion event is not firing. Audit the form-submit or contact trigger in GA4/GTM and confirm it fires on the thank-you step. Success = at least one conversion event recorded within 3 days of the fix. Re-check by 2026-09-20."
+        "monday_item_name": "GBP Zero-Action Audit",
+        "monday_update": "GBP actions hit 0 for three consecutive days (Sep 14–16) after averaging ~2.3 actions/day earlier in the period, a confirmed 86.67% weekly drop. Check the Healing Helps Therapy PLLC profile (ID: locations/9257180210135267024) for pending edits, profile suspension notices, or category changes that could suppress impressions. Success check: GBP actions return to ≥1/day within 7 days of any fix applied. Re-check by 2026-09-24."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GBP actions daily through 2026-09-20; if 3-day total stays at 0, escalate profile visibility review.",
+        "text": "Monitor GA4 conversion rate; 191 sessions with 0 conversions over 28 days warrants a form/tracking check before paid launch.",
         "cites": [
-          "F2",
           "F3"
         ],
-        "monday_item_name": "Watch GBP Action Recovery",
-        "monday_update": "GBP actions collapsed 86.67% last 7 days and the last 3 days recorded 0 actions against a prior 3-day average of 4.3. No paid activity exists to compensate. Monitor the daily GBP action count; if the 3-day sum remains at or near 0 by 2026-09-20, escalate to a GBP profile audit (category, photos, Q&A freshness). Success = 3-day sum returns above 5 actions."
+        "monday_item_name": "GA4 Conversion Rate Watch",
+        "monday_update": "191 sessions and 163 users arrived over 28 days but produced 0 recorded conversions, meaning any paid spend activated now would land in an unmeasured funnel. Verify contact form submissions and phone-call tracking are firing correctly in GA4 before committing paid budget. Success check: at least 1 confirmed conversion event recorded in GA4. Re-check by 2026-09-24."
       }
     ],
-    "next_check": "2026-09-20"
+    "next_check": "2026-09-24"
   }
 }

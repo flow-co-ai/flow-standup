@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-17T17:54:57.068Z",
+  "generated_at": "2026-09-17T18:49:05.680Z",
   "date": "2026-09-17",
   "slug": "steel-ohare",
   "name": "O'Hare Precision Metals",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "GBP engagement dropped 48% week-over-week across profiles, with total 28-day actions of 130 driven almost entirely by directions (88) and web clicks (40) rather than calls (only 2), and both Precision Ground Metals, Inc and Precision Ground Bars are flagged for zero calls despite meaningful impressions (107 and 294 respectively), suggesting those profiles may have a call button or tracking issue worth investigating.",
+  "verdict": "GBP engagement dropped 48% week-over-week across all three profiles, with total 28-day actions of 130 (88 directions, 2 calls, 40 web clicks), likely driven by seasonal or algorithmic visibility loss given that impressions were still recorded on 24-26 days per profile. Precision Ground Metals, Inc and Precision Ground Bars are flagged as concerns, generating zero calls despite 107 and 294 impressions respectively, suggesting their GBP listings may have conversion friction worth investigating.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -580,80 +580,79 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-09-17T17:59:24.964Z",
+    "generated_at": "2026-09-17T18:53:36.742Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "No paid spend active; organic signals now deteriorating — GBP and search both falling.",
+    "verdict": "No paid spend active; organic erosion and 6 overdue SOW blockers demand priority.",
     "findings": [
       {
         "id": "F1",
-        "priority": 1,
-        "text": "Zero paid spend across all 45 days in series. No Meta, no Google Ads — $0 in, $0 out. CPL undefined because no paid channel is live.",
+        "priority": 2,
+        "text": "4 CRM milestones overdue since Jul 7–Jul 31: 1st Directives, Tom call list, dedup workbook, 126 accounts — no completion event recorded.",
         "confidence": "confirmed",
-        "channel": "meta,google_ads"
+        "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3 overdue CRM blockers since Jul 7: 1st Directives, Tom call list, and dedup workbook (447 groups) unconfirmed complete as of 2026-09-17.",
+        "text": "342 stub reconciliation (blocker, due Aug 31) and Web/SEO root-cause fix (blocker, due Aug 31) both unresolved — 17 days overdue.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "2 more overdue blockers Aug 31: 342 stub reconciliation (CRM) and Web/SEO root cause fix unsubmitted; AGS + Forte contacts not pulled (Outreach).",
+        "text": "AGS + Forte outreach contact pull (blocker, due Aug 31) unresolved — cold email pipeline cannot start without it, 17 days overdue.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions dropped 48% week-over-week; last 3 days show 0 actions vs prior 3-day avg of 4.3. Precision Ground Metals (107 impressions) and Precision Ground Bars (294 impressions) have 0 calls — call button or tracking likely broken.",
+        "text": "GBP actions fell 48% week-over-week; last 3 days (Sep 14–16) show 0 actions vs prior 3-day avg of 2 — confirmed drop, not noise.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "GBP"
       },
       {
         "id": "F5",
         "priority": 3,
-        "text": "Search clicks fell 53.9% week-over-week; last 3 days (Sep 14–16) averaged 6 clicks vs prior 3-day avg of 14.7, confirming a sustained 3-day decline, not noise.",
+        "text": "Search clicks down 53.9% week-over-week; last 3 days (Sep 14–16) average 6 clicks vs prior 3-day avg of ~11 — organic visibility declining.",
         "confidence": "confirmed",
-        "channel": "search"
+        "channel": "Search Console"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit call button and call tracking on Precision Ground Metals and Precision Ground Bars GBP profiles — 0 calls against 401 combined impressions.",
+        "text": "Escalate 342 stub reconciliation and Web/SEO root-cause fix — both are confirmed blockers 17 days past due.",
         "cites": [
-          "F4"
+          "F2"
         ],
-        "monday_item_name": "Fix GBP Call Tracking PGM/PGB",
-        "monday_update": "Precision Ground Metals (107 impressions, 0 calls) and Precision Ground Bars (294 impressions, 0 calls) are flagged with zero call rate despite 28 days of visibility. Audit each profile's call button, verify the tracked phone number routes correctly, and confirm call-click events are firing. Success = at least 1 verified tracked call per profile within 7 days of fix; re-check 2026-09-24."
+        "monday_item_name": "Clear Aug 31 SOW Blockers",
+        "monday_update": "The 342 stub reconciliation and Web/SEO root-cause fix were both due Aug 31 and have no recorded completion event as of Sep 17. Ahmed and the Dev team must post rollback-ready batch files and the named root cause to the Monday board immediately. Success is confirmed when both items are marked complete with deliverable links by Sep 20. Re-check Sep 20."
       },
       {
         "id": "S2",
-        "type": "watch",
-        "text": "Watch search clicks recovery: if 7-day avg stays below 10 clicks by Sep 24, escalate to SEO or GSC investigation.",
+        "type": "fix",
+        "text": "Investigate Precision Ground Metals and Precision Ground Bars GBP listings — 0 calls from 401 combined impressions over 28 days.",
         "cites": [
-          "F5"
+          "F4"
         ],
-        "monday_item_name": "Watch Search Click Decline",
-        "monday_update": "Search clicks dropped 53.9% week-over-week with the last 3 days (Sep 14–16) averaging only 6 clicks versus a prior 3-day average of 14.7. No paid search is live to compensate. Monitor GSC for ranking drops or crawl errors. If the 7-day average has not recovered above 10 clicks by 2026-09-24, escalate to an SEO audit."
+        "monday_item_name": "GBP Call Friction Fix",
+        "monday_update": "Precision Ground Metals generated 0 calls from 107 impressions and Precision Ground Bars generated 0 calls from 294 impressions over the last 28 days. Audit both listings for missing or incorrect phone numbers, call button placement, and category accuracy. Success is a confirmed click-to-call event appearing in GBP Insights within 14 days of the fix. Re-check Oct 1."
       },
       {
         "id": "S3",
-        "type": "fix",
-        "text": "Unblock the 3 Aug 31 SOW blockers (342 stubs, Web/SEO root cause, AGS+Forte contacts) before any paid activation — pipeline integrity depends on them.",
+        "type": "watch",
+        "text": "Watch search clicks recovery — currently averaging 6/day over last 3 days vs prior avg of 11; re-check Sep 20.",
         "cites": [
-          "F2",
-          "F3"
+          "F5"
         ],
-        "monday_item_name": "Clear Aug 31 SOW Blockers",
-        "monday_update": "Three deliverables passed their Aug 31 deadline with no confirmed completion: 342 stub account reconciliation (blocks Sales-i sync), Web/SEO root cause identification, and AGS + Forte contact list pull for outreach. These gate downstream CRM automation and lead intake integrity. Each owner (Ahmed/Dev 2, SEO lead, Outreach lead) should post a status update or completion file to the Monday board by 2026-09-19. Re-check all three at 2026-09-24."
+        "monday_item_name": "Search Click Recovery Watch",
+        "monday_update": "Search clicks dropped 53.9% week-over-week with the last 3 days (Sep 14–16) averaging 6 clicks versus a prior 3-day average of roughly 11. This may be tied to the unresolved Web/SEO root-cause blocker (F2). No action is warranted until the SEO fix is submitted and 3 days of post-fix data are available. Re-check Sep 20."
       }
     ],
-    "next_check": "2026-09-24"
+    "next_check": "2026-09-20"
   }
 }

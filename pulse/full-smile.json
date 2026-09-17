@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-17T17:53:55.998Z",
+  "generated_at": "2026-09-17T18:47:56.074Z",
   "date": "2026-09-17",
   "slug": "full-smile",
   "name": "Full Smile",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 32,
   "status": "orange",
-  "verdict": "The biggest movement this period is a 94.74% drop in leads over the last 7 days, likely driven by at least one zero-spend day flagged in the account, which would have cut Meta delivery and caused the CPL to spike 1,272.33%. Top campaign \"BWS - Instant Leads - Awareness\" led spend at $355.36, but the 28d total of 77 leads (Meta/Windsor) vs. 79 opportunities (GHL) are unreconciled.",
+  "verdict": "The biggest movement this period is a 94.74% drop in leads over the last 7 days, likely driven by at least one zero-spend day flagging reduced Meta delivery, which also pushed CPL up 1,272.33% week-over-week. Lead volume shows a minor discrepancy between sources (77 from Meta vs. 79 opportunities in GHL) and both are active, so these figures are unreconciled.",
   "windsor": {
     "totals": {
       "spend": 662.21,
@@ -781,79 +781,78 @@
     "history_line": "OpenDental sync completed · Meta/LSA campaigns paused per client · GHL tasks completed pending go-live approval"
   },
   "performance": {
-    "generated_at": "2026-09-17T17:56:06.593Z",
+    "generated_at": "2026-09-17T18:50:13.531Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Spend halted Sep 12–13 and Sep 16; leads dead 6 days straight — confirm before declaring trend.",
+    "verdict": "Zero-spend collapse, not fatigue — 5 overdue milestones now risk the renewal.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero-spend days Sep 12, 13, and 16 caused leads to flatline: 0 leads across all 6 days Sep 11–16, CPL spiked 1,272% vs prior 7d.",
+        "text": "3 consecutive zero-spend days (Sep 14–16) killed leads to 0; spend fell to $0 on Sep 16, CPL spiked 1,272% WoW.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
-        "priority": 1,
-        "text": "3-day signal (Sep 14–16) vs prior 3 (Sep 11–13): spend $57.43 vs $32 but leads still 0 — delivery is not recovering even on spend-active days.",
-        "confidence": "confirmed",
-        "channel": "meta"
-      },
-      {
-        "id": "F3",
         "priority": 2,
-        "text": "3 overdue SOW milestones — phone-match attribution (Aug 7), sync/contact cleanup (Aug 14), and dashboard + renewal scoreboard (Aug 31) — all undelivered; client's stay/walk decision was tied to Aug 31 dashboard.",
+        "text": "5 SOW milestones overdue (Jul 23–Aug 31): phone-match attribution, sync cleanup, dashboard, and renewal scoreboard all undelivered.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
+        "id": "F3",
+        "priority": 2,
+        "text": "GHL shows 0 appointments and 0 won opportunities against 79 created — intake pipeline is not converting, not an ads problem.",
+        "confidence": "confirmed",
+        "channel": "GHL"
+      },
+      {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions dropped 63% in last 7d and show 0 for Sep 13–16; GBP had been averaging ~10 actions/day — organic dark alongside paid dark compounds the visibility loss.",
-        "confidence": "confirmed",
+        "text": "GBP actions dropped 63% WoW and show 0 for Sep 14–16, matching the spend blackout — organic signal also collapsed in that window.",
+        "confidence": "probable",
         "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 79 opportunities vs 77 Meta leads in 28d, but 0 appointments and 0 won — the intake funnel is receiving leads but converting none to chair, indicating an intake/CRM process leak.",
+        "text": "Pre-blackout CPL averaged ~$8.60/28d; 3-day prior window (Sep 11–13) had 0 leads on $37.85 spend — efficiency was already softening before zero-spend days.",
         "confidence": "probable",
-        "channel": "ghl"
+        "channel": "meta"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Diagnose and restore Meta campaign delivery — zero spend on Sep 12, 13, 16 must be explained before any budget decision.",
+        "text": "Immediately diagnose and restore Meta spend — 3 confirmed zero-spend days are bleeding the August scoreboard dry.",
         "cites": [
-          "F1",
-          "F2"
+          "F1"
         ],
-        "monday_item_name": "Restore Meta Delivery — Zero Spend",
-        "monday_update": "Meta spend hit $0 on Sep 12, 13, and 16, causing 0 leads across 6 consecutive days and a 1,272% CPL spike. Check campaign status, payment method, budget exhaustion, and policy flags in Ads Manager today. Success is confirmed when daily spend resumes at the ~$25–38 normal range and leads return within 3 days. Re-check Sep 20."
+        "monday_item_name": "Restore Meta Spend Now",
+        "monday_update": "Meta spend hit $0 on Sep 14, 15, and 16 — three confirmed zero-spend days that killed all lead volume and pushed CPL up 1,272% week-over-week. Check campaign budget exhaustion, payment method, account flags, or ad disapprovals and restore delivery today. Success check: confirmed non-zero spend and at least 1 lead recorded by Sep 18. This is the single most urgent action before any other optimization."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Escalate GHL intake leak: 79 opps created, 0 appointments booked — review pipeline stage logic and new intake hire process.",
+        "text": "Escalate 5 overdue SOW milestones to Nacer — dashboard and scoreboard gaps directly threaten the renewal decision.",
         "cites": [
-          "F5"
+          "F2",
+          "F3"
         ],
-        "monday_item_name": "GHL Intake Leak — 0 Appts",
-        "monday_update": "GHL shows 79 opportunities created in 28 days but 0 appointments and 0 won deals — leads are entering the CRM but nothing is being scheduled. Review pipeline stage transitions, automated follow-up triggers, and the new intake hire's workflow with Lily. This is not an ads problem; it is an intake/CRM process gap. Success is at least 5 appointments logged within 7 days of this fix. Re-check Sep 24."
+        "monday_item_name": "Clear 5 Overdue Milestones",
+        "monday_update": "Five milestones are past due (Jul 23–Aug 31): phone-match attribution gap, sync and contact cleanup, live dashboard, and the August scoreboard trusted for renewal. GHL shows 0 appointments and 0 won opportunities against 79 created contacts, meaning the client cannot verify a single new patient from Flow's work. Nacer must assign owners and set hard completion dates by Sep 19. Success check: dashboard live and scoreboard readable by Sep 24 — before the next check-in."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch Sep 14–16 spend recovery ($57.43 total) — if leads remain 0 by Sep 20, creative or account-level issue is confirmed.",
+        "text": "Watch 3-day CPL after spend restores — pre-blackout Sep 11–13 showed 0 leads on $37.85, suggesting efficiency was softening.",
         "cites": [
-          "F2",
-          "F4"
+          "F5"
         ],
-        "monday_item_name": "Watch: Meta Lead Recovery Sep 20",
-        "monday_update": "Spend on Sep 14–16 totalled $57.43 but generated 0 leads, suggesting the zero-spend days may have reset delivery learning or triggered a policy hold. GBP is also dark for the same window, removing organic support. If leads remain at 0 by Sep 20 despite restored spend, escalate to creative refresh and account audit. Re-check Sep 20."
+        "monday_item_name": "Watch CPL Post-Restore",
+        "monday_update": "Before the zero-spend blackout, Sep 11–13 produced 0 leads on $37.85 combined spend, hinting efficiency was already softening beyond the $8.60 28-day CPL baseline. Once spend is restored, monitor the 3-day CPL window closely. If CPL exceeds $15 (nearly 2× the 28d baseline) for three consecutive days after restoration, flag for creative refresh on the BWS - Instant Leads - Awareness campaign. Re-check by Sep 20."
       }
     ],
     "next_check": "2026-09-20"

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-17T17:55:00.879Z",
+  "generated_at": "2026-09-17T18:49:15.728Z",
   "date": "2026-09-17",
   "slug": "medstation",
   "name": "MedStation",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Leads surged 228.57% week-over-week to drive CPL down 67.75%, most likely fueled by the top Meta campaign \"MDST-WES-AWARE-WHTAPP\" ($86.04 spend), which anchored all 30 leads over the 28-day period at a $6.15 CPL. GBP actions dipped 31.58% in the same window, worth monitoring to ensure offline intent stays aligned with paid momentum.",
+  "verdict": "The standout movement is a 228.57% surge in leads over the past 7 days while CPL dropped 67.75%, almost certainly driven by the \"MDST-WES-AWARE-WHTAPP\" campaign which alone accounted for $86.04 of the $184.42 in 28-day spend. GBP actions softened 31.58% week-over-week, worth monitoring to ensure offline intent keeps pace with the paid lead volume.",
   "windsor": {
     "totals": {
       "spend": 184.42,
@@ -759,43 +759,43 @@
     "history_line": "Instagram restored after security block · GHL automations completed and verified · LSA document submitted for approval"
   },
   "performance": {
-    "generated_at": "2026-09-17T17:59:52.481Z",
+    "generated_at": "2026-09-17T18:54:02.233Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "CPL is excellent but 9 overdue milestones mean zero downstream conversion visibility.",
+    "verdict": "CPL efficiency is real but 9 overdue SOW milestones mean leads land nowhere.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "5 of 9 SOW milestones were due 2026-07-31 — pre-launch stack test, Como→GHL migration, GBP triage, Meta account/CAPI, and landing pages — all unconfirmed 48 days overdue.",
+        "text": "5 of 9 SOW milestones were due 2026-07-31 — pre-launch stack test, GHL migration, GBP triage, Meta account/CAPI, and landing pages — all unconfirmed complete, now 48 days overdue.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "4 additional milestones due 2026-08-31 to 2026-09-01 also unconfirmed: Meta lanes, Search campaigns, LSA verification, and reactivation nurture sequences — up to 17 days overdue.",
+        "text": "4 more SOW milestones due 2026-08-31 and 2026-09-01 — search campaigns, reactivation lanes, LSA verification, nurture sequences — none confirmed live, blocking Phase 1 proof.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 1,
-        "text": "CPL hit $6.15 on 30 leads over 28 days; 3-day signal (Sep 14–16: 3+5+1=9 leads, ~$41.58 spend) vs prior 3 days (Sep 11–13: 2+2+6=10 leads, ~$36.56) — efficiency holding, slight volume softness.",
+        "text": "CPL dropped to $6.15 over 28 days with 30 leads at only $184.42 spend; 3-day signal (Sep 14-16: 9 leads, $41.58) vs prior 3 (Sep 11-13: 10 leads, $36.56) — volume holding, efficiency confirmed.",
         "confidence": "confirmed",
         "channel": "Meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions fell 31.58% week-over-week and hit 0 for 3 consecutive days (Sep 14–16), while paid leads held — offline intent is diverging from paid momentum.",
-        "confidence": "probable",
+        "text": "GBP actions hit 0 for 3 consecutive days (Sep 14-16) after averaging ~3/day prior — a confirmed 3-day signal drop; GBP triage milestone is also overdue.",
+        "confidence": "confirmed",
         "channel": "GBP"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GA4 shows 0 conversions across 3,370 sessions and 28 days of spend — tracking is not firing; booked appointments are invisible to reporting.",
+        "text": "GA4 conversions show 0 across all 28 days despite 3,370 sessions and 30 Meta leads — tracking pipeline is broken or unconnected; leads are arriving but GA4 cannot confirm intake.",
         "confidence": "confirmed",
         "channel": "Web"
       }
@@ -804,33 +804,34 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate all 9 overdue SOW milestones to Nacer immediately; block any budget increase until stack test confirms lead-to-EHR path.",
+        "text": "Escalate all 9 overdue SOW milestones to Nacer immediately; no scaling until stack test confirms lead-to-GHL routing works.",
         "cites": [
           "F1",
           "F2"
         ],
-        "monday_item_name": "Escalate 9 Overdue Milestones",
-        "monday_update": "9 SOW milestones are unconfirmed past their deadlines — the earliest 5 were due 2026-07-31, now 48 days overdue. Without the end-to-end stack test and GHL/landing page/CAPI items cleared, the 30 leads at $6.15 CPL have no verified downstream path to booked appointments. Nacer to provide a completion status for each milestone by 2026-09-20. Success check: all 9 items show a confirmed completion event or revised gate date before any budget is increased."
+        "monday_item_name": "Escalate 9 Overdue SOW Milestones",
+        "monday_update": "Nine SOW milestones are overdue by 17–48 days including the end-to-end stack test, GHL migration, Meta CAPI, and nurture sequences. No paid scaling should proceed until Nacer confirms the pre-launch stack test passes and at least the GHL migration and landing page tracking are verified live. Success check: all July 31 milestones marked complete with evidence by 2026-09-24. Re-assess Phase 1 viability at that point."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Fix GA4 conversion tracking: 0 conversions across 3,370 sessions means booked appointments are entirely unreported.",
+        "text": "Fix GA4 conversion tracking — 0 conversions recorded against 30 confirmed Meta leads and 3,370 sessions is a broken pipeline.",
         "cites": [
           "F5"
         ],
         "monday_item_name": "Fix GA4 Conversion Tracking",
-        "monday_update": "GA4 recorded 0 conversions against 3,370 sessions and $184.42 in spend over 28 days — the appointment-booking event is not firing. This is a landing-pages-and-tracking milestone item (due 2026-07-31, overdue). Web/Creative team to audit the GA4 tag and booking confirmation trigger by 2026-09-20. Success check: at least 1 conversion event confirmed in GA4 real-time within 48 hours of the fix, with a matching lead record in GHL."
+        "monday_update": "GA4 shows 0 conversions across the full 28-day window despite 30 Meta leads and 3,370 sessions confirmed in other channels. This means Flow cannot verify lead-to-session attribution or report on intake quality to the client. Action: Web/Creative team to audit the GA4 goal or event configuration against the landing page form submission. Success check: at least 1 conversion event firing in GA4 debug view by 2026-09-20."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions: 3 consecutive zero-action days (Sep 14–16) after a 31.58% weekly drop — re-check after next 3-day window.",
+        "text": "Watch Meta CPL and GBP actions together — GBP hit 0 for 3 days (Sep 14-16); re-check both on 2026-09-20.",
         "cites": [
+          "F3",
           "F4"
         ],
-        "monday_item_name": "Watch GBP Action Drop",
-        "monday_update": "GBP actions fell 31.58% week-over-week and recorded 0 actions on Sep 14, 15, and 16 — a confirmed 3-day flat signal. This may reflect the overdue GBP triage milestone (due 2026-07-31) not being completed. No paid action is warranted yet; monitor the next 3-day window (Sep 17–19) for recovery. Success check: GBP actions return above 3/day average by 2026-09-20, or escalate as a GBP profile issue tied to F1."
+        "monday_item_name": "Watch Meta CPL & GBP Drop",
+        "monday_update": "Meta CPL is strong at $6.15 over 28 days but GBP actions dropped to 0 for three consecutive days (Sep 14–16), diverging from the paid lead uptick. This may indicate that offline intent is not keeping pace or that GBP triage work is still blocked. No paid action warranted yet — monitor whether GBP recovers to its prior ~3 actions/day average. Re-check on 2026-09-20."
       }
     ],
     "next_check": "2026-09-20"
