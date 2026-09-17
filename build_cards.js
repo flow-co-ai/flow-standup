@@ -39,15 +39,17 @@ function readHistory(slug) {
   return readJSON(`history/${slug}.json`) || [];
 }
 
-// 14d paid metrics from history. Returns { spend, leads, cpl, days } or null.
+// 14d paid metrics from history. Returns { spend, leads, cpl, purchases, revenue, days } or null.
 function paid14d(slug) {
   const rows = readHistory(slug).slice(-14);
   if (!rows.length) return null;
   const spend     = rows.reduce((s, r) => s + (r.spend        || 0), 0);
   const leads     = rows.reduce((s, r) => s + (r.leads        || 0), 0);
+  const purchases = rows.reduce((s, r) => s + (r.purchases    || 0), 0);
+  const revenue   = rows.reduce((s, r) => s + (r.revenue      || 0), 0);
   const metaSpend = rows.reduce((s, r) => s + (r.meta_spend   || 0), 0);
   const gadSpend  = rows.reduce((s, r) => s + (r.google_spend || 0), 0);
-  return { spend, leads, cpl: leads > 0 ? spend / leads : null, days: rows.length, meta_spend: metaSpend, gad_spend: gadSpend };
+  return { spend, leads, cpl: leads > 0 ? spend / leads : null, purchases, revenue, days: rows.length, meta_spend: metaSpend, gad_spend: gadSpend };
 }
 
 function daysBetween(a, b) {
@@ -219,14 +221,20 @@ function buildPaidLane(client, pulse, slug) {
   const h14         = paid14d(slug);
   const labelPlural = client.meta_leads_label || 'leads';
   const labelSing   = labelPlural.replace(/s$/, '');
+  const isEcom      = (client.windsor?.facebook_extra_fields || []).includes('actions_purchase');
 
   // Sentence must use the same window and label as the headline.
   // When h14 is the headline source (14d history), sentence uses h14 too.
   // When h14 is absent, both fall back to 28d Windsor totals.
   const parts = [];
   if (h14) {
-    if (hasMeta) parts.push(`Meta ${fmt$(h14.meta_spend)} spend, ${h14.leads} ${h14.leads === 1 ? labelSing : labelPlural}`);
-    if (hasGAds) parts.push(`Google Ads ${fmt$(h14.gad_spend)} spend`);
+    if (isEcom) {
+      if (hasMeta) parts.push(`Meta ${fmt$(h14.meta_spend)} spend, ${h14.purchases} purchase${h14.purchases !== 1 ? 's' : ''}, ${fmtInt$(h14.revenue)} revenue`);
+      if (hasGAds) parts.push(`Google Ads ${fmt$(h14.gad_spend)} spend`);
+    } else {
+      if (hasMeta) parts.push(`Meta ${fmt$(h14.meta_spend)} spend, ${h14.leads} ${h14.leads === 1 ? labelSing : labelPlural}`);
+      if (hasGAds) parts.push(`Google Ads ${fmt$(h14.gad_spend)} spend`);
+    }
   } else {
     if (hasMeta) parts.push(`Meta ${fmt$(metaSpend)} spend, ${metaLeads} ${metaLeads === 1 ? labelSing : labelPlural}`);
     if (hasGAds) parts.push(`Google Ads ${fmt$(gadSpend)} spend, ${gadConvs} conversions`);
@@ -246,9 +254,18 @@ function buildPaidLane(client, pulse, slug) {
 
   let paidHeadline;
   if (h14) {
-    paidHeadline = h14.leads > 0
-      ? `${fmtInt$(h14.spend)} · ${h14.leads} ${h14.leads === 1 ? labelSing : labelPlural} · ${fmtInt$(h14.cpl)} per ${labelSing}`
-      : `${fmtInt$(h14.spend)} · no ${labelPlural}`;
+    if (isEcom) {
+      const roas = h14.revenue > 0 && h14.spend > 0
+        ? Math.round(h14.revenue / h14.spend * 10) / 10
+        : null;
+      paidHeadline = h14.revenue > 0
+        ? `${fmtInt$(h14.spend)} · ${fmtInt$(h14.revenue)} revenue · ${roas}x`
+        : `${fmtInt$(h14.spend)} · no purchases`;
+    } else {
+      paidHeadline = h14.leads > 0
+        ? `${fmtInt$(h14.spend)} · ${h14.leads} ${h14.leads === 1 ? labelSing : labelPlural} · ${fmtInt$(h14.cpl)} per ${labelSing}`
+        : `${fmtInt$(h14.spend)} · no ${labelPlural}`;
+    }
   } else {
     paidHeadline = fmtInt$(totalSpend);
   }
