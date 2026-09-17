@@ -139,6 +139,80 @@ function pickLatestUpdate(item) {
   return all[0];
 }
 
+// ─── Update summary ───────────────────────────────────────────────────────────
+
+function summarizeUpdate(rawHtml) {
+  if (!rawHtml) return null;
+  let text = rawHtml;
+
+  // Remove bold labels before stripping HTML (e.g. <strong>Context.</strong>)
+  text = text.replace(/<strong>([^<]{1,60}?\.)\s*<\/strong>/gi, (m, inner) => {
+    const words = inner.trim().split(/\s+/).filter(Boolean);
+    return words.length <= 5 ? '' : m;
+  });
+
+  // Remove complete mention anchors and their text entirely
+  text = text.replace(/<a\b[^>]*\bdata-mention-type\b[^>]*>[\s\S]*?<\/a>/gi, '');
+  // Remove truncated mention anchors (text cut off before </a> or before closing >)
+  if (/data-mention-type/.test(text)) {
+    text = text.replace(/<a\b[\s\S]*$/, '');
+  }
+
+  // Detect non-mention URLs in remaining text (before final HTML strip)
+  const hasUrl = /<a\b[^>]*\bhref=["']https?:\/\//.test(text) ||
+                 /https?:\/\/[^\s<"]+/.test(text);
+
+  // Strip all HTML tags
+  text = text.replace(/<[^>]+>/g, ' ');
+
+  // Decode common HTML entities and remove BOM
+  text = text
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, ' ')
+    .replace(/﻿/g, '');
+
+  // Normalize whitespace
+  text = text.replace(/[\r\n\t]+/g, ' ').replace(/\s{2,}/g, ' ').trim();
+
+  // Strip leading boilerplate (iterate until stable)
+  let prev;
+  do {
+    prev = text;
+    text = text.replace(/^(?:Salam|Salaam)[,\s]*/i, '').trim();
+    text = text.replace(/^@\w+(?:\s+\w+){0,2}[,\s]*/i, '').trim();  // @mention name
+    text = text.replace(/^Context\.\s*/i, '').trim();
+    text = text.replace(/^What\s+is\s+new\.\s*/i, '').trim();
+    text = text.replace(/^New\s+on\s+[^.]{1,30}\.\s*/i, '').trim();
+    text = text.replace(/^\d+\.\s*/, '').trim();                       // leading list number
+  } while (text !== prev);
+
+  if (!text) return hasUrl ? 'link shared' : null;
+
+  // Find first sentence with ≥ 4 words; truncate at 90 chars on word boundary
+  const parts = text.split(/(?<=[.!?])\s+/);
+  for (const part of parts) {
+    // Strip trailing list-number artifact (e.g. "before 8/28 1." → "before 8/28")
+    const s = part.trim().replace(/\s+\d{1,2}\.$/, '').trim();
+    if (/^https?:\/\//.test(s)) return 'link shared';  // sentence opens with URL
+    if (s.split(/\s+/).filter(Boolean).length >= 4) {
+      if (s.length <= 90) return s;
+      const cut = s.slice(0, 90).replace(/\s+\S*$/, '').trim();
+      return cut || null;
+    }
+  }
+
+  return hasUrl ? 'link shared' : null;
+}
+
+function enrichUpdate(update) {
+  if (!update) return null;
+  return { ...update, summary: summarizeUpdate(update.text), age_days: daysSince(update.date) };
+}
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function readJSON(file) {
@@ -508,8 +582,11 @@ for (const client of activeClients) {
 
   const { visible, hiddenByBoard } = boardBalancedCap(withManual, 10);
 
-  // Strip internal keys before writing
-  const cleanWorkstreams = visible.map(({ _key, _normKey, _lastMovIso, ...w }) => w);
+  // Strip internal keys before writing; enrich latest_update with summary + age_days
+  const cleanWorkstreams = visible.map(({ _key, _normKey, _lastMovIso, ...w }) => ({
+    ...w,
+    latest_update: enrichUpdate(w.latest_update),
+  }));
   const totalHidden = Object.values(hiddenByBoard).reduce((s, n) => s + n, 0);
 
   writeFileSync(
@@ -524,8 +601,24 @@ for (const client of activeClients) {
     }, null, 2)
   );
 
-  tableRows.push({ name: client.name, workstreams: visible, hiddenByBoard });
+  tableRows.push({ slug: client.slug, name: client.name, workstreams: cleanWorkstreams, hiddenByBoard });
 }
+
+// ─── Debug: summary preview for MedStation and Maadi Law ─────────────────────
+
+const PREVIEW_SLUGS = new Set(['medstation', 'maadi-law']);
+for (const row of tableRows) {
+  if (!PREVIEW_SLUGS.has(row.slug)) continue;
+  console.log(`\n── ${row.name} ──`);
+  for (const w of row.workstreams) {
+    const lu = w.latest_update;
+    const firstName = lu ? (lu.author || '').split(' ')[0] : '—';
+    const age       = lu?.age_days != null ? `${lu.age_days}d` : '—';
+    const summary   = lu?.summary ?? '(null)';
+    console.log(`  ${w.name.padEnd(35)} ${firstName.padEnd(12)} ${age.padEnd(5)} "${summary}"`);
+  }
+}
+console.log('');
 
 // ─── Print table ──────────────────────────────────────────────────────────────
 

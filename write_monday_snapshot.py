@@ -13,8 +13,10 @@ Env: MONDAY_API_TOKEN required. Without it, exits non-zero.
 Run standalone: python write_monday_snapshot.py
 """
 
+import html as _html
 import json
 import os
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -78,8 +80,15 @@ def _latest_update_ts(updates: list) -> str | None:
     return best
 
 
+def _strip_html(raw: str) -> str:
+    """Remove HTML tags, decode entities, normalize whitespace."""
+    text = re.sub(r"<[^>]+>", " ", raw)
+    text = _html.unescape(text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
 def _shape_recent_updates(raw_updates: list, limit: int = 3) -> list:
-    """Return up to `limit` most-recent updates: author, ISO date, body ≤ 200 chars."""
+    """Return up to `limit` most-recent updates: author, ISO date, body (HTML-stripped) ≤ 800 chars."""
     sorted_upd = sorted(
         [u for u in (raw_updates or []) if u.get("created_at")],
         key=lambda u: u.get("created_at") or "",
@@ -87,11 +96,11 @@ def _shape_recent_updates(raw_updates: list, limit: int = 3) -> list:
     )
     out = []
     for u in sorted_upd[:limit]:
-        body = (u.get("body") or "").strip()
+        body = _strip_html((u.get("body") or "").strip())
         out.append({
             "author": ((u.get("creator") or {}).get("name") or "Unknown"),
             "date":   (u.get("created_at") or "")[:10],
-            "text":   body[:200],
+            "text":   body[:800],
         })
     return out
 
