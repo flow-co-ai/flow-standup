@@ -984,6 +984,21 @@
         row.append(el('span', `ws-movement ws-mv-${ws.movement}`, ws.age_days != null ? `${ws.age_days}d` : ''));
         if (ws.boards?.length) row.append(el('span', 'ws-board', ws.boards[0]));
         wsBlock.append(row);
+        for (const sub of ws.recent || []) {
+          const subRow = el('div', 'ws-sub-row');
+          if (sub.url) {
+            const a = el('a', 'ws-sub-name', sub.name);
+            a.href = sub.url;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            subRow.append(a);
+          } else {
+            subRow.append(el('span', 'ws-sub-name', sub.name));
+          }
+          subRow.append(el('span', `ws-state ws-state-${sub.state}`, sub.state));
+          subRow.append(el('span', 'ws-sub-age', sub.age_days != null ? `${sub.age_days}d` : ''));
+          wsBlock.append(subRow);
+        }
       }
       for (const [board, count] of Object.entries(workstream.hidden_by_board || {})) {
         if (count > 0) wsBlock.append(el('div', 'ws-hidden', `+${count} hidden in ${board}`));

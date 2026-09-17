@@ -353,6 +353,24 @@ function buildWorkstreams(mondayName) {
       s => (s.status || '').trim().toLowerCase() === 'done'
     ).length;
 
+    // Subitems that moved within the 7-day pulse window
+    const recentSubs = (item.subitems || [])
+      .filter(sub => !isRecord(sub.name))
+      .map(sub => {
+        const subMovIso = movementByItemId.get(String(sub.monday_item_id)) || null;
+        const subAge    = daysSince(subMovIso);
+        if (subAge == null || subAge > 7) return null;
+        const { state: subState } = deriveState(sub.name, sub.status);
+        return { name: sub.name, state: subState, age_days: subAge, url: sub.monday_url || null };
+      })
+      .filter(Boolean);
+    recentSubs.sort((a, b) => {
+      if (a.state === 'blocked' && b.state !== 'blocked') return -1;
+      if (b.state === 'blocked' && a.state !== 'blocked') return 1;
+      return (a.age_days ?? 999) - (b.age_days ?? 999);
+    });
+    if (recentSubs.length > 3) recentSubs.length = 3;
+
     const { state, blocked_reason } = deriveState(item.name, item.status);
     const movement = deriveMovement(lastMovIso);
     const normKey  = normalizeName(item.name);
@@ -376,6 +394,7 @@ function buildWorkstreams(mondayName) {
       done_count:    doneCount,
       last_movement: lastMovIso ? String(lastMovIso).slice(0, 10) : null,
       age_days:      daysSince(lastMovIso),
+      recent:        recentSubs,
       basis: { type: 'observed', source: 'site/monday-items.json + standups', window: 'current' },
     });
   }
@@ -401,6 +420,18 @@ function buildWorkstreams(mondayName) {
     ex.subitem_count += c.subitem_count;
     ex.subitem_done  += c.subitem_done;
     ex.done_count    += c.done_count;
+    const seenSubUrls = new Set((ex.recent || []).map(r => r.url).filter(Boolean));
+    for (const r of c.recent || []) {
+      if (r.url && seenSubUrls.has(r.url)) continue;
+      if (r.url) seenSubUrls.add(r.url);
+      (ex.recent ??= []).push(r);
+    }
+    ex.recent.sort((a, b) => {
+      if (a.state === 'blocked' && b.state !== 'blocked') return -1;
+      if (b.state === 'blocked' && a.state !== 'blocked') return 1;
+      return (a.age_days ?? 999) - (b.age_days ?? 999);
+    });
+    if (ex.recent.length > 3) ex.recent.length = 3;
     if (c._lastMovIso && c._lastMovIso > (ex._lastMovIso || '')) {
       ex._lastMovIso  = c._lastMovIso;
       ex.last_movement = c.last_movement;
