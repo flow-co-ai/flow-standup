@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-17T18:52:22.375174+00:00",
+  "updatedAt": "2026-09-17T20:07:18.737Z",
   "items": [
     {
       "id": "fullsmile-workflows-golive-approval",
@@ -72,7 +72,7 @@
     {
       "id": "medstation-reactivation-import-suppression",
       "title": "Import Suppression",
-      "note": "Auto-closed per \u00a719b: WhatsApp: GHL Dev, 9/14 on 2026-09-14 stated this is complete -- \"the MedStation historical patient import is complete\"\n\nSection 19b matched this card at a containment score of 1.0 on axis 3 rather than axis 2, because the paraphrased subject did not clear 0.6 against this card's own long body, but the parent is identical (Patient List Merge 13019850713) and the evidence is this card's own deliverables being reported on, not similar work. Merged rather than flagged, same call and same reason recorded on fullsmile-booked-showed-sync. SECOND QUESTION, CLOSED. Ahmed's 14 September message reports the import complete with all 595 contacts tagged patient, migrated and medstation-historical-import, and states he audited the workflows first and confirmed those tags trigger no active messaging automation. That is deliverable one (suppress before loading) and deliverable two (load without firing anything) satisfied at the mechanism level, which is stronger than the outbound count the card asked for. Deliverable three (restore) is moot because nothing was unpublished; Ahmed said separately the same afternoon that he is enabling the MedStation workflows. Residue not covered by this close: 5 rejected records and 30 shared-phone records remain excluded and still need review. Monday's status column was not consulted. Payload kept intact so this is recoverable if the close is wrong.",
+      "note": "Auto-closed per §19b: WhatsApp: GHL Dev, 9/14 on 2026-09-14 stated this is complete -- \"the MedStation historical patient import is complete\"\n\nSection 19b matched this card at a containment score of 1.0 on axis 3 rather than axis 2, because the paraphrased subject did not clear 0.6 against this card's own long body, but the parent is identical (Patient List Merge 13019850713) and the evidence is this card's own deliverables being reported on, not similar work. Merged rather than flagged, same call and same reason recorded on fullsmile-booked-showed-sync. SECOND QUESTION, CLOSED. Ahmed's 14 September message reports the import complete with all 595 contacts tagged patient, migrated and medstation-historical-import, and states he audited the workflows first and confirmed those tags trigger no active messaging automation. That is deliverable one (suppress before loading) and deliverable two (load without firing anything) satisfied at the mechanism level, which is stronger than the outbound count the card asked for. Deliverable three (restore) is moot because nothing was unpublished; Ahmed said separately the same afternoon that he is enabling the MedStation workflows. Residue not covered by this close: 5 rejected records and 30 shared-phone records remain excluded and still need review. Monday's status column was not consulted. Payload kept intact so this is recoverable if the close is wrong.",
       "status": "sent",
       "board": "CRM",
       "group": "MedStation",
@@ -320,7 +320,7 @@
     {
       "id": "maadilaw-empty-customer-contacts",
       "title": "Duplicate Contacts",
-      "note": "Auto-closed per \u00a719b: WhatsApp: GHL Dev, 9/15 on 2026-09-15 stated this is complete -- \"this has been cleaned up. I identified 55 blank contacts created by the Clio integration\"\n\nSection 19b matched on axis 1: same target item 13041132236. SECOND QUESTION, CLOSED. Ahmed reported on 15 September that the cleanup is finished and named the numbers: 55 blank Clio contacts tagged clio-incomplete and moved from Customer to Lead with nothing deleted, a Maadi Law Active Contacts smart list built so Tracy has the usable list deliverable two asked for, and a prevention workflow now quarantining incomplete Clio contacts automatically, which is deliverable one at the sync boundary. Sohib acknowledged it in the chat. The payload is kept intact so the close is recoverable if Naz disagrees. Monday status was not consulted. One residue worth watching rather than holding the card open for: deduplication on Clio ID, email and phone was not mentioned explicitly, so if duplicates recur that comes back as its own card.",
+      "note": "Auto-closed per §19b: WhatsApp: GHL Dev, 9/15 on 2026-09-15 stated this is complete -- \"this has been cleaned up. I identified 55 blank contacts created by the Clio integration\"\n\nSection 19b matched on axis 1: same target item 13041132236. SECOND QUESTION, CLOSED. Ahmed reported on 15 September that the cleanup is finished and named the numbers: 55 blank Clio contacts tagged clio-incomplete and moved from Customer to Lead with nothing deleted, a Maadi Law Active Contacts smart list built so Tracy has the usable list deliverable two asked for, and a prevention workflow now quarantining incomplete Clio contacts automatically, which is deliverable one at the sync boundary. Sohib acknowledged it in the chat. The payload is kept intact so the close is recoverable if Naz disagrees. Monday status was not consulted. One residue worth watching rather than holding the card open for: deduplication on Clio ID, email and phone was not mentioned explicitly, so if duplicates recur that comes back as its own card.",
       "status": "done",
       "board": "CRM",
       "group": "Maadi Law",
@@ -612,7 +612,7 @@
         "boardId": "18418241405",
         "groupId": "group_mm512p9w",
         "itemName": "Lead Geography",
-        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> On 15 September Renata at MedStation Weston said many of the messages arriving in GoHighLevel are from people in <strong>Massachusetts</strong>, and asked how the process is segmented when Weston targeting was set to a radius around the clinic. Naz checked and found the only out of state records he could see came from the historical NextGen sync, not live campaigns. Renata clarified she means the inbound message leads and posted examples. The question is still open in the client chat.</li><li><strong>Deliverable one, trace the examples.</strong> Take the contacts Renata posted and report, for each, the source, the campaign and the date it entered GoHighLevel. That settles whether these are live paid leads or imported records replying on an old thread.</li><li><strong>Deliverable two, act on what the trace says.</strong> If they are imported, tag them so they stop reading as new enquiries. If they came through paid, hand the geography to the Ads board with the campaign named, because targeting is set there and not in GoHighLevel.</li><li><strong>Deliverable three.</strong> Post one short written answer Sohib can send straight to Renata.</li><li><strong>Constraint.</strong> <strong>Do not</strong> change campaign targeting from this item.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> On 15 September Renata at MedStation Weston said many of the messages arriving in GoHighLevel are from people in <strong>Massachusetts</strong>, and asked how the process is segmented when Weston targeting was set to a radius around the clinic. Naz checked and found the only out of state records he could see came from the historical NextGen sync, not live campaigns. Renata clarified she means the inbound message leads and posted examples. The question is still open in the client chat.</li><li><strong>Deliverable one, trace the examples.</strong> Take the contacts Renata posted and report, for each, the source, the campaign and the date it entered GoHighLevel. That settles whether these are live paid leads or imported records replying on an old thread.</li><li><strong>Deliverable two, act on what the trace says.</strong> If they are imported, tag them so they stop reading as new enquiries. If they came through paid, hand the geography to the Ads board with the campaign named, because targeting is set there and not in GoHighLevel.</li><li><strong>Deliverable three.</strong> Post one short written answer Sohib can send straight to Renata.</li><li><strong>Constraint.</strong> <strong>Do not</strong> change campaign targeting from this item.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer<a class=\"mention\" data-mention-id=\"102221061\" data-mention-type=\"User\">@Ads Team</a>&nbsp;</a></p>",
         "blocked": false,
         "needsNaz": false
       },
@@ -620,7 +620,8 @@
       "priority": 2,
       "verifiedAt": "2026-09-17T17:51:58.119673+00:00",
       "completionEvidence": null,
-      "createdAt": "2026-09-16T18:53:44.684044+00:00"
+      "createdAt": "2026-09-16T18:53:44.684044+00:00",
+      "updatedAt": "2026-09-17T20:07:18.731Z"
     },
     {
       "id": "billydoe-website-error-sweep",
@@ -800,7 +801,7 @@
     {
       "id": "maadilaw-website-address-correction",
       "title": "Website",
-      "note": "Auto-closed per \u00a719b: WhatsApp: Maadi Law, 9/16 on 2026-09-16 stated this is complete -- \"We were able to update the address on the site, so we should be all set now.\"\n\nSection 19 audit covered Maadi Law groups on all four boards. Website 12471110064 on Web + SEO is the live site item, so drafted as an update on it. Section 19b returned no match. Closed on its own source under section 19b's second question: the same 16 September thread that raised the wrong address also carries Hashir confirming the fix, and no residual work is named anywhere in it.",
+      "note": "Auto-closed per §19b: WhatsApp: Maadi Law, 9/16 on 2026-09-16 stated this is complete -- \"We were able to update the address on the site, so we should be all set now.\"\n\nSection 19 audit covered Maadi Law groups on all four boards. Website 12471110064 on Web + SEO is the live site item, so drafted as an update on it. Section 19b returned no match. Closed on its own source under section 19b's second question: the same 16 September thread that raised the wrong address also carries Hashir confirming the fix, and no residual work is named anywhere in it.",
       "status": "done",
       "board": "Web + SEO",
       "group": "Maadi Law",
