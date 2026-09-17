@@ -78,41 +78,63 @@ def _latest_update_ts(updates: list) -> str | None:
     return best
 
 
+def _shape_recent_updates(raw_updates: list, limit: int = 3) -> list:
+    """Return up to `limit` most-recent updates: author, ISO date, body ≤ 200 chars."""
+    sorted_upd = sorted(
+        [u for u in (raw_updates or []) if u.get("created_at")],
+        key=lambda u: u.get("created_at") or "",
+        reverse=True,
+    )
+    out = []
+    for u in sorted_upd[:limit]:
+        body = (u.get("body") or "").strip()
+        out.append({
+            "author": ((u.get("creator") or {}).get("name") or "Unknown"),
+            "date":   (u.get("created_at") or "")[:10],
+            "text":   body[:200],
+        })
+    return out
+
+
 def _pulse_url(board_id: str, item_id: str) -> str | None:
     if not (board_id and item_id):
         return None
     return f"https://flowcompany.monday.com/boards/{board_id}/pulses/{item_id}"
 
 
-def _shape_subitem(sub: dict, parent_board_name: str) -> dict:
+def _shape_subitem(sub: dict, parent_board_name: str, updates_limit: int = 3) -> dict:
     _, status_text = _status_column(sub.get("column_values"))
     sub_id = str(sub.get("id") or "")
     sub_board_id = str((sub.get("board") or {}).get("id") or "")
+    raw_updates = sub.get("updates") or []
     return {
         "monday_item_id": sub_id,
         "name":           sub.get("name") or "",
         "board":          parent_board_name,
         "status":         status_text,
         "monday_url":     _pulse_url(sub_board_id, sub_id),
-        "updated_at":     _latest_update_ts(sub.get("updates") or []),
+        "updated_at":     _latest_update_ts(raw_updates),
+        "recent_updates": _shape_recent_updates(raw_updates, updates_limit),
     }
 
 
-def _shape_item(item: dict, board_id: str, board_name: str) -> dict:
+def _shape_item(item: dict, board_id: str, board_name: str, updates_limit: int = 3) -> dict:
     _, status_text = _status_column(item.get("column_values"))
     item_id = str(item.get("id") or "")
+    raw_updates = item.get("updates") or []
     return {
         "monday_item_id": item_id,
         "name":           item.get("name") or "",
         "board":          board_name,
         "status":         status_text,
         "monday_url":     _pulse_url(str(board_id), item_id),
-        "updated_at":     _latest_update_ts(item.get("updates") or []),
-        "subitems":       [_shape_subitem(s, board_name) for s in (item.get("subitems") or [])],
+        "updated_at":     _latest_update_ts(raw_updates),
+        "recent_updates": _shape_recent_updates(raw_updates, updates_limit),
+        "subitems":       [_shape_subitem(s, board_name, updates_limit) for s in (item.get("subitems") or [])],
     }
 
 
-def build_snapshot(config: dict) -> dict:
+def build_snapshot(config: dict, updates_limit: int = 3) -> dict:
     """{generated_at, by_client: {client: [items…]}}. Skips 'Unmapped' groups."""
     headers = {
         "Authorization": _token(),
@@ -138,7 +160,7 @@ def build_snapshot(config: dict) -> dict:
             client = resolve_client(group_title, clients_config) if clients_config else "Unmapped"
             if client == "Unmapped":
                 continue
-            by_client.setdefault(client, []).append(_shape_item(it, board_id, board_name))
+            by_client.setdefault(client, []).append(_shape_item(it, board_id, board_name, updates_limit))
 
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -153,16 +175,34 @@ def main() -> int:
         sys.exit("config.json missing")
     config = json.loads(config_path.read_text())
 
-    snapshot = build_snapshot(config)
-
     out_path = Path("site") / "monday-items.json"
     out_path.parent.mkdir(exist_ok=True)
-    out_path.write_text(json.dumps(snapshot, indent=2, ensure_ascii=False), encoding="utf-8")
+    baseline_bytes = out_path.stat().st_size if out_path.exists() else 0
+
+    snapshot = build_snapshot(config, updates_limit=3)
+    json_str = json.dumps(snapshot, indent=2, ensure_ascii=False)
+    new_bytes = len(json_str.encode("utf-8"))
+
+    updates_limit_used = 3
+    if baseline_bytes and new_bytes > baseline_bytes * 1.5:
+        print(
+            f"\n⚠  File grew to {new_bytes:,} bytes ({new_bytes / baseline_bytes:.1%} of baseline "
+            f"{baseline_bytes:,} bytes) — exceeds 150%. Dropping to 2 updates per item."
+        )
+        snapshot = build_snapshot(config, updates_limit=2)
+        json_str = json.dumps(snapshot, indent=2, ensure_ascii=False)
+        new_bytes = len(json_str.encode("utf-8"))
+        updates_limit_used = 2
+
+    out_path.write_text(json_str, encoding="utf-8")
 
     n_clients = len(snapshot["by_client"])
     n_items   = sum(len(v) for v in snapshot["by_client"].values())
     n_subs    = sum(len(it.get("subitems") or []) for v in snapshot["by_client"].values() for it in v)
-    print(f"\nWrote {out_path} — {n_clients} clients, {n_items} items, {n_subs} subitems")
+    print(
+        f"\nWrote {out_path} — {n_clients} clients, {n_items} items, {n_subs} subitems  "
+        f"({updates_limit_used} updates/item, {new_bytes:,} bytes)"
+    )
     return 0
 
 

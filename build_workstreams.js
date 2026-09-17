@@ -125,6 +125,20 @@ function deriveMovement(lastMovIso) {
   return 'stale_30d_plus';
 }
 
+// ─── Latest update rollup ─────────────────────────────────────────────────────
+// Picks the most recent update across an item and all its subitems.
+// Subitem updates roll up to their parent workstream.
+
+function pickLatestUpdate(item) {
+  const all = [...(item.recent_updates || [])];
+  for (const sub of item.subitems || []) {
+    all.push(...(sub.recent_updates || []));
+  }
+  if (!all.length) return null;
+  all.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  return all[0];
+}
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function readJSON(file) {
@@ -395,6 +409,7 @@ function buildWorkstreams(mondayName) {
       last_movement: lastMovIso ? String(lastMovIso).slice(0, 10) : null,
       age_days:      daysSince(lastMovIso),
       recent:        recentSubs,
+      latest_update: pickLatestUpdate(item),
       basis: { type: 'observed', source: 'site/monday-items.json + standups', window: 'current' },
     });
   }
@@ -438,6 +453,10 @@ function buildWorkstreams(mondayName) {
       ex.age_days      = c.age_days;
       ex.movement      = c.movement;
       ex.owner         = c.owner;
+    }
+    // Keep most recent update across merged items
+    if (c.latest_update && (!ex.latest_update || c.latest_update.date > ex.latest_update.date)) {
+      ex.latest_update = c.latest_update;
     }
     const rank = { blocked: 4, review: 3, live: 2, done: 1, queued: 0, unknown: 0 };
     if ((rank[c.state] || 0) > (rank[ex.state] || 0)) {
