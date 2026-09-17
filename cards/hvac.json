@@ -1,7 +1,7 @@
 {
   "slug": "hvac",
   "name": "Quality HVAC by Fibid",
-  "generated_at": "2026-09-17T15:40:09.736Z",
+  "generated_at": "2026-09-17T18:01:38.840Z",
   "contract": {
     "start": "2026-05-01",
     "end": "2026-10-31",
@@ -15,7 +15,7 @@
       "window": "engagement"
     }
   },
-  "status": "critical",
+  "status": "warn",
   "lanes": {
     "organic": {
       "state": "amber",
@@ -82,7 +82,7 @@
       }
     },
     "paid": {
-      "state": "red",
+      "state": "amber",
       "headline": "$731 · 6 leads · $122 per lead · 14d",
       "sentence": "Meta $382.31 spend, 6 leads; Google Ads $348.26 spend.",
       "basis": {
@@ -91,7 +91,7 @@
         "window": "14d"
       },
       "flags": [
-        "lead_drought"
+        "attribution_gap"
       ],
       "detail": {
         "meta": {
@@ -110,15 +110,15 @@
     },
     "crm": {
       "state": "amber",
-      "headline": "1 waiting 592h",
-      "sentence": "Luis Valencia, as of 2026-08-13 per fireflies. 1 client thread awaiting Flow, oldest 592h.",
+      "headline": "2 waiting 616h",
+      "sentence": "Luis Valencia, as of 2026-08-13 per fireflies. 2 client threads awaiting Flow, oldest 616h.",
       "basis": {
         "type": "observed",
         "source": "GHL / WhatsApp",
         "window": "14d"
       },
       "flags": [
-        "awaiting_flow:1"
+        "awaiting_flow:2"
       ],
       "detail": {
         "intake_owner": "Luis Valencia",
@@ -127,20 +127,31 @@
           "source": "fireflies",
           "window": "2026-08-13"
         },
-        "awaiting_flow": 1,
-        "oldest_unanswered_hours": 592,
+        "awaiting_flow": 2,
+        "oldest_unanswered_hours": 616.1,
         "threads": {
-          "messages_scanned": 677,
-          "threads": 10,
-          "awaiting_flow": 1,
+          "messages_scanned": 691,
+          "threads": 11,
+          "awaiting_flow": 2,
           "awaiting_client": 1,
-          "client_update": 4,
-          "settled": 4,
+          "client_update": 3,
+          "settled": 5,
           "abandoned": 29,
           "stale_over_24h": 1
         },
         "ghl": {
-          "error": "GHL 401: {\"statusCode\":401,\"message\":\"Command timed out\"}"
+          "contacts": 273,
+          "opportunities": {
+            "created": {
+              "count": 988,
+              "value": 20841.85
+            },
+            "won": {
+              "count": 48,
+              "value": 20841.85
+            }
+          },
+          "appointments": 0
         }
       }
     }
@@ -148,22 +159,9 @@
   "scope_out": [],
   "needs_you": [
     {
-      "text": "Paid issue (red)",
-      "flags": [
-        "lead_drought"
-      ],
-      "severity": "high",
-      "age_days": null,
-      "basis": {
-        "type": "observed",
-        "source": "Windsor Paid",
-        "window": "14d"
-      }
-    },
-    {
-      "text": "1 thread awaiting Flow, oldest 592h.",
+      "text": "2 threads awaiting Flow, oldest 616h.",
       "severity": "medium",
-      "age_days": 25,
+      "age_days": 26,
       "basis": {
         "type": "observed",
         "source": "GHL / WhatsApp",
@@ -178,6 +176,19 @@
         "type": "observed",
         "source": "Windsor GBP",
         "window": "28d"
+      }
+    },
+    {
+      "text": "Paid issue (amber)",
+      "flags": [
+        "attribution_gap"
+      ],
+      "severity": "medium",
+      "age_days": null,
+      "basis": {
+        "type": "observed",
+        "source": "Windsor Paid",
+        "window": "14d"
       }
     }
   ],

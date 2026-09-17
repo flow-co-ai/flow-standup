@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-09-17T15:28:13.994Z",
+  "generated_at": "2026-09-17T17:54:17.069Z",
   "date": "2026-09-17",
   "slug": "hvac",
   "name": "Quality HVAC by Fibid",
   "type": "leadgen",
   "window_days": 28,
-  "score": 21,
+  "score": 46,
   "status": "orange",
-  "verdict": "Leads collapsed 80% week-over-week while CPL spiked 215% to $242.73, driven primarily by Google Ads spend dropping 58.66% in the last 7 days and leaving the account in a lead drought. The one bright spot is GBP engagement, which rose 36.36% week-over-week, though two of three profiles (\"Fibid Heating & Air Conditioning\" and \"Quality HVAC by Fibid\") carry low call-rate flags, meaning that organic visibility is not converting to calls at a healthy rate.",
+  "verdict": "The biggest movement this period is a 80% drop in leads over the last 7 days alongside a 215% spike in CPL, likely driven by a 58.66% pullback in Google Ads spend (down to $923.29 total over 28 days) reducing conversion volume. Two GBP profiles, Fibid Heating & Air Conditioning (call rate 0.81%) and Quality HVAC by Fibid (call rate 0.47%), are flagged for low call rates and warrant profile optimization to recover organic lead flow.",
   "windsor": {
     "totals": {
       "spend": 1699.11,
@@ -117,7 +117,7 @@
       "spend_per_day_7d": 40.35
     },
     "flags": [
-      "lead_drought",
+      "attribution_gap",
       "gbp_low_call_rate:Fibid Heating & Air Conditioning",
       "gbp_low_call_rate:Quality HVAC by Fibid"
     ],
@@ -575,14 +575,25 @@
     }
   },
   "ghl": {
-    "error": "GHL 401: {\"statusCode\":401,\"message\":\"Command timed out\"}"
+    "contacts": 273,
+    "opportunities": {
+      "created": {
+        "count": 988,
+        "value": 20841.85
+      },
+      "won": {
+        "count": 48,
+        "value": 20841.85
+      }
+    },
+    "appointments": 0
   },
   "reconciliation": {
     "windsor_leads": 7,
-    "ghl_contacts": null,
-    "ghl_opps_created": null,
-    "ghl_opps_won": null,
-    "status": "ghl_unavailable"
+    "ghl_contacts": 273,
+    "ghl_opps_created": 988,
+    "ghl_opps_won": 48,
+    "status": "both_active"
   },
   "_meta": {
     "source": "windsor_api",
@@ -782,44 +793,44 @@
     "history_line": "Tune Up Campaign done · Website marked Done · Meta & Google Ads items closed"
   },
   "performance": {
-    "generated_at": "2026-09-17T15:35:31.484Z",
+    "generated_at": "2026-09-17T17:56:48.360Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Lead drought is structural, not cyclical — six overdue milestones now block recovery.",
+    "verdict": "CPL crisis is real; intake gap and SOW blockers prevent any scale response.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "CPL spiked 215% to $242.73 vs prior 7d; 3-day lead total (Sep 14–16) = 0, vs 1 in prior 3 days — drought is worsening, not stabilising.",
+        "text": "CPL spiked 215% to $242.73 over 28 days on just 7 GHL-tracked leads; Google spend cut 58.66% is the mechanical cause.",
         "confidence": "confirmed",
-        "channel": "cross-channel"
+        "channel": "google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Six SOW milestones overdue (oldest: Booking bot battle-test, due Jul 31); intake owner unconfirmed since Jul 7 blocks any budget scale-up per SOW gate.",
+        "text": "6 overdue SOW milestones (oldest: 2026-07-31 booking bot) including intake owner unconfirmed and LSA re-enable blocked — scale gate remains closed.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "LSA re-enable (heating toggles) was due Sep 1 — still unresolved; Google spend collapsed 58.66% WoW to ~$4.25 on Sep 16, removing the channel's lead contribution.",
+        "text": "3-day lead signal: 0 leads across Sep 14–16 vs 1 lead across Sep 11–13; spend averaged $44/day both windows — volume collapse is not a spend drop.",
         "confidence": "confirmed",
-        "channel": "google"
+        "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP call rate on primary profiles is critically low: Fibid H&A 0.81%, Quality HVAC by Fibid 0.47% vs Quality HVAC Solutions at 2.58% — organic visibility not converting to calls.",
+        "text": "GBP call rate: 'Quality HVAC by Fibid' at 0.47% and 'Fibid Heating & Air Conditioning' at 0.81% on 211 and 124 impressions respectively — organic lead floor is leaking.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL returned a 401 timeout error — pipeline data unavailable; cannot confirm whether leads in the system are being worked, masking a potential intake leak.",
-        "confidence": "hypothesis",
+        "text": "GHL shows 988 opportunities created vs only 48 won (4.9% win rate) and 0 appointments logged — intake or pipeline hygiene issue, not an ads problem.",
+        "confidence": "probable",
         "channel": "crm"
       }
     ],
@@ -827,36 +838,35 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Resolve intake owner gap immediately — confirm GHL login and after-hours coverage before any budget is touched.",
+        "text": "Confirm intake owner and GHL login immediately; unblocks scale-up gate per SOW and fixes speed-to-lead gap.",
         "cites": [
-          "F2"
+          "F2",
+          "F5"
         ],
-        "monday_item_name": "Confirm Intake Owner Now",
-        "monday_update": "Vivian left on Jul 7 and the intake seat has been unconfirmed for 10+ weeks, which is the SOW-gated blocker preventing any spend scale-up. Confirm who owns intake, verify their GHL login is active, and document after-hours coverage. Success check: named owner confirmed in writing to Sohib and Nacer by 2026-09-21. No budget increases are approved until this is closed."
+        "monday_item_name": "Confirm Intake Owner GHL",
+        "monday_update": "Vivian (dispatch) left 7/7 and the intake seat is unconfirmed per the SOW Admin blocker due 2026-08-31. Contact Xavier or Aiman to identify who now owns GHL intake and after-hours coverage, and obtain their GHL login confirmation. This is the scale-back-up gate — no budget raises until resolved. Success check: named owner confirmed in writing and GHL seat verified by 2026-09-24."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Escalate LSA heating-toggle re-enable — due Sep 1, now 16 days overdue; Google spend is at $4.25/day with zero leads.",
+        "text": "Optimize both low-call-rate GBP profiles; 0.47% and 0.81% call rates on active impressions signal profile content gaps.",
         "cites": [
-          "F3",
-          "F1"
+          "F4"
         ],
-        "monday_item_name": "LSA Heating Toggle Re-enable",
-        "monday_update": "LSA heating toggles were scheduled to go live Sep 1 and remain off as of Sep 16. Google spend dropped to $4.25 on the last data day and contributed zero leads in the last 3-day window. Action: Sohib to confirm with Nader/Xavier whether dispatch capacity can absorb heating-season leads, then re-enable LSA toggles in the native LSA dashboard. Success check: Google spend returns above $20/day and at least 1 LSA lead appears within 7 days of re-enable, by 2026-09-24."
+        "monday_item_name": "GBP Call Rate Fix",
+        "monday_update": "Both flagged profiles — 'Quality HVAC by Fibid' (0.47% call rate, 211 impressions) and 'Fibid Heating & Air Conditioning' (0.81% call rate, 124 impressions) — are underperforming on converting impressions to calls. Audit primary category, services listed, photos, and Q&A on both profiles; do not blend the two GBP listings. Success check: call rate on 'Quality HVAC by Fibid' moves above 1.5% within 14 days of changes, re-check 2026-10-01."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP call rate on Fibid H&A (0.81%) and Quality HVAC by Fibid (0.47%) — do not act until GHL error resolves and intake owner is confirmed.",
+        "text": "Watch Meta leads: 0 leads last 3 days at ~$25/day spend; confirm pixel firing before any budget action.",
         "cites": [
-          "F4",
-          "F5"
+          "F3"
         ],
-        "monday_item_name": "GBP Call Rate Watch",
-        "monday_update": "Two of three GBP profiles have critically low call rates (0.81% and 0.47% vs 2.58% on the healthy profile), but GHL is returning a 401 timeout so we cannot rule out an intake-side drop rather than a discovery problem. No copy or profile changes are warranted until the intake owner is confirmed and GHL data is restored. Re-check both call rates and GHL pipeline on 2026-09-24 — if call rate remains below 1% with GHL healthy, escalate to a profile optimisation task."
+        "monday_item_name": "Meta Lead Pixel Watch",
+        "monday_update": "Meta delivered 0 leads across Sep 14–16 while spending ~$25/day, continuing the -80% leads delta from the prior 7-day window. Before any budget move, verify the Meta lead form pixel is firing correctly — attribution_gap flag is active. Re-check the 3-day lead count on 2026-09-20; if still zero with confirmed pixel health, escalate to creative refresh."
       }
     ],
-    "next_check": "2026-09-24"
+    "next_check": "2026-09-20"
   }
 }

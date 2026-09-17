@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-17T15:26:56.818Z",
+  "generated_at": "2026-09-17T17:53:55.998Z",
   "date": "2026-09-17",
   "slug": "full-smile",
   "name": "Full Smile",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 32,
   "status": "orange",
-  "verdict": "The biggest movement is a 94.74% drop in leads over the last 7 days, likely driven by at least one zero-spend day flagged in the period, which severely disrupted Meta delivery. Despite a solid 28-day base of 77 leads at a $8.60 CPL, the spend pullback of 27.77% compounded the lead decline and sent CPL spiking 1,272.33% week-over-week.",
+  "verdict": "The biggest movement this period is a 94.74% drop in leads over the last 7 days, likely driven by at least one zero-spend day flagged in the account, which would have cut Meta delivery and caused the CPL to spike 1,272.33%. Top campaign \"BWS - Instant Leads - Awareness\" led spend at $355.36, but the 28d total of 77 leads (Meta/Windsor) vs. 79 opportunities (GHL) are unreconciled.",
   "windsor": {
     "totals": {
       "spend": 662.21,
@@ -781,44 +781,44 @@
     "history_line": "OpenDental sync completed · Meta/LSA campaigns paused per client · GHL tasks completed pending go-live approval"
   },
   "performance": {
-    "generated_at": "2026-09-17T15:34:47.123Z",
+    "generated_at": "2026-09-17T17:56:06.593Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Zero-spend days killed delivery; SOW milestones 7+ weeks overdue threaten renewal.",
+    "verdict": "Spend halted Sep 12–13 and Sep 16; leads dead 6 days straight — confirm before declaring trend.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "zero_spend_day flag confirmed: Sep 12, 13, and 16 all show $0 spend and 0 leads — a 3-day delivery blackout, not a single-day anomaly.",
+        "text": "Zero-spend days Sep 12, 13, and 16 caused leads to flatline: 0 leads across all 6 days Sep 11–16, CPL spiked 1,272% vs prior 7d.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 1,
-        "text": "CPL spiked 1,272% 7d vs prior 7d; the 28-day baseline CPL is $8.60, meaning the last 7 days produced near-zero leads at effectively infinite cost.",
+        "text": "3-day signal (Sep 14–16) vs prior 3 (Sep 11–13): spend $57.43 vs $32 but leads still 0 — delivery is not recovering even on spend-active days.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "5 overdue SOW milestones (oldest: Jul 23 renewal, latest: Aug 31 dashboard + scoreboard decision) remain undelivered; renewal is month-to-month with explicit walk risk.",
+        "text": "3 overdue SOW milestones — phone-match attribution (Aug 7), sync/contact cleanup (Aug 14), and dashboard + renewal scoreboard (Aug 31) — all undelivered; client's stay/walk decision was tied to Aug 31 dashboard.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions collapsed 63% 7d and show 0 for Sep 13–16 in series, mirroring the paid blackout — organic visibility is also disrupted, compounding lead loss.",
-        "confidence": "probable",
+        "text": "GBP actions dropped 63% in last 7d and show 0 for Sep 13–16; GBP had been averaging ~10 actions/day — organic dark alongside paid dark compounds the visibility loss.",
+        "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 79 opps created and 331 contacts but 0 appointments and 0 won — intake pipeline is stalled; leads arriving but not converting to booked patients is an intake/CRM issue, not an ads problem.",
-        "confidence": "confirmed",
+        "text": "GHL shows 79 opportunities vs 77 Meta leads in 28d, but 0 appointments and 0 won — the intake funnel is receiving leads but converting none to chair, indicating an intake/CRM process leak.",
+        "confidence": "probable",
         "channel": "ghl"
       }
     ],
@@ -826,33 +826,34 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Restore Meta spend immediately — diagnose why $0 posted Sep 12, 13, 16 and confirm daily budget is live at prior ~$25–33/day.",
+        "text": "Diagnose and restore Meta campaign delivery — zero spend on Sep 12, 13, 16 must be explained before any budget decision.",
         "cites": [
           "F1",
           "F2"
         ],
-        "monday_item_name": "Fix Meta zero-spend days",
-        "monday_update": "Meta recorded $0 spend on Sep 12, 13, and 16, wiping all leads and sending 7-day CPL up 1,272% vs the $8.60 baseline. Confirm the account is not paused, payment method is valid, and the campaign is actively delivering. Success check: spend resumes at $25–33/day and leads return within 3 days (by Sep 20). Escalate to Sohib immediately if the account is suspended."
+        "monday_item_name": "Restore Meta Delivery — Zero Spend",
+        "monday_update": "Meta spend hit $0 on Sep 12, 13, and 16, causing 0 leads across 6 consecutive days and a 1,272% CPL spike. Check campaign status, payment method, budget exhaustion, and policy flags in Ads Manager today. Success is confirmed when daily spend resumes at the ~$25–38 normal range and leads return within 3 days. Re-check Sep 20."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Escalate 5 overdue SOW milestones to Nacer/Sohib — dashboard and scoreboard were due Aug 31, directly blocking renewal decision.",
+        "text": "Escalate GHL intake leak: 79 opps created, 0 appointments booked — review pipeline stage logic and new intake hire process.",
         "cites": [
-          "F3"
+          "F5"
         ],
-        "monday_item_name": "Overdue SOW milestone escalation",
-        "monday_update": "Five milestones are overdue by 17–55 days, including the Aug 31 dashboard and the client's stay/walk scoreboard — the client's stated renewal condition. Nacer and Sohib must confirm current status on each item and deliver the dashboard before the next client touchpoint. Success check: all 5 milestones marked complete or have a committed delivery date confirmed in writing by Sep 20."
+        "monday_item_name": "GHL Intake Leak — 0 Appts",
+        "monday_update": "GHL shows 79 opportunities created in 28 days but 0 appointments and 0 won deals — leads are entering the CRM but nothing is being scheduled. Review pipeline stage transitions, automated follow-up triggers, and the new intake hire's workflow with Lily. This is not an ads problem; it is an intake/CRM process gap. Success is at least 5 appointments logged within 7 days of this fix. Re-check Sep 24."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GHL pipeline: 79 opps, 0 appointments, 0 won — confirm intake process with Lily before attributing to ads. Re-check Sep 20.",
+        "text": "Watch Sep 14–16 spend recovery ($57.43 total) — if leads remain 0 by Sep 20, creative or account-level issue is confirmed.",
         "cites": [
-          "F5"
+          "F2",
+          "F4"
         ],
-        "monday_item_name": "GHL intake pipeline watch",
-        "monday_update": "GHL shows 79 opportunities created and 331 contacts but zero appointments booked and zero won in the 28-day window. This gap between leads and booked patients is the client's primary scoreboard metric. Sync with Lily (front desk) to confirm whether the new intake hire is operational and whether inbound leads are being followed up. Re-check appointment count and pipeline stage movement by Sep 20."
+        "monday_item_name": "Watch: Meta Lead Recovery Sep 20",
+        "monday_update": "Spend on Sep 14–16 totalled $57.43 but generated 0 leads, suggesting the zero-spend days may have reset delivery learning or triggered a policy hold. GBP is also dark for the same window, removing organic support. If leads remain at 0 by Sep 20 despite restored spend, escalate to creative refresh and account audit. Re-check Sep 20."
       }
     ],
     "next_check": "2026-09-20"

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-17T15:31:12.034Z",
+  "generated_at": "2026-09-17T17:54:51.146Z",
   "date": "2026-09-17",
   "slug": "steel-advance",
   "name": "Advance Grinding Services",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Paid channels (Meta and Google Ads) show zero spend, leads, and clicks over the past 28 days, meaning all organic GBP activity is carrying the full load with 169 total actions, 3 calls, 126 direction requests, and 40 web clicks across 25 active days. The biggest concern is a 41.86% drop in Search Console clicks over the past 7 days versus the prior 7, suggesting organic search visibility has declined and warrants an immediate content or technical SEO review.",
+  "verdict": "Paid channels (Meta and Google Ads) generated zero spend, leads, or clicks over the past 28 days, so all measurable activity came from organic sources. Google Business Profile drove 169 total actions including 126 direction requests and 3 calls, though Search Console impressions dropped 41.86% over the last 7 days versus the prior 7, signaling a notable decline in organic search visibility worth monitoring.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -555,44 +555,44 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-09-17T15:37:39.250Z",
+    "generated_at": "2026-09-17T17:58:59.215Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid is fully dark; organic eroding — 3-day SC cliff confirms decline.",
+    "verdict": "Paid is dormant; organic holding but Search visibility eroding fast.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — Meta and Google Ads completely dark, 0 leads generated from paid channels.",
+        "text": "Zero paid spend, leads, or clicks across all 28 days — Meta and Google Ads are fully dark; no efficiency to measure.",
         "confidence": "confirmed",
-        "channel": "meta/google_ads"
+        "channel": "meta+google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3 overdue CRM milestones from July (1st Directives, Tom call list, dedup workbook) show no completion event — pipeline integrity at risk.",
+        "text": "342 stub accounts unreconciled (blocker due 2026-08-31): Sales-i sync is blind to these accounts, stalling pipeline data integrity.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "3 Aug-31 blockers overdue: 342 stub reconciliation, Web/SEO root cause fix, and AGS+Forte contact pull — all gate downstream delivery.",
+        "text": "Web/SEO root cause fix and AGS+Forte contact pull both overdue since 2026-08-31 — two separate blockers with no completed event recorded.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
-        "priority": 2,
-        "text": "SC clicks last 3 days (Sep 14–16): 9, 0, 0 vs prior 3 days (Sep 11–13): 8, 2, 0 — week avg collapsed; 3-day signal confirms -41.86% SC drop is real.",
+        "priority": 3,
+        "text": "Search Console clicks collapsed to 0 on Sep 14–16 (3-day signal); prior 3-day avg was ~3/day; 7d delta -41.86% confirms the drop is structural, not noise.",
         "confidence": "confirmed",
         "channel": "organic"
       },
       {
         "id": "F5",
-        "priority": 3,
-        "text": "GBP actions last 3 days (Sep 14–16): 0, 0, 0 vs prior 3 days (Sep 11–13): 1, 1, 0 — direction and call intent has gone silent for 3 consecutive days.",
-        "confidence": "confirmed",
+        "priority": 4,
+        "text": "GBP actions hit 0 for 3 consecutive days (Sep 14–16) after averaging ~5–10/day earlier in September; 407 impressions over 28 days but call rate only 0.74%.",
+        "confidence": "probable",
         "channel": "gbp"
       }
     ],
@@ -600,32 +600,33 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Immediately escalate 342 stub reconciliation and Web/SEO root cause fix — both Aug-31 blockers, now 17 days overdue.",
+        "text": "Escalate 342 stub reconciliation to Ahmed immediately — blocker gates Sales-i sync for all affected accounts.",
         "cites": [
-          "F3"
+          "F2"
         ],
-        "monday_item_name": "Clear Aug-31 SOW Blockers",
-        "monday_update": "Three blockers passed their Aug-31 deadline and remain open as of Sep 17: 342 stub reconciliation (gates Sales-i sync), the Web/SEO root cause fix, and AGS+Forte contact pull for outreach. Ahmed and Dev 2 to confirm current status and post updated ETAs to this board by Sep 19. Success check: all three items show a completion event or a revised milestone with owner assigned by Sep 20."
+        "monday_item_name": "Reconcile 342 CRM Stub Accounts",
+        "monday_update": "The 342 stub accounts remain unreconciled as of 2026-09-17, past the 2026-08-31 deadline. Sales-i cannot sync Customer IDs to these accounts until the name-based match against the authoritative customer sheet is complete, breaking the inactivity automation pipeline. Success check: rollback file posted to Monday board and stub count confirmed at zero by 2026-09-24. Ahmed to confirm progress by EOD 2026-09-18."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Investigate and fix the Search Console 0-click days (Sep 15–16) — likely a crawl, indexing, or manual action event given the 3-day cliff.",
+        "text": "Identify cause of Search Console 3-day zero-click signal; submit Web/SEO root cause fix overdue since Aug 31.",
         "cites": [
-          "F4"
+          "F4",
+          "F3"
         ],
-        "monday_item_name": "SC Zero-Click Drop Investigation",
-        "monday_update": "Search Console clicks hit 0 on both Sep 15 and Sep 16 after averaging 8–9 clicks on Sep 11 and Sep 14. This is a 3-day confirmed signal, not noise, and aligns with the -41.86% 7-day delta. Pull Google Search Console coverage and manual actions report immediately; check for a crawl anomaly or recent site change that matches the Sep 14 drop date. Success check: root cause documented and fix submitted by Sep 20; SC clicks return above 5/day within 7 days of fix."
+        "monday_item_name": "AGS Search Visibility Root Cause Fix",
+        "monday_update": "Search Console clicks dropped to 0 for Sep 14–16 and the 7-day delta is -41.86% versus the prior period — this is a confirmed 3-day signal, not noise. The Web/SEO root cause finding and fix were due 2026-08-31 and remain unsubmitted. Action: Dev/SEO team to diagnose ranking or indexation issue and post a written root cause with fix plan to Monday by 2026-09-20. Success check: sc_clicks return to prior 3-day avg of ~3/day within 7 days of fix deployment."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions through Sep 20 — 3 consecutive zero days may be weekend artifact; re-check before escalating.",
+        "text": "Watch GBP actions: 3 consecutive zero days (Sep 14–16) after 5–10/day norm — re-check at next run on Sep 20.",
         "cites": [
           "F5"
         ],
-        "monday_item_name": "GBP Action Drop Watch",
-        "monday_update": "GBP actions recorded 0 on Sep 14, 15, and 16. The prior 28-day total was 169 actions across 25 active days, so three quiet days could reflect weekend behaviour. No action taken this cycle. Re-check on Sep 20: if actions remain at or near 0 across weekday dates, escalate as a GBP visibility issue linked to the SC organic decline."
+        "monday_item_name": "Watch AGS GBP Action Drop",
+        "monday_update": "GBP actions fell to 0 for three consecutive days (Sep 14–16) after averaging 5–10/day earlier in September. This could reflect the same search visibility decline driving the Search Console drop, or a GBP profile issue. No action is taken this cycle — hypothesis grade only. Re-check on 2026-09-20: if actions remain at or near 0, escalate to a profile audit."
       }
     ],
     "next_check": "2026-09-20"
