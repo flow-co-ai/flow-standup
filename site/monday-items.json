@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-17T18:44:44.849565+00:00",
+  "generated_at": "2026-09-18T14:42:07.003476+00:00",
   "by_client": {
     "MedStation": [
       {
@@ -8,8 +8,13 @@
         "board": "CRM",
         "status": "Reopened",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12978886451",
-        "updated_at": "2026-09-09T16:19:36.000Z",
+        "updated_at": "2026-09-18T00:49:15.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-09-18",
+            "text": "@Nacer Amrouch ﻿ ﻿﻿Salam, the reported patient now has a matching NextGen ID and populated Weston clinic, service, status, and first-visit fields in GHL. Weston scoping is enforced in the DigitalOcean sync. Keeping this Reopened until a new contact and appointment pass the full field check."
+          },
           {
             "author": "Nacer Amrouch",
             "date": "2026-09-09",
@@ -82,6 +87,11 @@
             "author": "Nacer Amrouch",
             "date": "2026-09-09",
             "text": "Salam, Context. MedStation was closed on 7 September. Before 9am Renata had already answered three inbound leads by hand, because nothing replies automatically when the clinic is shut, and she said she had also picked up a message the previous night. Her words were that we should have messages after business hours too. This is the gap this item was opened for, now showing up with real patients on the other end. The policy Sohib set the same morning. Do not try to hold the conversation out of hours. Tell the lead we are closed, say we will be in contact during business hours, and invite them to leave what they are looking for so the team has something to work from when it opens. What was actually built on the day. Ahmed built a closed today message in GoHighLevel on 7 September. It fires on"
+          },
+          {
+            "author": "Sohib Boundaoui",
+            "date": "2026-09-04",
+            "text": "Confirm business hours logic exists across the messaging workflows. Handle it as one condition inside each workflow, not as separate day/after-hours workflows. @Ahmed Memon @Ali Shaheer"
           }
         ],
         "subitems": []
@@ -113,17 +123,22 @@
         "board": "CRM",
         "status": "For Review",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13002507842",
-        "updated_at": "2026-09-10T22:35:44.000Z",
+        "updated_at": "2026-09-18T00:45:06.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-09-18",
+            "text": "Salam @Nacer Amrouch ﻿ ﻿﻿, conversation-interruption fix is still For Review. The immediate task on every inbound reply is disabled, and the missed-message wait is set to 2 hours. Caroline's thread shows the earlier interruption and remains unassigned. We still need live staff-reply and no-reply tests before sign-off."
+          },
+          {
+            "author": "Nacer Amrouch",
+            "date": "2026-09-17",
+            "text": "Salam, Renata sent four screenshots on 16 September showing automated messages going out while she was actively replying to the patient. Her words: this flow needs review, we cannot send an automated message while I am messaging the patient. The 16 September checkin reset the rule. The missed message textback and its internal alert fire only after 2 hours with no staff reply , not the 1 hour built on 10 September, and never at all once a staff member has replied on the thread. Add the staff reply filter that this item's 9 September context already named as wrong: the notification triggers on the contact replying at all, so every patient message restarts the clock instead of stopping it. Test on a live thread where staff reply inside the window and confirm nothing automated is sent, then re"
+          },
           {
             "author": "Ahmed Memon",
             "date": "2026-09-10",
             "text": "Completed the Missed Call Textback and Missed Message Textback drafts. Missed messages wait one hour for a staff response during business hours; if unanswered, Renata receives an internal alert. After-hours contacts receive the closed-office response immediately, while Renata’s notification waits until the next business opening. Missed-call alerts follow the same business-hours rules. WhatsApp is primary, SMS is only the undelivered fallback, duplicate-message protection is configured, and both workflows have zero builder errors. They remain unpublished pending approval and controlled live QA."
-          },
-          {
-            "author": "Nacer Amrouch",
-            "date": "2026-09-09",
-            "text": "Salam, Context. The 3 September MedStation go live call moved lead escalation off user assignment triggers and onto message status triggers, and Sohib wrote the build out as point three of his recap in the GHL Dev chat the same day. Today a lead who calls and gets no answer, or texts and gets no reply, falls through with nobody told about it. The 4 September call then specified the trigger conditions, which are carried below. Workflow one, missed call textback. Build it to the same pattern already running for Maadi Law: an inbound call that is not answered triggers an automatic message back to the caller. Reuse the Maadi Law build as the reference rather than starting from a blank workflow. Workflow two, missed message textback. Trigger on a lead sending us a message that nobody replies to"
           }
         ],
         "subitems": []
@@ -235,6 +250,75 @@
             "author": "Ahmed Memon",
             "date": "2026-09-11",
             "text": "Salam @Nacer Amrouch ﻿ ﻿/ @Sohib Boundaoui ﻿ ﻿﻿﻿, The Send To NextGen backend and GHL draft are built, and read-only validation passed with duplicate protection. One field-mapping clarification is needed before activation: NextGen's person-create endpoint has no native service field. Name, phone, and email map directly, while Booking Clinic maps through the Weston NextGen session/location. Which NextGen field should receive GHL Booking Service: a specific user-defined/custom field, or should Booking Service remain in GHL until an appointment is created? Production writes remain disabled and the GHL workflow remains in Draft until this mapping is confirmed."
+          },
+          {
+            "author": "Nacer Amrouch",
+            "date": "2026-09-10",
+            "text": "Salam, Context. Patient data only moves one way today. Information flows from Neurin into NextGen and then into GoHighLevel on a fifteen minute sync, so anything captured first in GoHighLevel has to be retyped into NextGen by hand. At the team onboarding call on 4 September this was named as the main source of duplicate entry for the front desk, and the fix proposed on the call was a button rather than a further sync. Deliverable. Build a Send to NextGen action on the GoHighLevel contact record that pushes the patient into NextGen directly, so a contact created in GoHighLevel does not have to be typed a second time. Field mapping. Agree and document on this item which fields the button sends, at minimum name, phone, email, clinic and service, and confirm which of those NextGen treats as ma"
+          }
+        ],
+        "subitems": []
+      },
+      {
+        "monday_item_id": "13073772688",
+        "name": "Lead Geography",
+        "board": "CRM",
+        "status": "Start",
+        "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13073772688",
+        "updated_at": "2026-09-17T20:07:58.000Z",
+        "recent_updates": [
+          {
+            "author": "Nacer Amrouch",
+            "date": "2026-09-17",
+            "text": "Salam, Context. On 15 September Renata at MedStation Weston said many of the messages arriving in GoHighLevel are from people in Massachusetts , and asked how the process is segmented when Weston targeting was set to a radius around the clinic. Naz checked and found the only out of state records he could see came from the historical NextGen sync, not live campaigns. Renata clarified she means the inbound message leads and posted examples. The question is still open in the client chat. Deliverable one, trace the examples. Take the contacts Renata posted and report, for each, the source, the campaign and the date it entered GoHighLevel. That settles whether these are live paid leads or imported records replying on an old thread. Deliverable two, act on what the trace says. If they are import"
+          }
+        ],
+        "subitems": []
+      },
+      {
+        "monday_item_id": "13073779578",
+        "name": "Message Inventory",
+        "board": "CRM",
+        "status": "Start",
+        "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13073779578",
+        "updated_at": "2026-09-17T20:13:37.000Z",
+        "recent_updates": [
+          {
+            "author": "Nacer Amrouch",
+            "date": "2026-09-17",
+            "text": "Salam, Context. Renata asked on 16 September for a document with all the automated messages so she can review them, and the checkin the same day gave her Friday 18 September to come back with feedback. Nothing on the four boards holds the message set, so she has been reviewing it from screenshots of live patient threads. Produce one document listing every automated message Weston sends from GoHighLevel: the exact copy in Portuguese and English, the workflow it sits in, its trigger, and its delay. Please also include the Spanish copy of each to be added in next week. Cover the missed call textback, the missed message textback, the review request, reactivation, the closed office response and the 24 hour reopening template. Send it in ASAP for Renata to review on Friday. The same call asked f"
+          }
+        ],
+        "subitems": []
+      },
+      {
+        "monday_item_id": "13074108057",
+        "name": "Overall Lead View",
+        "board": "CRM",
+        "status": "Start",
+        "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13074108057",
+        "updated_at": "2026-09-17T20:40:05.000Z",
+        "recent_updates": [
+          {
+            "author": "Nacer Amrouch",
+            "date": "2026-09-17",
+            "text": "Salam, Context. On 11 September Mateus asked how MedStation can monitor how many leads the Weston Meta and Google campaigns are generating. Sohib pointed at GoHighLevel and said the built in dashboard is limited. Mateus narrowed it to the question he actually wants answered: separate the leads that are older or redirected from other clinics' campaigns from the ones coming directly from Weston paid ads. Sohib confirmed Weston Meta and Google leads are clearly labelled, so the labelling exists and the view does not. The 16 September checkin settled the counting rule that view has to implement. A lead counts as marketing only when it was booked through the ads or through the website and carries a source tag. Bookings that arrive any other way are excluded from the marketing count even when th"
+          }
+        ],
+        "subitems": []
+      },
+      {
+        "monday_item_id": "13074147388",
+        "name": "Purchase Value",
+        "board": "CRM",
+        "status": "Start",
+        "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13074147388",
+        "updated_at": "2026-09-17T20:44:38.000Z",
+        "recent_updates": [
+          {
+            "author": "Nacer Amrouch",
+            "date": "2026-09-17",
+            "text": "Salam, Context. On 14 September Jonatan at MedStation asked whether revenue from repeat purchases can be traced back to the original acquisition source, so the account is judged on lifetime value rather than first conversion. Sohib confirmed the structure is already right: the source is stamped the first time a patient is seen and stays on the record permanently, and every later sale sits on that same contact as a new opportunity. What is missing, and it was promised to the client. Sohib told MedStation the same day that the one gap is pulling the purchase amount onto each sale. Without a value on the record the cohort reports return patient counts and no money, which is not what was asked for. The 16 September Weston checkin widened this to the pipeline view itself. Renata is managing opp"
           }
         ],
         "subitems": []
@@ -256,6 +340,11 @@
             "author": "Nacer Amrouch",
             "date": "2026-08-13",
             "text": "Salam, Confirmed with the client (8/4): Flow runs the Weston campaigns directly, not the clinic team. Test additional CTA types. Current CTA is WhatsApp message only. Now that Weston's booking website is reportedly live, test call and instant form CTAs alongside it and compare performance. New clinic-recorded videos incoming. @Sohib Boundaoui will name each file to match the reference so it's clear which clip maps to which service/location. Consider location-tailored landing pages built around each clinic's top-performing services, coordinate with the Web+SEO team's location pages work rather than building standalone. @Ads Team @Khurram Jamil"
+          },
+          {
+            "author": "Ads Team",
+            "date": "2026-07-13",
+            "text": "﻿Salam @Nacer Amrouch ﻿ ﻿ @Sohib Boundaoui ﻿, ﻿ ﻿Kindly share the proper access and details for this client so we can plan a strategy for first campaign.﻿﻿﻿"
           }
         ],
         "subitems": []
@@ -277,6 +366,11 @@
             "author": "Sohib Boundaoui",
             "date": "2026-08-24",
             "text": "@Ads Team please run an audit of the Google Ads for Medstation, confirmed this is our campaign now. ﻿we need to make sure that we are doing hyper local targetting for ONLY the Weston branch of medstation. that is our first area of focus. ﻿ ﻿Looking to have this live ASAP. Phone calls should route to ﻿ +1 954-231-4605 ﻿﻿"
+          },
+          {
+            "author": "Sohib Boundaoui",
+            "date": "2026-08-21",
+            "text": "@Ads Team ﻿Please run an audit of the Google Ads for Medstation, there is a chance we can get this and Meta Ads. ﻿"
           }
         ],
         "subitems": [
@@ -679,8 +773,13 @@
         "board": "CRM",
         "status": "Done",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12810218373",
-        "updated_at": "2026-09-10T20:02:33.000Z",
+        "updated_at": "2026-09-18T12:26:15.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-09-18",
+            "text": "Salam @Nacer Amrouch ﻿ ﻿﻿﻿, I reviewed the agreement-reminder issue raised on this item. The 24-hour check was using the original \"Sent\" trigger value even after a contact had signed. I published \"Maadi Law | Agreement Outcome Stops Signature Reminders\" to remove contacts from \"Maadi Law - Agreement Signature Follow-Up\" when the standard or minor HIPAA agreement is signed/accepted, declined, or completed. The new workflow is published, and its removal action passed a controlled test. I cleared two waiting enrollments; the reminder workflow showed no waiting enrollments at the time of review. Still pending before sign-off: run dummy sign and decline tests end to end; verify the contacts named in this item and the recent signed-contact example have no queued reminders; and confirm cases awai"
+          },
           {
             "author": "Nacer Amrouch",
             "date": "2026-09-10",
@@ -801,8 +900,13 @@
         "board": "Ads",
         "status": "In Progress",
         "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12471071784",
-        "updated_at": "2026-08-25T21:39:54.000Z",
+        "updated_at": "2026-09-17T20:23:03.000Z",
         "recent_updates": [
+          {
+            "author": "Sohib Boundaoui",
+            "date": "2026-09-17",
+            "text": "﻿Please add this video to the mix of ads brother @Ads Team ﻿ ﻿ Maadi Law ad largrange.MP4 ﻿﻿"
+          },
           {
             "author": "Sohib Boundaoui",
             "date": "2026-08-25",
@@ -833,6 +937,11 @@
             "author": "Sohib Boundaoui",
             "date": "2026-08-25",
             "text": "Go-live blocker — before Friday 8/28 Rebuild the Google Ads CAPI conversion on the Collect Documents stage, not Case Accepted. Per your 8/20 note the CAPI event is currently tracking Case Accepted and is set as the main campaign goal. That needs to change for two reasons: 1. The pipeline was reordered with the client on 8/25. Collect Documents now sits before Case Accepted. New order: New Lead > Contacted/No Answer > Attorney Review > Collect Documents > Documents Received > Case Accepted / Case Rejected > Case Settled. Appointment Scheduled sits off to the side. 2. Case Accepted only fires from Clio Manage via a sync that isn't finished yet. If the main goal hangs off that stage, Smart Bidding gets nothing to optimise against for weeks. Collect Documents is the qualifier — it means the cl"
+          },
+          {
+            "author": "Sohib Boundaoui",
+            "date": "2026-08-19",
+            "text": "@Ads Team ﻿﻿﻿ Landing page URLs (final) https://maadilaw.com/car-accident-lawyer/ https://maadilaw.com/auto-accident-lawyer/ https://maadilaw.com/motor-vehicle-accident-lawyer/ https://maadilaw.com/la-grange-road-accident-lawyer/ https://maadilaw.com/harlem-avenue-accident-lawyer/ Conversion page: https://maadilaw.com/thank-you/ ﻿"
           }
         ],
         "subitems": []
@@ -879,6 +988,11 @@
                 "author": "Ads Team",
                 "date": "2026-08-28",
                 "text": "LSA Weekly Report Reporting Period: August 21, 2026 – August 27, 2026 ﻿ Overall Performance The LSA campaigns generated 1 phone lead during the reporting period from $198.44 in lead spend , resulting in an average cost per lead of $198.44 . The campaigns generated 50 ad impressions , with a strong 100.00% Top Impression Rate , meaning the ads appeared above organic search results for all eligible impressions. ﻿ Performance Summary Lead Spend: $198.44 Phone Leads: 1 Cost Per Lead: $198.44 Message Leads: 0 Ad Impressions: 50 Top Impression Rate: 100.00% Absolute Top Impression Rate: 67.57% ﻿ Overall Summary The account generated 1 phone lead at a cost of $198.44 during the reporting period. While lead volume was low, the campaigns maintained excellent search visibility , achieving a 100.00% "
+              },
+              {
+                "author": "Ads Team",
+                "date": "2026-08-21",
+                "text": "LSA Weekly Report Reporting Period: August 14, 2026 – August 20, 2026 ﻿ Overall Performance The LSA campaigns generated 2 phone leads during the reporting period from $488.50 in lead spend , resulting in an average cost per lead of $244.25 . The campaigns also generated 31 ad impressions , with a strong 100.00% Top Impression Rate , meaning the ads appeared above organic search results for all eligible impressions. ﻿ Performance Summary Lead Spend: $488.50 Phone Leads: 2 Cost Per Lead: $244.25 Message Leads: 0 Ad Impressions: 31 Top Impression Rate: 100.00% Absolute Top Impression Rate: 46.15% ﻿ Overall Summary The account generated 2 phone leads at an average cost of $244.25 per lead during the reporting period. While lead volume was low, visibility remained strong, with the ads achieving"
               }
             ]
           },
@@ -1072,6 +1186,11 @@
             "author": "Nacer Amrouch",
             "date": "2026-08-10",
             "text": "Salam, Refined local SEO priority from the 7/30 meeting: start with Orland Park + motor vehicle accidents as the fastest-impact target, rather than generic hyper-local motor vehicle accident pages across multiple cities at once. Deliverable : optimize Orland Park presence (GBP, on-page SEO, local citations) for motor vehicle accident queries first, then build out separate location pages for additional cities (no stripping local references from main pages, confirmed explicitly). Sequencing : Orland Park is the pilot; additional location pages follow once that's validated and performing. Done = Orland Park motor vehicle accident SEO is live, measurably ranking, and the roadmap for additional cities is documented and ready to execute. @Muhammad Hashir Faiz @Zayan Faiz"
+          },
+          {
+            "author": "Nacer Amrouch",
+            "date": "2026-07-22",
+            "text": "Salam, Build hyperlocal landing pages targeting Orland Park (this is a city), Harlem Ave, and LaGrange Rd for local SEO, per Sharif's 7/16 direction on southwest suburb targeting. Publish Spanish and Arabic language pages alongside the English site to support the multi-language ad and video push. @Muhammad Hashir Faiz @Zayan Faiz"
           }
         ],
         "subitems": []
@@ -1135,46 +1254,6 @@
         ]
       },
       {
-        "monday_item_id": "12472491450",
-        "name": "Review Boost Campaign Launch",
-        "board": "CRM",
-        "status": "Done",
-        "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12472491450",
-        "updated_at": "2026-08-06T13:09:09.000Z",
-        "recent_updates": [
-          {
-            "author": "Ahmed Memon",
-            "date": "2026-08-06",
-            "text": "Review Boost Campaign update: the live HCP-triggered “Customer Review Request” workflow was preserved, and I created a backup plus a separate unpublished workflow named “Review Boost - Converted Customer - Draft.” The draft uses Contact Tag Added = converted customer and the approved pacing: wait 1 day, Day 1 review request, wait 6 days, Day 7 reminder, wait 7 days, Day 14 final request. All messages use the Fibid Google review link. The Day 14 copy keeps the $50 referral reward separate from the request for an honest review to avoid incentivized-review wording. The draft remains OFF/unpublished with no historical existing-customer bulk trigger; it is ready for team review and must not be launched until approval is confirmed."
-          },
-          {
-            "author": "Ahmed Memon",
-            "date": "2026-08-01",
-            "text": "@Nacer Amrouch ﻿ ﻿﻿﻿ / @Sohib Boundaoui ﻿ ﻿﻿ Confirmed Hashir's guidance in GHL: the active tag is converted customer, while existing-customer is the historical 1,067-contact import tag and should not be used for a bulk trigger. The current published Customer Review Request workflow is still triggered by HCP Job Finished with no filter, not Contact Tag Added. Its builder contains three SMS and three wait steps, but the wait labels still say 1 Day After Job Completion, and the first inspected SMS has a grammar error and no review link. To avoid duplicate review requests, please confirm that we should replace/reconcile this existing live HCP-triggered workflow with the converted customer trigger and use the approved Homer Glen review link/copy for Day 1, Day 7, and Day 14. Nothing has been l"
-          }
-        ],
-        "subitems": [
-          {
-            "monday_item_id": "12472425897",
-            "name": "Confirm Import Tag",
-            "board": "CRM",
-            "status": "Done",
-            "monday_url": "https://flowcompany.monday.com/boards/18418241406/pulses/12472425897",
-            "updated_at": null,
-            "recent_updates": []
-          },
-          {
-            "monday_item_id": "12472426302",
-            "name": "Build Trigger + Launch Drip",
-            "board": "CRM",
-            "status": "Done",
-            "monday_url": "https://flowcompany.monday.com/boards/18418241406/pulses/12472426302",
-            "updated_at": null,
-            "recent_updates": []
-          }
-        ]
-      },
-      {
         "monday_item_id": "12484672740",
         "name": "Booking Bot Test",
         "board": "CRM",
@@ -1191,6 +1270,11 @@
             "author": "Ahmed Memon",
             "date": "2026-08-01",
             "text": "@Sohib Boundaoui ﻿ ﻿﻿ / @Nacer Amrouch ﻿﻿ Marketplace benchmark completed against the LeadConnector HVAC Service Booking template. The baseline supports instant booking, reschedule/cancel, live availability and technician assignment, lead capture/qualification, and FAQ responses. In the Quality HVAC location, the Conversation AI Agents list is currently empty, so there is no active bot/current flow available to test against the required 8-12 and 1-5 booking windows. Please confirm whether we should create a new Conversation AI bot from the HVAC template, and which calendar/team assignment it should use. The benchmark evidence and gap list are documented; no paid template or live agent was installed."
+          },
+          {
+            "author": "Sohib Boundaoui",
+            "date": "2026-07-08",
+            "text": "Salam, Found a ConversationAI marketplace template (HVAC Service Booking Bot) worth benchmarking our GHL booking flow against before wider rollout. Test the current flow against 3 capabilities: instant booking (two time slots only 8-12, and 1-5), lead capture/qualification, and FAQ responses. Document any gaps found so we know what to build before rollout. @Ali Shaheer @Ahmed Memon ﻿"
           }
         ],
         "subitems": [
@@ -1289,6 +1373,11 @@
             "author": "Ahmed Memon",
             "date": "2026-09-11",
             "text": "Salam @Nacer Amrouch, following up on Schedule Notifications. We reviewed the full requirement and are ready to complete the GHL verification. Please confirm with Quality HVAC: - Schedule Updated email notifications have been enabled in Lessen Pro. - The destination inbox receiving those notifications. - Whether Lessen Pro and Housecall Pro are separate appointment feeds, or Lessen Pro has replaced Housecall Pro for schedule updates. Once confirmed, we will trace the email parser and run one real schedule-change test to verify that it updates the matching GHL contact correctly. Status remains Stuck pending these client-side confirmations."
+          },
+          {
+            "author": "Nacer Amrouch",
+            "date": "2026-09-10",
+            "text": "Salam, Context. On 9 September Sohib asked Aiman at Quality HVAC to turn on the Schedule Updated email notifications in Lessen Pro, and said plainly that this was the only link getting those appointments into GoHighLevel. The client came back asking how to do it and nobody answered, so the appointment feed is off and they are waiting on us for instructions. Deliverable one. Send the exact steps to enable Schedule Updated notifications, addressed to whoever administers the account. Deliverable two. Confirm where those emails land and what parses them into GoHighLevel, then prove one real schedule change arrives as an appointment update on the matching contact. Deliverable three. Reconcile this with HouseCall Pro. Completed jobs for this client already come into GoHighLevel from HouseCall Pr"
           }
         ],
         "subitems": []
@@ -1387,6 +1476,11 @@
                 "author": "Ads Team",
                 "date": "2026-09-04",
                 "text": "Meta Ads Weekly Report Reporting Period: August 28 – September 3, 2026 ﻿ Overall Performance The Meta campaigns generated 11 total leads during the reporting period from $230.94 in ad spend . This included 9 phone calls and 2 leads through the instant form . The Calls campaign generated the majority of the leads, while the Installation campaign generated 2 form leads at a higher cost per lead. ﻿Performance Summary Amount Spent: $230.94 Total Leads: 11 Phone Calls: 9 Instant Form Leads: 2 Average Cost Per Lead: $20.99 Reach: 6,048 Impressions: 10,795 ﻿Campaign Performance Calls Phone Calls: 9 Amount Spent: $94.28 Cost Per Call: $10.48 Reach: 4,919 Impressions: 8,857 The Calls campaign generated 9 phone calls at an average cost of $10.48 per call , accounting for the majority of the campaign"
+              },
+              {
+                "author": "Ads Team",
+                "date": "2026-08-28",
+                "text": "Meta Ads Weekly Report Reporting Period: August 21, 2026 – August 27, 2026 ﻿ Overall Performance The campaigns generated 9 phone leads and 1 form lead during the reporting period, for a total of 10 leads . ﻿ Performance Summary Phone Leads: 8 Phone Lead Spend: $57.70 Average Cost Per Phone Lead: $7.21 Form Leads: 1 Form Lead Spend: $89.30 Average Cost Per Form Lead: $89.30 ﻿ Ad Set Level Performance Broad Targeting Phone Leads: 5 Cost Per Lead: $5.92 Spend: $29.59 Impressions: 3,469 Reach: 2,527 Status: Pending Review Instant Form - All Ads Form Leads: 1 Cost Per Lead: $89.30 Spend: $89.30 Impressions: 1,211 Reach: 817 Status: Pending Review HVAC - Surge Protector Phone Leads: 3 Cost Per Lead: $9.37 Spend: $28.11 Impressions: 1,559 Reach: 1,088 Status: Pending Review Inactive Ad Sets The f"
               }
             ]
           },
@@ -1407,6 +1501,11 @@
                 "author": "Ads Team",
                 "date": "2026-09-04",
                 "text": "Google Ads Weekly Report Reporting Period: August 28 – September 3, 2026 ﻿ Overall Performance The Google Ads Search campaign spent $100.05 during the reporting period and generated 15 interactions from 314 impressions . No phone calls or conversions were recorded during the week. ﻿ Performance Summary Total Spend: $100.05 Impressions: 314 Interactions: 15 Interaction Rate: 4.78% Average Cost: $6.67 Phone Calls: 0 Conversions: 0 ﻿ Campaign Level Performance Search – Phone Calls Spend: $100.05 Impressions: 314 Interactions: 15 Interaction Rate: 4.78% Average Cost: $6.67 Phone Calls: 0 Conversions: 0 The Search – Phone Calls campaign generated 15 interactions at an average cost of $6.67 , but no phone calls or conversions were recorded during the reporting period. ﻿ Overall Summary The campa"
+              },
+              {
+                "author": "Ads Team",
+                "date": "2026-08-28",
+                "text": "Google Ads Weekly Report Reporting Period: August 21, 2026 – August 27, 2026 ﻿ Overall Performance The Google Ads campaign generated 5 phone calls and 1 conversion during the reporting period from $103.60 in ad spend . The campaign generated 221 impressions and 18 interactions , resulting in a strong 8.14% interaction rate with an average cost of $5.76 per interaction . ﻿ Performance Summary Total Spend: $103.60 Impressions: 221 Interactions: 18 Interaction Rate: 8.14% Average Cost: $5.76 Phone Calls: 5 Conversions: 1 Cost Per Conversion: $103.60 ﻿ Campaign Level Performance BWS - Search - Phone Calls Spend: $103.60 Impressions: 221 Interactions: 18 Interaction Rate: 8.14% Average Cost: $5.76 Phone Calls: 5 Conversions: 1 Cost Per Conversion: $103.60 ﻿ Overall Summary The campaign generate"
               }
             ]
           },
@@ -1837,6 +1936,11 @@
             "author": "Ads Team",
             "date": "2026-07-22",
             "text": "Salam @Sohib Boundaoui ﻿, ﻿ ﻿We have paid $7.77 per call in last 7 days. If client has not received any new sales, I think we should start testing new creatives.﻿ ﻿ ﻿"
+          },
+          {
+            "author": "Ads Team",
+            "date": "2026-05-08",
+            "text": "﻿ ﻿Hi, client is getting calls and also they have been answered as stats show ﻿ ﻿ @Nacer Amrouch ﻿ ﻿ @Sohib Boundaoui"
           }
         ],
         "subitems": []
@@ -1877,6 +1981,11 @@
                 "author": "Ads Team",
                 "date": "2026-09-04",
                 "text": "Google Ads Weekly Report Reporting Period: August 28 – September 3, 2026 ﻿ Overall Performance The Google Ads campaigns generated 8 phone call leads during the reporting period from $136.09 in ad spend , resulting in an average cost per phone call of $17.01 . The Search – Calls campaign was the primary driver of leads, generating all 8 phone calls . The Belle Watch – Sales campaign generated traffic but no phone call leads during the reporting period. ﻿ Performance Summary Total Spend: $136.09 Phone Call Leads: 8 Cost Per Phone Call: $17.01 Clicks: 25 Impressions: 352 CTR: 7.10% Average CPC: $5.44 ﻿ Campaign Level Performance Search – Phone Calls Spend: $78.00 Phone Call Leads: 8 Cost Per Phone Call: $9.75 Clicks: 10 Impressions: 236 CTR: 4.24% Average CPC: $7.80 The Search campaign focuse"
+              },
+              {
+                "author": "Ads Team",
+                "date": "2026-08-28",
+                "text": "Google Ads Weekly Report Reporting Period: August 21, 2026 – August 27, 2026 ﻿ Overall Performance The Google Ads campaigns generated 25 clicks from 469 impressions during the reporting period, with a total spend of $100.02 . The account achieved an overall 5.33% CTR with an average CPC of $4.00 . No conversions or phone calls were recorded during the reporting period. ﻿ Performance Summary Total Spend: $100.02 Clicks: 25 Impressions: 469 CTR: 5.33% Average CPC: $4.00 Phone Calls: 0 Conversions: 0 ﻿ Campaign Level Performance BWS - Belle Watch - Sales Spend: $67.52 Clicks: 18 Impressions: 116 CTR: 15.52% Average CPC: $3.75 Phone Calls: 0 Conversions: 0 This campaign generated the majority of the account's clicks and delivered a strong 15.52% CTR , indicating good engagement with the search"
               }
             ]
           },
@@ -1897,6 +2006,11 @@
                 "author": "Ads Team",
                 "date": "2026-09-04",
                 "text": "Meta Ads Weekly Report Reporting Period: August 28 – September 3, 2026 ﻿ Overall Performance The Meta call campaigns generated 65 phone calls during the reporting period from $405.82 in ad spend , resulting in an average cost per call of $6.24 . The July Call Campaign was the strongest performer, generating the highest number of calls while also achieving the lowest cost per call. The July Retargeting Campaign also performed efficiently, while the April End campaign generated the fewest calls at the highest cost per call. ﻿ Performance Summary Amount Spent: $405.82 Phone Calls: 65 Average Cost Per Call: $6.24 Reach: 4,943 Impressions: 7,948 ﻿ Campaign Performance April End – Call Campaign Phone Calls: 14 Amount Spent: $135.34 Cost Per Call: $9.67 Reach: 1,937 Impressions: 2,781 The campaig"
+              },
+              {
+                "author": "Ads Team",
+                "date": "2026-08-28",
+                "text": "Meta Ads Weekly Report Reporting Period: August 21, 2026 – August 27, 2026 ﻿ Overall Performance The campaigns generated 62 phone calls during the reporting period from $439.35 in ad spend , resulting in an average cost per call of $7.09 . The Broad - Health & wellness - Latin ad set was the strongest performer by volume and efficiency, generating 15 calls at $4.73 per call . The Detailed Targeting - 45 to 65+ ad set generated the highest number of calls overall at 21 , while the retargeting campaigns also contributed 15 calls combined . ﻿ Performance Summary Amount Spent: $439.35 Phone Calls: 62 Cost Per Call: $7.09 Impressions: 10,410 Reach: 8,452 ﻿ Campaign Performance Detailed Targeting - 45 to 65+ Phone Calls: 21 Amount Spent: $150.16 Cost Per Call: $7.15 Impressions: 4,688 Reach: 4,0"
               }
             ]
           }
@@ -2052,6 +2166,11 @@
             "author": "Ahmed Memon",
             "date": "2026-08-08",
             "text": "Sohib, Calling List is complete and ready for review. - Created SugarCRM Target List: Tom Call List AGS Quiet Accounts - Assigned to Tom Harmon - Added 19 verified AGS account matches - Verified each member by exact Sugar Account ID, customer ID, and ADVANCE GRINDING SERVICES, INC. relationship - Excluded all 14 review exceptions: 5 multiple candidates, 5 name mismatches, 2 non-AGS records, and 2 with no customer ID match - No core Sugar account records were altered - Backups and the reconciliation audit remain preserved The original quick-create form issue was resolved through SugarCRM's legacy Target List form. Tom can now use the verified list; the 14 exceptions remain excluded pending mapping review."
+          },
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-08-08",
+            "text": "@Sohib Boundaoui Update on the SugarCRM Calling List: - Backed up and audited Tom_Call_List_AGS_Quiet_Accounts.csv (33 source rows). - Compared it against 7,057 active Sugar Accounts using exact Customer ID, exact normalized company name, and AGS company checks. - 19 accounts are verified safe matches and ready to add. - 14 rows are held for review: 5 multiple-candidate matches, 5 name mismatches, 2 non-AGS records, and 2 with no Customer ID match. No fuzzy matching was used. - SugarCRM is currently blocking Target List creation: the required Name field clears when Save is submitted, including through the Accounts > Add To Target List flow. I stopped rather than bypass validation or risk modifying accounts. - No CRM records were altered, and no Target List members were created. The source,"
           }
         ],
         "subitems": []
@@ -2073,6 +2192,11 @@
             "author": "Ahmed Memon",
             "date": "2026-08-11",
             "text": "@Sohib Boundaoui ﻿ ﻿﻿ Update on the SugarAI Homepage draft: Completed and verified: - Active Leads now renders as a Lead Type donut chart (71 active leads). - Best Accounts now uses Account Type = High Value with Account Status = Growing or Customer Priority containing High; 12 matching accounts are returned. - All Lost Customers now uses Account Type = Inactive and Account Status = Lost, with Last Interaction and Last Quote Date added to the list view. - New Accounts Source now filters Account Type = New 1st Order, excludes blank sources, groups only by Account Source, and shows one bar per source. The verified result is Old Contact = 19. All corrected reports were created as copies and connected only to SugarAI Sales Dashboard - Draft. The original reports and Overview dashboard remain u"
+          },
+          {
+            "author": "Sohib Boundaoui",
+            "date": "2026-08-10",
+            "text": "@Ahmed Memon ﻿ @Ali Shaheer ﻿ ﻿ ﻿﻿ Home page dashboard development for sales agents, with the following dashlets:﻿ Active Leads : Total number of leads segmented by Lead Type (Prospect). Quote-to-Order Ratio : Based on RFQ Stages (Quote Sent vs Quote Won). Best Accounts(List Format) : Number of accounts marked Account type: High-Value Account status: High-priority, or Growing Growing vs Losing Accounts : Number of Lost Accounts, segmented by Account Status (Lost). New vs. Lost Accounts: Number of New accounts vs lost & inactive New Accounts Source Graph The only records showing in this report should be Accounts with Type \"New\" There is still a large “Undefined” category The labels at the bottom should be categories of Sources. One bar per source. All Lost Customers Dashlet (List Format) : "
           }
         ],
         "subitems": []
@@ -2397,8 +2521,14 @@
         "board": "Ads",
         "status": "Start",
         "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12187041023",
-        "updated_at": null,
-        "recent_updates": [],
+        "updated_at": "2026-09-18T14:21:14.000Z",
+        "recent_updates": [
+          {
+            "author": "Ads Team",
+            "date": "2026-09-18",
+            "text": "﻿Salam @Sohib Boundaoui ﻿﻿ ﻿﻿﻿, Today I have paused the Premium Box Awareness-Video-4-22 ad in the Premium Box campaign. This ad was consuming most of the budget in the campaign and, as a result, it spent $122.11 over the last 14 days without generating any results. This change will allow the remaining ads in the campaign to receive more budget and have a better opportunity to deliver results."
+          }
+        ],
         "subitems": [
           {
             "monday_item_id": "12783993913",
@@ -2463,6 +2593,11 @@
                 "author": "Ads Team",
                 "date": "2026-09-04",
                 "text": "Meta Ads Weekly Report Reporting Period: August 28, 2026 – September 3, 2026 ﻿ Overall Performance The account generated 14 purchases during the reporting period, producing $3,852.39 in purchase value from $322.26 in ad spend. This resulted in an overall ROAS of 11.95x , meaning the campaigns generated $11.95 in revenue for every $1.00 spent on advertising. Both active sales campaigns contributed to the strong performance. The Muslim-focused campaign was the standout performer, generating the majority of purchases and achieving an excellent 17.31x ROAS . The Others campaign also performed strongly, delivering a 4.79x ROAS . ﻿ Performance Summary Amount Spent: $322.26 Purchases: 14 Purchase Value: $3,852.39 Overall ROAS: 11.95x Average Cost Per Purchase: $23.02 ﻿ Impressions: 22,698 Average"
+              },
+              {
+                "author": "Ads Team",
+                "date": "2026-08-28",
+                "text": "Meta Ads Weekly Report Reporting Period: August 21, 2026 – August 27, 2026 Overall Performance ﻿ The active Meta campaigns generated 6 purchases during the reporting period, producing $1,174.18 in purchase value from $378.84 in ad spend . This resulted in an overall ROAS of 3.10x , meaning the campaigns generated $3.10 in revenue for every $1.00 spent on advertising. The Muslim Subscription Box campaign was the strongest performer this week, generating 3 purchases at a 4.22x ROAS , while the Others campaign also contributed 3 purchases with a 1.69x ROAS . ﻿ Performance Summary Amount Spent: $378.84 Purchases: 6 Purchase Value: $1,174.18 Overall ROAS: 3.10x Average Cost Per Purchase: $63.14 Reach: 5,524 Impressions: 22,978 Average Frequency: 4.26 Link Clicks: 194 Landing Page Views: 163 Ave"
               }
             ]
           }
@@ -2628,6 +2763,11 @@
                 "author": "Ads Team",
                 "date": "2026-09-04",
                 "text": "Meta Ads Weekly Report Reporting Period: August 28 – September 3, 2026 ﻿ Overall Performance The Leads campaign generated 9 leads during the reporting period from $553.07 in ad spend , resulting in an average cost per lead of $61.45 . All 9 leads came from the Images ad set , while the Kinetic Text ad set spent $149.44 but did not generate any recorded leads during the reporting period. ﻿ Performance Summary Amount Spent: $553.07 Leads: 9 Average Cost Per Lead: $61.45 Impressions: 6,334 Reach: 3,418 Average Frequency: 1.85 ﻿ Ad Set Performance Kinetic Text Leads: 0 Amount Spent: $149.44 Reach: 1,157 Impressions: 1,736 The Kinetic Text ad set spent $149.44 during the reporting period but did not generate any recorded leads. ﻿ Images Leads: 9 Amount Spent: $403.63 Cost Per Lead: $44.85 Reach"
+              },
+              {
+                "author": "Ads Team",
+                "date": "2026-08-28",
+                "text": "Meta Ads Weekly Report Reporting Period: August 21, 2026 – August 27, 2026 ﻿ Overall Performance The campaigns generated 10 leads during the reporting period from $514.72 in ad spend , resulting in an average cost per lead of $51.47 . At this stage, all 10 leads are coming from the Image Ad 1 - Split Static creative within the Images ad set. The Kinetic Text ad set has spent $68.94 so far but has not generated any leads. ﻿ Performance Summary Amount Spent: $514.72 Leads: 10 Cost Per Lead: $51.47 Reach: 4,431 Impressions: 7,798 ﻿ Campaign Performance Ad Set 3 - Kinetic Text The Kinetic Text ad set spent $68.94 during the reporting period but did not generate any leads. Leads: 0 Amount Spent: $68.94 Reach: 778 Impressions: 1,182 Ad Set 4 - Images The Images ad set generated all 10 leads reco"
               }
             ]
           }
@@ -2691,6 +2831,11 @@
                 "author": "Sohib Boundaoui",
                 "date": "2026-08-26",
                 "text": "@Muhammad Hashir Faiz ﻿can we do a blog on this? ﻿ ﻿﻿ https://www.justice.gov/opa/pr/rentgrow-inc-agrees-225m-civil-penalty-and-injunction-alleged-violati... ﻿﻿"
+              },
+              {
+                "author": "Nacer Amrouch",
+                "date": "2026-04-21",
+                "text": "@Muhammad Hashir Faiz ﻿ ﻿﻿﻿ ﻿JCL team liked these blogs. Please rewrite similarly for their blogs: ﻿ ﻿﻿ https://247wallst.com/personal-finance/2026/04/15/george-kamel-warns-debt-relief-clients-get-out-now... ﻿ ﻿ ﻿﻿ https://www.atlantanewsfirst.com/2026/03/10/atlanta-woman-cancels-debt-relief-contract-following-inv... ﻿"
               }
             ]
           },
@@ -2726,6 +2871,11 @@
                 "author": "Nacer Amrouch",
                 "date": "2026-07-30",
                 "text": "Salam ﻿Appreciate the list, but let's redirect these. The pages should target the actual companies from our debt relief ad sets, not debt collectors/background check companies. Build pages for (skip Freedom Debt Relief and Pacific Debt Relief, we already have those live): - GRT Financial - DebtBlue - Turnbull - Start New Financial - JG Wentworth - Five Lakes - Clarity - Credit Associates - Alleviate Same style/approach as the existing pages. Let me know if you need anything else to get started. @Muhammad Hashir Faiz ﻿﻿"
+              },
+              {
+                "author": "Nacer Amrouch",
+                "date": "2026-07-22",
+                "text": "Salam, The existing \"company law suit\" targeted SEO pages are performing well for JCL. Build a few more pages in that same style and targeting to capitalize on it. Here are the pages to build similar to: - https://justiceconsumerlaw.com/pacific-debt-relief-program-costs-consumer-risks/ - https://justiceconsumerlaw.com/freedom-debt-relief-lawsuit/ @Muhammad Hashir Faiz @Zayan Faiz"
               }
             ]
           }
@@ -2833,6 +2983,11 @@
                 "author": "Ads Team",
                 "date": "2026-09-04",
                 "text": "Meta Ads Weekly Report Reporting Period: August 28, 2026 – September 3, 2026 ﻿ Overall Performance The active campaign generated 1 lead during the reporting period from $339.96 in ad spend , resulting in a cost per lead of $339.96 . The campaign generated 2,439 impressions and reached 1,721 people , while delivering 36 link clicks and 30 landing page views . ﻿ Performance Summary Amount Spent: $339.96 Leads: 1 Cost Per Lead: $339.96 Reach: 1,721 Impressions: 2,439 Frequency: 1.42 Link Clicks: 36 Landing Page Views: 30 Cost Per Landing Page View: $11.33 Link CTR: 1.48% CPC: $9.44 CPM: $139.38 ﻿ Campaign Performance USA - Dental Awareness The Dental Awareness campaign was the only active campaign delivering during the reporting period and generated 1 lead . Leads: 1 Amount Spent: $339.96 Cos"
+              },
+              {
+                "author": "Ads Team",
+                "date": "2026-08-28",
+                "text": "Meta Ads Weekly Report Reporting Period: August 21, 2026 – August 27, 2026 Overall Performance ﻿ The active awareness campaign generated 2 leads during the reporting period from $370.81 in ad spend , resulting in an average cost per lead of $185.41 . The campaign reached 1,779 people and generated 2,985 impressions , with a 1.51% link CTR and 39 landing page views . ﻿ Performance Summary Amount Spent: $370.81 Leads: 2 Cost Per Lead: $185.41 Reach: 1,779 Impressions: 2,985 Average Frequency: 1.68 Link Clicks: 45 Landing Page Views: 39 Cost Per Landing Page View: $9.51 Link CTR: 1.51% Average CPC: $8.24 CPM: $124.22 ﻿ Campaign Performance USA - Dental - Awareness - Broad - July Videos - Reset The Dental awareness campaign was the only active campaign during the reporting period and generated"
               }
             ]
           }
@@ -2855,6 +3010,11 @@
             "author": "Sohib Boundaoui",
             "date": "2026-09-15",
             "text": "@Ads Team ﻿Here are new ads for flow company please try to post soon as possible, thank you in advance brother : ﻿ https://f.io/eRfOA1D9 ﻿﻿"
+          },
+          {
+            "author": "Sohib Boundaoui",
+            "date": "2026-07-27",
+            "text": "@Ads Team Here are 3 new ads. One of them is a brand new audience (Eye Doctors Ophthalmology), so it should be in a new audience setup. The other 2 are for Dental and fit in the current ads ﻿ ﻿﻿ https://f.io/Z6Kxb8dq ﻿﻿﻿"
           }
         ],
         "subitems": []
@@ -2876,6 +3036,11 @@
             "author": "Sohib Boundaoui",
             "date": "2026-07-31",
             "text": "FINAL BRIEF v2. This replaces the update above. Work from this one. Campaign: Video, skippable in-stream, YouTube placements only, uncheck video partners Max CPV bidding, low cap Budget: $15/day US only Exclude TV screens Frequency cap 3/week Targeting: One custom segment: \"people who searched these terms on Google\" This list only, nothing added: dental marketing dental practice marketing marketing for dentists dental marketing agency dental marketing company dental marketing companies dental advertising how to get more dental patients ophthalmology marketing ophthalmology marketing agency optometry marketing optometrist marketing eye care marketing medical practice marketing marketing for doctors physician marketing healthcare marketing agency medical marketing agency clinic marketing pri"
+          },
+          {
+            "author": "Sohib Boundaoui",
+            "date": "2026-07-31",
+            "text": "Objective: Launch Sohib's \"Time Is the Asset\" pre-roll ad on YouTube, targeting people actively searching clinic/practice marketing topics. Budget is very limited, so precision beats reach on every decision below. No settings that expand targeting. 1. Campaign setup (Google Ads) Campaign type: Video, skippable in-stream. YouTube placements only. UNCHECK Video Partners on Display Network. Bidding: Maximum CPV with a low bid cap to start. No Target CPA/Maximize Conversions until we have conversion volume. Daily budget: start at $10/day hard cap. Confirm final number with Sohib before launch. Geo: US only for now. Confirm with Sohib if he wants specific metros. Devices: exclude TV screens (search-intent viewers are on mobile/desktop). Frequency cap: 3 impressions per user per week. 2. Targeti"
           }
         ],
         "subitems": []
