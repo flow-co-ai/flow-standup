@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-18T14:45:14.714Z",
+  "generated_at": "2026-09-18T15:47:21.816Z",
   "date": "2026-09-18",
   "slug": "billy-doe",
   "name": "Billy Doe Meats",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 82,
   "status": "green",
-  "verdict": "Billy Doe Meats drove a 5.28 ROAS on $1,485.72 in Meta spend over 28 days (39 purchases, $7,838.50 revenue), but the biggest concern is a 27.27% drop in purchases over the last 7 days, likely tied to a 9.99% spend pullback that reduced delivery and reach during the period.",
+  "verdict": "Billy Doe Meats delivered a 5.28 ROAS on $1,485.72 in Meta spend over 28 days, generating 39 purchases and $7,838.50 in revenue, but the biggest concern is a 27.27% drop in purchases week-over-week, likely tied to the 9.99% spend pullback and audience fatigue on the top campaign \"BWS - Sales - Muslims\" ($837.62 spend). GBP engagement also fell sharply at -58.97% week-over-week, suggesting reduced local visibility that may be compounding the purchase decline.",
   "windsor": {
     "totals": {
       "spend": 1485.72,
@@ -714,78 +714,79 @@
     "history_line": "Website work completed"
   },
   "performance": {
-    "generated_at": "2026-09-18T14:52:05.973Z",
+    "generated_at": "2026-09-18T15:49:05.090Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "ROAS holds at 5.28x but purchase volume is structurally thinning, not just spend-driven.",
+    "verdict": "ROAS holding but purchase volume collapsing; GBP dark is the hidden accelerant.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "3-day purchase signal (Sep 15–17): 3, 0, 2 purchases vs prior 3 days (Sep 12–14): 2, 0, 1 — volume thin but not collapsing; ROAS up 1.21% despite -27.27% purchase drop means avg order value is lifting, not efficiency.",
+        "text": "Purchases collapsed to 2 in last 3 days (Sep 15–17) vs 6 in prior 3 (Sep 12–14), on nearly identical ~$55/day spend — revenue per dollar deteriorating at flat cost.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "SOW: Funnel test + UTM live (Aug 31 deadline) overdue — /halal-subscribe conversion test result unreported, blocking subscribe-page web work and attribution clarity.",
+        "text": "SOW: Funnel test + UTM live (Aug 31), Pre-launch gate (Aug 31), Platform ownership audit (Aug 31), and Aug 14 live-cooking event are all overdue with no completion recorded.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "SOW: Pre-launch gate (Aug 31), platform ownership audit (Aug 31), and Aug 14 live-cooking event all overdue with no completed event recorded — three deliverables stalled across Admin, CRM, and Video.",
-        "confidence": "confirmed",
-        "channel": "SOW"
-      },
-      {
-        "id": "F4",
-        "priority": 3,
-        "text": "GBP actions collapsed -58.97% week-over-week; last 3 days show 4, 0, 0 actions vs 27–30/day earlier in September — organic local discovery effectively dark for 3 days.",
+        "text": "GBP actions dropped to 0 on Sep 16–17 (from 25–35/day in Aug) — 58.97% weekly decline; local discovery feeding paid is now dark.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
+        "id": "F4",
+        "priority": 3,
+        "text": "Top campaign 'BWS - Sales - Muslims' consumed $837.62 (56% of 28-day spend) with purchase volume now in 3-day freefall — pattern matches frequency burnout documented in June retargeting failure.",
+        "confidence": "probable",
+        "channel": "meta"
+      },
+      {
         "id": "F5",
         "priority": 4,
-        "text": "Spend averaging $53.09/day (7d) against a series baseline near $57–62/day; the -9.99% pullback reduced delivery but ROAS held, suggesting the top campaign (BWS - Sales - Muslims, $837.62 of $1,485.72) is carrying efficiency while reach narrows.",
-        "confidence": "probable",
+        "text": "GA4 sessions fell to 227 on Sep 17, lowest single day in 28-day window; IG reach holding ~600–650 — paid traffic drop is not organic-side, points to Meta delivery tightening.",
+        "confidence": "hypothesis",
         "channel": "meta"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Escalate funnel test closure: retrieve ihbp8pmtn8 conversion data and fire UTM tagging — blocks attribution and subscribe-page work.",
+        "type": "creative_refresh",
+        "text": "Inject new creative into 'BWS - Sales - Muslims' to counter frequency burnout; use approved real-footage assets from Jul 21 Haney delivery.",
         "cites": [
-          "F2"
+          "F1",
+          "F4"
         ],
-        "monday_item_name": "Close Funnel Test + UTM",
-        "monday_update": "The /halal-subscribe conversion test (code ihbp8pmtn8) and UTM live milestone were due Aug 31 and remain open. Pull the test result from Shopify and confirm UTM parameters are firing on all Meta ad links. Success = funnel test result documented and UTM verified in GA4 within 5 days by Sep 23. This unblocks the subscribe-page web work currently flagged as a hard dependency."
+        "monday_item_name": "Refresh BWS Muslims Creative",
+        "monday_update": "Purchases dropped to 2 over Sep 15–17 on $183 spend while the prior 3 days delivered 6 purchases on similar spend — the 'BWS - Sales - Muslims' campaign ($837.62 / 56% of budget) shows the same frequency-burnout signature as the June retargeting failure. Introduce at least 2 new ad creatives using the real facility footage delivered by Haney on Jul 21; do not duplicate existing copy angles. Success check: purchases recover to ≥4 over any rolling 3-day window within 7 days of launch (by Sep 25)."
       },
       {
         "id": "S2",
-        "type": "watch",
-        "text": "Watch GBP: 3 consecutive zero-action days (Sep 15–17) — confirm profile status before attributing to organic seasonality.",
+        "type": "fix",
+        "text": "Diagnose GBP dark condition — 0 actions Sep 16–17 after 25–47/day in Aug; restore local signals before next paid cycle.",
         "cites": [
-          "F4"
+          "F3"
         ],
-        "monday_item_name": "GBP Dark — Verify Profile",
-        "monday_update": "GBP actions dropped to 0 for three consecutive days (Sep 15, 16, 17) after averaging 25–30/day earlier in September, a -58.97% weekly collapse. Check the BillyDoe Meats GBP profile for suspension flags, pending verifications, or listing edits that may have suppressed visibility. Success check: actions return above 15/day by Sep 21. If still zero after Sep 21, escalate as a confirmed organic leak."
+        "monday_item_name": "Fix GBP Dark Sep 16–17",
+        "monday_update": "GBP actions hit zero on Sep 16 and 17 after averaging 25–47/day through most of August and early September. This is confirmed, not a gradual slide — check for a suspended profile, missing hours update, or a Google-side indexing issue. Success check: GBP actions return to ≥20/day within 3 days of the fix being applied; escalate to Nacer (Ops) immediately if profile suspension is confirmed."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch BWS - Sales - Muslims campaign: ROAS holding at 5.28x — do not scale until purchase volume sustains 2+/day for 3 consecutive days.",
+        "text": "Watch overall ROAS and daily purchases through Sep 21 before any budget move; do not scale on a 1.21% ROAS delta with purchase volume falling.",
         "cites": [
           "F1",
           "F5"
         ],
-        "monday_item_name": "Monitor Top Campaign ROAS",
-        "monday_update": "The top campaign (BWS - Sales - Muslims, $837.62 spend) is holding a 5.28x ROAS but purchases are averaging fewer than 1/day over the last 3 days. Current spend is $53.09/day, slightly below the $57–62/day series baseline. Re-check on Sep 21: if purchases hit 2+ for 3 consecutive days, bring daily budget back to the $60–62 baseline level as a first step. Do not scale beyond baseline until the funnel test result (F2) is resolved."
+        "monday_item_name": "Watch ROAS Before Scale",
+        "monday_update": "The 7-day ROAS delta is only +1.21% and purchases are in a confirmed 3-day decline (2 purchases, Sep 15–17). The 28-day ROAS of 5.28x is healthy but is being averaged over sporadic high-value days (e.g. Sep 9: $1,727 revenue) that mask the current downtrend. Do not raise daily budget from the current ~$53/day until purchases recover to ≥4 over a 3-day window. Re-check Sep 21."
       }
     ],
     "next_check": "2026-09-21"

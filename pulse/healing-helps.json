@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-18T14:45:59.989Z",
+  "generated_at": "2026-09-18T15:47:34.958Z",
   "date": "2026-09-18",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Healing Helps recorded zero paid spend and zero leads across Meta and Google Ads over the past 28 days, making GBP the only active channel with 42 total actions (2 calls, 31 directions, 9 web clicks) driven by 333 impressions across 24 active days. The biggest movement is a 93.75% drop in GBP actions over the last 7 days versus the prior 7 days, likely reflecting a sharp pullback in local search visibility or seasonal demand rather than any paid media change.",
+  "verdict": "Healing Helps recorded zero paid spend and zero leads across Meta and Google Ads over the past 28 days, making GBP the only active channel with 42 total actions (2 calls, 31 directions, 9 web clicks) from 333 impressions. The biggest movement is a 93.75% drop in GBP actions over the last 7 days versus the prior 7 days, likely driven by a sharp pullback in profile visibility or seasonal search demand rather than any paid activity.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -599,60 +599,70 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-09-18T14:52:50.092Z",
+    "generated_at": "2026-09-18T15:49:55.734Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP is the only live channel; its 93% collapse demands investigation.",
+    "verdict": "No paid activity; GBP collapse is the only urgent money signal.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend and zero leads across all 28 days — no Meta or Google Ads activity exists to evaluate for efficiency.",
+        "text": "Zero paid spend and zero leads for the full 45-day series — no Meta or Google Ads activity exists to evaluate for efficiency.",
         "confidence": "confirmed",
-        "channel": "meta/google"
+        "channel": "meta,google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions collapsed 93.75% last 7d vs prior 7d; last 7 days (Sep 11–17) show 0 actions every single day after averaging ~2.4/day prior.",
+        "text": "GBP actions collapsed to ~0 over the last 3 days (Sep 15-17: 0,0,0) versus prior 3 days (Sep 12-14: 1,0,0) — both near-zero, but the 28-day total of 42 actions is now front-loaded; the -93.75% 7d delta confirms the stall is real, not noise.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "Search clicks down 10% (7d delta) and last 3 days (Sep 15–17) show 4, 0, 0 clicks vs prior 3 days (Sep 12–14) averaging 1.0 — weak but softening.",
+        "text": "GA4 sessions +13.51% week-over-week (189 sessions, 160 users over 28 days) with 0 GA4-recorded conversions — traffic is arriving but converting nowhere, suggesting a broken or missing conversion event.",
         "confidence": "probable",
-        "channel": "search"
+        "channel": "ga4"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GA4 sessions up 13.51% week-over-week despite zero paid spend; 189 sessions in 28 days with 0 GA4 conversions — conversion tracking is likely broken.",
+        "text": "Search clicks down -10% 7d (43 clicks over 28 days, 4,378 impressions) with a 0.98% CTR — organic discoverability is thin and declining slightly despite sessions rising, pointing to direct/referral traffic rather than search.",
         "confidence": "hypothesis",
-        "channel": "ga4"
+        "channel": "search_console"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit GBP profile immediately — 0 actions for 7 straight days after 42 in prior period signals a listing suspension or suppression.",
+        "text": "Audit GBP profile for suppression, suspension flag, or category change causing the 93.75% action drop.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Investigate GBP Listing Drop",
-        "monday_update": "GBP actions dropped 93.75% in the last 7 days, hitting zero every day from Sep 11–17 after averaging ~2.4 actions/day prior. Check the Google Business Profile dashboard for any suspension notices, ownership conflicts, or guideline violations. Success is confirmed when daily GBP actions return to a 7-day average of at least 2. Re-check by 2026-09-21."
+        "monday_item_name": "GBP Profile Drop Investigation",
+        "monday_update": "GBP actions fell 93.75% in the last 7 days versus the prior 7, with 0 actions on Sep 15, 16, and 17. Check the Healing Helps Therapy PLLC profile (ID: locations/9257180210135267024) for any suspension notice, pending verification, duplicate listing, or recent category/attribute edit that could suppress visibility. Success looks like actions returning to the prior 7-day baseline of ~16 within 7 days of any fix applied. Re-check by 2026-09-25."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Verify GA4 conversion event setup — 189 sessions and 0 conversions over 28 days with no paid spend indicates a broken or unmapped goal.",
+        "text": "Verify GA4 conversion event firing; 189 sessions and 0 conversions over 28 days indicates a broken goal.",
+        "cites": [
+          "F3"
+        ],
+        "monday_item_name": "GA4 Conversion Event Audit",
+        "monday_update": "GA4 recorded 189 sessions and 160 users over the 28-day window but logged 0 conversions — this is almost certainly a misfired or missing conversion event, not a lead quality problem. Confirm that the form-submit or contact trigger is firing correctly in GTM/GA4 debug mode. Success is at least one confirmed conversion event recorded within 48 hours of the fix. Re-check by 2026-09-20."
+      },
+      {
+        "id": "S3",
+        "type": "watch",
+        "text": "Watch search clicks for further decline; at 43 clicks / 4,378 impressions over 28 days, CTR is 0.98% — act if it drops below 40 clicks next week.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Fix GA4 Conversion Tracking",
-        "monday_update": "GA4 recorded 189 sessions and 160 users over the last 28 days but logged 0 conversions, making it impossible to measure organic performance. Audit the GA4 property for active conversion events (contact form, booking, phone click). Success is a non-zero conversion count appearing within 3 days of the fix. Re-check by 2026-09-21."
+        "monday_item_name": "Search Click Trend Watch",
+        "monday_update": "Search Console shows 43 clicks on 4,378 impressions (0.98% CTR) over the 28-day window, with a -10% 7-day delta. No paid campaigns are active to support this organically. Monitor for a further weekly decline below 40 clicks before escalating to an SEO or GBP content action. Re-check by 2026-09-25."
       }
     ],
     "next_check": "2026-09-21"

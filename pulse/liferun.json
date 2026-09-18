@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-18T14:47:32.866Z",
+  "generated_at": "2026-09-18T15:48:10.568Z",
   "date": "2026-09-18",
   "slug": "liferun",
   "name": "Liferun",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 58,
   "status": "amber",
-  "verdict": "Leads dropped sharply this week, down 48.72% vs. the prior 7 days, likely driven by a 29.24% pullback in spend alongside a complete drop-off in one channel (SC down 100%), pushing CPL up 37.98% to $16.61. Note: Windsor shows 125 leads over 28 days while GHL shows 180 contacts and 150 opportunities created with 0 won, and these figures are unreconciled.",
+  "verdict": "Leads dropped sharply this week, down 48.72% versus the prior 7 days, likely driven by a 29.24% pullback in spend alongside at least one zero-spend day flagging in the account. Google Ads is generating zero conversions on $484.54 of the 28-day spend, making it a key area to investigate or pause.",
   "windsor": {
     "totals": {
       "spend": 2076.4,
@@ -723,79 +723,80 @@
     "history_line": "Webhook fix restored 100% order sync · Stripe checkout built & tested end-to-end · HANDOFF + Meta Ads Campaign Restructure marked Done"
   },
   "performance": {
-    "generated_at": "2026-09-18T14:54:09.707Z",
+    "generated_at": "2026-09-18T15:51:13.922Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Zero-spend day confirms fragile ops; CPL rising and pipeline won zero deals.",
+    "verdict": "Google burning $485 with zero conversions; CPL spike confirms spend pullback hurt Meta efficiency.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "zero_spend_day flag triggered Sep 17 ($0 spend); recurring pattern — 8 zero-spend days in 28 days. Likely manual budget/card interruption, not ad rejection.",
+        "text": "Zero-spend day Sep 17 (series: $0) caused CPL to spike +37.98% 7d vs prior 7d; Meta alone drives all 125 leads but is starved intermittently.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 1,
-        "text": "CPL rose 37.98% to $16.61 while leads fell 48.72%; 3-day signal (Sep 15–17): 12 leads, $217 spend vs prior 3 (Sep 12–14): 14 leads, $114 spend — efficiency deteriorating.",
+        "text": "Google Ads spent $484.54 over 28 days with 0 conversions and only 101 clicks; it is a confirmed spend leak with no result.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "google"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "5 overdue SOW milestones (oldest Jul 20): Stripe QA, GHL build gaps, end-to-end stack re-test ⛔, paid landing pages, and UGC batch — all undelivered as of Sep 18.",
+        "text": "5 SOW milestones overdue (earliest Jul 20): Stripe QA, GHL build gaps, end-to-end stack re-test, paid landing pages, and UGC batch — all unverified as of Sep 18.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
-        "priority": 3,
-        "text": "GHL shows 150 opportunities created, 0 won, 0 appointments in 28 days vs 125 Windsor leads — no deal closed; intake may be logging leads but no activation follow-through.",
-        "confidence": "probable",
-        "channel": "GHL"
+        "priority": 2,
+        "text": "3-day signal (Sep 15–17): leads 8, 4, 0 vs prior 3 days (Sep 12–14): 0, 0, 4 — last day zero spend; calls placed stayed 18–20 on good days but 60s connects near zero (1 on Sep 17).",
+        "confidence": "confirmed",
+        "channel": "meta"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "Google Ads spent $484.54 over 28 days with 0 reported conversions and only 101 clicks; SC dropped 100% last 7 days — spend with zero attributed results is a confirmed leak.",
-        "confidence": "confirmed",
-        "channel": "google"
+        "text": "GHL shows 150 opportunities created but 0 won and 0 appointments in 28 days; intake pipeline is receiving leads but no progression, likely a CRM workflow or follow-up gap.",
+        "confidence": "probable",
+        "channel": "crm"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Identify and fix the zero-spend trigger; 8 outage days in 28 cost an estimated 32+ leads at current CPL of $16.61.",
+        "type": "kill",
+        "text": "Pause Google Ads immediately — $484.54 spent over 28 days, 0 conversions confirmed.",
         "cites": [
-          "F1"
+          "F2"
         ],
-        "monday_item_name": "Fix Zero-Spend Day Trigger",
-        "monday_update": "Meta has logged 8 zero-spend days in the last 28, including Sep 17 (confirmed $0). Investigate whether this is a billing/card failure, manual pause, or budget exhaustion mid-day and resolve the root cause. Success check: no zero-spend day in the following 7-day window. Re-verify by Sep 25."
+        "monday_item_name": "Pause Google Ads Zero-Conv",
+        "monday_update": "Google Ads has spent $484.54 in the last 28 days and returned exactly 0 conversions across 101 clicks — this is a confirmed spend leak. Pause all Google campaigns now. Success check: zero Google spend on the daily series by Sep 19. Sohib to confirm before execution."
       },
       {
         "id": "S2",
-        "type": "fix",
-        "text": "Escalate 5 overdue SOW milestones to Nacer; end-to-end stack re-test ⛔ is a scale blocker — clear before any budget increase.",
+        "type": "budget_shift",
+        "text": "Shift recovered Google daily budget (~$17/day) into Meta to restore consistent daily spend and reduce CPL.",
         "cites": [
-          "F3"
+          "F1",
+          "F2"
         ],
-        "monday_item_name": "Clear 5 Overdue SOW Milestones",
-        "monday_update": "Five SOW milestones are overdue ranging from Jul 20 to Aug 31: Stripe QA, GHL gap closure, end-to-end stack re-test (scale blocker ⛔), paid landing pages, and UGC/Senior Avatar batch. Nacer to assign owners and deadlines by Sep 21. Success check: each milestone marked complete with a verification Loom or sign-off by Sep 30."
+        "monday_item_name": "Shift Google Budget to Meta",
+        "monday_update": "After pausing Google (S1), redirect the ~$17/day average Google Ads spend into Meta to eliminate the zero-spend interruptions driving CPL up 37.98%. Target: Meta daily budget raised by $17; no single zero-spend day in the next 7d. Re-check CPL on Sep 25 — if CPL falls below the 28-day baseline of $16.61, hold; if it holds above, review ad set allocation."
       },
       {
         "id": "S3",
-        "type": "watch",
-        "text": "Watch Google Ads: $484.54 spent, 0 conversions in 28 days — do not scale until pixel or call-tracking attribution is confirmed.",
+        "type": "fix",
+        "text": "Escalate 5 overdue SOW milestones to Nacer — stack re-test and landing pages are scaling blockers per SOW.",
         "cites": [
-          "F5"
+          "F3"
         ],
-        "monday_item_name": "Watch Google Ads Attribution",
-        "monday_update": "Google Ads has spent $484.54 over 28 days with zero reported conversions and search clicks down 100% in the last 7 days. This may be a client-side pixel issue (known data gap) rather than true zero performance, but spend cannot be justified without attribution. Confirm call-tracking and pixel fire by Sep 21; if still zero, escalate to a budget_shift away from Google. Re-check Sep 25."
+        "monday_item_name": "Escalate Overdue SOW Milestones",
+        "monday_update": "Five milestones are overdue with the earliest from Jul 20: Stripe QA, GHL gap closure, end-to-end stack re-test (⛔ blocker), paid landing pages (⛔ blocker), and UGC batch. None have a confirmed completion event. Nacer to provide status on each by Sep 22. Success check: at least the two ⛔ blockers (stack re-test and landing pages) confirmed complete before next budget scale decision."
       }
     ],
-    "next_check": "2026-09-25"
+    "next_check": "2026-09-22"
   }
 }

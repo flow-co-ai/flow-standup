@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-18T14:45:53.130Z",
+  "generated_at": "2026-09-18T15:47:30.452Z",
   "date": "2026-09-18",
   "slug": "full-smile",
   "name": "Full Smile",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 40,
   "status": "orange",
-  "verdict": "The biggest movement is a 100% drop in leads over the last 7 days, coinciding with a Meta channel going dark (zero-spend day flagged), which cut off the sole active paid source driving all 77 leads in the 28-day window at a $8.31 CPL. Immediate priority is restoring Meta spend, particularly on the top campaign \"BWS - Instant Leads - Awareness\" ($346.93), to prevent further pipeline stall given 74 opportunities created in CRM with 0 won.",
+  "verdict": "The most critical movement is a 100% drop in leads over the last 7 days, coinciding with a Meta channel going dark (channel_dark:meta flag) and a 47.84% spend reduction, which together effectively shut off lead flow entirely. With $640.21 spent over 28 days delivering 77 leads at a $8.31 CPL, performance was viable before the disruption, so restoring Meta spend continuity should be the immediate priority.",
   "windsor": {
     "totals": {
       "spend": 640.21,
@@ -557,7 +557,7 @@
     }
   },
   "ghl": {
-    "contacts": 320,
+    "contacts": 321,
     "opportunities": {
       "created": {
         "count": 74,
@@ -572,7 +572,7 @@
   },
   "reconciliation": {
     "windsor_leads": 77,
-    "ghl_contacts": 320,
+    "ghl_contacts": 321,
     "ghl_opps_created": 74,
     "ghl_opps_won": 0,
     "status": "both_active"
@@ -775,44 +775,44 @@
     "history_line": "OpenDental sync completed · All GHL tasks done (one pending go-live) · Meta/LSA ads paused per client"
   },
   "performance": {
-    "generated_at": "2026-09-18T14:52:31.799Z",
+    "generated_at": "2026-09-18T15:49:31.304Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Meta dark 6 days; 5 overdue SOW milestones compound the pipeline freeze.",
+    "verdict": "Meta dark for 4 days straight; all lead flow has stopped cold.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Meta has been $0 spend for 6 consecutive days (Sep 12–17), wiping all leads; prior 28-day CPL was $8.31 on 77 leads.",
+        "text": "Meta went dark Sep 14–17 (4 consecutive zero-spend days); $0 spent, 0 leads — all 77 28-day leads came from Meta alone.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "5 SOW milestones overdue since Jul 23–Aug 31: phone-match attribution, sync cleanup, dashboard, and August renewal scoreboard all undelivered.",
+        "text": "5 SOW milestones overdue: renewal close (Jul 23), attribution gap (Aug 7), CRM cleanup (Aug 14), dashboard live (Aug 31), and August scoreboard trusted (Aug 31) — none marked complete.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GHL shows 74 opportunities created, 0 won, 0 appointments in 28 days — intake is not converting leads regardless of ad volume.",
-        "confidence": "confirmed",
-        "channel": "GHL"
-      },
-      {
-        "id": "F4",
-        "priority": 3,
-        "text": "3-day signal (Sep 15–17): spend avg $6.16/day vs $29.60 prior 3 days — confirmed channel-dark collapse, not a creative issue.",
+        "text": "3-day lead signal (Sep 15–17): 0 leads vs prior 3 days (Sep 12–14) at 0 leads — drought extends back to Sep 12, 6 consecutive zero-lead days confirmed.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
+        "id": "F4",
+        "priority": 3,
+        "text": "GHL shows 74 opportunities created but 0 won and 0 appointments booked in 28 days — leads entering pipeline but no conversion to chair, intake leak not an ads problem.",
+        "confidence": "confirmed",
+        "channel": "GHL"
+      },
+      {
         "id": "F5",
         "priority": 4,
-        "text": "GBP actions dropped 69.86% week-over-week; Sep 15–17 show 0 actions, suggesting either a data gap or organic visibility loss coinciding with Meta dark.",
-        "confidence": "hypothesis",
+        "text": "GBP actions dropped 69.86% week-on-week; ig_reach fell 66.44% — organic signal collapsing in parallel with paid outage, compounding visibility loss.",
+        "confidence": "probable",
         "channel": "GBP"
       }
     ],
@@ -820,33 +820,33 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Restore Meta spend immediately on 'BWS - Instant Leads - Awareness' ($346.93 top campaign); confirm billing/payment method first.",
+        "text": "Restore Meta spend immediately — diagnose payment, policy, or ad account hold causing 4-day blackout; no leads without it.",
         "cites": [
           "F1",
-          "F4"
+          "F3"
         ],
-        "monday_item_name": "Restore Meta — Fix Dark",
-        "monday_update": "Meta has been $0 for 6 days (Sep 12–17), confirmed by the daily series, erasing all leads from a channel that generated 77 leads at $8.31 CPL in the prior 28 days. Action: check payment method / account status and reactivate the 'BWS - Instant Leads - Awareness' campaign. Success check: Meta spend resumes ≥$20/day and leads return within 3 days of reactivation (by Sep 21). Sohib to confirm account access before Nacer escalates to platform support."
+        "monday_item_name": "Restore Meta — diagnose blackout",
+        "monday_update": "Meta has been at $0 spend for 4 consecutive days (Sep 14–17), erasing all lead flow — all 77 leads in the 28-day window came from Meta. Check for a billing hold, disapproved ad, or account flag and restore the campaign 'BWS - Instant Leads - Awareness' (28-day top spend: $346.93) to prior daily pacing (~$25–33/day). Success is confirmed when Meta spend resumes and lead count returns to 1+ per day within 3 days of restoration. Re-check by Sep 21."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Escalate GHL intake leak: 74 opps created, 0 won, 0 appointments — pipeline is stalling before any scheduling occurs.",
+        "text": "Escalate 5 overdue SOW milestones to Nacer/Sohib; dashboard and attribution gap are August scoreboard blockers.",
         "cites": [
-          "F3"
+          "F2"
         ],
-        "monday_item_name": "Fix GHL Intake — 0 Appts",
-        "monday_update": "GHL shows 74 opportunities created and 0 appointments booked in the 28-day window — leads are arriving but nothing is converting to a scheduled visit. Action: Ahmed/Ali to audit the opportunity pipeline stage logic and confirm Lily's intake workflow is active with the new hire onboarded. Success check: at least 5 appointments appear in GHL within 7 days of reactivating Meta spend (by Sep 25). This is an intake problem, not an ads problem, but it renders any restored lead volume worthless until fixed."
+        "monday_item_name": "Escalate 5 overdue SOW items",
+        "monday_update": "Five milestones are overdue ranging from Jul 23 to Aug 31: renewal confirmation, phone-match attribution gap, CRM/contact cleanup, live dashboard, and August scoreboard sign-off. The client's stated walk condition is no visible return — without the dashboard and attribution fix, the scoreboard cannot be trusted. Nacer and Sohib must assign owners and due dates for each item by Sep 19. Success is each milestone marked complete or formally rescheduled with a new owner by Sep 25."
       },
       {
         "id": "S3",
-        "type": "watch",
-        "text": "Watch GBP actions after Meta restores; 0 actions Sep 15–17 may resolve with data lag — re-check Sep 21.",
+        "type": "fix",
+        "text": "Investigate GHL intake leak: 74 opportunities created, 0 appointments booked — confirm Lily's intake process and Flex Dental handoff are functioning.",
         "cites": [
-          "F5"
+          "F4"
         ],
-        "monday_item_name": "Watch GBP — Sep 21 Check",
-        "monday_update": "GBP actions fell 69.86% week-over-week and showed 0 actions on Sep 15–17, coinciding with Meta going dark. This may be a data reporting lag rather than a real organic drop. No action taken yet; hypothesis-grade only. Re-check GBP action totals on Sep 21 after Meta is restored — if actions remain at 0 beyond that date, escalate as a separate organic/GBP issue."
+        "monday_item_name": "GHL intake leak — 0 appointments",
+        "monday_update": "GHL shows 74 opportunities created in 28 days with $0 won and 0 appointments booked — leads are arriving but none are reaching the chair. This is an intake process or handoff issue, not an ads problem. Confirm with Lily that Flex Dental is receiving and acting on leads passed from GHL, and verify the biweekly Lily sync is identifying where drop-off occurs. Success is at least 1 appointment booked and logged in GHL within 7 days of process review, by Sep 25."
       }
     ],
     "next_check": "2026-09-21"
