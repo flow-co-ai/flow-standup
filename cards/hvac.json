@@ -1,14 +1,14 @@
 {
   "slug": "hvac",
   "name": "Quality HVAC by Fibid",
-  "generated_at": "2026-09-20T14:37:54.272Z",
+  "generated_at": "2026-09-21T16:57:50.172Z",
   "contract": {
     "start": "2026-05-01",
     "end": "2026-10-31",
     "validated": true,
     "month_of": 5,
     "months_total": 5,
-    "days_left": 41,
+    "days_left": 40,
     "basis": {
       "type": "observed",
       "source": "timeline/plan",
@@ -20,7 +20,7 @@
     "organic": {
       "state": "amber",
       "headline": "1 of 3 profiles active · 28d",
-      "sentence": "Fibid Heating & Air Conditioning took 1 calls on 125 impressions; Quality HVAC by Fibid took 2 calls on 220 impressions.",
+      "sentence": "Fibid Heating & Air Conditioning took 1 calls on 120 impressions; Quality HVAC by Fibid took 2 calls on 213 impressions.",
       "basis": {
         "type": "observed",
         "source": "Windsor GBP",
@@ -38,9 +38,9 @@
             "calls": 1,
             "directions": 0,
             "web_clicks": 5,
-            "impressions": 125,
+            "impressions": 120,
             "days_with_impressions": 25,
-            "call_rate": 0.008
+            "call_rate": 0.0083
           },
           {
             "account_id": "locations/9013300148944922826",
@@ -48,19 +48,19 @@
             "calls": 2,
             "directions": 0,
             "web_clicks": 7,
-            "impressions": 220,
+            "impressions": 213,
             "days_with_impressions": 26,
-            "call_rate": 0.0091
+            "call_rate": 0.0094
           },
           {
             "account_id": "locations/6129595594309014752",
             "label": "Quality HVAC Solutions",
             "calls": 27,
             "directions": 71,
-            "web_clicks": 47,
-            "impressions": 1024,
+            "web_clicks": 46,
+            "impressions": 996,
             "days_with_impressions": 26,
-            "call_rate": 0.0264
+            "call_rate": 0.0271
           }
         ],
         "flagged_profiles": [
@@ -82,34 +82,36 @@
       }
     },
     "paid": {
-      "state": "green",
-      "headline": "$815 · 4 leads · $204 per lead · 14d",
-      "sentence": "Meta $373.17 spend, 4 leads; Google Ads $441.69 spend.",
+      "state": "amber",
+      "headline": "$806 · 4 leads · $201 per lead · 14d",
+      "sentence": "Meta $375.47 spend, 4 leads; Google Ads $430.50 spend.",
       "basis": {
         "type": "observed",
         "source": "Windsor Paid",
         "window": "14d"
       },
-      "flags": [],
+      "flags": [
+        "attribution_gap"
+      ],
       "detail": {
         "meta": {
-          "spend": 697.96,
+          "spend": 697.85,
           "leads": 7,
-          "clicks": 558
+          "clicks": 564
         },
         "google_ads": {
-          "spend": 973.81,
-          "convs": 10,
-          "clicks": 141
+          "spend": 924.27,
+          "convs": 9,
+          "clicks": 134
         },
-        "total_spend": 1671.77,
+        "total_spend": 1622.12,
         "reconciliation": null
       }
     },
     "crm": {
       "state": "amber",
-      "headline": "2 waiting 663h",
-      "sentence": "Luis Valencia, as of 2026-08-13 per fireflies. 2 client threads awaiting Flow, oldest 663h.",
+      "headline": "2 waiting 687h",
+      "sentence": "Luis Valencia, as of 2026-08-13 per fireflies. 2 client threads awaiting Flow, oldest 687h.",
       "basis": {
         "type": "observed",
         "source": "GHL / WhatsApp",
@@ -126,7 +128,7 @@
           "window": "2026-08-13"
         },
         "awaiting_flow": 2,
-        "oldest_unanswered_hours": 663.2,
+        "oldest_unanswered_hours": 687.2,
         "threads": {
           "messages_scanned": 703,
           "threads": 12,
@@ -138,15 +140,15 @@
           "stale_over_24h": 2
         },
         "ghl": {
-          "contacts": 268,
+          "contacts": 277,
           "opportunities": {
             "created": {
-              "count": 982,
-              "value": 21045.85
+              "count": 981,
+              "value": 21134.85
             },
             "won": {
               "count": 46,
-              "value": 21045.85
+              "value": 21134.85
             }
           },
           "appointments": 0
@@ -157,9 +159,9 @@
   "scope_out": [],
   "needs_you": [
     {
-      "text": "2 threads awaiting Flow, oldest 663h.",
+      "text": "2 threads awaiting Flow, oldest 687h.",
       "severity": "medium",
-      "age_days": 28,
+      "age_days": 29,
       "basis": {
         "type": "observed",
         "source": "GHL / WhatsApp",
@@ -174,6 +176,19 @@
         "type": "observed",
         "source": "Windsor GBP",
         "window": "28d"
+      }
+    },
+    {
+      "text": "Paid issue (amber)",
+      "flags": [
+        "attribution_gap"
+      ],
+      "severity": "medium",
+      "age_days": null,
+      "basis": {
+        "type": "observed",
+        "source": "Windsor Paid",
+        "window": "14d"
       }
     }
   ],
