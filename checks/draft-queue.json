@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-22T17:34:56.095Z",
+  "updatedAt": "2026-09-22T17:49:12.753660+00:00",
   "items": [
     {
       "id": "medstation-weston-campaign-sending",
@@ -123,7 +123,7 @@
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-09-16T18:52:22.240786+00:00",
+      "verifiedAt": "2026-09-22T17:49:12.753627+00:00",
       "completionEvidence": null,
       "createdAt": "2026-09-16T18:53:44.684044+00:00"
     },
@@ -300,6 +300,31 @@
       "verifiedAt": "2026-09-19T17:50:43.528779+00:00",
       "completionEvidence": null,
       "createdAt": "2026-09-19T17:50:59.254695+00:00"
+    },
+    {
+      "id": "medstation-affiliate-subaccount",
+      "title": "Affiliate Sub Account",
+      "note": "Section 19 audit covered MedStation groups on all four boards, subitems included. Nothing on any board owns affiliate attribution: the CRM MedStation items are all Weston build and reporting work (NextGen Patient ID Mapping, Send To NextGen, Weston Lead Assignment, Lead Geography, Overall Lead View, Purchase Value, Message Inventory), Ads holds Meta, Google, LSA and the weekly report subitems, Web and SEO the site, hosting, GBP and GA4, Video the website video. Overall Lead View is the nearest neighbour but it separates Weston paid leads from other clinics' campaigns on the existing account; it does not cover a new sub account for referrers, so drafted as a new CRM item rather than an update on it. Routed to CRM because the deliverable is a GoHighLevel build. Section 19b returned no match against the pending queue. needsNaz left false: this is an Ahmed and Ali build, and the only outside dependency is Sohib's credentials, named in the body.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Flow ops review, 9/21",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm512p9w",
+        "itemName": "Affiliate Sub Account",
+        "updateBody": "<p>Salam,</p><ul><li><strong>Context.</strong> The 21 September Flow ops review settled how MedStation will run its affiliate programme. Bookings arrive from several referrers at once and today nothing separates them, so Sohib and Ahmed agreed the shape: a separate GoHighLevel sub account with UTM filters splitting the sources.</li><li><strong>Deliverable one, settle the webhook question first.</strong> Confirm whether one inbound webhook can feed several filtered sub accounts, or whether each sub account needs its own, and post the answer on this item <strong>before</strong> building anything.</li><li><strong>Deliverable two, build the sub account.</strong> Create the affiliate sub account in GoHighLevel and complete its initial setup, with UTM filters that keep each referrer's traffic distinct.</li><li><strong>Deliverable three, prove attribution.</strong> Put a booking through an affiliate test link and show it landing in the sub account tagged to that referrer, not merged into general MedStation traffic.</li><li><strong>Dependency.</strong> Sohib owes the affiliate test links and the access credentials. <strong>Do not start deliverable three before they arrive</strong>, and flag it here if they have not by the end of the week.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "verifiedAt": "2026-09-22T17:49:03.020464+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-09-22T17:49:12.753648+00:00"
     }
   ]
 }
