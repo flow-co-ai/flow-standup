@@ -1,14 +1,14 @@
 {
   "slug": "maadi-law",
   "name": "Maadi Law, LLC",
-  "generated_at": "2026-09-21T16:57:50.175Z",
+  "generated_at": "2026-09-22T15:29:46.274Z",
   "contract": {
     "start": "2026-07-01",
     "end": "2026-12-31",
     "validated": true,
     "month_of": 3,
     "months_total": 5,
-    "days_left": 101,
+    "days_left": 100,
     "basis": {
       "type": "observed",
       "source": "timeline/plan",
@@ -19,8 +19,8 @@
   "lanes": {
     "organic": {
       "state": "green",
-      "headline": "23 calls · 28d",
-      "sentence": "Maadi Law took 23 calls on 703 impressions.",
+      "headline": "20 calls · 28d",
+      "sentence": "Maadi Law took 20 calls on 668 impressions.",
       "basis": {
         "type": "observed",
         "source": "Windsor GBP",
@@ -32,48 +32,50 @@
           {
             "account_id": "locations/9222604944624527228",
             "label": "Maadi Law",
-            "calls": 23,
+            "calls": 20,
             "directions": 67,
-            "web_clicks": 45,
-            "impressions": 703,
+            "web_clicks": 44,
+            "impressions": 668,
             "days_with_impressions": 26,
-            "call_rate": 0.0327
+            "call_rate": 0.0299
           }
         ],
         "flagged_profiles": [],
-        "total_calls": 23,
+        "total_calls": 20,
         "total_profiles": 1
       }
     },
     "paid": {
-      "state": "green",
-      "headline": "$2,348 · 19 leads · $124 per lead · 14d",
-      "sentence": "Meta $692.76 spend, 19 leads; Google Ads $1,655.70 spend.",
+      "state": "amber",
+      "headline": "$2,428 · 18 leads · $135 per lead · 14d",
+      "sentence": "Meta $706.30 spend, 18 leads; Google Ads $1,721.73 spend.",
       "basis": {
         "type": "observed",
         "source": "Windsor Paid",
         "window": "14d"
       },
-      "flags": [],
+      "flags": [
+        "attribution_gap"
+      ],
       "detail": {
         "meta": {
-          "spend": 1084.4,
+          "spend": 1153.4,
           "leads": 23,
-          "clicks": 963
+          "clicks": 1031
         },
         "google_ads": {
-          "spend": 2601.27,
+          "spend": 2667.29,
           "convs": 6,
-          "clicks": 115
+          "clicks": 119
         },
-        "total_spend": 3685.67,
+        "total_spend": 3820.69,
         "reconciliation": null
       }
     },
     "crm": {
       "state": "red",
-      "headline": "4 waiting 738h",
-      "sentence": "Tracy Aoun, as of 2026-08-28 per fireflies. 4 client threads awaiting Flow, oldest 738h.",
+      "headline": "4 waiting 764h",
+      "sentence": "Tracy Aoun, as of 2026-08-28 per fireflies. 4 client threads awaiting Flow, oldest 764h.",
       "basis": {
         "type": "observed",
         "source": "GHL / WhatsApp",
@@ -90,7 +92,7 @@
           "window": "2026-08-28"
         },
         "awaiting_flow": 4,
-        "oldest_unanswered_hours": 737.6,
+        "oldest_unanswered_hours": 764,
         "threads": {
           "messages_scanned": 426,
           "threads": 11,
@@ -102,10 +104,10 @@
           "stale_over_24h": 4
         },
         "ghl": {
-          "contacts": 250,
+          "contacts": 254,
           "opportunities": {
             "created": {
-              "count": 101,
+              "count": 109,
               "value": 0
             },
             "won": {
@@ -121,12 +123,25 @@
   "scope_out": [],
   "needs_you": [
     {
-      "text": "4 threads awaiting Flow, oldest 738h.",
+      "text": "4 threads awaiting Flow, oldest 764h.",
       "severity": "high",
-      "age_days": 31,
+      "age_days": 32,
       "basis": {
         "type": "observed",
         "source": "GHL / WhatsApp",
+        "window": "14d"
+      }
+    },
+    {
+      "text": "Paid issue (amber)",
+      "flags": [
+        "attribution_gap"
+      ],
+      "severity": "medium",
+      "age_days": null,
+      "basis": {
+        "type": "observed",
+        "source": "Windsor Paid",
         "window": "14d"
       }
     }
