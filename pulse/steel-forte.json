@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-24T15:41:53.396Z",
+  "generated_at": "2026-09-24T20:00:28.619Z",
   "date": "2026-09-24",
   "slug": "steel-forte",
   "name": "Forte Precision Metals",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Google Business Profile is the only active channel driving engagement, generating 61 total actions over 28 days (2 calls, 33 direction requests, 26 website clicks) across 575 impressions on 24 active days. GBP actions are trending up 8.33% week-over-week, likely driven by increased local search visibility, while paid channels (Meta and Google Ads) show zero spend and zero leads, meaning all pipeline activity depends entirely on organic local presence.",
+  "verdict": "Google Business Profile is the only active channel driving engagement, generating 61 total actions over 28 days (2 calls, 33 direction requests, 26 website clicks) across 575 impressions on 24 active days, likely driven by local search visibility. GBP actions are trending up 8.33% week-over-week, but Search Console clicks dropped 50%, suggesting organic landing page traffic is softening even as map/profile engagement grows.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -555,77 +555,69 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-09-24T15:47:58.095Z",
+    "generated_at": "2026-09-24T20:04:22.286Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Paid channels are dead; 6 overdue SOW milestones now gate pipeline recovery.",
+    "verdict": "Paid channels are dark; only GBP works, but SC clicks are collapsing.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "3 CRM milestones overdue since July: 1st Directives (Jul 7), Tom call list (Jul 28), dedup workbook + 126 accounts (Jul 31). No completion recorded.",
+        "text": "3 CRM milestones overdue since July 7: 1st Directives, Tom call list, and dedup workbook — all unconfirmed complete as of today.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3 Aug-31 blockers unresolved: 342 stub reconciliation, Web/SEO root-cause fix, AGS + Forte contact pull for outreach — all gating downstream pipeline.",
+        "text": "3 more milestones overdue Aug 31: 342 stub reconciliation (blocker), Web/SEO root-cause fix (blocker), and AGS+Forte contact pull (blocker).",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 1,
-        "text": "Zero paid spend and zero leads across all 28 days; CPL is undefined. Entire pipeline depends on GBP alone — 61 actions, 2 calls.",
+        "text": "Zero paid spend and zero leads across all 28 days — no CPL exists. No ads channel is active for Forte.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F4",
-        "priority": 2,
-        "text": "GBP 3-day signal (Sep 21–23): 0 actions vs prior 3 days (Sep 18–20) averaging 4.3 actions/day — a confirmed stall after the Sep 15–17 peak of 17 actions.",
+        "priority": 3,
+        "text": "Search Console clicks collapsed to 0 in the last 3 days (Sep 21–23) vs 2 in prior 3 days (Sep 18–20), reinforcing the reported -50% 7d delta.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "organic"
       },
       {
         "id": "F5",
-        "priority": 3,
-        "text": "Search clicks down 50% week-over-week (7d delta = -50%); last 3 days (Sep 21–23) show 2, 0, 0 clicks vs prior 3 (Sep 18–20) at 0, 0, 1 — low but declining.",
-        "confidence": "probable",
-        "channel": "search"
+        "priority": 4,
+        "text": "GBP actions also dropped to 0 in last 3 days (Sep 21–23) vs 13 in prior 3 days (Sep 18–20), reversing the reported +8.33% weekly gain.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate 342 stub reconciliation to Ahmed immediately — blocker confirmed overdue 24 days, gating Sales-i pipeline sync.",
+        "text": "Escalate all 6 overdue SOW milestones to Ahmed/Dev team immediately; 3 are confirmed blockers gating CRM data integrity.",
         "cites": [
+          "F1",
           "F2"
         ],
-        "monday_item_name": "342 Stub Reconciliation Escalation",
-        "monday_update": "The 342 stub account reconciliation was due Aug 31 and remains incomplete as of Sep 24 — 24 days overdue. This is a confirmed blocker: Sales-i cannot sync data to Sugar CRM until Customer IDs are resolved, meaning inactivity automations and the reactivation pipeline are partially blind. Ahmed should post a status update and completion date to the Monday CRM board by Sep 26. Success check: rollback file posted and stub count at zero by the new agreed date."
+        "monday_item_name": "Clear 6 Overdue SOW Blockers",
+        "monday_update": "Six SOW milestones are past due, three of which are confirmed blockers: 342 stub reconciliation, Web/SEO root-cause fix, and AGS+Forte contact pull — all due 2026-08-31. Ahmed and Dev team must post status updates on each item by 2026-09-27. Success is confirmed when all 6 items show a completion date logged in Monday and the 342 stub reconciliation rollback file is posted to the CRM board."
       },
       {
         "id": "S2",
-        "type": "fix",
-        "text": "Pull AGS + Forte contact lists for outreach — overdue 24 days, zero cold email pipeline possible without it.",
-        "cites": [
-          "F2"
-        ],
-        "monday_item_name": "AGS + Forte Contact Pull",
-        "monday_update": "The AGS and Forte contact pull for cold email outreach was due Aug 31 and has no completion record as of Sep 24. With zero paid leads and only 2 GBP calls in 28 days (F3), outreach is the only near-term pipeline lever available. The responsible party should deliver the verified contact list to the Monday Outreach board by Sep 26. Success check: list live in the cold email tool with first sequence launched within 5 business days of delivery."
-      },
-      {
-        "id": "S3",
         "type": "watch",
-        "text": "Watch GBP daily actions through Sep 27 — 3-day stall (0 actions Sep 21–23) after 17-action peak may be weekend noise.",
+        "text": "Monitor GBP actions and SC clicks daily; both hit 0 for 3 consecutive days — re-check Sep 27 for recovery.",
         "cites": [
-          "F4"
+          "F4",
+          "F5"
         ],
-        "monday_item_name": "GBP Stall Watch Sep 27",
-        "monday_update": "GBP actions dropped to zero across Sep 21–23 after peaking at 17 actions over Sep 15–17 (F4). This is likely weekend/B2B pattern noise given the industrial client base, but must be confirmed. Monitor daily GBP actions through Sep 27; if the 3-day average remains below 1 action/day, escalate as a visibility issue requiring a GBP post or Q&A update. No paid budget action is warranted until the SOW blockers in F1 and F2 are resolved."
+        "monday_item_name": "Watch GBP + SC Click Drop",
+        "monday_update": "GBP actions dropped from 13 (Sep 18–20) to 0 (Sep 21–23), and Search Console clicks are also at 0 for the same 3-day window against a -50% 7-day delta. No paid activity exists to explain any shift, so this is an organic/local signal. Re-check on 2026-09-27: if GBP actions remain at 0 for a 6th consecutive day, escalate a GBP profile audit to Sohib."
       }
     ],
     "next_check": "2026-09-27"

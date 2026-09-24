@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-24T15:42:34.388Z",
+  "generated_at": "2026-09-24T20:00:47.826Z",
   "date": "2026-09-24",
   "slug": "medstation",
   "name": "MedStation",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 87,
   "status": "green",
-  "verdict": "Meta drove 95 leads at a $5.23 CPL over 28 days, with the last 7 days surging 182.61% in leads and 229.1% in spend, likely fueled by the \"MDST-WES-AWARE-WHTAPP\" campaign which alone consumed $331.10 of the $496.67 total budget. GBP actions softened 54.55% week-over-week, suggesting the paid push is not yet lifting organic profile engagement at MedStation Weston.",
+  "verdict": "Meta drove 95 leads at a $5.23 CPL over 28 days, with the past 7 days showing a sharp 182.61% surge in leads alongside a 229.1% spend increase, largely attributable to the top campaign \"MDST-WES-AWARE-WHTAPP\" which alone accounted for $331.10 of the $496.67 total spend. GBP actions declined 54.55% week-over-week, suggesting the paid push may not yet be translating to local profile engagement.",
   "windsor": {
     "totals": {
       "spend": 496.67,
@@ -708,79 +708,79 @@
     "history_line": "Disabled immediate fallback; added 2-hour wait · Fixed WhatsApp messaging and rescheduling bugs"
   },
   "performance": {
-    "generated_at": "2026-09-24T15:49:09.451Z",
+    "generated_at": "2026-09-24T20:05:52.861Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Meta CPL holding but 9 SOW milestones overdue — execution risk dwarfs ad performance.",
+    "verdict": "Meta CPL rising as spend scales; 9 overdue milestones block full attribution.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "5 milestones due 2026-07-31 undelivered: stack test, Como→GHL migration, GBP triage, Meta account/CAPI, and landing pages — 55 days overdue.",
+        "text": "9 SOW milestones overdue since July–September 2026: stack test, GHL migration, GBP triage, Meta CAPI, landing pages, search campaigns, LSA, and nurture sequences all undelivered.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
-        "priority": 2,
-        "text": "4 further milestones due Aug 31–Sep 1 also undelivered: reactivation lanes, search campaigns, LSA verification, nurture sequences — phase 1 attribution broken.",
+        "priority": 1,
+        "text": "CPL rose 16.45% week-over-week as spend surged 229.1%; spend scaling faster than leads is an early efficiency warning at current $5.23 CPL.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "meta"
       },
       {
         "id": "F3",
-        "priority": 1,
-        "text": "CPL rose 16.45% week-over-week as spend surged 229.1%; 3-day leads (Sep 21–23: 20+14+7=41) vs prior 3 (Sep 18–20: 7+4+11=22) still healthy but cost per lead creeping up.",
+        "priority": 2,
+        "text": "3-day lead signal: Sep 21–23 averaged 13.7 leads/day vs Sep 18–20 average of 7.3 — volume is up, but CPL is climbing with it, not compressing.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "MDST-WES-AWARE-WHTAPP consumed $331.10 of $496.67 (67%) over 28 days with zero GA4 conversion events and zero GHL pipeline data — results unverifiable downstream.",
-        "confidence": "probable",
-        "channel": "meta"
+        "text": "GBP actions dropped 54.55% week-over-week; last 4 days of series show 0 GBP actions — paid surge is not lifting local profile engagement.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GBP actions fell 54.55% week-over-week (last 4 days show 2, 2, 0, 0) while paid spend tripled — organic profile not lifting with paid activity.",
+        "text": "GA4 conversions read 0 across 28 days despite 3,480 sessions and 95 Meta leads — tracking is broken; leads are arriving but pipeline confirmation is invisible.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Escalate 9 overdue SOW milestones to Nacer and Sohib; block any further Meta budget increases until stack test clears.",
+        "type": "watch",
+        "text": "Hold Meta budget flat; watch CPL daily — if it exceeds $7.00 for 3 consecutive days, reduce spend 20%.",
         "cites": [
-          "F1",
-          "F2"
+          "F2",
+          "F3"
         ],
-        "monday_item_name": "SOW Milestone Escalation — Nacer",
-        "monday_update": "Nine SOW milestones are overdue by up to 55 days, including the end-to-end stack test, Como→GHL migration, landing pages, and Meta CAPI — all required before attribution is trustworthy. No lead-to-appointment path is confirmed, meaning the 95 leads at $5.23 CPL cannot be validated as booked appointments. Escalate to Nacer and Sohib immediately; gate any budget increases above the current $44.61/day run rate on stack test completion. Success check: stack test confirmed complete by 2026-10-01."
+        "monday_item_name": "Watch Meta CPL ceiling",
+        "monday_update": "Meta spend scaled 229.1% week-over-week, pushing CPL up 16.45% to $5.23. Budget stays flat this cycle — no scale until CPL stops rising. If CPL hits $7.00 on three consecutive days, reduce daily budget by 20%. Re-check September 27."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Audit GHL pipeline to confirm 95 Meta leads are entering as opportunities; surface intake leak if opps are flat.",
+        "text": "Fix GA4 conversion tracking — 0 conversions across 3,480 sessions means pipeline confirmation is fully blind.",
         "cites": [
-          "F4"
+          "F5",
+          "F1"
         ],
-        "monday_item_name": "GHL Lead Intake Audit",
-        "monday_update": "The 28-day window shows 95 Meta leads and $496.67 spend, but GHL pipeline data returned null — there is no confirmed link between ad leads and booked appointments, which is Phase 1's primary KPI. Pull the GHL opportunity count for the matching date range and compare against the 95 leads reported by Meta. If opportunities are materially lower, the issue is intake routing, not ad performance. Report findings by 2026-09-27."
+        "monday_item_name": "Fix GA4 conversion tracking",
+        "monday_update": "GA4 is recording 0 conversions against 3,480 sessions and 95 confirmed Meta leads — the conversion event is either misfiring or was never implemented. This is also a pre-launch stack test requirement overdue since July 31. Nacer to audit the GA4 goal/event setup and confirm a conversion fires end-to-end by September 27."
       },
       {
         "id": "S3",
-        "type": "watch",
-        "text": "Watch CPL on MDST-WES-AWARE-WHTAPP for 3 more days; do not scale past $44.61/day until GHL audit (S2) clears.",
+        "type": "fix",
+        "text": "Escalate all 9 overdue SOW milestones to Nacer; block any further Meta budget increases until stack test passes.",
         "cites": [
-          "F3",
-          "F4"
+          "F1"
         ],
-        "monday_item_name": "Meta CPL Watch — Hold Scale",
-        "monday_update": "CPL rose 16.45% week-over-week even as 3-day lead volume (41 leads, Sep 21–23) is strong; the direction is acceptable but the cost trend needs 3 more days of data before a scale decision is defensible. More importantly, the $331.10 MDST-WES-AWARE-WHTAPP campaign has no downstream validation (GHL null, GA4 conversions zero). Hold the daily budget at current levels (~$44.61/day) until the GHL audit in S2 is complete. Re-check 2026-09-27."
+        "monday_item_name": "Escalate 9 Overdue Milestones",
+        "monday_update": "Nine SOW milestones are overdue by 24–54 days, including the end-to-end stack test, GHL migration, Meta CAPI, and landing pages. Scaling Meta spend without verified attribution or a functioning intake pipeline risks real budget loss. Sohib to surface this in the next Medstation sync and set hard completion dates. No Meta budget increase approved until the stack test is confirmed complete."
       }
     ],
     "next_check": "2026-09-27"

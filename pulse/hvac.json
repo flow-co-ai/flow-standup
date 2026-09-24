@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-24T15:39:50.529Z",
+  "generated_at": "2026-09-24T19:59:48.412Z",
   "date": "2026-09-24",
   "slug": "hvac",
   "name": "Quality HVAC by Fibid",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 63,
   "status": "amber",
-  "verdict": "The biggest movement this period is Google Ads spend surging 256% week-over-week, driven by the LocalServicesCampaign ($620.47 of the $1,075.35 Google total), yet that spike has not translated into more leads, keeping CPL elevated at $260.27 and widening the attribution gap between the 7 reported leads (paid channels) and the 48 won opportunities logged in GHL. Two GBP profiles, Quality HVAC by Fibid (1.05% call rate) and Fibid Heating & Air Conditioning (0.91% call rate), are flagged for low call rates and warrant profile optimization to convert their 301 combined impressions more effectively.",
+  "verdict": "The biggest movement this period is Google Ads spend surging 256% week-over-week, driven by the top Local Services campaign alone accounting for $620.47 of the $1,075.35 Google spend, yet that spike has not translated into more leads, keeping CPL elevated at $260.27 and widening the attribution gap between the 7 tracked leads and GHL's 50 won opportunities.",
   "windsor": {
     "totals": {
       "spend": 1821.89,
@@ -575,14 +575,14 @@
     }
   },
   "ghl": {
-    "contacts": 319,
+    "contacts": 321,
     "opportunities": {
       "created": {
-        "count": 1201,
+        "count": 1203,
         "value": 21538.35
       },
       "won": {
-        "count": 48,
+        "count": 50,
         "value": 21538.35
       }
     },
@@ -590,9 +590,9 @@
   },
   "reconciliation": {
     "windsor_leads": 7,
-    "ghl_contacts": 319,
-    "ghl_opps_created": 1201,
-    "ghl_opps_won": 48,
+    "ghl_contacts": 321,
+    "ghl_opps_created": 1203,
+    "ghl_opps_won": 50,
     "status": "both_active"
   },
   "_meta": {
@@ -734,80 +734,81 @@
     "history_line": "WhatsApp & rescheduling bugs fixed · Wells Fargo financing copy updated on site"
   },
   "performance": {
-    "generated_at": "2026-09-24T15:46:11.872Z",
+    "generated_at": "2026-09-24T20:02:38.575Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Google spend tripled but bought zero incremental leads; six SOW milestones remain overdue.",
+    "verdict": "Google spend tripled but attribution is broken; 50 GHL wins vs 7 tracked leads exposes the real gap.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "CPL is $260.27 on 7 leads vs. spend of $1,821.89 over 28 days; Google spend spiked 256% week-over-week with zero new leads in final 3 days.",
+        "text": "CPL sits at $260.27 on 7 tracked leads, but GHL shows 50 won opps — attribution gap means true CPL is likely a fraction of reported, or paid ads are not the lead source.",
         "confidence": "confirmed",
-        "channel": "google"
+        "channel": "cross-channel"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "6 SOW milestones are overdue (oldest: Booking bot battle-test, due 2026-07-31); intake owner vacancy since 7/7 blocks all scale-up gates per SOW.",
+        "text": "6 overdue SOW milestones (oldest: Booking bot battle-test, due 2026-07-31): intake owner unconfirmed, LSA heating toggle unflipped, Review Boost, Financing page, and Homer Glen branch all undelivered — scale-up gate remains blocked.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GBP actions collapsed to 0 for last 3 days (Sep 21–23 all zero); GBP was averaging ~6 actions/day in prior 3 days — confirmed 3-day signal.",
+        "text": "Google spend spiked to $202.25 on 09-01 and $134.02 on 09-21 with 0 tracked leads on both days; 3-day signal (09-21–09-23: $216 spend, 0 leads) vs prior 3 days (09-18–09-20: $90, 0 leads) confirms spend is accelerating with no result response.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "google"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "48 won opportunities in GHL vs. only 7 reported paid leads in 28 days; 41-lead gap signals strong intake outside tracked channels, not an ads win.",
-        "confidence": "probable",
-        "channel": "ghl"
+        "text": "GBP actions dropped 76% week-over-week; last 3 series days (09-21–09-23) show 0 GBP actions vs a prior-period average of ~5/day — organic call pipeline has effectively gone dark.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "Search clicks fell 35% week-over-week (sc_7d_pct: -35.29) and IG reach is flat at ~15/day; organic visibility softening alongside paid efficiency drop.",
-        "confidence": "hypothesis",
-        "channel": "organic"
+        "text": "Search clicks fell 35% week-over-week; last 3 days show 1 and 0 and 0 sc_clicks vs a prior-3-day average of ~2.3 — top-of-funnel organic search intent is declining into fall shoulder season.",
+        "confidence": "probable",
+        "channel": "search"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit and cap LocalServicesCampaign daily budget by 30%; $620.47 in 28 days produced zero attributable leads.",
+        "text": "Audit and repair lead attribution pipeline: reconcile 50 GHL won opps against 7 tracked leads to find the broken conversion event.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Cap LSA Campaign Budget -30%",
-        "monday_update": "The LocalServicesCampaign spent $620.47 of the $1,075.35 Google total over 28 days with zero confirmed lead conversions and a CPL of $260.27 account-wide. Reduce its daily budget cap by 30% to stop the confirmed spend-with-no-return leak. Success check: CPL falls below $200 within 7 days of the change. Re-check by 2026-10-01."
+        "monday_item_name": "Fix Lead Attribution Gap",
+        "monday_update": "GHL shows 50 won opportunities worth $21,538 but only 7 leads are tracked in ad platforms, putting reported CPL at a misleading $260.27. The team must pull the GHL contact source field for all 50 won opps and match against Meta and Google Ads conversion logs to locate the broken or missing conversion event. Success is defined as tracked lead count reconciling within 20% of GHL won opps. Complete audit by 2026-09-28."
       },
       {
         "id": "S2",
-        "type": "fix",
-        "text": "Confirm intake owner, GHL login, and after-hours coverage; unblocks scale-up gate per SOW — overdue since 2026-08-31.",
+        "type": "watch",
+        "text": "Hold all Google budget increases; watch if LSA heating re-enable (overdue 09-01) is flipped before next cycle on 2026-09-28.",
         "cites": [
           "F2",
-          "F4"
+          "F3"
         ],
-        "monday_item_name": "Confirm Intake Owner & GHL Access",
-        "monday_update": "Vivian (dispatch) left 7/7 and the intake seat has been unconfirmed for 54+ days. With 48 GHL won opportunities vs. 7 tracked paid leads, there is clearly live volume flowing through intake — but speed-to-lead automations may be pointing at an empty seat. Escalate to Nacer (Ops): confirm who owns the GHL seat, verify login is active, and document after-hours coverage. Success check: named owner and confirmed login on file by 2026-10-01."
+        "monday_item_name": "Watch LSA Toggle & Scale Gate",
+        "monday_update": "Google spend has already tripled week-over-week (+256%) with zero additional tracked leads, and the SOW scale-up gate is explicitly blocked pending intake owner confirmation and 6 overdue milestones. Do not raise any Google or Meta budgets this cycle. Re-check on 2026-09-28 whether the LSA heating toggle (overdue since 09-01) has been flipped and whether the intake owner seat is confirmed — those two items must both be green before any budget increase is drafted."
       },
       {
         "id": "S3",
-        "type": "watch",
-        "text": "Watch GBP call volume on both flagged profiles; 3-day zero-action streak warrants profile audit before next cycle.",
+        "type": "fix",
+        "text": "Confirm intake owner and GHL seat access to prevent speed-to-lead failure on any leads that do arrive.",
         "cites": [
-          "F3"
+          "F2",
+          "F1"
         ],
-        "monday_item_name": "Watch GBP Call Rate Recovery",
-        "monday_update": "GBP actions hit zero for three consecutive days (Sep 21–23) across both the Quality HVAC by Fibid (1.05% call rate, 191 impressions) and Fibid Heating & Air Conditioning (0.91% call rate, 110 impressions) profiles. No action is taken this cycle as the cause (data lag vs. genuine drop) is unconfirmed. Monitor both profiles daily and note whether the Windsor data lag window (last 2–3 days) explains the gap. Re-check 2026-09-27; if actions remain at zero, escalate to GBP profile optimization."
+        "monday_item_name": "Confirm Intake Owner GHL Access",
+        "monday_update": "Vivian (dispatch) left 2026-07-07 and the intake owner role has been unconfirmed since the 2026-08-31 milestone deadline. With speed-to-lead automations pointing at a potentially empty seat, any lead — tracked or untracked — risks going unanswered, which may partly explain why 50 GHL opps exist but only 7 convert into tracked events. Confirm the new owner's name, GHL login, and after-hours coverage with Xavier or Nader by 2026-09-26. Success check: GHL seat is active and a test lead routes correctly."
       }
     ],
-    "next_check": "2026-09-27"
+    "next_check": "2026-09-28"
   }
 }

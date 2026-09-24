@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-24T15:40:53.831Z",
+  "generated_at": "2026-09-24T20:00:05.384Z",
   "date": "2026-09-24",
   "slug": "liferun",
   "name": "Liferun",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 30,
   "status": "orange",
-  "verdict": "The biggest movement this period is that both Meta and Google Ads have gone completely dark in the last 7 days (spend, leads, and CPL all down 100%), which is the likely driver of zero new leads in that window despite $1,634.26 spent and 102 leads delivered over the full 28 days. Lead volume is also unreconciled: Windsor/channel data shows 102 leads while GHL shows 149 contacts and 117 opportunities created, with 0 won.",
+  "verdict": "The biggest movement this period is that both Meta and Google Ads have gone completely dark in the last 7 days (spend, leads, and CPL all down -100%), which is the likely driver of zero activity in the most recent window despite a solid 28-day total of 102 leads at a $16.02 CPL across $1,634.26 in spend. Lead volume also shows a reconciliation gap: Windsor reports 102 leads while GHL shows 149 contacts and 117 opportunities created, with 0 won, and these figures are unreconciled.",
   "windsor": {
     "totals": {
       "spend": 1634.26,
@@ -702,78 +702,79 @@
     "history_line": "Paused all Google and Meta ad campaigns"
   },
   "performance": {
-    "generated_at": "2026-09-24T15:47:05.011Z",
+    "generated_at": "2026-09-24T20:03:31.209Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Both channels dark 7 days; five SOW milestones overdue — restart blocked on multiple fronts.",
+    "verdict": "Both channels dark 7 days; SOW milestones overdue — relaunch blocked on verification gaps.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Meta and Google both went to $0 spend on Sep 21 — confirmed channel_dark flags — delivering 0 leads over the last 7 days after averaging ~7 leads/day prior.",
+        "text": "Both Meta and Google have been at $0 spend for 7 consecutive days (Sep 17–23), confirmed by daily series — all paid lead flow is dead.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "5 SOW milestones overdue (oldest: Jul 20 Stripe QA; latest: Aug 31 Paid Landing Pages, UGC Batch, GHL Build, Stack Re-Test) — scale is blocked until cleared.",
+        "text": "5 SOW milestones overdue: Stripe QA (Jul 20), GHL Build (Aug 31), End-to-End Stack Re-Test ⛔ (Aug 31), Paid Landing Pages (Aug 31), UGC Batch (Aug 31). Scaling into unverified infrastructure leaks money silently.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "GHL shows 117 opportunities created vs 102 Windsor leads — 15-contact gap — and 0 won from 117 opps; intake is logging contacts but no activation is converting.",
-        "confidence": "confirmed",
-        "channel": "GHL"
-      },
-      {
-        "id": "F4",
         "priority": 3,
-        "text": "3-day signal (Sep 21–23): spend $0 vs prior 3-day avg ~$97/day; leads 0 vs prior ~6/day — sustained 3-day collapse, not noise.",
+        "text": "3-day signal (Sep 21–23) vs prior 3 (Sep 18–20): spend $0 vs $310.93, leads 0 vs 16 — abrupt stop, not gradual decline, consistent with account pause or budget exhaustion.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
+        "id": "F4",
+        "priority": 4,
+        "text": "GHL shows 117 opportunities created, 0 won, 0 appointments against 102 Windsor leads — 47-contact gap and zero downstream conversion signals an intake or CRM processing leak, not an ads problem.",
+        "confidence": "probable",
+        "channel": "GHL"
+      },
+      {
         "id": "F5",
         "priority": 4,
-        "text": "GA4 sessions held at 13–29/day through the channel-dark period, suggesting residual organic/direct traffic, but GBP actions fell 45% WoW (from ~11 to ~6) — organic softening in parallel.",
-        "confidence": "probable",
-        "channel": "GBP"
+        "text": "Google Ads: $404.21 spent over 28 days, 0 conversions recorded and 80 clicks — client-side pixel likely not firing; spend efficiency is unmeasurable until fixed.",
+        "confidence": "confirmed",
+        "channel": "google"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Diagnose and resolve the channel-dark shutdown on Meta and Google — confirm billing, policy holds, or account access issues before any restart.",
+        "text": "Diagnose and resolve channel-dark cause before reactivating any spend — confirm account status, billing, and ad approvals.",
         "cites": [
           "F1",
-          "F4"
+          "F3"
         ],
-        "monday_item_name": "Fix Meta & Google Shutdown",
-        "monday_update": "Both Meta and Google Ads dropped to $0 spend on Sep 21 and have been dark for 7 days, costing an estimated 49 leads at the prior CPL of ~$16. The immediate action is to check account status, billing, and any policy flags on both platforms before touching budgets. Success is confirmed when spend resumes and at least 5 leads register in a 24-hour window. Target resolution and first lead signal by Sep 27."
+        "monday_item_name": "Diagnose Channel-Dark Cause",
+        "monday_update": "Both Meta and Google have recorded $0 spend for 7 consecutive days (Sep 17–23), wiping all 16 leads that were averaging over the prior active window. Before any budget is reactivated, confirm: account standing and billing are clear, no ads are disapproved, and daily budget caps are set. Success check: at least one day of nonzero spend on both channels by Sep 27."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Escalate the 5 overdue SOW milestones to Nacer — stack re-test and paid landing pages are scale blockers; clear them before any budget increase.",
+        "text": "Complete End-to-End Stack Re-Test ⛔ and Google conversion pixel fix before scaling — two confirmed money leaks blocking reliable attribution.",
         "cites": [
-          "F2"
+          "F2",
+          "F5"
         ],
-        "monday_item_name": "Clear 5 Overdue SOW Milestones",
-        "monday_update": "Five milestones are overdue, the oldest since Jul 20 (Stripe QA) and four from Aug 31 including the End-to-End Stack Re-Test (marked ⛔) and Paid Landing Pages. These are explicit scale blockers: landing pages are needed for paid traffic to convert and the stack re-test is required to confirm Becklar billing and BWS duplicate paths are not leaking money silently. Nacer to provide a written status on all five by Sep 26; each milestone needs a confirmed-done date before the next budget increase is approved."
+        "monday_item_name": "Stack Re-Test + Pixel Fix",
+        "monday_update": "The End-to-End Stack Re-Test is overdue since Aug 31, and Google Ads has logged $404.21 in spend with 0 conversions recorded across 28 days — consistent with a broken client-side pixel. Fix the Google conversion event and run the full stack re-test (Becklar deactivation dummy, BWS duplicate check, Shippo label end-to-end). Success check: Google Ads logs at least 1 confirmed conversion within 48 hours of pixel fix, and all re-test items pass with no manual steps required by Oct 1."
       },
       {
         "id": "S3",
-        "type": "watch",
-        "text": "Watch 0-won from 117 GHL opportunities — confirm whether intake leak or sales process failure before attributing to ads.",
+        "type": "fix",
+        "text": "Audit GHL intake flow: 117 opps created, 0 won, 0 appointments — confirm leads are being worked, not stalling at entry.",
         "cites": [
-          "F3"
+          "F4"
         ],
-        "monday_item_name": "Watch GHL 0 Won Opps",
-        "monday_update": "GHL shows 117 opportunities created and 0 won across the 28-day window. This could mean the activation/sales step is broken in the pipeline, the opportunities are being created but never worked, or the won-stage trigger is misconfigured. The buyer is not acting on this yet because it may be a CRM workflow issue rather than an ads problem. Re-check on Sep 27: if the 0-won count persists with any new leads after channel restart, escalate to Ahmed/Ali for a pipeline audit."
+        "monday_item_name": "GHL Intake Audit",
+        "monday_update": "GHL shows 117 opportunities created against 102 Windsor leads with 0 won and 0 appointments booked — the 47-contact gap and zero downstream movement suggests leads are entering the pipeline but not being actioned. Audit the pipeline stage triggers and CS (Cebu) team follow-up steps. Success check: at least 10% of open opportunities have a logged appointment or next-step action within 7 days of audit completion, by Oct 1."
       }
     ],
     "next_check": "2026-09-27"
