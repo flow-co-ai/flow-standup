@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-25T15:46:39.307Z",
+  "generated_at": "2026-09-25T20:33:23.005Z",
   "date": "2026-09-25",
   "slug": "medstation",
   "name": "MedStation",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 88,
   "status": "green",
-  "verdict": "Meta drove all 95 leads over 28 days at a $5.23 CPL, with spend surging 230% week-over-week as the \"MDST-WES-AWARE-WHTAPP\" campaign alone consumed $331.64 of the $497.27 total budget. The 200% lead spike likely reflects that ramp in paid spend, though the 10.08% CPL rise signals early efficiency pressure worth monitoring as budgets scale.",
+  "verdict": "Meta drove all 95 leads over 28 days at a $5.23 CPL, with spend surging 230% week-over-week likely due to the \"MDST-WES-AWARE-WHTAPP\" campaign scaling to $331.64 of the $497.27 total. The 10% CPL rise alongside that spend jump is worth watching to ensure efficiency holds as budget increases.",
   "windsor": {
     "totals": {
       "spend": 497.27,
@@ -720,79 +720,80 @@
     "history_line": "Automation fallback timing fixed · WhatsApp & rescheduling bugs resolved · Message Inventory marked Done"
   },
   "performance": {
-    "generated_at": "2026-09-25T15:53:09.311Z",
+    "generated_at": "2026-09-25T20:38:13.157Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "9 overdue SOW milestones block attribution; paid results are unverifiable.",
+    "verdict": "9 overdue SOW milestones block attribution; ad efficiency secondary until stack is live.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "5 milestones due 2026-07-31 remain undelivered (stack test, GHL migration, GBP triage, Meta CAPI, landing pages) — 56 days overdue.",
+        "text": "5 milestones were due 2026-07-31 (stack test, GHL migration, GBP triage, Meta CAPI, landing pages) — all remain incomplete 57 days overdue.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "4 milestones due Aug–Sep 1 also undelivered: Meta reactivation lanes, Search campaigns, LSA submission, nurture sequences — blocking Phase 1 proof.",
+        "text": "3 milestones due Aug 31–Sep 1 (Meta reactivation lanes, Search campaigns, LSA submission, nurture sequences) also undelivered as of today 2026-09-25.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 1,
-        "text": "CPL rose 10.08% week-over-week to ~$5.23 while spend surged 230%; last 3 days (Sep 22–24) yielded 41 leads at rising cost vs 15 in prior 3 days (Sep 19–21) — efficiency pressure confirmed.",
-        "confidence": "confirmed",
+        "text": "CPL rose 10% to ~$5.23 as spend surged 230%; 3-day signal (Sep 22–24): $68/$58/$39 spend, 20/14/7 leads — CPL worsening as campaign scales, not improving.",
+        "confidence": "probable",
         "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Sep 24 spend collapsed to $0.53 with 0 leads after three $47–68 days — possible budget exhaustion or campaign pause, not a creative signal yet.",
-        "confidence": "probable",
-        "channel": "meta"
+        "text": "GBP actions fell 36.84% week-over-week while Meta spend tripled; 77 GBP actions over 28 days with 0 in the last 3 days — organic engagement collapsing in parallel.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GA4 sessions fell 25.86% week-over-week; GBP actions down 36.84% over same window — organic is contracting while paid scales, suggesting no halo effect.",
-        "confidence": "probable",
-        "channel": "organic"
+        "text": "GA4 shows 0 conversions across 3,411 sessions and GHL pipeline is null — leads arriving via Meta but zero pipeline evidence; intake or tracking is broken, not an ads problem.",
+        "confidence": "confirmed",
+        "channel": "meta"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate all 9 overdue SOW milestones to Nacer; block any budget increase until stack test is verified.",
+        "text": "Escalate all 9 overdue SOW milestones to Nacer immediately; no further budget increases until stack test and tracking are verified.",
         "cites": [
           "F1",
-          "F2"
+          "F2",
+          "F5"
         ],
-        "monday_item_name": "Unblock 9 SOW Milestones",
-        "monday_update": "Nine SOW milestones are overdue, the earliest by 56 days as of 2026-09-25. No budget scaling or new channel launches should proceed until the end-to-end stack test (Ops — Nacer) and GHL migration are verified live. Success is confirmed when all Jul 31 and Aug 31 items show a completed event in the project tracker. Target gate: 2026-10-02."
+        "monday_item_name": "Escalate 9 Overdue SOW Milestones",
+        "monday_update": "9 SOW milestones are overdue between 57 and 24 days, including the end-to-end stack test, GHL migration, Meta CAPI, and landing pages. With 3,411 GA4 sessions and 0 conversions recorded, and GHL pipeline returning null, there is no confirmed path from Meta lead to booked appointment. Escalate to Nacer for immediate gate review; success is confirmed stack test completion and at least one lead visible in GHL pipeline. Re-check by 2026-09-30."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch Meta CPL daily: if CPL exceeds $6.00 over next 3 days, cap daily spend at current $42.87 average.",
+        "text": "Watch MDST-WES-AWARE-WHTAPP CPL over next 3 days; hold spend flat until milestone gates clear.",
         "cites": [
-          "F3",
-          "F4"
+          "F3"
         ],
-        "monday_item_name": "Watch Meta CPL Ceiling",
-        "monday_update": "Meta CPL rose 10.08% week-over-week to $5.23, and Sep 24 showed near-zero spend ($0.53) with 0 leads after a $68 peak day. Monitor CPL daily through 2026-09-28; if it crosses $6.00 on any two of the next three days, hold the daily budget at $42.87 rather than scaling further. Confirm spend continuity resumed after the Sep 24 drop before drawing any efficiency conclusions."
+        "monday_item_name": "Watch WhatsApp Campaign CPL",
+        "monday_update": "The top campaign (MDST-WES-AWARE-WHTAPP, $331.64 of $497.27 28-day spend) produced a 10% CPL rise alongside the 230% spend surge. The 3-day trend shows leads dropping from 20 to 7 as spend held above $39/day, signalling efficiency decay. Hold daily spend at current ~$43/day and re-check CPL on 2026-09-28; if CPL exceeds $7.00 over that window, flag for budget reduction."
       },
       {
         "id": "S3",
-        "type": "watch",
-        "text": "Watch GBP actions weekly; if decline persists below 4 actions/day by 2026-10-02, flag for SEO review.",
+        "type": "fix",
+        "text": "Audit GA4 conversion events and GHL lead intake; 95 Meta leads and 0 pipeline entries confirm a tracking or intake break.",
         "cites": [
-          "F5"
+          "F5",
+          "F1"
         ],
-        "monday_item_name": "Watch GBP Organic Decline",
-        "monday_update": "GBP actions fell 36.84% week-over-week while paid spend tripled — no organic lift from paid ramp is visible. The GBP triage milestone (due Jul 31) remains undelivered, which likely explains the stagnation. Re-check on 2026-10-02: if the 7-day GBP action average remains below 4/day, escalate to the Local SEO workstream as a priority fix."
+        "monday_item_name": "Fix GA4 & GHL Lead Tracking",
+        "monday_update": "95 Meta leads were recorded over 28 days but GA4 shows 0 conversions across 3,411 sessions and GHL pipeline returns null. This is either a missing conversion event on the landing page or a broken GHL intake connection — both are listed as overdue SOW deliverables from 2026-07-31. Assign to the Web/CRM team to verify the lead-to-pipeline path; success is confirmed when at least 1 inbound lead appears as an opportunity in GHL. Target resolution by 2026-09-30."
       }
     ],
     "next_check": "2026-09-28"

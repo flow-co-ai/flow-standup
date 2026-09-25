@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-25T15:42:43.475Z",
+  "generated_at": "2026-09-25T20:32:10.282Z",
   "date": "2026-09-25",
   "slug": "full-smile",
   "name": "Full Smile",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Meta delivered 45 leads at a $10.19 CPL over 28 days, driven almost entirely by \"BWS - Instant Leads - Awareness\" at $273.38 spend, but the biggest movement is a -100% drop in spend over the last 7 days, suggesting the campaign was paused or budget exhausted mid-period. Note: Windsor shows 45 leads while GHL shows 51 opportunities created, and these figures are unreconciled.",
+  "verdict": "Meta delivered 45 leads at a $10.19 CPL over 28 days, with \"BWS - Instant Leads - Awareness\" driving the bulk of spend at $273.38, but the biggest movement is a -100% drop in spend over the last 7 days, suggesting the Meta campaigns were paused, which likely explains the -98.01% decline in Instagram activity as well. Note that Windsor shows 45 leads while GHL shows 51 opportunities created from 320 contacts, with 0 won, and these figures are unreconciled.",
   "windsor": {
     "totals": {
       "spend": 458.39,
@@ -554,7 +554,7 @@
     }
   },
   "ghl": {
-    "contacts": 319,
+    "contacts": 320,
     "opportunities": {
       "created": {
         "count": 51,
@@ -569,7 +569,7 @@
   },
   "reconciliation": {
     "windsor_leads": 45,
-    "ghl_contacts": 319,
+    "ghl_contacts": 320,
     "ghl_opps_created": 51,
     "ghl_opps_won": 0,
     "status": "both_active"
@@ -713,78 +713,78 @@
     "history_line": "Paused Meta ads and Local Service Ads to stop ad spend"
   },
   "performance": {
-    "generated_at": "2026-09-25T15:49:34.937Z",
+    "generated_at": "2026-09-25T20:34:20.978Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Meta dead 9 days; 5 overdue SOW milestones block the August scoreboard.",
+    "verdict": "Meta paused 10 days ago; pipeline shows 0 won from 51 opps — intake is the real problem.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Meta spend hit $0 on Sep 15 and has stayed at $0 for 9 consecutive days through Sep 24, killing all 45 leads and $458 in 28-day pipeline volume.",
+        "text": "Meta spend hit $0 on Sep 15 and has stayed dark for 10 consecutive days; $0 spend_per_day_7d confirms full pause, not throttle.",
         "confidence": "confirmed",
         "channel": "Meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Phone-match attribution gap (due Aug 7), sync/contact cleanup (due Aug 14), dashboard live (due Aug 31), and August scoreboard trusted (due Aug 31) are all overdue — 5 milestones unresolved with no completed event recorded.",
+        "text": "5 overdue milestones (oldest: Jul 23 renewal closure) remain unresolved; dashboard, attribution gap, and scoreboard trust all past due.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GHL shows 51 opportunities created vs 45 Meta leads reported, 0 appointments logged, and 0 won — 6-opp gap is unreconciled; intake conversion is invisible.",
+        "text": "GHL shows 51 opportunities created, $0 won, 0 appointments — 45 Meta leads produced zero pipeline conversions; intake leak, not an ads problem.",
         "confidence": "confirmed",
         "channel": "GHL"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "3-day signal (Sep 22–24): GBP actions averaged 4.7/day vs 8.3/day in the prior 3 days (Sep 19–21) — a -43% drop, likely suppressed by zero paid support for 9 days.",
+        "text": "GBP actions fell -38% (7d delta) and hit 0 on Sep 22–24; 3-day signal (Sep 22–24: 14+0+0=14 vs Sep 19–21: 13+2+2=17) confirms softening organic presence.",
         "confidence": "probable",
         "channel": "GBP"
       },
       {
         "id": "F5",
-        "priority": 4,
-        "text": "GA4 sessions held at 6–7/day in the last 3 days despite zero Meta spend and -27% search clicks, suggesting some residual direct/organic floor — but at 225 sessions/28 days this is thin.",
-        "confidence": "hypothesis",
-        "channel": "GA4"
+        "priority": 3,
+        "text": "When Meta was active (Aug 28–Sep 14), CPL averaged $10.19 over 28 days against 45 leads — efficient by this client's own series, but 3-day leads prior to pause (Sep 12–14: 1+0+0) were already collapsing before spend stopped.",
+        "confidence": "probable",
+        "channel": "Meta"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Immediately diagnose why Meta spend dropped to $0 on Sep 15; reactivate BWS campaign if paused, or replenish budget if exhausted.",
+        "text": "Escalate intake leak: 51 GHL opps, 0 won, 0 appointments — fix lead-to-booking workflow before restarting any ad spend.",
         "cites": [
-          "F1"
+          "F3",
+          "F2"
         ],
-        "monday_item_name": "Reactivate Meta — Full Smile",
-        "monday_update": "Meta spend has been $0 for 9 straight days (Sep 15–24), halting all 45 leads generated in the prior 28-day window at a $10.19 CPL. Diagnose whether the BWS - Instant Leads - Awareness campaign was manually paused or budget-exhausted, and reactivate or replenish immediately. Success check: confirmed non-zero spend showing in Meta Ads Manager by Sep 27. If spend does not resume by Sep 27, escalate to Sohib — every additional zero-spend day directly erodes the client's stay/walk decision with zero leads entering GHL."
+        "monday_item_name": "Fix GHL intake-to-booking gap",
+        "monday_update": "GHL shows 51 opportunities created and $0 won with 0 appointments booked against 45 delivered Meta leads — the ads worked, the intake did not. Audit the lead-response workflow in GHL: confirm leads are being contacted within the agreed window, that the new intake hire is actioning them, and that the OpenDental sync is correctly staging them as appointments. Success check: at least 5 opportunities move to 'appointment booked' status by Oct 2. This must be resolved before Meta spend resumes or the August scoreboard cannot be trusted."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Escalate all 5 overdue SOW milestones to Nacer; dashboard and scoreboard items are 25+ days past due and block renewal.",
+        "text": "Clear 5 overdue SOW milestones; dashboard and attribution gap are blocking the client's stay/walk renewal decision.",
         "cites": [
-          "F2",
-          "F3"
+          "F2"
         ],
-        "monday_item_name": "SOW Milestones — Escalate Nacer",
-        "monday_update": "Five milestones are overdue: phone-match attribution (Aug 7), sync/contact cleanup (Aug 14), dashboard live (Aug 31), August scoreboard trusted (Aug 31), and the renewal closed item (Jul 23). GHL shows 51 opps created, 0 appointments, and 0 won — the scoreboard the client uses to decide stay/walk is not operational. Nacer to assign owners and hard deadlines for each item in Monday by Sep 26. Success check: all 5 items have an assigned owner and a completion date no later than Oct 3."
+        "monday_item_name": "Clear overdue SOW milestones",
+        "monday_update": "Five milestones are past due, the oldest dating to Jul 23 (renewal closure). The two most critical are the Aug 31 dashboard (stay/walk decision depends on it) and the Aug 7 phone-match attribution gap. Sohib to confirm current status of each item with Ahmed Memon and Ali Shaheer and set a hard delivery date no later than Oct 2. Success check: all 5 milestones marked complete or formally rescheduled with written client acknowledgment by Oct 2."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions recovery: if daily average stays below 5/day through Sep 28, paid restart alone may not be sufficient.",
+        "text": "Watch GBP actions recovery through Sep 28; 3-day zero-action streak may worsen before deciding on organic intervention.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Watch GBP Recovery — Full Smile",
-        "monday_update": "GBP actions dropped to an average of 4.7/day over Sep 22–24, down from 8.3/day the prior 3 days, likely correlated with 9 days of zero Meta spend. Re-check GBP daily average on Sep 28 after Meta reactivation. If the daily average has not recovered above 7/day by Sep 28, flag for additional GBP optimization action. No spend move warranted until paid traffic is confirmed restored."
+        "monday_item_name": "Watch GBP actions Sep 28",
+        "monday_update": "GBP actions dropped -38% over 7 days and hit 0 for three consecutive days (Sep 22–24). This is a probable signal, not yet confirmed deterioration. No action this cycle. Re-check on Sep 28: if the 3-day average remains below 5 actions/day, escalate to GBP optimisation. Success threshold: actions return to the Aug 28–Sep 14 average of ~10/day."
       }
     ],
     "next_check": "2026-09-28"

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-25T15:42:48.967Z",
+  "generated_at": "2026-09-25T20:32:14.510Z",
   "date": "2026-09-25",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "GBP is the only active channel, generating 39 total actions (1 call, 27 directions, 11 web clicks) over 28 days, but momentum is declining sharply with GBP actions down 54.55% in the last 7 days versus the prior 7, likely driven by reduced local search visibility or seasonal drop-off. Paid channels (Meta and Google Ads) show zero spend, zero leads, and zero clicks, meaning all organic GBP activity is carrying the full lead generation load.",
+  "verdict": "GBP is the only active channel, generating 39 total actions (1 call, 27 directions, 11 web clicks) over 28 days, but momentum is declining sharply with GBP actions down 54.55% in the last 7 days versus the prior 7, likely driven by reduced local search visibility or seasonal drop-off. Paid channels (Meta and Google Ads) show zero spend, zero leads, and zero clicks, meaning there is no paid pipeline to offset the organic slowdown.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -599,37 +599,37 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-09-25T15:49:52.321Z",
+    "generated_at": "2026-09-25T20:34:39.940Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP-only signal is weakening; paid channels remain entirely dark.",
+    "verdict": "GBP-only baseline is collapsing; paid channels remain completely offline.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — Meta and Google Ads completely dark. GBP's 39 actions are the sole commercial activity.",
+        "text": "Zero paid spend across all 28 days — Meta and Google Ads are entirely dark, so there is no paid pipeline whatsoever.",
         "confidence": "confirmed",
         "channel": "meta, google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions fell 54.55% last 7d vs prior 7d. 3-day signal: Sep 22–24 totals 4 actions vs Sep 19–21's 7 — confirming the drop is sustained, not a one-day spike.",
+        "text": "GBP actions fell 54.55% last 7d vs prior 7d; 3-day signal (Sep 22-24: 4+0+0=4) vs prior 3 (Sep 19-21: 0+0+1=1) looks flat-to-soft after a Sep 16 spike of 6.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "Search clicks down 28.57% week-over-week; Sep 22–24 average is 2.3 clicks/day vs Sep 19–21 average of 4.0 — local search visibility is softening alongside GBP.",
+        "priority": 3,
+        "text": "Search clicks dropped 28.57% (7d delta) and last 3 days (Sep 22-24: 2+5+0=7) vs prior 3 (Sep 19-21: 1+0+2=3) show high volatility, not a clean trend — directional caution only.",
         "confidence": "probable",
-        "channel": "organic"
+        "channel": "search"
       },
       {
         "id": "F4",
-        "priority": 3,
-        "text": "GA4 shows 179 sessions and 156 users over 28 days with 0 conversions recorded — either the conversion event is unfired or the site has no intake form tracking.",
-        "confidence": "hypothesis",
+        "priority": 4,
+        "text": "GA4 sessions down 11.9% (7d); 179 sessions over 28 days yield 0 GA4 conversions — tracking is either broken or contact forms are not firing events.",
+        "confidence": "probable",
         "channel": "ga4"
       }
     ],
@@ -637,23 +637,22 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit GA4 conversion event: 179 sessions, 0 conversions recorded — likely broken or missing form/call tracking.",
+        "text": "Audit GA4 conversion events: 179 sessions, 0 conversions recorded over 28 days strongly suggests broken form tracking.",
         "cites": [
           "F4"
         ],
         "monday_item_name": "Fix GA4 Conversion Tracking",
-        "monday_update": "GA4 recorded 179 sessions and 156 users over the past 28 days but logged 0 conversions, meaning no lead intake events are firing. Audit the GA4 conversion event setup — check whether form submissions or call-click events are tagged and publishing correctly. Success is confirmed when at least one conversion event fires on a test form submission. Complete by 2026-09-29."
+        "monday_update": "GA4 recorded 179 sessions and 156 users over 28 days but zero conversions — form submission or thank-you-page events are likely not firing. Check GTM triggers and GA4 goal configuration against the contact/booking form. Success is confirmed when at least one conversion event appears in real-time GA4 view. Complete audit by 2026-09-28."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GBP actions for 3 more days; if Sep 25–27 total stays below 5, investigate profile health.",
+        "text": "Watch GBP actions over next 3 days; if 3-day total stays below 3, investigate Google Business Profile for listing changes.",
         "cites": [
-          "F2",
-          "F3"
+          "F2"
         ],
-        "monday_item_name": "Watch GBP Action Drop",
-        "monday_update": "GBP actions dropped 54.55% week-over-week and the 3-day signal (Sep 22–24 = 4 actions) confirms a sustained decline, not noise. Monitor Sep 25–27 daily GBP actions; if the 3-day total remains below 5, check for profile suspensions, missing categories, or review velocity issues. Re-check on 2026-09-28."
+        "monday_item_name": "Watch GBP Action Trend",
+        "monday_update": "GBP actions are down 54.55% in the last 7 days, and the last 2 days (Sep 23-24) recorded zero actions. Monitor the next 3 days (through Sep 28). If the 3-day total remains below 3 actions, investigate the GBP listing for suppression, review changes, or category edits that may have reduced local visibility."
       }
     ],
     "next_check": "2026-09-28"

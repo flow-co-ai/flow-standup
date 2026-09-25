@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-25T15:44:11.318Z",
+  "generated_at": "2026-09-25T20:32:49.807Z",
   "date": "2026-09-25",
   "slug": "liferun",
   "name": "Liferun",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 30,
   "status": "orange",
-  "verdict": "The biggest movement is a full shutdown of both Meta and Google Ads in the last 7 days (spend and leads both down 100%), flagged as channel_dark on both platforms, which has halted all paid lead flow. Over the 28-day window, Meta drove all 95 leads at a $16.18 CPL while Google Ads generated zero conversions on $384.52 in spend, and lead counts are unreconciled between Windsor (95 leads) and GHL (109 opportunities created).",
+  "verdict": "The most critical movement this period is that both Meta and Google Ads have gone completely dark in the last 7 days (spend and leads both down 100%), which means all 95 leads and $1,536.97 in spend are concentrated in the prior portion of the 28-day window with zero recent activity. Lead count is also unreconciled: Windsor reports 95 leads while GHL shows 145 contacts and 109 opportunities created, with 0 won.",
   "windsor": {
     "totals": {
       "spend": 1536.97,
@@ -703,78 +703,78 @@
     "history_line": "Paused all Google and Meta ad campaigns"
   },
   "performance": {
-    "generated_at": "2026-09-25T15:51:08.556Z",
+    "generated_at": "2026-09-25T20:36:00.457Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Both paid channels dark 8 days; 5 overdue SOW milestones block safe relaunch.",
+    "verdict": "Both channels dark 5+ days; SOW blockers compound an already-stopped funnel.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Meta and Google both went dark on Sep 17; spend has been $0 for 8 consecutive days, dropping leads from ~6/day to zero.",
+        "text": "Meta and Google both show $0 spend for 5 consecutive days (Sep 20–24); all 95 leads and $1,537 are confined to the prior portion of the 28-day window.",
         "confidence": "confirmed",
         "channel": "meta+google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Stripe Products QA (due Jul 20), GHL 5-gap build (due Aug 31), End-to-End Stack Re-Test ⛔ (due Aug 31) all overdue — money paths unverified before any relaunch.",
+        "text": "4 SOW milestones are overdue (earliest Jul 20): Stripe QA, GHL Gap Closure, End-to-End Stack Re-Test, and Paid Landing Pages — each a confirmed scale blocker.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Paid Landing Pages Live and UGC Batch + Senior Avatar Done both overdue Aug 31 — ads cannot relaunch into a compliant, converting destination without these.",
+        "text": "UGC Batch + Senior Avatar (due Aug 31) still overdue; with paid channels dark, no creative pipeline exists to relaunch Meta or Google.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GHL shows 109 opportunities vs 95 Windsor leads — 14-opp gap likely an intake-path duplicate (two order paths flagged in SOW), not incremental leads; zero won opps in 28 days.",
-        "confidence": "probable",
-        "channel": "crm"
+        "text": "GHL intake leak confirmed: 95 Windsor leads vs 109 GHL opportunities created, 0 won, 0 appointments — leads arriving but pipeline converting nothing.",
+        "confidence": "confirmed",
+        "channel": "GHL"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "Google spent $384.52 over 28 days with 0 conversions and 76 clicks; prior to going dark it averaged $14/day with no lead attribution — confirmed dead channel before shutdown.",
+        "text": "GBP actions fell 45% (7d delta) to near-zero; IG reach is 0 for all 28 days — organic has no presence to buffer the paid blackout.",
         "confidence": "confirmed",
-        "channel": "google"
+        "channel": "organic"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Resolve F2 blockers first: verify Becklar billing drop and BWS duplicate check before any ad spend resumes.",
+        "text": "Identify and resolve the channel-dark cause before any budget is reactivated; confirm Meta and Google billing/account status immediately.",
         "cites": [
-          "F2"
+          "F1"
         ],
-        "monday_item_name": "Verify GHL Money Paths ⛔",
-        "monday_update": "Run one dummy Becklar deactivation and one live order through each intake path (WordPress/Stripe + GHL Products) before restarting ads. The Aug 31 End-to-End Stack Re-Test is overdue; unverified paths risk leaking cash silently on every order. Success = Becklar portal confirms device drop AND exactly one fully-mapped opportunity per order. Must be cleared by 2026-09-28 before any paid relaunch."
+        "monday_item_name": "Resolve Meta + Google Blackout",
+        "monday_update": "Both Meta and Google have recorded $0 spend for 5 consecutive days (Sep 20–24), halting all 95 leads that were generated earlier in the 28-day window. The immediate action is to audit billing status, account flags, and campaign pause states on both platforms today (Sep 25). Success is confirmed when both channels show non-zero spend on the same calendar day. Re-check Sep 28 for a 3-day resumed spend signal."
       },
       {
         "id": "S2",
-        "type": "watch",
-        "text": "Hold Meta relaunch until landing pages (F3) and stack test (F2) confirmed; re-check Sep 28.",
+        "type": "fix",
+        "text": "Clear 4 overdue SOW blockers (Stripe QA Jul 20, GHL gaps Aug 31, Stack Re-Test Aug 31, Landing Pages Aug 31) before any paid relaunch.",
         "cites": [
-          "F1",
+          "F2",
           "F3"
         ],
-        "monday_item_name": "Meta Relaunch Hold — Sep 28",
-        "monday_update": "Meta was delivering 95 leads at $16.18 CPL before going dark Sep 17 — the channel was working. Do not restart spend until paid landing pages are live (overdue Aug 31) and the end-to-end stack re-test passes. Re-check on 2026-09-28; if both are cleared, relaunch at prior daily budget (~$85/day Meta) and confirm CPL holds at or below $16.18 within 3 days."
+        "monday_item_name": "Clear Overdue SOW Blockers",
+        "monday_update": "Four milestones are past due, the oldest by 2+ months (Stripe Products QA'd, due Jul 20); Paid Landing Pages and the End-to-End Stack Re-Test are both Aug 31 blockers that directly gate any paid relaunch. Each must be signed off by Nacer before budget is restored, as broken intake and missing landing pages will waste every dollar reactivated. Success is a completed checklist with a recorded test transaction and live landing page URL by Sep 30."
       },
       {
         "id": "S3",
-        "type": "kill",
-        "text": "Do not reinstate Google Ads: $384.52 spent over 28 days with 0 conversions and 76 clicks — confirmed non-performer.",
+        "type": "fix",
+        "text": "Audit GHL pipeline intake: 109 opportunities created, 0 won, 0 appointments signals a qualification or routing failure, not an ads volume problem.",
         "cites": [
-          "F5"
+          "F4"
         ],
-        "monday_item_name": "Kill Google Ads — Zero Conversions",
-        "monday_update": "Google Ads produced 0 conversions on $384.52 spend and 76 clicks over the full 28-day window — it was not working before the channel went dark. Reallocate that ~$14/day to Meta once the SOW blockers in F2 and F3 are resolved. Success check: Meta CPL remains at or below $16.18 after absorbing the additional budget for 7 days."
+        "monday_item_name": "GHL Pipeline Intake Audit",
+        "monday_update": "GHL shows 109 opportunities created against 0 won and 0 appointments booked, meaning leads are entering the CRM but never advancing — this is a CRM routing or follow-up failure, not an advertising problem. Ahmed/Ali should audit the automation sequence: confirm stage-move triggers fire, that the call/appointment booking link is active, and that assigned users are receiving tasks. Success is at least one opportunity advancing past stage 1 within 7 days of fix. Re-check Oct 2."
       }
     ],
     "next_check": "2026-09-28"

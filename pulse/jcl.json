@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-25T15:43:43.841Z",
+  "generated_at": "2026-09-25T20:32:39.883Z",
   "date": "2026-09-25",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "The biggest movement is a 135% surge in leads over the last 7 days, likely driven by the \"Leads - August Re-Launch\" campaign scaling spend up 54.07%, which pushed CPL down 34.44% to $20.83 over the 28-day window. Note that Meta reports 87 leads while GHL shows 72 contacts, and these figures are unreconciled.",
+  "verdict": "The biggest movement is a 135% surge in leads over the last 7 days alongside a 34.44% drop in CPL to $20.83, likely driven by the \"Leads - August Re-Launch\" campaign ramping up efficiently on Meta (87 leads, $1,812.45 spend). However, GHL shows only 74 contacts against 87 Meta-reported leads, and 0 opportunities created, so lead quality and CRM capture should be investigated.",
   "windsor": {
     "totals": {
       "spend": 1812.45,
@@ -554,7 +554,7 @@
     }
   },
   "ghl": {
-    "contacts": 72,
+    "contacts": 74,
     "opportunities": {
       "created": {
         "count": 0,
@@ -569,7 +569,7 @@
   },
   "reconciliation": {
     "windsor_leads": 87,
-    "ghl_contacts": 72,
+    "ghl_contacts": 74,
     "ghl_opps_created": 0,
     "ghl_opps_won": 0,
     "status": "both_active"
@@ -709,79 +709,78 @@
     "history_line": "Sticky lead forms added to GRT & Alleviate blogs · Sticky contact form added to all blog pages incl. Clarity"
   },
   "performance": {
-    "generated_at": "2026-09-25T15:50:43.100Z",
+    "generated_at": "2026-09-25T20:35:33.466Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "CPL breakthrough is real, but zero pipeline opps exposes a critical intake failure.",
+    "verdict": "CPL efficiency is real, but zero pipeline conversion exposes an intake failure, not an ads win.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "CPL fell 34% to $20.83 over 28 days as spend scaled to $80/day — efficiency confirmed, but 15 Meta leads (87 vs 72 GHL) are unaccounted for.",
+        "text": "CPL fell 34.44% to $20.83 over 7d — confirmed efficiency gain — but 87 Meta leads produced 0 GHL opportunities, so no signed-case progress.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3-day lead signal (Sep 22–24: 9,5,2 = avg 5.3) vs prior 3 days (Sep 19–21: 10,7,9 = avg 8.7) — leads decelerating while spend holds ~$70/day.",
-        "confidence": "probable",
-        "channel": "meta"
+        "text": "⛔ Extension with Marwan overdue since 2026-08-31; engagement is month-to-month lapsed — all spend and build work is ungated by contract.",
+        "confidence": "confirmed",
+        "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "⛔ Extension with Marwan unsigned past Aug 31 — engagement is now month-to-month lapsed; contract gates next 3 months of work.",
+        "text": "⛔ SMS automation and Zoho Voice access both overdue since 2026-08-31; 0 CTC calls placed in 45-day series confirms intake automation is dark.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
-        "priority": 2,
-        "text": "⛔ SMS automation and Zoho Voice both overdue since Aug 31 — 0 CTC calls confirmed across all 28 days; contact rate bottleneck is unaddressed.",
-        "confidence": "confirmed",
-        "channel": "SOW"
+        "priority": 3,
+        "text": "3-day lead signal (Sep 22–24: 9+5+2=16 leads) vs prior 3 days (Sep 19–21: 6+10+7=23) shows a 30% intraweek pullback as spend also dipped to $62.94 on Sep 24.",
+        "confidence": "probable",
+        "channel": "meta"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 0 opportunities created from 72 contacts over 28 days — leads arriving but pipeline is empty; this is an intake/CRM leak, not an ads problem.",
-        "confidence": "confirmed",
-        "channel": "meta"
+        "text": "GBP actions dropped 54.55% over 7d, with 3 consecutive zero-action days (Sep 22–24); organic signal decoupling from paid surge warrants monitoring.",
+        "confidence": "hypothesis",
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit GHL intake: 72 contacts produced 0 opportunities — fix pipeline stage trigger or intake routing immediately.",
+        "text": "Fix GHL intake pipeline: 87 leads, 74 contacts, 0 opportunities — map the 13-lead drop and force opp creation on form submission.",
         "cites": [
-          "F5",
-          "F4"
+          "F1"
         ],
-        "monday_item_name": "Fix GHL Pipeline Intake",
-        "monday_update": "GHL recorded 72 contacts over the 28-day window but created zero opportunities and zero appointments. The SMS automation and Zoho Voice access are also overdue since Aug 31, meaning speed-to-contact is broken. Task Andrew to verify pipeline stage triggers and opportunity creation rules in GHL this week. Success check: at least 1 opportunity created per 3 contacts by Oct 2."
+        "monday_item_name": "Fix GHL Lead-to-Opp Gap",
+        "monday_update": "GHL shows 87 Meta leads reported but only 74 contacts captured and 0 opportunities created in the 28-day window. The action is to audit the GHL workflow: confirm instant-form webhook is firing, check for duplicate/spam filters eating 13 leads, and add an automation that creates an opportunity at contact creation. Success is confirmed when new leads appear as open opportunities within 24 hours of form submission. Resolve and verify by 2026-09-28."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch 3-day lead rate: avg dropped from 8.7 to 5.3 — re-check Sep 28 before any budget move.",
+        "text": "Watch 3-day lead trend: Sep 22–24 averaged 5.3 leads/day vs Sep 19–21's 7.7 — hold budget, recheck before any scale.",
         "cites": [
-          "F2",
-          "F1"
+          "F4"
         ],
-        "monday_item_name": "Watch Meta Lead Rate Sep 28",
-        "monday_update": "The 3-day lead average fell from 8.7 (Sep 19–21) to 5.3 (Sep 22–24) while spend held near $70/day. This may be weekend noise or early fatigue on the Re-Launch campaign. Do not adjust budget yet. Re-check on Sep 28: if the 3-day avg is still below 6 leads/day at current spend, escalate to creative_refresh."
+        "monday_item_name": "Watch Meta Lead Trend 3-Day",
+        "monday_update": "The last 3 days (Sep 22–24) produced 16 leads vs 23 in the prior 3 days, a 30% intraweek pullback coinciding with spend softening to $62.94 on Sep 24. No budget action is warranted yet — one soft day is not a signal. Re-check the 3-day window on 2026-09-28; if the daily average recovers above 6 leads/day, the Aug Re-Launch campaign is ready to evaluate for a step-scale."
       },
       {
         "id": "S3",
         "type": "fix",
-        "text": "Escalate unsigned Marwan extension to Sohib — lapsed contract blocks all Month 2–3 SOW deliverables.",
+        "text": "Escalate ⛔ contract extension and Zoho Voice access to Sohib/Nacer immediately — all optimisation is ungated without them.",
         "cites": [
+          "F2",
           "F3"
         ],
-        "monday_item_name": "Chase Marwan Extension Signature",
-        "monday_update": "The engagement extension with Marwan was due Aug 31 and remains unsigned, leaving the account on a lapsed month-to-month basis. This blocks the next 3-month SOW including creative pipeline, CRM buildout, and budget rebalancing by signed-case data. Sohib to contact Marwan directly this week. Success check: signed agreement received by Sep 30."
+        "monday_item_name": "Escalate Contract & Zoho Blockers",
+        "monday_update": "The Marwan extension, SMS automation, and Zoho Voice access are all overdue since 2026-08-31 and remain unresolved. Zero CTC calls placed across the full 45-day series confirms the intake automation layer is entirely dark, which means no lead is being followed up automatically regardless of CPL performance. Sohib must chase Marwan on the contract and Joy/Andrew on Zoho Voice access this week. Success is a signed extension on file and Zoho Voice credentialed by 2026-09-30."
       }
     ],
     "next_check": "2026-09-28"
