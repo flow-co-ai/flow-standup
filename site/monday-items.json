@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-24T19:56:23.470490+00:00",
+  "generated_at": "2026-09-25T15:39:08.903865+00:00",
   "by_client": {
     "MedStation": [
       {
@@ -29,95 +29,6 @@
         "subitems": []
       },
       {
-        "monday_item_id": "12978907800",
-        "name": "Review Routing Interactive Rebuild",
-        "board": "CRM",
-        "status": "Done",
-        "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12978907800",
-        "updated_at": "2026-09-10T22:30:28.000Z",
-        "recent_updates": [
-          {
-            "author": "Ahmed Memon",
-            "date": "2026-09-10",
-            "text": "Completed the interactive review-routing rebuild. The workflow now uses Portuguese and English buttons instead of typed-text matching. Positive responses route to the Google review request, while negative responses route to service recovery and notify the assigned user. The workflow is saved with zero builder errors and remains unpublished pending approval."
-          },
-          {
-            "author": "Sohib Boundaoui",
-            "date": "2026-09-04",
-            "text": "The current logic reads the patient's typed reply to pick the positive vs negative branch, and that is what broke — a live patient said her visit was great and still got the \"sorry, how can we help\" message the next day. Rebuild the whole path as interactive buttons: rating prompt, button click, then branch (positive gets the Google review link, negative notifies the assigned user). No text parsing anywhere in the flow. @Ahmed Memon @Ali Shaheer"
-          }
-        ],
-        "subitems": []
-      },
-      {
-        "monday_item_id": "12978897529",
-        "name": "Bilingual Interactive Messaging",
-        "board": "CRM",
-        "status": "For Review",
-        "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12978897529",
-        "updated_at": "2026-09-10T22:33:37.000Z",
-        "recent_updates": [
-          {
-            "author": "Ahmed Memon",
-            "date": "2026-09-10",
-            "text": "Completed the Portuguese-first bilingual routing with an English option for the MedStation WhatsApp workflows. Button-based language selection is configured for the review, missed-call, and related messaging paths. Verified the workflows are saved with zero builder errors."
-          },
-          {
-            "author": "Sohib Boundaoui",
-            "date": "2026-09-04",
-            "text": "Portuguese default with an English option on the missed-call text-back and Meta WhatsApp workflows. Language selection has to be an interactive message with buttons they click, not a typed reply. @Ahmed Memon @Ali Shaheer"
-          }
-        ],
-        "subitems": []
-      },
-      {
-        "monday_item_id": "12978879914",
-        "name": "Business Hours Logic",
-        "board": "CRM",
-        "status": "Done",
-        "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12978879914",
-        "updated_at": "2026-09-10T22:34:19.000Z",
-        "recent_updates": [
-          {
-            "author": "Ahmed Memon",
-            "date": "2026-09-10",
-            "text": "Configured business-hours handling for Monday-Friday, 8:00 AM-5:00 PM ET, including the shared holiday-date exclusion. After-hours leads receive the closed-office response and are held until the next business opening. A shared tag prevents duplicate after-hours messages across workflows. The relevant workflows are saved with zero builder errors."
-          },
-          {
-            "author": "Nacer Amrouch",
-            "date": "2026-09-09",
-            "text": "Salam, Context. MedStation was closed on 7 September. Before 9am Renata had already answered three inbound leads by hand, because nothing replies automatically when the clinic is shut, and she said she had also picked up a message the previous night. Her words were that we should have messages after business hours too. This is the gap this item was opened for, now showing up with real patients on the other end. The policy Sohib set the same morning. Do not try to hold the conversation out of hours. Tell the lead we are closed, say we will be in contact during business hours, and invite them to leave what they are looking for so the team has something to work from when it opens. What was actually built on the day. Ahmed built a closed today message in GoHighLevel on 7 September. It fires on"
-          },
-          {
-            "author": "Sohib Boundaoui",
-            "date": "2026-09-04",
-            "text": "Confirm business hours logic exists across the messaging workflows. Handle it as one condition inside each workflow, not as separate day/after-hours workflows. @Ahmed Memon @Ali Shaheer"
-          }
-        ],
-        "subitems": []
-      },
-      {
-        "monday_item_id": "12978907440",
-        "name": "24-Hour Window Opening Template",
-        "board": "CRM",
-        "status": "Done",
-        "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12978907440",
-        "updated_at": "2026-09-10T22:34:56.000Z",
-        "recent_updates": [
-          {
-            "author": "Ahmed Memon",
-            "date": "2026-09-10",
-            "text": "Added the approved WhatsApp reopening template to the relevant after-hours and older-conversation paths. The workflows use the approved template before continuing the conversation when the WhatsApp customer-service window is closed. Configuration is saved with zero builder errors."
-          },
-          {
-            "author": "Sohib Boundaoui",
-            "date": "2026-09-04",
-            "text": "We need an approved re-open template so we can initiate a conversation once it falls outside the WhatsApp 24-hour window. Applies to reactivation, review asks, and any staff-initiated message on an older thread. @Ahmed Memon @Ali Shaheer"
-          }
-        ],
-        "subitems": []
-      },
-      {
         "monday_item_id": "13002507842",
         "name": "Lead Escalation Workflows",
         "board": "CRM",
@@ -139,27 +50,6 @@
             "author": "Ahmed Memon",
             "date": "2026-09-10",
             "text": "Completed the Missed Call Textback and Missed Message Textback drafts. Missed messages wait one hour for a staff response during business hours; if unanswered, Renata receives an internal alert. After-hours contacts receive the closed-office response immediately, while Renata’s notification waits until the next business opening. Missed-call alerts follow the same business-hours rules. WhatsApp is primary, SMS is only the undelivered fallback, duplicate-message protection is configured, and both workflows have zero builder errors. They remain unpublished pending approval and controlled live QA."
-          }
-        ],
-        "subitems": []
-      },
-      {
-        "monday_item_id": "13002597767",
-        "name": "Appointment Status Sync",
-        "board": "CRM",
-        "status": "Done",
-        "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13002597767",
-        "updated_at": "2026-09-10T22:36:31.000Z",
-        "recent_updates": [
-          {
-            "author": "Ahmed Memon",
-            "date": "2026-09-10",
-            "text": "Updated the NextGen-to-GHL appointment status mapping. Confirmed now maps correctly, Showed is blocked until the appointment has ended, and No Show and Cancelled are handled. Cancellation, linked-reschedule, future-status guard, and idempotent retry tests all pass. The mirror remains active and this is ready for controlled live verification."
-          },
-          {
-            "author": "Nacer Amrouch",
-            "date": "2026-09-09",
-            "text": "Salam, Context, where this started. At the go live call on 3 September the appointment status arriving from NextGen was confirmed broken in two separate ways. Statuses came across mostly as the default value, Confirmed did not map onto anything in GoHighLevel at all, and Showed was firing on appointments whose date had not yet happened. Review requests were paused rather than risk asking a patient about a visit they had not attended. What changed by 4 September. At the following morning’s go live call the sync was reported as accurate. Duplicate records are now handled at the DigitalOcean webhook level rather than downstream, and show, no show and last visit date were described as updating in real time, which is what both the reactivation and the review triggers key off. What is still open"
           }
         ],
         "subitems": []
@@ -197,64 +87,6 @@
             "author": "Nacer Amrouch",
             "date": "2026-09-10",
             "text": "Salam, Context. MedStation patients are now receiving automated messages from two systems at once. Neuryn sends its own appointment reminders, and GoHighLevel has started sending review requests, missed call replies and reactivation prompts. At the team onboarding call on 4 September this came out as a live risk on two fronts: patients getting duplicated or conflicting messages, and conversations splitting across two channels so staff never see a whole thread in one place. Step one, get the Neurin flows. Coordinate with Rafael at Neuryn to obtain the exact appointment reminder messages Neuryn sends, including their timing, their triggers and their language, and share them with the team so MedStation can approve the wording. Nothing here can be judged until the actual copy is in front of us"
-          }
-        ],
-        "subitems": []
-      },
-      {
-        "monday_item_id": "13019850713",
-        "name": "Patient List Merge",
-        "board": "CRM",
-        "status": "Done",
-        "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13019850713",
-        "updated_at": "2026-09-10T18:43:13.000Z",
-        "recent_updates": [
-          {
-            "author": "Nacer Amrouch",
-            "date": "2026-09-10",
-            "text": "Salam, Context. Reactivation messaging for Weston is being built in GoHighLevel, but the data it has to aim at is split across two systems. NextGen holds the clinical record and the last visit date, Como holds the older patient list and the last communication date. Neither one on its own can answer the question reactivation depends on, which is who has not been seen and has not been contacted. At the team onboarding call on 4 September Sohib took the action to bring the two together. Step one, get the current list from Sohib. Follow up with Leo and the MedStation team for the current NextGen lead and patient list for the Weston clinic. This has been asked for once already and has not come back, so it needs chasing rather than waiting on. Step two, merge and cross reference. Merge that list"
-          }
-        ],
-        "subitems": [
-          {
-            "monday_item_id": "13053344645",
-            "name": "Import Suppression",
-            "board": "CRM",
-            "status": "Start",
-            "monday_url": "https://flowcompany.monday.com/boards/18418241406/pulses/13053344645",
-            "updated_at": "2026-09-15T19:07:22.000Z",
-            "recent_updates": [
-              {
-                "author": "Nacer Amrouch",
-                "date": "2026-09-15",
-                "text": "Salam, What is new. The list this parent item is waiting on has arrived. Sohib confirmed on 10 September that the Weston patient list came back from Leo, that he cleaned the csv himself that day, and that reactivation starts . He also flagged the risk that loading it into GoHighLevel will fire the live messaging automations at every record on it. He wants zero messages sent by the import. Deliverable one, suppress before loading. List every published Weston workflow that can trigger on contact creation, tag application or import, the missed message textback, the review request, the opening template and the reactivation prompts included, and put each into a state where a bulk import cannot fire it. Post that list here before the import runs so the suppression is reviewable rather than assum"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "monday_item_id": "13020662201",
-        "name": "Send To NextGen",
-        "board": "CRM",
-        "status": "Waiting",
-        "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13020662201",
-        "updated_at": "2026-09-17T18:18:14.000Z",
-        "recent_updates": [
-          {
-            "author": "Nacer Amrouch",
-            "date": "2026-09-17",
-            "text": "Salam @Ahmed Memon ﻿ @Ali Shaheer ﻿ ﻿﻿ ﻿What is the status here? What is needed from us/Medstation to get this button onto pushing into NextGen?﻿﻿ ﻿"
-          },
-          {
-            "author": "Ahmed Memon",
-            "date": "2026-09-11",
-            "text": "Salam @Nacer Amrouch ﻿ ﻿/ @Sohib Boundaoui ﻿ ﻿﻿﻿, The Send To NextGen backend and GHL draft are built, and read-only validation passed with duplicate protection. One field-mapping clarification is needed before activation: NextGen's person-create endpoint has no native service field. Name, phone, and email map directly, while Booking Clinic maps through the Weston NextGen session/location. Which NextGen field should receive GHL Booking Service: a specific user-defined/custom field, or should Booking Service remain in GHL until an appointment is created? Production writes remain disabled and the GHL workflow remains in Draft until this mapping is confirmed."
-          },
-          {
-            "author": "Nacer Amrouch",
-            "date": "2026-09-10",
-            "text": "Salam, Context. Patient data only moves one way today. Information flows from Neurin into NextGen and then into GoHighLevel on a fifteen minute sync, so anything captured first in GoHighLevel has to be retyped into NextGen by hand. At the team onboarding call on 4 September this was named as the main source of duplicate entry for the front desk, and the fix proposed on the call was a button rather than a further sync. Deliverable. Build a Send to NextGen action on the GoHighLevel contact record that pushes the patient into NextGen directly, so a contact created in GoHighLevel does not have to be typed a second time. Field mapping. Agree and document on this item which fields the button sends, at minimum name, phone, email, clinic and service, and confirm which of those NextGen treats as ma"
           }
         ],
         "subitems": []
@@ -381,8 +213,13 @@
         "board": "Ads",
         "status": "In Progress",
         "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12786016809",
-        "updated_at": "2026-08-28T00:22:16.000Z",
+        "updated_at": "2026-09-25T02:05:11.000Z",
         "recent_updates": [
+          {
+            "author": "Sohib Boundaoui",
+            "date": "2026-09-25",
+            "text": "﻿Salaam @Ads Team ﻿ ﻿heres the updated LSA COI - MEDSTATION PRIMARY CLINIC (1).pdf ﻿﻿"
+          },
           {
             "author": "Sohib Boundaoui",
             "date": "2026-08-28",
@@ -1278,7 +1115,7 @@
         "monday_item_id": "13054042639",
         "name": "Missed Calls",
         "board": "CRM",
-        "status": "Start",
+        "status": "Done",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13054042639",
         "updated_at": "2026-09-15T20:03:40.000Z",
         "recent_updates": [
@@ -1352,7 +1189,7 @@
         "monday_item_id": "12175359339",
         "name": "Reports",
         "board": "Ads",
-        "status": "",
+        "status": "Ongoing",
         "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12175359339",
         "updated_at": null,
         "recent_updates": [],
@@ -2111,21 +1948,6 @@
                 "author": "Sohib Boundaoui",
                 "date": "2026-08-12",
                 "text": "@Ads Team ﻿please go live with the new creatives in the ad assets folder. ﻿"
-              }
-            ]
-          },
-          {
-            "monday_item_id": "12934305744",
-            "name": "Payment Error",
-            "board": "Ads",
-            "status": null,
-            "monday_url": "https://flowcompany.monday.com/boards/18405754312/pulses/12934305744",
-            "updated_at": "2026-08-31T13:12:52.000Z",
-            "recent_updates": [
-              {
-                "author": "Ads Team",
-                "date": "2026-08-31",
-                "text": "﻿Salam @Sohib Boundaoui ﻿ ﻿, ﻿ ﻿Billy Doe ads are delivering because of a payment error. ﻿Could you please check ASAP. ﻿ ﻿-Thanks﻿ ﻿ ﻿"
               }
             ]
           }
