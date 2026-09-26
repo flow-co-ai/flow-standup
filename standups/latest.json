@@ -1,22 +1,22 @@
 {
-  "week_of": "2026-09-25",
-  "executive_summary": "Meta performance is strong where active—Billy Doe Meats hit 4.28x ROAS, Maadi Law's Arabic ads run $18 CPL vs $90 English. Seven of ten clients show stalled loops aging 9–106 days, concentrated in Ads reconnections, CRM handoffs, and Web/SEO scoping. Quality HVAC and Liferun each carry 80+ day intake and verification gaps that block scale or cleanup.",
+  "week_of": "2026-09-26",
+  "executive_summary": "Eight of ten clients need attention this week, with stalled loops aging across CRM, Ads, and Web. Maadi Law shows progress on Arabic ad performance ($18 vs $90 CPL) but faces user assignment bugs risking wrong client texts. Quality HVAC and MedStation remain blocked on infrastructure—missed-call rates and hosting accounts unresolved despite timeout and deployment efforts.",
   "departments_overview": [
     {
       "department": "CRM",
-      "summary": "Load spread across dashboard builds (Maadi), message inventory requests (MedStation), and two 80-day handoff/verification items at Quality HVAC and Liferun blocking progress."
+      "summary": "Moderate load with Maadi Law user assignment defects flagged as urgent; Liferun handoff and Becklar billing items stalled 81 days."
     },
     {
       "department": "Ads",
-      "summary": "Billy Doe Meats and Maadi Law performing well; Justice Consumer Law Meta ramp stalled 36 days, Quality HVAC billing migration unverified 106 days, conversion tags and tests aging at multiple clients."
+      "summary": "Justice Consumer Law Meta ramp blocked 37 days; Maadi Law conversion tags incomplete 54 days; Billy Doe Meats /halal-subscribe test stalled 65 days."
     },
     {
       "department": "Video",
-      "summary": "Flow Company internal projects stalled—Ihya School Promo 35 days, Clinic SEO Reel Clips 10 days overdue."
+      "summary": "Flow Company internal projects stuck: Ihya School Promo awaiting Tahir 36 days, Clinic SEO Reel Clips overdue 11 days."
     },
     {
       "department": "Web + SEO",
-      "summary": "Full Smile scope breakdown pending 11 days; MedStation hosting account undefined 22 days, blocking deployment."
+      "summary": "Full Smile scope breakdown pending 12 days; MedStation hosting account undefined, blocking deployment 23 days."
     }
   ],
   "by_client": [
@@ -27,37 +27,26 @@
       "work_by_department": [
         {
           "department": "Ads",
-          "highlights": [
-            {
-              "text": "Meta 4.28x ROAS, 10 purchases, $373 spend",
-              "department": "Ads",
-              "source": "monday",
-              "monday_item_id": "12184917497",
-              "item_name": "Reports",
-              "days_stalled": null,
-              "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12184917497",
-              "id": "0a273d5c"
-            }
-          ],
+          "highlights": [],
           "stalled_items": [
             {
               "text": "/halal-subscribe conversion test awaiting results",
               "department": "Ads",
               "source": "monday",
-              "monday_item_id": "12613897388",
+              "monday_item_id": "[id: 12613897388]",
               "item_name": "/halal-subscribe Conversion Test",
-              "days_stalled": 64,
-              "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12613897388",
+              "days_stalled": 65,
+              "monday_url": null,
               "id": "225b48b1"
             },
             {
               "text": "Hoda's website mistakes need meeting review",
               "department": "Ads",
               "source": "monday",
-              "monday_item_id": "12321413451",
+              "monday_item_id": "[id: 12321413451]",
               "item_name": "Website Problem",
-              "days_stalled": 10,
-              "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12321413451",
+              "days_stalled": 11,
+              "monday_url": null,
               "id": "4bda9cf7"
             }
           ]
@@ -389,8 +378,8 @@
         "sub_scores": {
           "task_stalling": {
             "score": "red",
-            "reason": "0 in review, max stalled 64d",
-            "max_days_stalled": 64,
+            "reason": "0 in review, max stalled 65d",
+            "max_days_stalled": 65,
             "review_count": 0
           },
           "comms_quality": {
@@ -400,8 +389,8 @@
           },
           "meeting_cadence": {
             "score": "red",
-            "reason": "63d since last meeting (expected every 14d, biweekly)",
-            "gap_days": 63,
+            "reason": "64d since last meeting (expected every 14d, biweekly)",
+            "gap_days": 64,
             "expected_days": 14
           },
           "team_load": {
@@ -437,7 +426,7 @@
               "text": "Scope breakdown for web/SEO/GBP work pending",
               "department": "Web + SEO",
               "source": "monday",
-              "days_stalled": 11,
+              "days_stalled": 12,
               "item_name": null,
               "monday_item_id": null,
               "monday_url": null,
@@ -453,7 +442,7 @@
               "text": "Billing setup incomplete; no business card available",
               "department": "",
               "source": "meeting",
-              "days_stalled": 22,
+              "days_stalled": 23,
               "item_name": null,
               "monday_item_id": null,
               "monday_url": null,
@@ -799,8 +788,8 @@
         "sub_scores": {
           "task_stalling": {
             "score": "red",
-            "reason": "0 in review, max stalled 22d",
-            "max_days_stalled": 22,
+            "reason": "0 in review, max stalled 23d",
+            "max_days_stalled": 23,
             "review_count": 0
           },
           "comms_quality": {
@@ -809,8 +798,8 @@
           },
           "meeting_cadence": {
             "score": "red",
-            "reason": "35d since last meeting (expected every 14d, biweekly)",
-            "gap_days": 35,
+            "reason": "36d since last meeting (expected every 14d, biweekly)",
+            "gap_days": 36,
             "expected_days": 14
           },
           "team_load": {
@@ -835,36 +824,46 @@
     },
     {
       "client": "Quality HVAC",
-      "headline": "No new activity; open loops persist",
+      "headline": "Ring timeout raised to 30s on tracking lines",
       "health": "needs_attention",
       "work_by_department": [
         {
-          "department": "Ads",
+          "department": "CRM",
+          "highlights": [
+            {
+              "text": "Ring timeout raised 20→30s on all tracking lines",
+              "department": "CRM",
+              "source": "monday",
+              "monday_item_id": "13054042639",
+              "item_name": "Missed Calls",
+              "days_stalled": null,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13054042639",
+              "id": "7785b583"
+            }
+          ],
+          "stalled_items": []
+        },
+        {
+          "department": "General",
           "highlights": [],
           "stalled_items": [
             {
               "text": "Meta billing card migration not verified",
-              "department": "Ads",
+              "department": "",
               "source": "monday",
-              "days_stalled": 106,
-              "item_name": "Meta Ads",
-              "monday_item_id": "[id: 11929334685]",
+              "monday_item_id": null,
+              "item_name": null,
+              "days_stalled": 107,
               "monday_url": null,
               "id": "1fb50719"
-            }
-          ]
-        },
-        {
-          "department": "CRM",
-          "highlights": [],
-          "stalled_items": [
+            },
             {
               "text": "Intake owner unconfirmed since Vivian left",
-              "department": "CRM",
+              "department": "",
               "source": "monday",
-              "days_stalled": 80,
-              "item_name": null,
               "monday_item_id": null,
+              "item_name": null,
+              "days_stalled": 81,
               "monday_url": null,
               "id": "0fae80f7"
             }
@@ -873,7 +872,7 @@
       ],
       "status_change_suggestions": [],
       "risks": [
-        "Intake ownership gap blocks budget scale-up"
+        "100% missed-call rate persists despite timeout fix"
       ],
       "upcoming": [],
       "next_up": null,
@@ -884,7 +883,7 @@
         "review": 0,
         "stuck": 0,
         "done": 0,
-        "monday_msgs": 1,
+        "monday_msgs": 2,
         "meetings": 0,
         "wa_msgs": 0
       },
@@ -1454,24 +1453,24 @@
         }
       ],
       "scores": {
-        "composite": 39,
-        "label": "red",
+        "composite": 53,
+        "label": "yellow",
         "sub_scores": {
           "task_stalling": {
             "score": "red",
-            "reason": "0 in review, max stalled 106d",
-            "max_days_stalled": 106,
+            "reason": "0 in review, max stalled 107d",
+            "max_days_stalled": 107,
             "review_count": 0
           },
           "comms_quality": {
-            "score": "red",
-            "reason": "0% medium/high",
-            "pct_medium_high": 0
+            "score": "yellow",
+            "reason": "50% medium/high",
+            "pct_medium_high": 50
           },
           "meeting_cadence": {
             "score": "green",
-            "reason": "3d since last meeting (expected every 14d, biweekly)",
-            "gap_days": 3,
+            "reason": "4d since last meeting (expected every 14d, biweekly)",
+            "gap_days": 4,
             "expected_days": 14
           },
           "team_load": {
@@ -1485,18 +1484,13 @@
             "id": "long_stalled_task",
             "label": "Long-stalled task",
             "action": "Escalate in next standup — decide kill or keep, don't let it age further"
-          },
-          {
-            "id": "comms_quality_red",
-            "label": "Comms quality red",
-            "action": "1:1 on update expectations; share one \"high\" example from the team as a model"
           }
         ]
       }
     },
     {
       "client": "Justice Consumer Law",
-      "headline": "No movement; Meta ramp stalled 36 days",
+      "headline": "No movement; Meta ramp stalled 37 days",
       "health": "needs_attention",
       "work_by_department": [
         {
@@ -1509,7 +1503,7 @@
               "source": "monday",
               "monday_item_id": "[id: 11929336591]",
               "item_name": "Meta Ads",
-              "days_stalled": 36,
+              "days_stalled": 37,
               "monday_url": null,
               "id": "f832d898"
             }
@@ -1517,7 +1511,9 @@
         }
       ],
       "status_change_suggestions": [],
-      "risks": [],
+      "risks": [
+        "Meta optimization blocked 37 days; lead volume at risk"
+      ],
       "upcoming": [],
       "next_up": null,
       "stats": {
@@ -1715,8 +1711,8 @@
         "sub_scores": {
           "task_stalling": {
             "score": "red",
-            "reason": "0 in review, max stalled 36d",
-            "max_days_stalled": 36,
+            "reason": "0 in review, max stalled 37d",
+            "max_days_stalled": 37,
             "review_count": 0
           },
           "comms_quality": {
@@ -1726,8 +1722,8 @@
           },
           "meeting_cadence": {
             "score": "red",
-            "reason": "73d since last meeting (expected every 14d, biweekly)",
-            "gap_days": 73,
+            "reason": "74d since last meeting (expected every 14d, biweekly)",
+            "gap_days": 74,
             "expected_days": 14
           },
           "team_load": {
@@ -1763,19 +1759,19 @@
               "text": "HANDOFF item — absorb June 22 Automation Guide",
               "department": "CRM",
               "source": "monday",
+              "monday_item_id": "[id: 12470616714]",
               "item_name": "HANDOFF",
-              "monday_item_id": "12470616714",
-              "days_stalled": 80,
-              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/12470616714",
+              "days_stalled": 81,
+              "monday_url": null,
               "id": "ebd4e4dc"
             },
             {
               "text": "Becklar billing drop verification — confirm deactivation reflects",
               "department": "CRM",
               "source": "monday",
-              "item_name": null,
               "monday_item_id": null,
-              "days_stalled": 80,
+              "item_name": null,
+              "days_stalled": 81,
               "monday_url": null,
               "id": "45a779d2"
             }
@@ -1783,9 +1779,7 @@
         }
       ],
       "status_change_suggestions": [],
-      "risks": [
-        "Two critical CRM verifications stalled 80 days"
-      ],
+      "risks": [],
       "upcoming": [],
       "next_up": null,
       "stats": {
@@ -2006,8 +2000,8 @@
         "sub_scores": {
           "task_stalling": {
             "score": "red",
-            "reason": "0 in review, max stalled 80d",
-            "max_days_stalled": 80,
+            "reason": "0 in review, max stalled 81d",
+            "max_days_stalled": 81,
             "review_count": 0
           },
           "comms_quality": {
@@ -2016,8 +2010,8 @@
           },
           "meeting_cadence": {
             "score": "yellow",
-            "reason": "18d since last meeting (expected every 14d, biweekly)",
-            "gap_days": 18,
+            "reason": "19d since last meeting (expected every 14d, biweekly)",
+            "gap_days": 19,
             "expected_days": 14
           },
           "team_load": {
@@ -2187,25 +2181,9 @@
     },
     {
       "client": "MedStation",
-      "headline": "LSA updated; stalled loops age",
+      "headline": "No new activity; stalled loops age",
       "health": "needs_attention",
       "work_by_department": [
-        {
-          "department": "Ads",
-          "highlights": [
-            {
-              "text": "LSA updated by Sohib",
-              "department": "Ads",
-              "source": "monday",
-              "monday_item_id": "12786016809",
-              "item_name": "LSA",
-              "days_stalled": null,
-              "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/12786016809",
-              "id": "fb2316d1"
-            }
-          ],
-          "stalled_items": []
-        },
         {
           "department": "CRM",
           "highlights": [],
@@ -2214,9 +2192,9 @@
               "text": "Message inventory doc requested by Renata",
               "department": "CRM",
               "source": "monday",
+              "days_stalled": 10,
               "monday_item_id": null,
               "item_name": null,
-              "days_stalled": 9,
               "monday_url": null,
               "id": "2f3c58e2"
             }
@@ -2230,9 +2208,9 @@
               "text": "Website hosting account undefined; deployment blocked",
               "department": "Web + SEO",
               "source": "monday",
+              "days_stalled": 23,
               "monday_item_id": null,
               "item_name": null,
-              "days_stalled": 22,
               "monday_url": null,
               "id": "5ee872f0"
             }
@@ -2240,7 +2218,9 @@
         }
       ],
       "status_change_suggestions": [],
-      "risks": [],
+      "risks": [
+        "Website deployment blocked 23 days; hosting account still undefined"
+      ],
       "upcoming": [],
       "next_up": null,
       "stats": {
@@ -3038,8 +3018,8 @@
         "sub_scores": {
           "task_stalling": {
             "score": "red",
-            "reason": "0 in review, max stalled 22d",
-            "max_days_stalled": 22,
+            "reason": "0 in review, max stalled 23d",
+            "max_days_stalled": 23,
             "review_count": 0
           },
           "comms_quality": {
@@ -3049,8 +3029,8 @@
           },
           "meeting_cadence": {
             "score": "green",
-            "reason": "2d since last meeting (expected every 14d, biweekly)",
-            "gap_days": 2,
+            "reason": "3d since last meeting (expected every 14d, biweekly)",
+            "gap_days": 3,
             "expected_days": 14
           },
           "team_load": {
@@ -3075,31 +3055,58 @@
     },
     {
       "client": "Maadi Law",
-      "headline": "Arabic ads $18 CPL; LSA categories refined",
+      "headline": "User assignment bugs; Arabic automations in review",
       "health": "needs_attention",
       "work_by_department": [
+        {
+          "department": "CRM",
+          "highlights": [
+            {
+              "text": "User assignment defects: random Lena assignments, wrong texts",
+              "department": "CRM",
+              "source": "monday",
+              "monday_item_id": "13139672534",
+              "item_name": "User Assignment",
+              "days_stalled": null,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13139672534",
+              "id": "ce5f84f5"
+            },
+            {
+              "text": "Arabic messages sent to Tracy/Sharif for approval before live",
+              "department": "CRM",
+              "source": "monday",
+              "monday_item_id": "13020896818",
+              "item_name": "Arabic Automations",
+              "days_stalled": null,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13020896818",
+              "id": "5333363f"
+            }
+          ],
+          "stalled_items": [
+            {
+              "text": "User assignment workflow bugs need fixes",
+              "department": "CRM",
+              "source": "monday",
+              "monday_item_id": "13139672534",
+              "item_name": "User Assignment",
+              "days_stalled": 1,
+              "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13139672534",
+              "id": "6e670ed3"
+            }
+          ]
+        },
         {
           "department": "Ads",
           "highlights": [
             {
-              "text": "Arabic Meta ads $18 CPL vs $90 English",
+              "text": "Budget shift toward Arabic ads: $18 vs $90 CPL",
               "department": "Ads",
-              "source": "meeting",
-              "monday_item_id": null,
-              "item_name": null,
+              "source": "monday",
+              "monday_item_id": "13139697921",
+              "item_name": "Budget Shift",
               "days_stalled": null,
-              "monday_url": null,
-              "id": "3cd45631"
-            },
-            {
-              "text": "LSA disabled medical malpractice; focus car/trucking",
-              "department": "Ads",
-              "source": "meeting",
-              "monday_item_id": null,
-              "item_name": null,
-              "days_stalled": null,
-              "monday_url": null,
-              "id": "3a99638d"
+              "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/13139697921",
+              "id": "88f38817"
             }
           ],
           "stalled_items": [
@@ -3109,61 +3116,27 @@
               "source": "monday",
               "monday_item_id": null,
               "item_name": null,
-              "days_stalled": 53,
+              "days_stalled": 54,
               "monday_url": null,
               "id": "929e089f"
-            }
-          ]
-        },
-        {
-          "department": "CRM",
-          "highlights": [
-            {
-              "text": "Custom GHL dashboard in progress for lead tracking",
-              "department": "CRM",
-              "source": "meeting",
-              "monday_item_id": null,
-              "item_name": null,
-              "days_stalled": null,
-              "monday_url": null,
-              "id": "a5cafa32"
-            }
-          ],
-          "stalled_items": [
-            {
-              "text": "IVR missed call alerts need workflow fixes",
-              "department": "CRM",
-              "source": "meeting",
-              "monday_item_id": null,
-              "item_name": null,
-              "days_stalled": 1,
-              "monday_url": null,
-              "id": "e27f9633"
             }
           ]
         }
       ],
       "status_change_suggestions": [],
       "risks": [
-        "Medical malpractice leads converting 1-2%; ad spend refocus needed"
+        "User assignment defects may send wrong texts to clients"
       ],
-      "upcoming": [
-        {
-          "text": "Arabic Automations due",
-          "when": "2026-09-25",
-          "source": "monday",
-          "monday_item_id": "13020896818"
-        }
-      ],
-      "next_up": "Thu Sep 25 - Arabic Automations due",
+      "upcoming": [],
+      "next_up": null,
       "stats": {
-        "tasks": 23,
+        "tasks": 25,
         "todo": 0,
-        "working": 23,
+        "working": 25,
         "review": 0,
         "stuck": 0,
         "done": 0,
-        "monday_msgs": 0,
+        "monday_msgs": 3,
         "meetings": 2,
         "wa_msgs": 0
       },
@@ -4004,18 +3977,19 @@
         }
       ],
       "scores": {
-        "composite": 49,
-        "label": "red",
+        "composite": 67,
+        "label": "yellow",
         "sub_scores": {
           "task_stalling": {
             "score": "red",
-            "reason": "0 in review, max stalled 53d",
-            "max_days_stalled": 53,
+            "reason": "0 in review, max stalled 54d",
+            "max_days_stalled": 54,
             "review_count": 0
           },
           "comms_quality": {
-            "score": null,
-            "reason": "no data"
+            "score": "green",
+            "reason": "100% medium/high",
+            "pct_medium_high": 100
           },
           "meeting_cadence": {
             "score": "green",
@@ -4198,7 +4172,7 @@
     },
     {
       "client": "Flow Company",
-      "headline": "No new activity since yesterday",
+      "headline": "No change; still awaiting Tahir & clips",
       "health": "needs_attention",
       "work_by_department": [
         {
@@ -4210,9 +4184,9 @@
               "department": "Video",
               "source": "monday",
               "item_name": "Ihya School Promo (5-6 min)",
-              "monday_item_id": "[id: 12589574123]",
-              "days_stalled": 35,
-              "monday_url": null,
+              "monday_item_id": "12589574123",
+              "days_stalled": 36,
+              "monday_url": "https://flowcompany.monday.com/boards/18100257069/pulses/12589574123",
               "id": "8efce7ca"
             },
             {
@@ -4220,9 +4194,9 @@
               "department": "Video",
               "source": "monday",
               "item_name": "Clinic SEO Reel Clips (3)",
-              "monday_item_id": "[id: 12968356050]",
-              "days_stalled": 10,
-              "monday_url": null,
+              "monday_item_id": "12968356050",
+              "days_stalled": 11,
+              "monday_url": "https://flowcompany.monday.com/boards/18100257069/pulses/12968356050",
               "id": "8d1d6834"
             }
           ]
@@ -4230,15 +4204,8 @@
       ],
       "status_change_suggestions": [],
       "risks": [],
-      "upcoming": [
-        {
-          "text": "Reports (Ads) due",
-          "when": "2026-09-25",
-          "source": "monday",
-          "monday_item_id": "[id: 12184929465]"
-        }
-      ],
-      "next_up": "Thu Sep 25 - Reports (Ads) due",
+      "upcoming": [],
+      "next_up": null,
       "stats": {
         "tasks": 9,
         "todo": 0,
@@ -4432,43 +4399,6 @@
   ],
   "potential_clients": [
     {
-      "name": "Ahmed Memon",
-      "sources": [
-        "meeting"
-      ],
-      "items": [
-        {
-          "source": "meeting",
-          "blurb": "This meeting focused on troubleshooting and optimizing the marketing and CRM systems for a law firm. The team discussed Meta and Google Ads performance, noting that Arabic-language creatives were sign",
-          "when": "2026-09-24"
-        }
-      ],
-      "possible_existing_client": null,
-      "summary": "This meeting focused on troubleshooting and optimizing the marketing and CRM systems for a law firm. The team discussed Meta and Google Ads performance, noting that Arabic-language creatives were significantly outperforming English ones with much lower cost per lead. They addressed several technical issues in the GHL CRM including problematic lead routing that was incorrectly assigning leads to Lena, the need to fix IVR call handling to prevent false missed calls, and plans to build an AI-powered dashboard for better tracking across multiple ad platforms. The conversation also covered improving the Clio integration for handling multiple cases per contact and setting up automated Arabic messaging to better serve Arabic-speaking leads.",
-      "action_items": [
-        "Provide demonstration and training on managing document uploads syncing to Dropbox and Clio within GHL.",
-        "Analyze and resolve the issue of automatic wrong lead assignments to Lena by fixing the user assignment workflow based on phone numbers linked to users.",
-        "Review audit logs to clarify Lena's assignment on leads and communicate findings to the team for transparency and troubleshooting.",
-        "Create a custom dashboard integrating data from GHL, Google Business Profile, Meta Ads, Google Ads, and Local Service Ads for enhanced reporting."
-      ],
-      "likelihood_percent": 85,
-      "likelihood_reason": "Active troubleshooting session with multiple action items and ongoing CRM optimization work indicates engaged client."
-    },
-    {
-      "name": "CAPI Setup",
-      "sources": [
-        "monday_group"
-      ],
-      "items": [
-        {
-          "source": "monday_group",
-          "blurb": "\"Set Up\" on Ads — unrecognized group \"CAPI Setup\".",
-          "when": "2026-08-11"
-        }
-      ],
-      "possible_existing_client": null
-    },
-    {
       "name": "Fadi Tatari",
       "sources": [
         "meeting"
@@ -4476,55 +4406,70 @@
       "items": [
         {
           "source": "meeting",
-          "blurb": "This call discussed marketing strategy for a Medicare insurance enrollment campaign targeting the upcoming October 15th enrollment period. Dr. Fadi Tatari's team, which has helped over 10,000 clients,",
+          "blurb": "Flow Company met with Fadi, who runs a Medicare insurance enrollment business that has helped over 10,000 seniors. The discussion centered on an upcoming campaign targeting the October 2 deadline when",
           "when": "2026-09-24"
         },
         {
           "source": "meeting",
-          "blurb": "This meeting covered the Medicare enrollment marketing campaign strategy targeting seniors turning 65 and approximately 3 million people losing coverage. The campaign uses a two-step video approach wi",
+          "blurb": "This second meeting with Fadi focused on the Medicare enrollment campaign strategy targeting seniors turning 65 and 3 million people losing coverage. The team discussed a two-step video approach with ",
           "when": "2026-09-24"
         }
       ],
       "possible_existing_client": null,
-      "summary": "Dr. Fadi Tatari's team, which has assisted over 10,000 clients, is developing a Medicare insurance enrollment marketing campaign targeting seniors turning 65 and approximately 3 million people losing coverage ahead of the October 15th enrollment period. The strategy centers on a two-step video approach with 15-second intro ads followed by 3-minute detailed explanations, emphasizing the critical October 2nd deadline when insurance companies notify clients about non-renewal. The campaign prioritizes simple, honest messaging with instant forms integrated with Perspective for high-volume lead generation, along with proactive follow-up including calling and messaging no-shows. The team favors direct, personalized outreach over complex automation while exploring efficient AI tool integration to improve speed and volume in content creation.",
+      "summary": "Flow Company has been working with Fadi, who runs a Medicare insurance enrollment business serving over 10,000 seniors, to develop a campaign targeting the October 15 enrollment period. Across two meetings, the team refined a video-based strategy featuring a 15-second intro and 3-minute detailed explanation to reach seniors turning 65 and 3 million people losing coverage, emphasizing Fadi's expertise and authentic messaging that builds trust. The campaign integrates simple instant forms with Perspective for high-volume lead generation and includes proactive follow-up with no-shows to maximize conversions. The focus has been on speed, personalized outreach, and clear communication about coverage termination risks tied to the October 2 deadline when insurers notify clients about non-renewals.",
       "action_items": [
-        "Follow up with Dr. Fadi Tatari to reschedule and confirm the marketing discussion call and his availability.",
-        "Prepare and launch the Medicare enrollment marketing campaign by October 15th, including distribution of video sales letters and targeted ads.",
-        "Continue finalizing the Medicare-related ad campaign aligned with the October 15th enrollment period deadline.",
+        "Follow up with Dr. Fadi Tatari to reschedule and confirm the marketing discussion call.",
+        "Prepare and launch the Medicare enrollment marketing campaign by October 15th, including video sales letters and targeted ads.",
         "Explore efficient integration of AI tools like GPT or Claude in marketing content creation to improve speed and volume of lead generation campaigns.",
         "Verify details about agent compensation per enrollment with senior insurance contacts to better understand commission structures."
       ],
       "likelihood_percent": 75,
-      "likelihood_reason": "Campaign launch planned for urgent October 15th deadline with clear strategy and follow-up scheduled."
+      "likelihood_reason": "Two meetings held, detailed campaign strategy developed with October 15 deadline, action items assigned."
     },
     {
-      "name": "Sabri Amara",
+      "name": "Hoda Noureldin",
       "sources": [
         "meeting"
       ],
       "items": [
         {
           "source": "meeting",
-          "blurb": "This comprehensive onboarding and strategy call covered the setup of marketing campaigns and systems for a Medicare insurance business operating in Illinois and Indiana. The discussion addressed certi",
-          "when": "2026-09-18"
-        },
-        {
-          "source": "meeting",
-          "blurb": "This follow-up strategy and setup call continued planning for the Medicare insurance marketing campaign launch targeting Illinois and Indiana. The team reviewed certification progress with G2 Risk Sol",
-          "when": "2026-09-18"
+          "blurb": "This meeting focused on improving the e-commerce experience for Hoda's halal meat business. The team discussed adding a drawer-style add-to-cart animation, reorganizing the homepage to feature the Mee",
+          "when": "2026-09-25"
         }
       ],
       "possible_existing_client": null,
-      "summary": "Sabri Amara's Medicare insurance business operates in Illinois and Indiana, and two comprehensive strategy calls have focused on setting up marketing campaigns and technical systems for an October 15th launch. The team is working through certification and compliance requirements including active G2 Risk certification for Indiana with Illinois pending, planning a HIPAA add-on at $300 to $500 monthly for data safety, and addressing Google approval needs. The advertising strategy includes a $1,500 monthly budget split between Meta and Google Ads targeting both English and Arabic audiences, with ads running during business hours and prioritizing calls, WhatsApp, and form submissions. Technical work involves cleaning up GoHighLevel CRM workflows, removing old users for security, creating pre-recorded evergreen video sales letters in English and Arabic before end of September, scheduling live webinars for open enrollment, and rebuilding the website on SiteGround for direct form integration and compliance language.",
+      "summary": "This meeting focused on improving the e-commerce experience for Hoda's halal meat business. The team discussed adding a drawer-style add-to-cart animation, reorganizing the homepage to feature the Meet Your Butcher video more prominently, and fixing product description inaccuracies like incorrect USDA prime labels and mismatched photos. They also planned to launch a timed 10% discount popup, update the Halal certification link to the official HMS USA page, improve email and SMS capture for marketing compliance, and verify the subscription management system aligns with Shopify.",
       "action_items": [
-        "Provide Flow Co AI team with official certification documentation from G2 Risk Solutions or clarify certificate expectations and share with Flowco.",
-        "Add Flow Co AI team admin access to Go High Level account, Google Ads account, and Google Business Profiles with all necessary data permissions.",
-        "Remove old and unneeded users from GoHighLevel to clean up account access and improve security.",
-        "Share website hosting login access for SiteGround and provide required compliance language for website footer including disclaimers.",
-        "Confirm available dates and times for in-person content shoot meeting at Tinley office scheduled for mid to late September."
+        "Modify the add-to-cart function to incorporate a drawer or sidebar animation to improve user experience and maintain shopping flow.",
+        "Change product descriptions to replace humanely raised with domestically raised or raised on family farms to ensure compliance and accuracy.",
+        "Adjust category titles by removing farm from poultry, lamb, and goat categories and ensure accurate terminology is used.",
+        "Update homepage to reorder sections placing Meet Your Butcher video higher and integrate video as a background.",
+        "Update Halal certificate URL to official HMS USA page for transparency and legal accuracy."
       ],
-      "likelihood_percent": 80,
-      "likelihood_reason": "October 15th launch confirmed, budget committed at $1,500 monthly, in-person content shoot scheduled."
+      "likelihood_percent": 85,
+      "likelihood_reason": "Active implementation meeting with specific technical tasks assigned, already working on live e-commerce business."
+    },
+    {
+      "name": "Nacer (Internal)",
+      "sources": [
+        "meeting"
+      ],
+      "items": [
+        {
+          "source": "meeting",
+          "blurb": "This internal Flow Company meeting reviewed marketing and CRM performance for a legal client. The team analyzed Meta ads showing Arabic Oddity videos performing significantly better at $18 per lead ve",
+          "when": "2026-09-24"
+        }
+      ],
+      "possible_existing_client": null,
+      "summary": "This internal Flow Company meeting reviewed marketing and CRM performance for a legal client. The team analyzed Meta ads showing Arabic Oddity videos performing significantly better at $18 per lead versus $90 for English, while Google Ads had issues with $500 in unqualified medical malpractice leads that convert at only 1-2%. They discussed building an AI-powered dashboard in GHL to improve lead source tracking, fixing call routing problems causing incorrect lead assignments to Lena, resolving IVR issues creating false missed calls, and implementing automated Arabic text messaging to better serve Arabic-speaking leads.",
+      "action_items": [
+        "Provide demonstration and training on managing document uploads syncing to Dropbox and Clio within GHL.",
+        "Analyze and resolve the issue of automatic wrong lead assignments to Lena by fixing the user assignment workflow based on phone numbers linked to users.",
+        "Review audit logs to clarify Lena's assignment on leads and communicate findings to the team for transparency and troubleshooting.",
+        "Create a custom dashboard integrating data from GHL, Google Business Profile, Meta Ads, Google Ads, and Local Service Ads for enhanced reporting."
+      ]
     },
     {
       "name": "Senior Insurance",
@@ -4548,47 +4493,90 @@
       "items": [
         {
           "source": "meeting",
-          "blurb": "This call addressed lead management and workflow automation challenges for a Medicare insurance business using Go High Level CRM. The team discussed issues with manual lead qualification, unclear pipe",
+          "blurb": "Flow Company met with SIT, a Medicare enrollment business, to address lead management and workflow automation challenges. The team identified issues with manual lead qualification, unclear pipeline st",
           "when": "2026-09-24"
         }
       ],
       "possible_existing_client": null,
-      "summary": "This call addressed lead management and workflow automation challenges for a Medicare insurance business using Go High Level CRM. The team discussed issues with manual lead qualification, unclear pipeline stages causing missed follow-ups, and the need for better automation including source tagging and stage transitions. A major pain point was the lack of integration between the Retire Flow platform and Go High Level, which was creating significant manual work and preventing the business from scaling efficiently. The conversation covered plans to streamline the pipeline with new stages like attempting contact, improve task reminder systems, better utilize the document management features, and automate the enrollment workflow to save an estimated 3 to 5 hours weekly.",
+      "summary": "Flow Company met with SIT, a Medicare enrollment business, to address lead management and workflow automation challenges. The team identified issues with manual lead qualification, unclear pipeline stages causing missed follow-ups, and integration problems between the Retire Flow platform and Go High Level that create significant manual work. They discussed streamlining pipeline stages by adding an attempting contact stage, automating transitions and messaging, and better utilizing Go High Level's document management features instead of storing client documents manually in conversations. The goal is to automate the enrollment workflow to save 3-5 hours weekly and prevent lost leads, while addressing inconsistent task usage and improving the distinction between waiting on client versus waiting on eligibility determination.",
       "action_items": [
         "Follow up with Retire Flow support team to fix integration issues with Go High Level platform to reduce manual work and improve data syncing.",
         "Continue manually assigning leads and opportunities in Go High Level while system automation is being developed and improved.",
         "Organize pipeline stages to clearly separate waiting on client from waiting on eligibility or determination to improve follow-up efficiency and clarify actionable opportunities.",
         "Review meeting notes captured by AI notetaker and analyze current Go High Level system usage."
       ],
-      "likelihood_percent": 65,
-      "likelihood_reason": "Discussing workflow improvements and integration fixes but still in manual process phase with scaling challenges."
+      "likelihood_percent": 60,
+      "likelihood_reason": "Meeting held to address workflow challenges, but focused on fixing integration issues rather than commitment."
     },
     {
-      "name": "Tracy Aoun",
+      "name": "Sulmaan Farooqui",
       "sources": [
         "meeting"
       ],
       "items": [
         {
           "source": "meeting",
-          "blurb": "This urgent troubleshooting call addressed a critical CRM data issue where duplicate email addresses caused contacts to merge in the system, hiding separate client notes and opportunities and disrupti",
-          "when": "2026-09-18"
+          "blurb": "Flow Company met with Sulmaan, a dental practice owner, to discuss marketing opportunities. Sulmaan currently sees 15 patients daily with 20 new patients monthly from referrals and insurance, but his ",
+          "when": "2026-09-25"
+        },
+        {
+          "source": "meeting",
+          "blurb": "This was a second meeting with Sulmaan about his dental practice's marketing needs. The discussion covered his low patient volume of 1-2 new patients monthly, poor website performance with only 129 vi",
+          "when": "2026-09-25"
         }
       ],
       "possible_existing_client": null,
-      "summary": "This urgent troubleshooting call addressed a critical CRM data issue where duplicate email addresses caused contacts to merge in the system, hiding separate client notes and opportunities and disrupting case tracking. The team discovered a workaround by accessing notes through base intake submissions, which prevented the need for repeated client calls and delays. Due to client urgency and communication barriers, they decided to proceed with manual entry of opportunities in Clio Manage while the technical team investigated the root cause of the contact merging issue. The discussion emphasized the need to configure the system to allow separate contacts with shared email addresses without data loss, with thorough testing required before implementing any changes.",
+      "summary": "Flow Company has met twice with Sulmaan, a dental practice owner struggling with low patient acquisition and stagnant marketing after his previous agency stopped campaigns 7-8 months ago. His practice sees only 1-2 new patients monthly with just 129 website visits compared to competitors' 680-1,500, and his SEO has been inactive for months. Flow Company proposed a comprehensive strategy including Google Local Service Ads for verified leads, integrated Google and Meta ads with video content, and a custom HIPAA-compliant CRM that tracks patient data and recovers 30% of dropped leads through automated texts. Sulmaan expressed interest in starting with SEO-focused services and agreed to review materials before a follow-up discussion about investment options.",
       "action_items": [
-        "Investigate the contact merging issue caused by same email addresses and test potential fixes in the system.",
-        "Provide Tracy Aoun with the extracted notes from the intake forms to enable manual creation of Sultan Khalas's opportunity.",
-        "Hold off on creating a new opportunity for Sultan until Nacer confirms issue resolution, or proceed manually after 10 to 15 minutes if unresolved.",
-        "Manually create Sultan Khalas opportunity in Clio Manage to begin case work immediately due to client urgency.",
-        "Coordinate with Qasim to ensure integration and data consistency."
+        "Send Sulmaan Farooqui the Flow Company website and services overview one-pager.",
+        "Call Sulmaan Farooqui on the provided phone number to discuss investment details and next steps.",
+        "Review Flowco.ai materials and website after receiving email information.",
+        "Schedule follow-up call to discuss marketing investment and plan."
       ],
-      "likelihood_percent": 70,
-      "likelihood_reason": "Urgent troubleshooting call with immediate manual workarounds implemented shows active reliance on service."
+      "likelihood_percent": 45,
+      "likelihood_reason": "Two meetings but no pricing discussed yet, waiting on follow-up call to discuss investment."
     }
   ],
   "meetings_digest": [
+    {
+      "title": "Sync: Hoda Noureldin and Flow Company",
+      "date": "2026-09-25",
+      "client": "General comms",
+      "key_points": [
+        "Add-to-Cart experience: Introduce a drawer/sidebar and animation to keep users on the page, allowing multiple item additions before checkout.",
+        "Homepage design: Prioritize “Meet Your Butcher” above meats, move promo video for impact, and consider video background to boost trust.",
+        "Product accuracy: Fix wrong product cuts like “USDA prime,” update photos, and align descriptions with real inventory to avoid customer confusion.",
+        "Marketing pop-up: Launch a 60-second timed 10% discount popup with tailored wording to convert undecided visitors without being intrusive.",
+        "Customer data capture: Collect email first, then phone with SMS opt-in to comply with laws and enable future targeted campaigns."
+      ],
+      "action_items": [
+        "Sohib Boundaoui",
+        "Modify the add-to-cart function to incorporate a drawer or sidebar animation to improve user experience and maintain shopping flow (04:56)",
+        "Change product descriptions to replace the term “humanely raised” with “domestically raised” or “raised on family farms” to ensure compliance and accuracy across product categories (08:36)",
+        "Adjust category titles by removing “farm” from poultry, lamb, and goat categories and ensure accurate terminology is used (12:50)",
+        "Update homepage to reorder sections placing “Meet Your Butcher” video higher and integrate video as a background in the hero section for better user engagement (15:47)",
+        "Remove specific video segment showing cooked meat cutting from the homepage video assets to maintain relevance and user interest (17:38)"
+      ]
+    },
+    {
+      "title": "Sulmaan Farooqui and Flow Company",
+      "date": "2026-09-25",
+      "client": "General comms",
+      "key_points": [
+        "Patient Volume: Sulmaan sees 15 patients daily, 20 new monthly, mostly from referrals and insurance, despite ongoing building issues.",
+        "Marketing History: Past marketing agency spent ~$2,500 monthly; stopped active campaigns 7-8 months ago; current leads are organic only.",
+        "SEO Performance: Website gets 129 monthly visits vs competitors’ 680-1,500; ranks mostly low; Google Business Profile has 117 reviews but low recent activity.",
+        "Advertising Strategy: Plan includes paid ads, organic SEO, and CRM integration with Open Dental to track leads, appointments, and ROI.",
+        "Content & Engagement: Video content creation planned with local videographers; weekly Google Business posts and review responses recommended to boost ranking."
+      ],
+      "action_items": [
+        "Sohib Boundaoui",
+        "Send Sulmaan Farooqui the company website and an overview one-pager about Flow Company’s services (34:54)",
+        "Call Sulmaan Farooqui shortly on the provided phone number to discuss investment details and next steps (36:07)",
+        "Sulmaan Farooqui",
+        "Review Flow Company’s website and materials once received to prepare for a follow-up call (34:54)"
+      ]
+    },
     {
       "title": "nbu-gcff-hcp",
       "date": "2026-09-24",
@@ -4724,83 +4712,46 @@
         "Monitor Quality client’s WhatsApp missed call issue throughout the week, ensure applied fixes reduce missed call rate (24:55)",
         "Collaborate on new bank account details for payment handling and communicate payment receipt progress with Ali and Sohib (20:51)"
       ]
-    },
-    {
-      "title": "nacer@flowco.ai - Fri, 18 Sep 2026 11:51:15 CDT - Untitled",
-      "date": "2026-09-18",
-      "client": "General comms",
-      "key_points": [
-        "CRM Data Merge Issue: Duplicate emails caused contact merging, hiding separate client notes and opportunities, disrupting case tracking.",
-        "Data Recovery Workaround: Notes found in base intake submissions allowed access despite merge, preventing repeated client calls and delays.",
-        "Manual Process Approved: Temporary manual entry of opportunities in Clio Manage to continue cases if system fix takes over 10-15 minutes.",
-        "Dual-System Tracking: Go High Level intake and Clio Manage case creation run in parallel to maintain data consistency until fix is applied.",
-        "Root Cause Investigation: System config will be reviewed to allow separate contacts with shared emails without data loss, testing crucial before changes."
-      ],
-      "action_items": [
-        "Nacer Amrouch",
-        "Investigate the contact merging issue caused by same email addresses and test potential fixes in the system (08:58)",
-        "Provide Tracy Aoun with the extracted notes from the intake forms to enable manual creation of Sultan Khalas’s opportunity (08:53)",
-        "Tracy Aoun",
-        "Hold off on creating a new opportunity for Sultan until Nacer confirms issue resolution, or proceed manually after 10-15 minutes if unresolved (08:58)",
-        "Manually create Sultan Khalas opportunity in Clio Manage to begin case work immediately due to client urgency (09:38)"
-      ]
-    },
-    {
-      "title": "Sync: sabri amara  and Flow Company",
-      "date": "2026-09-18",
-      "client": "General comms",
-      "key_points": [
-        "Certification and Compliance: Indiana's G2 Risk certification is active; Illinois still pending; HIPAA add-on planned with $300-$500 monthly fee for data safety.",
-        "Advertising Strategy: Campaign launches by Oct 15 targeting Illinois, Indiana; $1,500 monthly budget split across Meta and Google Ads; focus on form submissions over calls.",
-        "Go High Level CRM: Live but needs workflow cleanup; manual SOA form sending preferred; all developers keep full access; unused users to be removed.",
-        "Content Creation: Pre-recorded evergreen VSL for English and Arabic planned before end of September; live webinars to shift to evergreen with weekly live options.",
-        "Website and Tech: Website on Agent Methods and SiteGround to be rebuilt for direct form integration; compliance language and Google Business profiles to be consolidated."
-      ],
-      "action_items": [
-        "Sabri Amara",
-        "Provide Flow Co AI team with official certification documentation from G2 Risk Solutions or confirmation if URL submission suffices (00:57)",
-        "Add Flow Co AI admin access to Go High Level account, including checking all data permissions (00:14)",
-        "Add Flow Co AI team admin access to Google Ads account(s) and Google Business Profiles (01:38)",
-        "Share website hosting/login access for SiteGround and provide required compliance language for website footer (01:35)",
-        "Confirm available dates and times (Tuesday, Wednesday, or Thursday after 2 PM) for in-person content shoot meeting at Tinley office (01:33)"
-      ]
     }
   ],
   "comms_flags": [
-    "Quality HVAC: Intake ownership gap blocks budget scale-up (80d unconfirmed since Vivian left)",
-    "Liferun: Two critical CRM verifications stalled 80 days (Automation Guide handoff, Becklar billing drop)",
-    "Maadi Law: Medical malpractice leads converting 1-2%; ad spend refocus needed",
-    "Full Smile: Billing setup incomplete; no business card available (22d stalled)"
+    "Maadi Law: User assignment defects may send wrong texts to clients",
+    "Quality HVAC: 100% missed-call rate persists despite timeout fix",
+    "Justice Consumer Law: Meta optimization blocked 37 days; lead volume at risk",
+    "MedStation: Website deployment blocked 23 days; hosting account still undefined"
   ],
   "blockers": [
-    "Quality HVAC: Meta billing card migration not verified (106d stalled)",
-    "MedStation: Website hosting account undefined; deployment blocked (22d stalled)",
-    "Full Smile: Scope breakdown for web/SEO/GBP work pending (11d stalled)"
+    "Billy Doe Meats: /halal-subscribe conversion test awaiting results (65d stalled)",
+    "Full Smile: Scope breakdown for web/SEO/GBP work pending (12d stalled)",
+    "Quality HVAC: Meta billing card migration not verified (107d stalled)",
+    "Justice Consumer Law: Meta account reconnected; ramp & optimization pending (37d stalled)",
+    "MedStation: Website hosting account undefined; deployment blocked (23d stalled)",
+    "Maadi Law: User assignment workflow bugs need fixes (1d stalled)"
   ],
   "this_week_priorities": [
     {
-      "client": "Quality HVAC",
-      "text": "Quality HVAC: Confirm intake owner and verify Meta billing migration",
+      "client": "Maadi Law",
+      "text": "Maadi Law: Fix user assignment workflow bugs to prevent wrong client texts",
       "action": null,
-      "id": "eeb9d1ab"
-    },
-    {
-      "client": "Liferun",
-      "text": "Liferun: Close 80-day CRM handoff items (Automation Guide, Becklar billing verification)",
-      "action": null,
-      "id": "72e6881e"
+      "id": "c170566a"
     },
     {
       "client": "Justice Consumer Law",
-      "text": "Justice Consumer Law: Resume Meta ramp and optimization (stalled 36 days)",
+      "text": "Justice Consumer Law: Unblock Meta ramp and optimization (37d stalled)",
       "action": null,
-      "id": "16616fee"
+      "id": "7eecb61b"
+    },
+    {
+      "client": "MedStation",
+      "text": "MedStation: Define hosting account to unblock website deployment",
+      "action": null,
+      "id": "82a7c857"
     },
     {
       "client": "Full Smile",
-      "text": "Full Smile: Deliver scope breakdown and complete billing setup",
+      "text": "Full Smile: Complete scope breakdown for web/SEO/GBP work",
       "action": null,
-      "id": "5e1b11d7"
+      "id": "0690117e"
     }
   ],
   "auto_completed_alerts": [
