@@ -1,14 +1,14 @@
 {
   "slug": "medstation",
   "name": "MedStation",
-  "generated_at": "2026-09-26T15:03:08.189Z",
+  "generated_at": "2026-09-27T15:42:03.824Z",
   "contract": {
     "start": "2026-07-01",
     "end": "2026-09-30",
     "validated": true,
     "month_of": 2,
     "months_total": 2,
-    "days_left": 4,
+    "days_left": 3,
     "basis": {
       "type": "observed",
       "source": "timeline/plan",
@@ -20,7 +20,7 @@
     "organic": {
       "state": "green",
       "headline": "12 calls · 28d",
-      "sentence": "MedStation Weston took 12 calls on 159 impressions.",
+      "sentence": "MedStation Weston took 12 calls on 169 impressions.",
       "basis": {
         "type": "observed",
         "source": "Windsor GBP",
@@ -35,9 +35,9 @@
             "calls": 12,
             "directions": 36,
             "web_clicks": 21,
-            "impressions": 159,
+            "impressions": 169,
             "days_with_impressions": 26,
-            "call_rate": 0.0755
+            "call_rate": 0.071
           }
         ],
         "flagged_profiles": [],
@@ -47,14 +47,16 @@
     },
     "paid": {
       "state": "green",
-      "headline": "$379 · 82 conversations · $5 per conversation · 14d",
-      "sentence": "Meta $379.12 spend, 82 conversations.",
+      "headline": "$372 · 80 conversations · $5 per conversation · 14d",
+      "sentence": "Meta $372.49 spend, 80 conversations.",
       "basis": {
         "type": "observed",
         "source": "Windsor Paid",
         "window": "14d"
       },
-      "flags": [],
+      "flags": [
+        "channel_dark:meta"
+      ],
       "detail": {
         "meta": {
           "spend": 497.27,
@@ -68,8 +70,8 @@
     },
     "crm": {
       "state": "red",
-      "headline": "19 waiting 842h",
-      "sentence": "Renata, as of 2026-09-16 per fireflies. 19 client threads awaiting Flow, oldest 842h.",
+      "headline": "19 waiting 862h",
+      "sentence": "Renata, as of 2026-09-16 per fireflies. 19 client threads awaiting Flow, oldest 862h.",
       "basis": {
         "type": "observed",
         "source": "GHL / WhatsApp",
@@ -86,14 +88,14 @@
           "window": "2026-09-16"
         },
         "awaiting_flow": 19,
-        "oldest_unanswered_hours": 842,
+        "oldest_unanswered_hours": 861.5,
         "threads": {
           "messages_scanned": 515,
-          "threads": 28,
+          "threads": 26,
           "awaiting_flow": 19,
           "awaiting_client": 0,
-          "client_update": 6,
-          "settled": 3,
+          "client_update": 5,
+          "settled": 2,
           "abandoned": 0,
           "stale_over_24h": 19
         },
@@ -104,9 +106,9 @@
   "scope_out": [],
   "needs_you": [
     {
-      "text": "19 threads awaiting Flow, oldest 842h.",
+      "text": "19 threads awaiting Flow, oldest 862h.",
       "severity": "high",
-      "age_days": 35,
+      "age_days": 36,
       "basis": {
         "type": "observed",
         "source": "GHL / WhatsApp",
@@ -114,7 +116,7 @@
       }
     },
     {
-      "text": "Contract ends in 4 days (2026-09-30).",
+      "text": "Contract ends in 3 days (2026-09-30).",
       "severity": "high",
       "age_days": null,
       "basis": {
