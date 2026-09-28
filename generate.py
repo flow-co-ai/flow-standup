@@ -33,7 +33,6 @@ load_dotenv()
 from fetch_monday import fetch_all_boards, resolve_client, set_monday_status_done
 from fetch_fireflies import fetch_transcripts
 from fetch_whatsapp import fetch_whatsapp
-from send_email import send_standup_email, markdown_to_simple_html
 import archive_monday
 import pulse_story
 import inbox_state
@@ -2408,19 +2407,6 @@ def main():
     md_path = standups_dir / f"{today}.md"
     md_path.write_text(md_content, encoding="utf-8")
     print(f"  Wrote {md_path}")
-
-    print("\nSending email...")
-    try:
-        to_address = config.get("email", "")
-        if not to_address or to_address == "EMAIL_HERE":
-            print("  ⚠️  No valid email in config.json — skipping")
-        else:
-            subject = f"Flow Pulse - {today}"
-            send_standup_email(
-                subject, md_content, markdown_to_simple_html(md_content), to_address
-            )
-    except Exception as exc:
-        print(f"  ⚠️  Email failed: {exc}")
 
     try:
         drive_pulse.upload_daily_pulse(md_content, today, config.get("pulse_archive_folder_id", ""))
