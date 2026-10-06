@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T17:03:41.616Z",
+  "generated_at": "2026-10-06T17:28:14.142Z",
   "date": "2026-10-06",
   "slug": "hvac",
   "name": "Quality HVAC by Fibid",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "The biggest movement this period is the 1,300% spike in leads week-over-week (paired with an 86.88% drop in CPL), almost certainly driven by the 83.71% surge in spend and Meta's 18 leads at a $91.55 blended CPL carrying the full lead volume. Google Ads contributed 10 conversions on $965.38 in spend but note a reconciliation gap: GHL shows 1,597 opportunities and 53 won against only 18 tracked leads on the ad platforms, and since both sources are active these figures are unreconciled.",
+  "verdict": "The biggest movement this period is the 1,300% spike in leads week-over-week (paired with an 86.88% drop in CPL), almost certainly driven by the 83.71% increase in spend and Meta's 18 leads at $682.46, which together pulled cost-per-lead down sharply. Note that GHL shows 1,597 opportunities created against only 18 tracked leads, and both systems are marked active and reconciled, so the volume gap between pipeline entries and attributed leads warrants a closer review.",
   "windsor": {
     "totals": {
       "spend": 1647.84,
@@ -705,80 +705,78 @@
     "history_line": "Fixed WhatsApp messaging and rescheduling bugs with fallback logic (Ahmed Memon)"
   },
   "performance": {
-    "generated_at": "2026-10-06T17:09:29.860Z",
+    "generated_at": "2026-10-06T17:30:41.041Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "CPL collapse is real but 9 critical SOW milestones are overdue, blocking scale.",
+    "verdict": "CPL collapse is real but 9 overdue milestones block any scale-up.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "CPL dropped 86.88% to $91.55 blended — driven by Meta's 18 leads this week vs near-zero prior; Google's 10 conversions add volume but remain unreconciled with GHL's 1,597 opps.",
+        "text": "CPL fell 86.88% to $91.55 on Meta's 18 leads — efficient, but 3-day lead signal (Oct 3–5: 0+1+0) shows the burst stalled immediately after Oct 1–3 spike.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "9 SOW milestones overdue by 5–66 days: intake owner unconfirmed (blocks scale-up gate), booking bot untested, Review Boost not live, Financing page missing, Homer Glen branch missing, LSA heating not re-enabled, heating/furnace content not indexed, Fall creative not delivered, Heating campaigns (Google & Meta) not live.",
+        "text": "9 SOW milestones overdue (earliest Jul 31): intake owner unconfirmed, booking bot untested, heating campaigns not live — scale-up gate explicitly blocked per SOW.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GBP 'Quality HVAC Solutions' call rate is 1.47% on 954 impressions (23 calls/28d); flagged gbp_low_call_rate. GBP actions dropped 64% week-over-week — organic demand signal is fading while paid ramps.",
-        "confidence": "confirmed",
-        "channel": "gbp"
+        "text": "GHL shows 1,597 opportunities vs 18 attributed leads — a 88x gap indicating a pipeline data integrity or intake classification issue, not an ads volume problem.",
+        "confidence": "probable",
+        "channel": "GHL"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "3-day lead signal (Oct 3–5): 0+1+0 = 1 lead on $34.07 spend, versus prior 3 days (Sep 30–Oct 2): 5+2+3 = 10 leads on $251.93. The lead burst was a 3-day window event, not a sustained trend.",
+        "text": "GBP actions dropped 64% week-over-week; Quality HVAC Solutions call rate is 0.0147 (14 calls on 954 impressions) — organic call conversion is weak and declining.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "GBP"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 1,597 opportunities created and 53 won (value $4,399.45) against only 18 ad-platform tracked leads in 28 days — a 88x gap suggesting most pipeline entries are not from paid ads; intake attribution is broken.",
+        "text": "Google Ads spent $965.38 over 28 days with 3 zero-spend days in last 5 (Oct 3, 4 show $0) and only 10 logged conversions — pixel attribution unreliable, not spend efficiency.",
         "confidence": "probable",
-        "channel": "crm"
+        "channel": "google"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Confirm intake owner in GHL and test speed-to-lead automation — unblocks scale-up gate per SOW.",
+        "text": "Confirm intake owner and GHL seat access — unblocks scale-up gate and validates 1,597 vs 18 lead gap.",
         "cites": [
           "F2",
-          "F5"
+          "F3"
         ],
-        "monday_item_name": "Confirm Intake Owner GHL",
-        "monday_update": "The SOW intake-owner milestone (due 2026-08-31) is unconfirmed and is the explicit gate blocking any budget scale-up. Vivian left 7/7 and no replacement seat has been verified. Nacer or Xavier must confirm the active GHL login, after-hours coverage, and that speed-to-lead automations are routing correctly. Success check: named owner confirmed with active GHL session and one test lead routed end-to-end by 2026-10-10."
+        "monday_item_name": "Confirm intake owner GHL",
+        "monday_update": "The intake owner has been unconfirmed since Vivian left 7/7; this is a hard blocker on all budget increases per SOW. GHL shows 1,597 opportunities against 18 attributed leads — the seat or pipeline classification needs to be audited before those numbers can be trusted. Action: Nacer confirms who owns intake, provides their GHL login, and documents after-hours coverage. Success check: intake owner named and GHL pipeline audited by 2026-10-10."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Reconcile GHL 1,597-opp vs 18 ad-tracked leads gap; identify attribution source to isolate intake leak from ad undercount.",
+        "text": "Escalate 3 overdue heating deliverables (LSA re-enable, heating campaigns, heating content) — heating season is live now.",
         "cites": [
-          "F5",
-          "F1"
+          "F2"
         ],
-        "monday_item_name": "GHL Attribution Reconciliation",
-        "monday_update": "GHL reports 1,597 opportunities created and 53 won against only 18 leads tracked across Meta and Google Ads in the same 28-day window. This gap means either non-paid sources (LSA, organic, direct calls) are driving the bulk of pipeline untagged, or opp creation is misconfigured and inflating numbers. Pull the opportunity source breakdown in GHL and map it against LSA dashboard exports and GBP call logs. Success check: a source-tagged opp report produced by 2026-10-10 that accounts for the 1,579-opp delta."
+        "monday_item_name": "Heating Go-Live Escalation",
+        "monday_update": "LSA heating toggles were due 2026-09-01, heating campaigns on Google and Meta due 2026-10-01, and heating/furnace content due 2026-09-30 — all overdue as of today 2026-10-06. With heating season underway, every day without these live is lost demand. Action: Sohib to convene Ads and Web/SEO departments this week for a hard ship date on all three. Success check: all three items have a confirmed live date logged in Monday by 2026-10-09."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch Meta CPL and daily lead rate for 3 more days before any budget move; burst may not hold.",
+        "text": "Watch Meta lead rate through Oct 9 — 3-day signal (0+1+0 leads) suggests Oct 1–3 burst may not hold at current $20–28/day spend.",
         "cites": [
-          "F4",
           "F1"
         ],
-        "monday_item_name": "Watch Meta CPL 3-Day",
-        "monday_update": "Meta delivered 18 leads at $91.55 blended CPL in the recent 7-day window, but the 3-day trailing signal (Oct 3–5) shows only 1 lead on $34.07 — the burst appears to have been a short cluster not a sustained rate. Do not raise Meta budget until 3 consecutive days of leads are confirmed. Re-check on 2026-10-09; if daily lead rate returns to 2+ per day and CPL holds below $120, escalate to a budget_shift recommendation."
+        "monday_item_name": "Watch Meta Lead Rate",
+        "monday_update": "Meta delivered 18 leads at $91.55 CPL in the 28-day window, but the last 3 days (Oct 3–5) show only 1 lead on roughly $62 combined spend. The Oct 1–3 burst (3+3+0 leads) may have been a short surge rather than a sustained rate. Monitor daily lead count and CPL through Oct 9 before any budget move. Success check: if 3-day lead rate returns to 1+ per day by Oct 9, flag for a budget conversation pending intake-owner confirmation."
       }
     ],
     "next_check": "2026-10-09"

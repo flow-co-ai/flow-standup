@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T17:03:00.258Z",
+  "generated_at": "2026-10-06T17:27:56.911Z",
   "date": "2026-10-06",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Healing Helps saw zero paid spend and zero leads across Meta and Google Ads in the last 28 days, making GBP the only active channel with 51 total actions (2 calls, 37 directions, 12 web clicks). The biggest movement is a 54% drop in GBP actions over the last 7 days versus the prior 7 days, likely driven by reduced organic search visibility given impressions were already limited to 377 over the period.",
+  "verdict": "Healing Helps had zero paid spend and zero paid leads over the past 28 days, making GBP the only active channel with 51 total actions (2 calls, 37 directions, 12 web clicks). The biggest movement is a 54% drop in GBP actions over the last 7 days versus the prior 7 days, likely driven by reduced organic search visibility as impressions trended down across the profile's 26 active days.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -599,60 +599,61 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-10-06T17:08:59.888Z",
+    "generated_at": "2026-10-06T17:30:12.853Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "No paid channels active; GBP-only account in accelerating organic decline.",
+    "verdict": "GBP-only account in freefall; paid channels completely absent 28 days.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero spend, zero leads across all 28 days — Meta and Google Ads are fully dark; no CPL can be computed.",
+        "text": "Zero paid spend and zero leads across all 28 days — no CPL to evaluate because no paid channel is active.",
         "confidence": "confirmed",
-        "channel": "meta,google_ads"
+        "channel": "cross-channel"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions dropped 54% (last 7d vs prior 7d): 11 actions vs ~24, with last 3 days (Oct 3-5) showing 2, 0, 0 — a confirmed 3-day collapse.",
+        "text": "GBP actions collapsed: last 3 days (Oct 3–5) total 2 actions vs prior 3 days (Sep 30–Oct 2) total 9 — a 78% 3-day drop confirming the 54% 7d delta is accelerating, not stabilizing.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "GBP"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Search clicks fell 53% (last 7d vs prior 7d); last 3 days Oct 3-5 show 0, 0, 0 vs prior 3 days averaging ~1.7 — organic visibility is contracting.",
-        "confidence": "confirmed",
-        "channel": "organic"
+        "text": "Search clicks mirroring GBP collapse: last 3 days (Oct 3–5) total 0 clicks vs prior 3 days (Sep 30–Oct 2) total 5 — consistent with reduced local search visibility, not a tracking gap.",
+        "confidence": "probable",
+        "channel": "search"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GA4 sessions held flat (7d delta 0%) at ~6-7/day, yet GBP and search clicks collapsed — web traffic source is likely direct/referral, masking organic deterioration.",
-        "confidence": "probable",
-        "channel": "ga4"
+        "text": "GA4 sessions held flat at 5–7/day over the same window where GBP and SC dropped — suggesting direct/referral traffic is buffering, masking the organic search erosion from the GBP decline.",
+        "confidence": "hypothesis",
+        "channel": "GA4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Monitor GBP actions daily; if 3-day total remains ≤2 by Oct 9, escalate to account owner for profile audit.",
+        "type": "fix",
+        "text": "Audit GBP profile for listing suppression or category change causing the 78% 3-day actions drop.",
         "cites": [
-          "F2"
+          "F2",
+          "F3"
         ],
-        "monday_item_name": "Watch GBP Action Collapse",
-        "monday_update": "GBP actions collapsed to 0 on both Oct 4 and Oct 5, continuing a 54% weekly drop. No paid channels are active to compensate. Success check: re-examine on Oct 9 — if the 3-day total (Oct 7–9) is still ≤2 actions, escalate to Sohib for a GBP profile health audit before any paid reactivation is considered."
+        "monday_item_name": "GBP Suppression Audit",
+        "monday_update": "GBP actions fell from 9 in Sep 30–Oct 2 to 2 in Oct 3–5 (78% drop), and search clicks went from 5 to 0 over the same window. Check the Healing Helps Therapy PLLC profile (locations/9257180210135267024) for suppression flags, category edits, or a duplicate listing triggering a penalty. Success looks like GBP daily actions returning above 3/day within 7 days of the fix. Re-check 2026-10-13."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Track search clicks recovery; if 0-click streak extends past Oct 9, flag paid search reactivation for Sohib review.",
+        "text": "Watch GA4 sessions over next 3 days; if they drop below 5/day, direct/referral buffer is gone.",
         "cites": [
-          "F3"
+          "F4"
         ],
-        "monday_item_name": "Watch Organic Search Decline",
-        "monday_update": "Search clicks hit 0 for three consecutive days (Oct 3–5), down 53% over the 7-day window with only 44 clicks across the full 28-day period. This is an organic visibility signal, not a paid issue, but if clicks do not recover by Oct 9 it removes the organic buffer that has been carrying the account. Re-check on Oct 9 and surface to Sohib if the streak continues."
+        "monday_item_name": "GA4 Session Floor Watch",
+        "monday_update": "Sessions held at 5–7/day (F4) even as GBP and search clicks zeroed out, suggesting non-search traffic is currently masking the decline. If daily sessions fall below 5 on any 2 of the next 3 days, organic search erosion has reached the site level and warrants escalation. Re-check 2026-10-09."
       }
     ],
     "next_check": "2026-10-09"

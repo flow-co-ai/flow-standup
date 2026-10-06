@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T17:02:18.391Z",
+  "generated_at": "2026-10-06T17:27:45.490Z",
   "date": "2026-10-06",
   "slug": "billy-doe",
   "name": "Billy Doe Meats",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 81,
   "status": "green",
-  "verdict": "Billy Doe Meats drove a 3.86 ROAS on $1,485.36 Meta spend over 28 days, generating $5,740.37 in revenue from 33 purchases, but the biggest concern is a 28.57% drop in purchases week-over-week, likely tied to the 6.86% spend increase not converting efficiently as ROAS also slipped 8.76% in the same period.",
+  "verdict": "Billy Doe Meats drove $5,740.37 in Meta revenue at a 3.86 ROAS over 28 days, but the biggest concern is a 28.57% drop in purchases week-over-week, likely tied to the top campaign \"BWS - Sales - Muslims\" ($841.02 spend) carrying the bulk of budget with limited diversification. GBP engagement also fell sharply at -71.33% week-over-week, suggesting reduced local visibility that may be compounding the purchase decline.",
   "windsor": {
     "totals": {
       "spend": 1485.36,
@@ -702,78 +702,78 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-10-06T17:08:17.034Z",
+    "generated_at": "2026-10-06T17:29:29.092Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "ROAS holding above 3.8x but purchase cadence is thinning — efficiency is the ceiling now.",
+    "verdict": "ROAS holding but purchase volume softening; GBP collapse and SOW debt are the real risks.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "3-day purchase signal (Oct 3–5): 0, 1, 1 purchases vs prior 3 days (Sep 30–Oct 2): 0, 1, 2 — volume softening confirmed; ROAS slipped 8.76% 7d.",
+        "text": "3-day purchase signal (Oct 3–5): 0, 1, 1 vs prior 3 days (Sep 30–Oct 2): 0, 2, 0 — effectively flat at near-zero; 28-day ROAS 3.86x but only 33 purchases total.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "7 overdue SOW milestones (Aug 14 – Sep 30): funnel test unclosed, UTM not live, subscribe pages unbuilt — attribution and conversion data remain unreliable.",
+        "text": "7 overdue SOW milestones span Admin, CRM, Ads, Web, Video — oldest is Aug 14 live-cooking event; funnel test and UTM still unresolved blocks paid attribution.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GBP actions collapsed 71.33% 7d (last 4 days: 2, 0, 0, 0 vs 20–30/day earlier) — organic local discovery has effectively gone dark.",
+        "text": "GBP actions collapsed to 0 on Oct 4–5 vs 19–30/day in early September — a 100% 2-day drop in local-intent signals that compounds ecom purchase softness.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Spend held at $40–66/day with purchases near zero on most days across 45-day series — creative fatigue probable; top campaign BWS-Sales-Muslims absorbed $841 of $1,485 spend.",
+        "text": "Spend steady at ~$54/day but revenue is erratic (0, 0, $244, $398 last 4 days) — flat spend with volatile output on a single campaign ($841 of $1,485 28d spend) is classic single-creative fatigue.",
         "confidence": "probable",
         "channel": "meta"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GA4 sessions fell 13.62% 7d while IG reach was flat (+1.84%) — paid traffic landing conversion weakening; subscribe-page rebuild still blocked per SOW.",
+        "text": "GA4 sessions down -13.62% week-over-week (recent 3-day avg ~250 vs prior ~290) while IG reach is flat at ~614 avg — organic is not compensating for paid softness.",
         "confidence": "probable",
-        "channel": "meta"
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Hold current Meta spend; watch purchases Oct 6–9. A fourth consecutive low-purchase day confirms thinning, not noise.",
-        "cites": [
-          "F1",
-          "F4"
-        ],
-        "monday_item_name": "Watch Meta Purchase Trend",
-        "monday_update": "Purchase counts for Oct 3–5 were 0, 1, 1 — a weakening 3-day signal after the 28.57% 7d drop. Hold Meta daily spend at current ~$54/day and do not scale until 3 consecutive days return ≥2 purchases each. Re-check Oct 9; if the run stays flat, escalate to creative refresh on BWS-Sales-Muslims."
-      },
-      {
-        "id": "S2",
         "type": "fix",
-        "text": "Investigate GBP profile: 0 actions for 4 consecutive days after averaging 20–30/day — check for listing suspension or edit penalty.",
-        "cites": [
-          "F3"
-        ],
-        "monday_item_name": "Fix GBP Listing Drop",
-        "monday_update": "GBP actions hit zero for Oct 2–5 after running 20–30/day through most of September — a 71.33% 7d collapse. Nacer to check Google Business Profile for a suspension flag, pending edit, or ownership change by Oct 7. Success is confirmed when daily actions return above 15 within 3 days of any fix applied."
-      },
-      {
-        "id": "S3",
-        "type": "fix",
-        "text": "Escalate 7 overdue SOW milestones to Nacer: funnel test closure and UTM deployment are blocking reliable attribution for all ecom decisions.",
+        "text": "Escalate Funnel test closure + UTM live immediately; attribution blind spot confirmed since Aug 31 — 36 days overdue.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Escalate Overdue SOW Items",
-        "monday_update": "Seven milestones are past due (Aug 14 – Sep 30), including the funnel test close, UTM go-live, subscribe page rebuild, all CRM flows, and monthly report v1. Without UTMs live, Meta purchase attribution via Shopify remains unreliable per the documented Windsor/Shopify gap. Sohib to flag to Nacer for reprioritisation by Oct 8; success check is at least funnel test closed and UTM live by Oct 15."
+        "monday_item_name": "Close Funnel Test + UTM",
+        "monday_update": "The 'Funnel test closed + UTM live' milestone was due Aug 31 and remains open as of Oct 6 — 36 days overdue. Without UTM firing correctly, Windsor/Meta reconciliation is unreliable and the ROAS 3.86x figure cannot be fully trusted. Owner: Khurram (Ads — Meta). Success check: UTM parameters confirmed firing on all purchase events in Windsor by Oct 10."
+      },
+      {
+        "id": "S2",
+        "type": "creative_refresh",
+        "text": "Introduce at least one new real-footage creative into BWS - Sales - Muslims; single campaign carrying 56% of 28-day spend shows volatile revenue.",
+        "cites": [
+          "F4",
+          "F1"
+        ],
+        "monday_item_name": "New Creative BWS Muslims",
+        "monday_update": "BWS - Sales - Muslims carried $841.02 of $1,485.36 in 28-day spend and purchases have dropped 28.57% week-over-week with revenue swinging between $0 and $398 on consecutive days. Haney's facility footage (delivered Jul 21) should be cut into at least one new ad variant using approved real or stock footage — no AI video per client rules. Success check: new creative live by Oct 10; monitor purchase rate over the following 3-day window (Oct 10–13) for stabilisation above 1 purchase/day."
+      },
+      {
+        "id": "S3",
+        "type": "watch",
+        "text": "Watch GBP: 0 actions Oct 4–5 vs 19–30/day in early Sep — confirm profile not suspended before attributing to organic decay. Re-check Oct 9.",
+        "cites": [
+          "F3"
+        ],
+        "monday_item_name": "GBP Collapse Watch Oct 9",
+        "monday_update": "GBP actions hit zero on Oct 4 and Oct 5 after averaging 19–30/day in early September. This could indicate a profile suspension, a listing issue, or a data reporting gap. Verify the BillyDoe Meats GBP profile (locations/17076764668101686399) is live and not flagged. If actions remain at zero by Oct 9, escalate as a fix. No paid action taken until root cause is confirmed."
       }
     ],
     "next_check": "2026-10-09"

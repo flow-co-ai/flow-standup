@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T17:05:19.783Z",
+  "generated_at": "2026-10-06T17:28:46.213Z",
   "date": "2026-10-06",
   "slug": "steel-forte",
   "name": "Forte Precision Metals",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Organic visibility is the only active channel, with Google Business Profile driving 87 total actions (60 directions, 4 calls, 23 web clicks) over 28 days, but momentum is fading fast: GBP actions dropped 41.67% in the last 7 days versus the prior 7, likely reflecting a pullback in local search demand or a profile engagement dip. Paid media on Meta and Google Ads shows zero spend, zero leads, and zero clicks, meaning there is no lead generation activity running at all.",
+  "verdict": "Forte Precision Metals' biggest movement is a 41.67% drop in Google Business Profile actions over the last 7 days, likely driven by reduced search visibility or seasonal demand softness, with GBP delivering just 87 total actions (4 calls, 60 directions, 23 web clicks) over 28 days against zero paid spend across Meta and Google Ads.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -555,43 +555,43 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-10-06T17:11:10.340Z",
+    "generated_at": "2026-10-06T17:32:22.758Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP is the only signal left; all paid and organic pipelines are silent.",
+    "verdict": "GBP-only organic signals declining; paid dormancy is the real risk.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend, zero leads, zero search clicks from paid over 28 days — no active lead generation exists for this client.",
+        "text": "Zero paid spend across all 45 days in series; CPL is undefined because no paid lead has ever been generated for this client.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "meta/google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "6 OVERDUE CRM/SOW milestones since July 7 — 342 stub accounts (blocker Aug 31) and Sales-i parser (blocker Sep 30) unresolved; contacts pull and lapsed sequences also overdue.",
+        "text": "6 OVERDUE SOW milestones unresolved as of today: 342 stub reconciliation, Sales-i parser, Web/SEO root cause, AGS+Forte contacts, lapsed sequences, and July CRM directives — all past due.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GBP actions fell 41.67% last 7d vs prior 7d; last 3 days (Oct 3–5) show 9, 0, 0 actions vs prior 3 days (Sep 30–Oct 2) averaging 5.3 — confirmed downward signal.",
+        "text": "GBP actions dropped 41.67% week-on-week; last 3 days (Oct 3–5) show 9, 0, 0 vs prior 3 days (Sep 30–Oct 2) averaging 2.67 — a confirmed 3-day cliff.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Search clicks dropped 33.33% last 7d; last 3 days (Oct 3–5) show 0, 0, 0 clicks vs prior 3 days averaging 0.67 — organic search visibility collapsing alongside GBP.",
+        "text": "Search clicks fell 33.33% week-on-week; last 3 days (Oct 3–5) show 0, 0, 0 vs prior 3 (Sep 30–Oct 2) averaging 0.67 — organic visibility is contracting with zero paid backstop.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "search"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GBP impressions 715 over 26 days yields a call rate of 0.0056 — extremely low conversion from visibility to action, suggesting profile content or offer gap.",
+        "text": "GBP 28-day call rate is 0.0056 per impression on 715 impressions, yielding only 4 calls — profile conversion quality is structurally weak regardless of traffic level.",
         "confidence": "probable",
         "channel": "gbp"
       }
@@ -600,34 +600,34 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate 342 stub account reconciliation and Sales-i parser build — both are confirmed blockers gating CRM data integrity.",
-        "cites": [
-          "F2"
-        ],
-        "monday_item_name": "Resolve CRM Blocker Milestones",
-        "monday_update": "Two confirmed SOW blockers are overdue: the 342 stub account reconciliation (due Aug 31) and the Sales-i parser build + Jorge answer (due Sep 30). Until stubs are resolved, Sales-i sync keys on Customer ID and these accounts receive no data. Assign Ahmed and Dev 2 to these items this week. Success check: both tasks marked complete with rollback files posted to Monday CRM board by Oct 13."
-      },
-      {
-        "id": "S2",
-        "type": "fix",
-        "text": "Audit GBP profile for content gaps — 715 impressions yielding only 4 calls over 28 days signals a profile engagement problem.",
+        "text": "Audit and update GBP profile (hours, photos, services) to arrest 0, 0, 0 click streak on Oct 3–5.",
         "cites": [
           "F3",
           "F5"
         ],
-        "monday_item_name": "GBP Profile Engagement Fix",
-        "monday_update": "GBP delivered 715 impressions over 26 days but only 4 calls (call rate 0.0056), and actions have now dropped 41.67% week-over-week with 0 actions the last 2 days. Review profile photos, posts, and service descriptions for staleness or gaps. Success check: GBP weekly actions return above the prior 7-day baseline (last measured at ~12 actions/week before the drop) within 2 weeks of update, re-check Oct 20."
+        "monday_item_name": "GBP Profile Audit Fix",
+        "monday_update": "GBP actions hit zero on Oct 3, 4, and 5 — the sharpest 3-day drop in the 45-day series — and the 28-day call rate is only 0.0056 per impression. Review profile completeness: confirm business hours, add recent photos, and verify service categories match industrial/precision metal buying intent. Success check: GBP actions return above 3/day average within 7 days of update. Re-check by 2026-10-13."
       },
       {
-        "id": "S3",
+        "id": "S2",
         "type": "watch",
-        "text": "Watch GBP and search clicks for 3 more days; if both remain at zero, escalate to Sohib for paid reactivation discussion.",
+        "text": "Watch GBP and search clicks through Oct 9 before any paid reactivation discussion; 3-day zeros may be weekend artifact.",
         "cites": [
           "F3",
           "F4"
         ],
-        "monday_item_name": "GBP + Search Zero Watch",
-        "monday_update": "Search clicks have been 0 for 3 consecutive days (Oct 3–5) and GBP actions are 0 for 2 consecutive days (Oct 4–5), down 33.33% and 41.67% respectively over the 7-day window. No paid channel is active to compensate. Monitor through Oct 9; if both metrics remain at or near zero, flag to Sohib to assess whether paid reactivation is needed to maintain any pipeline activity."
+        "monday_item_name": "Watch GBP + Search Oct 9",
+        "monday_update": "Last 3 days of search clicks and GBP actions are all zero, but Oct 3–5 includes weekend days where B2B intent typically drops. Hold paid reactivation decision until Oct 9 to confirm whether weekday traffic recovers. If search clicks remain at zero and GBP actions stay below 2/day through Oct 9, escalate to paid channel discussion with Sohib. Re-check: 2026-10-09."
+      },
+      {
+        "id": "S3",
+        "type": "fix",
+        "text": "Escalate 6 overdue SOW milestones to Sohib; 342-stub blocker and Sales-i parser directly gate CRM lead tracking.",
+        "cites": [
+          "F2"
+        ],
+        "monday_item_name": "Escalate Overdue SOW Blockers",
+        "monday_update": "Six SOW milestones are past due, the oldest dating to 2026-07-07. The 342-stub reconciliation and Sales-i parser are marked blockers — without them, Sales-i cannot sync purchase signals to Sugar and inactivity automations have no data to act on. Flag all six to Sohib and Nabil this week with owner assignments and revised due dates. Success check: each milestone has a named owner and a new committed date logged in Monday by 2026-10-09."
       }
     ],
     "next_check": "2026-10-09"

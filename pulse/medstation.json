@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T17:05:59.263Z",
+  "generated_at": "2026-10-06T17:28:58.993Z",
   "date": "2026-10-06",
   "slug": "medstation",
   "name": "MedStation",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Meta spend surged 139.7% week-over-week, driven almost entirely by the \"MDST-WES-AWARE-WHTAPP\" campaign ($669.98 of $786.72 total spend), which pushed CPL up 106.64% despite leads growing only 16%, signaling that scaling this awareness campaign is delivering volume but at a significantly higher cost per lead.",
+  "verdict": "Meta drove all 127 leads at a $6.19 CPL over 28 days, but the last 7 days show CPL spiking +106.64% as spend surged +139.7%, suggesting the \"MDST-WES-AWARE-WHTAPP\" campaign ($669.98, the dominant spender) is scaling faster than conversion efficiency can keep pace with. Monitoring or tightening that campaign's budget is the immediate priority.",
   "windsor": {
     "totals": {
       "spend": 786.72,
@@ -701,79 +701,79 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-10-06T17:12:27.522Z",
+    "generated_at": "2026-10-06T17:33:43.033Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Spend is live but 10 overdue milestones mean results are unverifiable.",
+    "verdict": "SOW 67 days overdue; CPL spike is a scaling problem, not a campaign one.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "10 SOW milestones overdue since July–September 2026: stack test, GHL migration, GBP triage, Meta CAPI, landing pages, search campaigns, LSA, nurture sequences, and Phase 1 close — all undelivered.",
+        "text": "10 of 10 SOW milestones overdue (earliest due 2026-07-31): stack test, GHL migration, Meta CAPI, landing pages, search campaigns, LSA, nurture sequences all undelivered.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 1,
-        "text": "CPL surged 106.64% week-over-week to ~$6.19 while leads grew only 16%; MDST-WES-AWARE-WHTAPP consumed $669.98 of $786.72 spend — efficiency is collapsing at scale.",
+        "text": "CPL jumped +106.64% as spend rose +139.7% but leads grew only +16% — MDST-WES-AWARE-WHTAPP ($669.98/28d) is scaling past its conversion efficiency ceiling.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "3-day signal (Oct 3–5): leads 6, 0, 2 vs prior 3-day (Sep 30–Oct 2): 6, 9, 2 — lead volume is softening while spend held at ~$35–54/day; CPL trend is worsening.",
+        "text": "3-day signal (Oct 3–5): spend averaged $41.64/day, leads averaged 2.67/day vs prior 3 days (Oct 1–3) averaging 3.33 leads at $47.37/day — efficiency worsening at lower spend.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Sep 24–26 show 3 consecutive zero-spend, zero-lead days with no flag — an unexplained gap; without landing pages or tracking live (F1), root cause cannot be confirmed.",
+        "text": "GA4 sessions spiked to 117 on Oct 5 with 2 leads — session-to-lead conversion near zero that day; 28-day GA4 conversions tracked at 0, suggesting broken pixel or missing form tracking.",
         "confidence": "probable",
-        "channel": "meta"
+        "channel": "web"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL pipeline is null and GA4 conversions are 0 across all 28 days — 127 reported leads have no downstream booking verification; intake leak cannot be ruled out.",
+        "text": "GBP generated 74 actions (10 calls, 48 directions) over 28 days with zero GHL pipeline data — intake capture from organic GBP traffic is unverifiable; may be an unreported lead source.",
         "confidence": "hypothesis",
-        "channel": "GHL"
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Do not scale MDST-WES-AWARE-WHTAPP further until CPL returns below $4.00 (pre-surge baseline) for 3 consecutive days.",
+        "type": "fix",
+        "text": "Cap MDST-WES-AWARE-WHTAPP daily budget by ~20% to restore CPL below $10 baseline; hold until 3-day CPL stabilises.",
         "cites": [
           "F2",
           "F3"
         ],
-        "monday_item_name": "Watch Meta CPL — no scale",
-        "monday_update": "MDST-WES-AWARE-WHTAPP drove CPL up 106.64% to ~$6.19 on a 139.7% spend increase, while leads grew only 16%. Budget is frozen at current daily level (~$45/day). Success check: CPL at or below $4.00 for 3 straight days before any scale is considered. Re-check 2026-10-09."
+        "monday_item_name": "Cap WhatsApp Campaign Budget",
+        "monday_update": "Reduce MDST-WES-AWARE-WHTAPP daily budget by approximately 20% (from the current ~$45/day pace). Spend surged +139.7% while leads grew only +16%, pushing CPL +106.64% in 7 days. Success check: CPL returns below $10 (the pre-surge series baseline) within 3 days of the cap. Re-check 2026-10-09."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Escalate all 10 overdue SOW milestones to Nacer; no further ad spend increases until stack test and tracking are verified live.",
+        "text": "Escalate all 10 overdue SOW milestones to Nacer; no paid scaling until stack test and tracking are verified live.",
         "cites": [
           "F1",
-          "F5"
+          "F4"
         ],
-        "monday_item_name": "Escalate 10 Overdue Milestones",
-        "monday_update": "Ten SOW milestones are overdue by 5 weeks or more, including the pre-launch stack test, GHL migration, Meta CAPI, and landing pages. Without these live, the 127 leads reported have no verified path to booked appointments and GHL pipeline remains null. Nacer to confirm completion status for each item by 2026-10-09. Success check: at minimum, stack test and landing page tracking confirmed live before any budget change."
+        "monday_item_name": "Escalate Overdue SOW Milestones",
+        "monday_update": "All 10 Phase 1 milestones are overdue, the earliest by 67 days (due 2026-07-31). GA4 shows 0 conversions over 28 days with 2,496 sessions, strongly suggesting tracking is unverified. Nacer must confirm which milestones are blocked and set a hard completion date. No budget scaling is defensible until the pre-launch stack test passes."
       },
       {
         "id": "S3",
-        "type": "fix",
-        "text": "Investigate Sep 24–26 zero-spend gap: confirm whether paused by platform, budget exhaustion, or manual stop — document the cause.",
+        "type": "watch",
+        "text": "Watch GBP (74 actions, 10 calls) for untracked appointment conversions; confirm via GHL once pipeline data is live.",
         "cites": [
-          "F4"
+          "F5"
         ],
-        "monday_item_name": "Investigate Sep 24-26 Spend Gap",
-        "monday_update": "Spend and leads dropped to zero for three consecutive days (Sep 24–26) with no system flag recorded. This could indicate a campaign pause, billing issue, or platform rejection — none of which are visible in current data. Pull Meta Ads Manager logs for that window and document the cause by 2026-10-09. Success check: written explanation on file before next budget decision."
+        "monday_item_name": "Watch GBP Organic Intake",
+        "monday_update": "GBP generated 74 actions including 10 calls and 48 directions over 28 days, but GHL pipeline data is null so none of this traffic is confirmed as booked appointments. Once GHL is connected (per SOW milestone), cross-reference GBP call volume against booked appointments. Re-check 2026-10-13."
       }
     ],
     "next_check": "2026-10-09"
