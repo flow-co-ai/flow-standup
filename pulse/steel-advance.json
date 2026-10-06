@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T18:48:12.407Z",
+  "generated_at": "2026-10-06T20:42:42.656Z",
   "date": "2026-10-06",
   "slug": "steel-advance",
   "name": "Advance Grinding Services",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "GBP was the only active channel this period, generating 133 total actions (7 calls, 105 direction requests, 21 web clicks) across 26 active days, but momentum is declining sharply with GBP actions down 42.86% over the last 7 days versus the prior 7, likely driven by reduced search visibility as impressions thin out toward the end of the period.",
+  "verdict": "GBP was the only active channel this period, generating 133 total actions (7 calls, 105 direction requests, 21 web clicks) across 26 active days, but momentum is declining sharply with GBP actions down 42.86% over the last 7 days versus the prior 7, likely driven by reduced search demand or a drop in local ranking visibility.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -567,78 +567,78 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-10-06T18:52:33.322Z",
+    "generated_at": "2026-10-06T20:46:26.358Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP-only client going dark; 8 overdue SOW milestones demand immediate resolution.",
+    "verdict": "GBP declining and stalling; paid is absent; SOW blockers dominate risk.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "5 CRM milestones overdue (earliest Jul 7): 342 stub reconciliation and Sales-i parser are active blockers as of Aug–Sep 2026.",
+        "text": "5 CRM & Automation milestones overdue since Jul 7: 342 stub reconciliation (blocker) and Sales-i parser (blocker) both missed Aug–Sep deadlines.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3 Outreach/Web milestones overdue: AGS+Forte contacts, lapsed sequences, and root-cause fix all past Sep 30 deadline.",
+        "text": "2 Outreach milestones overdue: AGS + Forte contacts pull (due Aug 31) and lapsed sequences launch (due Sep 30) both show no completion event.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 1,
-        "text": "Zero paid spend across all 28 days; $0 CPL is a vacuum, not efficiency — no paid channel is active for this leadgen client.",
+        "priority": 2,
+        "text": "Web/SEO blocker overdue: root cause named + fix submitted was due Aug 31 with no completion event recorded.",
         "confidence": "confirmed",
-        "channel": "google_ads"
+        "channel": "SOW"
       },
       {
         "id": "F4",
-        "priority": 3,
-        "text": "GBP actions collapsed to 0 for 3 consecutive days (Oct 3–5), down from a 45-day daily average of ~5 actions; search clicks also 0 last 2 days.",
+        "priority": 2,
+        "text": "GBP actions dropped 42.86% week-over-week; last 3 days (Oct 3–5) show 0 actions vs prior 3-day avg of ~2.3, confirming a stall, not a dip.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "GBP"
       },
       {
         "id": "F5",
         "priority": 3,
-        "text": "Search clicks dropped -30.3% week-over-week and hit 0 on Oct 4–5, consistent with the GBP visibility decline — organic is the only funnel and it is contracting.",
+        "text": "Search clicks fell 30.3% week-over-week; last 3 days averaged 1 click/day vs prior 3-day avg of ~5, reinforcing organic visibility loss alongside GBP decline.",
         "confidence": "probable",
-        "channel": "search"
+        "channel": "organic"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate 342-stub reconciliation and Sales-i parser blocker to Ahmed/Dev2 — both gates are 35+ days overdue.",
+        "text": "Escalate 342 stub reconciliation and Sales-i parser to Ahmed immediately — both are confirmed blockers stalling CRM pipeline.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Clear CRM Blocker Milestones",
-        "monday_update": "Two confirmed blockers are overdue: the 342-stub reconciliation (due Aug 31) and the Sales-i parser build + Jorge answer (due Sep 30). Until stubs are reconciled, Sales-i cannot sync and inactivity automations fire on incomplete data. Escalate to Ahmed and Dev2 this week with a hard completion date. Success = rollback files posted to Monday board and parser returning data to at least one test Sugar field by 2026-10-13."
+        "monday_item_name": "Unblock CRM stubs + parser",
+        "monday_update": "Two confirmed SOW blockers are overdue: the 342 stub reconciliation (due Aug 31) and the Sales-i export parser (due Sep 30) have no completion event. Ahmed should post a status update and revised completion date to the Monday CRM board by Oct 9. Success is defined as both tasks showing a completion event or a dated delivery commitment within 3 business days."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Escalate AGS+Forte contact pull and lapsed email sequences — both outreach milestones past Sep 30 with 0 sequences launched.",
+        "text": "Pull AGS + Forte contact lists and launch lapsed email sequences — both outreach milestones are confirmed overdue with no output.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Launch Overdue Outreach Sequences",
-        "monday_update": "AGS and Forte contact lists were due Aug 31 and lapsed sequences were due Sep 30 — neither appears complete. No outreach sequences are live, meaning the retainer's core revenue-recovery objective is stalled. Assign owner and post contacts to Monday board by 2026-10-09. Success = at least one lapsed sequence live per company by 2026-10-13."
+        "monday_item_name": "Launch AGS Forte outreach sequences",
+        "monday_update": "The AGS + Forte contact pull (due Aug 31) and lapsed email sequences (due Sep 30) both remain undelivered per SOW. The responsible team should deliver the contact lists and sequence drafts to Sohib for review by Oct 10. Success is at least one active sequence live per company with send confirmation posted to Monday by Oct 13."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions and search clicks for 3 more days; if zero persists through Oct 9, investigate listing health and local ranking drop.",
+        "text": "Watch GBP: 0 actions for 3 consecutive days (Oct 3–5); if zero continues through Oct 9, treat as ranking drop requiring SEO investigation.",
         "cites": [
           "F4",
           "F5"
         ],
-        "monday_item_name": "Monitor GBP Visibility Drop",
-        "monday_update": "GBP actions hit 0 for Oct 3–5 and search clicks were 0 on Oct 4–5, after a 45-day average of roughly 5 GBP actions per day. This may be a weekend pattern or an early sign of listing suppression. No action is warranted yet — one bad weekend is noise, but three confirmed zero-days is a signal. Re-check on 2026-10-09; if actions remain at 0, audit GBP listing status and check for any Google-initiated suspensions or category changes."
+        "monday_item_name": "Watch GBP 3-day zero streak",
+        "monday_update": "GBP actions hit zero for Oct 3, 4, and 5 — a confirmed 3-day stall after a 42.86% weekly decline. Search clicks also fell 30.3% week-over-week. Re-check on Oct 9: if GBP actions remain at or near zero, escalate to SEO team to audit local ranking and profile health. No paid action is warranted until the organic signal is understood."
       }
     ],
     "next_check": "2026-10-09"

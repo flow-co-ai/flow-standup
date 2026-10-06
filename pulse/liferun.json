@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T18:47:53.988Z",
+  "generated_at": "2026-10-06T20:42:27.719Z",
   "date": "2026-10-06",
   "slug": "liferun",
   "name": "Liferun",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Meta drove all 48 leads over 28 days at a $16.20 CPL while Google Ads spent $201.22 and generated zero conversions, making it the biggest drag on efficiency. GBP engagement dropped 44% week-over-week, likely tied to reduced local search visibility, and the CRM shows 82 opportunities created with 0 won, signaling a pipeline follow-up gap worth addressing.",
+  "verdict": "Meta drove all 48 leads over 28 days at a $16.20 CPL while Google Ads spent $201.22 and generated zero conversions, making it the biggest drag on efficiency. GBP engagement dropped 44% week-over-week, likely tied to reduced local search visibility, and lead volume shows a reconciliation gap with Windsor reporting 48 leads versus GHL showing 84 contacts and 82 opportunities created.",
   "windsor": {
     "totals": {
       "spend": 777.82,
@@ -560,7 +560,7 @@
     }
   },
   "ghl": {
-    "contacts": 82,
+    "contacts": 84,
     "opportunities": {
       "created": {
         "count": 82,
@@ -575,7 +575,7 @@
   },
   "reconciliation": {
     "windsor_leads": 48,
-    "ghl_contacts": 82,
+    "ghl_contacts": 84,
     "ghl_opps_created": 82,
     "ghl_opps_won": 0,
     "status": "both_active"
@@ -711,43 +711,43 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-10-06T18:51:15.743Z",
+    "generated_at": "2026-10-06T20:45:13.686Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Ads dead for 17 days; 8 overdue SOW milestones block safe relaunch.",
+    "verdict": "Ads went dark Sep 17; 8 overdue milestones now block scaling and attribution.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "All spend stopped on 2026-09-17; 17 consecutive zero-spend days means 0 leads generated since Sep 16 — full account dark.",
+        "text": "All spend hit zero from Sep 17 onward — 19 consecutive zero-spend days with 0 leads, confirmed by series data.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "8 SOW milestones overdue (earliest Jul 20): Money Paths, CAPI, Offline Conversions, Landing Pages, UGC — all unverified before ads went dark.",
+        "text": "8 overdue SOW milestones (Becklar/BWS verification, CAPI, Offline Conversions, Landing Pages, UGC) unresolved as of Oct 6; earliest was due Jul 20.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Google Ads spent $201.22 over 28 days with 0 conversions; top campaign 'BWS - July - Call Campaign' at $192.95 returned nothing measurable.",
+        "text": "Google Ads spent $201.22 over 28 days and recorded 0 conversions; 37 clicks produced no tracked outcome — pixel or attribution broken.",
         "confidence": "confirmed",
-        "channel": "google"
+        "channel": "google_ads"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "82 GHL opportunities created, 0 won, 0 appointments — leads that arrived pre-blackout are stalled in pipeline, indicating an intake/follow-up leak, not an ads problem.",
-        "confidence": "confirmed",
-        "channel": "ghl"
+        "text": "GHL shows 84 contacts and 82 opportunities created vs Windsor's 48 leads — a 75% gap suggesting duplicate or ghost records inflating pipeline, not real intake.",
+        "confidence": "probable",
+        "channel": "crm"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GBP actions down 44% week-over-week to near-zero; organic floor eroding in parallel with paid blackout, compounding funnel loss.",
+        "text": "GBP actions fell 44% week-over-week; GA4 sessions averaging ~33/day organically despite zero paid spend since Sep 17, masking the true paid-organic split.",
         "confidence": "probable",
         "channel": "gbp"
       }
@@ -756,35 +756,35 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Diagnose and resolve 17-day spend blackout on Meta before any budget decision; confirm billing and campaign status.",
+        "text": "Reactivate Meta campaigns immediately; 19 zero-spend days confirm full stop, not a pause.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Resolve Meta spend blackout",
-        "monday_update": "All Meta and Google spend stopped on 2026-09-17 with zero leads since. Immediately audit Meta billing status, campaign approval state, and ad account health to identify the cause of the blackout. Success is confirmed when at least one Meta campaign resumes active delivery with spend recorded in the dashboard. Resolve by 2026-10-09."
+        "monday_item_name": "Reactivate Meta Campaigns",
+        "monday_update": "Meta spend has been $0 since Sep 17 — 19 consecutive dark days confirmed in the daily series. Reactivate the Meta campaigns at the last active daily budget (≈$86/day based on Sep 8–16 average). Success check: at least 4 leads within 3 days of reactivation (matching prior daily pace). Confirm live by Oct 7."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Verify Becklar billing drop and BWS duplicate check before relaunching ads — both are confirmed ⛔ blockers per SOW.",
+        "text": "Audit Google Ads pixel — $201.22 spent, 0 conversions recorded; pause Google until tracking confirmed.",
         "cites": [
-          "F2",
           "F3"
         ],
-        "monday_item_name": "Clear ⛔ Money Path Blockers",
-        "monday_update": "Money Paths Verified milestone is overdue since 2026-09-30, and Offline Conversion Import and CAPI are also undelivered. Run one dummy Becklar deactivation and one live order through each BWS intake path before any paid relaunch — an unverified money path means Google and Meta spend cannot be attributed or billed correctly. Success is one confirmed Becklar invoice drop and zero duplicate opportunities in GHL. Complete by 2026-10-10."
+        "monday_item_name": "Fix Google Ads Pixel / Pause",
+        "monday_update": "Google Ads recorded 0 conversions on $201.22 of spend across 28 days with only 37 clicks — the conversion pixel is not firing or is misconfigured. Pause Google spend immediately to stop the confirmed leak, and audit the tracking setup (tag, trigger, thank-you page URL). Success check: at least one test conversion fires end-to-end before Google budget is restored. Complete by Oct 10."
       },
       {
         "id": "S3",
         "type": "fix",
-        "text": "Audit GHL pipeline: 82 opportunities at $0 won signals intake or follow-up automation failure requiring immediate CRM diagnosis.",
+        "text": "Run BWS duplicate-order test and Becklar dummy deactivation — both overdue since Sep 30, blocking revenue attribution.",
         "cites": [
+          "F2",
           "F4"
         ],
-        "monday_item_name": "GHL Pipeline Follow-up Audit",
-        "monday_update": "82 contacts entered the GHL pipeline with 0 won and 0 appointments booked — this is a CRM intake or automation failure, not an ads performance issue. Audit the follow-up sequence firing on new leads and confirm the Becklar/BWS opportunity stage logic is routing correctly. Success is at least one stage-transition event confirmed per new contact within 24 hours of entry. Complete audit by 2026-10-10."
+        "monday_item_name": "Verify Money Paths (Becklar/BWS)",
+        "monday_update": "Money-path verification (Becklar billing drop + BWS duplicate check) was due Sep 30 and remains unconfirmed. The GHL pipeline shows 82 opportunities against only 48 Windsor leads, suggesting possible duplicate records that these tests would surface. Run one dummy Becklar deactivation and one live BWS order through each intake path this week. Success check: single opportunity per order confirmed, Becklar invoice reflects the drop — complete by Oct 10."
       }
     ],
-    "next_check": "2026-10-10"
+    "next_check": "2026-10-09"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T18:47:02.230Z",
+  "generated_at": "2026-10-06T20:41:47.516Z",
   "date": "2026-10-06",
   "slug": "billy-doe",
   "name": "Billy Doe Meats",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 81,
   "status": "green",
-  "verdict": "Billy Doe Meats drove $5,740.37 in Meta revenue at a 3.86 ROAS over 28 days, but the biggest concern is a 28.57% drop in purchases week-over-week, likely tied to the top campaign \"BWS - Sales - Muslims\" ($841.02 spend) carrying the bulk of budget while overall momentum softens.",
+  "verdict": "Billy Doe Meats drove a 3.86 ROAS on $1,485.36 Meta spend over 28 days (33 purchases, $5,740.37 revenue), but the biggest concern is a 28.57% drop in purchases over the last 7 days alongside an 8.76% decline in ROAS, likely driven by the top campaign \"BWS - Sales - Muslims\" showing signs of audience fatigue or creative wear as spend held relatively flat (+6.86%).",
   "windsor": {
     "totals": {
       "spend": 1485.36,
@@ -714,79 +714,78 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-10-06T18:49:15.595Z",
+    "generated_at": "2026-10-06T20:43:35.062Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "ROAS holding but purchase volume in confirmed 3-day slide; SOW backlog is the deeper risk.",
+    "verdict": "ROAS holding at 3.86x but purchase rate collapsing; 7 SOW milestones overdue.",
     "findings": [
       {
         "id": "F1",
-        "priority": 1,
-        "text": "Purchases: last 3 days (Oct 3–5) total 2 vs prior 3 days (Sep 30–Oct 2) total 3; 28-day ROAS 3.86x but weekly ROAS fell 8.76% — efficiency softening confirmed.",
-        "confidence": "confirmed",
-        "channel": "meta"
-      },
-      {
-        "id": "F2",
         "priority": 2,
-        "text": "7 OVERDUE SOW milestones uncleared (earliest Aug 14): funnel test, UTM live, subscribe pages, all flows, platform audit, pre-launch gate, monthly report — blocking attribution integrity and scale.",
+        "text": "7 SOW milestones overdue (earliest Aug 14): funnel test, UTM tracking, subscribe pages, all CRM flows, and monthly report are all undelivered.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
-        "id": "F3",
-        "priority": 2,
-        "text": "GBP actions collapsed: last 3 days (Oct 3–5) averaged 0.67/day vs prior 3 days (Sep 30–Oct 2) averaging 4.3/day; 7d delta -71.33% — organic search intent drying up or listing issue.",
+        "id": "F2",
+        "priority": 1,
+        "text": "Purchases collapsed in 3-day signal: Oct 3–5 yielded 2 purchases on $165.72 spend vs Sep 30–Oct 2 yielding 3 purchases on $166.31 — but prior-period (Sep 27–29) was 3 purchases; trend is flat-to-falling with revenue per purchase highly volatile ($0–$398).",
         "confidence": "probable",
-        "channel": "gbp"
+        "channel": "meta"
+      },
+      {
+        "id": "F3",
+        "priority": 1,
+        "text": "28-day ROAS is 3.86x on $1,485.36 spend, but 7d ROAS is down 8.76% and purchases down 28.57% while spend rose 6.86% — revenue per dollar is deteriorating as top campaign BWS - Sales - Muslims ($841.02 of $1,485.36) likely fatigues.",
+        "confidence": "confirmed",
+        "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Single campaign 'BWS - Sales - Muslims' carries $841.02 of $1,485.36 (57%) of 28-day spend; no second campaign visible — concentration risk if audience fatigues.",
-        "confidence": "probable",
-        "channel": "meta"
+        "text": "GBP actions collapsed 71.33% week-over-week; last 5 days show 0, 0, 6, 2, 0 actions — organic local discovery has effectively gone dark despite 4,996 impressions over 28 days.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GA4 sessions -13.62% week-over-week while Meta spend rose +6.86%; paid traffic not converting to site visits at prior rate — possible landing page or UTM drop-off.",
+        "text": "GA4 sessions down 13.62% week-over-week; Oct 3–5 averaged 268 sessions/day vs Sep 30–Oct 2 average of 266 — directional flat, no corroborating paid traffic collapse to explain purchase drop, pointing to on-site conversion rate as the culprit.",
         "confidence": "hypothesis",
-        "channel": "meta"
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Hold all budget changes; watch purchases over next 3 days. Target: ≥2 purchases/day before any scale.",
+        "type": "creative_refresh",
+        "text": "Inject new creative into BWS - Sales - Muslims; spend share is 56.6% of 28d budget with confirmed ROAS decay.",
         "cites": [
-          "F1",
-          "F4"
+          "F3",
+          "F2"
         ],
-        "monday_item_name": "Watch Purchase Trend 3-Day",
-        "monday_update": "Purchases over the last 3 days (Oct 3–5) totalled only 2, down from 3 in the prior 3-day window, with weekly ROAS off 8.76%. No budget moves until the Oct 3–5 window resolves into at least 2 purchases/day on average. Re-check on Oct 9 with the Oct 6–8 series. If purchases recover to that floor, revisit a modest scale on BWS - Sales - Muslims."
+        "monday_item_name": "BWS Muslims Creative Refresh",
+        "monday_update": "Top campaign BWS - Sales - Muslims has consumed $841.02 (56.6% of 28d spend) and is showing confirmed ROAS decline of 8.76% and purchase drop of 28.57% with spend up 6.86% — a textbook fatigue signature. Pull real facility footage from Haney's July 21 Drive delivery and launch at least 2 new product-creative variants into this campaign's ad set this week. Success check: purchases per $50 spend return to ≥1.5 within 7 days of new creative going live (current 7d rate is approximately 0.7). Review by 2026-10-13."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Investigate GBP listing: 0 actions on Oct 3–5 vs 30+ actions on peak days — rule out suspension or info error.",
+        "text": "Close the funnel test (ihbp8pmtn8 code) and activate UTM tracking — overdue since Aug 31; blocking attribution clarity.",
         "cites": [
-          "F3"
+          "F1"
         ],
-        "monday_item_name": "Fix GBP Listing Drop",
-        "monday_update": "GBP actions hit zero on Oct 4 and Oct 5, and averaged 0.67/day over the last 3 days — against a prior-3-day average of 4.3/day and a 7d delta of -71.33%. Check the Google Business Profile dashboard immediately for any suspension notice, ownership change, or info flag. Success is confirmed when daily GBP actions return above 10 by Oct 9."
+        "monday_item_name": "Close Funnel Test + UTM Live",
+        "monday_update": "The funnel conversion test (100% off code ihbp8pmtn8 on /halal-subscribe) and UTM activation were due Aug 31 and remain open. Without UTMs live, purchase attribution relies solely on Meta's 7-day-click window and Shopify cross-reference, making it impossible to diagnose whether the 28.57% purchase decline is a traffic problem or an on-site conversion problem. Assign Khurram to close the test result and push UTM parameters to all active Meta ad URLs by 2026-10-10. Success check: Windsor shows UTM-tagged sessions matching within 15% of Meta reported clicks."
       },
       {
         "id": "S3",
-        "type": "fix",
-        "text": "Clear overdue 'Funnel test closed + UTM live' milestone (due Aug 31); UTM gap is distorting all purchase attribution now.",
+        "type": "watch",
+        "text": "Watch GBP — 5 consecutive near-zero action days; re-check Oct 9 before escalating to profile audit.",
         "cites": [
-          "F2",
-          "F5"
+          "F4"
         ],
-        "monday_item_name": "Close Funnel Test + UTM",
-        "monday_update": "The funnel test and UTM live milestone was due Aug 31 and remains open, meaning purchase attribution through Windsor/Meta cannot be cleanly reconciled with GA4. GA4 sessions are down 13.62% week-over-week while spend rose 6.86%, suggesting a tracking or landing-page disconnect. Owner (Khurram per SOW) should close the 100%-off code test and confirm UTM parameters are firing on all ad destinations by Oct 10. Success: Windsor and Shopify purchase counts within 20% of each other for 3 consecutive days."
+        "monday_item_name": "GBP Action Drop Watch",
+        "monday_update": "GBP actions dropped 71.33% week-over-week with 0 recorded actions on Oct 4 and Oct 5, despite the profile generating 4,996 impressions over 28 days. This may reflect a seasonal lull, a profile suppression, or a data pipeline gap. No action is warranted yet on a 2-day zero run, but if actions remain at or near 0 through Oct 9, escalate to a full platform ownership and profile health audit (also overdue per SOW Aug 31 milestone). Re-check 2026-10-09."
       }
     ],
     "next_check": "2026-10-09"
