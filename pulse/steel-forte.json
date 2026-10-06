@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T18:03:45.498Z",
+  "generated_at": "2026-10-06T18:48:08.099Z",
   "date": "2026-10-06",
   "slug": "steel-forte",
   "name": "Forte Precision Metals",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Organic visibility is the only active channel, with Google Business Profile driving 87 total actions (60 directions, 4 calls, 23 web clicks) over 28 days, but momentum is fading fast: GBP actions dropped 41.67% in the last 7 days versus the prior 7, likely due to a pullback in local search impressions across the 26 active days. Paid media (Meta and Google Ads) shows zero spend, clicks, and leads, meaning there is no lead generation engine running at this time.",
+  "verdict": "Organic visibility is the only active channel, with Google Business Profile driving 87 total actions (60 directions, 4 calls, 23 web clicks) over 28 days, but momentum is fading fast: GBP actions dropped 41.67% in the last 7 days versus the prior 7 days, likely reflecting a seasonal or algorithm-driven dip in local search demand. Paid channels (Meta and Google Ads) show zero spend, zero leads, and zero clicks, meaning there is no paid pipeline to offset the organic decline.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -567,78 +567,78 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-10-06T18:10:18.626Z",
+    "generated_at": "2026-10-06T18:52:09.846Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "No paid engine exists; GBP — the only channel — is now decelerating.",
+    "verdict": "Organic-only pipeline collapsing; 8 overdue SOW milestones compounding the risk.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "6 CRM/Automation milestones overdue by 5–90 days: 342 stub reconciliation (blocker Aug-31) and Sales-i parser (blocker Sep-30) remain open, stalling lead data integrity.",
+        "text": "5 CRM milestones overdue (earliest Jul 7): 342 stub reconciliation and Sales-i parser both blocker-flagged, stalling CRM data integrity for Forte.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "2 additional SOW blockers overdue: AGS+Forte contact pull (Aug-31) and lapsed email sequences (Sep-30) not launched, meaning outreach pipeline has not started.",
+        "text": "3 additional SOW milestones overdue: Web/SEO root-cause fix, AGS+Forte contact pull, and lapsed sequences launch — all past Aug–Sep deadlines.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — Meta and Google Ads show $0, 0 leads, 0 clicks. There is no active lead-generation engine for Forte Precision Metals.",
+        "text": "Zero paid spend and zero leads across all 45 days in series; no CPL baseline exists — the entire pipeline depends on 87 GBP actions in 28 days.",
         "confidence": "confirmed",
-        "channel": "Meta/Google"
+        "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 2,
-        "text": "GBP actions fell 41.67% (7d vs prior 7d). 3-day signal confirms: Oct 3–5 = 9+0+0 = 9 actions vs Sep 30–Oct 2 = 6+4+2 = 12 — downtrend is real, not noise.",
+        "text": "GBP actions dropped 41.67% last 7d vs prior 7d; 3-day signal (Oct 3–5: 9, 0, 0) vs prior 3 days (Sep 30–Oct 2: 6, 4, 2) confirms the drop is accelerating, not noise.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 3,
-        "text": "Search clicks down 33.33% (7d vs prior 7d); last 3 days (Oct 3–5) = 0+0+0 vs prior 3 (Sep 30–Oct 2) = 2+0+2 = 4. Organic search visibility is collapsing alongside GBP.",
+        "text": "Search clicks fell 33.33% last 7d; last 3 days show 0, 0, 0 vs prior 3 days average of 0.67 — organic search intent for Forte is near-zero.",
         "confidence": "confirmed",
-        "channel": "Organic Search"
+        "channel": "google_ads"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate 342 stub reconciliation and Sales-i parser to Ahmed/Dev2 immediately — both are confirmed blockers since Aug-31 and Sep-30.",
+        "text": "Escalate 342 stub reconciliation and Sales-i parser build immediately; both are confirmed blockers with deadlines 35+ days overdue.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Clear CRM Blocker Stubs+Parser",
-        "monday_update": "Both the 342 stub reconciliation and the Sales-i export parser are confirmed overdue blockers (Aug-31 and Sep-30 respectively). Ahmed and Dev2 must provide a completion date by Oct 9 — without these, Sales-i cannot sync and inactivity automations have no data floor. Success check: rollback files posted to Monday board and parser returning data to Sugar by Oct 20."
+        "monday_item_name": "Clear CRM Blocker Milestones",
+        "monday_update": "The 342 stub reconciliation (due Aug 31) and Sales-i parser build (due Sep 30) are both flagged blockers and remain incomplete as of Oct 6. Without the stub fix, Sales-i sync keys fail for those accounts and no inactivity automations fire. Assign Ahmed and Dev 2 to these two items before any other CRM work. Success is confirmed when rollback files are posted to the Monday CRM board and parser sends first CSV to Sugar REST API — target Oct 13."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Launch AGS+Forte contact pull and lapsed email sequences — both overdue since Aug-31 and Sep-30 with zero outreach sent to date.",
+        "text": "Unblock AGS+Forte contact pull and lapsed email sequences; outreach is fully stalled with paid channels at $0 spend for 45+ days.",
         "cites": [
-          "F2"
+          "F2",
+          "F3"
         ],
-        "monday_item_name": "Launch Forte Outreach Sequences",
-        "monday_update": "Contact pull for AGS and Forte was due Aug-31 and lapsed sequences were due Sep-30 — neither has launched. Assign responsible party to deliver contact list by Oct 10 and first sequence send by Oct 17. Success check: confirmed send count >0 in outreach platform by Oct 17."
+        "monday_item_name": "Launch Forte Lapsed Outreach",
+        "monday_update": "AGS and Forte contact pulls (due Aug 31) and lapsed sequences (due Sep 30) are both overdue with zero outreach activity in the data. With paid spend at $0 for the entire 45-day series, outreach is the only available lead-generation lever right now. Assign the contact pull this week and sequence launch by Oct 13. Success check: at least one lapsed sequence active and sending by Oct 13."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions through Oct 9 (3 more days); if weekly total stays below 9, escalate GBP optimisation as next action.",
+        "text": "Watch GBP actions: 3-day total is 9 vs prior-3 total of 12; re-check Oct 9 for sustained zero-action days before escalating.",
         "cites": [
-          "F4",
-          "F5"
+          "F4"
         ],
-        "monday_item_name": "Watch GBP Actions Oct 9",
-        "monday_update": "GBP actions dropped 41.67% last 7d and the last 3-day window (Oct 3–5) logged 0 actions versus 12 in the prior 3-day window. Search clicks also show 0 for the same 3 days. Monitor through Oct 9 — if cumulative GBP actions for Oct 6–9 remain below 9, escalate to GBP profile review and local SEO fix."
+        "monday_item_name": "Monitor GBP Action Decline",
+        "monday_update": "GBP actions fell 41.67% in the last 7 days, and the last 3 days (Oct 3–5) logged 9, 0, 0 actions respectively. This is the only active demand signal for Forte. No paid channels are live to offset further GBP decline. Re-check on Oct 9: if two more zero-action days appear, escalate to GBP profile audit and posting cadence review."
       }
     ],
     "next_check": "2026-10-09"

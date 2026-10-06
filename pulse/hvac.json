@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T18:03:12.440Z",
+  "generated_at": "2026-10-06T18:47:37.704Z",
   "date": "2026-10-06",
   "slug": "hvac",
   "name": "Quality HVAC by Fibid",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "The biggest movement this period is the 1,300% spike in leads week-over-week (paired with an 86.88% drop in CPL), almost certainly driven by the 83.71% surge in total spend and Google Ads scaling up 195.25%, with the top campaign alone accounting for $459.55. Note that GHL shows 55 won opportunities from 1,599 created against the 18 leads tracked in-platform, and since reconciliation is marked \"both_active,\" these figures are unreconciled and should not be combined.",
+  "verdict": "The biggest movement this period is the 1,300% spike in leads over the last 7 days (alongside an 86.88% drop in CPL), likely driven by the 195.25% surge in Google Ads spend which pushed the top campaign \"LocalServicesCampaign:SystemGenerated:0005fc228eede686\" to $459.55 in spend and fueled conversion volume. One flag to watch: the Quality HVAC Solutions GBP profile shows a low call rate of 1.47% despite 954 impressions over 26 days, suggesting the listing may need optimization to better convert visibility into calls.",
   "windsor": {
     "totals": {
       "spend": 1647.84,
@@ -31,16 +31,6 @@
           "web_clicks": 34,
           "by_profile": [
             {
-              "account_id": "locations/935628167137586436",
-              "label": "Fibid Heating & Air Conditioning",
-              "calls": 9,
-              "directions": 0,
-              "web_clicks": 6,
-              "impressions": 176,
-              "days_with_impressions": 25,
-              "call_rate": 0.0511
-            },
-            {
               "account_id": "locations/6129595594309014752",
               "label": "Quality HVAC Solutions",
               "calls": 14,
@@ -49,6 +39,16 @@
               "impressions": 954,
               "days_with_impressions": 26,
               "call_rate": 0.0147
+            },
+            {
+              "account_id": "locations/935628167137586436",
+              "label": "Fibid Heating & Air Conditioning",
+              "calls": 9,
+              "directions": 0,
+              "web_clicks": 6,
+              "impressions": 176,
+              "days_with_impressions": 25,
+              "call_rate": 0.0511
             }
           ]
         }
@@ -93,17 +93,17 @@
       "ctc_20s_connect": 0,
       "ctc_60s_connect": 0,
       "gbp_profiles": {
-        "locations/935628167137586436": 0,
-        "locations/6129595594309014752": 0
+        "locations/6129595594309014752": 0,
+        "locations/935628167137586436": 0
       },
       "gbp_by_profile": {
-        "locations/935628167137586436": {
+        "locations/6129595594309014752": {
           "calls": 0,
           "directions": 0,
           "web_clicks": 0,
           "impressions": 0
         },
-        "locations/6129595594309014752": {
+        "locations/935628167137586436": {
           "calls": 0,
           "directions": 0,
           "web_clicks": 0,
@@ -584,11 +584,11 @@
     "opportunities": {
       "created": {
         "count": 1599,
-        "value": 4399.45
+        "value": 4489.45
       },
       "won": {
         "count": 55,
-        "value": 4399.45
+        "value": 4489.45
       }
     },
     "appointments": 0
@@ -723,77 +723,79 @@
     "history_line": "Fixed WhatsApp messaging and rescheduling bugs with fallback logic (Ahmed Memon)"
   },
   "performance": {
-    "generated_at": "2026-10-06T18:08:36.106Z",
+    "generated_at": "2026-10-06T18:50:27.952Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "CPL crash is real but 9 overdue SOW items block any budget scale.",
+    "verdict": "Lead spike is real but scale-up gate still blocked by 9 overdue milestones.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "CPL dropped 86.88% week-over-week to ~$91.55/28d avg; 13 leads arrived Oct 1–3 alone vs 1–2/week prior — efficiency surge is confirmed but narrow.",
+        "text": "CPL collapsed 86.88% in 7 days (from ~$700 baseline to ~$91.55/28d avg) driven by Google Ads spend surging 195.25%; efficiency gain is real but fragile — Google spend spiked to $198.89 on 10/02 then dropped to $0 on 10/03–10/04.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "Google Ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "9 SOW milestones overdue (oldest: Booking bot 2026-07-31); intake owner unconfirmed since Vivian left 7/7 — scale-up gate explicitly blocked per SOW.",
+        "text": "9 SOW milestones are overdue as of today: Booking bot battle-test (due 7/31), Intake owner confirmed (8/31), Review Boost campaign (8/31), Financing page (8/31), Homer Glen branch (8/31), LSA re-enable (9/1), Heating/furnace content indexed (9/30), Fall creative package (9/30), Heating campaigns live (10/1) — all unresolved, blocking scale-up gate.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Heating campaigns live milestone (2026-10-01) is overdue; LSA re-enable also overdue since 2026-09-01 — entering heating season with no heating spend.",
+        "text": "3-day signal (10/03–10/05) vs prior 3 days (09/30–10/02): leads dropped from 11 to 1, spend collapsed from $292.93 to $119.57, and Google spend went $0 on 10/03 and 10/04 — a confirmed short-term reversal after the spike.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "Google Ads"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP 'Quality HVAC Solutions' call rate is 1.47% on 954 impressions over 28 days — 60 direction clicks but only 14 calls suggests profile drives walk-in intent, not phone leads.",
+        "text": "GHL shows 1,599 opportunities created vs only 55 won and 0 appointments in 28 days — with intake owner unconfirmed since 7/7, leads are likely arriving but not being worked; this is an intake leak, not an ads problem.",
         "confidence": "probable",
-        "channel": "gbp"
+        "channel": "CRM"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GBP actions fell 64% week-over-week; last 3 days show 0 actions vs 19 in prior 3 days (Oct 1–3 vs Sep 28–30) — likely Windsor data lag per SOW caveat, not real drop.",
-        "confidence": "hypothesis",
-        "channel": "gbp"
+        "text": "Quality HVAC Solutions GBP call rate is 1.47% on 954 impressions (14 calls in 28 days) vs Fibid profile at 5.11% on 176 impressions — the higher-traffic profile converts at 3.5x worse rate, suggesting listing content or CTA gap.",
+        "confidence": "confirmed",
+        "channel": "GBP"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Confirm intake owner and GHL seat coverage immediately; unblocks all budget scale-up per SOW gate.",
+        "text": "Confirm intake owner and GHL login — unblocks scale-up gate and stops confirmed lead-to-opp leak with 1,599 opps vs 55 won.",
         "cites": [
-          "F2"
+          "F2",
+          "F4"
         ],
         "monday_item_name": "Confirm Intake Owner GHL",
-        "monday_update": "Vivian (dispatch) left 7/7 and intake ownership is still unconfirmed per the SOW blocker flagged for 2026-08-31. No budget increases can proceed until a named owner with an active GHL login and after-hours coverage is confirmed. Success check: Sohib confirms owner name, GHL login verified, and after-hours routing tested by 2026-10-13. Speed-to-lead automations are currently pointing at an empty seat and every new lead from the CPL-efficient campaigns is at risk."
+        "monday_update": "Vivian (dispatch) left 7/7 and intake ownership is unconfirmed, blocking all budget scale-up per SOW gate. GHL shows 1,599 opportunities created against only 55 won and 0 appointments — speed-to-lead automations may be pointing at an empty seat. Confirm who owns intake, verify their GHL login, and document after-hours coverage. Success check: intake owner named and GHL login active by 2026-10-10."
       },
       {
         "id": "S2",
-        "type": "fix",
-        "text": "Escalate LSA re-enable and heating campaign launches; both overdue — heating season is live now.",
+        "type": "watch",
+        "text": "Watch Google Ads spend continuity — $0 spend on 10/03 and 10/04 after $198.89 spike; confirm campaign is active before any budget action.",
         "cites": [
+          "F1",
           "F3"
         ],
-        "monday_item_name": "Heating Campaigns & LSA Live",
-        "monday_update": "LSA heating toggles were due 2026-09-01 and Google/Meta heating campaigns were due 2026-10-01 — both are overdue as the market shifts to furnace and heating calls. Nacer and Sohib to confirm what is blocking each: LSA toggle requires client-side action; Meta/Google heating campaigns require creative (Fall creative package also overdue 2026-09-30). Success check: LSA heating toggle confirmed on and at least one heating-focused ad set live on Google or Meta by 2026-10-10."
+        "monday_item_name": "Watch Google Spend Continuity",
+        "monday_update": "Google Ads spend dropped to $0 on 10/03 and 10/04 after a $198.89 peak on 10/02, and only $57.80 returned on 10/05. This is a 3-day confirmed reversal signal that needs explanation before any scale action. Check campaign status, budget caps, and whether the LocalServicesCampaign ($459.55 in 28d) is still active and approved. Success check: 3 consecutive days of consistent spend confirmed by 2026-10-09."
       },
       {
         "id": "S3",
-        "type": "watch",
-        "text": "Watch CPL and lead volume through Oct 9; 3-day lead spike may not hold — confirm before any budget move.",
+        "type": "fix",
+        "text": "Optimize Quality HVAC Solutions GBP listing CTA — 1.47% call rate on 954 impressions vs 5.11% on Fibid profile; close the conversion gap.",
         "cites": [
-          "F1"
+          "F5"
         ],
-        "monday_item_name": "Watch CPL Hold Oct 9",
-        "monday_update": "The CPL dropped 86.88% and 13 leads arrived Oct 1–3, but Oct 4–5 show 1 lead combined and spend dropped to near zero on Oct 4–5 ($13.38 and $20.69). This is too short a window to confirm the efficiency holds. Re-check on 2026-10-09: if CPL stays below $100 across a full 7-day window and intake owner is confirmed, a modest budget step-up (+15–20%) becomes defensible."
+        "monday_item_name": "GBP Solutions Profile CTA Fix",
+        "monday_update": "The Quality HVAC Solutions GBP profile generated 954 impressions over 26 days but only 14 calls — a 1.47% call rate versus the Fibid profile's 5.11% on far fewer impressions. Review and update the primary category, services listed, call-to-action button, and photo set on the Solutions profile to match what is working on the Fibid profile. Success check: call rate on Solutions profile rises above 3% within the next 28-day window, checked on 2026-11-03."
       }
     ],
     "next_check": "2026-10-09"

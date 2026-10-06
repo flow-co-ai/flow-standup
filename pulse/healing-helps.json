@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T18:02:38.771Z",
+  "generated_at": "2026-10-06T18:47:15.835Z",
   "date": "2026-10-06",
   "slug": "healing-helps",
   "name": "Healing Helps",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "Healing Helps saw zero paid spend and zero leads over the past 28 days, making GBP the only active channel with 51 total actions (2 calls, 37 directions, 12 web clicks). The biggest concern is a 54% week-over-week drop in GBP actions, likely driven by a pullback in local search impressions across the profile's 26 active days.",
+  "verdict": "Healing Helps saw zero paid spend and zero leads across Meta and Google Ads in the last 28 days, making GBP the only active channel with 51 total actions (2 calls, 37 directions, 12 web clicks). The biggest movement is a 54% drop in GBP actions over the last 7 days versus the prior 7 days, likely driven by reduced organic search visibility given impressions were already limited to 377 over the period.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -611,61 +611,60 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-10-06T18:08:07.432Z",
+    "generated_at": "2026-10-06T18:49:57.998Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "No paid channel active; only organic GBP signal, now collapsing.",
+    "verdict": "No paid channels active; GBP declining fast — organic-only risk rising.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero spend and zero leads across all paid channels for the full 28-day window — CPL is undefined because no paid activity exists.",
+        "text": "Zero spend, zero leads across Meta and Google Ads for all 28 days in series — CPL is undefined because no paid activity exists.",
         "confidence": "confirmed",
-        "channel": "all"
+        "channel": "meta/google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions dropped 54% week-over-week (51 total in 28d); last 3 days show 0, 0, 0 actions vs prior 3-day avg of ~3.7, confirming a sharp stall.",
+        "text": "GBP actions fell 54% week-over-week (last 7d vs prior 7d); last 3 days logged 0 actions vs prior 3-day avg of ~3.7 — confirmed accelerating decline.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Search clicks fell 53% week-over-week (44 clicks / 3,123 impressions in 28d); last 3 days: 0, 0, 0 clicks — organic search visibility is collapsing in parallel with GBP.",
-        "confidence": "confirmed",
+        "text": "Search clicks dropped 53% week-over-week; last 3 days = 0 clicks vs prior 3-day avg of ~1.7 — mirrors GBP drop, suggesting shared organic visibility loss.",
+        "confidence": "probable",
         "channel": "organic"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GA4 sessions flat at 0% delta (182 sessions / 174 users in 28d) while GBP and search clicks crater — site traffic is holding but not sourced from local search.",
-        "confidence": "probable",
-        "channel": "GA4"
+        "text": "GA4 sessions held flat (7d delta = 0%) averaging ~6-7/day, while GBP and search clicks collapsed — direct/referral traffic masking organic decay in session counts.",
+        "confidence": "hypothesis",
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "watch",
-        "text": "Monitor GBP actions daily for 3 more days; confirmed zero-action streak of 3 days warrants Google profile audit before any paid activation.",
+        "text": "Watch GBP actions daily; if 3-day total stays at 0 by 2026-10-09, escalate to account review.",
         "cites": [
-          "F2",
-          "F3"
+          "F2"
         ],
-        "monday_item_name": "GBP drop — watch 3 days",
-        "monday_update": "GBP actions hit 0 for the last 3 consecutive days (Oct 3–5) after averaging ~3.7/day the prior period, and search clicks are also at 0 for the same window (53% weekly decline). No paid spend exists to mask or compensate for this. If the zero-action streak continues through Oct 9, escalate to a Google Business Profile audit — check for a suspension flag, suppressed listing, or category change. Success condition: GBP actions return to ≥2/day by Oct 9."
+        "monday_item_name": "Watch GBP Action Drop",
+        "monday_update": "GBP actions have hit 0 for the last 3 days (Oct 3–5) after averaging ~3.7/day the prior 3 days — a 54% weekly decline confirmed in the delta. No paid channels are active to compensate, so this is the only lead-generating signal in the account. Check the GBP profile on 2026-10-09: if the 3-day total is still 0 or below 3, escalate to a full profile audit (listing suppression, category change, or local rank drop)."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "No paid activation suggested this cycle; confirm whether paid channels are intentionally paused before any budget decision.",
+        "text": "Watch search clicks; 0 clicks last 3 days — confirm site indexing and GSC coverage by 2026-10-09.",
         "cites": [
-          "F1"
+          "F3"
         ],
-        "monday_item_name": "Paid status — confirm pause intent",
-        "monday_update": "All paid channels (Meta and Google Ads) show $0 spend for the full 28-day window with no flags triggering a zero-spend alert. This may be a planned pause or an account-level issue. Confirm with the client whether the pause is intentional. If unintentional, identify the account access or billing issue before next check on Oct 9. No budget moves are appropriate until paid status is clarified."
+        "monday_item_name": "Watch Search Click Collapse",
+        "monday_update": "Search clicks dropped 53% week-over-week and reached 0 for the last 3 days of the series (Oct 3–5), consistent with the GBP decline in F2. This pattern points to a shared organic visibility problem rather than isolated channel noise. Re-check Google Search Console on 2026-10-09 for indexing errors, manual actions, or impression share loss. If clicks remain at 0, flag for SEO/technical review — this is outside paid buyer scope but must be escalated."
       }
     ],
     "next_check": "2026-10-09"

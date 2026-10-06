@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T18:03:49.576Z",
+  "generated_at": "2026-10-06T18:48:12.407Z",
   "date": "2026-10-06",
   "slug": "steel-advance",
   "name": "Advance Grinding Services",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "GBP drove all measurable activity over the past 28 days with 133 total actions (7 calls, 105 direction requests, 21 web clicks) across 26 active days, but momentum is fading fast with GBP actions down 42.86% in the last 7 days versus the prior 7, likely reflecting seasonal slowdown or reduced search visibility. No paid spend was recorded on Meta or Google Ads during this period.",
+  "verdict": "GBP was the only active channel this period, generating 133 total actions (7 calls, 105 direction requests, 21 web clicks) across 26 active days, but momentum is declining sharply with GBP actions down 42.86% over the last 7 days versus the prior 7, likely driven by reduced search visibility as impressions thin out toward the end of the period.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -567,79 +567,78 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-10-06T18:10:44.599Z",
+    "generated_at": "2026-10-06T18:52:33.322Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Zero paid activity; organic GBP and search both now deteriorating in tandem.",
+    "verdict": "GBP-only client going dark; 8 overdue SOW milestones demand immediate resolution.",
     "findings": [
       {
         "id": "F1",
-        "priority": 1,
-        "text": "Zero paid spend across all 45 days in series; no Meta, no Google Ads — CPL is undefined because there is no lead generation engine running.",
+        "priority": 2,
+        "text": "5 CRM milestones overdue (earliest Jul 7): 342 stub reconciliation and Sales-i parser are active blockers as of Aug–Sep 2026.",
         "confidence": "confirmed",
-        "channel": "paid"
+        "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "6 overdue CRM/SOW milestones span July–September 2026; 2 are active blockers (342 stubs unreconciled, parser unbuilt) gating Sales-i pipeline data.",
+        "text": "3 Outreach/Web milestones overdue: AGS+Forte contacts, lapsed sequences, and root-cause fix all past Sep 30 deadline.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "GBP actions dropped 42.86% last 7d vs prior 7d; 3-day signal confirms collapse — Oct 3/4/5 show 0 actions vs prior 3-day average of ~2.3.",
+        "priority": 1,
+        "text": "Zero paid spend across all 28 days; $0 CPL is a vacuum, not efficiency — no paid channel is active for this leadgen client.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "google_ads"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Search clicks down 30.3% (7d delta); last 3 days (Oct 3–5) show 3, 0, 0 vs prior 3-day average of ~4.7 — organic visibility weakening alongside GBP.",
-        "confidence": "probable",
-        "channel": "SEO"
+        "text": "GBP actions collapsed to 0 for 3 consecutive days (Oct 3–5), down from a 45-day daily average of ~5 actions; search clicks also 0 last 2 days.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       },
       {
         "id": "F5",
-        "priority": 4,
-        "text": "GA4 sessions are zero for all 45 days — tracking is either broken or unconnected; directional data is completely unavailable per known GA4 caveat.",
-        "confidence": "confirmed",
-        "channel": "GA4"
+        "priority": 3,
+        "text": "Search clicks dropped -30.3% week-over-week and hit 0 on Oct 4–5, consistent with the GBP visibility decline — organic is the only funnel and it is contracting.",
+        "confidence": "probable",
+        "channel": "search"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate 342-stub reconciliation and Sales-i parser build immediately; both are confirmed blockers as of 2026-08-31.",
+        "text": "Escalate 342-stub reconciliation and Sales-i parser blocker to Ahmed/Dev2 — both gates are 35+ days overdue.",
         "cites": [
-          "F2"
+          "F1"
         ],
-        "monday_item_name": "Clear CRM blocker milestones",
-        "monday_update": "Two SOW blockers are now overdue: the 342-stub reconciliation (due 2026-08-31) and the Sales-i parser build with Jorge answer (due 2026-09-30). Until stubs are reconciled, Sales-i cannot sync data to those accounts, breaking the inactivity and reactivation automations. Success is confirmed when rollback files for all 447-group merges are posted to the Monday CRM board and the parser is processing a live sample export — target close by 2026-10-20."
+        "monday_item_name": "Clear CRM Blocker Milestones",
+        "monday_update": "Two confirmed blockers are overdue: the 342-stub reconciliation (due Aug 31) and the Sales-i parser build + Jorge answer (due Sep 30). Until stubs are reconciled, Sales-i cannot sync and inactivity automations fire on incomplete data. Escalate to Ahmed and Dev2 this week with a hard completion date. Success = rollback files posted to Monday board and parser returning data to at least one test Sugar field by 2026-10-13."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Investigate GBP listing health to diagnose 42.86% action drop and 3-day zero streak before it compounds.",
+        "text": "Escalate AGS+Forte contact pull and lapsed email sequences — both outreach milestones past Sep 30 with 0 sequences launched.",
         "cites": [
-          "F3",
-          "F4"
+          "F2"
         ],
-        "monday_item_name": "GBP visibility drop investigation",
-        "monday_update": "GBP actions hit zero for Oct 3, 4, and 5 after averaging roughly 2–4/day in September, and search clicks are down 30.3% week-over-week. Check the Advance Grinding Services GBP listing for suspensions, category changes, or a knowledge panel issue; cross-reference GSC for any crawl or indexing anomalies introduced after 2026-09-30. Success is a root-cause write-up delivered to Sohib by 2026-10-13, matching the overdue Web/SEO blocker milestone (originally due 2026-08-31)."
+        "monday_item_name": "Launch Overdue Outreach Sequences",
+        "monday_update": "AGS and Forte contact lists were due Aug 31 and lapsed sequences were due Sep 30 — neither appears complete. No outreach sequences are live, meaning the retainer's core revenue-recovery objective is stalled. Assign owner and post contacts to Monday board by 2026-10-09. Success = at least one lapsed sequence live per company by 2026-10-13."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP and search clicks over next 3 days; if zero streak extends to 6 days, escalate to emergency GBP audit.",
+        "text": "Watch GBP actions and search clicks for 3 more days; if zero persists through Oct 9, investigate listing health and local ranking drop.",
         "cites": [
-          "F3",
-          "F4"
+          "F4",
+          "F5"
         ],
-        "monday_item_name": "Watch GBP 3-day recheck",
-        "monday_update": "GBP has posted three consecutive zero-action days (Oct 3–5). Monitor through Oct 9 — if actions remain at zero for 6 straight days, treat as a listing suspension or major visibility event requiring same-day escalation. The number to watch is daily GBP actions returning above 2, which was the floor in the Sept 18–30 period."
+        "monday_item_name": "Monitor GBP Visibility Drop",
+        "monday_update": "GBP actions hit 0 for Oct 3–5 and search clicks were 0 on Oct 4–5, after a 45-day average of roughly 5 GBP actions per day. This may be a weekend pattern or an early sign of listing suppression. No action is warranted yet — one bad weekend is noise, but three confirmed zero-days is a signal. Re-check on 2026-10-09; if actions remain at 0, audit GBP listing status and check for any Google-initiated suspensions or category changes."
       }
     ],
     "next_check": "2026-10-09"

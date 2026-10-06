@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T18:03:54.473Z",
+  "generated_at": "2026-10-06T18:48:17.783Z",
   "date": "2026-10-06",
   "slug": "steel-ohare",
   "name": "O'Hare Precision Metals",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "GBP drove all measurable activity this period, with 175 total actions (128 directions, 3 calls, 44 web clicks) and a strong 25% week-over-week gain, likely fueled by the O'Hare Precision Metals, LLC profile which alone accounted for 649 impressions and 46 directions. Two profiles, Precision Ground Metals, Inc and Precision Ground Bars, generated a combined 349 impressions and 82 directions but zero calls, flagging a likely missing or broken call tracking setup that is suppressing lead capture.",
+  "verdict": "GBP is the only active channel this period, generating 175 total actions (128 directions, 3 calls, 44 web clicks) with a strong 25% week-over-week uptick, likely driven by increased map visibility across all three profiles. However, Precision Ground Bars and Precision Ground Metals, Inc. are flagged for zero calls despite 260 and 89 impressions respectively, suggesting their listings may need stronger calls-to-action or phone number optimization to convert that visibility into leads.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -31,14 +31,14 @@
           "web_clicks": 44,
           "by_profile": [
             {
-              "account_id": "locations/13271763853568185062",
-              "label": "Precision Ground Metals, Inc",
-              "calls": 0,
-              "directions": 56,
-              "web_clicks": 1,
-              "impressions": 89,
-              "days_with_impressions": 25,
-              "call_rate": 0
+              "account_id": "locations/8971866041567639876",
+              "label": "O'Hare Precision Metals, LLC",
+              "calls": 3,
+              "directions": 46,
+              "web_clicks": 36,
+              "impressions": 649,
+              "days_with_impressions": 26,
+              "call_rate": 0.0046
             },
             {
               "account_id": "locations/5934730863857931795",
@@ -51,14 +51,14 @@
               "call_rate": 0
             },
             {
-              "account_id": "locations/8971866041567639876",
-              "label": "O'Hare Precision Metals, LLC",
-              "calls": 3,
-              "directions": 46,
-              "web_clicks": 36,
-              "impressions": 649,
-              "days_with_impressions": 26,
-              "call_rate": 0.0046
+              "account_id": "locations/13271763853568185062",
+              "label": "Precision Ground Metals, Inc",
+              "calls": 0,
+              "directions": 56,
+              "web_clicks": 1,
+              "impressions": 89,
+              "days_with_impressions": 25,
+              "call_rate": 0
             }
           ]
         }
@@ -94,12 +94,12 @@
       "ctc_20s_connect": 0,
       "ctc_60s_connect": 0,
       "gbp_profiles": {
-        "locations/13271763853568185062": 0,
+        "locations/8971866041567639876": 0,
         "locations/5934730863857931795": 0,
-        "locations/8971866041567639876": 0
+        "locations/13271763853568185062": 0
       },
       "gbp_by_profile": {
-        "locations/13271763853568185062": {
+        "locations/8971866041567639876": {
           "calls": 0,
           "directions": 0,
           "web_clicks": 0,
@@ -111,7 +111,7 @@
           "web_clicks": 0,
           "impressions": 0
         },
-        "locations/8971866041567639876": {
+        "locations/13271763853568185062": {
           "calls": 0,
           "directions": 0,
           "web_clicks": 0,
@@ -132,8 +132,8 @@
       "spend_per_day_7d": 0
     },
     "flags": [
-      "gbp_no_calls_with_impressions:Precision Ground Metals, Inc",
-      "gbp_no_calls_with_impressions:Precision Ground Bars"
+      "gbp_no_calls_with_impressions:Precision Ground Bars",
+      "gbp_no_calls_with_impressions:Precision Ground Metals, Inc"
     ],
     "series": {
       "dates": [
@@ -604,77 +604,78 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-10-06T18:11:09.853Z",
+    "generated_at": "2026-10-06T18:52:59.144Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "GBP carries all activity; 2 profiles leak intent, 8 SOW milestones overdue.",
+    "verdict": "No paid spend active; GBP momentum real but calls-to-revenue gap unresolved.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "8 SOW milestones overdue (oldest: July 7): 342-stub reconciliation, Sales-i parser, outreach sequences, and web root-cause fix all remain undelivered blockers.",
+        "text": "6 SOW milestones overdue by 5–91 days including 3 confirmed blockers (342 stubs, Sales-i parser, Web root cause) that gate CRM data integrity.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Precision Ground Metals and Precision Ground Bars produced 349 impressions and 82 directions in 28 days but 0 calls — call tracking missing or broken on both profiles.",
+        "text": "2 more SOW blockers overdue: AGS+Forte contact pull (Aug 31) and lapsed email sequences launch (Sep 30) — outreach pipeline still empty.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "Search clicks dropped 38.6% week-over-week; 3-day signal (Oct 3–5: 2, 0, 0) vs prior 3 days (Sep 30–Oct 2: 28, 0, 17) shows a sharp stall — likely weekend/data lag but warrants watch.",
-        "confidence": "probable",
-        "channel": "Search Console"
-      },
-      {
-        "id": "F4",
-        "priority": 3,
-        "text": "GBP actions rose 25% week-over-week to 175 total (28 days), but only O'Hare Precision Metals LLC converted any calls (3 of 3), confirming engagement is profile-concentrated.",
+        "text": "GBP +25% week-over-week (175 actions, 28d), but Precision Ground Bars (260 impressions, 0 calls) and Precision Ground Metals (89 impressions, 0 calls) convert zero visibility to calls.",
         "confidence": "confirmed",
         "channel": "GBP"
       },
       {
+        "id": "F4",
+        "priority": 3,
+        "text": "Search clicks dropped -38.6% last 7 days; 3-day signal (Oct 3–5: 2, 0, 0) vs prior 3 (Sep 30–Oct 2: 28, 0, 17) confirms a sudden collapse, not weekend noise.",
+        "confidence": "confirmed",
+        "channel": "organic"
+      },
+      {
         "id": "F5",
         "priority": 4,
-        "text": "Zero paid spend across all 28 days — Meta, Google Ads, and total spend are all $0; no paid channel is active to diagnose for efficiency.",
-        "confidence": "confirmed",
-        "channel": "Paid"
+        "text": "GBP actions last 3 days (Oct 3–5): 6, 0, 0 — two consecutive zero days after a strong mid-series peak of 17 on Sep 29. Early softening worth watching.",
+        "confidence": "hypothesis",
+        "channel": "GBP"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Add or repair call tracking on Precision Ground Metals and Precision Ground Bars GBP profiles — both show 0 calls vs 349 impressions.",
+        "text": "Audit phone number and CTA on Precision Ground Bars and Precision Ground Metals GBP listings; 0 calls from 349 combined impressions is a listing config issue.",
         "cites": [
-          "F2"
+          "F3"
         ],
-        "monday_item_name": "Fix GBP call tracking x2",
-        "monday_update": "Precision Ground Metals (89 impressions, 25 active days) and Precision Ground Bars (260 impressions, 26 active days) each recorded 0 calls in the last 28 days despite strong direction and impression activity. Audit both profiles: confirm a tracked phone number is present, properly formatted, and that call reporting is enabled in GBP. Success check: at least 1 tracked call on each profile within 7 days of fix — re-verify by 2026-10-13."
+        "monday_item_name": "Fix GBP Call Config x2",
+        "monday_update": "Precision Ground Bars (260 impressions, 0 calls) and Precision Ground Metals (89 impressions, 0 calls) are generating zero phone leads despite active map visibility. Verify that the primary phone number is correct, call tracking is not stripping the number, and the CTA button is set to 'Call' not 'Website' on both profiles. Success check: at least 1 confirmed call per profile within 14 days of fix. Re-check by 2026-10-20."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch search-click recovery through Oct 9 — 3-day signal (2, 0, 0) is likely weekend drop, not a confirmed trend.",
+        "text": "Watch search clicks recovery: 3-day total is 2 clicks vs 45 prior 3 days — re-check Oct 9 for structural drop vs weekend artifact.",
         "cites": [
-          "F3"
+          "F4"
         ],
-        "monday_item_name": "Watch SC drop Oct 9",
-        "monday_update": "Search Console clicks fell 38.6% week-over-week, with the last 3 days (Oct 3–5) recording 2, 0, and 0 clicks. The prior 3 days (Sep 30–Oct 2) averaged ~15 clicks, suggesting a weekend/data-lag effect rather than a structural decline. No action until Monday Oct 9 restores weekday data — if weekday clicks remain below 10/day at next check, escalate to SEO root-cause review under the overdue Aug-31 SOW milestone."
+        "monday_item_name": "Watch SC Clicks Drop",
+        "monday_update": "Search clicks collapsed to near zero Oct 3–5 (2, 0, 0) against a prior-3-day total of 45. This -38.6% 7-day delta may include weekend distortion but the magnitude is notable. No action taken this cycle. Re-check the 3-day signal on 2026-10-09; if clicks remain below 10/day, escalate to investigate ranking or indexing change."
       },
       {
         "id": "S3",
         "type": "fix",
-        "text": "Escalate all 8 overdue SOW milestones to Sohib and Ahmed — 342-stub blocker alone freezes Sales-i pipeline data for those accounts.",
+        "text": "Escalate the 3 confirmed SOW blockers (342 stubs, Sales-i parser, AGS+Forte contacts) — each is gating downstream revenue attribution.",
         "cites": [
-          "F1"
+          "F1",
+          "F2"
         ],
-        "monday_item_name": "Escalate 8 Overdue SOW Items",
-        "monday_update": "Eight SOW milestones are past due, the oldest dating to July 7, 2026. The 342-stub reconciliation (due Aug 31) and Sales-i parser build (due Sep 30) are confirmed blockers: until resolved, Sales-i cannot sync data to Sugar for those accounts. Assign owners and target dates for each item on the Monday CRM board this week. Success check: every milestone has an assigned owner and a new target date logged by 2026-10-09."
+        "monday_item_name": "Unblock 3 CRM/Outreach Items",
+        "monday_update": "Three confirmed blockers are now 5–35 days overdue: 342 stub account reconciliation (Aug 31), Sales-i parser build and Jorge answer (Sep 30), and AGS+Forte contact pull (Aug 31). Until stubs are reconciled, Sales-i cannot sync purchase data to Sugar for any of those accounts, and outreach sequences cannot launch. Assign owners and post ETAs to the Monday CRM board by 2026-10-09. Success check: all three have an assigned owner and a committed completion date logged."
       }
     ],
     "next_check": "2026-10-09"
