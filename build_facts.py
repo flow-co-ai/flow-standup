@@ -15,7 +15,7 @@ import json
 import os
 import re
 import traceback
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import anthropic
@@ -461,6 +461,22 @@ def _assert_no_pii(slug: str, facts: list[dict]) -> None:
 
 # ── Fireflies client resolution ───────────────────────────────────────────────
 
+_MEET_CODE_RE = re.compile(
+    r'meet\.google\.com/([a-z0-9]{3}-[a-z0-9]{4}-[a-z0-9]{3})', re.IGNORECASE
+)
+_PUBLIC_EMAIL_DOMAINS = frozenset({
+    "gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "icloud.com",
+    "live.com", "msn.com", "aol.com", "protonmail.com", "me.com",
+    "googlemail.com", "ymail.com",
+})
+_BLOCKED_EMAIL_DOMAINS = frozenset({"flowco.ai", "fireflies.ai"})
+
+
+def _meet_code(url: str) -> str | None:
+    m = _MEET_CODE_RE.search(url or "")
+    return m.group(1).lower() if m else None
+
+
 # Agency-name tokens to remove from meeting titles before client resolution so
 # internal Flow/Flowco mentions don't misdirect the match to flow-company.
 _AGENCY_STRIP_RE = re.compile(
@@ -520,24 +536,46 @@ def _resolve_active_ff(
     return "Unmapped"
 
 
-def _resolve_by_participants(
+def _resolve_by_contacts(
     meeting: dict,
-    client_domains: dict,
-    clients_config: dict,
+    client_contacts: dict,
     slug_map: dict[str, str],
+    clients_config: dict,
     inactive: set[str],
-) -> str:
-    """Match participant email domains against client_domains config entries."""
+) -> tuple[str, str]:
+    """Match organizer/participant emails against client_contacts config.
+    Keys are full emails or domains. Public and agency domains skip domain matching.
+    Returns (canonical, rule_suffix) or ("Unmapped", "")."""
+    emails: list[str] = []
+    org = (meeting.get("organizer_email") or "").lower().strip()
+    if org:
+        emails.append(org)
+    # participants: list of email strings
     for p in (meeting.get("participants") or []):
-        domain = (p.get("email") or "").lower().split("@", 1)[-1]
-        if not domain or "." not in domain:
+        e = p.lower().strip() if isinstance(p, str) else (p.get("email") or "").lower().strip()
+        if e and e not in emails:
+            emails.append(e)
+    # meeting_attendees: list of email strings (normalised in fetch_fireflies)
+    for e in (meeting.get("meeting_attendees") or []):
+        e = e.lower().strip() if isinstance(e, str) else (e.get("email") or "").lower().strip()
+        if e and e not in emails:
+            emails.append(e)
+
+    for email in emails:
+        if "@" not in email:
             continue
-        for canonical, domains in client_domains.items():
-            if domain in [d.lower() for d in domains]:
-                slug = _resolve_slug(canonical, slug_map)
-                if slug not in inactive:
-                    return canonical
-    return "Unmapped"
+        _, domain = email.rsplit("@", 1)
+        if domain in _BLOCKED_EMAIL_DOMAINS:
+            continue
+        if email in client_contacts:
+            c = _canonical_for_slug(client_contacts[email], slug_map, clients_config)
+            if c and _resolve_slug(c, slug_map) not in inactive:
+                return c, "contacts-email"
+        if domain not in _PUBLIC_EMAIL_DOMAINS and domain in client_contacts:
+            c = _canonical_for_slug(client_contacts[domain], slug_map, clients_config)
+            if c and _resolve_slug(c, slug_map) not in inactive:
+                return c, "contacts-domain"
+    return "Unmapped", ""
 
 
 def _dedupe_meetings(meetings: list[dict], meeting_map: dict[str, str] | None = None) -> list[dict]:
@@ -877,57 +915,98 @@ def build_facts(config: dict) -> None:
     mapped_by_slug: dict[str, set[str]] = {}
     for tid, slug_val in meeting_map.items():
         mapped_by_slug.setdefault(slug_val, set()).add(tid)
-    client_domains = config.get("client_domains", {})
 
+    client_contacts = config.get("client_contacts") or {}
+    meeting_links_cfg = config.get("client_meeting_links") or {}
+    skip_terms = [t.lower() for t in (config.get("meeting_skip_terms") or [])]
+
+    meeting_records: list[dict] = []
     pre_dedup_by_client_ff: dict[str, list[dict]] = {}
+
     for meeting in all_meetings:
         title = meeting.get("title") or ""
         date = meeting.get("date") or ""
         meeting_id = meeting.get("id") or ""
+        canonical = "Unmapped"
+        rule = ""
 
-        # 1. Manual meeting_map override (transcript_id → slug)
+        # 1. meeting_map override (transcript_id → slug)
         mapped_slug = meeting_map.get(meeting_id)
         if mapped_slug:
             canonical_override = _canonical_for_slug(mapped_slug, slug_map, clients_config)
             if canonical_override:
-                pre_dedup_by_client_ff.setdefault(canonical_override, []).append(meeting)
+                canonical = canonical_override
+                rule = "meeting-map"
+                pre_dedup_by_client_ff.setdefault(canonical, []).append(meeting)
+                print(f"  FF [meeting-map]: {title!r} ({date}) → {canonical}")
             else:
                 print(f"  ⚠️  meeting_map slug {mapped_slug!r} has no canonical: {title!r}")
+            meeting_records.append({"id": meeting_id, "date": date, "title": title,
+                                     "client": canonical if canonical != "Unmapped" else None,
+                                     "rule": rule or "unmapped"})
             continue
 
-        canonical = "Unmapped"
+        # Pre-step: skip internal / non-client meetings before any resolution
+        s = meeting.get("summary") or {}
+        summary_text = ""
+        if isinstance(s, dict):
+            summary_text = " ".join(filter(None, [s.get("overview"), s.get("action_items")]))
+        text_for_skip = (title + " " + summary_text).lower()
+        skip_matched = next((t for t in skip_terms if t in text_for_skip), None)
+        if skip_matched:
+            rule = f"skip:{skip_matched}"
+            print(f"  skip FF (not a client) [{skip_matched!r}]: {title!r} ({date})")
+            meeting_records.append({"id": meeting_id, "date": date, "title": title,
+                                     "client": None, "rule": rule})
+            continue
 
-        # 2. Title — strip agency tokens first so internal mentions don't misdirect
-        clean_title = _strip_agency_tokens(title)
-        if clean_title:
-            canonical = _resolve_active_ff(clean_title, clients_config, slug_map, inactive)
+        # 2. Google Meet code → client_meeting_links
+        if meeting_links_cfg:
+            code = _meet_code(meeting.get("meeting_link") or "")
+            if code and code in meeting_links_cfg:
+                slug_val = meeting_links_cfg[code]
+                c = _canonical_for_slug(slug_val, slug_map, clients_config)
+                if c and _resolve_slug(c, slug_map) not in inactive:
+                    canonical, rule = c, "meeting-link"
 
-        # 3. Participant email domains (requires client_domains in config.json)
-        if canonical == "Unmapped" and client_domains:
-            canonical = _resolve_by_participants(meeting, client_domains, clients_config, slug_map, inactive)
+        # 3. Organizer / participant emails → client_contacts
+        if canonical == "Unmapped" and client_contacts:
+            canonical, rule = _resolve_by_contacts(
+                meeting, client_contacts, slug_map, clients_config, inactive
+            )
 
-        # 4. Summary text fallback — only when exactly one active client matches.
-        #    Zero or multiple matches → internal/ambiguous; skip with a log line.
+        # 4. Title aliases — strip agency tokens first
         if canonical == "Unmapped":
-            s = meeting.get("summary") or {}
-            if isinstance(s, dict):
-                summary_text = " ".join(filter(None, [s.get("overview"), s.get("action_items")]))
-                if summary_text:
-                    active_matches = [
-                        c for c in all_alias_matches(summary_text, clients_config)
-                        if _resolve_slug(c, slug_map) not in inactive
-                    ]
-                    if len(active_matches) == 1:
-                        canonical = active_matches[0]
-                    elif len(active_matches) > 1:
-                        print(f"  skip FF (multi-client): {title!r} ({date})")
-                        continue
+            clean_title = _strip_agency_tokens(title)
+            if clean_title:
+                canonical = _resolve_active_ff(clean_title, clients_config, slug_map, inactive)
+                if canonical != "Unmapped":
+                    rule = "title"
+
+        # 5. Summary text — only when exactly one active client matches
+        if canonical == "Unmapped" and summary_text:
+            active_matches = [
+                c for c in all_alias_matches(summary_text, clients_config)
+                if _resolve_slug(c, slug_map) not in inactive
+            ]
+            if len(active_matches) == 1:
+                canonical, rule = active_matches[0], "summary"
+            elif len(active_matches) > 1:
+                print(f"  skip FF (multi-client): {title!r} ({date})")
+                meeting_records.append({"id": meeting_id, "date": date, "title": title,
+                                         "client": None, "rule": "multi-client"})
+                continue
 
         if canonical == "Unmapped":
             print(f"  skip FF (unmapped): {title!r} ({date})")
+            meeting_records.append({"id": meeting_id, "date": date, "title": title,
+                                     "client": None, "rule": "unmapped"})
             continue
 
+        print(f"  FF [{rule}]: {title!r} ({date}) → {canonical}")
         pre_dedup_by_client_ff.setdefault(canonical, []).append(meeting)
+        meeting_records.append({"id": meeting_id, "date": date, "title": title,
+                                 "client": canonical, "rule": rule})
 
     # Dedupe within each client's list, protecting meeting_map entries.
     by_client_ff: dict[str, list[dict]] = {
@@ -953,6 +1032,18 @@ def build_facts(config: dict) -> None:
             )
         except Exception as exc:
             print(f"  ✗ {client_name}: failed — {exc}\n{traceback.format_exc()}")
+
+    # Write visibility log: every meeting from the last 60 days with resolution info.
+    sixty_ago = (datetime.now(timezone.utc) - timedelta(days=60)).strftime("%Y-%m-%d")
+    visible = sorted(
+        [m for m in meeting_records if (m.get("date") or "") >= sixty_ago],
+        key=lambda m: m.get("date") or "",
+    )
+    (FACTS_DIR / "_meetings.json").write_text(
+        json.dumps({"generated_at": now_iso, "meetings": visible}, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    print(f"\n  wrote facts/_meetings.json ({len(visible)} meetings in last 60 days)")
 
 
 if __name__ == "__main__":

@@ -928,8 +928,9 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     const payload = S.live || S.snapshot; if (!payload) return;
     const items = normalize(payload);
     const skip = new Set(((S.ops || {}).settings || {}).not_clients || ["CAPI Setup", "Unassigned"]);
+    const inactive = new Set(((S.ops || {}).settings || {}).inactive_clients || []);
     NAMES = [...new Set([...items.map((i) => i.client), ...Object.keys((S.hub && S.hub.clients) || {})])]
-      .filter((n) => n && !skip.has(n)).sort((a, b) => (a === "Flow Company") - (b === "Flow Company") || a.localeCompare(b));
+      .filter((n) => n && !skip.has(n) && !inactive.has(n)).sort((a, b) => (a === "Flow Company") - (b === "Flow Company") || a.localeCompare(b));
     const r = route(); localStorage.setItem(LAST_KEY, r.client);
     $("view").innerHTML = NAMES.map((n) => `<option value="${esc(n)}" ${r.client === n ? "selected" : ""}>${esc(n)}</option>`).join("");
     const pend = S.queueAll ? pendingDrafts().length : null;

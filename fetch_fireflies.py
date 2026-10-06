@@ -88,6 +88,12 @@ query Transcripts($fromDate: DateTime, $toDate: DateTime, $limit: Int, $skip: In
     id
     title
     date
+    meeting_link
+    organizer_email
+    participants
+    meeting_attendees {
+      email
+    }
     summary {
       overview
       action_items
@@ -152,8 +158,18 @@ def fetch_transcripts(days_back: int = 7) -> list:
             "title": t.get("title") or "Untitled",
             "date": date_str,
             "date_epoch": date_epoch,
-            "meeting_link": None,
-            "participants": [],
+            "meeting_link": t.get("meeting_link") or None,
+            "organizer_email": t.get("organizer_email") or None,
+            "participants": [
+                p.lower().strip()
+                for p in (t.get("participants") or [])
+                if isinstance(p, str) and p.strip()
+            ],
+            "meeting_attendees": [
+                a["email"].lower().strip()
+                for a in (t.get("meeting_attendees") or [])
+                if isinstance(a, dict) and (a.get("email") or "").strip()
+            ],
             "summary": summary,
         }
 
@@ -177,8 +193,30 @@ if __name__ == "__main__":
         cfg = json.load(f)
 
     days_back = cfg.get("days_back", 7)
-    print(f"Fetching Fireflies transcripts from the last {days_back} days...\n")
 
+    # Field verification: query 1 meeting to confirm meeting_link / organizer_email /
+    # participants are accepted by the API before running the full paginated fetch.
+    print("Verifying new fields against Fireflies API (limit=1)...")
+    try:
+        probe = _post(_TRANSCRIPTS_QUERY, {
+            "fromDate": (datetime.now(timezone.utc) - timedelta(days=7)).strftime("%Y-%m-%d"),
+            "toDate": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+            "limit": 1, "skip": 0,
+        })
+        sample = ((probe.get("data") or {}).get("transcripts") or [None])[0]
+        if sample:
+            print(f"  title            : {sample.get('title')!r}")
+            print(f"  meeting_link     : {sample.get('meeting_link')!r}")
+            print(f"  organizer_email  : {sample.get('organizer_email')!r}")
+            print(f"  participants     : {sample.get('participants')!r}")
+            print(f"  meeting_attendees: {sample.get('meeting_attendees')!r}")
+        else:
+            print("  (no meetings in the last 7 days)")
+    except Exception as exc:
+        print(f"  ✗ Field verification failed — {exc}")
+        raise  # Stop here; don't run the paginated fetch with bad field names.
+
+    print(f"\nFetching Fireflies transcripts from the last {days_back} days...\n")
     try:
         transcripts = fetch_transcripts(days_back)
         print(f"── Summary ──────────────────────────")
@@ -187,6 +225,8 @@ if __name__ == "__main__":
             summary = t.get("summary") or {}
             has_s = bool(summary.get("overview") or summary.get("action_items"))
             fallback = " [sentences fallback]" if "sentences" in t else ""
-            print(f"  - {t['title']}  ({t.get('date', 'no date')})  summary={'yes' if has_s else 'no'}{fallback}")
+            link = f"  link={t.get('meeting_link')!r}" if t.get("meeting_link") else ""
+            org = f"  org={t.get('organizer_email')!r}" if t.get("organizer_email") else ""
+            print(f"  - {t['title']}  ({t.get('date', 'no date')})  summary={'yes' if has_s else 'no'}{fallback}{link}{org}")
     except Exception as exc:
         print(f"Error: {exc}")

@@ -71,12 +71,17 @@ def shipped_events(days: int = 14) -> list:
 def main() -> None:
     config = json.loads(Path("config.json").read_text())
     ops = config.get("ops") or {}
+    inactive_clients = [
+        e["name"] for e in (load(Path("clients.json")) or [])
+        if e.get("active") is False and "name" in e
+    ]
     out = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "settings": {"quiet_days": ops.get("quiet_days", 14),
                      "quiet_days_ongoing": ops.get("quiet_days_ongoing", 30),
                      "recent_days": ops.get("recent_days", 30),
                      "not_clients": ops.get("not_clients") or [],
+                     "inactive_clients": inactive_clients,
                      "boards": {str(b["id"]): b["name"] for b in config.get("boards") or []}},
         "shipped": shipped_events(),
         "through": None,
