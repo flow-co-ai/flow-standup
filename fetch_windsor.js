@@ -28,13 +28,14 @@ function toNum(val) {
 
 function dateStr(d) { return d.toISOString().slice(0, 10); }
 
-// 28-day window ending yesterday (inclusive both ends).
-function windowDates() {
+// N-day window ending yesterday (inclusive both ends). 28 by default;
+// build_history.js asks for a longer one for the Ops page's 30/90-day ranges.
+function windowDates(days = 28) {
   const to = new Date();
   to.setUTCDate(to.getUTCDate() - 1);
   to.setUTCHours(0, 0, 0, 0);
   const from = new Date(to);
-  from.setUTCDate(from.getUTCDate() - 27);
+  from.setUTCDate(from.getUTCDate() - (days - 1));
   return { dateFrom: dateStr(from), dateTo: dateStr(to) };
 }
 
@@ -92,8 +93,8 @@ async function safeFetch(connector, fields, cfg, dateFrom, dateTo, apiKey, pickF
 
 // ── Main export ────────────────────────────────────────────────────────────────
 
-export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}) {
-  const { dateFrom, dateTo } = windowDates();
+export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}, days = 28) {
+  const { dateFrom, dateTo } = windowDates(days);
 
   // Fetch all six connectors in parallel.
   const [metaRows, gadsRows, ga4Rows, igRows, scRows, gmbRows] = await Promise.all([
@@ -228,7 +229,7 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}) {
 
   const ensureDay = d => {
     if (!d) return null;
-    if (!daily[d]) daily[d] = { date: d, spend: 0, leads: 0, meta_spend: 0, google_spend: 0, gbp_actions: 0, ig_reach: 0, sc_clicks: 0, ga4_sessions: 0, purchases: 0, revenue: 0, ctc_call_confirm: 0, ctc_call_placed: 0, ctc_20s_connect: 0, ctc_60s_connect: 0 };
+    if (!daily[d]) daily[d] = { date: d, spend: 0, leads: 0, meta_spend: 0, google_spend: 0, meta_leads: 0, meta_clicks: 0, google_conversions: 0, google_clicks: 0, gbp_actions: 0, ig_reach: 0, sc_clicks: 0, ga4_sessions: 0, purchases: 0, revenue: 0, ctc_call_confirm: 0, ctc_call_placed: 0, ctc_20s_connect: 0, ctc_60s_connect: 0 };
     return daily[d];
   };
 
@@ -238,6 +239,8 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}) {
     row.spend      += toNum(r.spend);
     row.meta_spend += toNum(r.spend);
     row.leads      += toNum(r[metaLeadsField]);
+    row.meta_leads  += toNum(r[metaLeadsField]);
+    row.meta_clicks += toNum(r.clicks);
     row.purchases        += toNum(r.actions_purchase);
     row.revenue          += toNum(r.action_values_purchase);
     row.ctc_call_confirm += toNum(r.actions_click_to_call_call_confirm);
@@ -251,6 +254,8 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}) {
     const s = toNum(r.cost_micros) / 1_000_000;
     row.spend        += s;
     row.google_spend += s;
+    row.google_conversions += toNum(r.conversions);
+    row.google_clicks      += toNum(r.clicks);
   }
   const gbpCallsByDate = {};
   for (const r of gmbRows) {
@@ -260,6 +265,11 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}) {
     const id = r.account_id ?? 'unknown';
     if (!gbpCallsByDate[r.date]) gbpCallsByDate[r.date] = {};
     gbpCallsByDate[r.date][id] = (gbpCallsByDate[r.date][id] ?? 0) + toNum(r.call_clicks);
+    // Full per-listing actions by day, so the Ops page can total any range per listing.
+    row.gbp_by_profile = row.gbp_by_profile || {};
+    const pr = row.gbp_by_profile[id] = row.gbp_by_profile[id] || { calls: 0, directions: 0, web_clicks: 0, impressions: 0 };
+    pr.calls += toNum(r.call_clicks); pr.directions += toNum(r.direction_requests);
+    pr.web_clicks += toNum(r.website_clicks); pr.impressions += toNum(r.impressions);
   }
   for (const r of igRows) {
     const row = ensureDay(r.date);
@@ -284,6 +294,10 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}) {
       leads:        Math.round(r.leads),
       meta_spend:   round2(r.meta_spend),
       google_spend: round2(r.google_spend),
+      meta_leads:   Math.round(r.meta_leads),
+      meta_clicks:  Math.round(r.meta_clicks),
+      google_conversions: round2(r.google_conversions),
+      google_clicks: Math.round(r.google_clicks),
       gbp_actions:  Math.round(r.gbp_actions),
       ig_reach:     Math.round(r.ig_reach),
       sc_clicks:    Math.round(r.sc_clicks),
@@ -296,6 +310,7 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}) {
       ctc_60s_connect:  Math.round(r.ctc_60s_connect),
     };
     if (gbpCallsByDate[r.date]) row.gbp_profiles = gbpCallsByDate[r.date];
+    if (r.gbp_by_profile) row.gbp_by_profile = r.gbp_by_profile;
     return row;
   }).sort((a, b) => a.date.localeCompare(b.date));
 

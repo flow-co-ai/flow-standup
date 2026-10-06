@@ -73,7 +73,8 @@ def main() -> None:
     out = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "settings": {"quiet_days": ops.get("quiet_days", 14),
-                     "quiet_days_ongoing": ops.get("quiet_days_ongoing", 30)},
+                     "quiet_days_ongoing": ops.get("quiet_days_ongoing", 30),
+                     "recent_days": ops.get("recent_days", 30)},
         "shipped": shipped_events(),
         "through": None,
         "window": None,
@@ -130,85 +131,105 @@ def main() -> None:
     print(f"hub.json: {len(hub['clients'])} clients, organic complete through {hub['complete_through']}")
 
 
-# ── Client hub (site/hub.json): Paid, Organic, CRM and Results per client ──
+# ── Client hub (site/hub.json): Paid, Organic, CRM per client ──────────────
+# Daily series come from series/<slug>.json (186 days, written by
+# build_history.js) when present, else the 28 days pulse.js keeps.
 SERIES = ("spend", "leads", "purchases", "revenue", "meta_spend", "google_spend",
+          "meta_leads", "meta_clicks", "google_conversions", "google_clicks",
           "gbp_actions", "sc_clicks", "ga4_sessions", "ig_reach")
 LAGGED = ("gbp_actions", "sc_clicks", "ga4_sessions", "ig_reach")
+PROFILE_KEYS = ("calls", "directions", "web_clicks", "impressions")
+
+
+def _shift(day: str, n: int) -> str:
+    return datetime.fromordinal(datetime.strptime(day, "%Y-%m-%d").toordinal() + n).strftime("%Y-%m-%d")
 
 
 def build_hub(config: dict) -> dict:
     ops = config.get("ops") or {}
     systems = ops.get("systems") or {}
+    cfg = {c.get("slug"): c for c in (load(Path("clients.json")) or [])}
     out = {"generated_at": datetime.now(timezone.utc).isoformat(), "complete_through": {}, "clients": {}}
+    staged, global_end = {}, ""
 
     for client, slugs in (ops.get("ad_slugs") or {}).items():
-        merged, found, kind = {}, [], "leads"
-        channels = {"meta": {"spend": 0, "leads": 0, "clicks": 0},
-                    "google_ads": {"spend": 0, "conversions": 0, "clicks": 0}}
+        merged, prof_daily, found, kind, long_hist = {}, {}, [], "leads", True
+        channels = {"meta": {"spend": 0, "leads": 0, "clicks": 0}, "google_ads": {"spend": 0, "conversions": 0, "clicks": 0}}
         profiles, top, crm, recon = [], None, None, None
         for slug in slugs:
-            pulse = load(Path("pulse") / f"{slug}.json")
-            if not pulse:
+            pulse = load(Path("pulse") / f"{slug}.json") or {}
+            hist = load(Path("series") / f"{slug}.json")
+            if not pulse and not hist:
                 continue
             found.append(slug)
-            if pulse.get("type") == "ecom":
+            if pulse.get("type") == "ecom" or (hist or {}).get("kind") == "sales":
                 kind = "sales"
+            if hist and len(hist.get("rows") or []) >= 28:
+                labels = hist.get("profile_labels") or {}
+                for r in hist["rows"]:
+                    row = merged.setdefault(r["date"], {k: 0.0 for k in SERIES})
+                    for k in SERIES:
+                        row[k] += float(r.get(k) or 0)
+                    for pid, vals in (r.get("gbp_by_profile") or {}).items():
+                        p = prof_daily.setdefault(labels.get(pid, pid), {})
+                        day = p.setdefault(r["date"], {k: 0.0 for k in PROFILE_KEYS})
+                        for k in PROFILE_KEYS:
+                            day[k] += float(vals.get(k) or 0)
+            else:
+                long_hist = False
+                s = (pulse.get("windsor") or {}).get("series") or {}
+                for i, d in enumerate(s.get("dates") or []):
+                    row = merged.setdefault(d, {k: 0.0 for k in SERIES})
+                    for k in SERIES:
+                        vals = s.get(k) or []
+                        row[k] += float(vals[i] or 0) if i < len(vals) else 0
             w = pulse.get("windsor") or {}
-            s = w.get("series") or {}
-            for i, d in enumerate(s.get("dates") or []):
-                row = merged.setdefault(d, {k: 0.0 for k in SERIES})
-                for k in SERIES:
-                    vals = s.get(k) or []
-                    row[k] += float(vals[i] or 0) if i < len(vals) else 0
             by = (w.get("totals") or {}).get("byChannel") or {}
             for ch, keys in channels.items():
-                for k in keys:
-                    keys[k] += float((by.get(ch) or {}).get(k) or 0)
+                for key in keys:
+                    keys[key] += float((by.get(ch) or {}).get(key) or 0)
             for prof in (by.get("gbp") or {}).get("by_profile") or []:
-                profiles.append({k: prof.get(k) for k in ("label", "calls", "directions", "web_clicks", "impressions")})
+                profiles.append({key: prof.get(key) for key in ("label",) + PROFILE_KEYS})
             tc = w.get("top_campaign")
             if tc and tc.get("spend") and (not top or tc["spend"] > top["spend"]):
                 top = tc
             if isinstance(pulse.get("ghl"), dict):
                 g = pulse["ghl"]
                 opps = g.get("opportunities") or {}
-                crm = {"contacts": g.get("contacts"),
-                       "opps_created": (opps.get("created") or {}).get("count"),
-                       "opps_won": (opps.get("won") or {}).get("count"),
-                       "opps_won_value": (opps.get("won") or {}).get("value"),
-                       "appointments": g.get("appointments"),
-                       "window_days": pulse.get("window_days")}
+                crm = {"contacts": g.get("contacts"), "opps_created": (opps.get("created") or {}).get("count"),
+                       "opps_won": (opps.get("won") or {}).get("count"), "opps_won_value": (opps.get("won") or {}).get("value"),
+                       "appointments": g.get("appointments"), "window_days": pulse.get("window_days")}
                 recon = (pulse.get("reconciliation") or {}).get("windsor_leads")
-
-        dates = sorted(merged)[-28:]
-        series = {k: [round(merged[d][k], 2) for d in dates] for k in SERIES}
-        cfg = {c.get("slug"): c for c in (load(Path("clients.json")) or [])}
+        if merged:
+            global_end = max(global_end, max(merged))
         sources = sorted({k for slug in slugs for k in ((cfg.get(slug) or {}).get("windsor") or {})
                           if not k.endswith("_field") and not k.endswith("_fields")})
-        res_file = load(Path("results") / f"{slugs[0]}.json") if slugs else None
+        staged[client] = dict(merged=merged, prof_daily=prof_daily, found=found, kind=kind, days=186 if (long_hist and found) else 28,
+                              channels=channels, profiles=profiles, top=top, crm=crm, recon=recon, sources=sources,
+                              results=load(Path("results") / f"{slugs[0]}.json") if slugs else None)
+
+    for client, st in staged.items():
+        merged, n = st["merged"], st["days"]
+        end = max(merged) if merged else global_end
+        dates = [_shift(end, -i) for i in range(n - 1, -1, -1)] if end else []
+        zero = {k: 0.0 for k in SERIES}
+        series = {k: [round((merged.get(d) or zero)[k], 2) for d in dates] for k in SERIES}
+        prof_series = [{"label": label, **{k: [round((days.get(d) or {}).get(k, 0)) for d in dates] for k in PROFILE_KEYS}}
+                       for label, days in sorted(st["prof_daily"].items())]
         out["clients"][client] = {
-            "accounts": found,
-            "sources": sources,
-            "kind": kind,
-            "system": systems.get(client),
-            "dates": dates,
-            "series": series,
-            "channels": channels,
-            "top_campaign": top,
-            "profiles": profiles,
-            "crm": crm,
-            "windsor_leads_28d": recon,
-            "results": res_file,
+            "accounts": st["found"], "sources": st["sources"], "kind": st["kind"], "system": systems.get(client),
+            "dates": dates, "series": series, "profiles_daily": prof_series,
+            "channels": st["channels"], "top_campaign": st["top"], "profiles": st["profiles"],
+            "crm": st["crm"], "windsor_leads_28d": st["recon"], "results": st["results"],
         }
         for k in SERIES:
-            last = max((d for d in dates if merged[d][k] > 0), default=None)
+            last = max((d for d in dates if (merged.get(d) or zero)[k] > 0), default=None)
             if k in LAGGED:
                 if last and last > (out["complete_through"].get(k) or ""):
                     out["complete_through"][k] = last
-            elif dates and dates[-1] > (out["complete_through"].get(k) or ""):
+            elif dates:
                 out["complete_through"][k] = dates[-1]
     return out
-
 
 if __name__ == "__main__":
     main()
