@@ -127,6 +127,23 @@ def _shape_subitem(sub: dict, parent_board_name: str, updates_limit: int = 3) ->
     }
 
 
+def _col_text(column_values: list | None, col_type: str) -> str | None:
+    """Text of the first column of a given type (people / date / timeline).
+    Matched by type, not id, because each board has its own column ids."""
+    for cv in column_values or []:
+        if cv.get("type") == col_type:
+            return (cv.get("text") or "").strip() or None
+    return None
+
+
+def _due_from_timeline(text: str | None) -> str | None:
+    """Timeline text is 'YYYY-MM-DD - YYYY-MM-DD'; the end date is the due date."""
+    if not text:
+        return None
+    dates = re.findall(r"\d{4}-\d{2}-\d{2}", text)
+    return dates[-1] if dates else None
+
+
 def _shape_item(item: dict, board_id: str, board_name: str, updates_limit: int = 3) -> dict:
     _, status_text = _status_column(item.get("column_values"))
     item_id = str(item.get("id") or "")
@@ -139,6 +156,11 @@ def _shape_item(item: dict, board_id: str, board_name: str, updates_limit: int =
         "monday_url":     _pulse_url(str(board_id), item_id),
         "updated_at":     _latest_update_ts(raw_updates),
         "recent_updates": _shape_recent_updates(raw_updates, updates_limit),
+        # Ops page fields (site/index.html): owner, created, last activity, due.
+        "people":         _col_text(item.get("column_values"), "people"),
+        "created_at":     (item.get("created_at") or "")[:10] or None,
+        "last_activity":  _col_text(item.get("column_values"), "date"),
+        "due":            _due_from_timeline(_col_text(item.get("column_values"), "timeline")),
         "subitems":       [_shape_subitem(s, board_name, updates_limit) for s in (item.get("subitems") or [])],
     }
 

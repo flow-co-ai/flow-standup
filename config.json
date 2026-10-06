@@ -68,6 +68,10 @@
       "Steel Round Bars",
       "Steel",
       "Round Bars"
+    ],
+    "Senior Insurance": [
+      "Senior Insurance",
+      "Senior Insurance Team"
     ]
   },
   "pulse_archive_folder_id": "1dVrpc-l-_FlQtGgTP-hyoNIdP2_mXlwc",
@@ -88,5 +92,73 @@
     "Tom Sugar Onboarding",
     "Ziad Khateeb",
     "Ziad"
-  ]
+  ],
+  "ops": {
+    "_readme": "Settings for the Ops page (site/index.html) and build_ops.py. quiet_days: an in-progress Monday item with no activity for this many days is flagged. quiet_days_ongoing: same, for items with status Ongoing (retainer work). ad_slugs: which pulse/<slug>.json Windsor files belong to each Monday client. systems: each client's own operating system, shown on the Results tab; health: true means its numbers can only come from a script on the client's own server (totals only), written to results/<slug>.json.",
+    "quiet_days": 14,
+    "quiet_days_ongoing": 30,
+    "ad_slugs": {
+      "Billy Doe Meats": [
+        "billy-doe"
+      ],
+      "Full Smile": [
+        "full-smile"
+      ],
+      "Quality HVAC": [
+        "hvac"
+      ],
+      "Justice Consumer Law": [
+        "jcl"
+      ],
+      "Liferun": [
+        "liferun"
+      ],
+      "Healing Helps": [
+        "healing-helps"
+      ],
+      "MedStation": [
+        "medstation"
+      ],
+      "Maadi Law": [
+        "maadi-law"
+      ],
+      "Steel Round Bars": [
+        "steel-advance",
+        "steel-forte",
+        "steel-ohare"
+      ]
+    },
+    "systems": {
+      "Full Smile": {
+        "name": "OpenDental",
+        "health": true
+      },
+      "MedStation": {
+        "name": "NextGen",
+        "health": true
+      },
+      "Maadi Law": {
+        "name": "Clio",
+        "health": false
+      },
+      "Justice Consumer Law": {
+        "name": "Zoho CRM",
+        "health": false
+      },
+      "Billy Doe Meats": {
+        "name": "Shopify",
+        "health": false
+      },
+      "Quality HVAC": {
+        "name": "Housecall Pro",
+        "health": false
+      },
+      "Steel Round Bars": {
+        "name": "Sales-i and SugarCRM",
+        "health": false
+      },
+      "Liferun": null,
+      "Healing Helps": null
+    }
+  }
 }

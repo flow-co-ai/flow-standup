@@ -1,66 +1,676 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Flow Ops</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@1,8..60,400;1,8..60,500&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="ops-widget.css">
-  <link rel="stylesheet" href="flow-ui.css">
-  <link rel="stylesheet" href="standup-brief.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Flow Ops</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#ffffff; --ink:#17202a; --muted:#5d6874; --faint:#8a939c;
+  --line:#e3e7eb; --wash:#f6f7f3; --rail:#f7f8f5; --olive:#5f7319; --olive-soft:#e9eedb;
+  --stuck:#b3261e; --quiet:#965800; --good:#2e6b2f;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:15px/1.5 "Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-variant-numeric:tabular-nums}
+a{color:inherit}
+.app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}
+
+/* rail */
+.rail{background:var(--rail);border-right:1px solid var(--line);padding:22px 14px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.rail img{height:24px;display:block;margin:0 8px 26px}
+.rail a{display:flex;justify-content:space-between;gap:8px;padding:7px 10px;border-radius:6px;text-decoration:none;font-size:14px;color:var(--ink)}
+.rail a:hover{background:var(--olive-soft)}
+.rail a.on{background:var(--ink);color:#fff}
+.rail a.on .n{color:#f3d9a4}
+.rail a .n{color:var(--quiet);font-weight:600;font-size:13px}
+.rail .agency{font-weight:600;margin-bottom:14px}
+.rail .group{font-size:13px;color:var(--faint);margin:6px 10px 4px}
+.rail select{display:none}
+
+.main{padding:24px 40px 64px;max-width:1140px;width:100%;min-width:0}
+.topline{display:flex;justify-content:flex-end;align-items:baseline;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+.topline .navlink{color:var(--olive);font-weight:600;font-size:14px;text-decoration:none;margin-right:auto}
+.topline button{background:none;border:0;padding:0;font:inherit;color:var(--olive);text-decoration:underline;cursor:pointer}
+.topline input{font:inherit;border:1px solid var(--line);border-radius:4px;padding:3px 8px;width:140px}
+.err{color:var(--stuck)}
+
+/* agency */
+.hero{margin:44px 0 36px}
+.hero .date{margin:0 0 10px;color:var(--muted)}
+.hero h1{margin:0;font-size:34px;line-height:1.25;font-weight:500;letter-spacing:-.01em;max-width:22em}
+.hero h1 a{color:var(--olive);text-decoration:none;font-weight:700;border-bottom:2px solid currentColor}
+section{margin-top:48px}
+h2{font-size:19px;font-weight:600;margin:0 0 4px}
+.hint{margin:0 0 14px;color:var(--muted);font-size:14px}
+h3{font-size:14px;font-weight:600;color:var(--muted);margin:22px 0 4px}
+
+/* item rows */
+.rows{border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:150px minmax(0,1fr) 128px 150px 76px;gap:16px;align-items:baseline;padding:10px 4px;border-bottom:1px solid var(--line);text-decoration:none}
+.rows.nc .row{grid-template-columns:minmax(0,1fr) 128px 150px 76px}
+a.row:hover{background:var(--wash)}
+a.row:focus-visible,a:focus-visible,button:focus-visible{outline:2px solid var(--olive);outline-offset:2px}
+.row .client{color:var(--muted);font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .name{font-weight:500}
+.row .state{font-size:13px;color:var(--muted)}
+.row .state.stuck{color:var(--stuck);font-weight:600}
+.row .state.quiet,.row .state.overdue{color:var(--quiet);font-weight:600}
+.row .who{font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .who.none{color:var(--faint);font-style:italic}
+.row .age{text-align:right;font-size:14px}
+.row .age.old{color:var(--quiet);font-weight:600}
+.empty{color:var(--muted);padding:12px 4px;border-bottom:1px solid var(--line)}
+
+/* tables */
+.tablewrap{overflow-x:auto;border-top:1px solid var(--ink)}
+table{border-collapse:collapse;width:100%}
+.clients{min-width:900px}
+th{font-size:13px;font-weight:600;color:var(--muted);text-align:right;padding:10px;border-bottom:1px solid var(--line);vertical-align:bottom}
+th:first-child,td:first-child{text-align:left;padding-left:4px}
+td{padding:11px 10px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top}
+tr.c{cursor:pointer}
+tr.c:hover td{background:var(--wash)}
+tr.c td:first-child{font-weight:600}
+td .sub{display:block;font-size:12px;color:var(--faint);margin-top:2px}
+td.zero{color:var(--faint)} td.hot{color:var(--quiet);font-weight:600} td.na{color:var(--faint);font-size:13px}
+
+/* client view */
+.cname{font-size:32px;font-weight:600;letter-spacing:-.01em;margin:30px 0 2px}
+.csrc{color:var(--muted);font-size:14px;margin:0}
+.tabs{display:flex;gap:4px;margin:22px 0 0;border-bottom:1px solid var(--line);overflow-x:auto}
+.tabs a{padding:10px 14px;text-decoration:none;color:var(--muted);font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tabs a:hover{color:var(--ink)}
+.tabs a.on{color:var(--ink);border-bottom-color:var(--ink);font-weight:600}
+.head{padding:26px 0 8px}
+.head .lede{font-size:24px;line-height:1.35;font-weight:500;margin:0 0 6px;max-width:30em}
+.head .when{color:var(--muted);font-size:13px;margin:0}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:20px 0 0}
+.kpis.six{grid-template-columns:repeat(3,minmax(0,1fr))}
+.kpi{padding:16px 18px 14px 0;border-right:1px solid var(--line);margin-right:18px}
+.kpi:last-child{border-right:0}
+.kpis.six .kpi:nth-child(3n){border-right:0}
+.kpis.six .kpi:nth-child(n+4){border-top:1px solid var(--line)}
+.kpi .l{font-size:13px;color:var(--muted)}
+.kpi .v{font-size:26px;font-weight:600;line-height:1.2;margin-top:2px}
+.kpi .p{font-size:13px;color:var(--faint)}
+.kpi .p.up{color:var(--good)} .kpi .p.down{color:var(--quiet)}
+.kpi svg{display:block;margin-top:8px;width:100%;height:28px}
+.flags{margin:22px 0 0;padding:0;list-style:none}
+.flags li{display:flex;gap:10px;align-items:baseline;padding:6px 0;font-size:15px}
+.flags li::before{content:"";flex:0 0 8px;height:8px;border-radius:50%;background:var(--faint);transform:translateY(-1px)}
+.flags li.bad::before{background:var(--stuck)} .flags li.warn::before{background:#d39b25} .flags li.ok::before{background:var(--good)}
+.block{margin-top:36px}
+.chart svg{display:block;width:100%;height:auto}
+.chart .cap{font-size:13px;color:var(--muted);margin-bottom:6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.note{font-size:13px;color:var(--muted);margin-top:10px}
+.mini td,.mini th{padding:9px 10px}
+.connect{border:1px dashed var(--line);border-radius:8px;padding:20px 22px;margin-top:22px;max-width:640px}
+.connect p{margin:0 0 8px}
+
+footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+details{margin:10px 0} summary{cursor:pointer;color:var(--ink)}
+details ul{margin:8px 0 0;padding-left:18px} details li{margin:3px 0}
+
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  .rail{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:14px 16px;display:flex;align-items:center;gap:14px}
+  .rail img{margin:0}
+  .rail nav{display:none}
+  .rail select{display:block;flex:1;font:inherit;padding:8px;border:1px solid var(--line);border-radius:6px;background:#fff}
+  .main{padding:18px 16px 48px}
+  .hero{margin:28px 0 24px} .hero h1{font-size:26px}
+  .cname{font-size:26px;margin-top:16px}
+  .head .lede{font-size:20px}
+  .kpis,.kpis.six{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kpis .kpi:nth-child(2n){border-right:0}
+  .kpis .kpi:nth-child(n+3){border-top:1px solid var(--line)}
+  .grid2{grid-template-columns:1fr}
+  .row,.rows.nc .row{grid-template-columns:auto minmax(0,1fr) auto;gap:2px 12px;padding:10px 2px}
+  .row .client{grid-column:1/-1;order:0;font-size:13px}
+  .row .name{grid-column:1/3;order:1} .row .age{grid-column:3;order:2}
+  .row .state{grid-column:1;order:3} .row .who{grid-column:2/-1;order:4}
+  .clients{min-width:0} .clients thead{display:none} .clients tbody{display:block}
+  .clients tr.c{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 12px;padding:12px 2px;border-bottom:1px solid var(--line)}
+  .clients tr.c td{display:block;border:0;padding:0;text-align:left}
+  .clients tr.c td:first-child{grid-column:1/-1;font-size:16px}
+  .clients tr.c td[colspan]{grid-column:1/-1}
+  .clients tr.c td[data-label]::before{content:attr(data-label);display:block;font-size:12px;font-weight:400;color:var(--faint)}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
 </head>
 <body>
+<div class="app">
+  <aside class="rail">
+    <img src="assets/flowco-logo.png" alt="Flow Co">
+    <nav id="rail-nav" aria-label="Clients"></nav>
+    <select id="rail-select" aria-label="Choose a view"></select>
+  </aside>
 
-  <div class="page">
-
-    <!-- ── BANNERS ───────────────────────────────────────────────────── -->
-    <div id="banner-missing" class="banner" hidden>
-      No standup report found yet. Run <code>python generate.py</code> to generate one.
+  <main class="main">
+    <div class="topline">
+      <a class="navlink" href="daily.html">Daily Ops drafts</a>
+      <span id="fresh">Loading…</span>
     </div>
-    <div id="banner-stale" class="banner banner-warn" hidden>
-      This report is more than 8 days old. The next automated run will refresh it Monday morning.
-    </div>
 
-    <!-- ── HEADER ────────────────────────────────────────────────────── -->
-    <header class="site-header">
-      <a href="/" class="logo-link" aria-label="Flow Ops home">
-        <img src="assets/flowco-logo.png" alt="Flow Co" class="logo-img">
-      </a>
-      <div class="header-right">
-        <span id="week-of" class="week-label">Flow Ops</span>
-        <span class="live-pill">
-          <span class="live-dot" aria-hidden="true"></span>
-          <span class="live-text">Wired to Monday + Fireflies + WhatsApp</span>
-        </span>
+    <!-- ── agency view ─────────────────────────────────────────────── -->
+    <div id="view-agency">
+      <div class="hero">
+        <p class="date" id="today"></p>
+        <h1 id="headline">Reading Monday…</h1>
       </div>
-    </header>
+      <section id="review">
+        <h2>Waiting on review</h2>
+        <p class="hint">Marked For Review in Monday. Oldest first.</p>
+        <div id="review-rows"></div>
+      </section>
+      <section id="push">
+        <h2>Needs a push</h2>
+        <p class="hint" id="push-hint"></p>
+        <div id="push-rows"></div>
+      </section>
+      <section id="clients">
+        <h2>Clients</h2>
+        <p class="hint" id="clients-hint"></p>
+        <div class="tablewrap"><table class="clients">
+          <thead><tr><th>Client</th><th>Open</th><th>In review</th><th>Needs a push</th><th>Not started</th>
+            <th>Last update</th><th>Ad spend, 7 days</th><th>Results, 7 days</th><th>Cost per result</th></tr></thead>
+          <tbody id="client-rows"></tbody>
+        </table></div>
+      </section>
+      <section id="shipped">
+        <h2>Shipped in the last 7 days</h2>
+        <p class="hint">Status changed to Done in Monday, newest first.</p>
+        <div id="shipped-rows"></div>
+      </section>
+      <footer>
+        <div id="gaps"></div>
+        <details><summary>How this page counts</summary><ul id="rules"></ul></details>
+      </footer>
+    </div>
 
-    <!-- ── TAB BAR ──────────────────────────────────────────────────── -->
-    <nav class="tab-bar">
-      <a href="/" class="tab active">Standup</a>
-      <a href="/daily.html" class="tab">Daily Ops</a>
-      <a href="/performance.html" class="tab">Performance</a>
-    </nav>
+    <!-- ── client view ─────────────────────────────────────────────── -->
+    <div id="view-client" hidden>
+      <h1 class="cname" id="c-name"></h1>
+      <p class="csrc" id="c-src"></p>
+      <nav class="tabs" id="c-tabs" aria-label="Client sections"></nav>
+      <div id="c-panel"></div>
+    </div>
+  </main>
+</div>
 
-    <!-- ── MAIN ──────────────────────────────────────────────────────── -->
-    <main id="app" class="client-list">
-      <!-- cards injected by app.js -->
-    </main>
+<script>
+(() => {
+  "use strict";
+  const PASS_KEY = "flowops-passcode";
+  const DAY = 86400000;
+  const LANES = ["CRM", "Ads", "Video", "Web + SEO"];
+  const TABS = [["overview", "Overview"], ["results", "Results"], ["paid", "Paid"], ["organic", "Organic"], ["crm", "CRM"], ["work", "Work"]];
+  const S = { snapshot: null, live: null, ops: null, hub: null, queue: null, quietDays: 14, quietOngoing: 30, liveError: "" };
 
-    <!-- ── FOOTER ────────────────────────────────────────────────────── -->
-    <footer class="site-footer">
-<div id="sync-status" class="sync-status" aria-live="polite" hidden></div>
-      <p id="footer-ts" class="footer-ts"></p>
-    </footer>
+  // ── helpers ────────────────────────────────────────────────────────────
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  function toDate(v) {
+    if (!v) return null;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(v)) { const [y, m, d] = v.split("-").map(Number); return new Date(y, m - 1, d); }
+    const d = new Date(v); return isNaN(d) ? null : d;
+  }
+  const dayOf = (d) => { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; };
+  const daysSince = (d) => d ? Math.max(0, Math.round((today - dayOf(d)) / DAY)) : null;
+  const fmtDay = (d) => d ? d.toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "";
+  const fmtTime = (d) => d.toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+  const money = (n) => "$" + Math.round(n).toLocaleString("en-US");
+  const num = (n) => Math.round(n).toLocaleString("en-US");
+  const plural = (n, one, many) => `${num(n)} ${Math.round(n) === 1 ? one : many}`;
+  const ageText = (n) => n == null ? "—" : n === 0 ? "today" : plural(n, "day", "days");
+  const sum = (a) => a.reduce((x, y) => x + (+y || 0), 0);
+  function firstNames(people) {
+    if (!people) return "";
+    const names = people.split(",").map((p) => {
+      const t = p.trim(), parts = t.split(/\s+/);
+      if (/team$/i.test(t)) return t;
+      if (/^(muhammad|mohammed|mohammad)$/i.test(parts[0]) && parts.length > 1) return parts[1];
+      return parts[0];
+    }).filter(Boolean);
+    return [...new Set(names)].join(", ");
+  }
 
-  </div>
+  // ── Monday items ───────────────────────────────────────────────────────
+  function bucket(status) {
+    const s = (status || "").trim().toLowerCase();
+    if (!s) return "blank";
+    if (s === "done") return "done";
+    if (s === "start" || s === "not yet") return "notStarted";
+    if (s.includes("review")) return "review";
+    if (s === "stuck") return "stuck";
+    if (s === "reopened") return "reopened";
+    if (s === "waiting" || s === "contingent") return "waiting";
+    return "active";
+  }
+  function normalize(payload) {
+    const out = [];
+    for (const [client, list] of Object.entries((payload && payload.by_client) || {})) {
+      for (const it of list || []) {
+        const stamps = [it.item_updated_at, it.updated_at, it.last_activity, it.created_at].map(toDate).filter(Boolean);
+        const activity = stamps.length ? new Date(Math.max(...stamps)) : null;
+        const b = bucket(it.status), due = toDate(it.due);
+        out.push({ id: it.monday_item_id, name: it.name, url: it.monday_url, client, lane: it.board,
+          status: it.status || "", bucket: b, people: it.people || "", who: firstNames(it.people),
+          activity, days: daysSince(activity), due, overdue: !!(due && due < today && b !== "done") });
+      }
+    }
+    return out;
+  }
+  const quietLimit = (it) => /^ongoing$/i.test(it.status) ? S.quietOngoing : S.quietDays;
+  function pushReason(it) {
+    if (it.bucket === "stuck") return ["Stuck", "stuck"];
+    if (it.overdue) return [`Was due ${fmtDay(it.due)}`, "overdue"];
+    if (it.bucket === "reopened") return ["Reopened", "stuck"];
+    if (it.bucket === "waiting") return [it.status, ""];
+    if (it.bucket === "active" && it.days != null && it.days >= quietLimit(it)) return ["No activity", "quiet"];
+    return null;
+  }
+  const isOpen = (it) => !["done", "notStarted", "blank"].includes(it.bucket);
 
-  <script src="app.js"></script>
-  <script src="ops-widget.js"></script>
-  <script src="standup-brief.js"></script>
-  <script src="refresh-widget.js"></script>
+  function rowHTML(it, o = {}) {
+    const [label, cls] = o.reason || [it.status || "No status", ""];
+    const old = it.days != null && it.days >= quietLimit(it);
+    return `<a class="row" href="${esc(it.url)}" target="_blank" rel="noopener" title="Open in Monday">
+      ${o.noClient ? "" : `<span class="client">${esc(it.client)}</span>`}
+      <span class="name">${esc(it.name)}</span>
+      <span class="state ${cls}">${esc(o.lane ? it.lane : label)}</span>
+      <span class="who ${it.who ? "" : "none"}">${esc(it.who || "No owner")}</span>
+      <span class="age ${old && !o.calm ? "old" : ""}">${ageText(it.days)}</span></a>`;
+  }
+  const rowsHTML = (list, o, empty, nc) => `<div class="rows ${nc ? "nc" : ""}">${list.length
+    ? list.map((it) => rowHTML(it, typeof o === "function" ? o(it) : o)).join("")
+    : `<div class="empty">${esc(empty)}</div>`}</div>`;
+
+  function shippedList(items) {
+    const events = (S.live && Array.isArray(S.live.shipped) ? S.live.shipped : (S.ops && S.ops.shipped)) || [];
+    const byId = new Map(items.map((i) => [String(i.id), i]));
+    return events.map((e) => {
+      const it = byId.get(String(e.monday_item_id)), d = toDate(e.date);
+      return { name: e.name, date: d, days: daysSince(d),
+        client: it ? it.client : (e.client && e.client !== "Unmapped" ? e.client : "Unassigned"),
+        lane: it ? it.lane : "", url: it ? it.url : "", who: it ? it.who : "" };
+    }).filter((e) => e.days != null && e.days <= 7);
+  }
+  function shippedRow(e, nc) {
+    const inner = `${nc ? "" : `<span class="client">${esc(e.client)}</span>`}<span class="name">${esc(e.name)}</span>
+      <span class="state">${esc(e.lane)}</span><span class="who ${e.who ? "" : "none"}">${esc(e.who)}</span>
+      <span class="age">${esc(fmtDay(e.date))}</span>`;
+    return e.url ? `<a class="row" href="${esc(e.url)}" target="_blank" rel="noopener">${inner}</a>` : `<div class="row">${inner}</div>`;
+  }
+
+  // ── hub numbers (Windsor + GHL), lag-aware 7-day windows ──────────────
+  const hubClient = (name) => (S.hub && S.hub.clients && S.hub.clients[name]) || null;
+  function windowOf(c, key) {
+    const end = (S.hub.complete_through || {})[key] || c.dates[c.dates.length - 1];
+    let e = c.dates.lastIndexOf(end); if (e < 0) e = c.dates.length - 1;
+    const arr = (c.series[key] || []);
+    const cur = sum(arr.slice(Math.max(0, e - 6), e + 1));
+    const prev = e >= 13 ? sum(arr.slice(e - 13, e - 6)) : null;
+    return { cur, prev, end: c.dates[e], from: c.dates[Math.max(0, e - 6)], e };
+  }
+  function spark(values, endIdx) {
+    const w = 200, h = 28, n = values.length, max = Math.max(...values, 1);
+    if (n < 2) return "";
+    const pt = (v, i) => `${((i / (n - 1)) * w).toFixed(1)},${(h - 2 - (v / max) * (h - 4)).toFixed(1)}`;
+    const a = values.slice(0, endIdx + 1).map((v, i) => pt(v, i)).join(" ");
+    const b = endIdx < n - 1 ? values.slice(endIdx).map((v, i) => pt(v, i + endIdx)).join(" ") : "";
+    return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true"><polyline points="${a}" fill="none" stroke="#5f7319" stroke-width="1.6" vector-effect="non-scaling-stroke"/>${b ? `<polyline points="${b}" fill="none" stroke="#c4cad0" stroke-width="1.6" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>` : ""}</svg>`;
+  }
+  // kpi(label, value text, prior text, direction ("up"/"down"/""), sparkline html)
+  const kpi = (l, v, p, dir, sp) => `<div class="kpi"><div class="l">${esc(l)}</div><div class="v">${v}</div><div class="p ${dir || ""}">${p || "&nbsp;"}</div>${sp || ""}</div>`;
+  function delta(cur, prev, goodWhenUp = true) {
+    if (prev == null) return ["", ""];
+    if (!prev && !cur) return ["same as the week before", ""];
+    if (!prev) return ["none the week before", goodWhenUp ? "up" : "down"];
+    const pct = Math.round(((cur - prev) / prev) * 100);
+    if (Math.abs(pct) < 5) return ["about the same as the week before", ""];
+    const up = pct > 0;
+    return [`${up ? "up" : "down"} ${Math.abs(pct)}% vs the week before`, (up === goodWhenUp) ? "up" : "down"];
+  }
+  function barChart(c, key, label, fmt, endKey) {
+    const vals = c.series[key] || [], n = vals.length; if (!n) return "";
+    const end = (S.hub.complete_through || {})[endKey || key] || c.dates[n - 1];
+    const W = 700, H = 150, pad = 18, bw = (W - pad) / n, max = Math.max(...vals, 1);
+    const bars = vals.map((v, i) => {
+      const h = Math.max(v > 0 ? 2 : 0, (v / max) * (H - 30)), x = pad + i * bw;
+      const late = c.dates[i] > end;
+      return `<rect x="${(x + 1).toFixed(1)}" y="${(H - 18 - h).toFixed(1)}" width="${(bw - 2).toFixed(1)}" height="${h.toFixed(1)}" fill="${late ? "#dfe3e7" : (i >= n - 7 && !late ? "#5f7319" : "#b9c79a")}"><title>${esc(fmtDay(toDate(c.dates[i])))}: ${esc(late ? "not reported yet" : fmt(v))}</title></rect>`;
+    }).join("");
+    const lab = (i) => `<text x="${(pad + i * bw + bw / 2).toFixed(1)}" y="${H - 4}" font-size="11" fill="#8a939c" text-anchor="middle">${esc(fmtDay(toDate(c.dates[i])))}</text>`;
+    return `<div class="chart"><div class="cap">${esc(label)}, by day (max ${esc(fmt(max))})</div>
+      <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)} by day">${bars}${lab(0)}${lab(Math.floor(n / 2))}${lab(n - 1)}</svg></div>`;
+  }
+  const flagsHTML = (flags) => flags.length ? `<ul class="flags">${flags.map(([t, x]) => `<li class="${t}">${x}</li>`).join("")}</ul>` : "";
+  const head = (lede, when) => `<div class="head"><p class="lede">${lede}</p>${when ? `<p class="when">${when}</p>` : ""}</div>`;
+  const rangeText = (w) => `${fmtDay(toDate(w.from))}–${fmtDay(toDate(w.end))}`;
+
+  // ── Paid ───────────────────────────────────────────────────────────────
+  function paidModel(c) {
+    if (!c || !c.dates.length) return null;
+    const sales = c.kind === "sales";
+    const sp = windowOf(c, "spend"), rs = windowOf(c, sales ? "purchases" : "leads"), rv = windowOf(c, "revenue");
+    const has = sum(c.series.spend) > 0;
+    const lastSpend = [...c.dates].reverse().find((d, i) => c.series.spend[c.dates.length - 1 - i] > 0);
+    return { sales, sp, rs, rv, has, lastSpend };
+  }
+  function paidFlags(c, m) {
+    const f = [];
+    if (!m || !m.has) return f;
+    if (m.sp.cur === 0) f.push(["bad", `No Windsor ad spend since ${esc(fmtDay(toDate(m.lastSpend)))}.`]);
+    else if (m.rs.cur === 0) f.push(["bad", `${money(m.sp.cur)} spent in the last 7 days with no ${m.sales ? "sales" : "leads"} reported.`]);
+    const g = c.channels.google_ads;
+    if (g.spend > 0 && !g.conversions) f.push(["bad", `Google Ads: ${money(g.spend)} in 28 days with no conversions recorded.`]);
+    else if (g.spend > 0 && g.conversions && c.channels.meta.leads && g.spend / g.conversions > 3 * (c.channels.meta.spend / c.channels.meta.leads))
+      f.push(["warn", `Google Ads costs ${money(g.spend / g.conversions)} per conversion vs ${money(c.channels.meta.spend / c.channels.meta.leads)} per Meta lead (28 days).`]);
+    if (!m.sales && m.sp.prev && m.rs.cur && m.rs.prev) {
+      const cpl = m.sp.cur / m.rs.cur, pcpl = m.sp.prev / m.rs.prev;
+      if (cpl > pcpl * 1.5) f.push(["warn", `Cost per lead rose from ${money(pcpl)} to ${money(cpl)} week over week.`]);
+      if (cpl < pcpl * 0.67) f.push(["ok", `Cost per lead fell from ${money(pcpl)} to ${money(cpl)} week over week.`]);
+    }
+    return f;
+  }
+  function paidTab(name, c) {
+    const m = paidModel(c);
+    if (!m || !m.has) return head("No paid ads in Windsor for this client in the last 28 days.") +
+      `<p class="note">LSA and anything billed outside Windsor wouldn't show here.</p>`;
+    const unit = m.sales ? ["sale", "sales"] : ["lead", "leads"];
+    const cost = m.sales ? (m.sp.cur ? `${(m.rv.cur / m.sp.cur).toFixed(1)}×` : "—") : (m.rs.cur ? money(m.sp.cur / m.rs.cur) : "—");
+    const costPrev = m.sales ? (m.sp.prev ? `was ${(m.rv.prev / m.sp.prev).toFixed(1)}×` : "") : (m.rs.prev ? `was ${money(m.sp.prev / m.rs.prev)}` : "");
+    const lede = m.sp.cur === 0 ? `No ad spend in Windsor since ${esc(fmtDay(toDate(m.lastSpend)))}.` :
+      `${money(m.sp.cur)} spent for ${plural(m.rs.cur, ...unit)}${m.sales ? ` and ${money(m.rv.cur)} in sales` : m.rs.cur ? ` at ${money(m.sp.cur / m.rs.cur)} each` : ""}. The week before: ${money(m.sp.prev || 0)} for ${plural(m.rs.prev || 0, ...unit)}.`;
+    const [sd, sdir] = delta(m.sp.cur, m.sp.prev, true), [rd, rdir] = delta(m.rs.cur, m.rs.prev, true);
+    const ch = c.channels, chRow = (label, s, r, clicks, rl) => s ? `<tr><td>${label}</td><td>${money(s)}</td><td>${num(r)} ${rl}</td><td>${r ? money(s / r) : "—"}</td><td>${num(clicks)}</td></tr>` : "";
+    return head(lede, `Last 7 days, ${esc(rangeText(m.sp))}, from Windsor.`) +
+      `<div class="kpis">${kpi("Ad spend", money(m.sp.cur), sd, "", spark(c.series.spend, m.sp.e))}
+        ${kpi(m.sales ? "Sales" : "Leads", num(m.rs.cur), rd, rdir, spark(c.series[m.sales ? "purchases" : "leads"], m.rs.e))}
+        ${kpi(m.sales ? "Return on spend" : "Cost per lead", cost, costPrev, "", "")}
+        ${kpi(m.sales ? "Revenue" : "Meta / Google spend", m.sales ? money(m.rv.cur) : `${Math.round(100 * windowOf(c, "meta_spend").cur / (m.sp.cur || 1))}% / ${Math.round(100 * windowOf(c, "google_spend").cur / (m.sp.cur || 1))}%`, "", "", m.sales ? spark(c.series.revenue, m.rv.e) : "")}</div>` +
+      flagsHTML(paidFlags(c, m)) +
+      `<div class="block grid2">${barChart(c, "spend", "Spend", money)}${barChart(c, m.sales ? "purchases" : "leads", m.sales ? "Sales" : "Leads", num)}</div>
+       <div class="block"><h3>By channel, last 28 days</h3><div class="tablewrap"><table class="mini">
+        <thead><tr><th>Channel</th><th>Spend</th><th>Results</th><th>Cost each</th><th>Clicks</th></tr></thead>
+        <tbody>${chRow("Meta", ch.meta.spend, ch.meta.leads, ch.meta.clicks, "leads")}${chRow("Google Ads", ch.google_ads.spend, ch.google_ads.conversions, ch.google_ads.clicks, "conversions")}</tbody></table></div>
+        ${c.top_campaign ? `<p class="note">Biggest campaign: ${esc(c.top_campaign.name)}, ${money(c.top_campaign.spend)} in 28 days.</p>` : ""}
+        <p class="note">Results are what Meta and Google report. LSA and anything billed outside Windsor isn't included.</p></div>`;
+  }
+
+  // ── Organic ────────────────────────────────────────────────────────────
+  const ORG = [["gbp_actions", "Google profile actions"], ["sc_clicks", "Search clicks"], ["ga4_sessions", "Website sessions"], ["ig_reach", "Instagram reach"]];
+  function organicFlags(c) {
+    const f = [], src = c.sources || [];
+    const want = { gbp_actions: "google_my_business", sc_clicks: "searchconsole", ga4_sessions: "googleanalytics4", ig_reach: "instagram" };
+    for (const [k, label] of ORG) {
+      const total = sum(c.series[k] || []);
+      if (src.includes(want[k]) && total === 0) f.push(["warn", `${label}: connected in Windsor but nothing reported in 28 days. Check the account.`]);
+      const w = windowOf(c, k);
+      if (w.prev && w.prev >= 20 && w.cur < w.prev * 0.7) f.push(["warn", `${label} down ${Math.round(100 - (100 * w.cur) / w.prev)}% (${num(w.prev)} to ${num(w.cur)}) in the week to ${esc(fmtDay(toDate(w.end)))}.`]);
+      if (w.prev && w.prev >= 20 && w.cur > w.prev * 1.3) f.push(["ok", `${label} up ${Math.round((100 * w.cur) / w.prev - 100)}% (${num(w.prev)} to ${num(w.cur)}) in the week to ${esc(fmtDay(toDate(w.end)))}.`]);
+    }
+    for (const p of c.profiles || []) if ((p.impressions || 0) > 50 && !(p.calls || p.directions || p.web_clicks)) f.push(["warn", `${esc(p.label)}: seen ${num(p.impressions)} times in 28 days, no calls, directions or clicks.`]);
+    return f;
+  }
+  function organicTab(name, c) {
+    if (!c) return head("No organic data for this client.");
+    const g = windowOf(c, "gbp_actions");
+    const lede = sum(c.series.gbp_actions) ? `${plural(g.cur, "Google profile action", "Google profile actions")} in the week to ${esc(fmtDay(toDate(g.end)))}${g.prev != null ? `, ${g.prev ? delta(g.cur, g.prev)[0] : "none the week before"}` : ""}.` : "No Google profile actions reported in the last 28 days.";
+    const k = ORG.map(([key, label]) => { const w = windowOf(c, key), [d, dir] = delta(w.cur, w.prev, true);
+      return kpi(label, num(w.cur), d, dir, spark(c.series[key], w.e)); }).join("");
+    const prof = (c.profiles || []).length ? `<div class="block"><h3>Google profiles, last 28 days</h3><div class="tablewrap"><table class="mini">
+      <thead><tr><th>Profile</th><th>Calls</th><th>Directions</th><th>Website clicks</th><th>Views</th></tr></thead>
+      <tbody>${c.profiles.map((p) => `<tr><td>${esc(p.label)}</td><td>${num(p.calls || 0)}</td><td>${num(p.directions || 0)}</td><td>${num(p.web_clicks || 0)}</td><td>${num(p.impressions || 0)}</td></tr>`).join("")}</tbody></table></div></div>` : "";
+    return head(lede, "Each number covers the latest 7 days that are fully reported. Google profile data arrives about 4 days late.") +
+      `<div class="kpis">${k}</div>` + flagsHTML(organicFlags(c)) +
+      `<div class="block grid2">${barChart(c, "gbp_actions", "Google profile actions", num)}${barChart(c, "sc_clicks", "Search clicks", num)}</div>` + prof +
+      `<p class="note">Grey bars are days not reported yet. Search clicks are website results in Google, not the map listing.</p>`;
+  }
+
+  // ── CRM ────────────────────────────────────────────────────────────────
+  function crmFlags(c) {
+    const f = [], g = c && c.crm; if (!g) return f;
+    if (g.opps_created > 0 && !g.opps_won) f.push(["warn", `${num(g.opps_created)} opportunities created and none marked won. Either nothing closed or wins aren't being marked in GHL.`]);
+    if (c.windsor_leads_28d && g.contacts > 3 * c.windsor_leads_28d) f.push(["warn", `GHL added ${num(g.contacts)} contacts vs ${num(c.windsor_leads_28d)} ad leads. The difference is organic, referrals or imports. Check before calling contacts "leads."`]);
+    if (c.windsor_leads_28d && g.contacts < c.windsor_leads_28d * 0.8) f.push(["bad", `Ads reported ${num(c.windsor_leads_28d)} leads but GHL only added ${num(g.contacts)} contacts. Some leads may not be reaching GHL.`]);
+    if (g.opps_created > 0 && !g.appointments) f.push(["warn", "No appointments in GHL. Booking may happen in the client's own system."]);
+    return f;
+  }
+  function crmTab(name, c) {
+    const g = c && c.crm;
+    if (!g) return head("GHL isn't connected for this client in this repo.") +
+      `<div class="connect"><p>Add the client's GHL location and a view-only Private Integration token to the <b>GHL_TOKENS</b> secret, and the daily run will fill this tab.</p></div>`;
+    const days = g.window_days || 28;
+    return head(`${plural(g.contacts, "new contact", "new contacts")} and ${plural(g.opps_created, "opportunity", "opportunities")} in GHL in the last ${days} days. ${num(g.opps_won || 0)} marked won.`,
+        `GHL, last ${days} days. Week-by-week comparison starts once history builds up.`) +
+      `<div class="kpis">${kpi("New contacts", num(g.contacts), "", "", "")}${kpi("Opportunities created", num(g.opps_created), "", "", "")}
+        ${kpi("Marked won", num(g.opps_won || 0), g.opps_won_value ? money(g.opps_won_value) : "", "", "")}${kpi("Appointments", num(g.appointments || 0), "", "", "")}</div>` +
+      flagsHTML(crmFlags(c)) +
+      (c.windsor_leads_28d != null ? `<div class="block"><h3>Ads vs GHL, last 28 days</h3><div class="tablewrap"><table class="mini">
+        <thead><tr><th>Step</th><th>Count</th></tr></thead><tbody>
+        <tr><td>Leads reported by Meta and Google</td><td>${num(c.windsor_leads_28d)}</td></tr>
+        <tr><td>New contacts in GHL (all sources)</td><td>${num(g.contacts)}</td></tr>
+        <tr><td>Opportunities created</td><td>${num(g.opps_created)}</td></tr>
+        <tr><td>Marked won</td><td>${num(g.opps_won || 0)}</td></tr></tbody></table></div>
+        <p class="note">Booked and showed should come from ${esc((c.system && c.system.name) || "the client's own system")}, not GHL stages. That arrives with the Results tab.</p></div>` : "");
+  }
+
+  // ── Results (client's own system) ──────────────────────────────────────
+  function resultsTab(name, c) {
+    const sys = c && c.system, r = c && c.results;
+    if (r && Array.isArray(r.metrics) && r.metrics.length) {
+      return head(esc(r.headline || `From ${sys ? sys.name : "the client's system"}.`), `${esc(r.source || (sys && sys.name) || "")}, ${esc(r.window || "")}. Updated ${esc(fmtDay(toDate(r.as_of)))}.`) +
+        `<div class="kpis">${r.metrics.slice(0, 4).map((m) => { const [d, dir] = delta(m.cur, m.prev, m.good !== "down");
+          return kpi(m.label, m.unit === "$" ? money(m.cur) : num(m.cur), m.prev != null ? d : "", dir, m.series ? spark(m.series, m.series.length - 1) : ""); }).join("")}</div>` +
+        (r.metrics.length > 4 ? `<div class="kpis">${r.metrics.slice(4, 8).map((m) => kpi(m.label, m.unit === "$" ? money(m.cur) : num(m.cur), "", "", "")).join("")}</div>` : "");
+    }
+    if (!sys) return head(`Which system does ${esc(name)} run on?`) +
+      `<div class="connect"><p>Set it in <b>config.json → ops.systems</b>, and the Results tab will show what's needed to connect it.</p></div>`;
+    return head(`Not connected to ${esc(sys.name)} yet.`) + `<div class="connect">` + (sys.health
+      ? `<p>${esc(sys.name)} holds patient data, so it's read by a script on ${esc(name)}'s own server. It sends totals only (no names, phones or record IDs) to <b>results/${esc((c.accounts || [])[0] || "client")}.json</b>.</p>`
+      : `<p>A daily job will read ${esc(sys.name)} directly with a read-only key and write <b>results/${esc((c.accounts || [])[0] || "client")}.json</b>.</p>`) +
+      `<p class="note">This tab then shows the business numbers ${esc(name)} cares about, against the month before.</p></div>`;
+  }
+
+  // ── Work (Monday + Daily Ops drafts) ───────────────────────────────────
+  function workTab(name, items) {
+    const mine = items.filter((i) => i.client === name);
+    const review = mine.filter((i) => i.bucket === "review").sort((a, b) => (b.days ?? 0) - (a.days ?? 0));
+    const push = mine.filter((i) => pushReason(i) && i.bucket !== "review").sort((a, b) => (b.days ?? 0) - (a.days ?? 0));
+    const other = mine.filter((i) => isOpen(i) && i.bucket !== "review" && !pushReason(i)).sort((a, b) => (a.days ?? 0) - (b.days ?? 0));
+    const later = mine.filter((i) => i.bucket === "notStarted"), blank = mine.filter((i) => i.bucket === "blank");
+    const shipped = shippedList(items).filter((e) => e.client === name);
+    const drafts = S.queue ? S.queue.filter((q) => q.group === name) : null;
+    let html = head(`${plural(review.length, "item", "items")} in review, ${num(push.length)} ${push.length === 1 ? "needs" : "need"} a push, ${num(shipped.length)} shipped this week.`,
+      `Monday${S.live ? ", live" : ""}.`);
+    html += `<div class="block"><h3>In review</h3>${rowsHTML(review, { noClient: true, lane: true }, "Nothing in review.", true)}</div>`;
+    html += `<div class="block"><h3>Needs a push</h3>${rowsHTML(push, (it) => ({ noClient: true, reason: pushReason(it) }), "Nothing stuck or quiet.", true)}</div>`;
+    html += `<div class="block"><h3>Moving</h3>${rowsHTML(other, { noClient: true }, "No other open items.", true)}</div>`;
+    html += `<div class="block"><h3>Shipped in the last 7 days</h3><div class="rows nc">${shipped.length ? shipped.map((e) => shippedRow(e, true)).join("") : `<div class="empty">Nothing marked Done this week.</div>`}</div></div>`;
+    html += `<div class="block"><h3>Daily Ops drafts</h3>` + (drafts == null
+      ? `<p class="note">Read Monday live (top right) to see this client's pending drafts.</p>`
+      : drafts.length ? `<div class="rows nc">${drafts.map((q) => `<a class="row" href="daily.html"><span class="name">${esc(q.title || q.sourceLabel || "Draft")}</span><span class="state">${esc(q.status || "")}</span><span class="who"></span><span class="age"></span></a>`).join("")}</div>`
+      : `<div class="rows"><div class="empty">No drafts waiting for this client.</div></div>`) + `</div>`;
+    if (later.length) html += `<details><summary>${plural(later.length, "item", "items")} not started</summary>${rowsHTML(later, { noClient: true, calm: true }, "", true)}</details>`;
+    if (blank.length) html += `<details><summary>${plural(blank.length, "item has", "items have")} no status</summary>${rowsHTML(blank, { noClient: true, calm: true }, "", true)}</details>`;
+    return html;
+  }
+
+  // ── Overview ───────────────────────────────────────────────────────────
+  function overviewTab(name, c, items) {
+    const mine = items.filter((i) => i.client === name);
+    const review = mine.filter((i) => i.bucket === "review").length, push = mine.filter((i) => pushReason(i)).length;
+    const open = mine.filter(isOpen).length;
+    const m = c ? paidModel(c) : null;
+    const parts = [];
+    if (m && m.has) parts.push(m.sp.cur ? `${money(m.sp.cur)} in ads brought ${plural(m.rs.cur, m.sales ? "sale" : "lead", m.sales ? "sales" : "leads")} last week` : `no ad spend since ${fmtDay(toDate(m.lastSpend))}`);
+    parts.push(`${num(open)} open ${open === 1 ? "item" : "items"} in Monday, ${num(push)} ${push === 1 ? "needs" : "need"} a push`);
+    const lede = parts.join(". ").replace(/^./, (x) => x.toUpperCase()) + ".";
+    const g = c ? windowOf(c, "gbp_actions") : null;
+    const ks = [
+      m && m.has ? kpi("Ad spend, 7 days", money(m.sp.cur), delta(m.sp.cur, m.sp.prev)[0], "", spark(c.series.spend, m.sp.e)) : kpi("Ad spend, 7 days", "—", "No paid ads in Windsor", "", ""),
+      m && m.has ? kpi(m.sales ? "Sales, 7 days" : "Leads, 7 days", num(m.rs.cur), ...delta(m.rs.cur, m.rs.prev), spark(c.series[m.sales ? "purchases" : "leads"], m.rs.e)) : kpi("Leads, 7 days", "—", "", "", ""),
+      c ? kpi("Google profile actions", num(g.cur), ...delta(g.cur, g.prev), spark(c.series.gbp_actions, g.e)) : kpi("Google profile actions", "—", "", "", ""),
+      c && c.crm ? kpi("New GHL contacts, 28 days", num(c.crm.contacts), `${num(c.crm.opps_won || 0)} marked won`, "", "") : kpi("New GHL contacts", "—", "GHL not connected", "", ""),
+      kpi("In review", num(review), review ? "waiting on you or Nacer" : "", "", ""),
+      kpi("Needs a push", num(push), push ? "stuck, waiting or quiet" : "", push ? "down" : "", ""),
+    ];
+    const flags = [...(c ? paidFlags(c, m) : []), ...(c ? organicFlags(c) : []), ...(c ? crmFlags(c) : [])]
+      .sort((a, b) => ({ bad: 0, warn: 1, ok: 2 }[a[0]] - { bad: 0, warn: 1, ok: 2 }[b[0]]));
+    const sys = c && c.system;
+    const res = c && c.results ? "" : `<p class="note">Results from ${esc(sys ? sys.name : "the client's own system")}: not connected yet.</p>`;
+    return head(esc(lede), "Ads are the last 7 days in Windsor. Monday is as of the time shown top right.") +
+      `<div class="kpis six">${ks.join("")}</div>` + (flags.length ? `<div class="block"><h3>Worth a look</h3>${flagsHTML(flags)}</div>` : "") + res;
+  }
+
+  // ── agency view ────────────────────────────────────────────────────────
+  function adCells(name) {
+    const c = hubClient(name), m = c ? paidModel(c) : null;
+    if (!m || !m.has) return `<td class="na" colspan="3">No paid ads in Windsor</td>`;
+    if (m.sp.cur === 0) return `<td class="hot" colspan="3">No Windsor spend since ${esc(fmtDay(toDate(m.lastSpend)))}</td>`;
+    const unit = m.sales ? ["sale", "sales"] : ["lead", "leads"];
+    const cost = m.sales ? `${(m.rv.cur / m.sp.cur).toFixed(1)}× return` : (m.rs.cur ? `${money(m.sp.cur / m.rs.cur)} per lead` : "No leads");
+    const costPrev = m.sales ? (m.sp.prev ? `was ${(m.rv.prev / m.sp.prev).toFixed(1)}×` : "") : (m.rs.prev ? `was ${money(m.sp.prev / m.rs.prev)}` : "");
+    return `<td data-label="Ad spend, 7 days">${money(m.sp.cur)}<span class="sub">was ${money(m.sp.prev || 0)}</span></td>
+      <td data-label="Results, 7 days">${plural(m.rs.cur, ...unit)}${m.sales ? ` · ${money(m.rv.cur)}` : ""}<span class="sub">was ${num(m.rs.prev || 0)}</span></td>
+      <td data-label="Cost per result" class="${!m.sales && !m.rs.cur ? "hot" : ""}">${cost}<span class="sub">${costPrev}</span></td>`;
+  }
+  function renderAgency(items, names) {
+    const review = items.filter((i) => i.bucket === "review").sort((a, b) => (b.days ?? 0) - (a.days ?? 0));
+    const push = items.filter((i) => pushReason(i)).sort((a, b) => (b.days ?? 0) - (a.days ?? 0));
+    const shipped = shippedList(items);
+    $("today").textContent = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+    $("headline").innerHTML = `<a href="#review">${plural(review.length, "item", "items")}</a> ${review.length === 1 ? "is" : "are"} waiting on review, ` +
+      `<a href="#push">${num(push.length)}</a> ${push.length === 1 ? "needs" : "need"} a push, and <a href="#shipped">${num(shipped.length)}</a> shipped in the last 7 days.`;
+    $("review-rows").innerHTML = rowsHTML(review, { lane: true }, "Nothing is waiting on review.");
+    $("push-hint").textContent = `Stuck, waiting, reopened, past a timeline date, or no activity in Monday for ${S.quietDays}+ days (${S.quietOngoing}+ for Ongoing). Longest first.`;
+    const lanes = [...LANES, ...new Set(push.map((i) => i.lane).filter((l) => !LANES.includes(l)))];
+    $("push-rows").innerHTML = lanes.map((lane) => { const l = push.filter((i) => i.lane === lane);
+      return l.length ? `<h3>${esc(lane)}, ${l.length}</h3>` + rowsHTML(l, (it) => ({ reason: pushReason(it) }), "") : ""; }).join("") ||
+      `<div class="rows"><div class="empty">Nothing is stuck or quiet.</div></div>`;
+    $("shipped-rows").innerHTML = `<div class="rows">${shipped.length ? shipped.map((e) => shippedRow(e)).join("") : `<div class="empty">Nothing was marked Done in Monday in the last 7 days.</div>`}</div>`;
+
+    const by = {}; for (const it of items) (by[it.client] = by[it.client] || []).push(it);
+    $("client-rows").innerHTML = names.map((name) => {
+      const l = by[name] || [], open = l.filter(isOpen).length, rev = l.filter((i) => i.bucket === "review").length;
+      const p = l.filter((i) => pushReason(i)).length, later = l.filter((i) => i.bucket === "notStarted").length;
+      const ds = l.map((i) => i.days).filter((d) => d != null), last = ds.length ? Math.min(...ds) : null;
+      return `<tr class="c" data-client="${esc(name)}" tabindex="0"><td>${esc(name)}</td>
+        <td data-label="Open" class="${open ? "" : "zero"}">${open}</td><td data-label="In review" class="${rev ? "" : "zero"}">${rev}</td>
+        <td data-label="Needs a push" class="${p ? "hot" : "zero"}">${p}</td><td data-label="Not started" class="${later ? "" : "zero"}">${later}</td>
+        <td data-label="Last update" class="${last != null && last >= S.quietDays ? "hot" : ""}">${last == null ? "—" : last === 0 ? "today" : plural(last, "day ago", "days ago")}</td>
+        ${adCells(name)}</tr>`;
+    }).join("");
+    const w = S.ops && S.ops.window;
+    $("clients-hint").textContent = "Open work from Monday. " + (w ? `Ad numbers from Windsor for ${fmtDay(toDate(w.cur[0]))}–${fmtDay(toDate(w.cur[1]))}, compared with the week before. ` : "") + "Click a client to open it.";
+
+    const noStatus = items.filter((i) => i.bucket === "blank"), noOwner = items.filter((i) => i.bucket !== "done" && !i.people), noDate = items.filter((i) => isOpen(i) && !i.due);
+    const list = (a) => `<ul>${a.slice(0, 40).map((i) => `<li><a href="${esc(i.url)}" target="_blank" rel="noopener">${esc(i.name)}</a> <span style="color:var(--faint)">${esc(i.client)}, ${esc(i.lane)}</span></li>`).join("")}</ul>`;
+    $("gaps").innerHTML = "<strong style='color:var(--ink);font-weight:600'>Monday gaps</strong>" +
+      (noStatus.length ? `<details><summary>${plural(noStatus.length, "item has", "items have")} no status, so this page can't place ${noStatus.length === 1 ? "it" : "them"}</summary>${list(noStatus)}</details>` : "") +
+      (noOwner.length ? `<details><summary>${plural(noOwner.length, "item has", "items have")} no owner</summary>${list(noOwner)}</details>` : "") +
+      (noDate.length ? `<details><summary>${plural(noDate.length, "open item has", "open items have")} no timeline date, so ${noDate.length === 1 ? "it" : "they"} can't show as overdue</summary>${list(noDate)}</details>` : "");
+    $("rules").innerHTML = [
+      "Everything comes from Monday status, owner, timeline and dates; Windsor ad and organic totals; GHL counts; and each client's own system once connected. Nothing is written or scored by AI.",
+      "Waiting on review: status For Review.",
+      `Needs a push: Stuck, Reopened, Waiting or Contingent; a timeline end date that has passed; or an in-progress item with no activity in ${S.quietDays} days (${S.quietOngoing} for Ongoing).`,
+      "Days: since the newest of the item's last change, last update post, Last Activity Date and creation date.",
+      "Shipped: Monday's webhook records each status change to Done. Only those events count.",
+      "Ad and organic numbers: the latest 7 fully reported days vs the 7 before. Trend only; LSA and anything billed outside Windsor isn't included.",
+    ].map((t) => `<li>${esc(t)}</li>`).join("");
+  }
+  $("client-rows").addEventListener("click", (e) => { const tr = e.target.closest("tr.c"); if (tr) go(tr.dataset.client, "overview"); });
+  $("client-rows").addEventListener("keydown", (e) => { if ((e.key === "Enter" || e.key === " ") && e.target.matches("tr.c")) { e.preventDefault(); go(e.target.dataset.client, "overview"); } });
+
+  // ── routing + render ───────────────────────────────────────────────────
+  function route() {
+    const p = new URLSearchParams(location.hash.slice(1));
+    const t = p.get("t"); return { client: p.get("c"), tab: TABS.some(([k]) => k === t) ? t : "overview" };
+  }
+  function go(client, tab) { location.hash = client ? `c=${encodeURIComponent(client)}&t=${tab || "overview"}` : ""; }
+  window.addEventListener("hashchange", render);
+
+  function render() {
+    const payload = S.live || S.snapshot; if (!payload) return;
+    const items = normalize(payload);
+    const names = [...new Set([...items.map((i) => i.client), ...Object.keys((S.hub && S.hub.clients) || {})])]
+      .sort((a, b) => (a === "Flow Company") - (b === "Flow Company") || a.localeCompare(b));
+    const r = route();
+
+    // rail
+    const pushCount = (n) => items.filter((i) => i.client === n && pushReason(i)).length;
+    $("rail-nav").innerHTML = `<a class="agency ${r.client ? "" : "on"}" href="#">Agency</a><div class="group">Clients</div>` +
+      names.map((n) => { const c = pushCount(n); return `<a class="${r.client === n ? "on" : ""}" href="#c=${encodeURIComponent(n)}&t=${r.tab}"><span>${esc(n)}</span>${c ? `<span class="n" title="Needs a push">${c}</span>` : ""}</a>`; }).join("");
+    $("rail-select").innerHTML = `<option value="">Agency</option>` + names.map((n) => `<option ${r.client === n ? "selected" : ""}>${esc(n)}</option>`).join("");
+
+    $("view-agency").hidden = !!r.client; $("view-client").hidden = !r.client;
+    if (!r.client) { renderAgency(items, names); renderFresh(); return; }
+
+    const c = hubClient(r.client);
+    $("c-name").textContent = r.client;
+    const srcs = ["Monday", c && c.accounts.length ? "Windsor" : null, c && c.crm ? "GHL" : null, c && c.system ? `${c.system.name}${c.results ? "" : " (not connected)"}` : null].filter(Boolean);
+    $("c-src").textContent = "Sources: " + srcs.join(", ") + ".";
+    $("c-tabs").innerHTML = TABS.map(([k, l]) => `<a href="#c=${encodeURIComponent(r.client)}&t=${k}" class="${r.tab === k ? "on" : ""}" ${r.tab === k ? 'aria-current="page"' : ""}>${l}</a>`).join("");
+    const panel = { overview: () => overviewTab(r.client, c, items), results: () => resultsTab(r.client, c), paid: () => paidTab(r.client, c),
+      organic: () => organicTab(r.client, c), crm: () => crmTab(r.client, c), work: () => workTab(r.client, items) }[r.tab];
+    $("c-panel").innerHTML = panel();
+    renderFresh();
+  }
+  $("rail-select").addEventListener("change", (e) => go(e.target.value, route().tab));
+
+  // ── freshness, live Monday, Daily Ops queue ────────────────────────────
+  function renderFresh() {
+    const ads = S.ops && S.ops.through ? ` Ads through ${fmtDay(toDate(S.ops.through))}.` : "";
+    if (S.live) { $("fresh").textContent = `Monday live as of ${fmtTime(new Date(S.live.generated_at))}.${ads}`; return; }
+    const snap = S.snapshot && S.snapshot.generated_at ? fmtTime(new Date(S.snapshot.generated_at)) : "unknown";
+    $("fresh").innerHTML = `Monday as of the ${esc(snap)} sync.${ads} ` + (S.liveError ? `<span class="err">${esc(S.liveError)}</span> ` : "") +
+      `<button type="button" id="go-live">Read Monday live</button>`;
+    $("go-live").onclick = () => {
+      if (localStorage.getItem(PASS_KEY) && !S.liveError) return loadLive();
+      $("fresh").insertAdjacentHTML("beforeend", ` <input id="pass" type="password" placeholder="Ops passcode" aria-label="Ops passcode">`);
+      $("go-live").remove(); const input = $("pass"); input.focus();
+      input.onkeydown = (e) => { if (e.key === "Enter" && input.value) { localStorage.setItem(PASS_KEY, input.value); S.liveError = ""; loadLive(); } };
+    };
+  }
+  async function loadLive() {
+    const key = localStorage.getItem(PASS_KEY); if (!key) return;
+    $("fresh").textContent = "Reading Monday live…";
+    try {
+      const [res, q] = await Promise.all([
+        fetch("/.netlify/functions/ops-live", { headers: { "x-ops-key": key } }),
+        fetch("/.netlify/functions/queue", { headers: { "x-ops-key": key } }).catch(() => null),
+      ]);
+      if (res.status === 401) { localStorage.removeItem(PASS_KEY); throw new Error("Passcode didn't match."); }
+      if (!res.ok) throw new Error("Live read failed, showing the morning sync.");
+      S.live = await res.json(); S.liveError = "";
+      if (q && q.ok) { const d = await q.json(); S.queue = (d.items || []).filter((i) => !["sent", "done", "ignored"].includes(i.status) && !i.mondayItemId); }
+    } catch (err) { S.liveError = err.message; }
+    render();
+  }
+  async function getJSON(path) { try { const r = await fetch(path, { cache: "no-store" }); return r.ok ? r.json() : null; } catch { return null; } }
+
+  (async function init() {
+    const [snap, ops, hub] = await Promise.all([getJSON("monday-items.json"), getJSON("ops.json"), getJSON("hub.json")]);
+    S.snapshot = snap; S.ops = ops; S.hub = hub || { clients: {}, complete_through: {} };
+    const set = (ops && ops.settings) || {};
+    if (set.quiet_days) S.quietDays = set.quiet_days;
+    if (set.quiet_days_ongoing) S.quietOngoing = set.quiet_days_ongoing;
+    if (!snap) $("headline").textContent = "Couldn't load the Monday snapshot (monday-items.json).";
+    render();
+    if (localStorage.getItem(PASS_KEY)) loadLive();
+  })();
+})();
+</script>
 </body>
 </html>
