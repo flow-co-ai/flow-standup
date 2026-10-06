@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T17:27:53.310Z",
+  "generated_at": "2026-10-06T18:02:35.055Z",
   "date": "2026-10-06",
   "slug": "full-smile",
   "name": "Full Smile",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Meta drove all 6 leads over 28 days at a $30.13 CPL across $180.80 in spend, but the biggest movement is a 66.67% drop in Instagram engagement over the last 7 days, likely driven by reduced creative reach as the top campaign \"BWS - Instant Leads - Awareness\" concentrates budget on awareness rather than conversion. GHL shows 12 opportunities created against only 6 leads reported in Meta, and these figures are unreconciled.",
+  "verdict": "Meta drove all 6 leads over 28 days at a $30.13 CPL on $180.80 spend, but GBP actions are trending down 17.95% week-over-week, likely tied to an 18.18% drop in Search Console visibility pulling fewer organic visitors into the funnel. Windsor reports 6 leads while GHL shows 13 opportunities created from 176 contacts — these figures are unreconciled.",
   "windsor": {
     "totals": {
       "spend": 180.8,
@@ -73,6 +73,10 @@
       "leads": 0,
       "meta_spend": 0,
       "google_spend": 0,
+      "meta_leads": 0,
+      "meta_clicks": 0,
+      "google_conversions": 0,
+      "google_clicks": 0,
       "gbp_actions": 0,
       "ig_reach": 0,
       "sc_clicks": 0,
@@ -85,6 +89,14 @@
       "ctc_60s_connect": 0,
       "gbp_profiles": {
         "locations/9295260348937485711": 0
+      },
+      "gbp_by_profile": {
+        "locations/9295260348937485711": {
+          "calls": 0,
+          "directions": 0,
+          "web_clicks": 0,
+          "impressions": 0
+        }
       }
     },
     "deltas": {
@@ -554,10 +566,10 @@
     }
   },
   "ghl": {
-    "contacts": 175,
+    "contacts": 176,
     "opportunities": {
       "created": {
-        "count": 12,
+        "count": 13,
         "value": 61.6
       },
       "won": {
@@ -569,8 +581,8 @@
   },
   "reconciliation": {
     "windsor_leads": 6,
-    "ghl_contacts": 175,
-    "ghl_opps_created": 12,
+    "ghl_contacts": 176,
+    "ghl_opps_created": 13,
     "ghl_opps_won": 0,
     "status": "both_active"
   },
@@ -708,81 +720,80 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-10-06T17:29:54.974Z",
+    "generated_at": "2026-10-06T18:07:48.996Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Ads dead since Sep 15 — GBP carrying the account alone now.",
+    "verdict": "Paid ads dark 22 days; GHL pipeline unreconciled; overdue milestones threaten renewal.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "All paid spend stopped Sep 15; last 20 days show $0 spend and 0 leads — CPL is undefined because there is no active campaign.",
+        "text": "Meta spend has been $0 since Sep 15 — all 6 leads and $180.80 spend occurred in the first 7 days of the 28-day window only.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "Meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "5 overdue SOW milestones (earliest Jul 23): phone-match attribution, CRM cleanup, dashboard, and renewal scoreboard all undelivered — August prove-it window has closed.",
+        "text": "5 overdue milestones (oldest: Jul 23) — phone attribution, sync cleanup, dashboard, and August scoreboard all undelivered; renewal trust at risk.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GHL shows 12 opportunities created vs only 6 Meta leads reported — 6-opp gap unreconciled; intake pipeline may be double-counting or sourcing from GBP calls.",
+        "text": "GHL shows 13 opportunities from 176 contacts but 0 won and 0 appointments; Windsor reports 6 leads — a 6-vs-13 gap signals an intake or tagging leak, not an ads problem.",
         "confidence": "probable",
         "channel": "GHL"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Instagram reach collapsed from ~105/day (Sep 8–14) to 0–1/day since Sep 15 — mirrors the spend shutoff, not organic fatigue.",
+        "text": "GBP actions down 17.95% week-over-week and Search Console clicks down 18.18%; last 3 days show 0 GBP actions vs a prior-3-day average of ~5 — organic decay is accelerating.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "GBP"
       },
       {
         "id": "F5",
-        "priority": 4,
-        "text": "GBP is the only active channel: 190 actions and 77 calls in 28 days, but gbp_actions dropped 17.95% last 7 days — organic floor is softening with no paid support.",
-        "confidence": "probable",
-        "channel": "gbp"
+        "priority": 3,
+        "text": "Instagram reach collapsed 66.67% week-over-week; series confirms near-zero reach since Sep 16 (0–3/day) vs 91–127/day in the prior active week.",
+        "confidence": "confirmed",
+        "channel": "Instagram"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Immediately diagnose and restore Meta campaign spend — $0 for 20 days confirms a campaign-level pause or billing failure, not a strategy.",
+        "text": "Reactivate Meta campaign immediately — $0 spend for 22 days means zero leads entering the funnel.",
         "cites": [
-          "F1",
-          "F4"
+          "F1"
         ],
-        "monday_item_name": "Restore Meta Campaign Spend",
-        "monday_update": "Meta spend has been $0 since Sep 15 (20 consecutive zero-spend days) and IG reach dropped from ~105/day to 0 — this is a paused or billing-failed campaign, not a planned action. Immediately check campaign status, billing, and ad account standing in Meta Business Manager and restore to prior daily budget. Success check: spend resumes and at least 1 lead recorded within 3 days of reactivation (by Oct 9). If billing is the cause, escalate to client same day."
+        "monday_item_name": "Reactivate Meta Ads",
+        "monday_update": "Meta spend has been $0 since September 15, producing zero leads for 22 consecutive days. Reactivate the 'BWS - Instant Leads - Awareness' campaign at its last confirmed daily rate (~$25–38/day based on Sep 8–11 actuals). Success check: at least 1 confirmed lead within 5 days of reactivation. Review on 2026-10-11."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Reconcile the 6-opp gap in GHL vs Meta leads and close the phone-match attribution gap — overdue since Aug 7.",
+        "text": "Reconcile GHL 13-opp vs Windsor 6-lead gap to confirm whether intake leak is hiding real lead volume.",
         "cites": [
-          "F2",
-          "F3"
+          "F3",
+          "F2"
         ],
-        "monday_item_name": "Close Attribution + GHL Gap",
-        "monday_update": "GHL reports 12 opportunities against only 6 Meta leads — a 6-record gap that is unreconciled and the phone-match attribution fix was due Aug 7. Audit each GHL opportunity's source field to determine whether the extras are GBP call-ins, direct contacts, or duplicates. Attribution gap closure is a prove-it blocker and the dashboard cannot be trusted until this is clean. Success check: every GHL opportunity has a verified source tag and the Meta vs GHL count discrepancy is explained in writing by Oct 10."
+        "monday_item_name": "GHL Pipeline Reconciliation",
+        "monday_update": "GHL shows 13 opportunities created from 176 contacts while Windsor reports only 6 leads, and 0 appointments are logged against those opportunities. The team needs to audit contact tagging and opportunity source fields to determine how many of the 13 are real qualified leads vs duplicates or mis-tags. Success check: a clean reconciled count with source attribution confirmed and the dashboard milestone (overdue since Aug 31) unblocked. Complete by 2026-10-10."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions weekly — down 17.95% last 7 days; if it drops another 15% without paid support returning, organic floor is at risk.",
+        "text": "Watch GBP actions and Search Console clicks over next 7 days — 3-day signal shows 0 actions, confirming accelerating organic decay.",
         "cites": [
-          "F5"
+          "F4"
         ],
-        "monday_item_name": "Watch GBP Action Trend",
-        "monday_update": "GBP delivered 190 actions and 77 calls in 28 days and is currently the only lead-adjacent channel active, but actions fell 17.95% in the last 7 days. Monitor GBP weekly; if actions drop a further 15% by Oct 13, flag to Nacer — the organic floor is softening without paid traffic reinforcing brand signals. No action required this week unless the Meta fix (S1) is delayed past Oct 9."
+        "monday_item_name": "GBP Organic Decay Watch",
+        "monday_update": "GBP actions are down 17.95% week-over-week and the last 3 days recorded 0 actions, down from a prior-3-day average of ~5. Search Console clicks are also down 18.18%. No action is taken this cycle as the cause (SEO/GBP content gap vs algorithm shift) is unconfirmed. Re-check on 2026-10-13: if GBP actions remain below 3/day for a full week, escalate to an SEO/GBP content fix."
       }
     ],
-    "next_check": "2026-10-09"
+    "next_check": "2026-10-13"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T17:28:29.109Z",
+  "generated_at": "2026-10-06T18:03:29.491Z",
   "date": "2026-10-06",
   "slug": "liferun",
   "name": "Liferun",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Meta drove all 48 leads over 28 days at a $16.20 CPL while Google Ads spent $201.22 and generated zero conversions, making it the biggest drag on efficiency. GBP engagement dropped 44% week-over-week, though the single Liferun profile still logged 55 direction requests, suggesting local intent remains but is declining.",
+  "verdict": "Meta drove all 48 leads over 28 days at a $16.20 CPL while Google Ads spent $201.22 and generated zero conversions, making it the biggest drag on efficiency. GBP engagement dropped 44% week-over-week, likely tied to reduced local search visibility or seasonal intent shifts.",
   "windsor": {
     "totals": {
       "spend": 777.82,
@@ -67,6 +67,10 @@
       "leads": 0,
       "meta_spend": 0,
       "google_spend": 0,
+      "meta_leads": 0,
+      "meta_clicks": 0,
+      "google_conversions": 0,
+      "google_clicks": 0,
       "gbp_actions": 0,
       "ig_reach": 0,
       "sc_clicks": 0,
@@ -79,6 +83,14 @@
       "ctc_60s_connect": 0,
       "gbp_profiles": {
         "locations/1230522329202519428": 0
+      },
+      "gbp_by_profile": {
+        "locations/1230522329202519428": {
+          "calls": 0,
+          "directions": 0,
+          "web_clicks": 0,
+          "impressions": 0
+        }
       }
     },
     "deltas": {
@@ -699,79 +711,79 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-10-06T17:31:30.600Z",
+    "generated_at": "2026-10-06T18:09:27.671Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Ads have been fully dark 18 days; SOW blockers compound the silence.",
+    "verdict": "Ads went dark Sep 17; all 8 overdue milestones compound the stall.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "All paid spend is $0 since Sep 17 — 18 consecutive dark days. Zero leads, zero Meta, zero Google. Full account blackout, not a channel issue.",
+        "text": "All spend, leads, and CTC calls dropped to zero on Sep 17 and remain zero for 19 consecutive days — campaigns appear fully paused.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "6 overdue SOW milestones span CRM, Google, Meta, Web, Creative — all past due between Jul 20 and Sep 30, 2026. Offline conversions and CAPI never went live.",
+        "text": "8 SOW milestones overdue (oldest Jul 20): Stripe QA, GHL build, stack re-test, money paths (Becklar+BWS), offline conversion import, CAPI, landing pages, UGC batch — all blocking attribution and scaling.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Google Ads spent $201.22 over 28 days and returned 0 conversions. Top campaign 'BWS - July - Call Campaign' consumed $192.95 with no measurable outcome.",
-        "confidence": "confirmed",
-        "channel": "google"
+        "text": "Google Ads spent $201.22 over 28 days with 0 conversions and only 37 clicks; pixel/conversion tracking is almost certainly broken, not the campaigns.",
+        "confidence": "probable",
+        "channel": "google_ads"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GHL shows 82 contacts and 82 opportunities created but 0 won, 0 appointments. Leads arrived but zero progressed — intake pipeline is not converting.",
+        "text": "GHL shows 82 contacts and 82 opportunities created but 0 won and 0 appointments — leads arrived but intake funnel is not converting any to activated subscribers.",
         "confidence": "confirmed",
-        "channel": "GHL"
+        "channel": "crm"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GBP actions dropped 44% week-over-week and hit 0 the last 3 days (Oct 3–5 vs Oct 1–3 avg of 0.67). Local intent signal is fading with no paid support.",
-        "confidence": "probable",
-        "channel": "GBP"
+        "text": "GBP actions fell 44% week-over-week; with paid traffic fully dark, organic (58 actions, 1 call over 28 days) is the only active demand signal and it is thin.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Diagnose and restore Meta + Google spend immediately; 18 dark days confirm a billing or account access break, not a strategy call.",
+        "text": "Confirm reason for full ad pause since Sep 17; reactivate Meta campaigns at prior $28/day spend level immediately if budget is available.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Restore Paid Ads Spend",
-        "monday_update": "All paid channels have been at $0 spend since September 17 — 18 consecutive days with zero Meta and zero Google activity. Confirm account billing status, payment method, and policy flags on both platforms today. Success is confirmed spend resuming within 24 hours. Re-check October 7."
+        "monday_item_name": "Reactivate Meta Campaigns Now",
+        "monday_update": "Meta spend has been $0 for 19 consecutive days (Sep 17–Oct 5), wiping all lead volume. Confirm with Sohib whether this was intentional or a billing/account issue, then restore Meta daily budget to the prior $28/day level. Success check: leads resume within 3 days of reactivation and CPL stays below the $16.20 28-day baseline. Verify by Oct 9."
       },
       {
         "id": "S2",
-        "type": "kill",
-        "text": "Pause Google 'BWS - July - Call Campaign'; $192.95 spent, 0 conversions over 28 days — confirmed dead weight once spend resumes.",
-        "cites": [
-          "F3",
-          "F1"
-        ],
-        "monday_item_name": "Pause Google Zero-Conv Campaign",
-        "monday_update": "The BWS - July - Call Campaign spent $192.95 over 28 days and produced 0 conversions. When paid spend is restored, pause this campaign before reactivating Google budget. Success is zero further spend on this campaign. Offline conversion import (overdue since Sep 30) must be live before any Google campaign is re-evaluated. Re-check October 9."
-      },
-      {
-        "id": "S3",
         "type": "fix",
-        "text": "Escalate 6 overdue SOW milestones to Nacer; CAPI and offline conversion import are blocking attribution on both active channels.",
+        "text": "Fix Google Ads conversion tracking (offline import overdue Sep 30); $201.22 spent with 0 recorded conversions confirms a broken pixel, not bad campaigns.",
         "cites": [
           "F2",
           "F3"
         ],
-        "monday_item_name": "Clear Overdue SOW Blockers",
-        "monday_update": "Six milestones are past due, the oldest from July 20. CAPI and offline conversion import (both Sep 30 deadline) mean neither Meta nor Google has valid conversion data — Google reads 0 conversions as a result. Nacer to confirm completion dates for each item this week. Success is all 6 marked done with verification evidence. Re-check October 13."
+        "monday_item_name": "Google Offline Conversion Import Fix",
+        "monday_update": "Google Ads recorded 0 conversions on $201.22 of spend over 28 days; the Offline Conversion Import milestone was due Sep 30 and is overdue. Task: implement and verify the offline conversion import so call-confirmed leads (48 recorded in CTC over the active period) flow back into Google as conversions. Success check: at least 1 imported conversion visible in Google Ads dashboard within 7 days of fix going live. Target completion: Oct 13."
+      },
+      {
+        "id": "S3",
+        "type": "fix",
+        "text": "Audit GHL intake: 82 contacts, 0 appointments, 0 won — leads are entering but no activation is occurring; Becklar+BWS money-path verification is overdue Sep 30.",
+        "cites": [
+          "F2",
+          "F4"
+        ],
+        "monday_item_name": "GHL Intake & Money Path Audit",
+        "monday_update": "GHL shows 82 opportunities created with 0 won and 0 appointments booked — leads are arriving but none are progressing to activated subscriber status, which is the client's actual success metric. The Becklar billing drop and BWS duplicate-check verifications were due Sep 30 and remain unconfirmed. Run the dummy deactivation test on Becklar and the dual-intake order test on BWS immediately. Success check: both tests pass with zero duplicate opportunities and Becklar invoice reflects the drop. Complete by Oct 13."
       }
     ],
     "next_check": "2026-10-09"

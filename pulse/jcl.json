@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T17:28:19.556Z",
+  "generated_at": "2026-10-06T18:03:20.447Z",
   "date": "2026-10-06",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "The biggest movement is a 29.73% surge in leads over the last 7 days, driving CPL down 16.4%, likely fueled by the \"Leads - August Re-Launch\" campaign ($1,785.94 spend across 139 leads at $12.85 CPL). However, GBP actions dropped 51.72% week-over-week and CRM reconciliation shows 139 Meta leads against only 120 GHL contacts with 0 opportunities created, suggesting a pipeline follow-up gap that needs attention.",
+  "verdict": "The biggest movement is a 29.73% surge in leads week-over-week, driving CPL down 16.4% to $12.85, likely fueled by momentum in the \"Leads - August Re-Launch\" campaign ($1,785.94 spend). However, GBP actions dropped 51.72% over the same 7-day period, suggesting organic discovery is softening even as paid Meta performance improves.",
   "windsor": {
     "totals": {
       "spend": 1785.94,
@@ -73,6 +73,10 @@
       "leads": 3,
       "meta_spend": 75.42,
       "google_spend": 0,
+      "meta_leads": 3,
+      "meta_clicks": 56,
+      "google_conversions": 0,
+      "google_clicks": 0,
       "gbp_actions": 0,
       "ig_reach": 132,
       "sc_clicks": 0,
@@ -85,6 +89,14 @@
       "ctc_60s_connect": 0,
       "gbp_profiles": {
         "locations/3362232819248488877": 0
+      },
+      "gbp_by_profile": {
+        "locations/3362232819248488877": {
+          "calls": 0,
+          "directions": 0,
+          "web_clicks": 0,
+          "impressions": 0
+        }
       }
     },
     "deltas": {
@@ -697,77 +709,78 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-10-06T17:31:06.854Z",
+    "generated_at": "2026-10-06T18:09:02.091Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "CPL at $12.85 is strong, but zero GHL opps exposes an intake failure, not an ads problem.",
+    "verdict": "Meta efficiency confirmed strong; intake and organic decay are the real risks.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "CPL fell to $12.85 over 28 days (16.4% drop vs prior 7d) — well below the $19–45/wk range seen in July. Efficiency is the best on record.",
+        "text": "CPL at $12.85 (28-day) is well below the July peak of $45/wk; 3-day leads (Oct 3–5: 5+12+3=20) vs prior 3 (Sep 30–Oct 2: 12+8+3=23) show a slight softening but 90-day trend is healthy.",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "Meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "⛔ Extension with Marwan unsigned since Aug 31; engagement is month-to-month with no contract. Gates the next 3-month plan.",
+        "text": "⛔ Extension with Marwan unsigned since Aug 31; engagement is month-to-month lapsed — contract risk blocks the next 3-month plan.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "⛔ SMS automation and Zoho Voice access both overdue since Aug 31; retargeting seed audience, GBP cadence, and case tracking overdue since Sep 30 — 5 milestones unresolved.",
+        "text": "⛔ SMS automation and Zoho Voice access both overdue since Aug 31; retargeting seed, GBP cadence, and case tracking overdue since Sep 30 — 5 milestones undelivered across CRM, Meta, and SEO.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "139 Meta leads in 28 days, 120 GHL contacts, 0 opportunities created — leads are arriving but not entering the pipeline. Intake leak, not an ads problem.",
+        "text": "GHL shows 139 leads delivered but 0 opportunities created and 0 appointments — leads are arriving but none converting to pipeline, confirming an intake leak, not an ads problem.",
         "confidence": "confirmed",
-        "channel": "crm"
+        "channel": "GHL"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GBP actions dropped 51.72% week-over-week (0 actions logged on Oct 3–5); search clicks also fell 50.24%. Organic signal is collapsing alongside missing GBP cadence milestone.",
-        "confidence": "probable",
-        "channel": "gbp"
+        "text": "GBP actions dropped 51.72% week-over-week (from ~33 to ~16 estimated) and last 3 series days show 0 GBP actions; search clicks also fell 50.24% — organic discovery collapsing while paid improves.",
+        "confidence": "confirmed",
+        "channel": "GBP"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Fix GHL intake: map 139 Meta leads to opportunities; target 0 unworked contacts within 7 days.",
+        "text": "Fix GHL intake leak: map 139 leads to opportunity pipeline; target 0→20 opps created within 7 days.",
         "cites": [
           "F4"
         ],
         "monday_item_name": "Fix GHL Intake Pipeline",
-        "monday_update": "139 Meta leads arrived in 28 days but GHL shows 0 opportunities created and 120 contacts with no pipeline movement — this is an intake configuration or workflow failure, not an ads problem. Action: audit the GHL lead-to-opportunity workflow with Andrew, confirm instant-form webhook is firing correctly, and manually triage any unworked contacts. Success check: ≥50% of the 139 leads converted to GHL opportunities by 2026-10-13. If the webhook is broken, escalate to Nacer immediately."
+        "monday_update": "GHL received 139 Meta leads in the 28-day window but shows 0 opportunities created and 0 appointments booked — this is a CRM intake leak, not an ads failure. Coordinate with Andrew to confirm lead-to-opportunity automation is wired correctly in GHL and Zoho. Success check: at least 20 opportunities created in GHL by 2026-10-13. If the automation is broken, escalate to Nacer immediately as this blocks Marwan's case-count metric."
       },
       {
         "id": "S2",
-        "type": "scale",
-        "text": "Scale 'Leads – August Re-Launch' daily budget +20% (~$15/day) given $12.85 CPL — record low efficiency.",
+        "type": "fix",
+        "text": "Escalate 5 overdue SOW milestones to Nacer; ⛔ extension signature is the single gate blocking all forward planning.",
         "cites": [
-          "F1"
+          "F2",
+          "F3"
         ],
-        "monday_item_name": "Scale Meta Re-Launch +20%",
-        "monday_update": "The 'Leads – August Re-Launch' campaign delivered 139 leads at a $12.85 CPL over 28 days — the lowest CPL on record for this account (prior range $19–45/wk in July). Spend is running at $76.58/day; a +20% step raises daily budget to approximately $92/day. Success check: CPL remains below $20 and weekly lead volume holds above 20 leads/week at the 2026-10-13 re-check. Do not scale further until GHL intake is confirmed functional (see S1)."
+        "monday_item_name": "Escalate Overdue SOW Items",
+        "monday_update": "Five milestones are undelivered: Marwan extension (overdue Aug 31), SMS automation (Aug 31), Zoho Voice access (Aug 31), retargeting seed audience (Sep 30), GBP cadence (Sep 30), and case tracking + GHL auto-logging (Sep 30). Sohib should flag the unsigned extension to Marwan as the immediate priority — it gates the next 3-month term and all associated deliverables. Success check: extension signed and at least 2 CRM milestones unblocked by 2026-10-13."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions: 0 logged Oct 3–5; re-check Oct 9 before declaring channel dark.",
+        "text": "Watch GBP actions: 3 consecutive zero-action days — re-check Oct 9 before any organic intervention.",
         "cites": [
           "F5"
         ],
-        "monday_item_name": "Watch GBP Actions Oct 9",
-        "monday_update": "GBP actions dropped 51.72% week-over-week and recorded 0 actions on Oct 3, 4, and 5 — a 3-day zero streak. This aligns with the overdue GBP cadence milestone (due Sep 30). No action is taken this cycle because the data gap may reflect a reporting lag. Re-check on 2026-10-09: if GBP actions remain at 0, escalate as channel dark and prioritize the GBP cadence deliverable with the Web/SEO team."
+        "monday_item_name": "Watch GBP Action Recovery",
+        "monday_update": "GBP actions have dropped 51.72% week-over-week and show 3 consecutive zero-action days (Oct 3–5) in the series. This may reflect a data reporting lag or a genuine organic discovery collapse. Do not act until the Oct 9 check confirms whether the zeros persist — if they do, escalate the GBP cadence milestone (already overdue Sep 30) as a contributing factor. Success check: GBP actions return above 5/day average by 2026-10-09."
       }
     ],
     "next_check": "2026-10-09"

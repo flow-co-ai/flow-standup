@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T17:27:45.490Z",
+  "generated_at": "2026-10-06T18:02:26.152Z",
   "date": "2026-10-06",
   "slug": "billy-doe",
   "name": "Billy Doe Meats",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 81,
   "status": "green",
-  "verdict": "Billy Doe Meats drove $5,740.37 in Meta revenue at a 3.86 ROAS over 28 days, but the biggest concern is a 28.57% drop in purchases week-over-week, likely tied to the top campaign \"BWS - Sales - Muslims\" ($841.02 spend) carrying the bulk of budget with limited diversification. GBP engagement also fell sharply at -71.33% week-over-week, suggesting reduced local visibility that may be compounding the purchase decline.",
+  "verdict": "Billy Doe Meats drove $5,740.37 in Meta revenue at a 3.86 ROAS over 28 days, but the biggest concern is a 28.57% drop in purchases week-over-week, likely tied to the top campaign \"BWS - Sales - Muslims\" pulling $841.02 of the $1,485.36 spend while overall ROAS slipped 8.76% in the same period.",
   "windsor": {
     "totals": {
       "spend": 1485.36,
@@ -76,6 +76,10 @@
       "leads": 0,
       "meta_spend": 59.03,
       "google_spend": 0,
+      "meta_leads": 0,
+      "meta_clicks": 25,
+      "google_conversions": 0,
+      "google_clicks": 0,
       "gbp_actions": 0,
       "ig_reach": 584,
       "sc_clicks": 0,
@@ -88,6 +92,14 @@
       "ctc_60s_connect": 0,
       "gbp_profiles": {
         "locations/17076764668101686399": 0
+      },
+      "gbp_by_profile": {
+        "locations/17076764668101686399": {
+          "calls": 0,
+          "directions": 0,
+          "web_clicks": 0,
+          "impressions": 0
+        }
       }
     },
     "deltas": {
@@ -702,78 +714,79 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-10-06T17:29:29.092Z",
+    "generated_at": "2026-10-06T18:07:25.107Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "ROAS holding but purchase volume softening; GBP collapse and SOW debt are the real risks.",
+    "verdict": "Purchase drop is real and deepening; ROAS floor not yet broken but at risk.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "3-day purchase signal (Oct 3–5): 0, 1, 1 vs prior 3 days (Sep 30–Oct 2): 0, 2, 0 — effectively flat at near-zero; 28-day ROAS 3.86x but only 33 purchases total.",
+        "text": "3-day purchases (Oct 3–5): 0+1+1=2 vs prior 3-day (Sep 30–Oct 2): 0+2+0=2 — flat, but 28-day ROAS slipped to 3.86 and purchases fell 28.57% week-over-week. Revenue efficiency is eroding.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "7 overdue SOW milestones span Admin, CRM, Ads, Web, Video — oldest is Aug 14 live-cooking event; funnel test and UTM still unresolved blocks paid attribution.",
+        "text": "Aug 14 live-cooking event, Aug 31 pre-launch gate, platform ownership audit, funnel test + UTM, Sep 30 monthly report, all flows, and subscribe pages — 7 SOW milestones overdue with no completion event recorded.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GBP actions collapsed to 0 on Oct 4–5 vs 19–30/day in early September — a 100% 2-day drop in local-intent signals that compounds ecom purchase softness.",
+        "text": "GBP actions collapsed 71.33% week-over-week; last 5 series days show 6, 2, 0, 0 actions — organic local discovery has effectively gone dark for 4 consecutive days.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Spend steady at ~$54/day but revenue is erratic (0, 0, $244, $398 last 4 days) — flat spend with volatile output on a single campaign ($841 of $1,485 28d spend) is classic single-creative fatigue.",
+        "text": "Spend held steady (~$54/day) while purchases trended zero across Oct 3–4; flat spend + falling results with no tracked creative or landing-page change signals creative fatigue on BWS - Sales - Muslims ($841.02 of $1,485.36 28-day spend).",
         "confidence": "probable",
         "channel": "meta"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GA4 sessions down -13.62% week-over-week (recent 3-day avg ~250 vs prior ~290) while IG reach is flat at ~614 avg — organic is not compensating for paid softness.",
-        "confidence": "probable",
-        "channel": "ga4"
+        "text": "GA4 sessions fell 13.62% week-over-week yet IG reach rose 1.84%; paid traffic is not converting to site visits at the same rate, suggesting a mid-funnel drop between ad click and landing.",
+        "confidence": "hypothesis",
+        "channel": "meta"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Escalate Funnel test closure + UTM live immediately; attribution blind spot confirmed since Aug 31 — 36 days overdue.",
-        "cites": [
-          "F2"
-        ],
-        "monday_item_name": "Close Funnel Test + UTM",
-        "monday_update": "The 'Funnel test closed + UTM live' milestone was due Aug 31 and remains open as of Oct 6 — 36 days overdue. Without UTM firing correctly, Windsor/Meta reconciliation is unreliable and the ROAS 3.86x figure cannot be fully trusted. Owner: Khurram (Ads — Meta). Success check: UTM parameters confirmed firing on all purchase events in Windsor by Oct 10."
-      },
-      {
-        "id": "S2",
         "type": "creative_refresh",
-        "text": "Introduce at least one new real-footage creative into BWS - Sales - Muslims; single campaign carrying 56% of 28-day spend shows volatile revenue.",
+        "text": "Introduce at least 1 new real-footage creative into BWS - Sales - Muslims to counter probable fatigue; do not raise budget until new creative proves ROAS ≥ 3.86.",
         "cites": [
           "F4",
           "F1"
         ],
-        "monday_item_name": "New Creative BWS Muslims",
-        "monday_update": "BWS - Sales - Muslims carried $841.02 of $1,485.36 in 28-day spend and purchases have dropped 28.57% week-over-week with revenue swinging between $0 and $398 on consecutive days. Haney's facility footage (delivered Jul 21) should be cut into at least one new ad variant using approved real or stock footage — no AI video per client rules. Success check: new creative live by Oct 10; monitor purchase rate over the following 3-day window (Oct 10–13) for stabilisation above 1 purchase/day."
+        "monday_item_name": "Refresh BWS Muslims Creative",
+        "monday_update": "BWS - Sales - Muslims has absorbed $841.02 of the 28-day spend while purchases dropped 28.57% week-over-week and the 3-day purchase signal is flat at 2 units (Oct 3–5). Add one new real-facility or product creative (Haney's July 21 footage is approved) into this campaign without increasing daily budget. Success check: purchases return to ≥ 3/day average and ROAS holds at or above 3.86 within 7 days of launch (by 2026-10-13)."
+      },
+      {
+        "id": "S2",
+        "type": "fix",
+        "text": "Investigate GBP dark period — 0 actions for 4 consecutive days (Oct 2–5); confirm profile is live and posts are scheduled.",
+        "cites": [
+          "F3"
+        ],
+        "monday_item_name": "Fix GBP Dark Period",
+        "monday_update": "GBP actions dropped 71.33% week-over-week and have registered zero for the last 4 tracked days (Oct 2–5), effectively cutting off local organic discovery. Check that the BillyDoe Meats GBP profile is active, no suspension notice is present, and that posting cadence has not lapsed. Success check: GBP actions return to ≥ 10/day within 5 days of fix (by 2026-10-11)."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP: 0 actions Oct 4–5 vs 19–30/day in early Sep — confirm profile not suspended before attributing to organic decay. Re-check Oct 9.",
+        "text": "Watch ROAS floor at 3.86; if 3-day average drops below 3.0 by Oct 9, shift budget off BWS - Sales - Muslims by ≤ 20%.",
         "cites": [
-          "F3"
+          "F1",
+          "F4"
         ],
-        "monday_item_name": "GBP Collapse Watch Oct 9",
-        "monday_update": "GBP actions hit zero on Oct 4 and Oct 5 after averaging 19–30/day in early September. This could indicate a profile suspension, a listing issue, or a data reporting gap. Verify the BillyDoe Meats GBP profile (locations/17076764668101686399) is live and not flagged. If actions remain at zero by Oct 9, escalate as a fix. No paid action taken until root cause is confirmed."
+        "monday_item_name": "Watch ROAS Floor Oct 9",
+        "monday_update": "Current 28-day ROAS is 3.86 with a confirmed 8.76% weekly decline. No budget move is made this cycle; the floor to defend is 3.0 ROAS. Re-check the 3-day purchase and revenue series on Oct 9. If ROAS has fallen below 3.0 at that point, shift up to 20% of daily spend away from BWS - Sales - Muslims into a fresher ad set or hold in reserve pending new creative results."
       }
     ],
     "next_check": "2026-10-09"
