@@ -768,12 +768,12 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     const p = it.payload || {}, boards = ((S.ops || {}).settings || {}).boards || {}, board = boards[String(p.boardId)] || "";
     const title = p.itemName || it.title || it.sourceLabel || "(untitled)";
     const dest = p.mode === "update_only" ? `Update on "${p.itemName || it.title || "an existing item"}"` : p.mode === "create_subitem" ? `New subitem${board ? ` on ${board}` : ""}` : p.mode ? `New item${board ? ` on ${board}` : ""}` : "No Monday destination yet";
-    const st = { ready: ["Ready", "g"], confirm: ["Check first", "a"], blocked: ["Not drafted", "r"], exists: ["Already in Monday", ""], sent: ["Sent", "g"] }[it.status] || [it.status, ""];
+    const st = { ready: ["Ready", "g"], confirm: ["Check first", "a"], blocked: ["Not a task", "r"], exists: ["Already in Monday", ""], sent: ["Sent", "g"] }[it.status] || [it.status, ""];
     const msg = S.qMsg[it.id], busy = S.qBusy[it.id], open = (S.qOpen || {})[it.id];
     const pending = ["ready", "confirm"].includes(it.status) && !it.mondayItemId;
     const sentUrl = it.mondayItemId ? (p.boardId ? `https://flowcompany.monday.com/boards/${p.boardId}/pulses/${it.mondayItemId}` : "") : "";
     return `<article class="draft" data-id="${esc(it.id)}"><div class="dh"><div><div class="dtitle">${esc(title)}</div>
-        <div class="dmeta"><span class="pill ${st[1]}">${esc(st[0])}</span>${esc(it.group || "No client")}, ${esc(dest)}${it.sourceLabel ? `, from ${esc(it.sourceLabel)}` : ""}${it.createdAt ? `, drafted ${esc(fmtDay(toDate(it.createdAt)))}` : ""}</div></div></div>
+        <div class="dmeta"><span class="pill ${st[1]}">${esc(st[0])}</span>${esc(it.group || "No client")}, ${esc(dest)}${it.sourceLabel ? `, from ${esc(it.sourceLabel)}` : ""}${it.createdAt ? `, found ${esc(fmtDay(toDate(it.createdAt)))}` : ""}</div></div></div>
       ${it.note || it.nullReason ? `<p class="note">${esc(it.note || it.nullReason)}</p>` : ""}
       ${p.updateBody ? `<div class="dbody">${sanitize(p.updateBody)}</div><button type="button" class="btn link" data-act="expand">Show all</button>` : ""}
       ${msg ? `<div class="dmsg ${msg.err ? "err" : ""}">${esc(msg.text)}</div>` : ""}
@@ -790,19 +790,19 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     </article>`;
   }
   function draftsView() {
-    if (!localStorage.getItem(PASS_KEY)) return hero("Drafts need the <em>ops passcode</em>.", [["info", "Drafts can post to Monday, so they stay behind the passcode."]], []) +
+    if (!localStorage.getItem(PASS_KEY)) return hero("Tasks need the <em>ops passcode</em>.", [["info", "Tasks can post to Monday, so they stay behind the passcode."]], []) +
       `<div class="unlock"><input id="unlock" type="password" placeholder="Ops passcode" aria-label="Ops passcode"><button type="button" class="btn primary" data-act="unlock">Unlock</button></div>${S.queueErr ? `<div class="dmsg err">${esc(S.queueErr)}</div>` : ""}`;
-    if (S.queueAll === null) { if (!S.qLoading) loadQueue(); return hero("Loading <em>drafts</em>…", [], []); }
+    if (S.queueAll === null) { if (!S.qLoading) loadQueue(); return hero("Loading <em>tasks</em>…", [], []); }
     const pend = pendingDrafts(), skip = notDrafted(), sent = (S.queueAll || []).filter((i) => i.status === "sent" && ageOk(i, 7)), ign = (S.queueAll || []).filter((i) => i.status === "ignored" && ageOk(i, 7));
     const counts = {}; pend.forEach((i) => (counts[i.group || "No client"] = (counts[i.group || "No client"] || 0) + 1));
     const f = S.qFilter, shown = pend.filter((i) => !f || (i.group || "No client") === f);
     const kp = [k("Ready", num(pend.filter((i) => i.status === "ready").length), "can send now"), k("Check first", num(pend.filter((i) => i.status === "confirm").length), "the drafter wasn't sure"),
-      k("Couldn't draft", num(skip.length), "need a decision"), k("Sent, 7 days", num(sent.length), "posted to Monday"), k("Ignored, 7 days", num(ign.length), "with a reason")];
-    return hero(`<em>${num(pend.length)}</em> ${pend.length === 1 ? "draft is" : "drafts are"} waiting to go to Monday.`,
-        [["info", "Drafted each morning from WhatsApp, meetings and Monday. Nothing posts until you send it."], ...(S.queueErr ? [["bad", esc(S.queueErr)]] : [])], kp) +
+      k("Not a task", num(skip.length), "need a decision"), k("Sent, 7 days", num(sent.length), "posted to Monday"), k("Ignored, 7 days", num(ign.length), "with a reason")];
+    return hero(`<em>${num(pend.length)}</em> ${pend.length === 1 ? "task is" : "tasks are"} waiting to go to Monday.`,
+        [["info", "Found each morning from WhatsApp, meetings and Monday. Nothing posts until you send it."], ...(S.queueErr ? [["bad", esc(S.queueErr)]] : [])], kp) +
       `<div class="chips"><button type="button" data-act="filter" data-client="" class="${!f ? "on" : ""}">All<span class="n">${pend.length}</span></button>${Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([n, x]) => `<button type="button" data-act="filter" data-client="${esc(n)}" class="${f === n ? "on" : ""}">${esc(n)}<span class="n">${x}</span></button>`).join("")}</div>` +
-      (shown.length ? shown.sort((a, b) => (a.status === "ready" ? 0 : 1) - (b.status === "ready" ? 0 : 1) || String(b.createdAt || "").localeCompare(String(a.createdAt || ""))).map(draftCard).join("") : `<section class="card" style="margin-top:16px"><div class="empty">No drafts waiting${f ? ` for ${esc(f)}` : ""}.</div></section>`) +
-      (skip.length && !f ? `<div class="grid one">${card("Couldn't be drafted", "The drafter found something but needs a person to decide.", skip.map(draftCard).join(""))}</div>` : "") +
+      (shown.length ? shown.sort((a, b) => (a.status === "ready" ? 0 : 1) - (b.status === "ready" ? 0 : 1) || String(b.createdAt || "").localeCompare(String(a.createdAt || ""))).map(draftCard).join("") : `<section class="card" style="margin-top:16px"><div class="empty">No tasks waiting${f ? ` for ${esc(f)}` : ""}.</div></section>`) +
+      (skip.length && !f ? `<div class="grid one">${card("Couldn't be turned into a task", "The drafter found something but needs a person to decide.", skip.map(draftCard).join(""))}</div>` : "") +
       (sent.length && !f ? `<div class="grid one">${card("Sent in the last 7 days", "", `<ul class="ins">${sent.map((i) => `<li><div class="t">${esc((i.payload || {}).itemName || i.title || i.sourceLabel)}</div><div class="m">${esc(i.group || "")}${i.createdAt ? `, ${esc(fmtDay(toDate(i.createdAt)))}` : ""}</div></li>`).join("")}</ul>`)}</div>` : "");
   }
   async function loadQueue() {
@@ -811,8 +811,8 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
       const r = await fetch("/.netlify/functions/queue", { headers: opsHeaders() });
       if (r.status === 401) { localStorage.removeItem(PASS_KEY); S.queueErr = "Passcode didn't match."; S.queueAll = null; }
       else if (r.ok) { const d = await r.json(); S.queueAll = d.items || []; S.queueErr = ""; }
-      else { S.queueErr = "Couldn't load drafts. Try again in a minute."; S.queueAll = S.queueAll || []; }
-    } catch { S.queueErr = "Couldn't reach the drafts service."; S.queueAll = S.queueAll || []; }
+      else { S.queueErr = "Couldn't load tasks. Try again in a minute."; S.queueAll = S.queueAll || []; }
+    } catch { S.queueErr = "Couldn't reach the tasks service."; S.queueAll = S.queueAll || []; }
     S.qLoading = false; render();
   }
   async function post(fn, body) {
@@ -914,7 +914,8 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
   let NAMES = [];
   function route() {
     const p = new URLSearchParams(location.hash.slice(1));
-    const screen = ["drafts", "sources"].includes(p.get("v")) ? p.get("v") : "client";
+    const v = p.get("v");
+    const screen = (v === "tasks" || v === "drafts") ? "tasks" : v === "sources" ? "sources" : "client";
     let client = p.get("c"); const t = p.get("t");
     if (!client || !NAMES.includes(client)) { const last = localStorage.getItem(LAST_KEY); client = NAMES.includes(last) ? last : NAMES[0]; }
     return { screen, client, tab: t === "about" || TABS.some(([x]) => x === t) ? t : "overview" };
@@ -935,14 +936,14 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     $("view").innerHTML = NAMES.map((n) => `<option value="${esc(n)}" ${r.client === n ? "selected" : ""}>${esc(n)}</option>`).join("");
     const pend = S.queueAll ? pendingDrafts().length : null;
     $("nav").innerHTML = TABS.map(([t, l]) => `<a href="${href(r.client, t)}" class="${r.screen === "client" && r.tab === t ? "on" : ""}"><svg viewBox="0 0 24 24">${ICON[t]}</svg>${l}</a>`).join("") +
-      `<div class="sep"></div><a href="#v=drafts" class="${r.screen === "drafts" ? "on" : ""}"><svg viewBox="0 0 24 24">${ICON.drafts}</svg>Drafts${pend ? `<span class="n">${pend}</span>` : ""}</a>` +
+      `<div class="sep"></div><a href="#v=tasks" class="${r.screen === "tasks" ? "on" : ""}"><svg viewBox="0 0 24 24">${ICON.drafts}</svg>Tasks${pend ? `<span class="n">${pend}</span>` : ""}</a>` +
       `<a href="#v=sources" class="${r.screen === "sources" ? "on" : ""}"><svg viewBox="0 0 24 24">${ICON.sources}</svg>Sources</a>`;
-    const crumbLabel = r.screen === "drafts" ? "Drafts" : r.screen === "sources" ? "Sources" : (r.tab === "about" ? "About these numbers" : TABS.find(([t]) => t === r.tab)[1]);
+    const crumbLabel = r.screen === "tasks" ? "Tasks" : r.screen === "sources" ? "Sources" : (r.tab === "about" ? "About these numbers" : TABS.find(([t]) => t === r.tab)[1]);
     $("crumb").innerHTML = `<b>${esc(crumbLabel)}</b> · ${esc(r.screen === "client" ? r.client : "All clients")}`;
     $("range").style.display = r.screen === "client" ? "" : "none";
     $("range").innerHTML = [7, 14, 30, 90].map((n) => `<button type="button" data-n="${n}" class="${S.n === n ? "on" : ""}" aria-pressed="${S.n === n}">${n} days</button>`).join("");
     const c = hubClient(r.client);
-    $("view-body").innerHTML = r.screen === "drafts" ? draftsView(items) : r.screen === "sources" ? sourcesView(items)
+    $("view-body").innerHTML = r.screen === "tasks" ? draftsView(items) : r.screen === "sources" ? sourcesView(items)
       : r.tab === "about" ? aboutView() : ({ overview: overviewView, paid: paidView, organic: organicView, crm: crmView }[r.tab])(r.client, c, items);
     S.items = items;
     renderFoot(r);
