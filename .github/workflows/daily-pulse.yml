@@ -61,6 +61,9 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node pulse.js
 
+      - name: Build ops page data
+        run: python build_ops.py
+
       - name: Apply ops-pulse brief
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -99,7 +102,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add pulse/ history/ reports/ playbooks/ timeline/ standups/ cards/
-          git add site/monday-items.json workstreams/*.json 2>/dev/null || true
+          git add site/monday-items.json site/ops.json site/hub.json workstreams/*.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Nothing changed — skipping commit."
             exit 0
