@@ -193,6 +193,58 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
 .steps .side{grid-row:1/3;grid-column:3;display:flex;align-items:center;gap:10px;padding-top:2px}
 .copy{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;font-size:14px;color:var(--ink);cursor:pointer}
 .copy:hover{border-color:var(--green);color:var(--green)}
+.k[data-ins]{cursor:pointer;transition:background .15s}
+.k[data-ins]:hover{background:rgba(255,255,255,.04)}
+.steps li[data-step]{cursor:pointer}
+.steps li[data-step]:hover .a{color:var(--green)}
+.drawer-bg{position:fixed;inset:0;background:rgba(20,22,16,.32);z-index:30}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(620px,100%);background:var(--page);z-index:31;overflow-y:auto;box-shadow:-20px 0 60px rgba(0,0,0,.18)}
+.drawer-in{padding:28px 30px 60px}
+.drawer .x{float:right;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 16px;cursor:pointer;font-size:14px}
+.drawer h2.dt{font:700 28px/1.15 "Inter Tight",Inter,sans-serif;letter-spacing:-.02em;margin:6px 0 4px}
+.drawer .dv{font:700 44px/1.1 "Inter Tight",Inter,sans-serif;letter-spacing:-.02em;margin-top:14px}
+.drawer .dp{color:var(--muted);margin-top:2px}
+.drawer .card{margin-top:18px;padding:24px 24px 22px}
+.drawer .eyebrow{font-size:14px;color:var(--muted)}
+.ins{list-style:none;margin:0;padding:0}
+.ins li{padding:12px 0;border-bottom:1px solid var(--line)}
+.ins li:last-child{border-bottom:0}
+.ins .t{font-size:15.5px;line-height:1.45}
+.ins .m{font-size:13.5px;color:var(--muted);margin-top:3px}
+.ins blockquote{margin:8px 0 0;padding:8px 12px;border-left:3px solid var(--green-wash);background:var(--soft);border-radius:0 8px 8px 0;font-size:14px;color:var(--muted)}
+.pill{display:inline-block;font-size:12px;font-weight:600;border-radius:999px;padding:2px 9px;margin-right:6px;background:var(--soft);color:var(--muted);vertical-align:1px}
+.pill.g{background:var(--green-wash);color:var(--green)} .pill.a{background:#fbf0d8;color:#a8700b} .pill.r{background:#fbe6e3;color:var(--red)}
+.facts{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px 18px;font-size:15.5px}
+.facts .fl{color:var(--muted)} .facts .fm{font-size:13px;color:var(--faint);margin-top:2px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 4px}
+.chips button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px;font-size:14.5px;cursor:pointer;color:var(--ink)}
+.chips button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chips button .n{color:var(--faint);margin-left:4px} .chips button.on .n{color:#cfd3c6}
+.draft{background:#fff;border-radius:22px;padding:24px 28px;margin-top:16px}
+.draft .dh{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.draft .dtitle{font:600 19px/1.3 "Inter Tight",Inter,sans-serif;letter-spacing:-.01em}
+.draft .dmeta{font-size:14px;color:var(--muted);margin-top:4px}
+.draft .note{margin-top:10px}
+.dbody{margin-top:14px;background:var(--soft);border-radius:14px;padding:14px 18px;font-size:14.5px;line-height:1.55;max-height:170px;overflow:hidden;position:relative}
+.dbody.open{max-height:none}
+.dbody:not(.open)::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46px;background:linear-gradient(rgba(244,244,241,0),var(--soft))}
+.dbody p{margin:0 0 8px} .dbody ul{margin:0 0 8px;padding-left:20px}
+.dacts{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
+.btn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 18px;font-size:14.5px;cursor:pointer;color:var(--ink)}
+.btn.primary{background:var(--green);border-color:var(--green);color:#fff;font-weight:600}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.link{border:0;background:none;color:var(--muted);padding:9px 6px;text-decoration:underline}
+.dask{display:flex;gap:8px;margin-top:12px} .dask input,.dign input,.unlock input{flex:1;border:1px solid var(--line);border-radius:999px;padding:9px 16px;font:inherit;font-size:14.5px}
+.dign{margin-top:12px} .dign .presets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.dmsg{margin-top:10px;font-size:14px;padding:10px 14px;border-radius:12px;background:var(--green-wash);color:#3f520f}
+.dmsg.err{background:#fbe6e3;color:#8f2a22}
+.unlock{display:flex;gap:10px;max-width:440px;margin-top:16px}
+.src td,.src th{white-space:nowrap}
+.src td{font-size:14.5px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;background:#cfd1ca;vertical-align:1px}
+.dot.ok{background:#6f8f24} .dot.warn{background:var(--amber)} .dot.bad{background:var(--red)}
+.src .s{display:block;font-size:12.5px;color:var(--faint)}
+@media (max-width:860px){ .drawer-in{padding:20px 16px 50px} .facts{grid-template-columns:1fr;gap:2px 0} .facts .fl{margin-top:10px} .draft{padding:18px 16px} .dh{flex-direction:column} }
 @media (max-width:860px){ .steps li{grid-template-columns:34px minmax(0,1fr)} .steps .side{grid-row:auto;grid-column:2;padding-top:8px} }
 </style>
 </head>
@@ -226,9 +278,10 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     organic: '<circle cx="11" cy="11" r="6.5"/><line x1="16" y1="16" x2="21" y2="21"/>',
     crm: '<circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7"/><path d="M18 14.5c2 .8 3 2.8 3 5.5"/>',
     drafts: '<path d="M4 20h4L19 9l-4-4L4 16v4z"/><line x1="13.5" y1="6.5" x2="17.5" y2="10.5"/>',
+    sources: '<ellipse cx="12" cy="6" rx="7" ry="2.8"/><path d="M5 6v6c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8V6"/><path d="M5 12v6c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8v-6"/>',
   };
   const TABS = [["overview", "Overview"], ["paid", "Paid"], ["organic", "Organic"], ["crm", "CRM"]];
-  const S = { snapshot: null, live: null, ops: null, hub: null, quietDays: 14, quietOngoing: 30, recentDays: 30, liveError: "", askPass: false, n: 7 };
+  const S = { snapshot: null, live: null, ops: null, hub: null, quietDays: 14, quietOngoing: 30, recentDays: 30, liveError: "", askPass: false, n: 7, queueAll: null, qMsg: {}, qBusy: {}, qFilter: "", drawer: null };
 
   // ── helpers ────────────────────────────────────────────────────────────
   const $ = (id) => document.getElementById(id);
@@ -347,7 +400,7 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
       <polyline points="${line}" fill="none" stroke="#a9c04b" stroke-width="1.6" vector-effect="non-scaling-stroke"/>
       ${tail.length > 1 ? `<polyline points="${tail.map((p) => p.map((x) => x.toFixed(1)).join(",")).join(" ")}" fill="none" stroke="#6f7268" stroke-width="1.4" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>` : ""}</svg>`;
   }
-  const k = (l, v, p, sp) => `<div class="k"><div class="l">${esc(l)}</div><div class="v">${v}</div><div class="p">${p || ""}</div>${sp || ""}</div>`;
+  const k = (l, v, p, sp) => `<div class="k" data-ins="${esc(l)}" role="button" tabindex="0" title="Open details"><div class="l">${esc(l)}</div><div class="v">${v}</div><div class="p">${p || ""}</div>${sp || ""}</div>`;
   const hero = (h1, bullets, kpis) => `<section class="hero"><div class="hero-in"><h1>${h1}</h1>${bullets.length ? `<ul class="bul">${bullets.slice(0, 4).map(([t, x]) => `<li class="${t}">${x}</li>`).join("")}</ul>` : ""}</div>
       ${kpis.length ? `<div class="strip" style="--cols:${kpis.length}">${kpis.join("")}</div>` : ""}</section>`;
   const card = (title, sub, body, chip) => `<section class="card"><div class="hdr"><div><h2>${esc(title)}</h2>${sub ? `<p class="sub">${sub}</p>` : ""}</div>${chip ? `<span class="chip">${esc(chip)}</span>` : ""}</div><div class="body">${body}</div></section>`;
@@ -442,6 +495,12 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
         if (r < rp * 0.7) add("paid", "Ads", 1, `Look at what changed${top ? ` on ${top.name}` : ""}`, `Return on ad spend fell from ${rp.toFixed(1)}× to ${r.toFixed(1)}×.`);
         if (r > rp * 1.3) add("paid", "Account", 2, `Send ${name} the win`, `Return on ad spend rose from ${rp.toFixed(1)}× to ${r.toFixed(1)}×, ${money(m.rv.cur)} in sales.`);
       }
+      for (const [key, label] of [["google_spend", "Google Ads"], ["meta_spend", "Meta"]]) {
+        const arr = c.series[key] || [], L = arr.length; let li = -1;
+        for (let i = L - 1; i >= 0; i--) if (arr[i] > 0) { li = i; break; }
+        if (m.sp.cur > 0 && li >= L - 10 && li <= L - 3 && sum(arr.slice(Math.max(0, li - 6), li + 1)) > 0)
+          add("paid", "Ads", 0, `Find out why ${label} spend stopped`, `${label} spent ${money(sum(arr.slice(Math.max(0, li - 6), li + 1)))} in the week to ${fmtDay(toDate(c.dates[li]))} and nothing since.`);
+      }
       const spend28 = sum(c.series.spend);
       if (top && spend28 && top.spend / spend28 > 0.8 && m.sp.cur > 0) add("paid", "Ads", 2, "Launch a second campaign or ad set to test against the main one", `${top.name} carries ${Math.round((100 * top.spend) / spend28)}% of spend.`);
     }
@@ -474,7 +533,7 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
   }
   function stepsHTML(steps, name) {
     if (!steps.length) return `<div class="empty">Nothing flagged. The numbers here look steady.</div>`;
-    return `<ol class="steps">${steps.map((s, i) => `<li><span class="no p${s.pri}">${i + 1}</span><div class="a">${esc(s.a)}</div><div class="w">${esc(s.w)}</div>
+    return `<ol class="steps">${steps.map((s, i) => `<li data-step="${esc(JSON.stringify({ a: s.a, w: s.w, area: s.area, lane: s.lane, pri: s.pri }))}" tabindex="0"><span class="no p${s.pri}">${i + 1}</span><div class="a">${esc(s.a)}</div><div class="w">${esc(s.w)}</div>
       <div class="side"><span class="chip">${esc(s.lane)}</span><button type="button" class="copy" data-copy="${esc(`${name}: ${s.a}. ${s.w}`)}">Copy</button></div></li>`).join("")}</ol>`;
   }
   document.addEventListener("click", async (e) => {
@@ -516,7 +575,37 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
       : c ? card(`Google profile actions ${per()}`, `Last ${span(c)} days. Dashed: not reported yet.`, areaChart(c, "gbp_actions", num), "Windsor") : "";
     return hero(h1, [...shortNote(c), ...facts], kp) +
       `<div class="grid one">${card("Next steps", "From the numbers on this page, most urgent first. Copy one into Monday or WhatsApp.", stepsHTML(steps.slice(0, 7), name), `${steps.length}`)}</div>
-       <div class="grid">${monday}${chart}</div>`;
+       <div class="grid">${monday}${chart}</div>` + contextCards(name, c);
+  }
+  const SUBJECT = { primary_contact: "Main contact", intake_owner: "Intake", scope: "Scope", kpi: "What they measure", crm_system: "CRM", booking_system: "Booking", contract_start: "Started", contract_end: "Contract ends" };
+  const CONF = { confirmed: ["Confirmed in the data", "g"], probable: ["Probable", "a"], possible: ["Possible", ""] };
+  const factMeta = (f) => `${f.by ? esc(f.by) + ", " : ""}${f.where ? esc(f.where) + ", " : ""}${esc(fmtDay(toDate(f.at)))}`;
+  function aiList(ai, chans) {
+    if (!ai) return "";
+    const keep = (x) => !chans || chans.some((ch) => String(x.channel || "").toLowerCase().includes(ch));
+    const f = ai.findings.filter(keep);
+    if (!f.length) return "";
+    const ids = new Set(f.map((x) => x.id));
+    const sg = ai.suggestions.filter((x) => !x.cites || !x.cites.length || x.cites.some((id) => ids.has(id)));
+    return `<ul class="ins">${f.map((x) => `<li><div class="t">${esc(x.text)}</div><div class="m"><span class="pill ${(CONF[x.confidence] || ["", ""])[1]}">${esc((CONF[x.confidence] || [x.confidence || "AI"])[0])}</span>${esc(x.channel || "")}</div></li>`).join("")}
+      ${sg.map((x) => `<li><div class="t"><span class="pill g">Suggested</span>${esc(x.text)}</div></li>`).join("")}</ul>`;
+  }
+  function saidList(list) {
+    return `<ul class="ins">${list.map((f) => `<li><div class="t"><span class="pill ${f.subject === "blocker" ? "r" : f.subject === "commitment" ? "a" : "g"}">${esc(cap(f.subject))}</span>${esc(f.value)}</div>
+      <div class="m">${factMeta(f)}</div>${f.excerpt ? `<blockquote>${esc(f.excerpt)}</blockquote>` : ""}</li>`).join("")}</ul>`;
+  }
+  function contextCards(name, c) {
+    if (!c) return "";
+    const ai = c.ai && aiList(c.ai);
+    const prof = Object.entries(c.profile || {});
+    const aiCard = card("AI read of the numbers", c.ai ? `From the ad and organic data on ${esc(fmtDay(toDate(c.ai.at)))}. Reporting-lag and plan claims are filtered out.${c.ai.next_check ? ` Next check ${esc(fmtDay(toDate(c.ai.next_check)))}.` : ""}` : "",
+      ai || `<div class="empty">No AI read of ${esc(name)} in the last 7 days.</div>`, "AI");
+    const acct = card("Account", "The latest of each, as stated in chats and meetings.", prof.length
+      ? `<div class="facts">${prof.map(([k2, f]) => `<div class="fl">${esc(SUBJECT[k2] || k2)}</div><div>${esc(f.value)}<div class="fm">${factMeta(f)}</div></div>`).join("")}</div>`
+      : `<div class="empty">Nothing read from chats or meetings for ${esc(name)} yet.</div>`, "Chats, meetings");
+    const said = (c.said || []).length ? `<div class="grid one">${card(`Said in chats and meetings, last ${S.recentDays} days`, "Decisions, commitments and blockers, newest first. Each one quotes where it came from.", saidList(c.said), "AI read")}</div>` : "";
+    const thr = (c.threads || []).length ? `<div class="grid one">${card("Waiting on us", "Client messages in WhatsApp with no reply from Flow in the chat.", `<ul class="ins">${c.threads.map((t) => `<li><div class="t">${esc(t.text)}</div><div class="m">${esc(t.chat)}, ${esc(fmtDay(toDate(t.at)))}, ${num(t.hours)} hours ago</div></li>`).join("")}</ul>`, "WhatsApp")}</div>` : "";
+    return `<div class="grid even">${aiCard}${acct}</div>` + said + thr;
   }
   function paidView(name, c, items) {
     const m = paidModel(c), steps = nextSteps(name, c, items).filter((s) => s.area === "paid");
@@ -569,6 +658,7 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
       `Monday: only items with activity in the last ${S.recentDays} days. Older items are left out until someone touches them.`,
       `Stalled: Stuck, Reopened, Waiting or Contingent; a timeline end date that has passed; or in progress with no update in ${S.quietDays} days (${S.quietOngoing} for Ongoing).`,
       "Shipped: Monday's webhook records each status change to Done. Only those events count.",
+      "AI read: a daily AI pass over the numbers, plus account facts and decisions read from WhatsApp and Fireflies. Each is labeled with its date and source; reporting-lag and plan claims are filtered out.",
       "Next steps: fixed rules. Each one appears only when its number crosses a line (for example, cost per lead up 50%), and says which number triggered it.",
       "Ads and organic: the latest fully reported days in the range (7, 14, 30 or 90) vs the same number of days before. Up to 186 days of daily history. Google profile data arrives about 4 days late. Trend only; LSA and anything billed outside Windsor isn't included.",
       "GHL: last 28 days of contacts, opportunities and appointments.",
@@ -577,32 +667,283 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
   }
 
   // ── routing + render ───────────────────────────────────────────────────
+  // ── detail drawer: what a number is, where it comes from, what the AI and the client said about it ──
+  const INS = [[/^Ad spend/, "spend"], [/^(Leads|Sales)/, "results"], [/^(Cost per lead|Return on spend)/, "cost"], [/^Revenue/, "revenue"], [/^Meta \/ Google/, "spend"],
+    [/^Google profile actions/, "gbp_actions"], [/^Search clicks/, "sc_clicks"], [/^Website sessions/, "ga4_sessions"], [/^Instagram reach/, "ig_reach"],
+    [/^(New GHL contacts|New contacts|Opportunities|Marked won|Appointments)/, "crm"], [/^Shipped/, "shipped"]];
+  const METRIC = {
+    spend: { title: "Ad spend", series: "spend", fmt: moneyK, src: ["Meta Ads", "Google Ads"], chans: ["meta", "google", "cross", "paid"], area: "paid", facts: ["kpi", "scope"],
+      how: "Meta and Google Ads spend as reported to Windsor. LSA and anything billed outside Windsor isn't included." },
+    results: { title: "Leads", series: "leads", fmt: num, src: ["Meta Ads", "Google Ads"], chans: ["meta", "google", "cross", "paid"], area: "paid", facts: ["kpi"],
+      how: "What Meta and Google conversion tracking report. Not yet matched against the CRM or the client's own system." },
+    cost: { title: "Cost per lead", series: "spend", fmt: moneyK, src: ["Meta Ads", "Google Ads"], chans: ["meta", "google", "cross", "paid"], area: "paid", facts: ["kpi"],
+      how: "Ad spend divided by the leads the ad platforms report, over the selected days." },
+    revenue: { title: "Revenue", series: "revenue", fmt: moneyK, src: ["Meta Ads"], chans: ["meta", "cross"], area: "paid", facts: ["kpi"],
+      how: "Purchase value reported by the Meta pixel." },
+    gbp_actions: { title: "Google profile actions", series: "gbp_actions", fmt: num, src: ["Google Business Profile"], chans: ["gbp", "google_my_business", "local", "organic"], area: "organic", facts: ["scope"],
+      how: "Calls, direction requests and website clicks from every Google Business Profile listing, pulled one listing at a time so they never blend. Data arrives about 4 days late." },
+    sc_clicks: { title: "Search clicks", series: "sc_clicks", fmt: num, src: ["Search Console"], chans: ["search", "seo", "organic"], area: "organic", facts: ["scope"],
+      how: "Clicks from Google search results to the website, from Search Console. Not the map listing." },
+    ga4_sessions: { title: "Website sessions", series: "ga4_sessions", fmt: num, src: ["Google Analytics"], chans: ["ga4", "analytics", "web"], area: "organic", facts: ["scope"],
+      how: "Sessions recorded by Google Analytics 4." },
+    ig_reach: { title: "Instagram reach", series: "ig_reach", fmt: num, src: ["Instagram"], chans: ["instagram", "social"], area: "organic", facts: ["scope"],
+      how: "Accounts reached by the Instagram profile." },
+  };
+  function showDrawer(html) {
+    if (!$("drawer")) {
+      document.body.insertAdjacentHTML("beforeend", `<div class="drawer-bg" id="drawer-bg" hidden></div><aside class="drawer" id="drawer" role="dialog" aria-modal="true" hidden><div class="drawer-in"><button type="button" class="x" id="drawer-x">Close</button><div id="drawer-body"></div></div></aside>`);
+      $("drawer-bg").onclick = closeDrawer; $("drawer-x").onclick = closeDrawer;
+    }
+    $("drawer-body").innerHTML = html; $("drawer").hidden = false; $("drawer-bg").hidden = false; $("drawer").scrollTop = 0; $("drawer-x").focus();
+  }
+  function closeDrawer() { if ($("drawer")) { $("drawer").hidden = true; $("drawer-bg").hidden = true; } }
+  const relFacts = (c, subjects) => Object.entries((c && c.profile) || {}).filter(([k2]) => subjects.includes(k2));
+  function factsBlock(c, subjects) {
+    const f = relFacts(c, subjects);
+    return f.length ? card("What the account says", "Latest statement in chats and meetings.", `<div class="facts">${f.map(([k2, x]) => `<div class="fl">${esc(SUBJECT[k2] || k2)}</div><div>${esc(x.value)}<div class="fm">${factMeta(x)}</div></div>`).join("")}</div>`) : "";
+  }
+  function sourceLine(c, names) {
+    const w = ((c && c.source_list && c.source_list.windsor) || []).filter((x) => names.includes(x.name));
+    return w.length ? w.map((x) => `${esc(x.name)}: ${x.last ? `data through ${esc(fmtDay(toDate(x.last)))}` : "connected, no data"}`).join(". ") + "." : "Not connected for this client.";
+  }
+  function metricDrawer(key, name, c, items) {
+    const steps = nextSteps(name, c, items);
+    if (key === "shipped") {
+      const mm = mondayModel(name, items);
+      return `<div class="eyebrow">${esc(name)}</div><h2 class="dt">Monday, last ${S.recentDays} days</h2>` +
+        card(`Shipped, ${num(mm.shipped.length)}`, "Status changed to Done, recorded by Monday's webhook.", mm.shipped.length ? `<ul class="ins">${mm.shipped.map((e) => `<li><div class="t">${esc(e.name)}</div><div class="m">${esc(e.lane)}, ${esc(fmtDay(e.date))}</div></li>`).join("")}</ul>` : `<div class="empty">Nothing marked Done.</div>`) +
+        card(`In review, ${num(mm.review.length)}`, "", rowsHTML(mm.review, { lane: true }, "Nothing in review.")) +
+        card(`Stalled, ${num(mm.stalled.length)}`, "", rowsHTML(mm.stalled, (it) => ({ reason: stall(it), old: true }), "Nothing stalled."));
+    }
+    if (key === "crm") {
+      const g = c && c.crm;
+      return `<div class="eyebrow">${esc(name)}</div><h2 class="dt">GHL, last 28 days</h2>` + (g
+        ? `<div class="dv">${num(g.contacts)}</div><div class="dp">new contacts, ${num(g.opps_created)} opportunities, ${num(g.opps_won || 0)} marked won</div>` +
+          (c.windsor_leads_28d != null ? card("Ads vs GHL", "If ads report more leads than GHL adds contacts, leads are being lost on the way in.", barsHTML([["Ad leads reported", c.windsor_leads_28d], ["New GHL contacts", g.contacts, true], ["Opportunities", g.opps_created], ["Marked won", g.opps_won || 0]])) : "")
+        : `<p class="dp">GHL isn't connected for ${esc(name)} in this repo.</p>`) +
+        (aiList(c && c.ai, ["ghl", "crm"]) ? card("AI read", "", aiList(c.ai, ["ghl", "crm"]), "AI") : "") +
+        factsBlock(c, ["crm_system", "booking_system", "intake_owner"]) +
+        (steps.filter((x) => x.area === "crm").length ? card("Next steps", "", stepsHTML(steps.filter((x) => x.area === "crm"), name)) : "");
+    }
+    const M = METRIC[key]; if (!M || !c) return `<p class="dp">No data for ${esc(name)}.</p>`;
+    const m = paidModel(c), sales = m && m.sales;
+    const sk = key === "results" && sales ? "purchases" : M.series;
+    const w = windowOf(c, sk);
+    let value = (M.fmt === moneyK ? moneyK : num)(w.cur), sub = delta(w.cur, w.prev, key !== "spend");
+    if (key === "cost") { value = m && m.rs.cur ? (sales ? `${(m.rv.cur / m.sp.cur).toFixed(1)}×` : money(m.sp.cur / m.rs.cur)) : "—"; sub = m && m.rs.prev ? `was ${sales ? `${(m.rv.prev / m.sp.prev).toFixed(1)}×` : money(m.sp.prev / m.rs.prev)}` : ""; }
+    const pf = key === "gbp_actions" ? profs(c) : null;
+    return `<div class="eyebrow">${esc(name)}</div><h2 class="dt">${esc(key === "results" && sales ? "Sales" : key === "cost" && sales ? "Return on spend" : M.title)}</h2>
+      <div class="dv">${value}</div><div class="dp">${sub || ""}${sub ? ". " : ""}Last ${daysLbl(w)} days through ${esc(fmtDay(toDate(w.end)))}.</div>` +
+      card("By " + (S.n >= 30 ? "week" : "day"), `${esc(M.how)}`, areaChart(c, sk, M.fmt), "Windsor") +
+      (pf && pf.list.length ? card("Each listing", `${cap(pf.label)}.`, `<div class="tw"><table><thead><tr><th>Listing</th><th>Calls</th><th>Directions</th><th>Clicks</th><th>Views</th></tr></thead><tbody>${pf.list.map((p) => `<tr><td>${esc(p.label)}</td><td>${num(p.calls || 0)}</td><td>${num(p.directions || 0)}</td><td>${num(p.web_clicks || 0)}</td><td>${num(p.impressions || 0)}</td></tr>`).join("")}</tbody></table></div>`) : "") +
+      (aiList(c.ai, M.chans) ? card("AI read", `From ${esc(fmtDay(toDate(c.ai.at)))}. Labeled by how sure it is.`, aiList(c.ai, M.chans), "AI") : "") +
+      (steps.filter((x) => x.area === M.area).length ? card("Next steps", "", stepsHTML(steps.filter((x) => x.area === M.area), name)) : "") +
+      factsBlock(c, M.facts) +
+      `<p class="note">Source: ${sourceLine(c, M.src)}</p>`;
+  }
+  function stepDrawer(st, name, c, items) {
+    const chart = !c ? "" : st.area === "paid" ? card("Ad spend by " + (S.n >= 30 ? "week" : "day"), "", areaChart(c, "spend", moneyK), "Windsor")
+      : st.area === "organic" ? card("Google profile actions by " + (S.n >= 30 ? "week" : "day"), "", areaChart(c, "gbp_actions", num), "Windsor") : "";
+    const chans = st.area === "paid" ? ["meta", "google", "cross"] : st.area === "organic" ? ["gbp", "search", "organic", "instagram"] : st.area === "crm" ? ["ghl", "crm"] : null;
+    const said = ((c && c.said) || []).filter((f) => f.subject === "blocker" || f.subject === "commitment").slice(0, 4);
+    return `<div class="eyebrow">${esc(name)}, ${esc(st.lane)}</div><h2 class="dt">${esc(st.a)}</h2><p class="dp">${esc(st.w)}</p>
+      <div class="dacts"><button type="button" class="copy" data-copy="${esc(`${name}: ${st.a}. ${st.w}`)}">Copy for Monday or WhatsApp</button></div>` + chart +
+      (c && chans && aiList(c.ai, chans) ? card("AI read", "What the AI saw in the same numbers.", aiList(c.ai, chans), "AI") : "") +
+      (said.length ? card("Open blockers and commitments", "From chats and meetings. Worth checking before acting.", saidList(said), "AI read") : "");
+  }
+
+  // ── Drafts: the Daily Ops queue, approved here and sent to Monday ─────
+  const opsHeaders = () => ({ "content-type": "application/json", "x-ops-key": localStorage.getItem(PASS_KEY) || "" });
+  const pendingDrafts = () => (S.queueAll || []).filter((i) => ["ready", "confirm"].includes(i.status) && !i.mondayItemId);
+  const notDrafted = () => (S.queueAll || []).filter((i) => ["blocked", "exists"].includes(i.status) && !i.mondayItemId);
+  const ageOk = (i, d) => daysSince(toDate(i.createdAt || i.ignoredAt)) <= d;
+  function sanitize(html) {
+    const t = document.createElement("template"); t.innerHTML = html || "";
+    t.content.querySelectorAll("script,style,iframe,object,embed,form").forEach((n) => n.remove());
+    t.content.querySelectorAll("*").forEach((el) => [...el.attributes].forEach((a) => { if (/^on/i.test(a.name) || (/^(href|src)$/i.test(a.name) && /^\s*javascript:/i.test(a.value))) el.removeAttribute(a.name); }));
+    t.content.querySelectorAll("a").forEach((a) => { a.target = "_blank"; a.rel = "noopener"; });
+    return t.innerHTML;
+  }
+  function draftCard(it) {
+    const p = it.payload || {}, boards = ((S.ops || {}).settings || {}).boards || {}, board = boards[String(p.boardId)] || "";
+    const title = p.itemName || it.title || it.sourceLabel || "(untitled)";
+    const dest = p.mode === "update_only" ? `Update on "${p.itemName || it.title || "an existing item"}"` : p.mode === "create_subitem" ? `New subitem${board ? ` on ${board}` : ""}` : p.mode ? `New item${board ? ` on ${board}` : ""}` : "No Monday destination yet";
+    const st = { ready: ["Ready", "g"], confirm: ["Check first", "a"], blocked: ["Not drafted", "r"], exists: ["Already in Monday", ""], sent: ["Sent", "g"] }[it.status] || [it.status, ""];
+    const msg = S.qMsg[it.id], busy = S.qBusy[it.id], open = (S.qOpen || {})[it.id];
+    const pending = ["ready", "confirm"].includes(it.status) && !it.mondayItemId;
+    const sentUrl = it.mondayItemId ? (p.boardId ? `https://flowcompany.monday.com/boards/${p.boardId}/pulses/${it.mondayItemId}` : "") : "";
+    return `<article class="draft" data-id="${esc(it.id)}"><div class="dh"><div><div class="dtitle">${esc(title)}</div>
+        <div class="dmeta"><span class="pill ${st[1]}">${esc(st[0])}</span>${esc(it.group || "No client")}, ${esc(dest)}${it.sourceLabel ? `, from ${esc(it.sourceLabel)}` : ""}${it.createdAt ? `, drafted ${esc(fmtDay(toDate(it.createdAt)))}` : ""}</div></div></div>
+      ${it.note || it.nullReason ? `<p class="note">${esc(it.note || it.nullReason)}</p>` : ""}
+      ${p.updateBody ? `<div class="dbody">${sanitize(p.updateBody)}</div><button type="button" class="btn link" data-act="expand">Show all</button>` : ""}
+      ${msg ? `<div class="dmsg ${msg.err ? "err" : ""}">${esc(msg.text)}</div>` : ""}
+      ${it.sendWarning ? `<div class="dmsg err">${esc(it.sendWarning)}</div>` : ""}
+      <div class="dacts">${pending ? `<button type="button" class="btn primary" data-act="send" ${busy || !p.mode ? "disabled" : ""}>${busy === "send" ? "Sending…" : "Send to Monday"}</button>
+        ${msg && msg.force ? `<button type="button" class="btn" data-act="force">Send anyway</button>` : ""}
+        <button type="button" class="btn" data-act="ask">Ask for a change</button>` : ""}
+        ${pending || it.status === "blocked" || it.status === "exists" ? `<button type="button" class="btn" data-act="ignore">Ignore</button>` : ""}
+        ${it.sendWarning ? `<button type="button" class="btn" data-act="retry">Retry assignment</button>` : ""}
+        ${sentUrl ? `<a class="btn" href="${esc(sentUrl)}" target="_blank" rel="noopener">Open in Monday</a>` : ""}</div>
+      ${open === "ask" ? `<div class="dask"><input type="text" placeholder="e.g. shorter, assign to Hashir, put it on the Ads board" aria-label="Change request"><button type="button" class="btn primary" data-act="ask-go" ${busy ? "disabled" : ""}>${busy === "ask" ? "Working…" : "Change it"}</button></div>` : ""}
+      ${open === "ignore" ? `<div class="dign"><div class="presets">${["Already done", "Not needed", "Duplicate", "Wrong client", "Not our work"].map((r) => `<button type="button" class="btn" data-act="preset" data-reason="${r}">${r}</button>`).join("")}</div>
+        <div class="dask"><input type="text" placeholder="Why ignore it? This teaches the drafter." aria-label="Reason"><button type="button" class="btn primary" data-act="ignore-go">Ignore</button></div></div>` : ""}
+    </article>`;
+  }
+  function draftsView() {
+    if (!localStorage.getItem(PASS_KEY)) return hero("Drafts need the <em>ops passcode</em>.", [["info", "Drafts can post to Monday, so they stay behind the passcode."]], []) +
+      `<div class="unlock"><input id="unlock" type="password" placeholder="Ops passcode" aria-label="Ops passcode"><button type="button" class="btn primary" data-act="unlock">Unlock</button></div>${S.queueErr ? `<div class="dmsg err">${esc(S.queueErr)}</div>` : ""}`;
+    if (S.queueAll === null) { if (!S.qLoading) loadQueue(); return hero("Loading <em>drafts</em>…", [], []); }
+    const pend = pendingDrafts(), skip = notDrafted(), sent = (S.queueAll || []).filter((i) => i.status === "sent" && ageOk(i, 7)), ign = (S.queueAll || []).filter((i) => i.status === "ignored" && ageOk(i, 7));
+    const counts = {}; pend.forEach((i) => (counts[i.group || "No client"] = (counts[i.group || "No client"] || 0) + 1));
+    const f = S.qFilter, shown = pend.filter((i) => !f || (i.group || "No client") === f);
+    const kp = [k("Ready", num(pend.filter((i) => i.status === "ready").length), "can send now"), k("Check first", num(pend.filter((i) => i.status === "confirm").length), "the drafter wasn't sure"),
+      k("Couldn't draft", num(skip.length), "need a decision"), k("Sent, 7 days", num(sent.length), "posted to Monday"), k("Ignored, 7 days", num(ign.length), "with a reason")];
+    return hero(`<em>${num(pend.length)}</em> ${pend.length === 1 ? "draft is" : "drafts are"} waiting to go to Monday.`,
+        [["info", "Drafted each morning from WhatsApp, meetings and Monday. Nothing posts until you send it."], ...(S.queueErr ? [["bad", esc(S.queueErr)]] : [])], kp) +
+      `<div class="chips"><button type="button" data-act="filter" data-client="" class="${!f ? "on" : ""}">All<span class="n">${pend.length}</span></button>${Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([n, x]) => `<button type="button" data-act="filter" data-client="${esc(n)}" class="${f === n ? "on" : ""}">${esc(n)}<span class="n">${x}</span></button>`).join("")}</div>` +
+      (shown.length ? shown.sort((a, b) => (a.status === "ready" ? 0 : 1) - (b.status === "ready" ? 0 : 1) || String(b.createdAt || "").localeCompare(String(a.createdAt || ""))).map(draftCard).join("") : `<section class="card" style="margin-top:16px"><div class="empty">No drafts waiting${f ? ` for ${esc(f)}` : ""}.</div></section>`) +
+      (skip.length && !f ? `<div class="grid one">${card("Couldn't be drafted", "The drafter found something but needs a person to decide.", skip.map(draftCard).join(""))}</div>` : "") +
+      (sent.length && !f ? `<div class="grid one">${card("Sent in the last 7 days", "", `<ul class="ins">${sent.map((i) => `<li><div class="t">${esc((i.payload || {}).itemName || i.title || i.sourceLabel)}</div><div class="m">${esc(i.group || "")}${i.createdAt ? `, ${esc(fmtDay(toDate(i.createdAt)))}` : ""}</div></li>`).join("")}</ul>`)}</div>` : "");
+  }
+  async function loadQueue() {
+    S.qLoading = true;
+    try {
+      const r = await fetch("/.netlify/functions/queue", { headers: opsHeaders() });
+      if (r.status === 401) { localStorage.removeItem(PASS_KEY); S.queueErr = "Passcode didn't match."; S.queueAll = null; }
+      else if (r.ok) { const d = await r.json(); S.queueAll = d.items || []; S.queueErr = ""; }
+      else { S.queueErr = "Couldn't load drafts. Try again in a minute."; S.queueAll = S.queueAll || []; }
+    } catch { S.queueErr = "Couldn't reach the drafts service."; S.queueAll = S.queueAll || []; }
+    S.qLoading = false; render();
+  }
+  async function post(fn, body) {
+    const r = await fetch(`/.netlify/functions/${fn}`, { method: "POST", headers: opsHeaders(), body: JSON.stringify(body) });
+    const d = await r.json().catch(() => ({})); return { ok: r.ok && !d.error, d, status: r.status };
+  }
+  const setItem = (id, next) => { const i = (S.queueAll || []).findIndex((x) => x.id === id); if (i >= 0) S.queueAll[i] = { ...S.queueAll[i], ...next }; };
+  async function onAct(el) {
+    const art = el.closest(".draft"), id = art && art.dataset.id, act = el.dataset.act;
+    S.qOpen = S.qOpen || {};
+    if (act === "unlock") { const v = $("unlock").value; if (v) { localStorage.setItem(PASS_KEY, v); S.queueErr = ""; loadLive(); loadQueue(); } return; }
+    if (act === "filter") { S.qFilter = el.dataset.client; render(); return; }
+    if (act === "expand") { const b = art.querySelector(".dbody"); b.classList.toggle("open"); el.textContent = b.classList.contains("open") ? "Show less" : "Show all"; return; }
+    if (act === "ask" || act === "ignore") { S.qOpen[id] = S.qOpen[id] === act ? null : act; render(); const inp = document.querySelector(`.draft[data-id="${CSS.escape(id)}"] .dask input`); if (inp) inp.focus(); return; }
+    if (act === "preset") { art.querySelector(".dign input").value = el.dataset.reason; return; }
+    S.qBusy[id] = act === "ask-go" ? "ask" : "send"; render();
+    try {
+      if (act === "send" || act === "force") {
+        const { ok, d } = await post("send-to-monday", { id, force: act === "force" });
+        if (ok) { setItem(id, { status: "sent", mondayItemId: d.mondayItemId, sendWarning: d.warning || null }); S.qMsg[id] = { text: "Sent to Monday." }; }
+        else S.qMsg[id] = { text: d.error || "Couldn't send it.", err: true, force: !!(d.duplicate || d.sibling) };
+      } else if (act === "retry") {
+        const { d } = await post("retry-monday-assignment", { id }); setItem(id, { sendWarning: d.warning || null }); S.qMsg[id] = d.error ? { text: d.error, err: true } : { text: "Assignment fixed." };
+      } else if (act === "ignore-go") {
+        const reason = art.querySelector(".dign input").value.trim(); if (!reason) { S.qBusy[id] = null; render(); return; }
+        const { ok, d } = await post("queue", { id, patch: { status: "ignored", ignoreReason: reason, ignoredAt: new Date().toISOString() } });
+        if (ok) { S.queueAll = d.items || S.queueAll; S.qOpen[id] = null; } else S.qMsg[id] = { text: d.error || "Couldn't ignore it.", err: true };
+      } else if (act === "ask-go") {
+        const message = art.querySelector(".dask input").value.trim(); if (!message) { S.qBusy[id] = null; render(); return; }
+        const { ok, d } = await post("item-chat", { id, message, history: [] });
+        if (d.item) setItem(id, d.item);
+        S.qMsg[id] = ok ? { text: d.reply || (d.changed ? "Changed." : "No change made.") } : { text: d.error || "Couldn't change it.", err: true };
+        if (ok && d.changed) S.qOpen[id] = null;
+      }
+    } catch (err) { S.qMsg[id] = { text: String(err.message || err), err: true }; }
+    S.qBusy[id] = null; render();
+  }
+
+  // ── Sources: what feeds each client, and whether it's actually sending ─
+  const CONN = ["Meta Ads", "Google Ads", "Google Business Profile", "Search Console", "Google Analytics", "Instagram"];
+  function sourcesView(items) {
+    const issues = [], rows = [], listRows = [];
+    const cell = (cls, text, sub) => `<td><span class="dot ${cls}"></span>${esc(text)}${sub ? `<span class="s">${esc(sub)}</span>` : ""}</td>`;
+    for (const n of NAMES) {
+      const c = hubClient(n), sl = (c && c.source_list) || { windsor: [], listings: [], ghl: {} };
+      const tds = CONN.map((name) => {
+        const w = sl.windsor.find((x) => x.name === name);
+        if (!w) return `<td class="na">—</td>`;
+        if (!w.last) { issues.push(["warn", `${esc(n)}: ${esc(name)} is connected but sending no data.`]); return cell("warn", "No data"); }
+        if (daysSince(toDate(w.last)) > 10) { issues.push(["warn", `${esc(n)}: ${esc(name)} data stopped ${esc(fmtDay(toDate(w.last)))}.`]); return cell("warn", "Stopped", fmtDay(toDate(w.last))); }
+        return cell("ok", "Live", `through ${fmtDay(toDate(w.last))}`);
+      });
+      const L = sl.listings || [], dead = L.filter((l) => !l.has_data);
+      dead.forEach((l) => issues.push(["warn", `${esc(n)}: listing "${esc(l.label)}" is linked but returns no data.`]));
+      L.forEach((l) => listRows.push(`<tr><td>${esc(n)}</td><td>${esc(l.label)}</td><td>${num(l.actions_28)}</td><td>${num(l.views_28)}</td>${l.has_data ? cell("ok", "Live") : cell("warn", "No data")}</tr>`));
+      const ghl = sl.ghl.data ? cell("ok", "Live") : sl.ghl.configured ? cell("warn", "No data") : `<td class="na">—</td>`;
+      if (!sl.ghl.data && c) issues.push(["info", `${esc(n)}: GHL ${sl.ghl.configured ? "is set up but sending nothing here" : "isn't connected here"}.`]);
+      const read = (d) => !d ? `<td class="na">—</td>` : daysSince(toDate(d)) > 10 ? cell("warn", "Last read", fmtDay(toDate(d))) : cell("ok", "Read", fmtDay(toDate(d)));
+      const mon = items.filter((i) => i.client === n && recent(i)).length;
+      rows.push(`<tr><td>${esc(n)}</td>${tds.join("")}${ghl}${read(sl.chats)}${read(sl.meetings)}${mon ? cell("ok", `${mon} items`) : cell("warn", "Quiet")}<td>${sl.playbook ? "Yes" : `<span class="na">—</span>`}</td></tr>`);
+    }
+    const lastRead = NAMES.map((n) => ((hubClient(n) || {}).source_list || {}).chats).filter(Boolean).sort().pop();
+    if (lastRead && daysSince(toDate(lastRead)) > 7) issues.unshift(["bad", `Chats and meetings were last read by the AI on ${esc(fmtDay(toDate(lastRead)))}. Account facts and "said" lists stop there.`]);
+    const unlinked = (S.hub && S.hub.unlinked_listings) || [];
+    if (unlinked.length) issues.unshift(["warn", `${unlinked.length} Google listings in Windsor aren't linked to a client.`]);
+    const order = { bad: 0, warn: 1, info: 2 };
+    return hero(`<em>${plural(issues.filter((i) => i[0] !== "info").length, "source", "sources")}</em> need attention across ${plural(NAMES.length, "client", "clients")}.`, issues.slice().sort((a, b) => order[a[0]] - order[b[0]]).slice(0, 4), []) +
+      `<div class="grid one">${card("Every client, every source", "Live means data arrived recently. — means not set up for that client.",
+        `<div class="tw"><table class="src"><thead><tr><th>Client</th>${CONN.map((x) => `<th>${esc(x.replace("Google Business Profile", "Google listings"))}</th>`).join("")}<th>GHL</th><th>Chats</th><th>Meetings</th><th>Monday, 30 days</th><th>Playbook</th></tr></thead><tbody>${rows.join("")}</tbody></table></div>`)}</div>
+       <div class="grid one">${card("Google listings", "Each listing is pulled on its own so numbers never blend. Last 28 days.", `<div class="tw"><table class="src"><thead><tr><th>Client</th><th>Listing</th><th>Actions</th><th>Views</th><th>Status</th></tr></thead><tbody>${listRows.join("")}</tbody></table></div>`)}</div>` +
+      `<div class="grid one">${card("Listings in Windsor not linked to a client", S.hub && S.hub.discovery_ok ? "Add the listing ID to config.json under ops.gbp_links to attach it." : "The listing check runs with the next daily update.",
+        unlinked.length ? `<ul class="ins">${unlinked.map((l) => `<li><div class="t">${esc(l.title || "(no title)")}</div><div class="m">${esc(l.id)}</div></li>`).join("")}</ul>` : `<div class="empty">${S.hub && S.hub.discovery_ok ? "Every listing is linked." : "Not checked yet."}</div>`)}</div>` +
+      `<div class="grid one">${card("Everything that feeds this page", "", `<ul class="rules">${[
+        "Monday: four boards (CRM, Ads, Video, Web + SEO), read live when you unlock, otherwise each morning.",
+        "Windsor: Meta, Google Ads, Google listings, Search Console, Google Analytics and Instagram, 186 days daily.",
+        "GHL: contacts, opportunities and appointments for each connected location, last 28 days.",
+        "WhatsApp and Fireflies: read by AI into account facts, decisions, commitments and blockers, each quoted with where it came from.",
+        "AI read of the numbers: a daily pass over the Windsor and GHL numbers. Shown only when under 7 days old, with reporting-lag and plan claims removed.",
+        "Monday webhook: every status change to Done.",
+      ].map((t) => `<li>${esc(t)}</li>`).join("")}</ul>`)}</div>`;
+  }
+  document.addEventListener("click", (e) => {
+    if (e.target.closest("button.copy")) return;
+    const act = e.target.closest("[data-act]"); if (act) { onAct(act); return; }
+    if (e.target.closest("a")) return;
+    const r = route(), c = hubClient(r.client);
+    const ins = e.target.closest("[data-ins]");
+    if (ins) { const hit = INS.find(([re]) => re.test(ins.dataset.ins)); if (hit) showDrawer(metricDrawer(hit[1], r.client, c, S.items || [])); return; }
+    const st = e.target.closest("[data-step]");
+    if (st) showDrawer(stepDrawer(JSON.parse(st.dataset.step), r.client, c, S.items || []));
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeDrawer();
+    if (e.key === "Enter" && e.target.matches && e.target.matches("[data-ins],[data-step]")) e.target.click();
+    if (e.key === "Enter" && e.target.closest && e.target.closest(".dask")) { const b = e.target.closest(".dask").querySelector("[data-act]"); if (b) b.click(); }
+    if (e.key === "Enter" && e.target.id === "unlock") { const b = document.querySelector('[data-act="unlock"]'); if (b) b.click(); }
+  });
+
   let NAMES = [];
   function route() {
     const p = new URLSearchParams(location.hash.slice(1));
+    const screen = ["drafts", "sources"].includes(p.get("v")) ? p.get("v") : "client";
     let client = p.get("c"); const t = p.get("t");
     if (!client || !NAMES.includes(client)) { const last = localStorage.getItem(LAST_KEY); client = NAMES.includes(last) ? last : NAMES[0]; }
-    return { client, tab: t === "about" || TABS.some(([x]) => x === t) ? t : "overview" };
+    return { screen, client, tab: t === "about" || TABS.some(([x]) => x === t) ? t : "overview" };
   }
   const href = (client, tab) => `#c=${encodeURIComponent(client)}&t=${tab}`;
   window.addEventListener("hashchange", () => { render(); window.scrollTo(0, 0); });
-  $("view").addEventListener("change", (e) => { location.hash = href(e.target.value, route().tab === "about" ? "overview" : route().tab).slice(1); });
+  $("view").addEventListener("change", (e) => { const r = route(); location.hash = (r.screen === "client" ? href(e.target.value, r.tab === "about" ? "overview" : r.tab) : `#v=${r.screen}&c=${encodeURIComponent(e.target.value)}`).slice(1); });
   $("range").addEventListener("click", (e) => { const b = e.target.closest("button[data-n]"); if (b) { S.n = +b.dataset.n; render(); } });
 
   function render() {
     const payload = S.live || S.snapshot; if (!payload) return;
     const items = normalize(payload);
+    const skip = new Set(((S.ops || {}).settings || {}).not_clients || ["CAPI Setup", "Unassigned"]);
     NAMES = [...new Set([...items.map((i) => i.client), ...Object.keys((S.hub && S.hub.clients) || {})])]
-      .filter((n) => n && n !== "Unassigned").sort((a, b) => (a === "Flow Company") - (b === "Flow Company") || a.localeCompare(b));
+      .filter((n) => n && !skip.has(n)).sort((a, b) => (a === "Flow Company") - (b === "Flow Company") || a.localeCompare(b));
     const r = route(); localStorage.setItem(LAST_KEY, r.client);
     $("view").innerHTML = NAMES.map((n) => `<option value="${esc(n)}" ${r.client === n ? "selected" : ""}>${esc(n)}</option>`).join("");
-    $("nav").innerHTML = TABS.map(([t, l]) => `<a href="${href(r.client, t)}" class="${r.tab === t ? "on" : ""}" ${r.tab === t ? 'aria-current="page"' : ""}><svg viewBox="0 0 24 24">${ICON[t]}</svg>${l}</a>`).join("") +
-      `<div class="sep"></div><a href="daily.html"><svg viewBox="0 0 24 24">${ICON.drafts}</svg>Daily Ops drafts</a>`;
-    $("crumb").innerHTML = `<b>${esc(r.tab === "about" ? "About these numbers" : TABS.find(([t]) => t === r.tab)[1])}</b> · ${esc(r.client)}`;
+    const pend = S.queueAll ? pendingDrafts().length : null;
+    $("nav").innerHTML = TABS.map(([t, l]) => `<a href="${href(r.client, t)}" class="${r.screen === "client" && r.tab === t ? "on" : ""}"><svg viewBox="0 0 24 24">${ICON[t]}</svg>${l}</a>`).join("") +
+      `<div class="sep"></div><a href="#v=drafts" class="${r.screen === "drafts" ? "on" : ""}"><svg viewBox="0 0 24 24">${ICON.drafts}</svg>Drafts${pend ? `<span class="n">${pend}</span>` : ""}</a>` +
+      `<a href="#v=sources" class="${r.screen === "sources" ? "on" : ""}"><svg viewBox="0 0 24 24">${ICON.sources}</svg>Sources</a>`;
+    const crumbLabel = r.screen === "drafts" ? "Drafts" : r.screen === "sources" ? "Sources" : (r.tab === "about" ? "About these numbers" : TABS.find(([t]) => t === r.tab)[1]);
+    $("crumb").innerHTML = `<b>${esc(crumbLabel)}</b> · ${esc(r.screen === "client" ? r.client : "All clients")}`;
+    $("range").style.display = r.screen === "client" ? "" : "none";
     $("range").innerHTML = [7, 14, 30, 90].map((n) => `<button type="button" data-n="${n}" class="${S.n === n ? "on" : ""}" aria-pressed="${S.n === n}">${n} days</button>`).join("");
     const c = hubClient(r.client);
-    $("view-body").innerHTML = r.tab === "about" ? aboutView()
-      : ({ overview: overviewView, paid: paidView, organic: organicView, crm: crmView }[r.tab])(r.client, c, items);
+    $("view-body").innerHTML = r.screen === "drafts" ? draftsView(items) : r.screen === "sources" ? sourcesView(items)
+      : r.tab === "about" ? aboutView() : ({ overview: overviewView, paid: paidView, organic: organicView, crm: crmView }[r.tab])(r.client, c, items);
+    S.items = items;
     renderFoot(r);
   }
 
@@ -627,6 +968,7 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
       if (res.status === 401) { localStorage.removeItem(PASS_KEY); throw new Error("Passcode didn't match."); }
       if (!res.ok) throw new Error("Live read failed. Showing the morning sync.");
       S.live = await res.json(); S.liveError = "";
+      if (S.queueAll === null && !S.qLoading) loadQueue();
     } catch (err) { S.liveError = err.message; }
     render();
   }

@@ -94,7 +94,7 @@
     "Ziad"
   ],
   "ops": {
-    "_readme": "Settings for the Ops page (site/index.html) and build_ops.py. quiet_days: an in-progress Monday item with no activity for this many days is flagged. quiet_days_ongoing: same, for items with status Ongoing (retainer work). ad_slugs: which pulse/<slug>.json Windsor files belong to each Monday client. systems: each client's own operating system, shown on the Results tab; health: true means its numbers can only come from a script on the client's own server (totals only), written to results/<slug>.json. recent_days: the Ops page only shows Monday items with activity in this many days.",
+    "_readme": "Settings for the Ops page (site/index.html) and build_ops.py. quiet_days: an in-progress Monday item with no activity for this many days is flagged. quiet_days_ongoing: same, for items with status Ongoing (retainer work). ad_slugs: which pulse/<slug>.json Windsor files belong to each Monday client. systems: each client's own operating system, shown on the Results tab; health: true means its numbers can only come from a script on the client's own server (totals only), written to results/<slug>.json. recent_days: the Ops page only shows Monday items with activity in this many days. not_clients: Monday groups that are internal projects, not clients. gbp_links: {\"locations/ID\": \"Client\"} to attach a Google listing Windsor can see but the name match missed.",
     "quiet_days": 14,
     "quiet_days_ongoing": 30,
     "ad_slugs": {
@@ -126,6 +126,9 @@
         "steel-advance",
         "steel-forte",
         "steel-ohare"
+      ],
+      "Senior Insurance": [
+        "senior-insurance"
       ]
     },
     "systems": {
@@ -160,6 +163,11 @@
       "Liferun": null,
       "Healing Helps": null
     },
-    "recent_days": 30
+    "recent_days": 30,
+    "not_clients": [
+      "CAPI Setup",
+      "Unassigned"
+    ],
+    "gbp_links": {}
   }
 }

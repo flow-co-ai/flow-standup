@@ -15,6 +15,7 @@ Standard library only. Run after `node pulse.js`:  python build_ops.py
 """
 
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -74,7 +75,9 @@ def main() -> None:
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "settings": {"quiet_days": ops.get("quiet_days", 14),
                      "quiet_days_ongoing": ops.get("quiet_days_ongoing", 30),
-                     "recent_days": ops.get("recent_days", 30)},
+                     "recent_days": ops.get("recent_days", 30),
+                     "not_clients": ops.get("not_clients") or [],
+                     "boards": {str(b["id"]): b["name"] for b in config.get("boards") or []}},
         "shipped": shipped_events(),
         "through": None,
         "window": None,
@@ -127,6 +130,7 @@ def main() -> None:
           f"{len(out['shipped'])} Done events in the last 14 days")
 
     hub = build_hub(config)
+    add_context(config, hub, ops.get("recent_days", 30))
     Path("site/hub.json").write_text(json.dumps(hub, separators=(",", ":")))
     print(f"hub.json: {len(hub['clients'])} clients, organic complete through {hub['complete_through']}")
 
@@ -230,6 +234,105 @@ def build_hub(config: dict) -> dict:
             elif dates:
                 out["complete_through"][k] = dates[-1]
     return out
+
+# ── What the AI layers and the source list add to each client ──────────────
+CONNECTOR_KEY = {"facebook": ("Meta Ads", "meta_spend"), "google_ads": ("Google Ads", "google_spend"),
+                 "googleanalytics4": ("Google Analytics", "ga4_sessions"), "instagram": ("Instagram", "ig_reach"),
+                 "searchconsole": ("Search Console", "sc_clicks"), "google_my_business": ("Google Business Profile", "gbp_actions")}
+PROFILE_SUBJECTS = ("primary_contact", "intake_owner", "scope", "kpi", "crm_system", "booking_system", "contract_start", "contract_end")
+PLAN_WORDS = ("sow", "milestone", "playbook", "phase 1", "standup card")
+
+
+def _days_ago(stamp: str) -> int:
+    try:
+        d = datetime.fromisoformat(stamp.replace("Z", "+00:00")[:19])
+        return (datetime.now() - d.replace(tzinfo=None)).days
+    except (ValueError, AttributeError):
+        return 9999
+
+
+def _fact_out(f: dict) -> dict:
+    return {"subject": f.get("subject"), "value": f.get("value"), "by": f.get("stated_by"), "at": (f.get("stated_at") or "")[:10],
+            "where": f.get("chat") or f.get("source"), "excerpt": (f.get("excerpt") or "")[:280], "confidence": f.get("confidence")}
+
+
+def add_context(config: dict, hub: dict, recent_days: int) -> None:
+    ops = config.get("ops") or {}
+    cfg = {c.get("slug"): c for c in (load(Path("clients.json")) or [])}
+    disc = load(Path("series/_gbp_discovery.json")) or {}
+    for client, c in hub["clients"].items():
+        slugs = (ops.get("ad_slugs") or {}).get(client) or []
+        name_slug = re.sub(r"[^a-z0-9]+", "-", client.lower()).strip("-")
+        facts = next((f for f in (load(Path("facts") / f"{s}.json") for s in slugs + [name_slug]) if f), None)
+        pulse = next((p for p in (load(Path("pulse") / f"{s}.json") for s in slugs) if p), None) or {}
+        comms = next((x for x in (load(Path("comms") / f"{s}.json") for s in slugs) if x), None) or {}
+
+        # account facts (latest stated value per subject) and recent decisions, commitments, blockers
+        by_id = {f["id"]: f for f in (facts or {}).get("facts") or []}
+        cur = (facts or {}).get("current") or {}
+        c["profile"] = {k: _fact_out(by_id[cur[k]]) for k in PROFILE_SUBJECTS if cur.get(k) in by_id}
+        said = [f for f in by_id.values() if f.get("subject") in ("decision", "commitment", "blocker")
+                and not f.get("superseded_by") and _days_ago(f.get("stated_at") or "") <= recent_days]
+        c["said"] = [_fact_out(f) for f in sorted(said, key=lambda f: f.get("stated_at") or "", reverse=True)[:10]]
+
+        # AI read of the numbers: only fresh, only findings about the data (not plan/playbook claims)
+        perf = pulse.get("performance") or {}
+        ai = None
+        if perf.get("generated_at") and _days_ago(perf["generated_at"]) <= 7 and not perf.get("stale"):
+            plan = lambda t: any(w in (t or "").lower() for w in PLAN_WORDS)
+            # Google profile data lands ~4 days late, so "0 in the last few days" is a reporting gap, not a drop.
+            lag = lambda f: str(f.get("channel", "")).lower() in ("gbp", "organic", "google_my_business") and re.search(
+                r"collapsed to 0|\b0\b[^.]*\b(last|past) \d+ days|(last|past) \d+ days[^.]*\b0\b", f.get("text") or "", re.I)
+            fnd = [f for f in perf.get("findings") or [] if not plan(f.get("text")) and not lag(f)
+                   and str(f.get("channel", "")).lower() not in ("sow", "plan")]
+            ids = {f.get("id") for f in fnd}
+            sug = [x for x in perf.get("suggestions") or [] if not plan(x.get("text")) and (not x.get("cites") or ids & set(x["cites"]))]
+            ai = {"at": perf["generated_at"][:10], "next_check": perf.get("next_check"),
+                  "findings": [{k: f.get(k) for k in ("id", "text", "confidence", "channel", "priority")} for f in fnd],
+                  "suggestions": [{k: x.get(k) for k in ("text", "type", "cites")} for x in sug]}
+        c["ai"] = ai
+
+        # client threads waiting on us, last 14 days only
+        c["threads"] = [{"chat": t.get("chat"), "at": (t.get("last_at") or "")[:10], "text": (t.get("last_text") or "")[:200],
+                         "hours": round(t.get("unanswered_hours") or 0)} for t in comms.get("threads") or []
+                        if t.get("state") == "awaiting_flow" and _days_ago(t.get("last_at") or "") <= 14]
+
+        # sources: what is connected and whether it is actually sending data
+        dates, series = c.get("dates") or [], c.get("series") or {}
+        tail = lambda key: [d for d, v in zip(dates, series.get(key) or []) if v > 0]
+        conns = sorted({k for s in slugs for k in ((cfg.get(s) or {}).get("windsor") or {}) if k in CONNECTOR_KEY}
+                       | ({"google_my_business"} if c.get("profiles_daily") else set()))
+        windsor = []
+        for k in conns:
+            label, key = CONNECTOR_KEY[k]
+            hits = tail(key)
+            windsor.append({"name": label, "last": hits[-1] if hits else None, "total_28": round(sum((series.get(key) or [])[-28:]))})
+        labels = {}
+        for s in slugs:
+            labels.update((cfg.get(s) or {}).get("gbp_labels") or {})
+        for l in disc.get("listings") or []:
+            if l.get("slug") in slugs:
+                labels.setdefault(l["id"], l.get("title") or l["id"])
+        daily = {p["label"]: p for p in c.get("profiles_daily") or []}
+        prof28 = {p["label"]: p for p in c.get("profiles") or []}
+        listings = []
+        for lid, label in labels.items():
+            p = daily.get(label) or prof28.get(label)
+            total = (sum(sum(p[k][-28:]) for k in ("calls", "directions", "web_clicks")) if p and isinstance(p.get("calls"), list)
+                     else (sum(p.get(k) or 0 for k in ("calls", "directions", "web_clicks")) if p else 0))
+            views = (sum(p["impressions"][-28:]) if p and isinstance(p.get("impressions"), list) else (p or {}).get("impressions") or 0)
+            listings.append({"id": lid, "label": label, "actions_28": round(total), "views_28": round(views), "has_data": bool(p)})
+        first = cfg.get(slugs[0]) if slugs else None
+        c["source_list"] = {
+            "windsor": windsor, "listings": listings,
+            "ghl": {"configured": bool(first and first.get("ghl_location_id")), "data": bool(c.get("crm"))},
+            "chats": ((facts or {}).get("last_processed_at") or {}).get("whatsapp"),
+            "meetings": ((facts or {}).get("last_processed_at") or {}).get("fireflies"),
+            "facts": len(by_id), "playbook": any((Path("playbooks") / f"{s}.md").exists() for s in slugs + [name_slug]),
+        }
+    hub["unlinked_listings"] = [l for l in disc.get("listings") or [] if not l.get("slug")]
+    hub["discovery_ok"] = disc.get("ok")
+
 
 if __name__ == "__main__":
     main()

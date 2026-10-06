@@ -126,10 +126,13 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}, days = 28
       'date', 'account_id', 'clicks', 'impressions',
     ], windsorCfg.searchconsole, dateFrom, dateTo, apiKey, 'clicks'),
 
-    safeFetch('google_my_business', [
-      'date', 'account_id', 'location_title',
-      'impressions', 'call_clicks', 'direction_requests', 'website_clicks',
-    ], windsorCfg.google_my_business, dateFrom, dateTo, apiKey, null),
+    // One listing per call: Windsor silently blends listings requested together.
+    Promise.all((windsorCfg.google_my_business ? norm(windsorCfg.google_my_business).accounts : []).map((acc) =>
+      safeFetch('google_my_business', [
+        'date', 'account_id', 'location_title',
+        'impressions', 'call_clicks', 'direction_requests', 'website_clicks',
+      ], [acc], dateFrom, dateTo, apiKey, null).then((rows) => rows.map((r) => ({ ...r, account_id: r.account_id || acc })))
+    )).then((lists) => lists.flat()),
   ]);
 
   // ── 28-day paid totals ──────────────────────────────────────────────────────
