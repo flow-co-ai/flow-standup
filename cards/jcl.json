@@ -1,14 +1,14 @@
 {
   "slug": "jcl",
   "name": "Justice Consumer Law",
-  "generated_at": "2026-10-06T20:49:06.283Z",
+  "generated_at": "2026-10-07T18:17:44.560Z",
   "contract": {
     "start": "2025-10-01",
     "end": "2026-10-31",
     "validated": true,
     "month_of": 12,
     "months_total": 12,
-    "days_left": 25,
+    "days_left": 24,
     "basis": {
       "type": "observed",
       "source": "timeline/plan",
@@ -19,8 +19,8 @@
   "lanes": {
     "organic": {
       "state": "green",
-      "headline": "56 calls · 28d",
-      "sentence": "Justice Consumer Law, LLC took 56 calls on 2001 impressions.",
+      "headline": "49 calls · 28d",
+      "sentence": "Justice Consumer Law, LLC took 49 calls on 1927 impressions.",
       "basis": {
         "type": "observed",
         "source": "Windsor GBP",
@@ -32,23 +32,23 @@
           {
             "account_id": "locations/3362232819248488877",
             "label": "Justice Consumer Law, LLC",
-            "calls": 56,
+            "calls": 49,
             "directions": 5,
-            "web_clicks": 130,
-            "impressions": 2001,
-            "days_with_impressions": 26,
-            "call_rate": 0.028
+            "web_clicks": 140,
+            "impressions": 1927,
+            "days_with_impressions": 25,
+            "call_rate": 0.0254
           }
         ],
         "flagged_profiles": [],
-        "total_calls": 56,
+        "total_calls": 49,
         "total_profiles": 1
       }
     },
     "paid": {
       "state": "green",
-      "headline": "$1,030 · 85 leads · $12 per lead · 14d",
-      "sentence": "Meta $1,030.32 spend, 85 leads.",
+      "headline": "$1,051 · 88 leads · $12 per lead · 14d",
+      "sentence": "Meta $1,050.74 spend, 88 leads.",
       "basis": {
         "type": "observed",
         "source": "Windsor Paid",
@@ -57,26 +57,26 @@
       "flags": [],
       "detail": {
         "meta": {
-          "spend": 1785.94,
-          "leads": 139,
-          "clicks": 1279
+          "spend": 1845.89,
+          "leads": 148,
+          "clicks": 1314
         },
         "google_ads": null,
-        "total_spend": 1785.94,
+        "total_spend": 1845.89,
         "reconciliation": null
       }
     },
     "crm": {
-      "state": "amber",
-      "headline": "1 waiting 1146h",
-      "sentence": "No intake owner found in whatsapp, fireflies. 1 client thread awaiting Flow, oldest 1146h.",
+      "state": "red",
+      "headline": "5 waiting 1149h",
+      "sentence": "No intake owner found in whatsapp, fireflies. 5 client threads awaiting Flow, oldest 1149h.",
       "basis": {
         "type": "observed",
         "source": "GHL / WhatsApp",
         "window": "14d"
       },
       "flags": [
-        "awaiting_flow:1"
+        "awaiting_flow:5"
       ],
       "detail": {
         "intake_owner": null,
@@ -85,20 +85,20 @@
           "source": "facts",
           "window": "current"
         },
-        "awaiting_flow": 1,
-        "oldest_unanswered_hours": 1146.3,
+        "awaiting_flow": 5,
+        "oldest_unanswered_hours": 1149.1,
         "threads": {
-          "messages_scanned": 209,
-          "threads": 1,
-          "awaiting_flow": 1,
+          "messages_scanned": 235,
+          "threads": 6,
+          "awaiting_flow": 5,
           "awaiting_client": 0,
-          "client_update": 0,
+          "client_update": 1,
           "settled": 0,
           "abandoned": 19,
-          "stale_over_24h": 1
+          "stale_over_24h": 5
         },
         "ghl": {
-          "contacts": 122,
+          "contacts": 125,
           "opportunities": {
             "created": {
               "count": 0,
@@ -117,23 +117,23 @@
   "scope_out": [],
   "needs_you": [
     {
-      "text": "Contract ends in 25 days (2026-10-31).",
+      "text": "5 threads awaiting Flow, oldest 1149h.",
+      "severity": "high",
+      "age_days": 48,
+      "basis": {
+        "type": "observed",
+        "source": "GHL / WhatsApp",
+        "window": "14d"
+      }
+    },
+    {
+      "text": "Contract ends in 24 days (2026-10-31).",
       "severity": "high",
       "age_days": null,
       "basis": {
         "type": "observed",
         "source": "timeline/plan",
         "window": "engagement"
-      }
-    },
-    {
-      "text": "1 thread awaiting Flow, oldest 1146h.",
-      "severity": "medium",
-      "age_days": 48,
-      "basis": {
-        "type": "observed",
-        "source": "GHL / WhatsApp",
-        "window": "14d"
       }
     }
   ],

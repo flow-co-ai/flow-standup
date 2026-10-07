@@ -1,14 +1,14 @@
 {
   "slug": "liferun",
   "name": "Liferun",
-  "generated_at": "2026-10-06T20:49:06.284Z",
+  "generated_at": "2026-10-07T18:17:44.561Z",
   "contract": {
     "start": "2026-05-01",
     "end": "2026-10-31",
     "validated": true,
     "month_of": 5,
     "months_total": 5,
-    "days_left": 25,
+    "days_left": 24,
     "basis": {
       "type": "observed",
       "source": "timeline/plan",
@@ -18,30 +18,39 @@
   "status": "critical",
   "lanes": {
     "organic": {
-      "state": "green",
-      "headline": "1 call · 28d",
-      "sentence": "Liferun took 1 calls on 119 impressions.",
+      "state": "amber",
+      "headline": "0 calls · 28d",
+      "sentence": "Liferun took 0 calls on 109 impressions.",
       "basis": {
         "type": "observed",
         "source": "Windsor GBP",
         "window": "28d"
       },
-      "flags": [],
+      "flags": [
+        "gbp_no_calls_with_impressions:Liferun"
+      ],
       "detail": {
         "profiles": [
           {
             "account_id": "locations/1230522329202519428",
             "label": "Liferun",
-            "calls": 1,
+            "calls": 0,
             "directions": 55,
-            "web_clicks": 2,
-            "impressions": 119,
+            "web_clicks": 1,
+            "impressions": 109,
             "days_with_impressions": 24,
-            "call_rate": 0.0084
+            "call_rate": 0
           }
         ],
-        "flagged_profiles": [],
-        "total_calls": 1,
+        "flagged_profiles": [
+          {
+            "label": "Liferun",
+            "flags": [
+              "gbp_no_calls_with_impressions"
+            ]
+          }
+        ],
+        "total_calls": 0,
         "total_profiles": 1
       }
     },
@@ -57,23 +66,23 @@
       "flags": [],
       "detail": {
         "meta": {
-          "spend": 576.6,
-          "leads": 48,
-          "clicks": 814
+          "spend": 483.61,
+          "leads": 38,
+          "clicks": 688
         },
         "google_ads": {
-          "spend": 201.22,
+          "spend": 120.1,
           "convs": 0,
-          "clicks": 37
+          "clicks": 28
         },
-        "total_spend": 777.82,
+        "total_spend": 603.71,
         "reconciliation": null
       }
     },
     "crm": {
       "state": "green",
-      "headline": "no owner",
-      "sentence": "No intake owner found in whatsapp, fireflies.",
+      "headline": "owner on file",
+      "sentence": "Sierra Felicidad, as of 2026-08-31 per fireflies.",
       "basis": {
         "type": "observed",
         "source": "GHL / WhatsApp",
@@ -81,11 +90,11 @@
       },
       "flags": [],
       "detail": {
-        "intake_owner": null,
+        "intake_owner": "Sierra Felicidad",
         "intake_owner_basis": {
-          "type": "not_found",
-          "source": "facts",
-          "window": "current"
+          "type": "fact",
+          "source": "fireflies",
+          "window": "2026-08-31"
         },
         "awaiting_flow": 0,
         "oldest_unanswered_hours": 0,
@@ -100,10 +109,10 @@
           "stale_over_24h": 0
         },
         "ghl": {
-          "contacts": 84,
+          "contacts": 64,
           "opportunities": {
             "created": {
-              "count": 82,
+              "count": 67,
               "value": 0
             },
             "won": {
@@ -119,13 +128,23 @@
   "scope_out": [],
   "needs_you": [
     {
-      "text": "Contract ends in 25 days (2026-10-31).",
+      "text": "Contract ends in 24 days (2026-10-31).",
       "severity": "high",
       "age_days": null,
       "basis": {
         "type": "observed",
         "source": "timeline/plan",
         "window": "engagement"
+      }
+    },
+    {
+      "text": "GBP issue (amber): Liferun.",
+      "severity": "medium",
+      "age_days": null,
+      "basis": {
+        "type": "observed",
+        "source": "Windsor GBP",
+        "window": "28d"
       }
     }
   ],

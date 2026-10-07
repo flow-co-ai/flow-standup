@@ -1,7 +1,7 @@
 {
   "slug": "senior-insurance",
   "name": "Senior Insurance",
-  "generated_at": "2026-10-06T20:49:06.289Z",
+  "generated_at": "2026-10-07T18:17:44.565Z",
   "contract": {
     "start": null,
     "end": null,
@@ -20,7 +20,7 @@
     "organic": {
       "state": "amber",
       "headline": "0 of 3 profiles active · 28d",
-      "sentence": "Senior Insurance Team took 0 calls on 294 impressions; Senior Insurance Team took 3 calls on 491 impressions; Senior Insurance Team took 0 calls on 200 impressions.",
+      "sentence": "Senior Insurance Team took 0 calls on 287 impressions; Senior Insurance Team took 3 calls on 467 impressions; Senior Insurance Team took 0 calls on 197 impressions.",
       "basis": {
         "type": "observed",
         "source": "Windsor GBP",
@@ -36,10 +36,10 @@
             "account_id": "locations/8170777697827184701",
             "label": "Senior Insurance Team",
             "calls": 0,
-            "directions": 38,
-            "web_clicks": 4,
-            "impressions": 294,
-            "days_with_impressions": 26,
+            "directions": 37,
+            "web_clicks": 6,
+            "impressions": 287,
+            "days_with_impressions": 25,
             "call_rate": 0
           },
           {
@@ -47,10 +47,10 @@
             "label": "Senior Insurance Team",
             "calls": 3,
             "directions": 61,
-            "web_clicks": 6,
-            "impressions": 491,
-            "days_with_impressions": 26,
-            "call_rate": 0.0061
+            "web_clicks": 8,
+            "impressions": 467,
+            "days_with_impressions": 25,
+            "call_rate": 0.0064
           },
           {
             "account_id": "locations/7713375159367604965",
@@ -58,8 +58,8 @@
             "calls": 0,
             "directions": 49,
             "web_clicks": 6,
-            "impressions": 200,
-            "days_with_impressions": 26,
+            "impressions": 197,
+            "days_with_impressions": 25,
             "call_rate": 0
           }
         ],
@@ -103,23 +103,54 @@
       "detail": {}
     },
     "crm": {
-      "state": "quiet",
-      "headline": "no CRM",
-      "sentence": "No GHL and no comms on file.",
+      "state": "amber",
+      "headline": "2 waiting 22h",
+      "sentence": "No intake owner found in known sources. 2 client threads awaiting Flow, oldest 22h.",
       "basis": {
-        "type": "not_found",
-        "source": "clients.json",
-        "window": "config"
+        "type": "observed",
+        "source": "GHL / WhatsApp",
+        "window": "14d"
       },
-      "flags": [],
-      "detail": {}
+      "flags": [
+        "awaiting_flow:2"
+      ],
+      "detail": {
+        "intake_owner": null,
+        "intake_owner_basis": {
+          "type": "unavailable",
+          "source": "facts",
+          "window": "current"
+        },
+        "awaiting_flow": 2,
+        "oldest_unanswered_hours": 22.4,
+        "threads": {
+          "messages_scanned": 93,
+          "threads": 13,
+          "awaiting_flow": 2,
+          "awaiting_client": 0,
+          "client_update": 11,
+          "settled": 0,
+          "abandoned": 0,
+          "stale_over_24h": 0
+        },
+        "ghl": null
+      }
     }
   },
   "scope_out": [
-    "paid",
-    "crm"
+    "paid"
   ],
   "needs_you": [
+    {
+      "text": "2 threads awaiting Flow, oldest 22h.",
+      "severity": "medium",
+      "age_days": 1,
+      "basis": {
+        "type": "observed",
+        "source": "GHL / WhatsApp",
+        "window": "14d"
+      }
+    },
     {
       "text": "GBP issue (amber): Senior Insurance Team, Senior Insurance Team, Senior Insurance Team.",
       "severity": "medium",
@@ -134,7 +165,7 @@
   "sources_read": {
     "pulse": true,
     "facts": false,
-    "comms": false,
+    "comms": true,
     "plan": false,
     "timeline": false,
     "inbox": true
