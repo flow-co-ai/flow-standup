@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-06T18:57:36.594Z",
+  "updatedAt": "2026-10-07T20:30:48.868496+00:00",
   "items": [
     {
       "id": "jcl-case-dashboard-updates",
@@ -28,6 +28,81 @@
       "ignoreReason": "This was resolved on a call with Andrew. Dashboard looks good now.",
       "ignoredAt": "2026-10-06T18:57:36.180Z",
       "updatedAt": "2026-10-06T18:57:36.593Z"
+    },
+    {
+      "id": "qualityhvac-burr-ridge-gbp-move",
+      "title": "Burr Ridge Address",
+      "note": "Priority 2: client chased status on 10/6 and the move needs a one shot reverification. Blocked on the client (door sign, lobby directory, hours, Regus agreement photo), so blocked=true. Section 19 audit: Quality HVAC groups on all four boards, subitems included, plus a text sweep of every update for Burr Ridge/Regus/Suite 210. Only hits are the Ads heating campaign location targeting; nothing tracks the GBP address move. Drafted as a subitem of the existing GBP item. Section 19b: no pending queue match. Nate and Aiman are client side and are named in plain text only.",
+      "status": "ready",
+      "board": "Web + SEO",
+      "group": "Quality HVAC",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: Quality HVAC, 10/6",
+      "payload": {
+        "mode": "create_subitem",
+        "boardId": "18099807701",
+        "parentItemId": "12545566882",
+        "itemName": "Burr Ridge Address",
+        "updateBody": "<p>Salam,</p><ul><li>Fibid is moving its Google Business Profile to the Regus office in Burr Ridge, Suite 210. Nate asked for status on 10/6. Hashir's 10/6 plan in the HVAC chat is the plan of record.</li><li><strong>Do not change the address yet.</strong> The change sends the profile into reverification and we only want to go through that once. Two things from the client first, both arranged through Regus: a sign on the outside of the door reading Fibid Heating &amp; Air Conditioning, Suite 210 (matching the profile name, not the Heating &amp; Cooling decal inside), and the business listed on the lobby directory.</li><li><strong>Collect from Nate</strong>: actual office hours (when someone is physically there) and a photo of the Regus agreement page showing the office number and address, for any Google document request.</li><li><strong>Then, in this order</strong>: hours on the profile, address on the website, then the address change with the verification video. Use the office video Nate sent on 10/1.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a></p>",
+        "blocked": true,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "verifiedAt": "2026-10-07T20:30:43.923202+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-10-07T20:30:48.868496+00:00"
+    },
+    {
+      "id": "medstation-deleted-appointment-messages",
+      "title": "Deleted Appointment Messages",
+      "note": "Priority 2: possible patient facing message on deleted appointments, flagged twice (10/5, 10/6). Ahmed said on 10/6 he would check; nothing on Monday tracks it. Section 19 audit: MedStation groups on all four boards, subitems included, plus a text sweep for deleted/appointment deletion/Eliana. Closest item is Neuryn Message Consolidation (Stuck), which is about Neuryn and GHL both messaging patients, not this trigger, so create_item. Section 19b: no pending queue match.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: MedStation, 10/6",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm512p9w",
+        "itemName": "Deleted Appointment Messages",
+        "updateBody": "<p>Salam,</p><ul><li>On 10/5 and 10/6 MedStation staff posted screenshots in the GHL chat of a message showing on a patient's conversation after an appointment was deleted, and again on one that was not cancelled at all. On 10/6 they also flagged a GHL message carrying the name \"Eliana\". Their only concern is that patients must not receive these.</li><li><strong>Confirm the channel</strong> of each flagged message. Mateus's read is that a bubble with no WhatsApp or SMS label is internal and never reached the patient; confirm or correct that in the chat.</li><li><strong>Find the trigger</strong>: which workflow or NextGen sync event fires on appointment deletion or status change, and why it fired on an appointment that was not cancelled. Same for the \"Eliana\" message.</li><li>If anything patient facing fires on deletion, <strong>turn it off</strong>. If it is internal only, <strong>explain it in the chat</strong> so staff stop reading it as a patient message.</li><li><strong>Do not touch</strong> Neuryn's own reminders; that overlap is Neuryn Message Consolidation.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "verifiedAt": "2026-10-07T20:30:43.923323+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-10-07T20:30:48.868496+00:00"
+    },
+    {
+      "id": "medstation-ring-timeout",
+      "title": "Ring Timeout",
+      "note": "Priority 3: staff are missing calls but nothing is down. Section 19 audit: MedStation groups on all four boards, subitems included, plus a text sweep for ring timeout. Only hits are Quality HVAC Missed Calls and Maadi Law Intake Call Drops, other clients, so create_item. Kept separate from Deleted Appointment Messages per the single item counter rule (call routing vs messaging). Section 19b: no pending queue match. Sohib has a call with MedStation and their IT on 10/7 at 10am, which is a good place to confirm which line this is.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: MedStation, 10/6",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm512p9w",
+        "itemName": "Ring Timeout",
+        "updateBody": "<p>Salam,</p><ul><li>On 10/6 MedStation staff reported in the GHL chat that the phone rings only once before moving on, leaving no time to answer.</li><li><strong>Identify the line and routing path</strong> behind it: GHL number, forwarding target, user device, voicemail handover. If the call does not route through GHL at all, say so in the chat.</li><li><strong>Raise the ring timeout</strong> so staff can pick up. Quality HVAC went from 20 to 30 seconds on 9/25 for the same symptom; start there.</li><li><strong>Test</strong> with a live call and confirm with staff in the chat.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 3,
+      "verifiedAt": "2026-10-07T20:30:43.923402+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-10-07T20:30:48.868496+00:00"
     }
   ]
 }
