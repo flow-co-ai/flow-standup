@@ -1,14 +1,14 @@
 {
   "slug": "medstation",
   "name": "MedStation",
-  "generated_at": "2026-10-08T17:56:12.553Z",
+  "generated_at": "2026-10-09T17:32:10.339Z",
   "contract": {
     "start": "2026-07-01",
     "end": "2026-09-30",
     "validated": true,
     "month_of": 2,
     "months_total": 2,
-    "days_left": -8,
+    "days_left": -9,
     "basis": {
       "type": "observed",
       "source": "timeline/plan",
@@ -18,9 +18,9 @@
   "status": "critical",
   "lanes": {
     "organic": {
-      "state": "unknown",
-      "headline": "0 calls · 28d",
-      "sentence": "0 calls across 0 profiles.",
+      "state": "green",
+      "headline": "7 calls · 28d",
+      "sentence": "MedStation Weston took 7 calls on 382 impressions.",
       "basis": {
         "type": "observed",
         "source": "Windsor GBP",
@@ -28,39 +28,48 @@
       },
       "flags": [],
       "detail": {
-        "profiles": [],
+        "profiles": [
+          {
+            "account_id": "locations/301736109571843428",
+            "label": "MedStation Weston",
+            "calls": 7,
+            "directions": 55,
+            "web_clicks": 18,
+            "impressions": 382,
+            "days_with_impressions": 25,
+            "call_rate": 0.0183
+          }
+        ],
         "flagged_profiles": [],
-        "total_calls": 0,
-        "total_profiles": 0
+        "total_calls": 7,
+        "total_profiles": 1
       }
     },
     "paid": {
       "state": "green",
-      "headline": "$350 · 33 conversations · $11 per conversation · 14d",
-      "sentence": "Meta $349.61 spend, 33 conversations.",
+      "headline": "$435 · 42 conversations · $10 per conversation · 14d",
+      "sentence": "Meta $434.52 spend, 42 conversations.",
       "basis": {
         "type": "observed",
         "source": "Windsor Paid",
         "window": "14d"
       },
-      "flags": [
-        "channel_dark:meta"
-      ],
+      "flags": [],
       "detail": {
         "meta": {
-          "spend": 756.81,
-          "leads": 121,
-          "clicks": 815
+          "spend": 825.51,
+          "leads": 126,
+          "clicks": 850
         },
         "google_ads": null,
-        "total_spend": 756.81,
+        "total_spend": 825.51,
         "reconciliation": null
       }
     },
     "crm": {
       "state": "red",
-      "headline": "25 waiting 1128h",
-      "sentence": "No intake owner found in whatsapp, fireflies. 25 client threads awaiting Flow, oldest 1128h.",
+      "headline": "25 waiting 1152h",
+      "sentence": "No intake owner found in whatsapp, fireflies. 25 client threads awaiting Flow, oldest 1152h.",
       "basis": {
         "type": "observed",
         "source": "GHL / WhatsApp",
@@ -77,14 +86,14 @@
           "window": "current"
         },
         "awaiting_flow": 25,
-        "oldest_unanswered_hours": 1128.3,
+        "oldest_unanswered_hours": 1152.3,
         "threads": {
-          "messages_scanned": 926,
-          "threads": 43,
+          "messages_scanned": 957,
+          "threads": 46,
           "awaiting_flow": 25,
           "awaiting_client": 0,
-          "client_update": 16,
-          "settled": 2,
+          "client_update": 17,
+          "settled": 4,
           "abandoned": 0,
           "stale_over_24h": 25
         },
@@ -95,9 +104,9 @@
   "scope_out": [],
   "needs_you": [
     {
-      "text": "25 threads awaiting Flow, oldest 1128h.",
+      "text": "25 threads awaiting Flow, oldest 1152h.",
       "severity": "high",
-      "age_days": 47,
+      "age_days": 48,
       "basis": {
         "type": "observed",
         "source": "GHL / WhatsApp",
@@ -105,7 +114,7 @@
       }
     },
     {
-      "text": "Contract ends in -8 days (2026-09-30).",
+      "text": "Contract ends in -9 days (2026-09-30).",
       "severity": "high",
       "age_days": null,
       "basis": {

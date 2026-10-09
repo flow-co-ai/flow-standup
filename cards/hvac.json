@@ -1,14 +1,14 @@
 {
   "slug": "hvac",
   "name": "Quality HVAC by Fibid",
-  "generated_at": "2026-10-08T17:56:12.546Z",
+  "generated_at": "2026-10-09T17:32:10.332Z",
   "contract": {
     "start": "2026-05-01",
     "end": "2026-10-31",
     "validated": true,
     "month_of": 5,
     "months_total": 5,
-    "days_left": 23,
+    "days_left": 22,
     "basis": {
       "type": "observed",
       "source": "timeline/plan",
@@ -18,47 +18,73 @@
   "status": "critical",
   "lanes": {
     "organic": {
-      "state": "green",
-      "headline": "15 calls · 28d",
-      "sentence": "Quality HVAC Solutions took 11 calls on 929 impressions; Quality HVAC by Fibid took 4 calls on 246 impressions.",
+      "state": "amber",
+      "headline": "1 of 3 profiles active · 28d",
+      "sentence": "Quality HVAC Solutions took 11 calls on 922 impressions; Quality HVAC by Fibid took 3 calls on 243 impressions.",
       "basis": {
         "type": "observed",
         "source": "Windsor GBP",
         "window": "28d"
       },
-      "flags": [],
+      "flags": [
+        "gbp_low_call_rate:Quality HVAC Solutions",
+        "gbp_low_call_rate:Quality HVAC by Fibid"
+      ],
       "detail": {
         "profiles": [
           {
             "account_id": "locations/6129595594309014752",
             "label": "Quality HVAC Solutions",
             "calls": 11,
-            "directions": 66,
-            "web_clicks": 30,
-            "impressions": 929,
+            "directions": 58,
+            "web_clicks": 28,
+            "impressions": 922,
             "days_with_impressions": 25,
-            "call_rate": 0.0118
+            "call_rate": 0.0119
+          },
+          {
+            "account_id": "locations/935628167137586436",
+            "label": "Fibid Heating & Air Conditioning",
+            "calls": 10,
+            "directions": 0,
+            "web_clicks": 6,
+            "impressions": 175,
+            "days_with_impressions": 24,
+            "call_rate": 0.0571
           },
           {
             "account_id": "locations/9013300148944922826",
             "label": "Quality HVAC by Fibid",
-            "calls": 4,
+            "calls": 3,
             "directions": 0,
-            "web_clicks": 7,
-            "impressions": 246,
+            "web_clicks": 6,
+            "impressions": 243,
             "days_with_impressions": 25,
-            "call_rate": 0.0163
+            "call_rate": 0.0123
           }
         ],
-        "flagged_profiles": [],
-        "total_calls": 15,
-        "total_profiles": 2
+        "flagged_profiles": [
+          {
+            "label": "Quality HVAC Solutions",
+            "flags": [
+              "gbp_low_call_rate"
+            ]
+          },
+          {
+            "label": "Quality HVAC by Fibid",
+            "flags": [
+              "gbp_low_call_rate"
+            ]
+          }
+        ],
+        "total_calls": 24,
+        "total_profiles": 3
       }
     },
     "paid": {
       "state": "amber",
-      "headline": "$860 · 15 leads · $57 per lead · 14d",
-      "sentence": "Meta $322.17 spend, 15 leads; Google Ads $537.80 spend.",
+      "headline": "$871 · 14 leads · $62 per lead · 14d",
+      "sentence": "Meta $317.12 spend, 14 leads; Google Ads $553.65 spend.",
       "basis": {
         "type": "observed",
         "source": "Windsor Paid",
@@ -69,16 +95,16 @@
       ],
       "detail": {
         "meta": {
-          "spend": 663.56,
+          "spend": 659.03,
           "leads": 17,
-          "clicks": 478
+          "clicks": 451
         },
         "google_ads": {
-          "spend": 1002.55,
+          "spend": 1016.2,
           "convs": 9,
-          "clicks": 136
+          "clicks": 137
         },
-        "total_spend": 1666.11,
+        "total_spend": 1675.23,
         "reconciliation": null
       }
     },
@@ -103,10 +129,10 @@
         "oldest_unanswered_hours": 0,
         "threads": {},
         "ghl": {
-          "contacts": 132,
+          "contacts": 140,
           "opportunities": {
             "created": {
-              "count": 1214,
+              "count": 1216,
               "value": 12362.1
             },
             "won": {
@@ -122,13 +148,23 @@
   "scope_out": [],
   "needs_you": [
     {
-      "text": "Contract ends in 23 days (2026-10-31).",
+      "text": "Contract ends in 22 days (2026-10-31).",
       "severity": "high",
       "age_days": null,
       "basis": {
         "type": "observed",
         "source": "timeline/plan",
         "window": "engagement"
+      }
+    },
+    {
+      "text": "GBP issue (amber): Quality HVAC Solutions, Quality HVAC by Fibid.",
+      "severity": "medium",
+      "age_days": null,
+      "basis": {
+        "type": "observed",
+        "source": "Windsor GBP",
+        "window": "28d"
       }
     },
     {
