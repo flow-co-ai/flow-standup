@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T19:13:27.032110+00:00",
+  "updatedAt": "2026-10-11T19:24:04.823056+00:00",
   "items": [
     {
       "id": "jcl-case-dashboard-updates",
@@ -231,7 +231,7 @@
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-10-08T20:40:25.838640+00:00",
+      "verifiedAt": "2026-10-11T19:23:55.274361+00:00",
       "completionEvidence": null,
       "createdAt": "2026-10-08T20:40:26.108326+00:00"
     },
@@ -306,10 +306,59 @@
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-10-10T19:13:21.553578+00:00",
+      "verifiedAt": "2026-10-11T19:23:55.274364+00:00",
       "completionEvidence": null,
       "updatedAt": "2026-10-10T19:13:21.553581+00:00",
       "createdAt": "2026-10-09T20:06:02.908958+00:00"
+    },
+    {
+      "id": "seniorinsurance-seminar-reminders-urgent",
+      "title": "Seminar 24-hour reminder",
+      "note": "Priority 1: 10/10 seminar attendance dropped because no reminders went out, and more events run this coming week. Section 19 audit: Senior Insurance Team groups on all four boards, subitems included; Seminar 24-hour reminder (CRM 13207258365, Start) is exactly this work, so update_only. Section 19b: no card targets 13207258365; axis 3 flag (0.63) on seniorinsurance-appointment-reminders, which is calendar appointment reminders, not seminar RSVPs, so not merged. Also related: sibling seniorinsurance-pipeline-cleanup covers the seminar date filter Sabri wants for reminder texts, related but separate. Sabri is client side and named in plain text only.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Senior Insurance",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: Senior Insurance, 10/10",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "13207258365",
+        "itemName": "Seminar 24-hour reminder",
+        "updateBody": "<p>Salam,</p><ul><li>New on 10/10: Sabri said attendance at that day's seminar was some of the worst so far because registrants <strong>did not receive any seminar reminders</strong>. He asked for reminders set up <strong>as soon as possible</strong> so they go out for the rest of this coming week's events.</li><li><strong>Get this live before the next event this week.</strong> Confirm the upcoming event dates with Sabri in the chat and make sure every confirmed RSVP for those dates is enrolled.</li><li>Check why nothing fired for 10/10: if the workflow was never published, publish it; if it is live, find where contacts from the RSVP webhook are falling out.</li><li>Same rules as above: <strong>confirmed RSVPs only, never the waitlist</strong>, pulls that seminar's address and date, copy approved by Sabri before it goes live. If approval is the holdup, send him the draft copy today.</li><li><strong>Test</strong> with a dummy RSVP and confirm the text arrives with the right date and venue.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 1,
+      "verifiedAt": "2026-10-11T19:23:55.273870+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-10-11T19:24:04.823056+00:00"
+    },
+    {
+      "id": "seniorinsurance-sold-review-request",
+      "title": "Sold Review Request",
+      "note": "Priority 3: client request, no deadline named. Section 19 audit: Senior Insurance Team groups on all four boards, subitems included, plus a text sweep for review/sold. Only hit is Build pipeline stages (CRM 13186034905), which defines the Sold stage as visibility only with no automations, so create_item. groupId group_mm7qby8z, same as the existing Senior Insurance CRM cards (not yet in the rules table or CLIENT_GROUPS). Section 19b: no pending queue match. Sabri is client side and named in plain text only.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Senior Insurance",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: Senior Insurance, 10/10",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm7qby8z",
+        "itemName": "Sold Review Request",
+        "updateBody": "<p>Salam,</p><ul><li>On 10/10 Sabri asked for a Google review request to go out automatically once a policy is entered in the <strong>Sold</strong> stage, linking to the Google Business Profile of the location where that client's appointment took place. Senior Insurance has three profiles.</li><li><strong>Build the workflow</strong>: opportunity moves to Sold, send the review request by text and email, with the review link chosen by the appointment's location.</li><li><strong>Prerequisite</strong>: confirm the appointment or contact actually records which location it was at. If it does not, add that first and tell Sabri which field his team has to fill, otherwise the link cannot be picked.</li><li>Get the three review links from the Flow admin account (Hashir and Zayan hold GBP under Start GBP SEO). Copy needs Sabri's approval before it goes live.</li><li>Fire once per policy only; moving to Won later must not send a second request.</li><li><strong>Test</strong> with a dummy opportunity for each location.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 3,
+      "verifiedAt": "2026-10-11T19:23:55.274353+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-10-11T19:24:04.823056+00:00"
     }
   ]
 }
