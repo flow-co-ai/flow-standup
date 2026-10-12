@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-12T13:25:32.045Z",
+  "updatedAt": "2026-10-12T22:28:29.388997+00:00",
   "items": [
     {
       "id": "jcl-case-dashboard-updates",
@@ -263,26 +263,27 @@
     {
       "id": "fullsmile-ghl-offboarding",
       "title": "GHL Offboarding",
-      "note": "Priority 2: client decision due by the end of the weekend, and Flow is paying for the account meanwhile. blocked=true, waiting on Full Smile. Section 19 audit: Full Smile groups on all four boards, subitems included; nothing on CRM for Full Smile and nothing about GHL anywhere, so create_item. Section 19b: no pending queue match. FYI: the open Full Smile items on Web + SEO (Website with Implant Blog and Dry Mouth Blog, GBP) are now dead work once the contract ends; closing them is a Monday change for Naz, not this run.",
+      "note": "Priority 2: client has decided and Flow is still paying for the subaccount. Section 19b merge: Dr. Jamal's 10/11 message answers the decision this card was blocked on (turn GHL off), so blocked is now false and the body is rewritten to the turn off path only. Merged rather than flagged: the 10/8 card already scoped both outcomes of this exact decision. Not a completion, the work is now starting. needsNaz=true because the client asked Flow to confirm the phone and email on file, and client comms are Naz's. Section 19 re-audit: still nothing for Full Smile on CRM. FYI: Website (Implant Blog, Dry Mouth Blog) and GBP on Web + SEO are now dead work; closing them is a Monday change for Naz, not this run.",
       "status": "ready",
       "board": "CRM",
       "group": "Full Smile",
       "potentialClient": null,
       "source": "whatsapp",
-      "sourceLabel": "WhatsApp: Full Smile, 10/8",
+      "sourceLabel": "WhatsApp: Full Smile, 10/8 + WhatsApp: Full Smile, 10/11",
       "payload": {
         "mode": "create_item",
         "boardId": "18418241405",
         "groupId": "group_mkxdmhbz",
         "itemName": "GHL Offboarding",
-        "updateBody": "<p>Salam,</p><ul><li>Full Smile is ending all marketing management with Flow (Sohib, 10/8, after his call with Dr. Adham). GHL is still live, Lily uses it, and Flow has been covering its cost.</li><li>On 10/8 Sohib offered two options: <strong>keep GHL</strong> at $250/month plus messaging (under $40/month), or <strong>turn it off</strong>. Dr. Jamal Sahloul replied 10/9 they will decide <strong>before the end of the weekend</strong>. Blocked until then.</li><li>If they keep it: leave Lily's setup and workflows untouched; Naz and Sohib handle billing.</li><li>If they turn it off: <strong>forward calls</strong> from the GHL numbers to their main line, <strong>send form submissions</strong> to their email, test both with a live call and a test submission, then shut the subaccount down.</li><li><strong>Change nothing</strong> until their answer is posted in the Full Smile Management chat.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
-        "blocked": true,
-        "needsNaz": false
+        "updateBody": "<p>Salam,</p><ul><li>Update 10/11: Dr. Jamal Sahloul confirmed Full Smile is going with <strong>Option 2</strong>: cancel everything, <strong>including GHL</strong>, and step away from marketing. No longer blocked.</li><li><strong>Naz</strong>: reply in the Full Smile Management chat with the main phone line and email we have on file and get Dr. Jamal to confirm both. <strong>Do not cut over</strong> until he does.</li><li>Once confirmed: <strong>forward calls</strong> from the GHL numbers to their main line and <strong>route form submissions</strong> to their email.</li><li><strong>Test</strong> both with a live call and a test submission, and post the result in the chat.</li><li>Only after both tests pass, <strong>shut the subaccount down</strong> so Flow stops paying for it. Lily loses access at that point, so give the client a heads up first.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
+        "blocked": false,
+        "needsNaz": true
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-10-10T19:13:21.553638+00:00",
+      "verifiedAt": "2026-10-12T22:28:18.351366+00:00",
       "completionEvidence": null,
+      "updatedAt": "2026-10-12T22:28:18.351373+00:00",
       "createdAt": "2026-10-09T20:06:02.908958+00:00"
     },
     {
@@ -359,9 +360,58 @@
       },
       "nullReason": null,
       "priority": 3,
-      "verifiedAt": "2026-10-11T19:23:55.274353+00:00",
+      "verifiedAt": "2026-10-12T22:28:18.351445+00:00",
       "completionEvidence": null,
       "createdAt": "2026-10-11T19:24:04.823056+00:00"
+    },
+    {
+      "id": "maadilaw-sharif-ghl-permissions",
+      "title": "GHL User Permissions",
+      "note": "Priority 2: Sharif called it urgent and it blocks him working his own leads. Section 19 audit: Maadi Law groups on all four boards, subitems included. Closest is User Assignment (CRM 13139672534), which covers auto assignment rules, not a user's edit or field visibility permissions, so create_item. Section 19b: no pending queue match. Naz was actively on this 10/11 and may have fixed it live; no message says it is resolved, so Step 1 checks. Sharif and Kassem are client side, plain text only. Not drafted: Naz's 17:49 question about a phone number entered in the wrong format (a message failed to send) has no detail on which contact or workflow.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: Maadi Law, 10/11",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm5112vv",
+        "itemName": "GHL User Permissions",
+        "updateBody": "<p>Salam,</p><ul><li>On 10/11 Sharif Maadi reported in the Maadi Law Marketing chat that his GHL user <strong>can no longer edit contact information</strong> and that many fields under <strong>Maadi Law Intake</strong> on opportunities are <strong>missing for him</strong>, while Kassem still sees and edits them. He flagged it as urgent. Naz said Sharif should have edit access and started checking permissions that evening.</li><li><strong>Step 1</strong>: check with Naz what he already changed on 10/11 so nothing is redone or undone.</li><li><strong>Compare</strong> Sharif's user role and permissions with Kassem's: contact edit rights, opportunity access, and custom field visibility for the intake fields.</li><li><strong>Fix</strong> Sharif's user so he can edit contacts and see every Maadi Law Intake field. Do not reduce Kassem's access.</li><li><strong>Confirm</strong> with Sharif in the chat that he can now edit a contact and see the intake data on a live lead.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "verifiedAt": "2026-10-12T22:28:18.351418+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-10-12T22:28:29.388997+00:00"
+    },
+    {
+      "id": "seniorinsurance-seminar-dates",
+      "title": "Seminar 24-hour reminder",
+      "note": "Priority 1: the first seminar is Tuesday 10/13 and the 10/10 seminar went badly without reminders. Section 19: lands on Seminar 24-hour reminder (CRM 13207258365), which already asks the team to confirm event dates with Sabri; this answers that. Section 19b: axis 1 on existingItemId 13207258365 only hits seniorinsurance-seminar-reminders-urgent, which is sent (terminal), so a new update_only card. Axis 3 flags sibling seniorinsurance-appointment-reminders (only because that body names this item; it covers calendar appointments, not seminar RSVPs), so flagged, not merged. Naz's 10/11 'We'll work on the review send out automation' re-confirms seniorinsurance-sold-review-request (re-verified, no change).",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Senior Insurance",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: Senior Insurance, 10/11",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "13207258365",
+        "itemName": "Seminar 24-hour reminder",
+        "updateBody": "<p>Salam,</p><ul><li>New on 10/11: Sabri confirmed this week's seminars are <strong>Tuesday, Thursday and Saturday</strong>. Naz committed to having reminders working <strong>before next week's seminars</strong>.</li><li>Reminders must be <strong>live before Tuesday's seminar</strong>, with every confirmed RSVP for all three dates enrolled. Same rules as above: confirmed RSVPs only, never the waitlist.</li><li>Naz, Ahmed and Sabri were set to go over the reminders and the Google review automation on a call 10/12 at 9AM CST. Post anything agreed there, especially approved copy, as an update here.</li></ul>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 1,
+      "verifiedAt": "2026-10-12T22:28:18.351441+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-10-12T22:28:29.388997+00:00"
     }
   ]
 }
