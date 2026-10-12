@@ -1,14 +1,14 @@
 {
   "slug": "hvac",
   "name": "Quality HVAC by Fibid",
-  "generated_at": "2026-10-11T16:44:27.184Z",
+  "generated_at": "2026-10-12T20:20:48.399Z",
   "contract": {
     "start": "2026-05-01",
     "end": "2026-10-31",
     "validated": true,
     "month_of": 5,
     "months_total": 5,
-    "days_left": 20,
+    "days_left": 19,
     "basis": {
       "type": "observed",
       "source": "timeline/plan",
@@ -20,7 +20,7 @@
     "organic": {
       "state": "amber",
       "headline": "1 of 3 profiles active · 28d",
-      "sentence": "Quality HVAC Solutions took 10 calls on 963 impressions; Quality HVAC by Fibid took 3 calls on 247 impressions.",
+      "sentence": "Quality HVAC Solutions took 11 calls on 985 impressions; Quality HVAC by Fibid took 4 calls on 248 impressions.",
       "basis": {
         "type": "observed",
         "source": "Windsor GBP",
@@ -35,32 +35,32 @@
           {
             "account_id": "locations/6129595594309014752",
             "label": "Quality HVAC Solutions",
-            "calls": 10,
-            "directions": 60,
-            "web_clicks": 29,
-            "impressions": 963,
+            "calls": 11,
+            "directions": 54,
+            "web_clicks": 30,
+            "impressions": 985,
             "days_with_impressions": 26,
-            "call_rate": 0.0104
+            "call_rate": 0.0112
           },
           {
             "account_id": "locations/935628167137586436",
             "label": "Fibid Heating & Air Conditioning",
             "calls": 13,
             "directions": 0,
-            "web_clicks": 6,
-            "impressions": 183,
-            "days_with_impressions": 24,
-            "call_rate": 0.071
+            "web_clicks": 8,
+            "impressions": 182,
+            "days_with_impressions": 25,
+            "call_rate": 0.0714
           },
           {
             "account_id": "locations/9013300148944922826",
             "label": "Quality HVAC by Fibid",
-            "calls": 3,
-            "directions": 3,
+            "calls": 4,
+            "directions": 7,
             "web_clicks": 6,
-            "impressions": 247,
+            "impressions": 248,
             "days_with_impressions": 26,
-            "call_rate": 0.0121
+            "call_rate": 0.0161
           }
         ],
         "flagged_profiles": [
@@ -77,14 +77,14 @@
             ]
           }
         ],
-        "total_calls": 26,
+        "total_calls": 28,
         "total_profiles": 3
       }
     },
     "paid": {
       "state": "amber",
-      "headline": "$893 · 14 leads · $64 per lead · 14d",
-      "sentence": "Meta $321.34 spend, 14 leads; Google Ads $571.67 spend.",
+      "headline": "$905 · 14 leads · $65 per lead · 14d",
+      "sentence": "Meta $318.74 spend, 14 leads; Google Ads $586.10 spend.",
       "basis": {
         "type": "observed",
         "source": "Windsor Paid",
@@ -95,29 +95,31 @@
       ],
       "detail": {
         "meta": {
-          "spend": 645.66,
-          "leads": 17,
-          "clicks": 438
+          "spend": 644.4,
+          "leads": 16,
+          "clicks": 440
         },
         "google_ads": {
-          "spend": 1039.78,
-          "convs": 8,
-          "clicks": 139
+          "spend": 1054.27,
+          "convs": 9,
+          "clicks": 138
         },
-        "total_spend": 1685.44,
+        "total_spend": 1698.67,
         "reconciliation": null
       }
     },
     "crm": {
-      "state": "unknown",
-      "headline": "no owner",
-      "sentence": "No intake owner found in whatsapp, fireflies.",
+      "state": "red",
+      "headline": "7 waiting 1193h",
+      "sentence": "No intake owner found in whatsapp, fireflies. 7 client threads awaiting Flow, oldest 1193h.",
       "basis": {
-        "type": "fact",
-        "source": "facts",
+        "type": "observed",
+        "source": "GHL / WhatsApp",
         "window": "14d"
       },
-      "flags": [],
+      "flags": [
+        "awaiting_flow:7"
+      ],
       "detail": {
         "intake_owner": null,
         "intake_owner_basis": {
@@ -125,19 +127,28 @@
           "source": "facts",
           "window": "current"
         },
-        "awaiting_flow": 0,
-        "oldest_unanswered_hours": 0,
-        "threads": {},
+        "awaiting_flow": 7,
+        "oldest_unanswered_hours": 1193.4,
+        "threads": {
+          "messages_scanned": 885,
+          "threads": 16,
+          "awaiting_flow": 7,
+          "awaiting_client": 0,
+          "client_update": 7,
+          "settled": 2,
+          "abandoned": 29,
+          "stale_over_24h": 7
+        },
         "ghl": {
-          "contacts": 142,
+          "contacts": 144,
           "opportunities": {
             "created": {
-              "count": 1220,
-              "value": 13341.1
+              "count": 1068,
+              "value": 23601.1
             },
             "won": {
-              "count": 60,
-              "value": 13341.1
+              "count": 59,
+              "value": 23601.1
             }
           },
           "appointments": 0
@@ -148,7 +159,17 @@
   "scope_out": [],
   "needs_you": [
     {
-      "text": "Contract ends in 20 days (2026-10-31).",
+      "text": "7 threads awaiting Flow, oldest 1193h.",
+      "severity": "high",
+      "age_days": 50,
+      "basis": {
+        "type": "observed",
+        "source": "GHL / WhatsApp",
+        "window": "14d"
+      }
+    },
+    {
+      "text": "Contract ends in 19 days (2026-10-31).",
       "severity": "high",
       "age_days": null,
       "basis": {
@@ -184,7 +205,7 @@
   "sources_read": {
     "pulse": true,
     "facts": true,
-    "comms": false,
+    "comms": true,
     "plan": true,
     "timeline": true,
     "inbox": true
