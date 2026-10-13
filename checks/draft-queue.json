@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-12T22:28:29.388997+00:00",
+  "updatedAt": "2026-10-13T20:36:32.192697+00:00",
   "items": [
     {
       "id": "qualityhvac-burr-ridge-gbp-move",
@@ -157,13 +157,13 @@
     {
       "id": "seniorinsurance-appointment-reminders",
       "title": "Appointment Reminders",
-      "note": "Priority 2: Sabri reported it 10/6 and will book seminar attendees now; Ahmed confirmed 10/8 it is pending. Section 19 audit: Senior Insurance Team groups on all four boards, subitems included, plus a text sweep for reminder. Only hit is Seminar 24-hour reminder, which covers seminar RSVPs, not calendar appointments, so create_item. groupId group_mm7qby8z read live from the CRM board (Senior Insurance is not yet in the rules table or CLIENT_GROUPS). Section 19b: no pending queue match. Sabri is client side and named in plain text only.",
+      "note": "Priority 2: Sabri is booking seminar attendees now. Section 19b merge: Naz's 10/12 list in the GHL Dev chat names this exact fix (calendar reminders 7/3/1 day, tags interfering) and adds one constraint: leave the Attended stage with no triggers. Adds detail, nothing says complete (Ahmed's 10/12 updates cover seminar reminders, reviews and pipeline moves, not calendar reminders), stays ready. Matcher returned axis 3 only because this is a create_item with no item id; same card, not a sibling. Section 19 re-audit: nothing on the Senior Insurance Team groups covers calendar reminders.",
       "status": "ready",
       "board": "CRM",
       "group": "Senior Insurance",
       "potentialClient": null,
       "source": "whatsapp",
-      "sourceLabel": "WhatsApp: Senior Insurance, 10/8",
+      "sourceLabel": "WhatsApp: Senior Insurance, 10/8 + WhatsApp: GHL Dev, 10/12",
       "payload": {
         "mode": "create_item",
         "boardId": "18418241405",
@@ -171,12 +171,13 @@
         "itemName": "Appointment Reminders",
         "blocked": false,
         "needsNaz": false,
-        "updateBody": "<p>Salam,</p><ul><li>On 10/6 Sabri reported his GHL calendar appointment reminders stopped. After the confirmation text and email, contacts should get email and SMS reminders 7 days, 3 days and 24 hours before the appointment. GHL support said a workflow was blocking some leads based on tags; Sabri could not fix it from their walkthrough. Ahmed confirmed on 10/8 this is next now the seminar data is in.</li><li><strong>Find the workflow</strong> and tag conditions stopping reminders for affected contacts and <strong>fix them</strong> without breaking the seminar workflows.</li><li><strong>Test</strong> with a dummy appointment that all three emails and texts fire.</li><li><strong>Explain</strong> to Sabri in the chat what was wrong. He will be booking seminar attendees, so this is time sensitive.</li><li>Separate from Seminar 24-hour reminder, which covers seminar RSVPs, not calendar appointments.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
+        "updateBody": "<p>Salam,</p><ul><li>On 10/6 Sabri reported his GHL calendar appointment reminders stopped. After the confirmation text and email, contacts should get email and SMS reminders 7 days, 3 days and 24 hours before the appointment. GHL support said a workflow was blocking some leads based on tags. Naz put it back on the list on 10/12 after the check in.</li><li><strong>Find the workflow</strong> and tag conditions stopping reminders and <strong>fix them so tags do not interfere</strong>, without breaking the seminar workflows.</li><li><strong>Leave the Attended stage in place with no triggers for now</strong> (Naz, 10/12).</li><li><strong>Test</strong> with a dummy appointment that all three emails and texts fire.</li><li><strong>Explain</strong> to Sabri in the chat what was wrong. He is booking seminar attendees now.</li><li>Separate from Seminar 24-hour reminder, which covers seminar RSVPs, not calendar appointments.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-10-11T19:23:55.274361+00:00",
+      "verifiedAt": "2026-10-13T20:36:31.946231+00:00",
       "completionEvidence": null,
+      "updatedAt": "2026-10-13T20:36:31.946233+00:00",
       "createdAt": "2026-10-08T20:40:26.108326+00:00"
     },
     {
@@ -207,65 +208,65 @@
     {
       "id": "fullsmile-ghl-offboarding",
       "title": "GHL Offboarding",
-      "note": "Priority 2: client has decided and Flow is still paying for the subaccount. Section 19b merge: Dr. Jamal's 10/11 message answers the decision this card was blocked on (turn GHL off), so blocked is now false and the body is rewritten to the turn off path only. Merged rather than flagged: the 10/8 card already scoped both outcomes of this exact decision. Not a completion, the work is now starting. needsNaz=true because the client asked Flow to confirm the phone and email on file, and client comms are Naz's. Section 19 re-audit: still nothing for Full Smile on CRM. FYI: Website (Implant Blog, Dry Mouth Blog) and GBP on Web + SEO are now dead work; closing them is a Monday change for Naz, not this run.",
+      "note": "Priority 2: client has confirmed and Flow is still paying for the subaccount. Section 19b merge: Lily's 10/12 \"Yes, that is the correct information\" answers the confirmation step this card was holding on, so that step is replaced with the confirmed number and email. Adds detail, not a completion: the cutover itself has not been reported done. needsNaz stays true for the client heads up Naz promised. Section 19 re-audit: still nothing for Full Smile on CRM. FYI: Website (Implant Blog, Dry Mouth Blog) and GBP on Web + SEO are dead work; closing them is a Monday change for Naz, not this run.",
       "status": "ready",
       "board": "CRM",
       "group": "Full Smile",
       "potentialClient": null,
       "source": "whatsapp",
-      "sourceLabel": "WhatsApp: Full Smile, 10/8 + WhatsApp: Full Smile, 10/11",
+      "sourceLabel": "WhatsApp: Full Smile, 10/8 + WhatsApp: Full Smile, 10/11 + WhatsApp: Full Smile, 10/12",
       "payload": {
         "mode": "create_item",
         "boardId": "18418241405",
         "groupId": "group_mkxdmhbz",
         "itemName": "GHL Offboarding",
-        "updateBody": "<p>Salam,</p><ul><li>Update 10/11: Dr. Jamal Sahloul confirmed Full Smile is going with <strong>Option 2</strong>: cancel everything, <strong>including GHL</strong>, and step away from marketing. No longer blocked.</li><li><strong>Naz</strong>: reply in the Full Smile Management chat with the main phone line and email we have on file and get Dr. Jamal to confirm both. <strong>Do not cut over</strong> until he does.</li><li>Once confirmed: <strong>forward calls</strong> from the GHL numbers to their main line and <strong>route form submissions</strong> to their email.</li><li><strong>Test</strong> both with a live call and a test submission, and post the result in the chat.</li><li>Only after both tests pass, <strong>shut the subaccount down</strong> so Flow stops paying for it. Lily loses access at that point, so give the client a heads up first.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
+        "updateBody": "<p>Salam,</p><ul><li>Update 10/12: Naz sent Full Smile the cutover details and Lily confirmed both are correct. Main line: <strong>708-448-0468</strong>. Form submissions: <strong>fullsmilechicago@gmail.com</strong>. No longer waiting on the client.</li><li><strong>Forward calls</strong> from every GHL number to 708-448-0468 and <strong>route form submissions</strong> to fullsmilechicago@gmail.com, so Lily has no disruption.</li><li><strong>Test</strong> both with a live call and a test submission, and post the result here.</li><li><strong>Naz</strong>: give the clinic the heads up he promised once it is set up, before anything is switched off.</li><li>Only after both tests pass and the clinic has been told, <strong>shut the subaccount down</strong> so Flow stops paying for it. Lily loses access at that point.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
         "blocked": false,
         "needsNaz": true
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-10-12T22:28:18.351366+00:00",
+      "verifiedAt": "2026-10-13T20:36:31.946285+00:00",
       "completionEvidence": null,
-      "updatedAt": "2026-10-12T22:28:18.351373+00:00",
+      "updatedAt": "2026-10-13T20:36:31.946290+00:00",
       "createdAt": "2026-10-09T20:06:02.908958+00:00"
     },
     {
       "id": "seniorinsurance-pipeline-cleanup",
       "title": "Pipeline Cleanup",
-      "note": "Priority 2: seminar is 10/10 and the client is in the pipeline daily. Section 19b merge into this card: Sabri's 10/9 reply answers the two questions this card was waiting on (event date as a field; associate with responder means linking spouses), so both items move from waiting to buildable. Adds detail, nothing says complete, stays ready. Section 19 re-audit: Senior Insurance Team CRM group unchanged, nothing covers these. Not drafted: Sabri's requests to be shown how to find tomorrow's attendees and pixel attribution are training questions Naz is handling on a call (Naz, 10/10).",
+      "note": "Priority 2: seminars run Tue/Thu/Sat and Naz flagged these as needing attention ASAP. Section 19b merge: Naz's 10/12 list in the GHL Dev chat restates this card's open points item for item (full name on card, event field, lead source, guest linking) and adds the guest name import fix, the Seminar Guest tag and the webhook check. Matcher returned axis 3 only because this card is a create_item with no item id; merged rather than flagged because a second card would duplicate this one bullet for bullet. Second question: Ahmed's second 10/12 update in the Senior Insurance chat explicitly says the automatic appointment pipeline update is live and tested, so that step is removed; the rest is residue and stays ready. Section 19 re-audit: Senior Insurance Team CRM group unchanged, Seminar RSVP webhook (13207292413) is Done on Monday but Naz asked to re-confirm it, so it rides here.",
       "status": "ready",
       "board": "CRM",
       "group": "Senior Insurance",
       "potentialClient": null,
       "source": "whatsapp",
-      "sourceLabel": "WhatsApp: Senior Insurance, 10/8 + WhatsApp: Senior Insurance, 10/9",
+      "sourceLabel": "WhatsApp: Senior Insurance, 10/8 + WhatsApp: Senior Insurance, 10/9 + WhatsApp: GHL Dev, 10/12 + WhatsApp: Senior Insurance, 10/12",
       "payload": {
         "mode": "create_item",
         "boardId": "18418241405",
         "groupId": "group_mm7qby8z",
         "itemName": "Pipeline Cleanup",
-        "updateBody": "<p>Salam,</p><ul><li>On 10/8 Sabri sent a cleanup list for the Dinner Seminar pipeline. On 10/9 he answered both open questions, so nothing here is waiting on him now.</li><li><strong>Show the lead's full name</strong> on each opportunity card; today it only appears after opening the opportunity.</li><li><strong>Build the automation</strong>: when an appointment is booked on the calendar, move that contact's opportunity to Scheduled appointment. Test with a dummy booking.</li><li><strong>Seminar date field</strong>: Sabri confirmed one field, not a pipeline per seminar. Add it and fill it from the event number (226003 to 226008 so far). He wants to <strong>filter contacts by event date</strong> to send seminar reminder texts, so make sure that filter works and show him.</li><li><strong>Link spouses</strong>: \"associate with responder\" means linking a spouse's contact to the registrant (the relationship button under Activity in his old system). Set up GHL contact associations and link guests to their registrant on import.</li><li><strong>Lead source</strong>: it shows on the card but not in the contact detail area his team checks, and it reads \"LR\". Show the source there and add the seminar date and venue.</li><li>Pre and post seminar texts stay on Seminar 24 hour reminder and Attended scheduling texts.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "updateBody": "<p>Salam,</p><ul><li>New on 10/12: after the Senior Insurance check in, Naz posted the follow up list in the GHL Dev chat. Ahmed confirmed the <strong>automatic move to Scheduled appointment is live and tested</strong>, so that step is dropped here. He named missing guest names and the LeadingResponse cancellation/reschedule updates as still open; nothing was said about the rest, so treat it as open until confirmed.</li><li><strong>Opportunity cards</strong>: show the lead's full name without clicking in.</li><li><strong>Event date and venue field</strong> on the opportunity, in the single Dinner Seminar pipeline, filled from the event number (226003 to 226008). Sabri needs to <strong>filter by event</strong>.</li><li><strong>Seminar Guest tag</strong>: support multiple guests per contact, labelled with event, date, time and location. This replaces the spouse linking ask.</li><li><strong>Guest names did not import.</strong> Find out why and fix it, including for existing registrants.</li><li><strong>Lead source</strong>: show \"Seminar\" everywhere (some still read \"LR\"), with venue and date, in the contact's source area.</li><li><strong>Webhook</strong>: confirm Ravi's submissions flow in and land in the right stages, and confirm with LeadingResponse whether cancellations and reschedules come through.</li><li>Post status on each point in the Senior Insurance chat.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
         "blocked": false,
         "needsNaz": false
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-10-11T19:23:55.274364+00:00",
+      "verifiedAt": "2026-10-13T20:36:31.946170+00:00",
       "completionEvidence": null,
-      "updatedAt": "2026-10-10T19:13:21.553581+00:00",
+      "updatedAt": "2026-10-13T20:36:31.946173+00:00",
       "createdAt": "2026-10-09T20:06:02.908958+00:00"
     },
     {
       "id": "seniorinsurance-sold-review-request",
       "title": "Sold Review Request",
-      "note": "Priority 3: client request, no deadline named. Section 19 audit: Senior Insurance Team groups on all four boards, subitems included, plus a text sweep for review/sold. Only hit is Build pipeline stages (CRM 13186034905), which defines the Sold stage as visibility only with no automations, so create_item. groupId group_mm7qby8z, same as the existing Senior Insurance CRM cards (not yet in the rules table or CLIENT_GROUPS). Section 19b: no pending queue match. Sabri is client side and named in plain text only.",
-      "status": "ready",
+      "note": "Auto-closed per \u00a719b: WhatsApp: Senior Insurance, 10/12 on 2026-10-12 stated this is complete -- \"The office-specific Google review requests and automatic appointment pipeline updates are also live and tested.\"\n\nPriority 3: client request, no deadline named. Section 19 audit: Senior Insurance Team groups on all four boards, subitems included, plus a text sweep for review/sold. Only hit is Build pipeline stages (CRM 13186034905), which defines the Sold stage as visibility only with no automations, so create_item. groupId group_mm7qby8z, same as the existing Senior Insurance CRM cards (not yet in the rules table or CLIENT_GROUPS). Section 19b: no pending queue match. Sabri is client side and named in plain text only.",
+      "status": "done",
       "board": "CRM",
       "group": "Senior Insurance",
       "potentialClient": null,
       "source": "whatsapp",
-      "sourceLabel": "WhatsApp: Senior Insurance, 10/10",
+      "sourceLabel": "WhatsApp: Senior Insurance, 10/10 + WhatsApp: Senior Insurance, 10/12",
       "payload": {
         "mode": "create_item",
         "boardId": "18418241405",
@@ -277,8 +278,14 @@
       },
       "nullReason": null,
       "priority": 3,
-      "verifiedAt": "2026-10-12T22:28:18.351445+00:00",
-      "completionEvidence": null,
+      "verifiedAt": "2026-10-13T20:36:31.946095+00:00",
+      "completionEvidence": {
+        "quote": "The office-specific Google review requests and automatic appointment pipeline updates are also live and tested.",
+        "sourceLabel": "WhatsApp: Senior Insurance, 10/12",
+        "statedAt": "2026-10-12",
+        "closedAt": "2026-10-13T20:36:31.946009+00:00"
+      },
+      "updatedAt": "2026-10-13T20:36:31.946098+00:00",
       "createdAt": "2026-10-11T19:24:04.823056+00:00"
     },
     {
@@ -309,13 +316,13 @@
     {
       "id": "seniorinsurance-seminar-dates",
       "title": "Seminar 24-hour reminder",
-      "note": "Priority 1: the first seminar is Tuesday 10/13 and the 10/10 seminar went badly without reminders. Section 19: lands on Seminar 24-hour reminder (CRM 13207258365), which already asks the team to confirm event dates with Sabri; this answers that. Section 19b: axis 1 on existingItemId 13207258365 only hits seniorinsurance-seminar-reminders-urgent, which is sent (terminal), so a new update_only card. Axis 3 flags sibling seniorinsurance-appointment-reminders (only because that body names this item; it covers calendar appointments, not seminar RSVPs), so flagged, not merged. Naz's 10/11 'We'll work on the review send out automation' re-confirms seniorinsurance-sold-review-request (re-verified, no change).",
-      "status": "ready",
+      "note": "Auto-closed per \u00a719b: WhatsApp: Senior Insurance, 10/12 on 2026-10-12 stated this is complete -- \"the seminar text and email reminders are now live for October 13, 15 and 17\"\n\nPriority 1: the first seminar is Tuesday 10/13 and the 10/10 seminar went badly without reminders. Section 19: lands on Seminar 24-hour reminder (CRM 13207258365), which already asks the team to confirm event dates with Sabri; this answers that. Section 19b: axis 1 on existingItemId 13207258365 only hits seniorinsurance-seminar-reminders-urgent, which is sent (terminal), so a new update_only card. Axis 3 flags sibling seniorinsurance-appointment-reminders (only because that body names this item; it covers calendar appointments, not seminar RSVPs), so flagged, not merged. Naz's 10/11 'We'll work on the review send out automation' re-confirms seniorinsurance-sold-review-request (re-verified, no change).",
+      "status": "done",
       "board": "CRM",
       "group": "Senior Insurance",
       "potentialClient": null,
       "source": "whatsapp",
-      "sourceLabel": "WhatsApp: Senior Insurance, 10/11",
+      "sourceLabel": "WhatsApp: Senior Insurance, 10/11 + WhatsApp: Senior Insurance, 10/12",
       "payload": {
         "mode": "update_only",
         "existingItemId": "13207258365",
@@ -326,9 +333,39 @@
       },
       "nullReason": null,
       "priority": 1,
-      "verifiedAt": "2026-10-12T22:28:18.351441+00:00",
-      "completionEvidence": null,
+      "verifiedAt": "2026-10-13T20:36:31.945994+00:00",
+      "completionEvidence": {
+        "quote": "the seminar text and email reminders are now live for October 13, 15 and 17",
+        "sourceLabel": "WhatsApp: Senior Insurance, 10/12",
+        "statedAt": "2026-10-12",
+        "closedAt": "2026-10-13T20:36:31.945695+00:00"
+      },
+      "updatedAt": "2026-10-13T20:36:31.945999+00:00",
       "createdAt": "2026-10-12T22:28:29.388997+00:00"
+    },
+    {
+      "id": "seniorinsurance-post-seminar-drip",
+      "title": "Attended scheduling texts",
+      "note": "Priority 3: flows are reportedly live, this is a scope check. Section 19: lands on Attended scheduling texts (CRM 13207258367), whose spec is one text the next day to Attended contacts only; Naz's 10/12 ask is a 3 to 5 day drip including no shows, so update_only. Ahmed's 10/12 \"The post-seminar follow-up flows are also active\" does not say which scope was built, so not treated as complete. Section 19b: no card targets 13207258367; axis 3 flags sibling seniorinsurance-pipeline-cleanup only because its body names this item. Flagged, not merged.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Senior Insurance",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: GHL Dev, 10/12",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "13207258367",
+        "itemName": "Attended scheduling texts",
+        "updateBody": "<p>Salam,</p><ul><li>New on 10/12: Naz widened this. The post event \"book an appointment\" message should be a <strong>3 to 5 day drip</strong>, starting the day after the event, to <strong>everyone who did not schedule, including no shows</strong>, not just Attended contacts getting one text.</li><li>Ahmed told Sabri the same day that the post seminar follow up flows are active. <strong>Check the live flow against the scope above</strong>: no shows enrolled, drip length, stops once they book. Adjust what does not match.</li><li>Copy still needs Sabri's approval. <strong>Post</strong> what is live and the message wording here.</li></ul>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 3,
+      "verifiedAt": "2026-10-13T20:36:31.946328+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-10-13T20:36:32.192697+00:00"
     }
   ]
 }
