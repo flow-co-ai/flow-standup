@@ -515,14 +515,18 @@
     "next_check": "2026-08-01"
   },
   "brief": {
-    "date": "2026-10-12",
+    "date": "2026-10-13",
     "headlines": [
       {
-        "text": "Flow Reels and Youtube Clinic marked done",
-        "tone": "win"
+        "text": "No completions this week; open loops persist",
+        "tone": "info"
       },
       {
-        "text": "Two stalled loops persist; no new movement",
+        "text": "Video promo awaiting client action from Tahir",
+        "tone": "info"
+      },
+      {
+        "text": "SEO reel clips overdue, no movement",
         "tone": "info"
       }
     ],
@@ -531,96 +535,99 @@
         "title": "Flow Company - Video",
         "badge": {
           "label": "P1 - blocked",
+          "tone": "red"
+        },
+        "items": [
+          {
+            "state": "blocked",
+            "text": "Ihya School Promo (5-6 min) awaiting Tahir action"
+          },
+          {
+            "state": "next",
+            "text": "(inferred) Chase Tahir for required input to unblock promo"
+          }
+        ],
+        "owners": [
+          "Tahir"
+        ]
+      },
+      {
+        "title": "Flow Company - Web / SEO",
+        "badge": {
+          "label": "P2 - needs attention",
           "tone": "amber"
         },
         "items": [
           {
             "state": "blocked",
-            "text": "Ihya School Promo (5-6 min) awaiting Tahir action [id: 12589574123]"
+            "text": "Clinic SEO Reel Clips (3) overdue with no recent movement"
           },
           {
             "state": "next",
-            "text": "(inferred) Chase Tahir to unblock Ihya School Promo"
+            "text": "(inferred) Identify blocker on SEO reel clips and assign owner"
           }
-        ],
-        "owners": []
-      },
-      {
-        "title": "Flow Company - Web + SEO",
-        "badge": {
-          "label": "P2 - on track",
-          "tone": "green"
-        },
-        "items": [
-          {
-            "state": "done",
-            "text": "Clinic SEO Reel Clips (3) marked Done on Monday (Oct 8)"
-          },
-          {
-            "state": "next",
-            "text": "(inferred) Confirm Clinic SEO Reel Clips delivery with client"
-          }
-        ],
-        "owners": []
+        ]
       }
     ],
     "waiting_on_client": [
       {
-        "item": "Ihya School Promo (5-6 min) — action required to unblock production",
+        "item": "Ihya School Promo (5-6 min)",
         "who": "Tahir",
         "since": "8/23"
       }
     ],
     "launch_gate": null,
     "brief_v2": {
-      "verdict": "Tahir's move: Ihya School Promo remains blocked pending his action.",
-      "next_move": "Team: follow up with Tahir on Ihya School Promo [id: 12589574123] — his action unblocks production.",
+      "verdict": "Client's move: Tahir must act on the Ihya School Promo to unblock Video.",
+      "next_move": "Team: escalate to Tahir on Ihya School Promo — his action is the only unblock.",
       "blocks": [
         {
-          "item": "Ihya School Promo (5-6 min) [id: 12589574123]",
+          "item": "Ihya School Promo (5-6 min)",
           "side": "client",
           "who": "Tahir",
-          "last_activity": "Standup card flags item stalled awaiting Tahir action"
+          "last_activity": "Monday board flagged as stalled, awaiting Tahir action"
+        },
+        {
+          "item": "Clinic SEO Reel Clips (3)",
+          "side": "team",
+          "who": "Unassigned",
+          "last_activity": "Monday board shows overdue with no recent update"
         }
       ],
       "snapshot": [
         {
           "label": "Open items",
-          "value": "6 open, all in Working status; 1 blocked on client action",
+          "value": "6 open, all in working status, 0 moving, 1 awaiting client",
           "tone": "warn"
-        },
-        {
-          "label": "Last client word",
-          "value": "No recent client comms recorded this period",
-          "tone": "muted"
         }
       ],
-      "history_line": "Flow Reels marked Done · Youtube: Clinic Overlap marked Done · Clinic SEO Reel Clips (3) marked Done"
+      "history_line": null
     }
   },
   "brief_v2": {
-    "verdict": "Tahir's move: Ihya School Promo remains blocked pending his action.",
-    "next_move": "Team: follow up with Tahir on Ihya School Promo [id: 12589574123] — his action unblocks production.",
+    "verdict": "Client's move: Tahir must act on the Ihya School Promo to unblock Video.",
+    "next_move": "Team: escalate to Tahir on Ihya School Promo — his action is the only unblock.",
     "blocks": [
       {
-        "item": "Ihya School Promo (5-6 min) [id: 12589574123]",
+        "item": "Ihya School Promo (5-6 min)",
         "side": "client",
         "who": "Tahir",
-        "last_activity": "Standup card flags item stalled awaiting Tahir action"
+        "last_activity": "Monday board flagged as stalled, awaiting Tahir action"
+      },
+      {
+        "item": "Clinic SEO Reel Clips (3)",
+        "side": "team",
+        "who": "Unassigned",
+        "last_activity": "Monday board shows overdue with no recent update"
       }
     ],
     "snapshot": [
       {
         "label": "Open items",
-        "value": "6 open, all in Working status; 1 blocked on client action",
+        "value": "6 open, all in working status, 0 moving, 1 awaiting client",
         "tone": "warn"
-      },
-      {
-        "label": "Last client word",
-        "value": "No recent client comms recorded this period",
-        "tone": "muted"
       }
     ],
-    "history_line": "Flow Reels marked Done · Youtube: Clinic Overlap marked Done · Clinic SEO Reel Clips (3) marked Done"
+    "history_line": null
   }
 }
