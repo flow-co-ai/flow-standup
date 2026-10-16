@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-10-15T15:28:46.426Z",
-  "date": "2026-10-15",
+  "generated_at": "2026-10-16T15:09:25.728Z",
+  "date": "2026-10-16",
   "slug": "liferun",
   "name": "Liferun",
   "type": "leadgen",
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "GBP is the only active channel, generating 57 actions (56 directions, 1 web click) over 28 days, but the biggest concern is zero calls despite 92 impressions across 23 days, and a 44% week-over-week drop in GBP engagement signals declining visibility. Paid channels (Meta and Google Ads) show zero spend, zero leads, and zero clicks, while GHL recorded 12 contacts and 9 opportunities created with no wins, unreconciled against paid data.",
+  "verdict": "GBP is the only active channel but is declining fast, with direction actions dropping 44% week-over-week and zero paid spend or leads recorded across Meta and Google Ads in the last 28 days. The biggest concern is that Liferun's GBP profile generated 96 impressions with 0 calls, suggesting the call button or tracking may be broken and is silently killing lead capture.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -36,7 +36,7 @@
               "calls": 0,
               "directions": 56,
               "web_clicks": 1,
-              "impressions": 92,
+              "impressions": 96,
               "days_with_impressions": 23,
               "call_rate": 0
             }
@@ -50,7 +50,7 @@
     },
     "top_campaign": null,
     "analytics": {
-      "sessions": 822,
+      "sessions": 819,
       "users": 753,
       "conversions": 0
     },
@@ -59,7 +59,7 @@
       "impressions": 149
     },
     "latest_day": {
-      "date": "2026-10-14",
+      "date": "2026-10-15",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -71,7 +71,7 @@
       "gbp_actions": 0,
       "ig_reach": 0,
       "sc_clicks": 0,
-      "ga4_sessions": 25,
+      "ga4_sessions": 18,
       "purchases": 0,
       "revenue": 0,
       "ctc_call_confirm": 0,
@@ -98,7 +98,7 @@
       "google_spend_7d_pct": null,
       "gbp_7d_pct": -44.44,
       "sc_7d_pct": -100,
-      "ga4_7d_pct": -39.31,
+      "ga4_7d_pct": -39.34,
       "ig_7d_pct": null,
       "spend_per_day_7d": 0
     },
@@ -107,7 +107,6 @@
     ],
     "series": {
       "dates": [
-        "2026-09-17",
         "2026-09-18",
         "2026-09-19",
         "2026-09-20",
@@ -134,7 +133,8 @@
         "2026-10-11",
         "2026-10-12",
         "2026-10-13",
-        "2026-10-14"
+        "2026-10-14",
+        "2026-10-15"
       ],
       "spend": [
         0,
@@ -259,7 +259,6 @@
       "gbp_actions": [
         0,
         0,
-        0,
         1,
         5,
         0,
@@ -282,6 +281,7 @@
         0,
         0,
         5,
+        0,
         0,
         0,
         0
@@ -319,7 +319,6 @@
       "sc_clicks": [
         0,
         0,
-        0,
         1,
         0,
         0,
@@ -337,6 +336,7 @@
         0,
         0,
         1,
+        0,
         0,
         0,
         0,
@@ -347,7 +347,6 @@
         0
       ],
       "ga4_sessions": [
-        21,
         19,
         19,
         29,
@@ -374,7 +373,8 @@
         25,
         15,
         16,
-        25
+        25,
+        18
       ],
       "purchases": [
         0,
@@ -559,10 +559,10 @@
     }
   },
   "ghl": {
-    "contacts": 12,
+    "contacts": 11,
     "opportunities": {
       "created": {
-        "count": 9,
+        "count": 8,
         "value": 0
       },
       "won": {
@@ -574,8 +574,8 @@
   },
   "reconciliation": {
     "windsor_leads": 0,
-    "ghl_contacts": 12,
-    "ghl_opps_created": 9,
+    "ghl_contacts": 11,
+    "ghl_opps_created": 8,
     "ghl_opps_won": 0,
     "status": "ghl_only"
   },
@@ -588,10 +588,14 @@
     ]
   },
   "brief": {
-    "date": "2026-10-15",
+    "date": "2026-10-16",
     "headlines": [
       {
         "text": "No movement; quiet since Sierra onboarding",
+        "tone": "info"
+      },
+      {
+        "text": "Two CRM verification items remain open",
         "tone": "info"
       }
     ],
@@ -605,15 +609,15 @@
         "items": [
           {
             "state": "blocked",
-            "text": "HANDOFF item — absorb June 22 Automation Guide (stalled, no recent comms)"
+            "text": "HANDOFF item — absorb June 22 Automation Guide (no recent progress)"
           },
           {
             "state": "blocked",
-            "text": "Becklar billing drop — deactivation reflection unverified (⛔ cash-leak risk)"
+            "text": "Becklar billing drop verification — dummy deactivation not yet run"
           },
           {
             "state": "next",
-            "text": "(inferred) Run dummy deactivation to verify Becklar billing drop"
+            "text": "(inferred) Run one dummy deactivation to confirm Becklar portal reflects billing drop"
           }
         ],
         "owners": [
@@ -627,7 +631,7 @@
       "title": "Launch gate - clear before scaling ads",
       "items": [
         {
-          "text": "Becklar billing drop: dummy deactivation confirmed in portal + invoice",
+          "text": "Becklar billing drop: dummy deactivation + invoice confirmed",
           "done": false
         },
         {
@@ -635,26 +639,26 @@
           "done": false
         },
         {
-          "text": "HANDOFF item: June 22 Automation Guide fully absorbed",
+          "text": "HANDOFF automation guide absorbed",
           "done": false
         }
       ]
     },
     "brief_v2": {
-      "verdict": "Team's move: two P1 verification items have no active owner and no recent comms.",
-      "next_move": "Ahmed / Ali: run dummy deactivation on Becklar — confirms billing drop and unblocks scaling.",
+      "verdict": "Team's move: two P1 CRM verification items are open with no activity this week.",
+      "next_move": "Ahmed/Ali: run dummy Becklar deactivation — confirms billing drop and unblocks scaling.",
       "blocks": [
         {
           "item": "HANDOFF — absorb June 22 Automation Guide",
           "side": "team",
           "who": "Ahmed Memon",
-          "last_activity": "Standup card lists as stalled CRM item this week"
+          "last_activity": "Standup card flags item stalled, no recent comms or updates"
         },
         {
           "item": "Becklar billing drop verification",
           "side": "team",
           "who": "Ali Shaheer",
-          "last_activity": "Standup card lists as stalled CRM item this week"
+          "last_activity": "Standup card flags item stalled, dummy deactivation not yet run"
         }
       ],
       "snapshot": [
@@ -665,7 +669,7 @@
         },
         {
           "label": "Last client word",
-          "value": "No client comms on record this period",
+          "value": "No client comms recorded this week",
           "tone": "muted"
         }
       ],
@@ -673,20 +677,20 @@
     }
   },
   "brief_v2": {
-    "verdict": "Team's move: two P1 verification items have no active owner and no recent comms.",
-    "next_move": "Ahmed / Ali: run dummy deactivation on Becklar — confirms billing drop and unblocks scaling.",
+    "verdict": "Team's move: two P1 CRM verification items are open with no activity this week.",
+    "next_move": "Ahmed/Ali: run dummy Becklar deactivation — confirms billing drop and unblocks scaling.",
     "blocks": [
       {
         "item": "HANDOFF — absorb June 22 Automation Guide",
         "side": "team",
         "who": "Ahmed Memon",
-        "last_activity": "Standup card lists as stalled CRM item this week"
+        "last_activity": "Standup card flags item stalled, no recent comms or updates"
       },
       {
         "item": "Becklar billing drop verification",
         "side": "team",
         "who": "Ali Shaheer",
-        "last_activity": "Standup card lists as stalled CRM item this week"
+        "last_activity": "Standup card flags item stalled, dummy deactivation not yet run"
       }
     ],
     "snapshot": [
@@ -697,87 +701,87 @@
       },
       {
         "label": "Last client word",
-        "value": "No client comms on record this period",
+        "value": "No client comms recorded this week",
         "tone": "muted"
       }
     ],
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-10-15T15:36:39.802Z",
+    "generated_at": "2026-10-16T15:17:32.078Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Paid channels dead 45+ days; 8 overdue SOW milestones block any relaunch.",
+    "verdict": "No paid channel is live; only GBP remains, and it is collapsing.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across Meta and Google for all 28 days in window; 45-day series confirms $0 every day. No leads, no CPL to measure.",
+        "text": "Zero paid spend across all 28 days — Meta and Google both dark. CPL is undefined because leads are zero. No money is working.",
         "confidence": "confirmed",
-        "channel": "meta+google"
+        "channel": "meta/google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "8 SOW milestones overdue (oldest Jul 20): CAPI, Offline Conversion Import, Money Paths, Landing Pages, UGC, GHL gaps — all blocking paid relaunch.",
+        "text": "8 overdue SOW milestones span CRM, Ops, Google, Meta, Web, and Creative — oldest dated 2026-07-20. CAPI, offline conversions, and landing pages are all unbuilt, blocking any paid relaunch.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GBP flag confirmed: 92 impressions over 23 days, 56 directions, but 0 calls — call_rate is 0. A 44% week-over-week drop in GBP actions compounds this.",
+        "text": "GBP generated 96 impressions over 23 days with 0 calls recorded — call_rate is 0. Call button or forwarding tracking is broken and silently killing the only active lead path.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "3-day GA4 signal (Oct 12–14: 15, 16, 25 sessions) vs prior 3 (Oct 9–11: 21, 28, 25) is flat-to-declining; 28-day peak of 56 sessions (Sep 26) is fading with no paid support.",
+        "text": "GBP actions fell 44% week-over-week; last 3 days (Oct 13–15) show 0 actions vs. 5 in prior 3 days (Oct 10–12). The organic floor is actively eroding.",
         "confidence": "confirmed",
-        "channel": "ga4"
+        "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 12 contacts and 9 opportunities created with 0 wins, unreconciled against any paid source — likely organic or direct, not an ads pipeline problem.",
+        "text": "GA4 sessions averaged 19 over last 3 days vs. 26 prior 3 days — a 27% drop — while 8 GHL opportunities were created with 0 won and 0 appointments, suggesting intake is not converting any web traffic.",
         "confidence": "probable",
-        "channel": "ghl"
+        "channel": "ga4/ghl"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Resolve 8 overdue SOW milestones before any paid dollar is switched on; no budget move is valid until stack is verified.",
+        "text": "Audit and repair GBP call button or call-tracking number — 96 impressions with 0 calls confirms a broken path.",
         "cites": [
-          "F2",
-          "F1"
+          "F3"
         ],
-        "monday_item_name": "Clear SOW Blockers — Relaunch Gate",
-        "monday_update": "Paid channels have been dark for 45+ days with $0 spend, and 8 SOW milestones are overdue dating back to July 20 — including CAPI, Offline Conversion Import, Money Paths (Becklar + BWS), Landing Pages, and UGC batch. None of these are buyer actions; they are build and ops deliverables owned by Ahmed/Ali (GHL), Nacer (Ops), and the Web/Creative teams. Success check: each milestone marked complete with a verification Loom or confirmation note by 2026-10-31. No paid budget recommendation will be made until at minimum Money Paths Verified and Landing Pages Live are closed."
+        "monday_item_name": "Fix GBP Call Button Liferun",
+        "monday_update": "The Liferun GBP profile recorded 96 impressions across 23 days with zero calls — call_rate is confirmed at 0. Test the call button manually and verify the forwarding number resolves correctly; if a tracking number is in place, confirm it is active and routing calls. Success is confirmed when at least 1 call is recorded in the GBP dashboard within 3 days of the fix. Re-check by 2026-10-19."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Investigate GBP call-to-action setup: 92 impressions with 0 calls over 28 days indicates a broken or missing click-to-call on the profile.",
+        "text": "Clear the 5 ⛔ SOW blockers (Becklar billing, BWS duplicate, CS permissions, CAPI, offline conversions) before any paid budget is committed.",
         "cites": [
-          "F3"
+          "F2",
+          "F1"
         ],
-        "monday_item_name": "Fix GBP Zero-Call Issue",
-        "monday_update": "Liferun's GBP profile logged 92 impressions across 23 days but received exactly 0 calls, while 56 direction requests occurred — suggesting the profile is visible but the phone number or call button is not functioning or prominently placed. Audit the GBP listing: confirm phone number is correct, call button is enabled, and the number matches the tracking number in GHL. Success check: at least 1 tracked call attributed to GBP within 7 days of fix. Re-check 2026-10-22."
+        "monday_item_name": "Clear SOW Blockers Before Relaunch",
+        "monday_update": "Meta and Google have been dark for the full 28-day window with zero spend and zero leads. Eight SOW milestones are overdue, including CAPI, offline conversion import, paid landing pages, and money-path verification — all of which are prerequisites for paid relaunch. Assign owners to each ⛔ item and set completion dates; no paid budget should be activated until at minimum CAPI, offline conversions, and landing pages are live. Confirm all five blocker tasks closed by 2026-10-30."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GHL pipeline: 9 opps, 0 wins — monitor for intake leak once paid traffic resumes; no action warranted while channels are dark.",
+        "text": "Watch GA4 sessions and GHL opportunity-to-appointment rate; 0 appointments from 8 opps signals an intake conversion problem to diagnose before scaling.",
         "cites": [
           "F5"
         ],
-        "monday_item_name": "Watch GHL Pipeline — 0 Wins",
-        "monday_update": "GHL currently shows 9 opportunities created against 12 contacts with 0 wins over 28 days, but all traffic appears organic or direct given zero paid spend. This is not actionable as an ads problem today. Flag for re-evaluation once paid channels relaunch — if leads arrive and opportunities remain flat, that is an intake leak requiring a fix action. Re-check 2026-10-22."
+        "monday_item_name": "Watch GHL Intake Conversion Rate",
+        "monday_update": "GHL shows 8 opportunities created in 28 days with 0 appointments booked — a 0% intake conversion rate. This is likely an intake or follow-up automation gap, not an ads problem, but it means leads from any paid relaunch will also be wasted if unresolved. Monitor for the next 7 days; if the appointment rate remains at 0 by 2026-10-23, escalate to Ahmed/Ali for an automation audit."
       }
     ],
-    "next_check": "2026-10-22"
+    "next_check": "2026-10-19"
   }
 }
