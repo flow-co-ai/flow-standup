@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-16T20:19:33.129Z",
+  "updatedAt": "2026-10-17T17:49:20.491942+00:00",
   "items": [
     {
       "id": "qualityhvac-burr-ridge-gbp-move",
@@ -55,39 +55,39 @@
     {
       "id": "medstation-ring-timeout",
       "title": "Ring Timeout",
-      "note": "Priority 3: staff are missing calls but nothing is down. Section 19 audit: MedStation groups on all four boards, subitems included, plus a text sweep for ring timeout. Only hits are Quality HVAC Missed Calls and Maadi Law Intake Call Drops, other clients, so create_item. Kept separate from Deleted Appointment Messages per the single item counter rule (call routing vs messaging). Section 19b: no pending queue match. Sohib has a call with MedStation and their IT on 10/7 at 10am, which is a good place to confirm which line this is. Section 19b matcher returned axis 3 (same client, similar work); merged rather than flagged because the 10/7 message is the same staff reporting the same symptom continuing, not separate work. 10/7 Weston said calls are still failing, so priority raised to 2. Still needs doing; nothing in the window says it is fixed.",
+      "note": "Priority 3: staff are missing calls but nothing is down. Section 19 audit: MedStation groups on all four boards, subitems included, plus a text sweep for ring timeout. Only hits are Quality HVAC Missed Calls and Maadi Law Intake Call Drops, other clients, so create_item. Kept separate from Deleted Appointment Messages per the single item counter rule (call routing vs messaging). Section 19b: no pending queue match. Sohib has a call with MedStation and their IT on 10/7 at 10am, which is a good place to confirm which line this is. Section 19b matcher returned axis 3 (same client, similar work); merged rather than flagged because the 10/7 message is the same staff reporting the same symptom continuing, not separate work. 10/7 Weston said calls are still failing, so priority raised to 2. Still needs doing; nothing in the window says it is fixed. 10/16 merge (Section 19b axis 3, same symptom, same staff): timeout is already 22 seconds and GHL config checks out, so the raise timeout step is replaced with opening a GHL support ticket. Second question: not fixed, still happening per Ahmed; stays ready.",
       "status": "ready",
       "board": "CRM",
       "group": "MedStation",
       "potentialClient": null,
       "source": "whatsapp",
-      "sourceLabel": "WhatsApp: MedStation, 10/6 + WhatsApp: MedStation, 10/7",
+      "sourceLabel": "WhatsApp: MedStation, 10/6 + WhatsApp: MedStation, 10/7 + Meeting: Client Delivery and CRM Review, 10/16",
       "payload": {
         "mode": "create_item",
         "boardId": "18418241405",
         "groupId": "group_mm512p9w",
         "itemName": "Ring Timeout",
-        "updateBody": "<p>Salam,</p><ul><li>On 10/6 MedStation staff reported in the GHL chat that the phone rings only once before moving on, leaving no time to answer. On 10/7 Weston said it is still happening: another call failed to answer that morning. Screenshots are in the chat and Ahmed said he is checking.</li><li><strong>Identify the line and routing path</strong> behind it: GHL number, forwarding target, user device, voicemail handover. If the call does not route through GHL at all, say so in the chat.</li><li><strong>Raise the ring timeout</strong> so staff can pick up. Quality HVAC went from 20 to 30 seconds on 9/25 for the same symptom; start there.</li><li><strong>Test</strong> with a live call and confirm with Weston staff in the chat.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "updateBody": "<p>Salam,</p><ul><li>On 10/6 and 10/7 MedStation staff reported in the GHL chat that the phone rings only once before moving on. On the 10/16 review Ahmed said Renata is still getting calls for about one second, even though the ring timeout is already set to 22 seconds. He has checked the GHL configuration and found nothing wrong.</li><li><strong>Open a ticket with GHL support</strong> with the affected numbers, example call times and the screenshots from the chat. Ahmed has seen the same symptom fixed through support for another client.</li><li><strong>Confirm the routing path</strong> while the ticket is open: GHL number, forwarding target, user device, voicemail handover. If the call does not route through GHL at all, say so in the chat.</li><li><strong>Test</strong> with a live call once support responds and confirm with Weston staff in the chat.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
         "blocked": false,
         "needsNaz": false
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-10-08T20:40:25.838882+00:00",
+      "verifiedAt": "2026-10-17T17:49:15.120137+00:00",
       "completionEvidence": null,
-      "updatedAt": "2026-10-08T20:40:25.838883+00:00",
+      "updatedAt": "2026-10-17T17:49:15.120148+00:00",
       "createdAt": "2026-10-07T20:30:48.868496+00:00"
     },
     {
       "id": "medstation-ghl-whatsapp-campaigns",
       "title": "WhatsApp Campaigns",
-      "note": "Priority 2: Pink October is a this month campaign and Weston is waiting to launch. Section 19 audit: MedStation groups on all four boards, subitems included, plus a text sweep for Kommo/Pink October/WhatsApp campaign/250/business verification. Only hits are Meta and Google ad items (paid WhatsApp ads, not GHL broadcast campaigns), so create_item on CRM. Section 19b: no pending queue match. Two Fireflies recordings of the same 10/7 Medstation Checkin were read as one. Rapha is client side and named in plain text only.",
+      "note": "Priority 2: Pink October is a this month campaign and Weston is waiting to launch. Section 19 audit: MedStation groups on all four boards, subitems included, plus a text sweep for Kommo/Pink October/WhatsApp campaign/250/business verification. Only hits are Meta and Google ad items (paid WhatsApp ads, not GHL broadcast campaigns), so create_item on CRM. Section 19b: no pending queue match. Two Fireflies recordings of the same 10/7 Medstation Checkin were read as one. Rapha is client side and named in plain text only. 10/16 merge (Section 19b axis 3, same client and same campaign): build step done per Ahmed, launch now on hold for MedStation's contact list. Second question: not complete, launch, guide and verification still open; stays ready.",
       "status": "ready",
       "board": "CRM",
       "group": "MedStation",
       "potentialClient": null,
       "source": "fireflies",
-      "sourceLabel": "Meeting with MedStation, 10/7 + WhatsApp: MedStation, 10/7",
+      "sourceLabel": "Meeting with MedStation, 10/7 + WhatsApp: MedStation, 10/7 + Meeting: Client Delivery and CRM Review, 10/16",
       "payload": {
         "mode": "create_item",
         "boardId": "18418241405",
@@ -95,12 +95,13 @@
         "itemName": "WhatsApp Campaigns",
         "blocked": false,
         "needsNaz": false,
-        "updateBody": "<p>Salam,</p><ul><li>On the 10/7 Medstation Checkin, Weston agreed to move its WhatsApp marketing campaigns from Kommo to GoHighLevel. Rapha (Raphaela Pereira) owns campaigns on their side and will build them herself once set up. Sohib asked Ahmed on 10/7 to lead the setup.</li><li><strong>Confirm</strong> Rapha has admin access on the Weston GHL account (rpereira@medstation.com).</li><li><strong>Build and test</strong> the Pink October (Outubro Rosa) campaign in GHL from the image and text Rapha posted in the GHL chat on 10/7: tag based audience, image with up to three interactive buttons, on the approved utility template.</li><li><strong>Write a short guide</strong> Rapha can follow to duplicate a campaign on her own: picking the tagged segment, attaching media and buttons, scheduling, checking results.</li><li><strong>Stay under the cap</strong>: Meta limits the number to 250 unique recipients per rolling 24 hours, rep templates included. Segment sends accordingly.</li><li><strong>Start Meta business verification</strong> to raise the cap to 2,000; Sohib told Rapha on 10/7 we would help get it moving.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
+        "updateBody": "<p>Salam,</p><ul><li>On the 10/7 Medstation Checkin, Weston agreed to move its WhatsApp marketing campaigns from Kommo to GoHighLevel. Rapha (Raphaela Pereira) owns campaigns on their side and will build them herself once set up.</li><li>New on 10/16: Ahmed reported the campaign is <strong>built and ready</strong>. MedStation (Mateus, per Ahmed) said the contact list for it is missing on their side and asked us <strong>not to launch any campaign</strong> until they send it. They promised it the next day and have not sent it yet.</li><li><strong>Chase the contact list</strong> in the chat, then import it, tag the audience and launch only once MedStation confirms.</li><li><strong>Confirm</strong> Rapha has admin access on the Weston GHL account (rpereira@medstation.com).</li><li><strong>Write a short guide</strong> Rapha can follow to duplicate a campaign: tagged segment, media and buttons, scheduling, results.</li><li><strong>Stay under the cap</strong>: 250 unique recipients per rolling 24 hours until Meta business verification raises it to 2,000. Start that verification; Sohib told Rapha on 10/7 we would help.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-10-09T20:06:02.509195+00:00",
+      "verifiedAt": "2026-10-17T17:49:15.120965+00:00",
       "completionEvidence": null,
+      "updatedAt": "2026-10-17T17:49:15.120969+00:00",
       "createdAt": "2026-10-08T20:40:26.108326+00:00"
     },
     {
@@ -234,27 +235,27 @@
     {
       "id": "seniorinsurance-pipeline-cleanup",
       "title": "Pipeline Cleanup",
-      "note": "Priority 2: seminars run Tue/Thu/Sat and Naz flagged these as needing attention ASAP. Section 19b merge: Naz's 10/12 list in the GHL Dev chat restates this card's open points item for item (full name on card, event field, lead source, guest linking) and adds the guest name import fix, the Seminar Guest tag and the webhook check. Matcher returned axis 3 only because this card is a create_item with no item id; merged rather than flagged because a second card would duplicate this one bullet for bullet. Second question: Ahmed's second 10/12 update in the Senior Insurance chat explicitly says the automatic appointment pipeline update is live and tested, so that step is removed; the rest is residue and stays ready. Section 19 re-audit: Senior Insurance Team CRM group unchanged, Seminar RSVP webhook (13207292413) is Done on Monday but Naz asked to re-confirm it, so it rides here.",
+      "note": "Priority 2: seminars run Tue/Thu/Sat and Naz flagged these as needing attention ASAP. Section 19b merge: Naz's 10/12 list in the GHL Dev chat restates this card's open points item for item (full name on card, event field, lead source, guest linking) and adds the guest name import fix, the Seminar Guest tag and the webhook check. Matcher returned axis 3 only because this card is a create_item with no item id; merged rather than flagged because a second card would duplicate this one bullet for bullet. Second question: Ahmed's second 10/12 update in the Senior Insurance chat explicitly says the automatic appointment pipeline update is live and tested, so that step is removed; the rest is residue and stays ready. Section 19 re-audit: Senior Insurance Team CRM group unchanged, Seminar RSVP webhook (13207292413) is Done on Monday but Naz asked to re-confirm it, so it rides here. 10/16 merge (Section 19b axis 3): Naz asked on the 10/16 review for a contact level Event field folder with the October RSVP data mapped in; folded into the existing event field bullet. Second question: still open; stays ready.",
       "status": "ready",
       "board": "CRM",
       "group": "Senior Insurance",
       "potentialClient": null,
       "source": "whatsapp",
-      "sourceLabel": "WhatsApp: Senior Insurance, 10/8 + WhatsApp: Senior Insurance, 10/9 + WhatsApp: GHL Dev, 10/12 + WhatsApp: Senior Insurance, 10/12",
+      "sourceLabel": "WhatsApp: Senior Insurance, 10/8 + WhatsApp: Senior Insurance, 10/9 + WhatsApp: GHL Dev, 10/12 + WhatsApp: Senior Insurance, 10/12 + Meeting: Client Delivery and CRM Review, 10/16",
       "payload": {
         "mode": "create_item",
         "boardId": "18418241405",
         "groupId": "group_mm7qby8z",
         "itemName": "Pipeline Cleanup",
-        "updateBody": "<p>Salam,</p><ul><li>New on 10/12: after the Senior Insurance check in, Naz posted the follow up list in the GHL Dev chat. Ahmed confirmed the <strong>automatic move to Scheduled appointment is live and tested</strong>, so that step is dropped here. He named missing guest names and the LeadingResponse cancellation/reschedule updates as still open; nothing was said about the rest, so treat it as open until confirmed.</li><li><strong>Opportunity cards</strong>: show the lead's full name without clicking in.</li><li><strong>Event date and venue field</strong> on the opportunity, in the single Dinner Seminar pipeline, filled from the event number (226003 to 226008). Sabri needs to <strong>filter by event</strong>.</li><li><strong>Seminar Guest tag</strong>: support multiple guests per contact, labelled with event, date, time and location. This replaces the spouse linking ask.</li><li><strong>Guest names did not import.</strong> Find out why and fix it, including for existing registrants.</li><li><strong>Lead source</strong>: show \"Seminar\" everywhere (some still read \"LR\"), with venue and date, in the contact's source area.</li><li><strong>Webhook</strong>: confirm Ravi's submissions flow in and land in the right stages, and confirm with LeadingResponse whether cancellations and reschedules come through.</li><li>Post status on each point in the Senior Insurance chat.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "updateBody": "<p>Salam,</p><ul><li>New on 10/12: after the Senior Insurance check in, Naz posted the follow up list in the GHL Dev chat. Ahmed confirmed the <strong>automatic move to Scheduled appointment is live and tested</strong>, so that step is dropped here. He named missing guest names and the LeadingResponse cancellation/reschedule updates as still open; nothing was said about the rest, so treat it as open until confirmed.</li><li><strong>Opportunity cards</strong>: show the lead's full name without clicking in.</li><li><strong>Event fields</strong>: an Event date and venue field on the opportunity, filled from the event number (226003 to 226008), so Sabri can <strong>filter by event</strong>. New on 10/16: Ravi has pushed the October RSVP data into GHL. Naz also wants a contact field folder (e.g. \"Event\") holding event day, location, time and attended / did not attend, with that October data loaded into it.</li><li><strong>Seminar Guest tag</strong>: support multiple guests per contact, labelled with event, date, time and location. This replaces the spouse linking ask.</li><li><strong>Guest names did not import.</strong> Find out why and fix it, including for existing registrants.</li><li><strong>Lead source</strong>: show \"Seminar\" everywhere (some still read \"LR\"), with venue and date, in the contact's source area.</li><li><strong>Webhook</strong>: confirm Ravi's submissions flow in and land in the right stages, and confirm with LeadingResponse whether cancellations and reschedules come through.</li><li>Post status on each point in the Senior Insurance chat.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
         "blocked": false,
         "needsNaz": false
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-10-13T20:36:31.946170+00:00",
+      "verifiedAt": "2026-10-17T17:49:15.121767+00:00",
       "completionEvidence": null,
-      "updatedAt": "2026-10-13T20:36:31.946173+00:00",
+      "updatedAt": "2026-10-17T17:49:15.121772+00:00",
       "createdAt": "2026-10-09T20:06:02.908958+00:00"
     },
     {
