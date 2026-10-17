@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-10-16T15:10:05.241Z",
-  "date": "2026-10-16",
+  "generated_at": "2026-10-17T14:05:01.164Z",
+  "date": "2026-10-17",
   "slug": "senior-insurance",
   "name": "Senior Insurance",
   "type": "leadgen",
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "GBP engagement dropped 68% over the last 7 days with no paid activity running across Meta or Google Ads to offset it. Across the 28-day window, GBP generated 164 total actions (136 directions, 5 calls, 23 web clicks) but call volume is critically low relative to 1,023 total impressions, flagged because at least one profile is generating impressions with zero calls recorded.",
+  "verdict": "GBP activity dropped 78% over the last 7 days with zero paid spend recorded across Meta and Google Ads, meaning all 147 GBP actions (including 5 calls, 120 directions, and 22 web clicks) over 28 days came from organic profile traffic alone. The flagged location \"Senior Insurance Team\" (locations/8170777697827184701) generated 386 impressions but zero calls, suggesting a potential call button or tracking issue that should be investigated immediately.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,18 +25,18 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 164,
+          "actions": 147,
           "calls": 5,
-          "directions": 136,
-          "web_clicks": 23,
+          "directions": 120,
+          "web_clicks": 22,
           "by_profile": [
             {
               "account_id": "locations/8170777697827184701",
               "label": "Senior Insurance Team",
               "calls": 0,
-              "directions": 38,
+              "directions": 36,
               "web_clicks": 6,
-              "impressions": 356,
+              "impressions": 386,
               "days_with_impressions": 25,
               "call_rate": 0
             },
@@ -44,20 +44,20 @@
               "account_id": "locations/7384859202011040888",
               "label": "Senior Insurance Team",
               "calls": 4,
-              "directions": 56,
+              "directions": 51,
               "web_clicks": 15,
-              "impressions": 445,
-              "days_with_impressions": 25,
-              "call_rate": 0.009
+              "impressions": 434,
+              "days_with_impressions": 24,
+              "call_rate": 0.0092
             },
             {
               "account_id": "locations/7713375159367604965",
               "label": "Senior Insurance Team",
               "calls": 1,
-              "directions": 42,
-              "web_clicks": 2,
-              "impressions": 222,
-              "days_with_impressions": 24,
+              "directions": 33,
+              "web_clicks": 1,
+              "impressions": 221,
+              "days_with_impressions": 25,
               "call_rate": 0.0045
             }
           ]
@@ -65,12 +65,12 @@
       }
     },
     "organic": {
-      "gbp_actions": 164,
+      "gbp_actions": 147,
       "ig_reach": 0
     },
     "top_campaign": null,
     "latest_day": {
-      "date": "2026-10-15",
+      "date": "2026-10-16",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -121,7 +121,7 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -68.42,
+      "gbp_7d_pct": -78.05,
       "sc_7d_pct": null,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
@@ -132,7 +132,6 @@
     ],
     "series": {
       "dates": [
-        "2026-09-18",
         "2026-09-19",
         "2026-09-20",
         "2026-09-21",
@@ -159,7 +158,8 @@
         "2026-10-12",
         "2026-10-13",
         "2026-10-14",
-        "2026-10-15"
+        "2026-10-15",
+        "2026-10-16"
       ],
       "spend": [
         0,
@@ -282,7 +282,6 @@
         0
       ],
       "gbp_actions": [
-        17,
         1,
         7,
         6,
@@ -305,6 +304,7 @@
         9,
         3,
         9,
+        0,
         0,
         0,
         0,
@@ -598,20 +598,48 @@
     ]
   },
   "brief": {
-    "date": "2026-10-16",
+    "date": "2026-10-17",
     "headlines": [
       {
-        "text": "Google & Meta tracking both marked Done",
+        "text": "Meta & Google tracking marked Done on Monday",
         "tone": "win"
       },
       {
-        "text": "CRM webhook and policy automation still open",
+        "text": "Webhook and seminar data import completed this week",
+        "tone": "win"
+      },
+      {
+        "text": "Webhook integration still stalled on Monday board",
         "tone": "info"
       }
     ],
     "workstreams": [
       {
-        "title": "Senior Insurance - Tracking / Ads",
+        "title": "Senior Insurance - CRM / GHL",
+        "badge": {
+          "label": "P1 - needs attention",
+          "tone": "amber"
+        },
+        "items": [
+          {
+            "state": "done",
+            "text": "Webhook ready and tested for seminar RSVP data into GHL"
+          },
+          {
+            "state": "done",
+            "text": "October seminar data imported: 136 reserved, 47 waitlist with opportunities"
+          },
+          {
+            "state": "blocked",
+            "text": "Seminar RSVP webhook item still open on Monday board — pending post-setup-call follow-through"
+          }
+        ],
+        "owners": [
+          "احمد میمن"
+        ]
+      },
+      {
+        "title": "Senior Insurance - Ads / Tracking",
         "badge": {
           "label": "P1 - on track",
           "tone": "green"
@@ -619,40 +647,12 @@
         "items": [
           {
             "state": "done",
-            "text": "Google tracking setup marked Done (2026-10-13)"
+            "text": "Google tracking setup marked Done on Monday (Oct 13)"
           },
           {
             "state": "done",
-            "text": "Meta tracking setup marked Done (2026-10-14)"
+            "text": "Meta tracking setup marked Done on Monday (Oct 14)"
           }
-        ]
-      },
-      {
-        "title": "Senior Insurance - CRM / GHL",
-        "badge": {
-          "label": "P1 - blocked",
-          "tone": "red"
-        },
-        "items": [
-          {
-            "state": "blocked",
-            "text": "Seminar RSVP webhook integration pending after setup call [id: 13207292413]"
-          },
-          {
-            "state": "blocked",
-            "text": "Policy review automation setup requested — no owner yet"
-          },
-          {
-            "state": "done",
-            "text": "Webhook built and tested; October seminar data imported (136 reserved, 47 waitlist)"
-          },
-          {
-            "state": "next",
-            "text": "(inferred) Confirm webhook integration next steps with client"
-          }
-        ],
-        "owners": [
-          "احمد میمن"
         ]
       },
       {
@@ -664,7 +664,7 @@
         "items": [
           {
             "state": "done",
-            "text": "Video edited and shared in folder"
+            "text": "Video editing finished and shared in folder"
           }
         ],
         "owners": [
@@ -675,125 +675,113 @@
     "waiting_on_client": [],
     "launch_gate": null,
     "brief_v2": {
-      "verdict": "Team's move: two CRM items are open with no recent activity to close them.",
-      "next_move": "Team: follow up on Seminar RSVP webhook integration to push past the post-setup-call stall.",
+      "verdict": "Team's move: Seminar RSVP webhook board item needs closure despite work being complete.",
+      "next_move": "Team: close Seminar RSVP webhook on Monday — work confirmed done, board still shows open.",
       "blocks": [
         {
           "item": "Seminar RSVP webhook [id: 13207292413]",
           "side": "team",
           "who": "احمد میمن",
-          "last_activity": "Standup card flags webhook integration pending after setup call"
-        },
-        {
-          "item": "Policy review automation setup",
-          "side": "team",
-          "who": "Unassigned",
-          "last_activity": "Standup card flags setup requested, no owner or update"
+          "last_activity": "Standup flags item still open on board despite webhook being tested and live"
         }
       ],
       "snapshot": [
         {
           "label": "Open items",
-          "value": "20 open, all in Working; 2 CRM items stalled, tracking completed",
+          "value": "20 open, all in Working status; tracking completions not yet reflected on board",
           "tone": "warn"
         },
         {
           "label": "Last client word",
-          "value": "No client-side comms recorded this period",
-          "tone": "muted"
+          "value": "No client-side comms this week",
+          "tone": "plain"
         }
       ],
-      "history_line": "Webhook built & tested · October seminar data imported (136 reserved, 47 waitlist) · Google & Meta tracking marked Done"
+      "history_line": "Webhook tested for seminar RSVP into GHL · October seminar: 136 reserved, 47 waitlist imported · Meta & Google tracking marked Done"
     }
   },
   "brief_v2": {
-    "verdict": "Team's move: two CRM items are open with no recent activity to close them.",
-    "next_move": "Team: follow up on Seminar RSVP webhook integration to push past the post-setup-call stall.",
+    "verdict": "Team's move: Seminar RSVP webhook board item needs closure despite work being complete.",
+    "next_move": "Team: close Seminar RSVP webhook on Monday — work confirmed done, board still shows open.",
     "blocks": [
       {
         "item": "Seminar RSVP webhook [id: 13207292413]",
         "side": "team",
         "who": "احمد میمن",
-        "last_activity": "Standup card flags webhook integration pending after setup call"
-      },
-      {
-        "item": "Policy review automation setup",
-        "side": "team",
-        "who": "Unassigned",
-        "last_activity": "Standup card flags setup requested, no owner or update"
+        "last_activity": "Standup flags item still open on board despite webhook being tested and live"
       }
     ],
     "snapshot": [
       {
         "label": "Open items",
-        "value": "20 open, all in Working; 2 CRM items stalled, tracking completed",
+        "value": "20 open, all in Working status; tracking completions not yet reflected on board",
         "tone": "warn"
       },
       {
         "label": "Last client word",
-        "value": "No client-side comms recorded this period",
-        "tone": "muted"
+        "value": "No client-side comms this week",
+        "tone": "plain"
       }
     ],
-    "history_line": "Webhook built & tested · October seminar data imported (136 reserved, 47 waitlist) · Google & Meta tracking marked Done"
+    "history_line": "Webhook tested for seminar RSVP into GHL · October seminar: 136 reserved, 47 waitlist imported · Meta & Google tracking marked Done"
   },
   "performance": {
-    "generated_at": "2026-10-16T15:19:26.642Z",
+    "generated_at": "2026-10-17T14:14:28.124Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "GBP is the only live signal; paid is fully dark with zero results.",
+    "verdict": "No paid activity; organic GBP is sole signal and it's collapsing.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across Meta and Google for all 28 days; CPL is undefined because no leads exist at all.",
+        "text": "Zero paid spend across all 28 days — Meta $0, Google $0. No CPL can be computed; the account is effectively dark on paid channels.",
         "confidence": "confirmed",
         "channel": "meta/google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions collapsed to 0 for 4 consecutive days (Oct 12–15), down from a 28-day average of ~5.9 actions/day.",
+        "text": "GBP actions collapsed to 0 for the last 6 days (Oct 11–16 all zero), down from a prior peak of 19 actions on Sep 27. 3-day signal: days 13–15 avg = 0 vs prior 3-day avg of 3 — confirmed deterioration.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GBP profile 8170777697827184701 generated 356 impressions over 25 days with 0 calls recorded — call_rate is 0.00.",
-        "confidence": "confirmed",
+        "text": "Location 8170777697827184701 ('Senior Insurance Team') generated 386 impressions over 25 days but 0 calls — call_rate = 0 vs 0.92% on the comparable sibling profile. Call button or tracking failure probable.",
+        "confidence": "probable",
         "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "Across all 3 GBP profiles, only 5 calls from 1,023 impressions (0.49% call rate) over 28 days — organic intent is not converting to contact.",
+        "text": "All 147 GBP actions over 28 days are purely organic; no paid amplification exists to attribute or defend. Score of 90 is a green flag on a stationary engine — no paid baseline to protect.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "cross-channel"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit GBP profile 8170777697827184701 click-to-call button and phone number — 356 impressions, 0 calls recorded.",
+        "text": "Audit call button on location 8170777697827184701 — 386 impressions, 0 calls over 25 days is a confirmed broken touchpoint.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Fix GBP Call Tracking Issue",
-        "monday_update": "Profile 8170777697827184701 produced 356 impressions over 25 days with zero calls recorded, giving a 0.00 call rate versus 0.009 on the sister profile. Verify the phone number is correct, the click-to-call button is active, and that GBP call tracking is properly enabled. Success is defined as at least 1 confirmed call logged within 7 days of the fix. Re-check by 2026-10-23."
+        "monday_item_name": "Fix GBP Call Button 8170777697827184701",
+        "monday_update": "Location 8170777697827184701 ('Senior Insurance Team') recorded 386 impressions across 25 days but zero calls, while the sibling profile (7384859202011040888) achieved a 0.92% call rate on 434 impressions. Audit the call button setup, phone number entry, and any GBP call tracking redirect for this profile immediately. Success is confirmed when at least 1 tracked call is logged within 7 days of the fix going live — re-check by 2026-10-24."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GBP actions — 4-day zero streak (Oct 12–15) must recover before any paid reactivation is considered.",
+        "text": "Watch GBP action recovery through Oct 20 — 6 consecutive zero-action days must reverse before any paid reactivation is evaluated.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Watch GBP Action Recovery",
-        "monday_update": "GBP actions have been zero for the last 4 consecutive days (Oct 12–15), against a prior 28-day average of ~5.9 actions/day. No paid channels are running to compensate. Monitor daily GBP actions for a return to at least 5/day over 3 consecutive days before treating organic as a reliable baseline for paid reactivation planning. Re-check 2026-10-19."
+        "monday_item_name": "Watch GBP Recovery Oct 20",
+        "monday_update": "GBP actions have been zero for 6 consecutive days (Oct 11–16), compared to a prior-period average of roughly 7–9 actions per active day. No paid spend exists to drive recovery; this is an organic profile visibility question. Monitor daily GBP action counts through Oct 20 — if the 3-day average remains at 0, escalate to a GBP profile health review. Re-check on 2026-10-20."
       }
     ],
-    "next_check": "2026-10-19"
+    "next_check": "2026-10-20"
   }
 }
