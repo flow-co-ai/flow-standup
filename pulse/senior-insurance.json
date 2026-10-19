@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-10-18T14:17:48.450Z",
-  "date": "2026-10-18",
+  "generated_at": "2026-10-19T17:20:02.907Z",
+  "date": "2026-10-19",
   "slug": "senior-insurance",
   "name": "Senior Insurance",
   "type": "leadgen",
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "GBP activity is the only measurable channel over the past 28 days, generating 162 total actions (135 directions, 22 web clicks, 5 calls) across three profiles, but GBP engagement dropped 67.35% in the last 7 days versus the prior 7 days, which is the biggest concern and likely signals reduced local search visibility or seasonal drop-off. Notably, one profile (locations/8170777697827184701) recorded 374 impressions with zero calls, flagged as an anomaly that warrants a review of the call tracking setup on that listing.",
+  "verdict": "GBP drove all measurable activity over the past 28 days with 165 total actions (8 calls, 129 directions, 28 web clicks) across 3 profiles, but call volume dropped 33% in the last 7 days versus the prior 7 days, flagged by a low call rate across all locations (highest at 0.0086). Paid channels (Meta and Google Ads) show zero spend and zero leads, meaning the account is generating no paid pipeline at this time.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,52 +25,52 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 162,
-          "calls": 5,
-          "directions": 135,
-          "web_clicks": 22,
+          "actions": 165,
+          "calls": 8,
+          "directions": 129,
+          "web_clicks": 28,
           "by_profile": [
             {
               "account_id": "locations/8170777697827184701",
               "label": "Senior Insurance Team",
-              "calls": 0,
+              "calls": 2,
               "directions": 39,
-              "web_clicks": 6,
-              "impressions": 374,
+              "web_clicks": 8,
+              "impressions": 480,
               "days_with_impressions": 25,
-              "call_rate": 0
+              "call_rate": 0.0042
             },
             {
               "account_id": "locations/7384859202011040888",
               "label": "Senior Insurance Team",
               "calls": 4,
-              "directions": 54,
-              "web_clicks": 15,
-              "impressions": 418,
-              "days_with_impressions": 23,
-              "call_rate": 0.0096
+              "directions": 51,
+              "web_clicks": 17,
+              "impressions": 464,
+              "days_with_impressions": 25,
+              "call_rate": 0.0086
             },
             {
               "account_id": "locations/7713375159367604965",
               "label": "Senior Insurance Team",
-              "calls": 1,
-              "directions": 42,
-              "web_clicks": 1,
-              "impressions": 216,
+              "calls": 2,
+              "directions": 39,
+              "web_clicks": 3,
+              "impressions": 266,
               "days_with_impressions": 25,
-              "call_rate": 0.0046
+              "call_rate": 0.0075
             }
           ]
         }
       }
     },
     "organic": {
-      "gbp_actions": 162,
+      "gbp_actions": 165,
       "ig_reach": 0
     },
     "top_campaign": null,
     "latest_day": {
-      "date": "2026-10-17",
+      "date": "2026-10-18",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -121,18 +121,17 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -67.35,
+      "gbp_7d_pct": -33.33,
       "sc_7d_pct": null,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
       "spend_per_day_7d": 0
     },
     "flags": [
-      "gbp_no_calls_with_impressions:Senior Insurance Team"
+      "gbp_low_call_rate:Senior Insurance Team"
     ],
     "series": {
       "dates": [
-        "2026-09-20",
         "2026-09-21",
         "2026-09-22",
         "2026-09-23",
@@ -159,7 +158,8 @@
         "2026-10-14",
         "2026-10-15",
         "2026-10-16",
-        "2026-10-17"
+        "2026-10-17",
+        "2026-10-18"
       ],
       "spend": [
         0,
@@ -282,7 +282,6 @@
         0
       ],
       "gbp_actions": [
-        7,
         6,
         5,
         1,
@@ -304,9 +303,10 @@
         3,
         9,
         0,
-        1,
+        3,
         4,
-        11,
+        14,
+        5,
         0,
         0,
         0
@@ -598,18 +598,18 @@
     ]
   },
   "brief": {
-    "date": "2026-10-18",
+    "date": "2026-10-19",
     "headlines": [
       {
-        "text": "Meta & Google tracking marked done this week",
+        "text": "Meta & Google tracking both marked done",
         "tone": "win"
       },
       {
-        "text": "Seminar workflows and data import completed",
+        "text": "Seminar reminders live; webhook stall resolved",
         "tone": "win"
       },
       {
-        "text": "Webhook integration still pending post-setup call",
+        "text": "Two stalled items aging with no recent comms",
         "tone": "info"
       }
     ],
@@ -634,8 +634,12 @@
             "text": "Seminar text and email reminder workflows built and launched for all three weekly events"
           },
           {
+            "state": "done",
+            "text": "Seminar 24-hour reminder marked Done on Monday"
+          },
+          {
             "state": "blocked",
-            "text": "Webhook integration still pending after setup call (awaiting next step)"
+            "text": "Seminar RSVP webhook (Monday item) — pending post-setup-call integration, no recent comms"
           }
         ],
         "owners": [
@@ -645,8 +649,8 @@
       {
         "title": "Senior Insurance - Ads",
         "badge": {
-          "label": "P2 - on track",
-          "tone": "green"
+          "label": "P1 - needs attention",
+          "tone": "amber"
         },
         "items": [
           {
@@ -656,13 +660,17 @@
           {
             "state": "done",
             "text": "Meta tracking setup marked Done on Monday"
+          },
+          {
+            "state": "next",
+            "text": "(inferred) Confirm ads can go live now that tracking is resolved"
           }
         ]
       },
       {
         "title": "Senior Insurance - Content / Video",
         "badge": {
-          "label": "P3 - on track",
+          "label": "P2 - on track",
           "tone": "green"
         },
         "items": [
@@ -679,113 +687,114 @@
     "waiting_on_client": [],
     "launch_gate": null,
     "brief_v2": {
-      "verdict": "Team's move: webhook integration loop needs resolution after the setup call.",
-      "next_move": "Ahmed Memon: follow up on Seminar RSVP webhook next step — clears the last open CRM loop.",
+      "verdict": "Team's move: tracking is done, but the RSVP webhook integration loop needs a clear owner and next step.",
+      "next_move": "Ahmed: confirm Seminar RSVP webhook integration is complete or surface the remaining blocker — closes the only open CRM loop.",
       "blocks": [
         {
-          "item": "Seminar RSVP webhook",
+          "item": "Seminar RSVP webhook (Monday item 13207292413)",
           "side": "team",
           "who": "Ahmed Memon",
-          "last_activity": "Webhook ready and tested; integration step still pending after setup call"
+          "last_activity": "Standup card flags webhook integration pending after setup call"
         }
       ],
       "snapshot": [
         {
           "label": "Open items",
-          "value": "20 open, all in working status; webhook integration the key unresolved loop",
+          "value": "20 open, all in working status; 2 stalled items flagged, no stuck count on board",
           "tone": "warn"
         },
         {
           "label": "Last client word",
-          "value": "No recent client-side comms this week",
+          "value": "No client-side comms surfaced this week",
           "tone": "muted"
         }
       ],
-      "history_line": "Meta & Google tracking done · Seminar workflows launched · Seminar data imported (136 reserved, 47 waitlist)"
+      "history_line": "Webhook + seminar data imported · Tracking setup (Google & Meta) done · Seminar reminder workflows launched"
     }
   },
   "brief_v2": {
-    "verdict": "Team's move: webhook integration loop needs resolution after the setup call.",
-    "next_move": "Ahmed Memon: follow up on Seminar RSVP webhook next step — clears the last open CRM loop.",
+    "verdict": "Team's move: tracking is done, but the RSVP webhook integration loop needs a clear owner and next step.",
+    "next_move": "Ahmed: confirm Seminar RSVP webhook integration is complete or surface the remaining blocker — closes the only open CRM loop.",
     "blocks": [
       {
-        "item": "Seminar RSVP webhook",
+        "item": "Seminar RSVP webhook (Monday item 13207292413)",
         "side": "team",
         "who": "Ahmed Memon",
-        "last_activity": "Webhook ready and tested; integration step still pending after setup call"
+        "last_activity": "Standup card flags webhook integration pending after setup call"
       }
     ],
     "snapshot": [
       {
         "label": "Open items",
-        "value": "20 open, all in working status; webhook integration the key unresolved loop",
+        "value": "20 open, all in working status; 2 stalled items flagged, no stuck count on board",
         "tone": "warn"
       },
       {
         "label": "Last client word",
-        "value": "No recent client-side comms this week",
+        "value": "No client-side comms surfaced this week",
         "tone": "muted"
       }
     ],
-    "history_line": "Meta & Google tracking done · Seminar workflows launched · Seminar data imported (136 reserved, 47 waitlist)"
+    "history_line": "Webhook + seminar data imported · Tracking setup (Google & Meta) done · Seminar reminder workflows launched"
   },
   "performance": {
-    "generated_at": "2026-10-18T14:28:01.280Z",
+    "generated_at": "2026-10-19T17:30:06.291Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "GBP-only engagement is collapsing; no paid channel is active to compensate.",
+    "verdict": "GBP is the only active channel; paid is fully dark with zero pipeline.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — Meta, Google, and Search Clicks all read $0. No paid lead generation is occurring whatsoever.",
+        "text": "Paid spend is $0 across all 28 days — Meta and Google Ads are completely inactive, producing zero leads and zero paid pipeline.",
         "confidence": "confirmed",
-        "channel": "cross-channel"
+        "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions dropped 67.35% in the last 7 days vs prior 7; last 3 days (Oct 15–17) show 0 actions each, versus 11, 4, and 1 in the prior 3 — a confirmed 3-day collapse.",
+        "text": "GBP 3-day signal (Oct 16–18) shows 0 actions on all 3 days, vs 5+4+14=23 actions in the prior 3 days (Oct 13–15) — a confirmed drop to zero.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "Profile 8170777697827184701 recorded 374 impressions but 0 calls over 28 days — call rate is 0% while the other two profiles average 0.7–1.0%. Call tracking is likely broken on this listing.",
-        "confidence": "probable",
-        "channel": "GBP"
+        "text": "GBP call volume down 33% week-over-week; highest call rate across 3 profiles is only 0.0086, indicating weak conversion from 1,210 total impressions.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GA4 sessions, IG reach, and Search Console clicks are all zero for the full 45-day series — no organic web or social signal exists to offset the paid and GBP gaps.",
+        "text": "GA4 sessions, Search Console clicks, and IG reach are all zero for the full 45-day series — no measurable organic web or social traffic exists.",
         "confidence": "confirmed",
-        "channel": "cross-channel"
+        "channel": "google_ads"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Audit and repair call tracking on GBP listing 8170777697827184701, which has 374 impressions and 0 calls recorded.",
+        "type": "watch",
+        "text": "Monitor GBP daily actions; if 0-action streak extends past Oct 22, escalate to profile audit.",
         "cites": [
+          "F2",
           "F3"
         ],
-        "monday_item_name": "Fix GBP call tracking listing",
-        "monday_update": "Profile 8170777697827184701 ('Senior Insurance Team') logged 374 impressions over 28 days with zero calls recorded, while sibling profiles show call rates of 0.46–0.96%. The likely cause is a broken or missing call tracking number on that listing. Confirm the forwarding number is live, click-to-call is enabled, and the GBP phone field matches the tracked number. Success check: at least 1 confirmed call recorded within 7 days of fix, by 2026-10-25."
+        "monday_item_name": "Watch GBP action streak",
+        "monday_update": "GBP logged 0 actions on each of the last 3 days (Oct 16–18), down from 23 actions in the prior 3-day window. Call rate is already weak at 0.0086 maximum across 3 profiles. If the zero-action streak continues through Oct 22, escalate to a full GBP profile audit (photos, categories, Q&A freshness). Re-check on Oct 22."
       },
       {
         "id": "S2",
-        "type": "watch",
-        "text": "Watch GBP actions daily; 3-day zero streak (Oct 15–17) after a 45-day active period needs a 3-day recovery signal before any other action.",
+        "type": "fix",
+        "text": "Confirm whether paid channel pause is intentional; $0 spend for 28+ days with zero documentation is an unresolved account status risk.",
         "cites": [
-          "F2"
+          "F1"
         ],
-        "monday_item_name": "Watch GBP action recovery",
-        "monday_update": "GBP actions fell 67.35% week-over-week and hit 0 for three consecutive days ending Oct 17. This could reflect a Google data reporting lag, a listing suspension, or genuine seasonal drop. No buyer action is warranted until a 3-day window shows resumed actions. Re-check on 2026-10-21; if actions remain at 0, escalate to a listing health audit."
+        "monday_item_name": "Confirm Paid Pause Status",
+        "monday_update": "Meta and Google Ads have recorded $0 spend across all 28 days in the window and all 45 days in the series — no campaigns are running. This needs a documented owner decision: either confirm the pause is intentional or identify what is blocking reactivation. Success check: a written status is logged in this item by Oct 22 so the next analysis cycle has context."
       }
     ],
-    "next_check": "2026-10-21"
+    "next_check": "2026-10-22"
   }
 }
