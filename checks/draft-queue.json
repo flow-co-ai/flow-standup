@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-20T19:00:59.944581+00:00",
+  "updatedAt": "2026-10-21T19:14:17.150383+00:00",
   "items": [
     {
       "id": "qualityhvac-burr-ridge-gbp-move",
@@ -23,7 +23,7 @@
       },
       "nullReason": null,
       "priority": 1,
-      "verifiedAt": "2026-10-20T19:00:52.180479+00:00",
+      "verifiedAt": "2026-10-21T19:14:10.021612+00:00",
       "completionEvidence": null,
       "updatedAt": "2026-10-20T19:00:52.180490+00:00",
       "createdAt": "2026-10-07T20:30:48.868496+00:00"
@@ -282,6 +282,129 @@
       "verifiedAt": "2026-10-13T20:36:31.946328+00:00",
       "completionEvidence": null,
       "createdAt": "2026-10-13T20:36:32.192697+00:00"
+    },
+    {
+      "id": "medstation-clinic-rollout",
+      "title": "Clinic GHL Rollout",
+      "note": "From the 10/20 Medstation GHL Ramp up call. Commercials are NOT in the body: the two recordings of the same call disagree ($1,750 monthly vs $350 monthly per clinic; Flow Sync the same day cites a 2,500 monthly proposal for five GHLs), and the $1,000 accelerated build bonus is still under discussion. Confirm terms with Sohib before firing if that matters to the build start.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Medstation GHL Ramp up, 10/20",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm512p9w",
+        "itemName": "Clinic GHL Rollout",
+        "updateBody": "<p>Salam,</p><ul><li>10/20 ramp up call: every <strong>active</strong> MedStation clinic moves onto GHL before year end, using the Weston account as the template. Inactive clinics are excluded.</li><li><strong>Before cloning</strong>, close out the Weston pieces the template depends on: Lead Escalation Workflows (still For Review) and NextGen Patient ID Mapping (still Reopened). Validate NextGen API access for the other clinics, and add a <strong>Spanish messaging branch</strong> to the Weston flows so every clone inherits it.</li><li><strong>Build order</strong>: the two lower volume clinics first, then the busier ones. Per clinic: its own WhatsApp number, tracking, dashboard, NextGen integration, pipelines and workflows cloned from Weston.</li><li><strong>Target</strong>: builds done <strong>December 18 to 24</strong>; staff training starts early January and may run to mid January.</li><li>Waiting on MedStation via Sohib: clinic details, historical patient lists, WhatsApp number verification and Meta messaging limits, and a named MedStation representative. Do not start a clinic before its details are in.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "verifiedAt": "2026-10-21T19:14:10.021171+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-10-21T19:14:17.150344+00:00"
+    },
+    {
+      "id": "medstation-lead-reactivation",
+      "title": "Lead Reactivation",
+      "note": "From the 10/20 Medstation GHL Ramp up call. Weston account, separate from the multi clinic rollout card. The 45 day trigger matches the 8/25 decision.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Medstation GHL Ramp up, 10/20",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm512p9w",
+        "itemName": "Lead Reactivation",
+        "updateBody": "<p>Salam,</p><ul><li>10/20 ramp up call: two recovery pieces on the live <strong>Weston</strong> account.</li><li><strong>Enable the reactivation workflow</strong> for patients whose last visit was more than <strong>45 days</strong> ago, with its own reactivation pipeline so those contacts are tracked apart from new leads.</li><li><strong>Build an engaged lead follow up</strong> for the <strong>98 leads</strong> who replied but never booked: a short sequence pushing them to book, enrolled from the existing list rather than only new contacts.</li><li>Constraint: check against the Neuryn reminders (Neuryn Message Consolidation is still Stuck) so patients do not get messages from both systems at once.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "verifiedAt": "2026-10-21T19:14:10.021246+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-10-21T19:14:17.150344+00:00"
+    },
+    {
+      "id": "medstation-gbp-categories",
+      "title": "GBP Categories",
+      "note": "From the 10/20 Flow Sync 2.0 and Web/SEO team coordination calls.",
+      "status": "ready",
+      "board": "Web + SEO",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Web/SEO team coordination, 10/20 + Meeting: Flow Sync 2.0, 10/20",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12545614773",
+        "itemName": "GBP Categories",
+        "updateBody": "<p>Salam,</p><ul><li>New on 10/20: GBP fixes apply to <strong>all MedStation locations</strong>, not only Weston. The primary category was called out as the easiest open improvement.</li><li><strong>Correct the categories</strong> on every location profile, then <strong>schedule recurring posts</strong> for each location under the Posting subitem.</li><li>Photos: Sohib is collecting each clinic's image folder from MedStation; use Weston's existing shoot until the others arrive.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 3,
+      "verifiedAt": "2026-10-21T19:14:10.021287+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-10-21T19:14:17.150344+00:00"
+    },
+    {
+      "id": "seniorinsurance-gbp-enrollment",
+      "title": "GBP Before Enrollment",
+      "note": "From the 10/20 Web/SEO team coordination call. The call also said to remove the outdated version of the Senior Insurance website, but gave no detail on which version or where; left out of this card (see run summary).",
+      "status": "ready",
+      "board": "Web + SEO",
+      "group": "Senior Insurance",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Web/SEO team coordination, 10/20",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "13185930393",
+        "itemName": "GBP Before Enrollment",
+        "updateBody": "<p>Salam,</p><ul><li>New on 10/20: this is now <strong>urgent</strong>. Medicare enrollment season is open and runs to mid December, so the profiles need to be done while it is running.</li><li><strong>Finish all three profiles first</strong>: categories, hours, service areas, shoot photos, Q&amp;A, then start the weekly posts. This item has had no update since 10/1.</li><li>Put this <strong>ahead of the Web Redesign</strong>; the site rebuild can follow.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "verifiedAt": "2026-10-21T19:14:10.021325+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-10-21T19:14:17.150344+00:00"
+    },
+    {
+      "id": "flowco-onboarding-intake",
+      "title": "Onboarding Intake",
+      "note": "Raised on both 10/20 calls (Flow Sync 2.0 and Web/SEO team coordination). Sohib owns the form and briefs; the transcript gives the master sheet to \"Admin Control\"/Nasir, who is not a Monday user mapped to any board, so Naz is tagged as the operational owner. Re-route if Admin Control is a different team.",
+      "status": "ready",
+      "board": "Web + SEO",
+      "group": "Flow Company",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Flow Sync 2.0, 10/20 + Meeting: Web/SEO team coordination, 10/20",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18099807701",
+        "groupId": "group_mkwjem1v",
+        "itemName": "Onboarding Intake",
+        "updateBody": "<p>Salam,</p><ul><li>10/20 internal calls: the main build work is fast, launches slip on onboarding, missing access and handoffs. Target is a client live in <strong>12 to 13 days</strong>.</li><li><strong>Build one onboarding questionnaire</strong> (about 15 minutes, sent before the onboarding call) covering web, SEO, CRM, ads, content, access and locations.</li><li><strong>Create one master client sheet</strong>: a row per client with access status, call recording links, content folders and key details, editable by every team.</li><li>From it, a <strong>short brief per department</strong> (web, SEO, ads, CRM) with locations, services and priorities.</li><li>Done when the next new client is onboarded through the questionnaire and appears in the master sheet before the kickoff call.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a> <a class=\"mention\" data-mention-id=\"70062990\" data-mention-type=\"User\">@Nacer Amrouch</a></p>",
+        "blocked": false,
+        "needsNaz": true
+      },
+      "nullReason": null,
+      "priority": 2,
+      "verifiedAt": "2026-10-21T19:14:10.021381+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-10-21T19:14:17.150344+00:00"
     }
   ]
 }
