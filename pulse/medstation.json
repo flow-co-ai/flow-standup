@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-10-26T11:39:32.639Z",
+  "generated_at": "2026-10-26T17:06:58.441Z",
   "date": "2026-10-26",
   "slug": "medstation",
   "name": "MedStation",
   "type": "leadgen",
   "window_days": 28,
-  "score": 90,
+  "score": 100,
   "status": "green",
-  "verdict": "Leads surged 87.5% week-over-week while CPL dropped 43.63%, pointing to a strong efficiency gain driven almost entirely by the top Meta campaign \"MDST-WES-AWARE-WHTAPP\" ($1,332.28 of $1,343.02 total spend), which delivered 101 leads at a $13.30 CPL over 28 days. GBP actions dipped 34.09% week-over-week, worth monitoring to ensure offline demand is keeping pace with the paid lead volume.",
+  "verdict": "The standout movement is a 87.5% surge in leads over the last 7 days alongside a 43.63% drop in CPL, likely driven by improved audience resonance or delivery efficiency within the top Meta campaign \"MDST-WES-AWARE-WHTAPP,\" which accounts for nearly all 28-day spend at $1,332.28 of $1,343.02. GBP actions dipped 25% week-over-week, worth monitoring to ensure offline demand is keeping pace with the paid lead volume.",
   "windsor": {
     "totals": {
       "spend": 1343.02,
@@ -25,27 +25,27 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 138,
-          "calls": 14,
+          "actions": 142,
+          "calls": 18,
           "directions": 96,
           "web_clicks": 28,
           "by_profile": [
             {
               "account_id": "locations/301736109571843428",
               "label": "MedStation Weston",
-              "calls": 14,
+              "calls": 18,
               "directions": 96,
               "web_clicks": 28,
-              "impressions": 1204,
+              "impressions": 1209,
               "days_with_impressions": 26,
-              "call_rate": 0.0116
+              "call_rate": 0.0149
             }
           ]
         }
       }
     },
     "organic": {
-      "gbp_actions": 138,
+      "gbp_actions": 142,
       "ig_reach": 0
     },
     "top_campaign": {
@@ -95,7 +95,7 @@
       "cpl_7d_pct": -43.63,
       "meta_leads_7d_pct": 87.5,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -34.09,
+      "gbp_7d_pct": -25,
       "sc_7d_pct": null,
       "ga4_7d_pct": 1.01,
       "ig_7d_pct": null,
@@ -279,7 +279,7 @@
         5,
         8,
         5,
-        2,
+        6,
         0,
         0
       ],
@@ -721,79 +721,79 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-10-26T11:48:52.055Z",
+    "generated_at": "2026-10-26T17:11:43.722Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Campaigns efficient but 10 overdue SOW milestones block every downstream channel.",
+    "verdict": "Score is green but 10 overdue SOW milestones mean nothing is truly live yet.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "5 milestones due 2026-07-31 undelivered: stack test, GHL migration, GBP triage, Meta CAPI, and landing pages — all 87+ days overdue; attribution is blind.",
+        "text": "10 SOW milestones overdue since Jul–Sep 2026: stack test, GHL migration, Meta CAPI, landing pages, search campaigns, LSA, nurture sequences, and Phase 1 close — none completed.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
-        "priority": 2,
-        "text": "5 more milestones due Aug 31–Sep 30 undelivered: Meta lanes, Search campaigns, LSA, nurture sequences, and Phase 1 close — engagement is past its end-date.",
-        "confidence": "confirmed",
-        "channel": "SOW"
+        "priority": 1,
+        "text": "CPL dropped 43.63% week-over-week to ~$13.30 on nearly flat spend (+5.7%); 3-day lead sum (Oct 23–25: 3+6+0=9) vs prior 3 (Oct 20–22: 2+5+6=13) shows the surge is softening.",
+        "confidence": "probable",
+        "channel": "meta"
       },
       {
         "id": "F3",
-        "priority": 1,
-        "text": "Meta CPL hit $13.30 over 28 days on $1,343.02 spend; 3-day signal (Oct 23–25) shows 9 leads at avg $49/day vs prior 3-day (Oct 20–22) 13 leads at avg $48/day — roughly flat, not yet decaying.",
-        "confidence": "confirmed",
+        "priority": 2,
+        "text": "Oct 25 logged 0 leads on $40.68 spend; single-day noise, but 3-day signal (9 leads) trails the mid-Oct peak window (Oct 10–12: 20 leads in 3 days) materially.",
+        "confidence": "probable",
         "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Oct 25 logged 0 leads on $40.68 spend; single-day drop after 3-lead day Oct 24 — noise, but worth flagging as MDST-WES-AWARE-WHTAPP runs with no creative variation observed.",
-        "confidence": "hypothesis",
-        "channel": "meta"
+        "text": "GBP actions fell 25% week-over-week; last 2 days in series show 0 actions each, while paid leads are rising — offline demand not tracking paid momentum.",
+        "confidence": "probable",
+        "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GBP actions fell 34.09% week-over-week; last 2 days in series show 0 GBP actions while paid leads continue — offline demand not keeping pace with paid volume.",
-        "confidence": "probable",
-        "channel": "gbp"
+        "text": "GA4 conversions = 0 across all 28 days and 1,901 sessions; no landing page or tracking is live per SOW, so lead volume is unverifiable at the web layer.",
+        "confidence": "confirmed",
+        "channel": "web"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate all 10 overdue SOW milestones to Nacer and Sohib; block any budget increase until stack test confirms attribution.",
+        "text": "Escalate all 10 overdue SOW milestones to Nacer and Sohib; no paid scale is defensible until stack test and tracking are live.",
         "cites": [
           "F1",
-          "F2"
+          "F5"
         ],
-        "monday_item_name": "Escalate 10 overdue SOW milestones",
-        "monday_update": "All 10 SOW milestones from July 31 through September 30 are undelivered as of October 26, 2026. Tag Nacer (Ops) and Sohib (Account) to triage blockers, starting with the end-to-end stack test and GHL migration, since every other milestone depends on those. Success is confirmed when the stack test shows a tracked touch flowing from each channel into GHL and appearing in reporting. Target resolution no later than 2026-11-03 for the two hardest blockers."
+        "monday_item_name": "Escalate 10 Overdue Milestones",
+        "monday_update": "10 SOW milestones are overdue, the earliest since 2026-07-31, including the pre-launch stack test, GHL migration, Meta CAPI, landing pages, and search campaigns. With GA4 conversions at 0 across 1,901 sessions and no tracking confirmed live, lead volume cannot be validated end-to-end. Success is defined as Nacer confirming a written completion date for each item by 2026-10-30. No paid budget increases should be approved until at least the stack test and landing page tracking items are closed."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch Meta CPL daily: 3-day signal is flat at ~$13–14 CPL; re-check Oct 29 before any budget move.",
+        "text": "Watch Meta CPL and daily lead rate through Oct 29; 3-day signal (9 leads) is softening from the Oct 10–12 peak of 20 leads.",
         "cites": [
-          "F3",
-          "F4"
+          "F2",
+          "F3"
         ],
-        "monday_item_name": "Watch Meta CPL Oct 29",
-        "monday_update": "The 3-day window (Oct 23–25) shows 9 leads at roughly $49/day spend, consistent with the 28-day $13.30 CPL — no decay confirmed yet. October 25 logged 0 leads, which is a single-day data point and currently noise. Re-check on October 29; if CPL climbs above $20 for 3 consecutive days, flag for creative refresh on MDST-WES-AWARE-WHTAPP."
+        "monday_item_name": "Watch Meta Lead Rate",
+        "monday_update": "The 7-day CPL improvement of -43.63% is real, but the 3-day lead count (Oct 23–25) of 9 trails the prior peak 3-day window (Oct 10–12) of 20 leads at similar spend levels. Oct 25 returned 0 leads on $40.68 spend. Re-check on 2026-10-29: if the 3-day lead sum is below 8 or CPL climbs above $18, flag for creative review of MDST-WES-AWARE-WHTAPP."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions: 0 actions for 2 consecutive days; confirm GBP profile health before attributing to offline demand drop.",
+        "text": "Watch GBP actions weekly; 2 consecutive zero-action days with paid leads rising signals an offline intake gap, not an ads problem.",
         "cites": [
-          "F5"
+          "F4"
         ],
-        "monday_item_name": "Watch GBP actions Oct 29",
-        "monday_update": "GBP actions are down 34.09% week-over-week and hit 0 for the last 2 days in the series (Oct 24–25). The GBP triage milestone is itself overdue (F1), so profile completeness and posting cadence may be the cause rather than reduced demand. Check GBP profile status and confirm no suppression or suspension by October 29; if actions remain at 0 for 3 days total, treat as a confirmed profile issue and escalate to Nacer."
+        "monday_item_name": "Watch GBP Offline Demand",
+        "monday_update": "GBP actions dropped 25% week-over-week and the last 2 days in the series logged 0 actions each, while Meta leads are up 87.5% in the same window. This pattern suggests the offline intake pathway (calls, directions) is not converting the paid lead volume — this is an intake gap, not an ads problem. Re-check on 2026-10-29: if GBP actions remain below 3/day for the next 3 days, escalate to Nacer for intake team review."
       }
     ],
     "next_check": "2026-10-29"
