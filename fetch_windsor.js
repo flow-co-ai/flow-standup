@@ -97,7 +97,7 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}, days = 28
   const { dateFrom, dateTo } = windowDates(days);
 
   // Fetch all six connectors in parallel.
-  const [metaRows, gadsRows, ga4Rows, igRows, scRows, gmbRows] = await Promise.all([
+  const [metaRows, gadsRowsRaw, ga4Rows, igRows, scRows, gmbRows] = await Promise.all([
     safeFetch('facebook', [
       'date_start', 'account_id', 'campaign_name',
       'spend', 'clicks', 'impressions', 'reach', 'actions_lead',
@@ -134,6 +134,14 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}, days = 28
       ], [acc], dateFrom, dateTo, apiKey, null).then((rows) => rows.map((r) => ({ ...r, account_id: r.account_id || acc })))
     )).then((lists) => lists.flat()),
   ]);
+
+  // Optional campaign filter for shared ad accounts (e.g. a franchise account
+  // where only some locations are ours). Case-insensitive "name contains" match.
+  // No google_ads_campaigns in clients.json = keep every campaign, as before.
+  const campaignWords = (windsorCfg.google_ads_campaigns || []).map(w => w.toLowerCase());
+  const gadsRows = campaignWords.length
+    ? gadsRowsRaw.filter(r => campaignWords.some(w => (r['campaign.name'] || '').toLowerCase().includes(w)))
+    : gadsRowsRaw;
 
   // ── 28-day paid totals ──────────────────────────────────────────────────────
 
