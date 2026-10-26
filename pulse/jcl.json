@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-26T17:05:46.327Z",
+  "generated_at": "2026-10-26T18:14:03.754Z",
   "date": "2026-10-26",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -711,43 +711,43 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-10-26T17:08:46.867Z",
+    "generated_at": "2026-10-26T18:17:35.127Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "CPL rising on fatigue, but intake pipeline is the deeper leak.",
+    "verdict": "CPL rising on single campaign; 6 overdue SOW blockers compound paid risk.",
     "findings": [
       {
         "id": "F1",
-        "priority": 1,
-        "text": "CPL rose 17.98% week-over-week while spend held flat (-0.79%), confirming efficiency erosion — not a budget cut — on a single campaign carrying all $2,126.68.",
+        "priority": 2,
+        "text": "3 critical SOW blockers overdue since Aug 31: extension unsigned, SMS automation offline, Zoho Voice access not granted — engagement is month-to-month with no contract.",
         "confidence": "confirmed",
-        "channel": "Meta"
+        "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3-day lead signal (Oct 23–25: 6+8+4=18) vs prior 3 days (Oct 20–22: 5+5+3=13) is marginally up, but both windows sit well below early-series peaks of 12/day — sustained underperformance, not a new crash.",
+        "text": "3 further SOW milestones overdue since Sep 30: retargeting seed upload, GBP cadence, and case tracking/GHL auto-logging — all undelivered per milestone log.",
         "confidence": "confirmed",
-        "channel": "Meta"
+        "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "⛔ Extension with Marwan unsigned since 2026-08-31 — engagement is month-to-month lapsed; all 28-day spend of $2,126.68 runs without a contracted scope.",
-        "confidence": "confirmed",
-        "channel": "SOW"
+        "priority": 1,
+        "text": "CPL rose 17.98% week-over-week; 3-day leads (Oct 23–25): 6+8+4=18 vs prior 3-day (Oct 20–22): 5+5+3=13 — recovery attempt but CPL $12.15 still elevated vs July low of ~$9–$11/lead.",
+        "confidence": "probable",
+        "channel": "Meta"
       },
       {
         "id": "F4",
-        "priority": 2,
-        "text": "⛔ SMS automation, Zoho Voice access, retargeting seed audience, GBP cadence, and case tracking all overdue (earliest: 2026-08-31); 5 milestones undelivered gates contact-rate recovery.",
+        "priority": 3,
+        "text": "GBP actions zero for Oct 24–25 (2 consecutive days) after -38.75% 7d decline; organic demand signal is falling independently of paid, not reinforcing it.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "GBP"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 148 contacts but 0 opportunities created and 0 appointments in 28 days — 175 Meta leads are arriving but generating no pipeline, indicating an intake/CRM logging failure, not an ads problem.",
+        "text": "GHL shows 148 contacts but 0 opportunities created and 0 appointments in 28 days — leads arriving but not entering pipeline, indicating an intake leak, not an ads problem.",
         "confidence": "confirmed",
         "channel": "CRM"
       }
@@ -755,36 +755,33 @@
     "suggestions": [
       {
         "id": "S1",
-        "type": "creative_refresh",
-        "text": "Introduce at least 1 new video creative into 'Leads - August Re-Launch' to counter rising CPL (+17.98%) without pausing spend.",
+        "type": "fix",
+        "text": "Fix GHL intake: 148 contacts with 0 opportunities is a confirmed pipeline leak — route contacts to opportunity stage immediately.",
         "cites": [
-          "F1",
-          "F2"
+          "F5"
         ],
-        "monday_item_name": "JCL Meta Creative Refresh",
-        "monday_update": "CPL climbed 17.98% week-over-week while spend on 'Leads - August Re-Launch' held steady at ~$75/day, pointing to creative fatigue as the primary efficiency drag. Launch at least one new 9:16 video variant (Marwan/Rocco on-camera or a new general CROA concept) into the active campaign alongside existing creatives. Success check: CPL returns below the 28-day average of $12.15 within 7 days of new creative going live. Re-check by 2026-11-02."
+        "monday_item_name": "Fix GHL Intake Pipeline Leak",
+        "monday_update": "GHL shows 148 contacts in the 28-day window with zero opportunities created and zero appointments logged — leads are arriving but not entering the pipeline. Coordinate with Andrew to confirm the Zoho/GHL handoff rule and manually audit the last 20 contacts to identify where the drop-off occurs. Success is confirmed when new contacts produce at least 1 opportunity creation event within 48 hours of intake. Re-check by 2026-10-29."
       },
       {
         "id": "S2",
-        "type": "fix",
-        "text": "Repair GHL intake: 148 contacts, 0 opportunities — leads are arriving but CRM pipeline is completely dark; fix logging before any scale.",
+        "type": "watch",
+        "text": "Watch Meta CPL for 3 more days; if CPL holds above 28-day baseline of $12.15, trigger creative refresh on 'Leads - August Re-Launch'.",
         "cites": [
-          "F5"
+          "F3"
         ],
-        "monday_item_name": "GHL Pipeline Intake Fix",
-        "monday_update": "GHL recorded 148 contacts against 175 Meta leads in 28 days, yet shows 0 opportunities created and 0 appointments — the lead-to-pipeline conversion is entirely broken at the intake stage. Audit the GHL workflow that should auto-create opportunities on lead form submission and confirm Andrew's intake process is logging to Zoho correctly. Success check: at least 50% of new leads appear as GHL opportunities within 48 hours of the fix. Verify by 2026-10-30."
+        "monday_item_name": "Watch Meta CPL 3-Day Signal",
+        "monday_update": "The 7-day CPL rose 17.98% to an implied rate above the 28-day average of $12.15, but the last 3-day lead count (18) is recovering versus the prior 3-day window (13). Hold spend at the current ~$75/day pace and monitor CPL daily. If CPL does not return toward the $12 range by Oct 29, escalate to a creative refresh on the sole active campaign 'Leads - August Re-Launch'. Re-check 2026-10-29."
       },
       {
         "id": "S3",
-        "type": "watch",
-        "text": "Watch 3-day lead trend through 2026-10-29; do not scale budget until CPL stabilises and intake pipeline (0 opps) is repaired.",
+        "type": "fix",
+        "text": "Escalate unsigned extension with Marwan; without contract, any budget scale or new creative investment is unscoped and unprotected.",
         "cites": [
-          "F1",
-          "F2",
-          "F5"
+          "F1"
         ],
-        "monday_item_name": "JCL Lead Trend Watch",
-        "monday_update": "The 3-day lead window (Oct 23–25, 18 leads) is marginally above the prior 3 days (13 leads) but CPL remains elevated at +17.98% and GHL shows 0 pipeline created from 175 leads. Scaling spend before the intake leak is fixed would waste dollars — hold current ~$75/day and monitor. Re-check on 2026-10-29: if CPL holds flat or falls and GHL opportunities begin populating, escalate to a scale suggestion."
+        "monday_item_name": "Escalate Marwan Extension Sign-Off",
+        "monday_update": "The engagement extension with Marwan has been overdue since Aug 31 and the account is running month-to-month with no signed contract. Sohib to send a follow-up with a deadline of Oct 30 for signature or a formal decision. Success is a countersigned extension or a documented client decision. All budget and creative decisions beyond maintenance level are gated on this. Re-check 2026-10-30."
       }
     ],
     "next_check": "2026-10-29"

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-26T17:06:08.810Z",
+  "generated_at": "2026-10-26T18:14:13.844Z",
   "date": "2026-10-26",
   "slug": "liferun",
   "name": "Liferun",
@@ -704,79 +704,78 @@
     "history_line": null
   },
   "performance": {
-    "generated_at": "2026-10-26T17:09:12.146Z",
+    "generated_at": "2026-10-26T18:17:57.099Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "No paid spend is live; organic GBP pipeline is the only money signal.",
+    "verdict": "No paid spend active; organic-only pipeline cannot sustain growth without ads live.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — Meta $0, Google $0. No CPL exists because no paid campaign is active.",
+        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google. No CPL exists because no paid lead acquisition is running.",
         "confidence": "confirmed",
-        "channel": "paid"
+        "channel": "cross-channel"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "8 overdue SOW milestones (oldest: Jul 20) unresolved: Stripe QA, GHL build gaps, Becklar/BWS money-path verification, Offline Conversion Import, CAPI, landing pages, and UGC batch all past due.",
+        "text": "8 overdue SOW milestones (oldest: Jul 20) including CAPI, Offline Conversion Import, and Paid Landing Pages — blocking any ad relaunch.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GBP: 105 impressions and 81 directions over 25 active days produced 0 calls — call_rate is 0% across the full 28-day window.",
+        "text": "GBP directions fell 64% week-over-week; 105 impressions over 25 days produced 0 calls and 0 web clicks — zero conversion from profile traffic.",
         "confidence": "confirmed",
         "channel": "GBP"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP directions dropped 64% week-over-week; last 3 days (Oct 23–25) show 0, 0, 0 actions vs prior 3 days (Oct 20–22) averaging 2 — momentum gone.",
-        "confidence": "confirmed",
-        "channel": "GBP"
+        "text": "GA4 sessions trending down: last 3 days avg 15.7 vs prior 3 days avg 20.7 — a -24% organic traffic signal with no paid support.",
+        "confidence": "probable",
+        "channel": "GA4"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GA4 sessions last 3 days avg 15.7 vs prior 3-day avg 20.3 — a mild downtrend, but with 0 GA4 conversions across all 28 days, traffic is not converting to pipeline.",
-        "confidence": "probable",
-        "channel": "GA4"
+        "text": "GHL shows 6 contacts and 3 opportunities created with 0 appointments and $0 pipeline value — intake flow active but producing no booked calls.",
+        "confidence": "confirmed",
+        "channel": "GHL"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Unblock paid launch: complete Offline Conversion Import and CAPI before any budget goes live to protect attribution.",
+        "text": "Clear the 3 launch-blocking SOW milestones (CAPI, Offline Conversion, Paid Landing Pages) before any budget is activated.",
         "cites": [
-          "F1",
-          "F2"
+          "F2",
+          "F1"
         ],
-        "monday_item_name": "Fix tracking before paid launch",
-        "monday_update": "Paid spend is $0 across 28 days and 8 SOW milestones are overdue, including Offline Conversion Import (due Sep 30) and CAPI (due Sep 30). No budget should be activated until these two tracking foundations are live, or every dollar spent will be invisible to optimisation. Success check: Offline Conversion Import confirmed pulling data in Google Ads and CAPI event match rate >80% in Meta Events Manager — verify by 2026-11-02."
+        "monday_item_name": "Clear Ad Launch Blockers",
+        "monday_update": "Paid ads cannot relaunch without CAPI live, Offline Conversion Import active, and Paid Landing Pages built — all overdue since Aug–Sep 2026. Assign owners this week for each of the 3 blocker items. Success is confirmed when all 3 show a verified completion event in Monday before any spend is switched on. Target: resolved by 2026-11-03."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Verify Becklar billing drop and BWS duplicate paths — both money-path milestones are overdue since Sep 30.",
+        "text": "Audit GBP call button and phone number placement; 105 impressions with 0 calls over 25 days is a profile setup failure.",
         "cites": [
-          "F2"
+          "F3"
         ],
-        "monday_item_name": "Verify Becklar + BWS paths",
-        "monday_update": "Money-path verification (Becklar billing drop and BWS duplicate check) was due Sep 30 and remains unconfirmed. Run one dummy deactivation in Becklar and one live order through each intake path, then confirm exactly one opportunity per order, fully field-mapped, and that the next Becklar invoice reflects the deactivation. Success check: both tests pass with documented screenshots — target completion 2026-11-02."
+        "monday_item_name": "Fix GBP Call Button",
+        "monday_update": "The Liferun GBP profile generated 105 impressions and 81 direction actions over 28 days but received exactly 0 calls. Check that the primary phone number is correct, the call button is enabled, and compliance rules (prominent phone, plain language) are met. Success check: at least 1 call recorded in GBP within 7 days of the fix. Re-verify by 2026-11-03."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP call rate: 0 calls from 105 impressions over 28 days — re-check after CTA and phone-number prominence review.",
+        "text": "Watch GA4 sessions; if 3-day avg stays below 16 by Nov 2, organic floor is eroding ahead of paid relaunch.",
         "cites": [
-          "F3",
           "F4"
         ],
-        "monday_item_name": "Watch GBP call rate",
-        "monday_update": "The Liferun GBP profile generated 105 impressions and 81 directions over 28 days but zero calls, and directions dropped 64% week-over-week. The likely cause is that the phone number or call CTA is not prominent enough on the profile for a senior-targeted audience. Review the GBP listing for phone-number visibility and plain-language CTA compliance per SOW compliance rules. Re-check call count on 2026-11-02 — success is at least 1 confirmed call in the next 7-day window."
+        "monday_item_name": "Watch GA4 Session Floor",
+        "monday_update": "GA4 sessions averaged 15.7 over the last 3 days vs 20.7 the prior 3 days — a 24% drop with no paid traffic running. No action yet, but if the 3-day average remains below 16 on the next check date, investigate landing page or indexing issues before relaunching ads. Re-check on 2026-11-02."
       }
     ],
     "next_check": "2026-11-02"

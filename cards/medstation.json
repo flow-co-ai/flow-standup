@@ -1,7 +1,7 @@
 {
   "slug": "medstation",
   "name": "MedStation",
-  "generated_at": "2026-10-26T17:13:07.601Z",
+  "generated_at": "2026-10-26T18:22:22.370Z",
   "contract": {
     "start": "2026-07-01",
     "end": "2026-09-30",
@@ -18,15 +18,18 @@
   "status": "critical",
   "lanes": {
     "organic": {
-      "state": "green",
-      "headline": "18 calls · 28d",
-      "sentence": "MedStation Weston took 18 calls on 1209 impressions.",
+      "state": "amber",
+      "headline": "3 of 5 profiles active · 28d",
+      "sentence": "MedStation Weston took 18 calls on 1209 impressions; MedStation Dr Phillips took 79 calls on 687 impressions.",
       "basis": {
         "type": "observed",
         "source": "Windsor GBP",
         "window": "28d"
       },
-      "flags": [],
+      "flags": [
+        "gbp_low_call_rate:MedStation Weston",
+        "gbp_low_call_rate:MedStation Dr Phillips"
+      ],
       "detail": {
         "profiles": [
           {
@@ -38,17 +41,70 @@
             "impressions": 1209,
             "days_with_impressions": 26,
             "call_rate": 0.0149
+          },
+          {
+            "account_id": "locations/13946263154604534400",
+            "label": "MedStation Pompano",
+            "calls": 340,
+            "directions": 214,
+            "web_clicks": 146,
+            "impressions": 1364,
+            "days_with_impressions": 26,
+            "call_rate": 0.2493
+          },
+          {
+            "account_id": "locations/16546221356681683409",
+            "label": "MedStation Dr Phillips",
+            "calls": 79,
+            "directions": 58,
+            "web_clicks": 64,
+            "impressions": 687,
+            "days_with_impressions": 26,
+            "call_rate": 0.115
+          },
+          {
+            "account_id": "locations/2629427868288778087",
+            "label": "MedStation Boca Raton",
+            "calls": 66,
+            "directions": 85,
+            "web_clicks": 30,
+            "impressions": 326,
+            "days_with_impressions": 26,
+            "call_rate": 0.2025
+          },
+          {
+            "account_id": "locations/4863923654082291864",
+            "label": "MedStation Coconut Creek",
+            "calls": 191,
+            "directions": 123,
+            "web_clicks": 47,
+            "impressions": 588,
+            "days_with_impressions": 26,
+            "call_rate": 0.3248
           }
         ],
-        "flagged_profiles": [],
-        "total_calls": 18,
-        "total_profiles": 1
+        "flagged_profiles": [
+          {
+            "label": "MedStation Weston",
+            "flags": [
+              "gbp_low_call_rate"
+            ]
+          },
+          {
+            "label": "MedStation Dr Phillips",
+            "flags": [
+              "gbp_low_call_rate"
+            ]
+          }
+        ],
+        "total_calls": 694,
+        "total_profiles": 5
       }
     },
     "paid": {
       "state": "green",
-      "headline": "$696 · 46 conversations · $15 per conversation · 14d",
-      "sentence": "Meta $695.85 spend, 46 conversations.",
+      "headline": "$925 · 46 conversations · $20 per conversation · 14d",
+      "sentence": "Meta $695.85 spend, 46 conversations; Google Ads $228.91 spend.",
       "basis": {
         "type": "observed",
         "source": "Windsor Paid",
@@ -61,8 +117,12 @@
           "leads": 101,
           "clicks": 989
         },
-        "google_ads": null,
-        "total_spend": 1343.02,
+        "google_ads": {
+          "spend": 480.74,
+          "convs": 86,
+          "clicks": 343
+        },
+        "total_spend": 1823.76,
         "reconciliation": null
       }
     },
@@ -97,7 +157,9 @@
           "abandoned": 10,
           "stale_over_24h": 21
         },
-        "ghl": null
+        "ghl": {
+          "error": "GHL 401: {\"statusCode\":401,\"message\":\"Invalid JWT\"}"
+        }
       }
     }
   },
@@ -121,6 +183,16 @@
         "type": "observed",
         "source": "timeline/plan",
         "window": "engagement"
+      }
+    },
+    {
+      "text": "GBP issue (amber): MedStation Weston, MedStation Dr Phillips.",
+      "severity": "medium",
+      "age_days": null,
+      "basis": {
+        "type": "observed",
+        "source": "Windsor GBP",
+        "window": "28d"
       }
     }
   ],

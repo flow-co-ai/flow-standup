@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-26T17:06:26.721Z",
+  "generated_at": "2026-10-26T18:14:27.527Z",
   "date": "2026-10-26",
   "slug": "steel-forte",
   "name": "Forte Precision Metals",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Google Business Profile was the only active channel over the past 28 days, generating 109 total actions (7 calls, 75 directions, 27 web clicks) across 26 days with impressions, but momentum is softening with GBP actions down 18.52% and Search Console clicks down 20% week over week, likely driven by seasonal slowdown or reduced search demand. Paid channels (Meta and Google Ads) show zero spend and zero leads, so all engagement is currently organic.",
+  "verdict": "Google Business Profile was the only active channel over the past 28 days, generating 109 total actions (7 calls, 75 directions, 27 web clicks) across 26 days with impressions, but momentum is softening with GBP actions down 18.52% and Search Console clicks down 20% week over week, likely reflecting seasonal slowdown or reduced search demand. Paid channels (Meta and Google Ads) show zero spend and zero leads, so all engagement is currently organic.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -567,77 +567,77 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-10-26T17:10:07.190Z",
+    "generated_at": "2026-10-26T18:18:45.692Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Organic-only signal softening; 8 overdue SOW milestones demand immediate escalation.",
+    "verdict": "Organic-only; GBP softening and 8 SOW blockers demand immediate CRM/outreach action.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "5 CRM milestones overdue since Jul 7–Sep 30: 342 stub reconciliation and Sales-i parser both flagged blockers, unresolved for 55+ days.",
+        "text": "CRM blocker: 342 stub accounts unreconciled since Aug 31 — Sales-i sync delivers nothing to these accounts until fixed.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3 outreach/web milestones overdue since Aug 31–Sep 30: AGS+Forte contact pull, lapsed sequences, and root-cause fix all undelivered.",
+        "text": "Sales-i → Sugar parser and Jorge 'Quote Ordered = True' bug both overdue since Sep 30; 2 pipeline blockers unresolved for 26+ days.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 3,
-        "text": "GBP actions are the sole active channel; last 3 days (Oct 23–25) show 4 total actions vs 16 in prior 3 days (Oct 20–22) — a 75% drop.",
+        "priority": 2,
+        "text": "Outreach blockers: AGS + Forte contact pull and lapsed sequences both overdue (Aug 31 and Sep 30); 0 cold-email leads in 45-day series.",
+        "confidence": "confirmed",
+        "channel": "SOW"
+      },
+      {
+        "id": "F4",
+        "priority": 1,
+        "text": "Zero paid spend and zero leads for all 28 days; GBP is the only active channel with 109 actions, all organic — no paid efficiency to measure.",
         "confidence": "confirmed",
         "channel": "GBP"
       },
       {
-        "id": "F4",
-        "priority": 3,
-        "text": "Search Console clicks: last 3 days (Oct 23–25) total 0 clicks vs 2 in prior 3 days; 28-day total is only 24 clicks from 1,535 impressions (1.6% CTR).",
-        "confidence": "confirmed",
-        "channel": "organic"
-      },
-      {
         "id": "F5",
-        "priority": 1,
-        "text": "Zero paid spend across all 28 days; CPL is undefined. All lead-generation capability is offline with $0 Meta and $0 Google Ads spend.",
-        "confidence": "confirmed",
-        "channel": "paid"
+        "priority": 2,
+        "text": "GBP 3-day signal: Oct 23–25 averaged 5.3 actions/day vs Oct 20–22 average of 2.0 — short uptick, but 28-day trend is -18.52% week-over-week and sc_clicks are also -20%.",
+        "confidence": "probable",
+        "channel": "GBP"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate 342 stub reconciliation and Sales-i parser blockers to Ahmed/Dev 2 — both overdue 55+ days, gating CRM pipeline integrity.",
+        "text": "Escalate 342 stub reconciliation to Ahmed immediately; no Sales-i data flows to these accounts until done.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Clear CRM Blocker Milestones",
-        "monday_update": "Two confirmed blockers — 342 stub reconciliation and the Sales-i export parser — are overdue since Aug 31 and Sep 30 respectively, per the SOW. Tag Ahmed and Dev 2 for immediate status update this week. Success is a written completion date or a root-cause explanation posted to the Monday CRM board by 2026-10-30."
+        "monday_item_name": "Reconcile 342 CRM Stubs",
+        "monday_update": "The 342 stub accounts remain unreconciled as of Oct 26, 2026, past the Aug 31 blocker deadline — Sales-i sync is blind to all of them. Ahmed to run the name-based match against the authoritative customer sheet this week and post audited batch + rollback file to the Monday CRM board. Success check: zero stub accounts remaining unmatched by Nov 2, 2026."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Resolve AGS+Forte contact pull and lapsed email sequences — both overdue since Aug 31–Sep 30, blocking outreach pipeline entirely.",
+        "text": "Chase Jorge on 'Quote Ordered = True' bug and unblock Dev 2 Sales-i parser build; both 26+ days overdue.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Outreach Milestone Escalation",
-        "monday_update": "The AGS+Forte contact pull and lapsed sequences were due Aug 31 and Sep 30 per SOW — neither has a completion event. Without the contact list, outreach sequences cannot launch and the engagement's primary lead-gen lever remains offline. Confirm list delivery and sequence launch dates with the outreach lead by 2026-10-30. Success check: sequences live and first send logged before 2026-11-07."
+        "monday_item_name": "Unblock Parser + Jorge Bug",
+        "monday_update": "The Sales-i → Sugar export parser and the 'Quote Ordered = True' Epicor sync bug are both overdue since Sep 30, 2026. Sohib to get a written status from Jorge this week; Dev 2 to begin parser build from the sample export already in hand. Success check: Jorge provides root-cause answer and parser skeleton is committed by Nov 2, 2026."
       },
       {
         "id": "S3",
-        "type": "watch",
-        "text": "Watch GBP actions: last 3-day total was 4 vs prior 3-day 16 — confirm if Oct 24–25 zeros are data lag before acting.",
+        "type": "fix",
+        "text": "Pull AGS + Forte contact lists and launch lapsed sequences; 0 outreach leads in 45-day series confirms no emails have fired.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "GBP Action Drop Watch",
-        "monday_update": "GBP actions dropped from 16 in Oct 20–22 to 4 in Oct 23–25, a 75% fall over 3 days. The two trailing zero days (Oct 24–25) may reflect a GBP data reporting lag rather than a real demand drop. Re-check on 2026-10-29: if the 3-day total is below 6 with no lag explanation, escalate to GBP profile review. No action before then."
+        "monday_item_name": "Launch Forte Lapsed Sequences",
+        "monday_update": "AGS and Forte contact pulls were due Aug 31 and lapsed sequences were due Sep 30, 2026 — both missed, and the 45-day series shows 0 leads from any outreach channel. Contacts to be pulled and verified against Sugar this week; first lapsed sequence to be scheduled and sent by Nov 2, 2026. Success check: at least one sequence live with open-rate data visible in the outreach tool by Nov 2, 2026."
       }
     ],
     "next_check": "2026-10-29"

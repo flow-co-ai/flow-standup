@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-26T17:06:30.928Z",
+  "generated_at": "2026-10-26T18:14:31.372Z",
   "date": "2026-10-26",
   "slug": "steel-advance",
   "name": "Advance Grinding Services",
@@ -567,43 +567,43 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-10-26T17:10:31.836Z",
+    "generated_at": "2026-10-26T18:19:10.289Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP holding; 8 overdue SOW milestones block real lead flow.",
+    "verdict": "GBP holds ground; 8 overdue SOW milestones now block revenue recovery.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "5 CRM milestones overdue since Jul–Sep 2026: 342 stub reconciliation, parser build, dedup execution, Tom call list, and 1st Directives close-out remain open.",
+        "text": "5 CRM milestones overdue since Jul–Sep 2026: 342 stub reconciliation and Sales-i parser both flagged blockers; stubs mean zero Sales-i sync for those accounts.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3 more SOW milestones overdue: AGS+Forte contacts pull (Aug 31), lapsed sequences launch (Sep 30), and web root-cause fix submission (Aug 31) all unresolved.",
+        "text": "3 outreach/web milestones overdue (Aug–Sep 2026): AGS+Forte contact pull, lapsed sequences, and root-cause fix all undelivered — blocking cold email pipeline entirely.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 1,
-        "text": "Zero paid spend and zero leads for all 28 days; CPL is undefined — no paid efficiency exists to evaluate against any baseline.",
+        "text": "Zero paid spend across all 28 days; CPL and lead count are both 0 — no paid efficiency data exists to evaluate.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP is the sole active channel: 117 actions over 26 days, up 15.38% WoW, but only 2 calls recorded — direction and web-click engagement not converting to RFQs.",
+        "text": "GBP is the only active channel: 117 actions over 26 days, up 15.38% WoW, but only 2 calls — direction requests (79) dominate and do not reliably convert to RFQs.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 3,
-        "text": "Search Console clicks dropped 14.81% WoW (last 3 days: 1, 6, 1 vs prior 3: 8, 0, 7) — 3-day signal is flat-to-declining, reinforcing organic web attention needed.",
+        "text": "Search Console clicks fell 14.81% WoW (last 3 days: 1, 6, 1 vs prior 3: 8, 0, 7); 3-day signal is soft but no paid traffic exists to compensate for organic dip.",
         "confidence": "probable",
         "channel": "search_console"
       }
@@ -612,32 +612,32 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Resolve 342 stub reconciliation blocker immediately — Sales-i sync is blind to these accounts until fixed.",
+        "text": "Escalate 342-stub reconciliation and Sales-i parser blocker to Ahmed; no CRM sync revenue signal until resolved.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Reconcile 342 CRM Stubs",
-        "monday_update": "The 342 stub accounts have not been reconciled against the authoritative customer sheet as of the Aug 31 deadline, blocking all Sales-i sync keys for those accounts. Ahmed must complete the name-based match and post a rollback file to the Monday CRM board before any inactivity automation or Sales-i pipeline data can be trusted. Success check: zero unmatched stubs in the CRM audit log by 2026-11-02. This is a hard blocker — nothing downstream is reliable until it clears."
+        "monday_item_name": "Clear CRM Blocker Stubs + Parser",
+        "monday_update": "The 342 stub accounts cannot receive Sales-i sync data until Customer IDs are matched — this gates the entire inactivity and lapsed-account revenue recovery workflow. Both the stub reconciliation (due 2026-08-31) and the Sales-i parser build (due 2026-09-30) are overdue blockers. Ahmed to confirm a completion date this week. Success check: rollback file posted to Monday board and at least one test account syncing `si_last_purchase_date_c` correctly by 2026-11-07."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Pull AGS + Forte contact lists and submit web root-cause fix — both are Sep/Aug blockers gating outreach sequences.",
+        "text": "Unblock outreach: pull AGS + Forte contact lists and submit root-cause web fix — both overdue since Aug 2026.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "AGS Contacts + Web Fix",
-        "monday_update": "The AGS and Forte contact pull (due Aug 31) and the web root-cause fix submission (due Aug 31) are both unresolved, which is preventing lapsed email sequences from launching (due Sep 30). Assign contact pull to the outreach team and web fix to Ahmed/Ali with a hard deadline of 2026-11-02. Success check: contacts delivered to outreach board and fix ticket closed with Jorge's confirmation by that date."
+        "monday_item_name": "Unblock Outreach Contact Pull",
+        "monday_update": "The AGS and Forte contact pulls (due 2026-08-31) and lapsed-sequence launch (due 2026-09-30) are both overdue, meaning cold email pipeline has not started. The web root-cause fix submission is also outstanding from 2026-08-31. Responsible parties to confirm status by 2026-10-30. Success check: contact lists uploaded to outreach tool and at least one lapsed sequence live per company by 2026-11-07."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP call rate (currently 0.47% on 422 impressions) — re-check in 7 days before any paid reactivation decision.",
+        "text": "Watch GBP call rate (currently 0.47% of 422 impressions); re-check at next cycle for any RFQ attribution.",
         "cites": [
           "F4"
         ],
         "monday_item_name": "Watch GBP Call Rate",
-        "monday_update": "GBP generated 117 actions over 26 days but only 2 calls from 422 impressions (0.47% call rate), meaning local visibility is not translating to RFQ intent. No paid spend is active, so GBP is the only demand signal available. Monitor call volume and direction requests over the next 7 days. Re-check on 2026-11-02: if calls remain at or below 2 per 7-day window, escalate to Sohib for a paid reactivation conversation."
+        "monday_update": "GBP generated 117 actions over 26 days but only 2 direct calls from 422 impressions (0.47% call rate). Direction requests at 79 suggest local discovery is working but not converting to inbound contact. No action warranted this cycle. Re-check on 2026-11-02 to see if call volume moves above 5 in the next 7 days, which would confirm GBP as a lead source worth optimising."
       }
     ],
     "next_check": "2026-11-02"

@@ -1,7 +1,7 @@
 {
   "slug": "senior-insurance",
   "name": "Senior Insurance",
-  "generated_at": "2026-10-26T17:13:07.601Z",
+  "generated_at": "2026-10-26T18:22:22.369Z",
   "contract": {
     "start": null,
     "end": null,
@@ -87,16 +87,29 @@
       }
     },
     "paid": {
-      "state": "quiet",
-      "headline": "no paid · config",
-      "sentence": "No paid channels configured.",
+      "state": "amber",
+      "headline": "$92 · 11 calls · $8 per call · 14d",
+      "sentence": "Meta $91.54 spend, 11 calls; Google Ads $0.00 spend.",
       "basis": {
-        "type": "not_found",
-        "source": "clients.json",
-        "window": "config"
+        "type": "observed",
+        "source": "Windsor Paid",
+        "window": "14d"
       },
       "flags": [],
-      "detail": {}
+      "detail": {
+        "meta": {
+          "spend": 145.58,
+          "leads": 11,
+          "clicks": 446
+        },
+        "google_ads": {
+          "spend": 0,
+          "convs": 0,
+          "clicks": 0
+        },
+        "total_spend": 145.58,
+        "reconciliation": null
+      }
     },
     "crm": {
       "state": "red",
@@ -129,13 +142,13 @@
           "abandoned": 0,
           "stale_over_24h": 4
         },
-        "ghl": null
+        "ghl": {
+          "error": "GHL 401: {\"statusCode\":401,\"message\":\"Invalid JWT\"}"
+        }
       }
     }
   },
-  "scope_out": [
-    "paid"
-  ],
+  "scope_out": [],
   "needs_you": [
     {
       "text": "4 threads awaiting Flow, oldest 474h.",
@@ -155,6 +168,16 @@
         "type": "observed",
         "source": "Windsor GBP",
         "window": "28d"
+      }
+    },
+    {
+      "text": "Paid issue (amber): zero rows or attribution gap.",
+      "severity": "medium",
+      "age_days": null,
+      "basis": {
+        "type": "observed",
+        "source": "Windsor Paid",
+        "window": "14d"
       }
     }
   ],
