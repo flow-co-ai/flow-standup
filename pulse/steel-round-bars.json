@@ -487,16 +487,24 @@
     "next_check": "2026-08-01"
   },
   "brief": {
-    "date": "2026-10-26",
+    "date": "2026-10-27",
     "headlines": [
       {
-        "text": "No new activity recorded this week",
+        "text": "Custom sales platform replacing Sugar CRM & Sales-i",
+        "tone": "shift"
+      },
+      {
+        "text": "O'Hare Ads launching: exact match, $2K/mo",
+        "tone": "info"
+      },
+      {
+        "text": "CRM data backlog still unexecuted",
         "tone": "info"
       }
     ],
     "workstreams": [
       {
-        "title": "Steel Round Bars - CRM / Data",
+        "title": "Steel Round Bars - CRM",
         "badge": {
           "label": "P1 - needs attention",
           "tone": "amber"
@@ -504,11 +512,41 @@
         "items": [
           {
             "state": "next",
-            "text": "(inferred) Reconcile 342 stub accounts against authoritative customer sheet"
+            "text": "Sales platform build replacing Sugar CRM & Sales-i [id: 12837698128]"
           },
           {
-            "state": "queued",
-            "text": "Verify Epicor sync keys before merging stub accounts"
+            "state": "blocked",
+            "text": "342 stub accounts reconciliation still pending"
+          },
+          {
+            "state": "blocked",
+            "text": "447-group merge workbook execution not started"
+          }
+        ]
+      },
+      {
+        "title": "Steel Round Bars - Web / SEO",
+        "badge": {
+          "label": "P2 - on track",
+          "tone": "green"
+        },
+        "items": [
+          {
+            "state": "next",
+            "text": "Content refresh across 5 sites; Google flagged thin content [id: 11956027382]"
+          }
+        ]
+      },
+      {
+        "title": "Steel Round Bars - Ads",
+        "badge": {
+          "label": "P2 - on track",
+          "tone": "green"
+        },
+        "items": [
+          {
+            "state": "next",
+            "text": "O'Hare Google Ads: exact match 5 terms, $2K/mo [id: 12837697584]"
           }
         ]
       }
@@ -516,38 +554,86 @@
     "waiting_on_client": [],
     "launch_gate": null,
     "brief_v2": {
-      "verdict": "No activity this week; 23 items sit in Working with no visible movement or comms.",
-      "next_move": "Team: surface status on 342 stub account reconciliation — it gates all downstream CRM sync.",
-      "blocks": [],
+      "verdict": "Team's move: sales platform pivot is active and CRM data backlog needs execution to unblock downstream sync.",
+      "next_move": "Ahmed: begin 447-group merge workbook execution — unblocks Sales-i sync and CRM data integrity.",
+      "blocks": [
+        {
+          "item": "342 stub accounts reconciliation",
+          "side": "team",
+          "who": "Ahmed",
+          "last_activity": "Standup card flags reconciliation still pending this week"
+        },
+        {
+          "item": "447-group merge workbook execution",
+          "side": "team",
+          "who": "Ahmed",
+          "last_activity": "Standup card flags execution not started this week"
+        },
+        {
+          "item": "Sales platform build",
+          "side": "team",
+          "who": "Ahmed",
+          "last_activity": "Monday item updated today: custom platform replacing Sugar CRM & Sales-i"
+        }
+      ],
       "snapshot": [
         {
           "label": "Open items",
-          "value": "23 open, all in Working, none moving or awaiting client reply this week.",
+          "value": "10 open, all in working status, 0 done this week — CRM data backlog unexecuted",
           "tone": "warn"
         },
         {
           "label": "Contract",
-          "value": "Retainer $10,500/mo, Flow Company, Jan 2026; window Aug–Oct 2026.",
+          "value": "$10,500/mo retainer, window Aug–Oct 2026",
           "tone": "muted"
+        },
+        {
+          "label": "Judged on",
+          "value": "RFQs → quotes → orders and revenue recovered from quiet accounts",
+          "tone": "plain"
         }
       ],
       "history_line": null
     }
   },
   "brief_v2": {
-    "verdict": "No activity this week; 23 items sit in Working with no visible movement or comms.",
-    "next_move": "Team: surface status on 342 stub account reconciliation — it gates all downstream CRM sync.",
-    "blocks": [],
+    "verdict": "Team's move: sales platform pivot is active and CRM data backlog needs execution to unblock downstream sync.",
+    "next_move": "Ahmed: begin 447-group merge workbook execution — unblocks Sales-i sync and CRM data integrity.",
+    "blocks": [
+      {
+        "item": "342 stub accounts reconciliation",
+        "side": "team",
+        "who": "Ahmed",
+        "last_activity": "Standup card flags reconciliation still pending this week"
+      },
+      {
+        "item": "447-group merge workbook execution",
+        "side": "team",
+        "who": "Ahmed",
+        "last_activity": "Standup card flags execution not started this week"
+      },
+      {
+        "item": "Sales platform build",
+        "side": "team",
+        "who": "Ahmed",
+        "last_activity": "Monday item updated today: custom platform replacing Sugar CRM & Sales-i"
+      }
+    ],
     "snapshot": [
       {
         "label": "Open items",
-        "value": "23 open, all in Working, none moving or awaiting client reply this week.",
+        "value": "10 open, all in working status, 0 done this week — CRM data backlog unexecuted",
         "tone": "warn"
       },
       {
         "label": "Contract",
-        "value": "Retainer $10,500/mo, Flow Company, Jan 2026; window Aug–Oct 2026.",
+        "value": "$10,500/mo retainer, window Aug–Oct 2026",
         "tone": "muted"
+      },
+      {
+        "label": "Judged on",
+        "value": "RFQs → quotes → orders and revenue recovered from quiet accounts",
+        "tone": "plain"
       }
     ],
     "history_line": null

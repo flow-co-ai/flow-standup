@@ -1,7 +1,7 @@
 {
   "slug": "al-manakeesh",
   "name": "Al Manakeesh",
-  "generated_at": "2026-10-26T18:22:22.371Z",
+  "generated_at": "2026-10-27T16:21:50.067Z",
   "contract": {
     "start": null,
     "end": null,
@@ -19,8 +19,8 @@
   "lanes": {
     "organic": {
       "state": "green",
-      "headline": "384 calls · 28d",
-      "sentence": "Al Manakeesh Canton took 216 calls on 19343 impressions; Al Manakeesh Fishers took 168 calls on 25171 impressions.",
+      "headline": "377 calls · 28d",
+      "sentence": "Al Manakeesh Canton took 213 calls on 19189 impressions; Al Manakeesh Fishers took 164 calls on 24898 impressions.",
       "basis": {
         "type": "observed",
         "source": "Windsor GBP",
@@ -32,26 +32,26 @@
           {
             "account_id": "locations/7792026507986387091",
             "label": "Al Manakeesh Canton",
-            "calls": 216,
-            "directions": 787,
-            "web_clicks": 900,
-            "impressions": 19343,
+            "calls": 213,
+            "directions": 807,
+            "web_clicks": 929,
+            "impressions": 19189,
             "days_with_impressions": 26,
-            "call_rate": 0.0112
+            "call_rate": 0.0111
           },
           {
             "account_id": "locations/1230683753315353634",
             "label": "Al Manakeesh Fishers",
-            "calls": 168,
-            "directions": 723,
-            "web_clicks": 1030,
-            "impressions": 25171,
+            "calls": 164,
+            "directions": 748,
+            "web_clicks": 1078,
+            "impressions": 24898,
             "days_with_impressions": 26,
-            "call_rate": 0.0067
+            "call_rate": 0.0066
           }
         ],
         "flagged_profiles": [],
-        "total_calls": 384,
+        "total_calls": 377,
         "total_profiles": 2
       }
     },
@@ -68,27 +68,46 @@
       "detail": {}
     },
     "crm": {
-      "state": "quiet",
-      "headline": "no CRM",
-      "sentence": "No GHL and no comms on file.",
+      "state": "green",
+      "headline": "no owner",
+      "sentence": "No intake owner found in known sources.",
       "basis": {
-        "type": "not_found",
-        "source": "clients.json",
-        "window": "config"
+        "type": "observed",
+        "source": "GHL / WhatsApp",
+        "window": "14d"
       },
       "flags": [],
-      "detail": {}
+      "detail": {
+        "intake_owner": null,
+        "intake_owner_basis": {
+          "type": "unavailable",
+          "source": "facts",
+          "window": "current"
+        },
+        "awaiting_flow": 0,
+        "oldest_unanswered_hours": 0,
+        "threads": {
+          "messages_scanned": 0,
+          "threads": 0,
+          "awaiting_flow": 0,
+          "awaiting_client": 0,
+          "client_update": 0,
+          "settled": 0,
+          "abandoned": 0,
+          "stale_over_24h": 0
+        },
+        "ghl": null
+      }
     }
   },
   "scope_out": [
-    "paid",
-    "crm"
+    "paid"
   ],
   "needs_you": [],
   "sources_read": {
     "pulse": true,
     "facts": false,
-    "comms": false,
+    "comms": true,
     "plan": false,
     "timeline": false,
     "inbox": false
