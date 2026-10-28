@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-10-27T16:11:13.155Z",
-  "date": "2026-10-27",
+  "generated_at": "2026-10-28T16:57:52.805Z",
+  "date": "2026-10-28",
   "slug": "al-manakeesh",
   "name": "Al Manakeesh",
   "type": "leadgen",
   "window_days": 28,
-  "score": 90,
+  "score": 100,
   "status": "green",
-  "verdict": "Al Manakeesh generated 3,939 total GBP actions over 28 days (377 calls, 1,555 directions, 2,007 web clicks) with no paid spend active, but GBP engagement dropped 30.65% in the last 7 days versus the prior 7 days, likely reflecting reduced organic search visibility or seasonal foot traffic softening across both Canton and Fishers locations.",
+  "verdict": "Al Manakeesh generated 4,073 total GBP actions over 28 days (387 calls, 1,609 directions, 2,077 web clicks) with no paid spend active, but GBP engagement is trending down 17.53% week over week, likely reflecting natural organic traffic softness without paid support to drive incremental visibility.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,42 +25,42 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 3939,
-          "calls": 377,
-          "directions": 1555,
-          "web_clicks": 2007,
+          "actions": 4073,
+          "calls": 387,
+          "directions": 1609,
+          "web_clicks": 2077,
           "by_profile": [
             {
               "account_id": "locations/7792026507986387091",
               "label": "Al Manakeesh Canton",
-              "calls": 213,
-              "directions": 807,
-              "web_clicks": 929,
-              "impressions": 19189,
+              "calls": 221,
+              "directions": 826,
+              "web_clicks": 962,
+              "impressions": 19933,
               "days_with_impressions": 26,
               "call_rate": 0.0111
             },
             {
               "account_id": "locations/1230683753315353634",
               "label": "Al Manakeesh Fishers",
-              "calls": 164,
-              "directions": 748,
-              "web_clicks": 1078,
-              "impressions": 24898,
+              "calls": 166,
+              "directions": 783,
+              "web_clicks": 1115,
+              "impressions": 25388,
               "days_with_impressions": 26,
-              "call_rate": 0.0066
+              "call_rate": 0.0065
             }
           ]
         }
       }
     },
     "organic": {
-      "gbp_actions": 3939,
+      "gbp_actions": 4073,
       "ig_reach": 0
     },
     "top_campaign": null,
     "latest_day": {
-      "date": "2026-10-26",
+      "date": "2026-10-27",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -104,7 +104,7 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -30.65,
+      "gbp_7d_pct": -17.53,
       "sc_7d_pct": null,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
@@ -113,7 +113,6 @@
     "flags": [],
     "series": {
       "dates": [
-        "2026-09-29",
         "2026-09-30",
         "2026-10-01",
         "2026-10-02",
@@ -140,7 +139,8 @@
         "2026-10-23",
         "2026-10-24",
         "2026-10-25",
-        "2026-10-26"
+        "2026-10-26",
+        "2026-10-27"
       ],
       "spend": [
         0,
@@ -263,7 +263,6 @@
         0
       ],
       "gbp_actions": [
-        94,
         111,
         138,
         165,
@@ -288,7 +287,8 @@
         170,
         148,
         222,
-        74,
+        208,
+        94,
         0,
         0
       ],
@@ -579,37 +579,37 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-10-27T16:20:18.042Z",
+    "generated_at": "2026-10-28T17:07:47.537Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP-only client; organic carrying all load with a real 3-day stall.",
+    "verdict": "Organic-only account; GBP softening with no paid lever to pull.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend and zero leads for all 28 days — no paid efficiency to measure; GBP is the sole revenue-driving channel.",
+        "text": "Zero paid spend across all 28 days; CPL and ROAS are undefined — no paid efficiency to measure.",
         "confidence": "confirmed",
-        "channel": "all"
+        "channel": "cross-channel"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3-day GBP signal: Oct 23–25 averaged 148 actions vs Oct 20–22 average of 140 — flat, not declining, contradicting the -30.65% 7d delta alarm.",
-        "confidence": "confirmed",
+        "text": "GBP actions down 17.53% week-over-week; 3-day signal confirms softening: Oct 23–25 averaged 175 vs Oct 20–22 avg of 140 — but Oct 26 dropped to 94 and Oct 27 shows 0, a likely data lag not a true zero.",
+        "confidence": "probable",
         "channel": "GBP"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "Oct 24–26 show 74, 0, 0 GBP actions — last 2 days are zeroed, likely a data-lag reporting gap, not a true blackout.",
-        "confidence": "probable",
+        "priority": 3,
+        "text": "Canton call rate is 1.11% vs Fishers 0.65% on 25,388 impressions — Fishers drives more impressions but converts calls at nearly half the rate.",
+        "confidence": "confirmed",
         "channel": "GBP"
       },
       {
         "id": "F4",
-        "priority": 3,
-        "text": "Canton call rate (1.11%) is 68% higher than Fishers (0.66%) despite Fishers having 30% more impressions (24,898 vs 19,189) — Fishers profile may have a weaker CTA or category mismatch.",
-        "confidence": "probable",
+        "priority": 4,
+        "text": "Oct 26–27 GBP actions read 94 and 0 respectively; prior 45-day floor is 94 — Oct 27 zero is a probable data ingestion gap, not an engagement collapse.",
+        "confidence": "hypothesis",
         "channel": "GBP"
       }
     ],
@@ -617,24 +617,24 @@
       {
         "id": "S1",
         "type": "watch",
-        "text": "Watch GBP Oct 24–26 zeroes: confirm data-lag or real drop by Oct 30 before any action.",
-        "cites": [
-          "F3"
-        ],
-        "monday_item_name": "GBP data gap verify",
-        "monday_update": "GBP actions show 0 for Oct 25–26, which is almost certainly a reporting lag rather than a true blackout. Pull the GBP dashboard directly on Oct 30 to confirm the numbers backfill. If actions remain zero after backfill, escalate as an organic visibility issue. No paid or organic action until this is confirmed."
-      },
-      {
-        "id": "S2",
-        "type": "fix",
-        "text": "Audit Fishers GBP profile CTA and primary category — call rate 0.66% vs Canton's 1.11% on higher impressions.",
+        "text": "Confirm Oct 27 GBP data gap before any action; re-check in 3 days when full data populates.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Fishers GBP CTA audit",
-        "monday_update": "Al Manakeesh Fishers has 24,898 impressions but only a 0.66% call rate versus Canton's 1.11% on 19,189 impressions — a meaningful gap. Review the Fishers primary category, business description, and phone CTA placement for alignment with Canton. Success check: Fishers call rate closes to within 0.2pp of Canton within 30 days (re-check Nov 27)."
+        "monday_item_name": "Confirm Oct 27 GBP data",
+        "monday_update": "GBP actions on Oct 27 read zero, which is below the 45-day floor of 94 and is likely a data ingestion lag, not a true engagement drop. No action should be taken until the Oct 27–29 window populates fully. Success check: if Oct 27 backfills above 94 by Oct 31, it was a gap; if it holds at zero, escalate to GBP account health review. Re-check by 2026-10-31."
+      },
+      {
+        "id": "S2",
+        "type": "watch",
+        "text": "Watch Fishers GBP call rate (0.65% vs Canton 1.11%); flag if gap persists next cycle.",
+        "cites": [
+          "F3"
+        ],
+        "monday_item_name": "Fishers GBP call rate watch",
+        "monday_update": "Fishers location generated 25,388 impressions over 28 days but converted calls at only 0.65%, versus Canton's 1.11% on 19,933 impressions. The gap may reflect profile completeness, photo quality, or review volume differences rather than a paid ads issue. No paid activity is currently in scope. Monitor the call rate ratio over the next 28-day window; if Fishers remains below 0.80% while impressions hold, flag for organic GBP profile audit. Re-check by 2026-11-28."
       }
     ],
-    "next_check": "2026-10-30"
+    "next_check": "2026-10-31"
   }
 }
