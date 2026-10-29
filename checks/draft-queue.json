@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-27T19:55:32.521517+00:00",
+  "updatedAt": "2026-10-29T20:11:09.362424+00:00",
   "items": [
     {
       "id": "qualityhvac-burr-ridge-gbp-move",
@@ -23,7 +23,7 @@
       },
       "nullReason": null,
       "priority": 1,
-      "verifiedAt": "2026-10-27T19:55:32.089232+00:00",
+      "verifiedAt": "2026-10-29T20:11:00.088071+00:00",
       "completionEvidence": null,
       "updatedAt": "2026-10-27T19:55:32.089238+00:00",
       "createdAt": "2026-10-07T20:30:48.868496+00:00"
@@ -381,7 +381,7 @@
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-10-21T19:14:10.021325+00:00",
+      "verifiedAt": "2026-10-29T20:11:00.088073+00:00",
       "completionEvidence": null,
       "createdAt": "2026-10-21T19:14:17.150344+00:00"
     },
@@ -438,25 +438,26 @@
     {
       "id": "maadilaw-zoom-call-routing",
       "title": "Call Routing",
-      "note": "Priority 2: missed intake calls are lost paid leads and the firm reported more on 10/15, 10/22 and 10/23. Section 19 audit: Maadi Law groups on all four boards, subitems included. Intake Call Drops (CRM, 13019178772, In Progress, last update 9/10) is this workstream, so update_only on it rather than a new item. Section 19b: no pending queue match. Tracy and Kassem are client side, plain text only. Second question: not complete; Tracy has not yet run the test of the 10/23 routing.",
+      "note": "Priority 2: missed intake calls are lost paid leads and the firm reported more on 10/15, 10/22 and 10/23. Section 19 audit: Maadi Law groups on all four boards, subitems included. Intake Call Drops (CRM, 13019178772, In Progress, last update 9/10) is this workstream, so update_only on it rather than a new item. Section 19b: no pending queue match. Tracy and Kassem are client side, plain text only. Second question: not complete; Tracy has not yet run the test of the 10/23 routing. 10/29 merge (Section 19b axis 1, same item 13019178772): 10/27 Zoom first routing and queue order, 10/28 missed 1:21 PM call, Sharif escalation, Ahmed's Zoom trace and the IVR no selection fix. Priority raised to 1: the client escalated it as urgent and every miss is a lost lead. Second question: not complete. Naz's 10/28 \"back up and running\" was followed the same day by a missed call; Ahmed's \"I have fixed this\" covers only the no selection forwarding and asks for a test; the Carmen backup queue gap is still open. Section 19 re-audit: no other item on the four boards tracks Maadi call routing.",
       "status": "ready",
       "board": "CRM",
       "group": "Maadi Law",
       "potentialClient": null,
       "source": "whatsapp",
-      "sourceLabel": "WhatsApp: Maadi Law, 10/23",
+      "sourceLabel": "WhatsApp: Maadi Law, 10/23 + WhatsApp: Maadi Law, 10/28",
       "payload": {
         "mode": "update_only",
         "existingItemId": "13019178772",
         "itemName": "Call Routing",
-        "updateBody": "<p>Salam,</p><ul><li>New since 9/10: the firm reported calls that never reached Zoom on 10/15 (one caller tried about 8 times). Ahmed changed forwarding on 10/16 and Tracy confirmed it rang. On 10/22 another call was missed: GHL marked the transfer as voicemail and the call ended before the backup rang. Ahmed <strong>turned off voicemail detection</strong> on the transfers to Tracy and Zoom.</li><li>10/23: a callback dropped after two rings and then Tracy (GHL) and Kassem (Zoom) both answered the same call. Routing is now GHL app first for 20 seconds, then Zoom.</li><li><strong>Get Tracy's test</strong> of the 10/23 routing: unanswered in GHL, answered in Zoom, and confirm GHL stops ringing before Zoom connects so two people never pick up the same caller.</li><li><strong>Simplify the IVR forwarding</strong> with Naz, as he told the firm on 10/22; he recommends keeping the first ring at 20 seconds. Use the same review for MedStation, which has the same dropped call pattern.</li><li>Done = test calls through every inbound number reach exactly one person, with no drop and no double answer.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "updateBody": "<p>Salam,</p><ul><li>New 10/27 to 10/28: GHL numbers now ring <strong>Zoom first</strong>, and the New Client queue order is Tracy, Kassem, Sharif, Carmen, Jenna. Tracy confirmed a test call reached Carmen on 10/28.</li><li>Later on 10/28 a new lead called at 1:21 PM and nobody got it; Sharif escalated it as <strong>urgent</strong>. Ahmed traced it: the caller reached the Zoom menu, made no selection and was disconnected after 19 seconds, before any staff queue.</li><li>Ahmed found two Zoom gaps: <strong>no selection callers were dropped</strong> (now forwarded to New Client, Naz approved, Ahmed says fixed), and <strong>Carmen is missing from the backup overflow queue</strong>, which also caps at 30 seconds for four people ringing 15 seconds each.</li><li><strong>Add Carmen to the backup queue</strong> and raise its time limit so everyone actually rings.</li><li><strong>Run a scheduled test with Tracy</strong> covering a menu selection, no selection, and unanswered/DND, and post the result in the Maadi chat. Sharif offered after hours or weekend time for testing.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
         "blocked": false,
         "needsNaz": false
       },
       "nullReason": null,
-      "priority": 2,
-      "verifiedAt": "2026-10-26T12:33:07.108310+00:00",
+      "priority": 1,
+      "verifiedAt": "2026-10-29T20:11:00.087886+00:00",
       "completionEvidence": null,
+      "updatedAt": "2026-10-29T20:11:00.087894+00:00",
       "createdAt": "2026-10-26T12:33:12.800217+00:00"
     },
     {
@@ -561,13 +562,13 @@
     {
       "id": "maadilaw-gclid-conversion-test",
       "title": "GCLID Test",
-      "note": "Priority 2: Google Ads has had no tracked conversions, and this is the fix to that signal. Section 19 audit: Maadi Law groups on all four boards, subitems included; Google (Ads, 12471102491) is the live campaign item, nothing tracks the GCLID break, so update_only on it. Section 19b: no pending queue match. Second question: the 10/26 messages report both the break and Hashir's fix (\"Its taken care of brother\"), so this card is scoped to the residue only, the Ads team test Naz asked for.",
-      "status": "ready",
+      "note": "Priority 2: Google Ads has had no tracked conversions, and this is the fix to that signal. Section 19 audit: Maadi Law groups on all four boards, subitems included; Google (Ads, 12471102491) is the live campaign item, nothing tracks the GCLID break, so update_only on it. Section 19b: no pending queue match. Second question: the 10/26 messages report both the break and Hashir's fix (\"Its taken care of brother\"), so this card is scoped to the residue only, the Ads team test Naz asked for. 10/29 re-audit (Section 19): Monday item 13405840170 \"Google Ads conversion tracking fix\" (Ads, Maadi Law, created 10/28) now carries this work and more: confirm auto tagging, run the click to GHL test and post results, plus Hashir's hidden click ID fields and Ahmed's workflow fix. Firing this card would duplicate it, so status exists. Payload kept so the card is recoverable if that item is removed. Second question: no message says the test has run, so not done.",
+      "status": "exists",
       "board": "Ads",
       "group": "Maadi Law",
       "potentialClient": null,
       "source": "whatsapp",
-      "sourceLabel": "WhatsApp: Paid Ads + Web & SEO, 10/26",
+      "sourceLabel": "WhatsApp: Paid Ads + Web & SEO, 10/26 + WhatsApp: Paid Ads, 10/28",
       "payload": {
         "mode": "update_only",
         "existingItemId": "12471102491",
@@ -578,9 +579,132 @@
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-10-27T19:55:32.089618+00:00",
+      "verifiedAt": "2026-10-29T20:11:00.087932+00:00",
       "completionEvidence": null,
+      "updatedAt": "2026-10-29T20:11:00.087934+00:00",
       "createdAt": "2026-10-27T19:55:32.521517+00:00"
+    },
+    {
+      "id": "maadilaw-lead-source-audit",
+      "title": "Lead Source Audit",
+      "note": "Priority 2: the client is questioning lead volume and Naz wants this as the template for every client. Section 19 audit: Maadi Law groups on all four boards, subitems included. Ads 13405840170 covers Google click ID capture only; nothing tracks the Meta/LSA reconciliation, the Clio overwrite or the all client rollout, so create_item on CRM (Ahmed is doing the audit). Section 19b: no pending queue match; sibling maadilaw-gclid-conversion-test (now exists) covers the Google test. Second question: Ahmed's 10/28 audit fixed sources but explicitly lists three items still open and says the final new lead count is unconfirmed, so this card is scoped to that residue. Sources: Conversion Tracking Audit 10/28, Lead Attribution and Tracking Review 10/27, Paid Ads chat 10/28.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: Paid Ads, 10/28 + Meeting: Conversion Tracking Audit, 10/28",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm5112vv",
+        "itemName": "Lead Source Audit",
+        "updateBody": "<p>Salam,</p><ul><li>Sharif asked on 10/27 why Google Ads showed no leads since 9/17 while GHL shows about 30. On 10/28 Naz had the Ads team export 30 days of Maadi Meta, Google and LSA results so Ahmed could reconcile them against GHL, <strong>as the test before auditing every client</strong>.</li><li>Ahmed's 10/28 audit (9/28 to 10/27): 84 incoming calls, 69 after QA calls, from 42 numbers. He fixed 13 contact sources, 6 opportunity sources and the forced Website source on intake; the three call source workflows are live and preserve existing sources.</li><li><strong>Close the three open gaps</strong> with Raheel: Meta's 11 reported calls (no calls hit the Meta number 708 719 2305, need the real ad number and call times); Google's 10/23 website conversion (time and attribution); LSA's 0 reported leads versus 15 GHL calls to the LSA number (need the receiving number and the full lead inbox export).</li><li><strong>Fix the native Clio overwrite</strong> of contact source, still open.</li><li><strong>Send Naz the confirmed new lead count by channel</strong> for him to share with Sharif.</li><li>Then <strong>repeat the same reconciliation for every client</strong>. Google click ID capture is tracked separately on Google Ads conversion tracking fix (Ads), do not duplicate it here.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "verifiedAt": "2026-10-29T20:11:00.087977+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-10-29T20:11:09.362424+00:00"
+    },
+    {
+      "id": "seniorinsurance-landing-intake",
+      "title": "Landing Page Intake",
+      "note": "Priority 2: Medicare enrollment season is running and Meta ads are already live. Section 19 audit: Senior Insurance groups on all four boards, subitems included. Connect ad leads to GHL (CRM 13185972533, In Progress) is this workstream, so update_only. Build Thank You Pages (Web+SEO 13397447806) asked for the calendar redirect but it is a GHL calendar, which Hashir assigned to Ahmed; Auto create opportunities (13186008077) holds the opportunity spec. Section 19b: no pending queue match. Not in this card: the Medicare disclaimer carriers list (Naz asked the client), the VSL (Video 13417533290 exists), favicon (asked of Hashir directly).",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Senior Insurance",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: Web & SEO, 10/28 + Meeting: Marketing Tracking and Automation Fixes, 10/28",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "13185972533",
+        "itemName": "Landing Page Intake",
+        "updateBody": "<p>Salam,</p><ul><li>New on 10/28: Hashir built the Senior Insurance landing pages (English, Arabic, video page) and thank you pages on the live site. Their form posts to GHL through the same webhook you already tested, with three new fields.</li><li><strong>Map the new webhook fields</strong> zip_code, current_coverage and form_name onto the contact.</li><li><strong>Set the Schedule Your Appointment calendar</strong> to redirect to the thank you page (https://www.seniorinsuranceteam.com/thank-you-for-reaching-out) after booking, so ads can count it. Naz asked for this on Build Thank You Pages (Web+SEO).</li><li><strong>Confirm Meta leads create an opportunity in New lead</strong>; the 10/27 and 10/28 calls said they still land in Contacts only (see Auto create opportunities).</li><li>Tell Hashir when mapping is done so he runs a test submission on each page and shares the test IDs. Write to Contact Source only, never Lead Source.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "verifiedAt": "2026-10-29T20:11:00.088005+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-10-29T20:11:09.362424+00:00"
+    },
+    {
+      "id": "qualityhvac-lead-reactivation",
+      "title": "Lead Reactivation",
+      "note": "Priority 3. Blocked on the client for message copy, so blocked=true. Section 19 audit: Quality HVAC groups on all four boards, subitems included; nothing tracks a reactivation workflow (CRM has Junk Call Audit and New Meta tracking number only). Section 19b: no pending queue match; medstation-lead-reactivation is a different client. Both 10/27 Flow Sync recordings name it; the second ties it explicitly to HVAC.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Quality HVAC",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Flow Sync 2.0, 10/27",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm231wbb",
+        "itemName": "Lead Reactivation",
+        "updateBody": "<p>Salam,</p><ul><li>From the 10/27 Flow Sync: Quality HVAC has roughly 80 contacts who engaged but never booked. Build a <strong>45 day reactivation workflow</strong> in GHL to bring them back.</li><li><strong>Waiting on the client</strong>: the follow up message copy has to come from Quality HVAC. Sohib is requesting it; do not write or send copy of our own.</li><li>Once the copy arrives: build the 45 day sequence, enroll the engaged, unbooked contacts, and stop the sequence for anyone who books or replies.</li><li><strong>Test</strong> on a dummy contact before enrolling anyone and post the enrolled count.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": true,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 3,
+      "verifiedAt": "2026-10-29T20:11:00.088030+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-10-29T20:11:09.362424+00:00"
+    },
+    {
+      "id": "jcl-meta-video-focus",
+      "title": "Video Budget Focus",
+      "note": "Priority 2: lead quality is dropping while spend continues. Section 19 audit: Justice Consumer Law groups on all four boards; Meta Ads (Ads 11929336591) is the live item, last update 10/6 already asked to spread spend across the videos, so update_only. Section 19b: no pending queue match. Marwan is client side, plain text.",
+      "status": "ready",
+      "board": "Ads",
+      "group": "Justice Consumer Law",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Flow Sync 2.0, 10/27",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "11929336591",
+        "itemName": "Video Budget Focus",
+        "updateBody": "<p>Salam,</p><ul><li>New from the 10/27 Flow Sync: Justice Consumer Law leads rose from 81 to 108 this month, but signed cases fell from 6 to 3.</li><li><strong>Pause the kinetic text ads.</strong></li><li><strong>Move that budget onto the three strongest video ads</strong> by cost per lead, and post which three you picked.</li><li>Flag any ad or form driving low quality leads so Sohib can raise it on the client check in. New videos are coming from a videographer Sohib is sending to Marwan; fold them in when they land.</li></ul><p><a class=\"mention\" data-mention-id=\"102221064\" data-mention-type=\"User\">@Khurram Jamil</a> <a class=\"mention\" data-mention-id=\"102221061\" data-mention-type=\"User\">@Ads Team</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "verifiedAt": "2026-10-29T20:11:00.088050+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-10-29T20:11:09.362424+00:00"
+    },
+    {
+      "id": "billydoe-graphics-final-edits",
+      "title": "Graphics Final Edits",
+      "note": "Priority 3. Section 19 audit: Billy Doe Meats groups on all four boards, subitems included; New creatives (subitem 12783993913 under Meta Ads, In Progress) is this work, so update_only on it. Section 19b: no pending queue match (billydoe-website-edits-followup is web, unrelated). Hoda is client side, plain text. Not drafted: Thanksgiving and review campaigns, named once each on the 10/27 call with no detail (see run summary).",
+      "status": "ready",
+      "board": "Ads",
+      "group": "Billy Doe Meats",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: Billy Doe Meats, 10/28",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "12783993913",
+        "itemName": "Graphics Final Edits",
+        "updateBody": "<p>Salam,</p><ul><li>New on 10/28: Hoda reviewed the ad graphics Naz resent. Approved once the line <strong>\"Choose it. we butcher it. dinner arrives.\" is removed</strong>.</li><li>She also asked to take one graphic off and said one shows a cut that is not in the box; <strong>confirm with Naz which one</strong> and drop it.</li><li><strong>Launch</strong> the corrected graphics in the existing Meta campaigns, and <strong>turn off Meta AI auto edits and product browsing</strong> on Billy Doe ads (10/27 Flow Sync) so the approved copy stays as approved.</li></ul><p><a class=\"mention\" data-mention-id=\"102221064\" data-mention-type=\"User\">@Khurram Jamil</a> <a class=\"mention\" data-mention-id=\"102221061\" data-mention-type=\"User\">@Ads Team</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 3,
+      "verifiedAt": "2026-10-29T20:11:00.088069+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-10-29T20:11:09.362424+00:00"
     }
   ]
 }
