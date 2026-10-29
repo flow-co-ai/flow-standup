@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-10-28T16:57:52.805Z",
-  "date": "2026-10-28",
+  "generated_at": "2026-10-29T17:18:37.859Z",
+  "date": "2026-10-29",
   "slug": "al-manakeesh",
   "name": "Al Manakeesh",
   "type": "leadgen",
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "Al Manakeesh generated 4,073 total GBP actions over 28 days (387 calls, 1,609 directions, 2,077 web clicks) with no paid spend active, but GBP engagement is trending down 17.53% week over week, likely reflecting natural organic traffic softness without paid support to drive incremental visibility.",
+  "verdict": "Al Manakeesh generated 4,140 total GBP actions over 28 days (396 calls, 1,627 directions, 2,117 web clicks) with no paid spend active, but GBP engagement dropped 21.44% in the last 7 days versus the prior 7 days, likely driven by seasonal softness or reduced profile visibility rather than any ad-side change.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -25,42 +25,42 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 4073,
-          "calls": 387,
-          "directions": 1609,
-          "web_clicks": 2077,
+          "actions": 4140,
+          "calls": 396,
+          "directions": 1627,
+          "web_clicks": 2117,
           "by_profile": [
             {
               "account_id": "locations/7792026507986387091",
               "label": "Al Manakeesh Canton",
-              "calls": 221,
-              "directions": 826,
-              "web_clicks": 962,
-              "impressions": 19933,
+              "calls": 223,
+              "directions": 824,
+              "web_clicks": 974,
+              "impressions": 20354,
               "days_with_impressions": 26,
-              "call_rate": 0.0111
+              "call_rate": 0.011
             },
             {
               "account_id": "locations/1230683753315353634",
               "label": "Al Manakeesh Fishers",
-              "calls": 166,
-              "directions": 783,
-              "web_clicks": 1115,
-              "impressions": 25388,
+              "calls": 173,
+              "directions": 803,
+              "web_clicks": 1143,
+              "impressions": 25580,
               "days_with_impressions": 26,
-              "call_rate": 0.0065
+              "call_rate": 0.0068
             }
           ]
         }
       }
     },
     "organic": {
-      "gbp_actions": 4073,
+      "gbp_actions": 4140,
       "ig_reach": 0
     },
     "top_campaign": null,
     "latest_day": {
-      "date": "2026-10-27",
+      "date": "2026-10-28",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -104,7 +104,7 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -17.53,
+      "gbp_7d_pct": -21.44,
       "sc_7d_pct": null,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
@@ -113,7 +113,6 @@
     "flags": [],
     "series": {
       "dates": [
-        "2026-09-30",
         "2026-10-01",
         "2026-10-02",
         "2026-10-03",
@@ -140,7 +139,8 @@
         "2026-10-24",
         "2026-10-25",
         "2026-10-26",
-        "2026-10-27"
+        "2026-10-27",
+        "2026-10-28"
       ],
       "spend": [
         0,
@@ -263,7 +263,6 @@
         0
       ],
       "gbp_actions": [
-        111,
         138,
         165,
         206,
@@ -288,7 +287,8 @@
         148,
         222,
         208,
-        94,
+        208,
+        64,
         0,
         0
       ],
@@ -579,62 +579,53 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-10-28T17:07:47.537Z",
+    "generated_at": "2026-10-29T17:28:30.383Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "Organic-only account; GBP softening with no paid lever to pull.",
+    "verdict": "Organic-only account; GBP softening warrants watch, no paid action available.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days; CPL and ROAS are undefined — no paid efficiency to measure.",
+        "text": "Zero paid spend across all 28 days; CPL and ROAS are undefined. No paid efficiency to evaluate.",
         "confidence": "confirmed",
-        "channel": "cross-channel"
+        "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions down 17.53% week-over-week; 3-day signal confirms softening: Oct 23–25 averaged 175 vs Oct 20–22 avg of 140 — but Oct 26 dropped to 94 and Oct 27 shows 0, a likely data lag not a true zero.",
-        "confidence": "probable",
-        "channel": "GBP"
+        "text": "GBP actions dropped 21.44% week-over-week. The 3-day signal (Oct 26: 64, Oct 27: 0, Oct 28: 0) vs prior 3 days (Oct 23: 222, Oct 24: 208, Oct 25: 208) shows a sharp cliff, not gradual softness.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "Canton call rate is 1.11% vs Fishers 0.65% on 25,388 impressions — Fishers drives more impressions but converts calls at nearly half the rate.",
-        "confidence": "confirmed",
-        "channel": "GBP"
+        "text": "Oct 27–28 show 0 GBP actions on both profiles. Data gap or profile-visibility issue; Canton had 223 calls and Fishers 173 calls in 28 days but nothing recorded in the last 2 days.",
+        "confidence": "hypothesis",
+        "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "Oct 26–27 GBP actions read 94 and 0 respectively; prior 45-day floor is 94 — Oct 27 zero is a probable data ingestion gap, not an engagement collapse.",
-        "confidence": "hypothesis",
-        "channel": "GBP"
+        "text": "Canton call rate (1.1%) is 62% higher than Fishers (0.68%) against comparable impression counts (20,354 vs 25,580). Fishers converts impressions to calls less efficiently.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "watch",
-        "text": "Confirm Oct 27 GBP data gap before any action; re-check in 3 days when full data populates.",
+        "text": "Watch GBP Oct 27–28 zero-action days; confirm data gap or real drop by Nov 1.",
         "cites": [
-          "F4"
-        ],
-        "monday_item_name": "Confirm Oct 27 GBP data",
-        "monday_update": "GBP actions on Oct 27 read zero, which is below the 45-day floor of 94 and is likely a data ingestion lag, not a true engagement drop. No action should be taken until the Oct 27–29 window populates fully. Success check: if Oct 27 backfills above 94 by Oct 31, it was a gap; if it holds at zero, escalate to GBP account health review. Re-check by 2026-10-31."
-      },
-      {
-        "id": "S2",
-        "type": "watch",
-        "text": "Watch Fishers GBP call rate (0.65% vs Canton 1.11%); flag if gap persists next cycle.",
-        "cites": [
+          "F2",
           "F3"
         ],
-        "monday_item_name": "Fishers GBP call rate watch",
-        "monday_update": "Fishers location generated 25,388 impressions over 28 days but converted calls at only 0.65%, versus Canton's 1.11% on 19,933 impressions. The gap may reflect profile completeness, photo quality, or review volume differences rather than a paid ads issue. No paid activity is currently in scope. Monitor the call rate ratio over the next 28-day window; if Fishers remains below 0.80% while impressions hold, flag for organic GBP profile audit. Re-check by 2026-11-28."
+        "monday_item_name": "GBP Zero-Day Data Check",
+        "monday_update": "GBP actions recorded 0 on Oct 27 and Oct 28 across both profiles, following a sharp drop from 208 actions on Oct 25. This may be a reporting lag or a real profile-visibility loss. Check the GBP dashboard directly for both Canton and Fishers by Nov 1. Success = data gap confirmed and backfilled, or root cause (suspension, listing edit) identified and resolved."
       }
     ],
-    "next_check": "2026-10-31"
+    "next_check": "2026-11-01"
   }
 }
