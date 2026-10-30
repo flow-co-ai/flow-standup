@@ -425,9 +425,16 @@ def _sanitize_fact(fact: dict) -> dict:
         text = _LONG_DIGIT_RE.sub("[number]", text)
         return text
 
+    # WAHA exports name unsaved contacts by a long digit ID, not a name. The
+    # model copies that into stated_by, _assert_no_pii rejects it, and the
+    # whole client's save fails silently (stalled every client since early Oct).
+    by = (fact.get("stated_by") or "").strip()
+    by = "Unsaved contact" if re.fullmatch(r"[\d\s+\-()]{6,}", by) else _clean(by)
+
     return {
         **fact,
         "value": _clean(fact.get("value") or ""),
+        "stated_by": by,
         "excerpt": _clean(fact.get("excerpt") or ""),
     }
 
