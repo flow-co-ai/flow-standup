@@ -61,15 +61,16 @@
   function budgetHTML(b, name) {
     const plats = [["google", "Google"], ["meta", "Meta"], ["lsa", "LSA"]].filter(([k]) => b[k]);
     const head = plats.length ? `${plats.map(([k, l]) => `${money(b[k])} ${l}`).join(" + ")} a month`
-      : b.total ? `${money(b.total)} a month across platforms` : `<span class="sc-dim">Not set</span>`;
+      : b.total ? `${money(b.total)} a month, all platforms` : `<span class="sc-dim">Not set</span>`;
     let html = `<div>${head}</div>`;
     if (plats.length || b.total) {
       const p = pace(b, name);
       if (!p) html += `<div class="sc-pace">No spend data in Windsor for this client yet.</div>`;
       else if (p.none) html += `<div class="sc-pace">This client's ad spend isn't tracked in Windsor yet.</div>`;
       else {
-        html += `<div class="sc-pace">${p.label}: ${money(p.spent)} spent, ${money(p.expected)} expected by now · <b class="${p.cls}">${p.word}</b></div>`;
-        if (p.rows.length > 1) html += `<div class="sc-sub">${p.rows.filter((r) => r[1] != null).map((r) => `${r[0]} ${money(r[1])} of ${money(r[2] * p.frac)}`).join(" · ")}</div>`;
+        const tag = (spent, exp) => { const r = exp ? spent / exp : 0; return r > 1.1 ? ` <b class="bad">over</b>` : r < 0.8 ? ` <b class="warn">under</b>` : ""; };
+        const per = p.rows.length > 1 ? " · " + p.rows.filter((r) => r[1] != null).map((r) => `${r[0]} ${money(r[1])}/${money(r[2] * p.frac)}${tag(r[1], r[2] * p.frac)}`).join(" · ") : "";
+        html += `<div class="sc-pace">${p.label}: ${money(p.spent)} of ${money(p.expected)} expected, <b class="${p.cls}">${p.word}</b>${per}</div>`;
         if (p.missing.length) html += `<div class="sc-sub">${p.missing.join(", ")} not tracked in Windsor.</div>`;
       }
       if (b.lsa) html += `<div class="sc-sub">LSA spend isn't in Windsor.</div>`;
@@ -80,6 +81,7 @@
 
   // ── lists ──────────────────────────────────────────────────────────────
   const plainList = (xs) => `<ul class="sc-list">${xs.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
+  const inlineList = (xs) => `<ul class="sc-inline">${xs.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
   function datedList(xs, cls) {
     return `<ul class="sc-list dots ${cls || ""}">${xs.map((x) => {
       const d = toDate(x.date), when = [d ? fmtDay(d) : "", x.source].filter(Boolean).join(" · ");
@@ -91,23 +93,22 @@
   function scopeHTML(name) {
     const c = DATA && DATA.clients && DATA.clients[name];
     if (!c) {
-      return `<div class="scope"><div class="sc-kicker">Scope</div><h2 class="sc-title">No scope on file for <em>${esc(name)}</em>.</h2>
+      return `<div class="scope"><h2 class="sc-title">No scope on file for <em>${esc(name)}</em>.</h2>
         <div class="sc-foot"><a href="${NEW}" target="_blank" rel="noopener">Add a contract file</a> named after the client, with "name": "${esc(name)}".</div></div>`;
     }
     const changed = c.changed || [], shown = changed.slice(0, 3), more = changed.length - shown.length;
     const rev = toDate(c.reviewed_through);
-    let rows = row("We run", c.we_run && c.we_run.length ? plainList(c.we_run) : `<span class="sc-dim">Nothing listed</span>`);
+    let rows = row("We run", c.we_run && c.we_run.length ? inlineList(c.we_run) : `<span class="sc-dim">Nothing listed</span>`);
     rows += row("Ad budget", budgetHTML(c.budget || {}, name));
-    if (c.not_ours && c.not_ours.length) rows += row("Not ours", `<div class="sc-dim">${plainList(c.not_ours)}</div>`);
-    if (shown.length) rows += row("Changed", datedList(shown) + (more > 0 ? `<div class="sc-sub">${more} older ${more === 1 ? "change" : "changes"} in the contract file.</div>` : ""));
+    if (c.not_ours && c.not_ours.length) rows += row("Not ours", `<div class="sc-dim">${inlineList(c.not_ours)}</div>`);
+    if (shown.length) rows += row("Changed", datedList(shown) + (more > 0 ? `<div class="sc-sub">+${more} older in the contract file</div>` : ""));
     if (c.unclear && c.unclear.length) rows += row("Unclear", datedList(c.unclear, "warn"), "warn");
-    if (c.heard && c.heard.length) rows += row("Heard since review", datedList(c.heard, "grey") + `<div class="sc-sub">Picked up from chats and calls. Not applied until someone updates the contract.</div>`);
+    if (c.heard && c.heard.length) rows += row("Heard, unreviewed", datedList(c.heard, "grey") + `<div class="sc-sub">From chats and calls. Not applied until the contract is updated.</div>`);
     return `<div class="scope">
-      <div class="sc-kicker">Scope</div>
       <h2 class="sc-title">What we do for <em>${esc(name)}</em></h2>
       ${c.term ? `<div class="sc-term">${termLine(c.term)}</div>` : ""}
       <dl class="sc-rows">${rows}</dl>
-      <div class="sc-foot">${rev ? `Reviewed through ${fmtDay(rev, true)} against the playbook, WhatsApp and calls. ` : ""}<a href="${EDIT}${esc(c.edit_path)}" target="_blank" rel="noopener">Edit scope</a></div>
+      <div class="sc-foot">${rev ? `Reviewed ${fmtDay(rev, true)} · ` : ""}<a href="${EDIT}${esc(c.edit_path)}" target="_blank" rel="noopener">Edit scope</a></div>
     </div>`;
   }
 
@@ -125,7 +126,7 @@
     inner.insertAdjacentHTML("afterbegin", `<div class="sc-toggle" role="group" aria-label="Hero view">
       <button type="button" data-sc="scope" aria-pressed="${v === "scope"}">Scope</button>
       <button type="button" data-sc="numbers" aria-pressed="${v === "numbers"}">Numbers</button></div>`);
-    if (v === "scope") inner.insertAdjacentHTML("beforeend", DATA ? scopeHTML(name) : `<div class="scope"><div class="sc-kicker">Scope</div><div class="sc-term">Loading scope…</div></div>`);
+    if (v === "scope") inner.insertAdjacentHTML("beforeend", DATA ? scopeHTML(name) : `<div class="scope"><div class="sc-term">Loading scope…</div></div>`);
   }
 
   const css = `
@@ -137,34 +138,36 @@
 .sc-toggle button:focus-visible{outline:2px solid var(--green-on-dark);outline-offset:2px}
 .hero.scope-on .hero-in>h1,.hero.scope-on .hero-in>.bul{display:none}
 .scope{max-width:1080px}
-.sc-kicker{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--green-on-dark)}
-.sc-title{font:700 42px/1.1 "Inter Tight",Inter,sans-serif;letter-spacing:-.03em;margin:8px 0 0;padding-right:200px;color:#fff}
+.sc-title{font:700 36px/1.1 "Inter Tight",Inter,sans-serif;letter-spacing:-.03em;margin:0;padding-right:200px;color:#fff}
 .sc-title em{font-style:normal;color:var(--green-on-dark)}
-.sc-term{margin-top:10px;font-size:16px;color:var(--hero-muted)}
-.sc-rows{display:grid;grid-template-columns:170px minmax(0,1fr);margin:26px 0 0;border-top:1px solid var(--hero-line)}
-.sc-rows dt{padding:15px 18px 15px 0;border-bottom:1px solid var(--hero-line);font-size:13px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--hero-muted)}
+.sc-term{margin-top:6px;font-size:15px;color:var(--hero-muted)}
+.sc-rows{display:grid;grid-template-columns:130px minmax(0,1fr);margin:18px 0 0;border-top:1px solid var(--hero-line)}
+.sc-rows dt{padding:11px 16px 11px 0;border-bottom:1px solid var(--hero-line);font-size:13px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--hero-muted)}
 .sc-rows dt.warn{color:var(--amber)}
-.sc-rows dd{margin:0;padding:12px 0;border-bottom:1px solid var(--hero-line);font-size:17px;line-height:1.5;color:#e6e7e2}
+.sc-rows dd{margin:0;padding:9px 0;border-bottom:1px solid var(--hero-line);font-size:16px;line-height:1.45;color:#e6e7e2}
 .sc-list{list-style:none;margin:0;padding:0}
-.sc-list li{padding:2px 0}
+.sc-list li{padding:1px 0}
+.sc-inline{list-style:none;margin:0;padding:0}
+.sc-inline li{display:inline}
+.sc-inline li+li::before{content:" · ";color:var(--hero-muted)}
 .sc-list.dots li{display:flex;gap:12px;align-items:baseline}
 .sc-list.dots li::before{content:"";flex:0 0 8px;height:8px;border-radius:50%;background:var(--green-on-dark);transform:translateY(-1px)}
 .sc-list.warn li::before{background:var(--amber)}
 .sc-list.grey li::before{background:#6f7268}
-.sc-when{margin-right:8px;font-size:14px;color:var(--hero-muted);white-space:nowrap}
+.sc-when{margin-right:8px;font-size:13.5px;color:var(--hero-muted);white-space:nowrap}
 .sc-dim{color:#c3c5bd}
-.sc-pace{margin-top:4px;font-size:15px;color:var(--hero-muted)}
+.sc-pace{margin-top:2px;font-size:14.5px;color:var(--hero-muted)}
 .sc-pace b{font-weight:600}.sc-pace b.ok{color:var(--green-on-dark)}.sc-pace b.warn{color:var(--amber)}.sc-pace b.bad{color:#ff8a7f}
 .sc-sub{margin-top:3px;font-size:14px;color:var(--hero-muted)}
-.sc-foot{margin-top:16px;font-size:14px;color:var(--hero-muted)}
+.sc-foot{margin-top:10px;font-size:13.5px;color:var(--hero-muted)}
 .sc-foot a{color:var(--green-on-dark);text-decoration:none}.sc-foot a:hover{text-decoration:underline}
 @media (max-width:860px){
   .hero.has-sc .hero-in>h1,.sc-title{padding-right:0}
   .sc-toggle{position:static;display:inline-flex;margin:0 0 18px}
-  .sc-title{font-size:28px}
+  .sc-title{font-size:26px}
   .sc-rows{grid-template-columns:1fr}
-  .sc-rows dt{padding:14px 0 2px;border-bottom:0}
-  .sc-rows dd{padding:0 0 14px;font-size:15.5px}
+  .sc-rows dt{padding:10px 0 1px;border-bottom:0}
+  .sc-rows dd{padding:0 0 10px;font-size:15px}
   .sc-when{display:block;white-space:normal}
 }`;
 
