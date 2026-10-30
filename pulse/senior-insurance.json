@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-30T16:55:52.291Z",
+  "generated_at": "2026-10-30T19:21:48.052Z",
   "date": "2026-10-30",
   "slug": "senior-insurance",
   "name": "Senior Insurance",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 95,
   "status": "green",
-  "verdict": "Meta drove all 22 leads over 28 days at a $11.68 CPL, with the top campaign \"BWS - 28 States - Leads - Calls\" accounting for $169.02 of the $256.99 total spend. GBP engagement is notable at 194 total actions but call rates are flagged as low across all three profiles (as low as 0.43%), and GBP actions dipped 3.33% in the last 7 days, suggesting the listings may need optimization to convert impressions into calls more effectively.",
+  "verdict": "Meta drove all 22 leads over 28 days at a $11.68 CPL, with the top campaign \"BWS - 28 States - Leads - Calls\" accounting for $169.02 of the $256.99 total spend. GBP engagement is high (194 total actions, 18 calls) but two of three profiles are flagged for low call rates, and overall GBP actions dipped 3.33% in the last 7 days, likely reflecting softening local search intent or listing visibility.",
   "windsor": {
     "totals": {
       "spend": 256.99,
@@ -782,44 +782,44 @@
     "history_line": "Meta campaigns launched and live · Duplicate contacts fixed, email-first matching live · Website form tracking + GHL webhook QA passed"
   },
   "performance": {
-    "generated_at": "2026-10-30T17:05:19.143Z",
+    "generated_at": "2026-10-30T19:26:19.641Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Meta efficient at $11.68 CPL; GBP call gap and GHL blackout are the real risks.",
+    "verdict": "CPL efficient at $11.68 but GHL blind spot hides true pipeline health.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Meta CPL is $11.68 on 22 leads over 28 days — strong baseline. No CPL degradation in the active 8-day window (Oct 22–29), holding $10–16/lead daily.",
+        "text": "CPL holds at $11.68 across 22 leads on $256.99 spend — efficient vs this client's active-period baseline with no degradation signal.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GHL returning 401 JWT error — pipeline data fully blind. Leads arriving (22 confirmed) but CRM intake unverifiable; this is a tracking fix, not an ads problem.",
+        "text": "GHL returned a 401 auth error; 0 pipeline data available. Leads arriving (22 in 28d) but intake conversion is unverifiable — this is a tracking leak, not an ads problem.",
         "confidence": "confirmed",
         "channel": "GHL"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GBP actions zeroed last 3 days (Oct 27–29 all show 0 vs 11 avg prior 3 days); 3-day signal is a confirmed drop, not noise.",
-        "confidence": "confirmed",
-        "channel": "gbp"
-      },
-      {
-        "id": "F4",
-        "priority": 3,
-        "text": "3-day lead signal (Oct 27–29): 2, 2, 3 leads vs prior 3 days (Oct 24–26): 4, 3, 4 — mild softening, but spend held at ~$34–36/day, watch for CPL drift.",
+        "text": "3-day lead signal (Oct 27-29: 2,2,3) is down vs prior 3 days (Oct 24-26: 4,3,4), averaging 2.3 vs 3.7 — a soft but real deceleration worth monitoring.",
         "confidence": "probable",
         "channel": "meta"
       },
       {
+        "id": "F4",
+        "priority": 3,
+        "text": "GBP calls are low: two of three profiles at 0.43% and 0.96% call rate vs 2.51% on the third profile (10 calls on 399 impressions). Underperforming listings may suppress organic lead capture.",
+        "confidence": "confirmed",
+        "channel": "gbp"
+      },
+      {
         "id": "F5",
         "priority": 4,
-        "text": "Best GBP profile converts at 2.51% call rate (10 calls / 399 impressions); worst at 0.43% (3 calls / 696 impressions) — 6× gap suggests listing optimization opportunity.",
-        "confidence": "confirmed",
+        "text": "GBP actions dropped 3.33% last 7 days, and the last 3 series days show 0 GBP actions (Oct 27-29) — possible reporting lag or genuine dip in local visibility.",
+        "confidence": "hypothesis",
         "channel": "gbp"
       }
     ],
@@ -827,33 +827,32 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Repair GHL JWT token immediately — 22 leads arrived with zero CRM visibility; intake leak unquantifiable until fixed.",
+        "text": "Repair GHL JWT token immediately; 22 leads are entering a pipeline we cannot see or verify.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Fix GHL JWT Auth Error",
-        "monday_update": "GHL is returning a 401 Invalid JWT error, meaning all lead pipeline data is blind for this client. Re-authenticate the GHL API token today and confirm the connection returns valid data. Success check: GHL pipeline loads without error by 2026-11-01. Until fixed, we cannot confirm whether any of the 22 Meta leads are being worked."
+        "monday_item_name": "Fix GHL Auth Token",
+        "monday_update": "The GHL integration is returning a 401 Invalid JWT error, meaning pipeline data for all 22 leads captured this 28-day period is invisible to the system. Regenerate or re-authenticate the GHL API token today. Success check: GHL pipeline data populates in the next performance pull (by 2026-11-02). Without this fix, we cannot confirm whether any lead is being worked or lost at intake."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch Meta CPL for 3 more days — leads softened to 2–3/day vs 3–4/day prior; no action until pattern confirms.",
+        "text": "Watch 3-day lead rate: if Oct 30-Nov 1 averages below 2.3/day, escalate to creative review.",
         "cites": [
-          "F4"
+          "F3"
         ],
         "monday_item_name": "Watch Meta Lead Rate",
-        "monday_update": "Leads dipped to 2, 2, 3 over Oct 27–29 versus 4, 3, 4 the prior 3 days while spend held flat at ~$34–36/day. This is a probable softening signal but not yet confirmed creative fatigue. Re-check on 2026-11-02; if CPL exceeds $16 on 3 consecutive days, flag for creative refresh on 'BWS - 28 States - Leads - Calls'."
+        "monday_update": "The last 3 days (Oct 27-29) averaged 2.3 leads/day, down from 3.7 leads/day in the prior 3 days (Oct 24-26). Spend is holding at ~$34-35/day so CPL is rising modestly. No action yet — one window is not a trend. Re-check on 2026-11-02; if the 3-day average remains below 2.5 leads/day, escalate to a creative refresh on the BWS - 28 States campaign."
       },
       {
         "id": "S3",
         "type": "fix",
-        "text": "Audit lowest-performing GBP profile (0.43% call rate, 696 impressions, 3 calls) — update CTA, hours, and photos to close 6× gap vs top profile.",
+        "text": "Audit the 2 low-call-rate GBP profiles; update CTA, hours, or primary category to close 0.43%/0.96% vs 2.51% gap.",
         "cites": [
-          "F5",
-          "F3"
+          "F4"
         ],
         "monday_item_name": "GBP Low Call Rate Fix",
-        "monday_update": "The lowest-performing Senior Insurance Team GBP profile generated only 3 calls from 696 impressions (0.43% call rate) versus the top profile's 2.51% rate on fewer impressions. Additionally, GBP actions have gone to zero for 3 consecutive days across all profiles. Audit and update the weakest profile's business description, call CTA, and primary photo by 2026-11-04. Success check: call rate on that profile moves above 1.0% within the next 28-day window."
+        "monday_update": "Two Senior Insurance Team GBP profiles show call rates of 0.43% and 0.96% against 696 and 523 impressions respectively, while the third profile achieves 2.51% on fewer impressions (399). Review and align the underperforming profiles' primary category, business description, CTA buttons, and listed phone number to match the higher-performing listing. Success check: call rate on both profiles exceeds 1.5% within the next 28-day window (by 2026-11-27)."
       }
     ],
     "next_check": "2026-11-02"

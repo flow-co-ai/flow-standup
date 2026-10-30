@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-30T16:55:28.613Z",
+  "generated_at": "2026-10-30T19:21:38.611Z",
   "date": "2026-10-30",
   "slug": "steel-advance",
   "name": "Advance Grinding Services",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 90,
   "status": "green",
-  "verdict": "Google Business Profile is the only active channel, generating 108 total actions (2 calls, 75 directions, 31 web clicks) over 28 days with no paid spend on Meta or Google Ads. The biggest movement is a 36.67% drop in GBP actions over the last 7 days versus the prior 7 days, likely driven by seasonal reduced search demand or a dip in local visibility, though a 27.27% lift in Search Console clicks offers a partial offset.",
+  "verdict": "Google Business Profile is the only active channel, generating 108 total actions (2 calls, 75 directions, 31 web clicks) over 28 days with no paid spend on Meta or Google Ads. The biggest movement is a 36.67% drop in GBP actions over the last 7 days versus the prior 7 days, likely driven by seasonal reduced search demand or a dip in local map pack visibility.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -567,43 +567,43 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-10-30T17:04:27.786Z",
+    "generated_at": "2026-10-30T19:25:26.306Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "GBP-only signal thinning; 8 overdue SOW milestones demand immediate escalation.",
+    "verdict": "GBP-only signal fading; 8 overdue SOW milestones demand immediate escalation.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "5 CRM milestones overdue since July–September 2026: 342 stub reconciliation and Sales-i parser (both blockers) still open as of 2026-10-30.",
+        "text": "5 CRM milestones overdue since Jul 7–Sep 30: 342 stub reconciliation and Sales-i parser are active blockers gating all downstream CRM value.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3 outreach/web milestones overdue: AGS+Forte contact pull, lapsed sequences, and root-cause fix all past their Aug–Sep 2026 deadlines.",
+        "text": "3 Outreach/Web milestones overdue since Aug 31–Sep 30: AGS+Forte contact pull, lapsed sequences, and root-cause fix all unresolved — zero outreach firing.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "GBP actions dropped 36.67% last 7d vs prior 7d; last 3 days (Oct 27–29) show 0, 0, 0 actions vs prior 3-day average of ~3.0.",
+        "priority": 3,
+        "text": "GBP actions collapsed to 0 for 3 consecutive days (Oct 27–29), down from a 28-day average of ~3.9/day; 3-day signal is a confirmed drop, not noise.",
         "confidence": "confirmed",
         "channel": "GBP"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Search Console clicks rose 27.27% 7d vs prior 7d, averaging ~3.7/day last 3 days — diverging from GBP collapse, suggesting local pack visibility specifically is dropping.",
+        "text": "Search clicks rose 27.27% week-over-week (119 clicks, 28,389 impressions over 28d) but GBP actions fell 36.67% — demand exists; map-pack visibility is the gap.",
         "confidence": "probable",
-        "channel": "SEO"
+        "channel": "GBP"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GA4 sessions are zero for all 28 days; either tracking is broken or GA4 property is disconnected — no website conversion data available.",
+        "text": "GA4 sessions are zero across all 28 series days — either the property is unlinked or tracking is broken; website traffic is completely dark.",
         "confidence": "confirmed",
         "channel": "Web"
       }
@@ -612,35 +612,35 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Escalate 342 stub reconciliation and Sales-i parser blockers to Ahmed/Dev2 — both gates are 60+ days overdue.",
+        "text": "Escalate 342-stub reconciliation and Sales-i parser to Ahmed immediately; both are confirmed blockers past Aug 31 and Sep 30 deadlines.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "CRM Blockers Escalation Oct",
-        "monday_update": "Two confirmed blockers — 342 stub reconciliation and the Sales-i export parser — passed their Aug 31 and Sep 30 deadlines with no completion event recorded. Tag Ahmed and Dev 2 for a status update by 2026-11-03. Success is a written completion date or a blocker reason posted to Monday. Re-check 2026-11-03."
+        "monday_item_name": "Clear CRM Blocker Milestones",
+        "monday_update": "Two confirmed blockers are overdue: the 342 stub reconciliation (due Aug 31) and the Sales-i export parser (due Sep 30). Ahmed and Dev 2 must provide a completion date by Nov 3. Success is defined as stubs reconciled with rollback files posted and parser returning data to the 6 Sugar fields — confirm both by Nov 14."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Investigate GBP local-pack visibility drop: 0 actions for 3 consecutive days after averaging ~3/day prior 3 days.",
+        "text": "Audit GBP profile for suppression or listing edit; 3 consecutive zero-action days against 406 impressions/28d baseline is an actionable signal.",
         "cites": [
           "F3",
           "F4"
         ],
-        "monday_item_name": "GBP Visibility Drop Fix",
-        "monday_update": "GBP actions hit zero for Oct 27–29 (3 consecutive days) while Search Console clicks held at ~3.7/day, pointing to a local-pack or profile-level issue rather than broad search demand. Check GBP profile for suspensions, missing hours, or a recent edit that triggered re-review. Success is GBP actions returning above 3/day within 7 days. Re-check 2026-11-06."
+        "monday_item_name": "GBP Zero-Action Audit",
+        "monday_update": "GBP actions hit zero for Oct 27–29 despite search clicks rising 27.27% week-over-week, indicating a map-pack or listing issue rather than demand loss. Check for listing suspensions, pending edits, or category changes on the AGS profile (account ID 915214044079692050). Success check: daily GBP actions return above 3/day average by Nov 6."
       },
       {
         "id": "S3",
         "type": "fix",
-        "text": "Resolve GA4 zero-session data gap — 28 straight days of null sessions blocks any future web conversion tracking.",
+        "text": "Verify GA4 tracking installation on AGS site; 28 consecutive zero-session days confirm broken or missing tag — not a data gap.",
         "cites": [
           "F5"
         ],
         "monday_item_name": "GA4 Tracking Fix AGS",
-        "monday_update": "GA4 sessions have read zero across all 28 days in the reporting window, making web performance completely invisible. Dev team to verify the GA4 property ID is correctly connected and the tracking tag is firing on the AGS site. Success is confirmed non-zero session data appearing in GA4 within 48 hours of the fix. Re-check 2026-11-02."
+        "monday_update": "GA4 sessions have read zero for every day in the 28-day series, which confirms a broken or absent tag rather than low traffic. Dev team should verify the GA4 measurement ID is firing on the AGS site and confirm via DebugView by Nov 3. Success is at least 1 verified session recorded before end of day Nov 3."
       }
     ],
-    "next_check": "2026-11-02"
+    "next_check": "2026-11-03"
   }
 }

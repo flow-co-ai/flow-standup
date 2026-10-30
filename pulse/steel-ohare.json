@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-30T16:55:34.980Z",
+  "generated_at": "2026-10-30T19:21:43.657Z",
   "date": "2026-10-30",
   "slug": "steel-ohare",
   "name": "O'Hare Precision Metals",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 100,
   "status": "green",
-  "verdict": "GBP drove all measurable engagement over the past 28 days with 188 total actions (140 directions, 44 web clicks, 4 calls), but the profile-level flags are a concern: Precision Ground Bars and Precision Ground Metals, Inc. each recorded zero calls despite 183 and 78 impressions respectively, suggesting those listings may have call friction or incorrect phone setups. GBP actions also trended down 10% week-over-week, making it the biggest negative movement to watch.",
+  "verdict": "GBP drove all measurable engagement over the past 28 days with 188 total actions (140 directions, 44 web clicks, 4 calls), but the O'Hare main profile is carrying the load almost entirely, as Precision Ground Bars and Precision Ground Metals, Inc. recorded zero calls despite 183 and 78 impressions respectively, flagging a likely conversion friction issue on those listings. GBP actions also trended down 10% week-over-week, making optimization of the underperforming profiles the clearest near-term opportunity.",
   "windsor": {
     "totals": {
       "spend": 0,
@@ -604,43 +604,43 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-10-30T17:04:52.796Z",
+    "generated_at": "2026-10-30T19:25:52.568Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "GBP is the only active channel; 2 of 3 profiles are call-dead.",
+    "verdict": "No paid spend exists; GBP organic is the only active money channel.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "6 CRM milestones overdue since Jul 7; 342 stub accounts and Sales-i parser (both blockers) unresolved as of Oct 30.",
+        "text": "6 overdue CRM milestones (oldest: 2026-07-07) unresolved; 342 stub accounts block Sales-i sync — no pipeline data is trustworthy until fixed.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "2 outreach milestones overdue: AGS+Forte contacts and lapsed sequences not launched; zero cold-email activity visible in data.",
+        "text": "2 overdue outreach milestones (AGS + Forte contacts, lapsed sequences) unresolved since 2026-08-31 and 2026-09-30 respectively; cold pipeline contribution is zero.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Web/SEO blocker overdue Aug 31: root cause named + fix submitted milestone shows no completed event.",
+        "text": "Web/SEO root-cause fix overdue since 2026-08-31; blocker status means organic search health cannot be verified or improved.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Precision Ground Bars (183 impressions, 0 calls) and Precision Ground Metals (78 impressions, 0 calls) have zero call-rate despite sustained visibility — likely phone setup or CTA friction.",
-        "confidence": "probable",
+        "text": "Precision Ground Bars (183 impressions) and Precision Ground Metals (78 impressions) logged 0 calls over 28 days; call_rate is 0.000 vs O'Hare main at 0.0064.",
+        "confidence": "confirmed",
         "channel": "GBP"
       },
       {
         "id": "F5",
         "priority": 3,
-        "text": "GBP actions dropped 10% week-over-week; last 3 days (Oct 27–29) show 5, 0, 0 vs prior 3 days (Oct 24–26) averaging 9 — a real 3-day downturn, not noise.",
+        "text": "GBP actions fell -10% week-over-week; last 3 days (Oct 27–29) show 5, 0, 0 vs prior 3 days (Oct 24–26) of 3, 15, 5 — spike-and-drop pattern, no sustained momentum.",
         "confidence": "confirmed",
         "channel": "GBP"
       }
@@ -649,34 +649,34 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit phone number and call button on Precision Ground Bars and Precision Ground Metals GBP profiles; 261 combined impressions produced 0 calls.",
+        "text": "Escalate 342 stub reconciliation and Sales-i parser build; both blockers are 60+ days overdue.",
         "cites": [
-          "F4"
+          "F1"
         ],
-        "monday_item_name": "Fix GBP call friction x2",
-        "monday_update": "Precision Ground Bars (183 impressions, 0 calls) and Precision Ground Metals (78 impressions, 0 calls) have a confirmed zero call-rate — verify the phone number is correct, the call button is enabled, and the primary category is not suppressing the call CTA on both profiles. Success check: at least 1 call recorded on each profile within the next 14 days (by Nov 13)."
+        "monday_item_name": "Clear CRM Blocker Stubs + Parser",
+        "monday_update": "The 342 stub accounts remain unreconciled (due 2026-08-31) and the Sales-i parser is unbuilt (due 2026-09-30), meaning Sales-i cannot populate any Sugar fields and all inactivity/BPM automations are running blind. Escalate to Ahmed and Dev 2 with a hard deadline of 2026-11-07 for the stub batch and a scope-locked parser spec. Success check: rollback file posted to Monday board and at least one sample export successfully parsed into Sugar REST API by 2026-11-14."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Escalate 342 stub reconciliation and Sales-i parser blocker; both gate downstream CRM data integrity and are 60+ days overdue.",
+        "text": "Audit Precision Ground Bars and Precision Ground Metals GBP listings for call friction; 0 calls on 261 combined impressions is confirmed lost signal.",
         "cites": [
-          "F1"
+          "F4"
         ],
-        "monday_item_name": "Unblock CRM stubs + parser",
-        "monday_update": "The 342 stub accounts remain unreconciled and the Sales-i export parser is unbuilt — both are flagged blockers in the SOW and were due Aug 31 and Sep 30 respectively. Without these, Sales-i cannot populate Sugar fields and the inactivity BPM has no reliable data to act on. Escalate to Ahmed and Dev 2 for a hard completion date; success is stub workbook posted to Monday board and parser tested against one sample export by Nov 7."
+        "monday_item_name": "Fix GBP Zero-Call Profiles",
+        "monday_update": "Precision Ground Bars and Precision Ground Metals recorded 0 calls across 183 and 78 impressions respectively over 28 days, while O'Hare main converted at 0.64%. Check that each profile has a correct, clickable phone number, the primary category matches buyer intent, and Q&A or photo gaps are not suppressing call CTA visibility. Success check: at least 1 confirmed call on each profile within the next 14 days (by 2026-11-13)."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP action trend: 3-day avg dropped from 9 to 1.7; re-check Nov 3 to confirm recovery or continued decline.",
+        "text": "Watch GBP action trend; 3-day signal shows 0 actions on Oct 28–29 — re-check on 2026-11-02 for recovery.",
         "cites": [
           "F5"
         ],
-        "monday_item_name": "Watch GBP action trend",
-        "monday_update": "GBP actions over Oct 27–29 were 5, 0, 0 against a prior 3-day average of 9 — a confirmed short-term downturn. No paid channels are active to compensate. Re-check on Nov 3; if the 3-day average remains below 5, escalate to a GBP content or post-frequency review. No action taken this cycle pending one more data window."
+        "monday_item_name": "Watch GBP Action Trend",
+        "monday_update": "GBP actions dropped to 0 on both Oct 28 and Oct 29 after a spike of 15 on Oct 26, and the 7-day delta is already -10%. This may be weekend suppression or early signal of listing demotion. No action taken this cycle. Re-check the 3-day window on 2026-11-02; if daily actions remain below 3 for a third consecutive day, escalate GBP listing health review."
       }
     ],
-    "next_check": "2026-11-03"
+    "next_check": "2026-11-02"
   }
 }

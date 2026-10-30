@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-10-30T16:56:30.747Z",
+  "generated_at": "2026-10-30T19:21:56.389Z",
   "date": "2026-10-30",
   "slug": "al-manakeesh",
   "name": "Al Manakeesh",
   "type": "leadgen",
   "window_days": 28,
-  "score": 100,
+  "score": 80,
   "status": "green",
-  "verdict": "Al Manakeesh generated 4,114 total GBP actions over 28 days (394 calls, 1,619 directions, 2,101 web clicks) with no paid spend active, but GBP engagement dropped 26.13% in the last 7 days versus the prior 7 days, likely driven by organic visibility softening across both the Canton and Fishers profiles.",
+  "verdict": "Google Ads drove 18 conversions from 107 clicks on $62.90 in spend over 28 days, but zero tracked leads are registering in the pipeline, triggering a lead drought flag that likely points to a form or CRM tracking disconnect rather than a true demand gap. GBP engagement is also sliding, down 26.13% week-over-week, with Canton and Fishers profiles combining for 394 calls and 2,101 web clicks but losing momentum heading into the current period.",
   "windsor": {
     "totals": {
-      "spend": 0,
+      "spend": 62.9,
       "leads": 0,
       "cpl": 0,
       "byChannel": {
@@ -20,9 +20,9 @@
           "clicks": 0
         },
         "google_ads": {
-          "spend": 0,
-          "conversions": 0,
-          "clicks": 0
+          "spend": 62.9,
+          "conversions": 18,
+          "clicks": 107
         },
         "gbp": {
           "actions": 4114,
@@ -58,17 +58,20 @@
       "gbp_actions": 4114,
       "ig_reach": 0
     },
-    "top_campaign": null,
+    "top_campaign": {
+      "name": "Fishers | Pizza & Specialty",
+      "spend": 21.46
+    },
     "latest_day": {
       "date": "2026-10-29",
-      "spend": 0,
+      "spend": 24.67,
       "leads": 0,
       "meta_spend": 0,
-      "google_spend": 0,
+      "google_spend": 24.67,
       "meta_leads": 0,
       "meta_clicks": 0,
       "google_conversions": 0,
-      "google_clicks": 0,
+      "google_clicks": 40,
       "gbp_actions": 0,
       "ig_reach": 0,
       "sc_clicks": 0,
@@ -108,9 +111,11 @@
       "sc_7d_pct": null,
       "ga4_7d_pct": null,
       "ig_7d_pct": null,
-      "spend_per_day_7d": 0
+      "spend_per_day_7d": 8.99
     },
-    "flags": [],
+    "flags": [
+      "lead_drought"
+    ],
     "series": {
       "dates": [
         "2026-10-02",
@@ -168,9 +173,9 @@
         0,
         0,
         0,
-        0,
-        0,
-        0
+        13.92,
+        24.31,
+        24.67
       ],
       "leads": [
         0,
@@ -258,9 +263,9 @@
         0,
         0,
         0,
-        0,
-        0,
-        0
+        13.92,
+        24.31,
+        24.67
       ],
       "gbp_actions": [
         165,
@@ -575,67 +580,227 @@
   "_meta": {
     "source": "windsor_api",
     "sources": [
+      "google_ads",
       "google_my_business"
     ]
   },
+  "brief": {
+    "date": "2026-10-30",
+    "headlines": [
+      {
+        "text": "Multiple client access items marked done today",
+        "tone": "win"
+      },
+      {
+        "text": "Location pages Canton & Fishers due today",
+        "tone": "info"
+      },
+      {
+        "text": "Website backend access still pending from client",
+        "tone": "info"
+      }
+    ],
+    "workstreams": [
+      {
+        "title": "Al Manakeesh - SEO / Web",
+        "badge": {
+          "label": "P1 - needs attention",
+          "tone": "amber"
+        },
+        "items": [
+          {
+            "state": "done",
+            "text": "Keyword research, SEO audit, and GBP audit & fixes completed (Hashir)"
+          },
+          {
+            "state": "next",
+            "text": "Location pages: Canton & Fishers — due today"
+          }
+        ],
+        "owners": [
+          "Hashir"
+        ]
+      },
+      {
+        "title": "Al Manakeesh - Ads / Analytics",
+        "badge": {
+          "label": "P1 - blocked",
+          "tone": "red"
+        },
+        "items": [
+          {
+            "state": "done",
+            "text": "Google Analytics created; ads team access granted (Hashir)"
+          },
+          {
+            "state": "done",
+            "text": "Google Ads account access marked done on Monday"
+          },
+          {
+            "state": "blocked",
+            "text": "Website backend access still needed from client (Monday item 13324404132)"
+          }
+        ],
+        "owners": [
+          "Hashir",
+          "Nacer Amrouch"
+        ]
+      },
+      {
+        "title": "Al Manakeesh - Client Access",
+        "badge": {
+          "label": "P2 - on track",
+          "tone": "green"
+        },
+        "items": [
+          {
+            "state": "done",
+            "text": "Square: Flow added as team member with website access"
+          },
+          {
+            "state": "done",
+            "text": "Photo folders: Canton & Fishers shared Drive/Dropbox"
+          },
+          {
+            "state": "done",
+            "text": "Google Ads account: client created with card, Flow given admin access"
+          }
+        ]
+      }
+    ],
+    "waiting_on_client": [
+      {
+        "item": "Website backend access for order tracking setup",
+        "who": "Client (unnamed)",
+        "since": "10/26"
+      }
+    ],
+    "launch_gate": null,
+    "brief_v2": {
+      "verdict": "Team is moving; client must still provide website backend access to unblock order tracking.",
+      "next_move": "Client: provide website backend access — unblocks order tracking setup (item 13324404132).",
+      "blocks": [
+        {
+          "item": "Client access — website backend (item 13324404132)",
+          "side": "client",
+          "who": "Client (unnamed)",
+          "last_activity": "Nacer provided BWS email access 10/26; backend access still outstanding on Monday"
+        }
+      ],
+      "snapshot": [
+        {
+          "label": "Open items",
+          "value": "6 open, all in working status; 1 blocked awaiting client backend access",
+          "tone": "warn"
+        },
+        {
+          "label": "Last client word",
+          "value": "10/26 — client provided partial website access via Nacer",
+          "tone": "plain"
+        }
+      ],
+      "history_line": "Keyword research, SEO & GBP audit done · Google Analytics created & access granted · Square, photo folders & Google Ads access marked done"
+    }
+  },
+  "brief_v2": {
+    "verdict": "Team is moving; client must still provide website backend access to unblock order tracking.",
+    "next_move": "Client: provide website backend access — unblocks order tracking setup (item 13324404132).",
+    "blocks": [
+      {
+        "item": "Client access — website backend (item 13324404132)",
+        "side": "client",
+        "who": "Client (unnamed)",
+        "last_activity": "Nacer provided BWS email access 10/26; backend access still outstanding on Monday"
+      }
+    ],
+    "snapshot": [
+      {
+        "label": "Open items",
+        "value": "6 open, all in working status; 1 blocked awaiting client backend access",
+        "tone": "warn"
+      },
+      {
+        "label": "Last client word",
+        "value": "10/26 — client provided partial website access via Nacer",
+        "tone": "plain"
+      }
+    ],
+    "history_line": "Keyword research, SEO & GBP audit done · Google Analytics created & access granted · Square, photo folders & Google Ads access marked done"
+  },
   "performance": {
-    "generated_at": "2026-10-30T17:06:05.341Z",
-    "cadence": "scheduled_3d",
+    "generated_at": "2026-10-30T19:27:11.867Z",
+    "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "GBP-only client; organic softening is the sole risk to watch.",
+    "verdict": "GBP collapse last 3 days masks a campaign-just-launched, not-yet-converting reality.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days; no CPL, no leads, no Meta or Google activity to evaluate for efficiency.",
+        "text": "lead_drought confirmed: 18 Google Ads conversions tracked in 28 days but 0 leads recorded in series — tracking disconnect, not demand failure.",
         "confidence": "confirmed",
-        "channel": "all"
+        "channel": "google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions fell 26.13% in the last 7 days vs prior 7; the 3-day signal confirms it: Oct 25–27 totalled 176 actions vs 578 in the prior 3 days (Oct 22–24).",
+        "text": "Google Ads only launched Oct 27; spend is $13.92, $24.31, $24.67 across 3 live days — too early to judge CPL from a cold start.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "google_ads"
       },
       {
         "id": "F3",
-        "priority": 3,
-        "text": "Oct 28–29 show 0 GBP actions on both days; 26 of 28 days had impressions, so two consecutive zero-action days are an anomaly likely indicating a data feed lag.",
-        "confidence": "hypothesis",
-        "channel": "GBP"
+        "priority": 2,
+        "text": "GBP actions collapsed to 49 on Oct 27, then 0 for Oct 28–29, down from a 90-day daily average of ~155 — 3-day signal is a confirmed drop.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       },
       {
         "id": "F4",
+        "priority": 3,
+        "text": "Canton call rate (1.11%) is 68% higher than Fishers (0.66%) across 28 days — Fishers impressions (25,464) exceed Canton (20,468) but convert calls worse.",
+        "confidence": "probable",
+        "channel": "gbp"
+      },
+      {
+        "id": "F5",
         "priority": 4,
-        "text": "Canton call rate is 1.11% vs Fishers 0.66% on 20,468 vs 25,464 impressions; Fishers drives more impressions but converts calls at nearly half the rate.",
+        "text": "Meta spend is $0 across all 45 series days — channel is dark; no leads, clicks, or reach recorded at any point in the window.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "meta"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Watch GBP actions daily; confirm Oct 28–29 zero-action days are data lag, not true drop, by Nov 2.",
+        "type": "fix",
+        "text": "Audit Google Ads conversion tag and GHL intake: 18 conversions show in Ads but 0 leads land in pipeline — fix tracking before reading CPL.",
         "cites": [
-          "F3",
-          "F2"
+          "F1"
         ],
-        "monday_item_name": "GBP Data Gap Confirm",
-        "monday_update": "GBP logged 0 actions on Oct 28 and Oct 29, breaking a 26-day streak with impressions — this is likely a reporting/feed lag rather than a true visibility collapse. Cross-check both the Canton and Fishers profiles directly in Google Business Profile dashboard against the Oct 28–29 dates. Success check: if actions reappear in the feed by Nov 2, no action needed; if zeros persist, escalate as a GBP data or suspension issue before Nov 2."
+        "monday_item_name": "Fix Google Ads conversion tracking",
+        "monday_update": "Google Ads reports 18 conversions from $62.90 spend over 28 days, but the daily leads series shows 0 across every day — the conversion event is either misfiring or not writing to GHL. Audit the conversion tag (confirm it fires on the actual thank-you or form-submit step, not a page view) and check GHL intake for any form submission errors. Success is confirmed when at least 3 consecutive days of Google spend also show matching lead entries in GHL. Complete audit by 2026-11-03."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch Fishers GBP call rate (0.66%) vs Canton (1.11%); diagnose profile completeness gap by Nov 6.",
+        "text": "Watch GBP actions: 3-day collapse to near-zero (49 → 0 → 0) may be a data lag — re-check Oct 31 before treating as a real drop.",
         "cites": [
-          "F4"
+          "F3"
         ],
-        "monday_item_name": "Fishers GBP Call Rate Audit",
-        "monday_update": "Fishers generates more impressions (25,464) than Canton (20,468) over 28 days but converts calls at 0.66% vs Canton's 1.11% — nearly half the rate. Review the Fishers profile for missing or weaker call-to-action elements: hours accuracy, Q&A, photos, and primary category alignment. Success check: call rate at Fishers moves above 0.85% within 30 days of any profile improvements made by Nov 6."
+        "monday_item_name": "Watch GBP actions drop",
+        "monday_update": "GBP actions fell to 49 on Oct 27 and read 0 for Oct 28–29, against a prior daily average of ~155 actions. This is likely a data-pull lag for the most recent days rather than a true audience loss, but it cannot be dismissed given the -26.13% 7-day delta already flagged. Re-check on 2026-11-01: if actions remain below 100 for three confirmed days, escalate to a GBP profile audit (categories, photos, review velocity)."
+      },
+      {
+        "id": "S3",
+        "type": "watch",
+        "text": "Watch Google Ads CPL for 4 more days: campaign is only 3 days old at $24.67/day — no efficiency verdict is defensible yet.",
+        "cites": [
+          "F2"
+        ],
+        "monday_item_name": "Watch Google Ads CPL baseline",
+        "monday_update": "Paid search only went live Oct 27, with daily spend of $13.92, $24.31, and $24.67. A CPL baseline cannot be set on 3 days of data. Hold current budget and re-check on 2026-11-03 once at least 7 live days have accumulated and tracking (see S1) is confirmed working. Success signal: CPL is calculable and stable across 3 consecutive days."
       }
     ],
-    "next_check": "2026-11-02"
+    "next_check": "2026-11-03"
   }
 }

@@ -1,7 +1,7 @@
 {
   "slug": "al-manakeesh",
   "name": "Al Manakeesh",
-  "generated_at": "2026-10-30T17:07:39.548Z",
+  "generated_at": "2026-10-30T19:28:53.240Z",
   "contract": {
     "start": null,
     "end": null,
@@ -15,7 +15,7 @@
       "window": "engagement"
     }
   },
-  "status": "ok",
+  "status": "critical",
   "lanes": {
     "organic": {
       "state": "green",
@@ -56,16 +56,27 @@
       }
     },
     "paid": {
-      "state": "quiet",
-      "headline": "no paid · config",
-      "sentence": "No paid channels configured.",
+      "state": "red",
+      "headline": "$63 · no leads · 14d",
+      "sentence": "Google Ads $62.90 spend.",
       "basis": {
-        "type": "not_found",
-        "source": "clients.json",
-        "window": "config"
+        "type": "observed",
+        "source": "Windsor Paid",
+        "window": "14d"
       },
-      "flags": [],
-      "detail": {}
+      "flags": [
+        "lead_drought"
+      ],
+      "detail": {
+        "meta": null,
+        "google_ads": {
+          "spend": 62.9,
+          "convs": 18,
+          "clicks": 107
+        },
+        "total_spend": 62.9,
+        "reconciliation": null
+      }
     },
     "crm": {
       "state": "green",
@@ -87,12 +98,12 @@
         "awaiting_flow": 0,
         "oldest_unanswered_hours": 0,
         "threads": {
-          "messages_scanned": 0,
-          "threads": 0,
+          "messages_scanned": 2,
+          "threads": 1,
           "awaiting_flow": 0,
           "awaiting_client": 0,
           "client_update": 0,
-          "settled": 0,
+          "settled": 1,
           "abandoned": 0,
           "stale_over_24h": 0
         },
@@ -100,16 +111,28 @@
       }
     }
   },
-  "scope_out": [
-    "paid"
+  "scope_out": [],
+  "needs_you": [
+    {
+      "text": "Paid issue (red)",
+      "flags": [
+        "lead_drought"
+      ],
+      "severity": "high",
+      "age_days": null,
+      "basis": {
+        "type": "observed",
+        "source": "Windsor Paid",
+        "window": "14d"
+      }
+    }
   ],
-  "needs_you": [],
   "sources_read": {
     "pulse": true,
     "facts": false,
     "comms": true,
     "plan": false,
     "timeline": false,
-    "inbox": false
+    "inbox": true
   }
 }

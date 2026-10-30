@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-30T16:56:26.247Z",
+  "generated_at": "2026-10-30T19:21:51.939Z",
   "date": "2026-10-30",
   "slug": "medstation",
   "name": "MedStation",
@@ -7,7 +7,7 @@
   "window_days": 28,
   "score": 80,
   "status": "green",
-  "verdict": "MedStation Google Business actions is down 47.53% vs the prior 7 days.",
+  "verdict": "Over the past 28 days MedStation generated 98 leads at a $18.55 CPL, but the biggest concern is a 47.53% drop in GBP actions week-over-week, likely driven by reduced local search visibility or listing engagement, compounded by flagged low call rates at Weston (1.34%) and Dr Phillips (10.38%) suggesting those profiles are not converting impressions into patient contacts.",
   "windsor": {
     "totals": {
       "spend": 1817.48,
@@ -848,77 +848,78 @@
     "history_line": "Pink October campaign launched to 1,053 Weston contacts · Fixed appointment sync & delivered 17 review requests · Melissa & Rapha added to GHL and Google Ads"
   },
   "performance": {
-    "generated_at": "2026-10-30T17:05:46.638Z",
+    "generated_at": "2026-10-30T19:26:44.815Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "SOW is 3 months overdue; ads are cheap but pipeline is invisible.",
+    "verdict": "10 overdue SOW milestones expose a pre-launch stall; paid efficiency is secondary.",
     "findings": [
       {
         "id": "F1",
         "priority": 2,
-        "text": "10 of 10 SOW milestones are overdue; earliest was 2026-07-31, now 91 days past — no confirmed deliveries on record.",
+        "text": "5 of 10 SOW milestones due 2026-07-31 are undelivered — stack test, GHL migration, GBP triage, Meta CAPI, and landing pages — blocking all attribution.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GHL returning 401 JWT error — pipeline data fully blind; leads-to-opportunities conversion is unverifiable with 98 leads in 28 days.",
+        "text": "5 further milestones (Aug–Sep–Oct) also overdue: Meta lanes, Search campaigns, LSA, nurture sequences, and Phase 1 close conversation — engagement is 3 months behind.",
         "confidence": "confirmed",
         "channel": "SOW"
       },
       {
         "id": "F3",
         "priority": 1,
-        "text": "CPL rose 13.03% week-over-week while spend rose only 5.24% and leads fell 6.9%; 3-day signal (Oct 27–29: 3+7+3=13 leads, $69+$60+$65=$194) vs prior 3 (Oct 24–26: 0+5+3=8 leads, $49+$97+$69=$215) shows volume recovering but spend-per-lead still elevated vs 28-day baseline of $18.55.",
+        "text": "CPL rose 13.03% week-over-week while spend rose only 5.24% and leads fell 6.9% — efficiency is degrading, not recovering, on a $18.55 28-day CPL baseline.",
         "confidence": "confirmed",
         "channel": "Meta"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions dropped 47.53% in 7 days; Oct 28–29 show 0 actions both days vs 28-day daily average of ~51; Weston call rate is 0.0134 vs Coconut Creek's 0.3007 — Weston profile is underperforming by 22x on calls per impression.",
+        "text": "GBP actions are zero on Oct 28–29 and down 47.53% week-over-week; Weston call rate is 1.34% vs Pompano's 24.42% — two profiles are functionally dark.",
         "confidence": "confirmed",
         "channel": "GBP"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GA4 sessions fell 16.8% week-over-week and GA4 conversions read 0 for the full 45-day series — tracking is not firing; directional only.",
-        "confidence": "hypothesis",
-        "channel": "GA4"
+        "text": "GHL returning 401 JWT error — pipeline data is completely unavailable, so lead-to-opportunity conversion cannot be assessed this cycle.",
+        "confidence": "confirmed",
+        "channel": "GHL"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Repair GHL JWT token immediately; 98 leads in 28 days with zero pipeline visibility is an intake leak, not an ads problem.",
+        "text": "Escalate all 10 overdue SOW milestones to Nacer and Sohib; block any budget increase until stack test passes.",
         "cites": [
+          "F1",
           "F2"
         ],
-        "monday_item_name": "Fix GHL 401 JWT Error",
-        "monday_update": "The GHL API is returning a 401 JWT authentication error, making all pipeline data invisible. Rotate or reissue the JWT token and confirm API connectivity. Success check: GHL pipeline data populates without error by 2026-11-03. This blocks any assessment of whether 98 leads in 28 days are converting to booked appointments."
+        "monday_item_name": "SOW Milestone Escalation — Nacer",
+        "monday_update": "All 10 SOW milestones due July–October 2026 remain undelivered, including the end-to-end stack test, GHL migration, Meta CAPI, and landing pages. No paid budget increase should be approved until at minimum the stack test and tracking are confirmed live. Success check: Nacer confirms gate sign-off on stack test and tracking by 2026-11-07."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Escalate all 10 overdue SOW milestones to Nacer and Sohib; oldest is 91 days past due as of today.",
+        "text": "Repair GHL JWT token; pipeline visibility is zero until resolved — do not interpret lead volume without it.",
         "cites": [
-          "F1"
+          "F5"
         ],
-        "monday_item_name": "SOW Milestone Escalation — 10 Overdue",
-        "monday_update": "All 10 Phase 1 milestones are overdue, with the earliest (pre-launch stack test, GHL migration, GBP triage, Meta CAPI, landing pages) 91 days past their 2026-07-31 due date. Nacer and Sohib need to produce a written status on each item and a revised delivery date. Success check: written status received and updated dates confirmed in Monday by 2026-11-06. Phase 1 close conversation was due 2026-09-30 and has not occurred."
+        "monday_item_name": "Fix GHL 401 JWT Error",
+        "monday_update": "GHL is returning a 401 Invalid JWT error, meaning all pipeline and opportunity data is inaccessible this cycle. Rotate or reissue the API token and re-authenticate the integration. Success check: GHL pipeline data loads cleanly on next scheduled pull by 2026-11-02."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch CPL trend for 3 more days; if it stays above $18.55 baseline by 2026-11-02, shift budget away from Meta.",
+        "text": "Watch CPL trend over next 3 days; if CPL exceeds $22 (vs $18.55 baseline), trigger a budget_shift away from MDST-WES-AWARE-WHTAPP.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Watch Meta CPL vs Baseline",
-        "monday_update": "CPL rose 13.03% week-over-week against a 28-day baseline of $18.55. The 3-day lead recovery (Oct 27–29: 13 leads vs prior 3-day 8 leads) is encouraging but CPL remains elevated. Re-check on 2026-11-02; if CPL has not returned to at or below $18.55, escalate to a budget_shift suggestion. No action before then — one partial recovery is not confirmation."
+        "monday_item_name": "Watch CPL — MDST-WES-AWARE-WHTAPP",
+        "monday_update": "CPL rose 13.03% week-over-week to an estimated ~$20.96 against a 28-day baseline of $18.55, with leads down 6.9% and spend up 5.24%. No budget move is warranted today, but if CPL crosses $22 in the next 3-day window (check 2026-11-02), initiate a budget_shift of up to 20% away from the top campaign. Re-check date: 2026-11-02."
       }
     ],
     "next_check": "2026-11-02"
