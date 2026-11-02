@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-02T17:38:56.650Z",
+  "updatedAt": "2026-11-02T23:05:38.344213+00:00",
   "items": [
     {
       "id": "qualityhvac-burr-ridge-gbp-move",
@@ -56,13 +56,13 @@
     {
       "id": "medstation-ring-timeout",
       "title": "Ring Timeout",
-      "note": "Priority 3: staff are missing calls but nothing is down. Section 19 audit: MedStation groups on all four boards, subitems included, plus a text sweep for ring timeout. Only hits are Quality HVAC Missed Calls and Maadi Law Intake Call Drops, other clients, so create_item. Kept separate from Deleted Appointment Messages per the single item counter rule (call routing vs messaging). Section 19b: no pending queue match. Sohib has a call with MedStation and their IT on 10/7 at 10am, which is a good place to confirm which line this is. Section 19b matcher returned axis 3 (same client, similar work); merged rather than flagged because the 10/7 message is the same staff reporting the same symptom continuing, not separate work. 10/7 Weston said calls are still failing, so priority raised to 2. Still needs doing; nothing in the window says it is fixed. 10/16 merge (Section 19b axis 3, same symptom, same staff): timeout is already 22 seconds and GHL config checks out, so the raise timeout step is replaced with opening a GHL support ticket. Second question: not fixed, still happening per Ahmed; stays ready. 10/26 re-audit (Section 19): Monday item 13383800829 \"Weston calls not ringing in GHL app\", created by Sohib on 10/26, already carries this work and the 10/14 to 10/23 GHL chat (routing changed repeatedly, Renata still reports one ring or none on 10/21, Ahmed still waiting on her app email and call settings screenshot on 10/23). Firing this card would create a duplicate, so status exists. Payload kept so the card is recoverable if that item is removed.",
+      "note": "Priority 3: staff are missing calls but nothing is down. Section 19 audit: MedStation groups on all four boards, subitems included, plus a text sweep for ring timeout. Only hits are Quality HVAC Missed Calls and Maadi Law Intake Call Drops, other clients, so create_item. Kept separate from Deleted Appointment Messages per the single item counter rule (call routing vs messaging). Section 19b: no pending queue match. Sohib has a call with MedStation and their IT on 10/7 at 10am, which is a good place to confirm which line this is. Section 19b matcher returned axis 3 (same client, similar work); merged rather than flagged because the 10/7 message is the same staff reporting the same symptom continuing, not separate work. 10/7 Weston said calls are still failing, so priority raised to 2. Still needs doing; nothing in the window says it is fixed. 10/16 merge (Section 19b axis 3, same symptom, same staff): timeout is already 22 seconds and GHL config checks out, so the raise timeout step is replaced with opening a GHL support ticket. Second question: not fixed, still happening per Ahmed; stays ready. 10/26 re-audit (Section 19): Monday item 13383800829 \"Weston calls not ringing in GHL app\", created by Sohib on 10/26, already carries this work and the 10/14 to 10/23 GHL chat (routing changed repeatedly, Renata still reports one ring or none on 10/21, Ahmed still waiting on her app email and call settings screenshot on 10/23). Firing this card would create a duplicate, so status exists. Payload kept so the card is recoverable if that item is removed. 11/2 merge: Sohib asked in GHL Dev whether the early October ringing issue was solved; Ahmed will follow up with Renata today to check. Second question: unconfirmed, not complete; still exists on Monday item 13383800829.",
       "status": "exists",
       "board": "CRM",
       "group": "MedStation",
       "potentialClient": null,
       "source": "whatsapp",
-      "sourceLabel": "WhatsApp: MedStation, 10/6 + WhatsApp: MedStation, 10/7 + Meeting: Client Delivery and CRM Review, 10/16 + WhatsApp: MedStation, 10/23",
+      "sourceLabel": "WhatsApp: MedStation, 10/6 + WhatsApp: MedStation, 10/7 + Meeting: Client Delivery and CRM Review, 10/16 + WhatsApp: MedStation, 10/23 + WhatsApp: GHL Dev, 11/2",
       "payload": {
         "mode": "create_item",
         "boardId": "18418241405",
@@ -74,9 +74,9 @@
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-10-26T12:33:07.112602+00:00",
+      "verifiedAt": "2026-11-02T23:05:32.046222+00:00",
       "completionEvidence": null,
-      "updatedAt": "2026-10-26T12:33:07.112605+00:00",
+      "updatedAt": "2026-11-02T23:05:32.046223+00:00",
       "createdAt": "2026-10-07T20:30:48.868496+00:00"
     },
     {
@@ -356,13 +356,13 @@
     {
       "id": "medstation-lead-reactivation",
       "title": "Lead Reactivation",
-      "note": "From the 10/20 Medstation GHL Ramp up call. Weston account, separate from the multi clinic rollout card. The 45 day trigger matches the 8/25 decision.",
-      "status": "ready",
+      "note": "From the 10/20 Medstation GHL Ramp up call. Weston account, separate from the multi clinic rollout card. The 45 day trigger matches the 8/25 decision. 11/2 re-audit (Section 19): Monday item 13383800828 'Reactivation pipeline + engaged leads who never booked' (CRM, MedStation, created 10/26) already carries this work, so firing this card would duplicate it; status exists, payload kept so the card is recoverable if that item is removed. 11/2 merge: Ahmed said in the GHL Dev chat it 'will activated today testing remains ready in draft'. Second question: in progress, not complete.",
+      "status": "exists",
       "board": "CRM",
       "group": "MedStation",
       "potentialClient": null,
       "source": "fireflies",
-      "sourceLabel": "Meeting: Medstation GHL Ramp up, 10/20",
+      "sourceLabel": "Meeting: Medstation GHL Ramp up, 10/20 + WhatsApp: GHL Dev, 11/2",
       "payload": {
         "mode": "create_item",
         "boardId": "18418241405",
@@ -374,8 +374,9 @@
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-10-21T19:14:10.021246+00:00",
+      "verifiedAt": "2026-11-02T23:05:32.046189+00:00",
       "completionEvidence": null,
+      "updatedAt": "2026-11-02T23:05:32.046191+00:00",
       "createdAt": "2026-10-21T19:14:17.150344+00:00"
     },
     {
@@ -671,7 +672,7 @@
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-10-30T19:58:22.055560+00:00",
+      "verifiedAt": "2026-11-02T23:05:32.046262+00:00",
       "completionEvidence": null,
       "updatedAt": "2026-10-29T20:11:00.087934+00:00",
       "createdAt": "2026-10-27T19:55:32.521517+00:00"
@@ -899,13 +900,13 @@
     {
       "id": "flowco-ghl-tracking-audit",
       "title": "GHL Tracking Audit",
-      "note": "From the 10/30 call tracking review. Naz said he'd post the audit action points on Monday; this is that item. The tracking-ownership card was ignored as already agreed; this card is the audit work itself, not the ownership decision.",
+      "note": "From the 10/30 call tracking review. Naz said he'd post the audit action points on Monday; this is that item. The tracking-ownership card was ignored as already agreed; this card is the audit work itself, not the ownership decision. 11/2 merge (Section 19b, same work): Sohib asked the Ads team in Paid Ads for status on tracking fixes across clients and restated that the Ads team owns all ad tracking; he flagged Maadi Law as most important (largest ad spend, no tracked conversions). The card's audit order puts Quality HVAC first per the 10/30 call; Naz may want Maadi moved up. Khurram's reply was a voice note. Second question: adds detail, not complete; stays ready.",
       "status": "ready",
       "board": "Ads",
       "group": "Flow Company",
       "potentialClient": null,
       "source": "fireflies",
-      "sourceLabel": "Meeting: Call Tracking and Account Audit Review, 10/30",
+      "sourceLabel": "Meeting: Call Tracking and Account Audit Review, 10/30 + WhatsApp: Paid Ads, 11/2",
       "payload": {
         "mode": "create_item",
         "boardId": "18405754310",
@@ -917,8 +918,9 @@
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-10-31T19:10:48.534592+00:00",
+      "verifiedAt": "2026-11-02T23:05:32.046259+00:00",
       "completionEvidence": null,
+      "updatedAt": "2026-11-02T23:05:32.046260+00:00",
       "createdAt": "2026-10-31T19:10:58.036111+00:00"
     },
     {
@@ -1047,6 +1049,55 @@
       "verifiedAt": "2026-11-01T19:26:43.720085+00:00",
       "completionEvidence": null,
       "createdAt": "2026-11-01T19:26:51.625910+00:00"
+    },
+    {
+      "id": "billydoe-product-filters",
+      "title": "Product Filters",
+      "note": "Priority 3: client facing polish on a site that just launched, nothing blocked. Section 19 audit: Billy Doe Meats groups on all four boards, subitems included; New Website Edits (Web + SEO, 13154539282) is Done and covered the launch round, nothing tracks product filtering, so create_item rather than reopening a finished item. Section 19b: no pending queue match. The prior Billy Doe ignores (website edits, graphics) were both 'Already done' on different work, so no ignore pattern. Sohib's message included a screenshot that is not readable here.",
+      "status": "ready",
+      "board": "Web + SEO",
+      "group": "Billy Doe Meats",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: Billy Doe Meats, 11/2",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18099807701",
+        "groupId": "group_mm2dqm7n",
+        "itemName": "Product Filters",
+        "updateBody": "<p>Salam,</p><ul><li>The new Billy Doe Meats site went live on 10/31. On 11/2 Sohib asked in the client chat for <strong>filtering options at the top of the products section</strong>, with a screenshot of where they should sit.</li><li><strong>Add filter buttons</strong> for each meat type: Chicken, Beef, Goat, plus the other categories the old site filtered by (check the previous theme for the full list, e.g. Lamb).</li><li>Filters should narrow the product grid in place, work on mobile, and match the existing collection tags so new products fall under the right filter automatically.</li><li><strong>Do not disrupt ordering</strong>: publish outside U.S. hours, same as the launch, and post a preview link in the chat first.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 3,
+      "verifiedAt": "2026-11-02T23:05:32.046104+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-11-02T23:05:38.344181+00:00"
+    },
+    {
+      "id": "seniorinsurance-google-ads-golive",
+      "title": "Google Ads Launch",
+      "note": "Priority 2: real deadline, the client's hot season closes in about five weeks. Section 19 audit: Senior Insurance groups on all four boards, subitems included; Build Google Search campaigns (Ads, 13185914913) already carries the campaign spec from 10/1 and sits at Waiting with a timeline of 11/2 and no update since, so update_only on it. Section 19b: no pending queue match. Khurram replied in the Paid Ads chat by voice note, which is not readable here, so what the item is waiting on is unknown; the card asks for it to be stated.",
+      "status": "ready",
+      "board": "Ads",
+      "group": "Senior Insurance",
+      "potentialClient": null,
+      "source": "whatsapp",
+      "sourceLabel": "WhatsApp: Paid Ads, 11/2",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "13185914913",
+        "itemName": "Google Ads Launch",
+        "updateBody": "<p>Salam,</p><ul><li>New on 11/2: Sohib wants Senior Insurance Google Ads <strong>live soon</strong>. Their hot season closes in <strong>about five weeks</strong>, so every week of delay is lost enrollment volume.</li><li>This item has been at Waiting since 10/1. <strong>Post what it is waiting on</strong> (call line, conversion tracking, landing page, client approval) and who owns each blocker. If it is the client, flag Naz to chase.</li><li><strong>Launch the three search campaigns</strong> per the 10/1 spec above once those are cleared, and post the go live date here.</li></ul><p><a class=\"mention\" data-mention-id=\"102221064\" data-mention-type=\"User\">@Khurram Jamil</a> <a class=\"mention\" data-mention-id=\"102221061\" data-mention-type=\"User\">@Ads Team</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "verifiedAt": "2026-11-02T23:05:32.046152+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-11-02T23:05:38.344181+00:00"
     }
   ]
 }
