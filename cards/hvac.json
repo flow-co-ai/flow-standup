@@ -1,14 +1,14 @@
 {
   "slug": "hvac",
   "name": "Quality HVAC by Fibid",
-  "generated_at": "2026-11-01T17:14:17.320Z",
+  "generated_at": "2026-11-02T20:50:56.691Z",
   "contract": {
     "start": "2026-05-01",
     "end": "2026-10-31",
     "validated": true,
     "month_of": 5,
     "months_total": 5,
-    "days_left": -1,
+    "days_left": -2,
     "basis": {
       "type": "observed",
       "source": "timeline/plan",
@@ -20,7 +20,7 @@
     "organic": {
       "state": "green",
       "headline": "21 calls · 28d",
-      "sentence": "Quality HVAC Solutions took 16 calls on 787 impressions; Quality HVAC by Fibid took 5 calls on 194 impressions.",
+      "sentence": "Quality HVAC Solutions took 16 calls on 789 impressions; Quality HVAC by Fibid took 5 calls on 193 impressions.",
       "basis": {
         "type": "observed",
         "source": "Windsor GBP",
@@ -33,9 +33,9 @@
             "account_id": "locations/6129595594309014752",
             "label": "Quality HVAC Solutions",
             "calls": 16,
-            "directions": 91,
-            "web_clicks": 22,
-            "impressions": 787,
+            "directions": 98,
+            "web_clicks": 23,
+            "impressions": 789,
             "days_with_impressions": 26,
             "call_rate": 0.0203
           },
@@ -43,11 +43,11 @@
             "account_id": "locations/9013300148944922826",
             "label": "Quality HVAC by Fibid",
             "calls": 5,
-            "directions": 38,
-            "web_clicks": 4,
-            "impressions": 194,
+            "directions": 42,
+            "web_clicks": 2,
+            "impressions": 193,
             "days_with_impressions": 26,
-            "call_rate": 0.0258
+            "call_rate": 0.0259
           }
         ],
         "flagged_profiles": [],
@@ -56,34 +56,36 @@
       }
     },
     "paid": {
-      "state": "green",
-      "headline": "$643 · 21 leads · $31 per lead · 14d",
-      "sentence": "Meta $227.90 spend, 21 leads; Google Ads $415.26 spend.",
+      "state": "amber",
+      "headline": "$532 · 18 leads · $30 per lead · 14d",
+      "sentence": "Meta $212.92 spend, 18 leads; Google Ads $318.74 spend.",
       "basis": {
         "type": "observed",
         "source": "Windsor Paid",
         "window": "14d"
       },
-      "flags": [],
+      "flags": [
+        "attribution_gap"
+      ],
       "detail": {
         "meta": {
-          "spend": 504.59,
-          "leads": 31,
-          "clicks": 335
+          "spend": 498.48,
+          "leads": 30,
+          "clicks": 323
         },
         "google_ads": {
-          "spend": 809.67,
+          "spend": 814.48,
           "convs": 7,
           "clicks": 96
         },
-        "total_spend": 1314.26,
+        "total_spend": 1312.96,
         "reconciliation": null
       }
     },
     "crm": {
       "state": "red",
-      "headline": "8 waiting 1073h",
-      "sentence": "Luis, as of 2026-09-18 per whatsapp. 8 client threads awaiting Flow, oldest 1073h.",
+      "headline": "8 waiting 1098h",
+      "sentence": "Luis, as of 2026-09-18 per whatsapp. 8 client threads awaiting Flow, oldest 1098h.",
       "basis": {
         "type": "observed",
         "source": "GHL / WhatsApp",
@@ -100,7 +102,7 @@
           "window": "2026-09-18"
         },
         "awaiting_flow": 8,
-        "oldest_unanswered_hours": 1073.2,
+        "oldest_unanswered_hours": 1098,
         "threads": {
           "messages_scanned": 1017,
           "threads": 14,
@@ -112,15 +114,15 @@
           "stale_over_24h": 8
         },
         "ghl": {
-          "contacts": 93,
+          "contacts": 90,
           "opportunities": {
             "created": {
-              "count": 772,
-              "value": 81329.25
+              "count": 569,
+              "value": 77162.25
             },
             "won": {
-              "count": 88,
-              "value": 81329.25
+              "count": 87,
+              "value": 77162.25
             }
           },
           "appointments": 0
@@ -131,9 +133,9 @@
   "scope_out": [],
   "needs_you": [
     {
-      "text": "8 threads awaiting Flow, oldest 1073h.",
+      "text": "8 threads awaiting Flow, oldest 1098h.",
       "severity": "high",
-      "age_days": 45,
+      "age_days": 46,
       "basis": {
         "type": "observed",
         "source": "GHL / WhatsApp",
@@ -141,13 +143,26 @@
       }
     },
     {
-      "text": "Contract ends in -1 days (2026-10-31).",
+      "text": "Contract ends in -2 days (2026-10-31).",
       "severity": "high",
       "age_days": null,
       "basis": {
         "type": "observed",
         "source": "timeline/plan",
         "window": "engagement"
+      }
+    },
+    {
+      "text": "Paid issue (amber)",
+      "flags": [
+        "attribution_gap"
+      ],
+      "severity": "medium",
+      "age_days": null,
+      "basis": {
+        "type": "observed",
+        "source": "Windsor Paid",
+        "window": "14d"
       }
     }
   ],
