@@ -1,0 +1,29 @@
+name: One-time cleanup (retired files)
+
+# Run once from the Actions tab, then delete this file and standup.yml in the
+# GitHub web UI (workflow files can't be removed by the Actions bot).
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove retired files
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          while read -r p; do
+            [ -z "$p" ] && continue
+            [ -e "$p" ] && git rm -r -q --ignore-unmatch "$p" && echo "removed $p"
+          done < RETIRED_FILES.txt
+          git rm -q RETIRED_FILES.txt
+          git commit -m "cleanup: remove retired standup, timeline, cards, workstreams, scoring" || exit 0
+          git pull --rebase
+          git push

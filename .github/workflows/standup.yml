@@ -1,124 +1,14 @@
-name: Daily Standup
+name: Daily Standup (retired)
+
+# Retired Nov 2026. Its steps (facts, comms, standup rundown) now run inside
+# daily-pulse.yml in the right order. This file only exists so uploading the
+# new version stops the old 12:00 run. Delete it in the GitHub web UI any time.
 
 on:
-  # Every day at 12:00 UTC = 7:00 AM Chicago (CDT) / 6:00 AM (CST)
-  schedule:
-    - cron: "0 12 * * *"
-
-  # Also lets you click "Run workflow" in the GitHub UI any time
   workflow_dispatch:
 
-permissions:
-  contents: write  # needed to commit the standup file back to main
-
 jobs:
-  generate-standup:
+  retired:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Build facts layer
-        env:
-          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
-          FIREFLIES_API_KEY: ${{ secrets.FIREFLIES_API_KEY }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python build_facts.py
-
-      - name: Build comms layer
-        env:
-          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
-        run: python build_comms.py
-
-      - name: Generate standup report
-        env:
-          MONDAY_API_TOKEN: ${{ secrets.MONDAY_API_TOKEN }}
-          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
-          FIREFLIES_API_KEY: ${{ secrets.FIREFLIES_API_KEY }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
-          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-          # generate.py now syncs standups/completed-accumulator.json via the
-          # GitHub API directly (same credential monday-done-webhook.js uses)
-          # instead of the local write + this step's own git commit below --
-          # see sync_accumulator_via_github's docstring.
-          GH_STATE_TOKEN: ${{ secrets.GH_STATE_TOKEN }}
-        run: python generate.py
-
-      - name: Commit standup file to main
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          # standups/completed-accumulator.json is excluded here on purpose
-          # (Naz, 2026-08-06): it's now synced via the GitHub API directly by
-          # generate.py itself (see sync_accumulator_via_github), decoupled
-          # from this commit entirely. It used to be bundled in via the plain
-          # `standups/` glob -- netlify/functions/monday-done-webhook.js
-          # writes that SAME file in real time, and a webhook write landing
-          # mid-run used to make THIS step's own rebase-on-conflict logic
-          # below drop the ENTIRE day's commit on a conflict there, not just
-          # that file's diff.
-          git add standups/ ':!standups/completed-accumulator.json' site/latest.json site/inbox.json archive/ alerts/
-          # history/ doesn't exist until a week ages out of the rolling
-          # 12-week window and gets archived for the first time, and
-          # scores-history.json (root + site copy) only gets written when at
-          # least one client scored this run -- `git add` on a nonexistent
-          # pathspec is fatal (exit 128), so only add these once they exist.
-          if [ -d facts/ ]; then
-            git add facts/
-          fi
-          if [ -d comms/ ]; then
-            git add comms/
-          fi
-          if [ -d history/ ]; then
-            git add history/
-          fi
-          if [ -f scores-history.json ]; then
-            git add scores-history.json site/scores-history.json
-          fi
-          if git diff --staged --quiet; then
-            echo "Nothing new to commit."
-            exit 0
-          fi
-
-          git commit -m "standup: daily report $(date -u +%Y-%m-%d)"
-
-          # Retry on a rejected push (a concurrent run -- e.g. two manual
-          # triggers close together -- landed its commit first): fetch and
-          # rebase onto the latest main, then retry. If the rebase itself
-          # conflicts, there's no sane way to merge two independent full
-          # regenerations of the same generated files -- abort the rebase,
-          # drop this run's commit, and defer to whichever run already
-          # landed, rather than leaving the repo mid-rebase or forcing a
-          # conflicting overwrite.
-          attempt=1
-          max_attempts=5
-          until git push; do
-            if [ "$attempt" -ge "$max_attempts" ]; then
-              echo "::error::Push failed after $max_attempts attempts -- giving up."
-              exit 1
-            fi
-            echo "Push rejected (attempt $attempt/$max_attempts) -- fetching and rebasing onto origin/main..."
-            git fetch origin main
-            if git rebase origin/main; then
-              echo "Rebase succeeded, retrying push..."
-            else
-              echo "Rebase conflicted -- a concurrent run's commit already covers this update. Dropping this run's commit."
-              git rebase --abort
-              git reset --hard origin/main
-              echo "Nothing to push -- deferring to the concurrent run."
-              exit 0
-            fi
-            sleep $((RANDOM % 5 + 1))
-            attempt=$((attempt + 1))
-          done
-          echo "Pushed successfully."
+      - run: echo "Retired. Use the Daily Pulse workflow."

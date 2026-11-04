@@ -1,17 +1,27 @@
 name: Daily Pulse
 
+# The one daily pipeline. Each step reads only what the steps above it wrote,
+# so the Ops page never shows a mix of today's numbers and yesterday's chats.
+#
+# 12:00 UTC = 6:00 am Chicago (CST) / 7:00 am (CDT). Runs after the WhatsApp
+# pull on the droplet (5 am Chicago).
+
 on:
   schedule:
-    # 11:00 UTC = 6:00 am Chicago (CDT) / 5:00 am (CST)
-    - cron: '0 11 * * *'
-  workflow_dispatch: # manual "Run workflow" button in GitHub UI
+    - cron: '0 12 * * *'
+  workflow_dispatch:
 
 permissions:
   contents: write
 
+concurrency:
+  group: daily-pulse
+  cancel-in-progress: false
+
 jobs:
   pulse:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
 
     steps:
       - name: Checkout repo
@@ -33,93 +43,108 @@ jobs:
       - name: Install Node dependencies
         run: npm install
 
+      # 1. Playbooks: what each client bought (feeds contracts, the AI read, Ask)
       - name: Sync playbooks from Drive
         env:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
         run: python sync_playbooks.py
 
-      - name: Extract timeline plans
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node extract_timeline.js
-
+      # 2. Monday: every item, status, latest updates
       - name: Write Monday snapshot
         env:
           MONDAY_API_TOKEN: ${{ secrets.MONDAY_API_TOKEN }}
         run: python write_monday_snapshot.py
 
-      - name: Apply task matching
+      # 3. Windsor + GHL, 28 days. Connector errors are written, not swallowed.
+      - name: Pull ads, organic and GHL numbers
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node apply_task_matching.js
-
-      - name: Run daily pulse
-        env:
-          WINDSOR_API_KEY:  ${{ secrets.WINDSOR_API_KEY }}
-          GHL_API_TOKEN:    ${{ secrets.GHL_API_TOKEN }}
-          GHL_TOKENS:       ${{ secrets.GHL_TOKENS }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          WINDSOR_API_KEY: ${{ secrets.WINDSOR_API_KEY }}
+          GHL_TOKENS: ${{ secrets.GHL_TOKENS }}
+          GHL_TOKEN_MEDSTATION: ${{ secrets.GHL_TOKEN_MEDSTATION }}
+          GHL_TOKEN_SENIOR_INSURANCE: ${{ secrets.GHL_TOKEN_SENIOR_INSURANCE }}
         run: node pulse.js
 
-      - name: Build 186-day history for the Ops page
+      # 4. 186-day daily history and Google listing discovery
+      - name: Build 186-day history
         env:
           WINDSOR_API_KEY: ${{ secrets.WINDSOR_API_KEY }}
         run: node build_history.js
 
-      - name: Build ops page data
-        run: python build_ops.py
-
-      - name: Apply ops-pulse brief
+      # 5. Account facts from WhatsApp and Fireflies
+      - name: Build facts
         env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          FIREFLIES_API_KEY: ${{ secrets.FIREFLIES_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node apply_ops_pulse.js
+        run: python build_facts.py
 
-      - name: Build standup summary
+      # 6. WhatsApp threads and "waiting on us"
+      - name: Build comms
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node build_standup_summary.js
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: python build_comms.py
 
+      # 7. Weekly rundown, Monday update archive, Done log (feeds Ask)
+      - name: Generate standup rundown
+        env:
+          MONDAY_API_TOKEN: ${{ secrets.MONDAY_API_TOKEN }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          FIREFLIES_API_KEY: ${{ secrets.FIREFLIES_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GH_STATE_TOKEN: ${{ secrets.GH_STATE_TOKEN }}
+        run: python generate.py
+
+      # 8. AI read of the numbers: every 3 days per client, or when a flag fires
       - name: Apply performance lens
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          FORCE_PERFORMANCE: '1'
         run: node apply_performance.js
 
+      # 9. Weekly client report (Mondays), read by Ask
       - name: Apply reporter lens
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          FORCE_REPORTER: '1'
         run: node apply_reporter.js
 
-      - name: Build timeline
-        env:
-          STATE_BRANCH: state
-        run: node build_timeline.js
+      # 10. Ops page data (no model calls)
+      - name: Build ops page data
+        run: python build_ops.py
 
-      - name: Build cards
-        run: node build_cards.js
-
-      - name: Build workstreams
-        run: node build_workstreams.js
-
-      - name: Build contracts (scope block on the hero)
+      # 11. Scope block on the hero
+      - name: Build contracts
         run: python build_contracts.py
 
-      - name: Commit pulse and history
+      # 12. Commit. A push that can't land fails the run (red), never green.
+      - name: Commit and push
         run: |
+          set -e
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add pulse/ history/ reports/ playbooks/ timeline/ standups/ cards/
-          git add site/monday-items.json site/ops.json site/hub.json series/ workstreams/*.json 2>/dev/null || true
-          git add site/contracts.json 2>/dev/null || true
+          for p in pulse history series reports playbooks facts comms archive alerts standups; do
+            [ -e "$p" ] && git add "$p"
+          done
+          git reset -q -- standups/completed-accumulator.json 2>/dev/null || true
+          for f in site/monday-items.json site/ops.json site/hub.json site/contracts.json site/latest.json site/inbox.json; do
+            [ -e "$f" ] && git add "$f"
+          done
           if git diff --staged --quiet; then
-            echo "Nothing changed — skipping commit."
+            echo "Nothing changed."
             exit 0
           fi
           git commit -m "pulse: $(date -u +%Y-%m-%d)"
-          # Retry push up to 3 times to handle concurrent-push rejection.
-          for i in 1 2 3; do
-            git pull --rebase && git push && break
-            echo "Push attempt $i failed — retrying in $((i * 5))s…"
+          for i in 1 2 3 4 5; do
+            if git push; then
+              echo "Pushed."
+              exit 0
+            fi
+            echo "Push rejected (attempt $i). Rebasing onto origin/main..."
+            git fetch origin main
+            if ! git rebase origin/main; then
+              git rebase --abort || true
+              echo "::error::Rebase conflicted with another commit. Today's data was NOT saved. Re-run this workflow."
+              exit 1
+            fi
             sleep $((i * 5))
           done
+          echo "::error::Push failed after 5 attempts. Today's data was NOT saved. Re-run this workflow."
+          exit 1
