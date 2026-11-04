@@ -77,10 +77,12 @@ for (const client of bySlug.values()) {
     for (const id of [].concat(windsor.google_my_business || [])) profileLabels[id] = profileLabels[id] || labels[id] || id;
     writeFileSync(`series/${client.slug}.json`, JSON.stringify({
       generated_at: new Date().toISOString(), days: HISTORY_DAYS, kind: client.type === 'ecom' ? 'sales' : 'leads',
-      connectors: Object.keys(windsor).filter((k) => !/_fields?$/.test(k)), profile_labels: profileLabels, rows: raw._dailyRows || [],
+      connectors: Object.keys(windsor).filter((k) => !/_fields?$/.test(k)), profile_labels: profileLabels, rows: raw._dailyRows || [], errors: raw._errors || [],
     }));
     console.log(`  ✓ ${client.slug}: ${(raw._dailyRows || []).length} days, ${Object.keys(profileLabels).length} listings`);
   } catch (err) {
     console.log(`  ✗ ${client.slug}: ${err.message}`);
+    writeFileSync(`series/${client.slug}.json`, JSON.stringify({ generated_at: new Date().toISOString(), days: HISTORY_DAYS, rows: [],
+      errors: [{ connector: 'all', accounts: [], message: String(err.message).slice(0, 300) }] }));
   }
 }

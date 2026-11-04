@@ -111,6 +111,21 @@ def _sanitize_filename(name: str) -> str:
     return s.strip("-")
 
 
+def _html_to_text(html_text: str) -> str:
+    """Playbooks saved as .html (e.g. Senior Insurance) become plain markdown-ish text."""
+    import html as _html
+    t = re.sub(r"(?is)<(script|style|head)[^>]*>.*?</\1>", "", html_text)
+    t = re.sub(r"(?i)<h1[^>]*>", "\n# ", t)
+    t = re.sub(r"(?i)<h2[^>]*>", "\n## ", t)
+    t = re.sub(r"(?i)<h3[^>]*>", "\n### ", t)
+    t = re.sub(r"(?i)<li[^>]*>", "\n- ", t)
+    t = re.sub(r"(?i)<(br|/p|/h[1-6]|/ul|/ol|hr)[^>]*>", "\n", t)
+    t = re.sub(r"<[^>]+>", "", t)
+    t = _html.unescape(t)
+    t = re.sub(r"[ \t]+", " ", t)
+    return re.sub(r"\n\s*\n+", "\n\n", t).strip()
+
+
 def _read_modified_time(path: Path) -> str | None:
     try:
         first_line = path.read_text(encoding="utf-8").split("\n", 1)[0]
@@ -179,17 +194,18 @@ def sync_playbooks() -> None:
         is_gdoc = mime == "application/vnd.google-apps.document"
         is_md   = mime == "text/markdown" or name.lower().endswith((".md", ".markdown"))
         is_pdf  = mime == "application/pdf" or name.lower().endswith(".pdf")
+        is_html = mime == "text/html" or name.lower().endswith((".html", ".htm"))
 
         if is_pdf:
             print(f"  ⚠️  '{name}': PDF — skipped")
             continue
-        if not (is_gdoc or is_md):
+        if not (is_gdoc or is_md or is_html):
             print(f"  note: '{name}' ({mime}) — skipped")
             continue
 
         # Strip any extension, then normalise stem.
         stem = name
-        for ext in (".md", ".txt", ".markdown"):
+        for ext in (".md.html", ".html", ".htm", ".md", ".txt", ".markdown"):
             if name.lower().endswith(ext):
                 stem = name[: -len(ext)]
                 break
@@ -244,6 +260,8 @@ def sync_playbooks() -> None:
                 while not done:
                     _, done = downloader.next_chunk()
                 content = buf.getvalue().decode("utf-8", errors="replace").strip()
+                if is_html:
+                    content = _html_to_text(content)
         except Exception as exc:
             print(f"  ⚠️  '{name}': fetch failed — {exc}")
             continue

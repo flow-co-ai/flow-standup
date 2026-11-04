@@ -27,7 +27,7 @@ from fetch_whatsapp import fetch_whatsapp_history
 from fetch_fireflies import fetch_transcripts
 from client_aliases import resolve_client, all_alias_matches
 
-MODEL = "claude-sonnet-4-5"
+MODEL = os.environ.get("ANTHROPIC_MODEL") or json.loads(Path("config.json").read_text()).get("model") or "claude-sonnet-4-6"  # one setting: config.json "model"
 FACTS_DIR = Path("facts")
 CHUNK_SIZE = 75
 _FF_DAYS_BACK = 1095  # ~3 years; used when no prior Fireflies checkpoint exists

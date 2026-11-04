@@ -14,8 +14,9 @@
 // ANTHROPIC_API_KEY, GH_STATE_TOKEN. Optional: GH_REPO, GH_STATE_BRANCH, ASK_MODEL.
 
 import crypto from "node:crypto";
+import modelSetting from "./lib/model.js";
 
-const MODEL_DEFAULT = "claude-sonnet-4-5"; // same model the other functions use
+const MODEL_DEFAULT = modelSetting.MODEL; // one setting: config.json "model"
 const SITE_FALLBACK = "https://flowco-ops.netlify.app";
 const SNAPSHOT_FILES = ["ops.json", "hub.json", "monday-items.json"];
 

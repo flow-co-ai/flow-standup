@@ -17,7 +17,7 @@ const { getJSON, putJSON, updateJSON } = require("./github");
 const { textSimilarity, SIMILARITY_DUP_THRESHOLD, COMPLETION_CORROBORATED_SIMILARITY_THRESHOLD } = require("./textSimilarity");
 const { resolveClientName } = require("./clientAliases");
 
-const ANTHROPIC_MODEL = "claude-sonnet-4-5"; // check docs.claude.com/en/docs/about-claude/models if this starts erroring
+const { MODEL: ANTHROPIC_MODEL } = require("./model"); // one setting: config.json "model"
 
 const QUEUE_PATH = "checks/draft-queue.json";
 

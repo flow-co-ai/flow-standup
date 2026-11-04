@@ -59,7 +59,14 @@ async function callConnector(connector, fields, accounts, dateFrom, dateTo, apiK
   }
 
   const json = await res.json();
-  return Array.isArray(json.data) ? json.data : [];
+  const data = Array.isArray(json.data) ? json.data : [];
+  // Windsor can answer 200 with an error body (e.g. a listing whose access was
+  // revoked). Treat that as an error so it reaches the Sources page, not a zero.
+  const errText = json.error || json.errors || (data.length ? null : json.detail);
+  if (!data.length && errText) {
+    throw new Error(`Windsor ${connector}: ${String(typeof errText === 'string' ? errText : JSON.stringify(errText)).slice(0, 200)}`);
+  }
+  return data;
 }
 
 // When pick=true, keep only the account with the highest total of primaryField.
@@ -74,8 +81,10 @@ function pickLargest(rows, primaryField) {
   return rows.filter(r => (r.account_id ?? '') === best);
 }
 
-// Fetch one connector safely: returns empty array on failure, logs the error.
-async function safeFetch(connector, fields, cfg, dateFrom, dateTo, apiKey, pickField) {
+// Fetch one connector safely: returns empty array on failure. The failure is
+// recorded in `errors` so pulse.js can write it to the pulse file and the
+// Sources page can show it. A failed connector must never read as a zero.
+async function safeFetch(connector, fields, cfg, dateFrom, dateTo, apiKey, pickField, errors) {
   if (!cfg) return [];
   const { accounts, pick } = norm(cfg);
   if (!accounts?.length) return [];
@@ -86,7 +95,12 @@ async function safeFetch(connector, fields, cfg, dateFrom, dateTo, apiKey, pickF
     console.log(`    ${connector}: ${rows.length} rows`);
     return rows;
   } catch (err) {
-    console.error(`    ${connector} error: ${err.message}`);
+    // Never write the key itself: Windsor echoes it back on auth errors and pulse/ is committed.
+    let msg = String(err.message || err);
+    if (apiKey) msg = msg.split(apiKey).join('***');
+    msg = msg.replace(/api_key=[^&\s]+/g, 'api_key=***').replace(/(API key used:\s*)\S+/gi, '$1***');
+    console.error(`    ${connector} error: ${msg}`);
+    if (errors) errors.push({ connector, accounts, message: msg.slice(0, 300) });
     return [];
   }
 }
@@ -95,6 +109,7 @@ async function safeFetch(connector, fields, cfg, dateFrom, dateTo, apiKey, pickF
 
 export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}, days = 28) {
   const { dateFrom, dateTo } = windowDates(days);
+  const errors = [];
 
   // Fetch all six connectors in parallel.
   const [metaRows, gadsRowsRaw, ga4Rows, igRows, scRows, gmbRows] = await Promise.all([
@@ -106,32 +121,32 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}, days = 28
       'actions_click_to_call_native_20s_call_connect',
       'actions_click_to_call_native_60s_call_connect',
       ...(windsorCfg.facebook_extra_fields || []),
-    ], windsorCfg.facebook, dateFrom, dateTo, apiKey, null),
+    ], windsorCfg.facebook, dateFrom, dateTo, apiKey, null, errors),
 
     safeFetch('google_ads', [
       'segments.date', 'account_id', 'campaign.name',
       'cost_micros', 'clicks', 'impressions', 'conversions',
-    ], windsorCfg.google_ads, dateFrom, dateTo, apiKey, null),
+    ], windsorCfg.google_ads, dateFrom, dateTo, apiKey, null, errors),
 
     safeFetch('googleanalytics4', [
       'date', 'account_id', 'sessions', 'active_users', 'conversions',
-    ], windsorCfg.googleanalytics4, dateFrom, dateTo, apiKey, 'sessions'),
+    ], windsorCfg.googleanalytics4, dateFrom, dateTo, apiKey, 'sessions', errors),
 
     safeFetch('instagram', [
       'date', 'account_id',
       'follower_count_1d', 'reach_1d', 'impressions_1d', 'media_engagement',
-    ], windsorCfg.instagram, dateFrom, dateTo, apiKey, null),
+    ], windsorCfg.instagram, dateFrom, dateTo, apiKey, null, errors),
 
     safeFetch('searchconsole', [
       'date', 'account_id', 'clicks', 'impressions',
-    ], windsorCfg.searchconsole, dateFrom, dateTo, apiKey, 'clicks'),
+    ], windsorCfg.searchconsole, dateFrom, dateTo, apiKey, 'clicks', errors),
 
     // One listing per call: Windsor silently blends listings requested together.
     Promise.all((windsorCfg.google_my_business ? norm(windsorCfg.google_my_business).accounts : []).map((acc) =>
       safeFetch('google_my_business', [
         'date', 'account_id', 'location_title',
         'impressions', 'call_clicks', 'direction_requests', 'website_clicks',
-      ], [acc], dateFrom, dateTo, apiKey, null).then((rows) => rows.map((r) => ({ ...r, account_id: r.account_id || acc })))
+      ], [acc], dateFrom, dateTo, apiKey, null, errors).then((rows) => rows.map((r) => ({ ...r, account_id: r.account_id || acc })))
     )).then((lists) => lists.flat()),
   ]);
 
@@ -160,7 +175,10 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}, days = 28
   const gadsClicks      = gadsRows.reduce((s, r) => s + toNum(r.clicks), 0);
 
   const totalSpend = round2(metaSpend + gadsSpend);
-  const totalLeads = Math.round(metaLeads); // leads from Meta conversion actions only
+  // Results = Meta's configured result field (leads, calls or conversations)
+  // plus Google Ads conversions. Google used to be left out, which made
+  // Google-only clients read as "no leads" and inflated cost per lead.
+  const totalLeads = Math.round(metaLeads + gadsConversions);
   const cpl        = totalLeads > 0 ? round2(totalSpend / totalLeads) : 0;
   const roas       = metaRevenue > 0 && totalSpend > 0 ? round2(metaRevenue / totalSpend) : null;
 
@@ -267,6 +285,7 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}, days = 28
     row.google_spend += s;
     row.google_conversions += toNum(r.conversions);
     row.google_clicks      += toNum(r.clicks);
+    row.leads              += toNum(r.conversions); // results = Meta results + Google conversions
   }
   const gbpCallsByDate = {};
   for (const r of gmbRows) {
@@ -377,6 +396,7 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}, days = 28
     _latestDay:   latestDay,
     _sources:     sources,
     _gbpProfiles: gbpProfiles,
+    _errors:      errors,
   };
 
   // Optional blocks — omit entirely when no data exists for that connector.

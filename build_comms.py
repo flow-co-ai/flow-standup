@@ -1,6 +1,15 @@
 """
 build_comms.py — Deterministic WhatsApp thread analysis. No model calls.
-Writes comms/[slug].json. Run after build_facts.py in the Daily Standup workflow.
+Writes comms/[slug].json. Runs after build_facts.py in the Daily Pulse workflow.
+
+"Awaiting Flow" rules (Nov 2026):
+  - A client question is answered by ANY later Flow message in the same chat,
+    not only one inside the same 6-hour thread.
+  - Only the last 14 days count. Older unanswered threads are counted as
+    abandoned, never shown as waiting.
+  - Team members are matched by name (config.json "team", any script) and by
+    phone digits (config.json "team_phones") for unsaved numbers.
+  - "Is this a question" uses whole words, so "show" no longer reads as "how".
 """
 
 import hashlib
@@ -45,8 +54,8 @@ _FWD_MARKER_RE = re.compile(r"^\*[^*\n]+\*\s*")
 
 # State classification for last-client-message threads
 _REQUEST_RE = re.compile(
-    r"\?|can you|could you|please|need|any update|let me know|when|how|what|why"
-    r"|pode|poderia|por favor|precisa|alguma atualiza[çc][aã]o|quando|como",
+    r"\?|\b(?:can you|could you|please|need|needs|any update|let me know|when|how|what|why"
+    r"|pode|poderia|por favor|precisa|alguma atualiza[çc][aã]o|quando|como)\b",
     re.IGNORECASE,
 )
 _ACK_RE = re.compile(
@@ -106,13 +115,23 @@ def _classify_last_client_msg(text: str) -> str:
 
 # ── sender resolution ─────────────────────────────────────────────────────────
 
+TEAM_PHONES: set[str] = set()   # filled from config.json "team_phones" in main()
+
+
 def _is_flow_sender(clean_name: str, team: list[str]) -> bool:
-    s = clean_name.lower()
+    s = clean_name.lower().strip()
     if not s:
         return False
+    digits = re.sub(r"\D", "", s)
+    if len(digits) >= 7 and any(digits.endswith(p[-10:]) for p in TEAM_PHONES if p):
+        return True
     for member in team:
-        m = member.lower()
-        if m in s or s in m:
+        m = member.lower().strip()
+        if not m:
+            continue
+        # Full-name containment either way, or the first name as a whole word
+        # ("Hashir" for "Hashir Faiz"). Bare short names never match by substring.
+        if m in s or (len(s) >= 4 and s in m):
             return True
     return False
 
@@ -252,6 +271,7 @@ def _process_client(
 
         if not annotated:
             continue
+        flow_times = [m["local_dt"] for m in annotated if m["side"] == "flow"]
 
         # Segment by 6-hour gap
         groups: list[list[dict]] = [[annotated[0]]]
@@ -278,7 +298,10 @@ def _process_client(
             unanswered_hours: float | None = None
             state: str
 
-            if last_side == "client":
+            answered_later = last_side == "client" and any(t > last["local_dt"] for t in flow_times)
+            if answered_later:
+                state = "settled"
+            elif last_side == "client":
                 delta = now - last["local_dt"].astimezone(timezone.utc)
                 hours = round(delta.total_seconds() / 3600, 1)
                 if hours > ABANDONED_DAYS * 24:
@@ -325,12 +348,13 @@ def _process_client(
                 "unanswered_hours": unanswered_hours,
             })
 
-    # Window: last 14 days, plus any awaiting_flow regardless of age (already capped at 60d)
+    # Window: last 14 days only. An unanswered thread older than that is
+    # abandoned, never shown as waiting on Flow.
     cutoff = now - timedelta(days=WINDOW_DAYS)
-    output_threads = [
-        t for t in all_threads
-        if t["_last_at_dt"] >= cutoff or t["state"] == "awaiting_flow"
-    ]
+    for t in all_threads:
+        if t["_last_at_dt"] < cutoff and t["state"] == "awaiting_flow":
+            t["state"] = "abandoned"
+    output_threads = [t for t in all_threads if t["_last_at_dt"] >= cutoff]
 
     # Sort: longest-unanswered first; settled/client_update/None at the end
     output_threads.sort(
@@ -391,6 +415,8 @@ def _save(slug: str, data: dict) -> None:
 
 def build_comms(config: dict) -> None:
     team = config.get("team", [])
+    TEAM_PHONES.clear()
+    TEAM_PHONES.update(re.sub(r"\D", "", str(p)) for p in config.get("team_phones", []) if p)
     clients_config = config.get("clients", {})
     slug_map = _load_clients_slug_map()
     tz_map = _load_client_timezones()

@@ -30,10 +30,9 @@ exports.handler = async (event) => {
     if (!token) throw new Error("GH_STATE_TOKEN is not set");
 
     await dispatchWorkflow("daily-pulse.yml", token);
-    await dispatchWorkflow("standup.yml", token);
     await dispatchWorkflow("draft-queue.yml", token);
 
-    return json(200, { ok: true, triggered: ["daily-pulse.yml", "standup.yml", "draft-queue.yml"], triggeredAt: new Date().toISOString() });
+    return json(200, { ok: true, triggered: ["daily-pulse.yml", "draft-queue.yml"], triggeredAt: new Date().toISOString() });
   } catch (err) {
     console.error("refresh-everything error:", err);
     return json(500, { ok: false, error: String((err && err.message) || err) });

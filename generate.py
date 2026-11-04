@@ -37,9 +37,8 @@ import archive_monday
 import pulse_story
 import inbox_state
 import drive_pulse
-import scoring
 
-MODEL = "claude-sonnet-4-5"
+MODEL = os.environ.get("ANTHROPIC_MODEL") or json.loads(Path("config.json").read_text()).get("model") or "claude-sonnet-4-6"  # one setting: config.json "model"
 
 
 # ── config / playbooks ────────────────────────────────────────────────────────
@@ -2039,24 +2038,9 @@ def main():
         if c not in _inactive_client_names:
             active.append(c)
     for c in grouped:
-        if c not in active and c != "Unmapped":
+        # active:false wins even when the client still has Monday items
+        if c not in active and c != "Unmapped" and c not in _inactive_client_names:
             active.append(c)
-
-    # Write quiet-marker for build_cards.js: clients with no signal this week.
-    def _resolve_slug(canonical: str) -> str | None:
-        if canonical in _name_to_slug:
-            return _name_to_slug[canonical]
-        for alias in (clients_config.get(canonical) or []):
-            if alias in _name_to_slug:
-                return _name_to_slug[alias]
-        return None
-
-    _quiet_slugs = sorted(
-        slug for c in active
-        if c not in grouped and c not in meetings_by_client and c not in chats_by_client
-        if (slug := _resolve_slug(c))
-    )
-    (Path("site") / "quiet_this_week.json").write_text(json.dumps(_quiet_slugs))
 
     # potential_clients is assembled further below, after the per-client Claude
     # calls -- it also folds in other_entities_mentioned, content those calls
@@ -2342,21 +2326,6 @@ def main():
             for wk in history_weeks
         ]
 
-    # ── Layer 1 operational health scoring (docs/scoring-spec-draft.md §1) ─────
-    print("\nScoring Layer 1 (task stalling, comms quality, cadence, team load)...")
-    try:
-        score_rows = scoring.compute_layer1_scores(
-            call_tool=_call_tool,
-            ai=ai,
-            client_entries=client_entries,
-            grouped=grouped,
-            meetings_by_client=meetings_by_client,
-            today=today,
-        )
-    except Exception as exc:
-        print(f"  ⚠️  Layer 1 scoring failed (non-blocking): {exc}")
-        score_rows = []
-
     # ── assemble + write ──────────────────────────────────────────────────────
     standup = {
         "week_of": today,
@@ -2395,13 +2364,6 @@ def main():
         print(f"  Wrote {inbox_path} ({len(inbox['by_client'])} clients, {n_items} items)")
     except Exception as exc:
         print(f"  ⚠️  Inbox state computation failed (non-blocking): {exc}")
-
-    if score_rows:
-        scoring.append_scores_history(score_rows)
-        print(f"  Wrote {scoring.SCORES_HISTORY_PATH} (+{len(score_rows)} row(s))")
-        site_scores_path = Path("site") / "scores-history.json"
-        shutil.copy2(scoring.SCORES_HISTORY_PATH, site_scores_path)
-        print(f"  Copied → {site_scores_path}")
 
     md_content = render_markdown(standup)
     md_path = standups_dir / f"{today}.md"

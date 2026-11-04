@@ -1,5 +1,7 @@
-// Daily Pulse — numbers-only, no AI calls.
-// Writes pulse/[slug].json and history/[slug].json for every client.
+// Daily Pulse: numbers only, no AI calls.
+// Writes pulse/[slug].json and history/[slug].json for every active client.
+// Connector failures are written to pulse.windsor.errors and pulse.ghl.error so
+// the Sources page shows them. A failure never reads as a zero.
 
 import { fetchWindsor } from './fetch_windsor.js';
 import { fetchGHL }     from './fetch_ghl.js';
@@ -9,8 +11,6 @@ import { createRequire } from 'module';
 const require         = createRequire(import.meta.url);
 const CLIENTS         = require('./clients.json');
 const WINDSOR_TOKEN   = process.env.WINDSOR_API_KEY    || '';
-const GHL_TOKEN       = process.env.GHL_API_TOKEN      || '';
-const ANTHROPIC_KEY   = process.env.ANTHROPIC_API_KEY  || '';
 const GHL_TOKENS      = (() => {
   try { return process.env.GHL_TOKENS ? JSON.parse(process.env.GHL_TOKENS) : {}; }
   catch { console.warn('Warning: GHL_TOKENS is not valid JSON — ignoring'); return {}; }
@@ -20,21 +20,6 @@ const GHL_TOKENS      = (() => {
 
 function round2(n) { return Math.round(n * 100) / 100; }
 function dateStr(d) { return d.toISOString().slice(0, 10); }
-
-// Reads the existing pulse file (if any) and returns just the keys we want to
-// preserve across runs. pulse.js writes each pulse from scratch and used to
-// wipe the brief written by apply_ops_pulse.js. Nothing else is carried over.
-function carryOverBrief(slug) {
-  const path = `pulse/${slug}.json`;
-  if (!existsSync(path)) return {};
-  try {
-    const prev = JSON.parse(readFileSync(path, 'utf8'));
-    const out = {};
-    if (prev.brief    !== undefined) out.brief    = prev.brief;
-    if (prev.brief_v2 !== undefined) out.brief_v2 = prev.brief_v2;
-    return out;
-  } catch { return {}; }
-}
 
 // --- History management (unchanged) ---
 
@@ -202,144 +187,6 @@ function computeReconciliation(windsor, ghl) {
   return { windsor_leads: windsorLeads, ghl_contacts: ghlContacts, ghl_opps_created: ghlOppsCreated, ghl_opps_won: ghlOppsWon, status };
 }
 
-// --- Score (0-100) ---
-
-function computeScore(deltas, flags, windsor, ghl, clientType) {
-  if (windsor?.error) return 20;
-
-  let score = 100;
-
-  // Primary performance signal: leads (leadgen) or worst of roas/purchases (ecom).
-  let leadSignal;
-  if (clientType === 'ecom') {
-    const r = deltas.roas_7d_pct;
-    const p = deltas.purchases_7d_pct;
-    leadSignal = (r != null && p != null) ? Math.min(r, p) : (r ?? p ?? null);
-  } else {
-    leadSignal = deltas.leads_7d_pct ?? null;
-  }
-  if (leadSignal != null && leadSignal < 0) {
-    score -= Math.min(30, Math.abs(leadSignal) * 0.3);
-  }
-
-  // CPL penalty (leadgen only): positive cpl delta = worse.
-  if (clientType !== 'ecom' && deltas.cpl_7d_pct != null && deltas.cpl_7d_pct > 0) {
-    score -= Math.min(20, deltas.cpl_7d_pct * 0.2);
-  }
-
-  // Channel deltas <= -30 → -10 each, capped at -20 total.
-  const channelPenalty = [
-    deltas.gbp_7d_pct,
-    deltas.sc_7d_pct,
-    deltas.ga4_7d_pct,
-    deltas.ig_7d_pct,
-    deltas.google_spend_7d_pct,
-  ].reduce((pen, d) => pen + (d != null && d <= -30 ? 10 : 0), 0);
-  score -= Math.min(20, channelPenalty);
-
-  if (flags.includes('lead_drought')) score -= 20;
-  score -= flags.filter(f => f.startsWith('channel_dark')).length * 10;
-  score -= flags.filter(f => f.startsWith('gbp_conversion_break')).length * 10;
-  if (ghl?.error) score -= 5;
-
-  return Math.round(Math.max(0, Math.min(100, score)));
-}
-
-// --- Verdict ---
-
-function buildVerdictFallback(name, deltas, flags) {
-  const CANDIDATES = [
-    { key: 'leads_7d_pct',       label: 'leads' },
-    { key: 'purchases_7d_pct',   label: 'purchases' },
-    { key: 'roas_7d_pct',        label: 'ROAS' },
-    { key: 'cpl_7d_pct',         label: 'cost per lead' },
-    { key: 'spend_7d_pct',       label: 'spend' },
-    { key: 'sc_7d_pct',          label: 'search clicks' },
-    { key: 'ga4_7d_pct',         label: 'website sessions' },
-    { key: 'gbp_7d_pct',         label: 'Google Business actions' },
-    { key: 'ig_7d_pct',          label: 'Instagram reach' },
-    { key: 'google_spend_7d_pct',label: 'Google Ads spend' },
-  ].filter(c => deltas[c.key] != null)
-   .sort((a, b) => Math.abs(deltas[b.key]) - Math.abs(deltas[a.key]));
-
-  if (!CANDIDATES.length) return `${name}: no significant week-over-week movement in the last 7 days.`;
-
-  const top = CANDIDATES[0];
-  const val = deltas[top.key];
-  const dir = val > 0 ? 'up' : 'down';
-  let sentence = `${name} ${top.label} is ${dir} ${Math.abs(val)}% vs the prior 7 days.`;
-
-  if (flags.includes('lead_drought'))               sentence += ' Lead drought flag is active.';
-  else if (flags.some(f => f.startsWith('channel_dark'))) sentence += ' A channel dark flag is active.';
-
-  return sentence;
-}
-
-async function callVerdict(name, clientType, totals, deltas, flags, topCampaign, ghl, reconciliation) {
-  const fallback = buildVerdictFallback(name, deltas, flags);
-  if (!ANTHROPIC_KEY) return fallback;
-
-  // Build a compact, non-null delta map for the prompt.
-  const deltaSlim = Object.fromEntries(
-    Object.entries(deltas).filter(([k, v]) => v !== null && k !== 'spend_per_day_7d' && k !== 'meta_leads_7d_pct'),
-  );
-
-  const ghlLine = (ghl && !ghl.error)
-    ? `GHL (direct CRM API, 28d): ${ghl.contacts ?? 0} contacts, ${ghl.opportunities?.created?.count ?? 0} opportunities created, ${ghl.opportunities?.won?.count ?? 0} won — reconciliation: ${reconciliation?.status ?? 'unknown'}`
-    : `GHL (direct CRM API, 28d): unavailable`;
-
-  const prompt = [
-    `Client: ${name} (${clientType})`,
-    `Totals (28d): ${JSON.stringify(totals)}`,
-    `7d vs prior-7d deltas (%): ${JSON.stringify(deltaSlim)}`,
-    ghlLine,
-    `Flags: ${flags.join(', ') || 'none'}`,
-    topCampaign?.name ? `Top campaign: "${topCampaign.name}" ($${topCampaign.spend} spend)` : null,
-    '',
-    'Rules: 1-2 sentences. Name the biggest movement and its likely driver. Use exact numbers from the data. Never invent numbers not shown above. No URLs. No em dashes. When Windsor and GHL show different numbers, name both and say they are unreconciled — never pick one.',
-  ].filter(l => l !== null).join('\n');
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method:  'POST',
-      headers: {
-        'x-api-key':         ANTHROPIC_KEY,
-        'anthropic-version': '2023-06-01',
-        'content-type':      'application/json',
-      },
-      body: JSON.stringify({
-        model:       'claude-sonnet-4-6',
-        max_tokens:  200,
-        temperature: 0,
-        tools: [{
-          name:         'emit_verdict',
-          description:  'Emit a short performance verdict for the client.',
-          input_schema: {
-            type:       'object',
-            properties: { verdict: { type: 'string' } },
-            required:   ['verdict'],
-          },
-        }],
-        tool_choice: { type: 'tool', name: 'emit_verdict' },
-        messages:    [{ role: 'user', content: prompt }],
-      }),
-    });
-
-    if (!res.ok) {
-      console.warn(`  Verdict API ${res.status} — using fallback`);
-      return fallback;
-    }
-
-    const json  = await res.json();
-    const block = json.content?.find(b => b.type === 'tool_use' && b.name === 'emit_verdict');
-    return block?.input?.verdict || fallback;
-
-  } catch (err) {
-    console.warn(`  Verdict error: ${err.message} — using fallback`);
-    return fallback;
-  }
-}
-
 // --- Per-client processing ---
 
 async function processClient(client) {
@@ -357,7 +204,7 @@ async function processClient(client) {
       const raw = await fetchWindsor(client.windsor, WINDSOR_TOKEN, client.gbp_labels || {});
 
       // Extract internal fields before writing.
-      const { _dailyRows, _latestDay, _sources, _gbpProfiles, ...metrics } = raw;
+      const { _dailyRows, _latestDay, _sources, _gbpProfiles, _errors, ...metrics } = raw;
       sources = _sources;
 
       // Write history archive (90-day rolling); not used for delta computation.
@@ -410,7 +257,7 @@ async function processClient(client) {
         ctc_60s_connect:  _dailyRows.map(r => r.ctc_60s_connect  || 0),
       };
 
-      windsorOut = { ...metrics, latest_day: _latestDay, deltas, flags: [], series };
+      windsorOut = { ...metrics, latest_day: _latestDay, deltas, flags: [], series, errors: _errors || [] };
       console.log(`  Windsor: spend $${metrics.totals?.spend} | leads ${metrics.totals?.leads} | sources: ${sources.join(', ')}`);
 
     } catch (err) {
@@ -424,19 +271,29 @@ async function processClient(client) {
     windsorOut = { error: 'no_windsor_config' };
   }
 
-  // GHL — prefer per-location token from GHL_TOKENS map, fall back to GHL_TOKEN
+  // GHL: one sub-account Private Integration token per location.
+  // A per-client secret (GHL_TOKEN_MEDSTATION, GHL_TOKEN_SENIOR_INSURANCE, ...)
+  // wins over the GHL_TOKENS map. There is no agency-token fallback: agency
+  // tokens cannot read a location and only produce "Invalid JWT".
   let ghl = null;
-  const locationToken = GHL_TOKENS[client.ghl_location_id] || GHL_TOKEN;
-  if (client.ghl_location_id && locationToken) {
-    try {
-      ghl = await fetchGHL(client.ghl_location_id, locationToken);
-      console.log(`  GHL: ${ghl.contacts} contacts, ${ghl.opportunities.created.count} opps, ${ghl.appointments} appts`);
-    } catch (err) {
-      ghl = { error: err.message };
-      console.error(`  GHL error: ${err.message}`);
+  if (client.ghl_location_id) {
+    const envKey = 'GHL_TOKEN_' + client.slug.toUpperCase().replace(/[^A-Z0-9]/g, '_');
+    const locationToken = process.env[envKey] || GHL_TOKENS[client.ghl_location_id] || '';
+    if (!locationToken) {
+      ghl = { error: `No token. Add ${envKey} (or this location in GHL_TOKENS) to GitHub secrets.` };
+      console.warn(`  GHL: ${ghl.error}`);
+    } else {
+      try {
+        ghl = await fetchGHL(client.ghl_location_id, locationToken);
+        console.log(`  GHL: ${ghl.contacts} contacts, ${ghl.opportunities.created.count} opps, ${ghl.appointments} appts`);
+      } catch (err) {
+        const msg = String(err.message || err);
+        ghl = { error: /401|Invalid JWT/i.test(msg)
+          ? `Token rejected (${msg.slice(0, 80)}). Create a sub-account Private Integration token for location ${client.ghl_location_id} and save it as ${envKey}.`
+          : msg.slice(0, 300) };
+        console.error(`  GHL error: ${ghl.error}`);
+      }
     }
-  } else if (client.ghl_location_id && !locationToken) {
-    console.warn(`  GHL_API_TOKEN not set — skipping GHL for ${client.slug}`);
   }
 
   if (windsorOut && !windsorOut.error && flagInputs) {
@@ -447,27 +304,6 @@ async function processClient(client) {
 
   if (!existsSync('pulse')) mkdirSync('pulse');
 
-  const score  = computeScore(windsorOut?.deltas ?? {}, windsorOut?.flags ?? [], windsorOut, ghl, clientType);
-  const status = score >= 80 ? 'green' : score >= 50 ? 'amber' : 'orange';
-
-  let verdict = null;
-  if (windsorOut && !windsorOut.error) {
-    try {
-      verdict = await callVerdict(
-        client.name,
-        clientType,
-        windsorOut.totals      ?? {},
-        windsorOut.deltas      ?? {},
-        windsorOut.flags       ?? [],
-        windsorOut.top_campaign,
-        ghl,
-        reconciliation,
-      );
-    } catch (err) {
-      console.warn(`  Verdict failed: ${err.message}`);
-    }
-  }
-
   const pulse = {
     generated_at: new Date().toISOString(),
     date:         dateStr(new Date()),
@@ -475,9 +311,6 @@ async function processClient(client) {
     name:         client.name,
     type:         clientType,
     window_days:  28,
-    score,
-    status,
-    verdict,
     windsor:      windsorOut,
     ghl,
     reconciliation,
@@ -485,7 +318,6 @@ async function processClient(client) {
       source:  'windsor_api',
       sources,
     },
-    ...carryOverBrief(client.slug),
   };
 
   writeFileSync(`pulse/${client.slug}.json`, JSON.stringify(pulse, null, 2));
@@ -503,7 +335,6 @@ async function main() {
   if (!existsSync('history')) mkdirSync('history');
 
   if (!WINDSOR_TOKEN) console.warn('Warning: WINDSOR_API_KEY not set — Windsor blocks will error for all clients\n');
-  if (!GHL_TOKEN)     console.warn('Warning: GHL_API_TOKEN not set — GHL blocks will be null for all clients\n');
 
   let succeeded = 0;
   const failed  = [];
@@ -525,12 +356,9 @@ async function main() {
         name:         client.name,
         type:         client.type || 'leadgen',
         window_days:  28,
-        score:        20,
-        status:       'orange',
-        windsor:      { error: err.message },
+        windsor:      { error: err.message, errors: [{ connector: 'all', accounts: [], message: String(err.message).slice(0, 300) }] },
         ghl:          null,
         _meta:        { source: 'windsor_api', sources: [] },
-        ...carryOverBrief(client.slug),
       };
       if (!existsSync('pulse')) mkdirSync('pulse');
       writeFileSync(`pulse/${client.slug}.json`, JSON.stringify(failPulse, null, 2));

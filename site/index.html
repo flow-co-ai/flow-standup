@@ -353,7 +353,10 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
         const b = bucket(it.status), due = toDate(it.due);
         out.push({ id: it.monday_item_id, name: it.name, url: it.monday_url, client, lane: it.board,
           status: it.status || "", bucket: b, people: it.people || "", who: firstNames(it.people),
-          activity, days: daysSince(activity), due, overdue: !!(due && due < today && b !== "done") });
+          activity, days: daysSince(activity), due, overdue: !!(due && due < today && b !== "done"),
+          updates: [...(it.recent_updates || []), ...(it.subitems || []).flatMap((x) => (x.recent_updates || []).map((u) => ({ ...u, on: x.name })))]
+            .filter((u) => u && u.text).sort((a, b2) => String(b2.date).localeCompare(String(a.date))),
+          subitems: (it.subitems || []).map((x) => ({ name: x.name, status: x.status || "" })) });
       }
     }
     return out;
@@ -461,10 +464,17 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
       google_ads: { spend: w("google_spend"), conversions: w("google_conversions"), clicks: w("google_clicks") }, label: `${S.n} days` };
   }
   function profs(c) {
-    if (!(c.profiles_daily || []).length) return { list: c.profiles || [], label: "28 days" };
+    const errOf = (label) => (((c.source_list || {}).listings || []).find((l) => l.label === label) || {}).error || "";
+    if (!(c.profiles_daily || []).length) return { list: (c.profiles || []).map((p) => ({ ...p, nodata: !!p.no_data, error: errOf(p.label) })), label: "28 days" };
     const w = windowOf(c, "gbp_actions"), a = Math.max(0, w.e - S.n + 1), b = w.e + 1;
     return { list: c.profiles_daily.map((p) => ({ label: p.label, calls: sum(p.calls.slice(a, b)), directions: sum(p.directions.slice(a, b)),
-      web_clicks: sum(p.web_clicks.slice(a, b)), impressions: sum(p.impressions.slice(a, b)) })), label: `${S.n} days through ${fmtDay(toDate(w.end))}` };
+      web_clicks: sum(p.web_clicks.slice(a, b)), impressions: sum(p.impressions.slice(a, b)), nodata: p.has_data === false, error: errOf(p.label) })), label: `${S.n} days through ${fmtDay(toDate(w.end))}` };
+  }
+  function listingStatus(p) {
+    if (p.error) return `<span class="dot bad"></span>Error<span class="s" title="${esc(p.error)}">${esc(p.error.slice(0, 70))}</span>`;
+    if (p.nodata) return `<span class="dot warn"></span>No data`;
+    if (!(p.calls || p.directions || p.web_clicks)) return `<span class="dot warn"></span>No actions`;
+    return `<span class="dot ok"></span>Live`;
   }
   const daysLbl = (w) => (w && w.short ? w.have : S.n);
   const per = () => (S.n >= 30 ? "by week" : "by day");
@@ -531,10 +541,12 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
       if (gb.prev >= 20 && gb.cur > gb.prev * 1.3) add("organic", "Account", 2, `Send ${name} the Google profile win`, `Profile actions up ${Math.round((100 * gb.cur) / gb.prev - 100)}% (${num(gb.prev)} to ${num(gb.cur)}).`);
       if (sc.prev >= 20 && sc.cur < sc.prev * 0.7) add("organic", "Web + SEO", 2, "Find which pages lost Google clicks in Search Console", `Search clicks down ${Math.round(100 - (100 * sc.cur) / sc.prev)}% (${num(sc.prev)} to ${num(sc.cur)}) through ${fmtDay(toDate(sc.end))}.`);
       const pf = profs(c);
-      for (const p of pf.list) if ((p.impressions || 0) > 50 && !(p.calls || p.directions || p.web_clicks))
+      for (const p of pf.list) if (p.error) add("organic", "Web + SEO", 0, `Restore access to the ${p.label} listing`, `Google refuses its numbers: ${p.error.slice(0, 120)}`);
+      for (const p of pf.list) if (!p.error && (p.impressions || 0) > 50 && !(p.calls || p.directions || p.web_clicks))
         add("organic", "Web + SEO", 1, `Fill in the ${p.label} profile: phone, website, hours and photos`, `Seen ${num(p.impressions)} times in ${pf.label} with no calls, directions or clicks.`);
-      const g = c.crm;
-      if (!g) add("crm", "CRM", 2, `Connect ${poss(name)} GHL to this page`, "Without it, lead follow-up and wins can't be checked here.");
+      const g = c.crm, gs = (c.source_list || {}).ghl || {};
+      if (!g && gs.error) add("crm", "CRM", 0, `Fix ${poss(name)} GHL connection`, gs.error.slice(0, 160));
+      else if (!g) { /* not on GHL (or no CRM in scope): nothing to connect */ }
       else {
         if (c.windsor_leads_28d && g.contacts < c.windsor_leads_28d * 0.8) add("crm", "CRM", 0, "Check that ad leads are reaching GHL", `Ads reported ${num(c.windsor_leads_28d)} leads; GHL added ${num(g.contacts)} contacts (28 days).`);
         if (g.opps_created > 0 && !g.opps_won) add("crm", "CRM", 1, `Get wins marked in GHL${c.system ? `, or synced from ${c.system.name}` : ""}`, `${num(g.opps_created)} opportunities in 28 days, none marked won. Without wins, ROI can't be shown.`);
@@ -573,6 +585,7 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     if (c && sum(c.series.gbp_actions)) { const g = windowOf(c, "gbp_actions"); facts.push(["info", `Google profile actions ${delta(g.cur, g.prev, true, true) || "steady"}, through ${fmtDay(toDate(g.end))}.`]); }
     if (c && c.crm) facts.push(["info", `GHL: ${plural(c.crm.contacts, "new contact", "new contacts")}, ${plural(c.crm.opps_created, "opportunity", "opportunities")}, ${num(c.crm.opps_won || 0)} won in 28 days.`]);
     facts.push(["info", `Monday, last ${S.recentDays} days: ${plural(mm.mine.length, "item", "items")} touched, ${num(mm.shipped.length)} shipped, ${num(mm.review.length)} in review.`]);
+    if (c && c.week && c.week.quiet) facts.unshift(["warn", `Quiet this week: no Monday updates, WhatsApp threads, meetings or Done items for ${esc(name)} in 7 days.`]);
     const g = c ? windowOf(c, "gbp_actions") : null;
     const kp = [
       m && m.has ? k(`Ad spend, ${daysLbl(m.sp)} days`, moneyK(m.sp.cur), delta(m.sp.cur, m.sp.prev).replace(/class="(up|down)"/, ""), spark(c.series.spend, m.sp.e)) : k("Ad spend", "—", "No paid ads in Windsor"),
@@ -580,7 +593,7 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
       m && m.has ? k(m.sales ? "Return on spend" : "Cost per lead", m.sales ? (m.sp.cur ? `${(m.rv.cur / m.sp.cur).toFixed(1)}×` : "—") : (m.rs.cur ? money(m.sp.cur / m.rs.cur) : "—"),
         m.sales ? (m.sp.prev ? `was ${(m.rv.prev / m.sp.prev).toFixed(1)}×` : "") : (m.rs.prev ? `was ${money(m.sp.prev / m.rs.prev)}` : "")) : k("Cost per lead", "—", ""),
       c ? k("Google profile actions", num(g.cur), delta(g.cur, g.prev), spark(c.series.gbp_actions, g.e)) : k("Google profile actions", "—", ""),
-      c && c.crm ? k("New GHL contacts", num(c.crm.contacts), "last 28 days") : k("New GHL contacts", "—", "GHL not connected"),
+      c && c.crm ? k("New GHL contacts", num(c.crm.contacts), "last 28 days") : k("New GHL contacts", "—", c && c.crm_system && c.crm_system !== "GHL" ? `CRM is ${esc(c.crm_system)}` : ((c && c.source_list && c.source_list.ghl.error) ? "GHL error, see Sources" : "GHL not connected")),
       k(`Shipped, ${S.recentDays} days`, num(mm.shipped.length), "marked Done in Monday"),
     ];
     const monday = card(`Monday, last ${S.recentDays} days`, `Only items with activity since ${fmtDay(new Date(today - S.recentDays * DAY))}. Older items are left out.`,
@@ -643,8 +656,8 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     return hero(h1, shortNote(c), kp) +
       `<div class="grid one">${card("Next steps", "Paid only.", stepsHTML(steps, name), `${steps.length}`)}</div>
        <div class="grid even">${card(`Spend ${per()}`, `Last ${span(c)} days. Shaded: the ${S.n} days above.`, areaChart(c, "spend", moneyK), "Windsor")}${card(m.sales ? `Sales ${per()}` : `Leads ${per()}`, "As reported by Meta and Google.", areaChart(c, m.sales ? "purchases" : "leads", num), "Windsor")}</div>
-       <div class="grid one">${card("By channel", `${ch.label === "28 days" ? "Last 28 days" : `Last ${S.n} days`}. LSA and anything billed outside Windsor isn't included.`,
-        `<div class="tw"><table><thead><tr><th>Channel</th><th>Spend</th><th>Results</th><th>Cost each</th><th>Clicks</th></tr></thead><tbody>${chRow("Meta", ch.meta.spend, ch.meta.leads, ch.meta.clicks, "leads")}${chRow("Google Ads", ch.google_ads.spend, ch.google_ads.conversions, ch.google_ads.clicks, "conversions")}</tbody></table></div>
+       <div class="grid one">${card("By channel", `${ch.label === "28 days" ? "Last 28 days" : `Last ${S.n} days`}. Leads above = Meta ${esc(c.meta_label || "leads")} plus Google Ads conversions. LSA and anything billed outside Windsor isn't included.`,
+        `<div class="tw"><table><thead><tr><th>Channel</th><th>Spend</th><th>Results</th><th>Cost each</th><th>Clicks</th></tr></thead><tbody>${chRow("Meta", ch.meta.spend, ch.meta.leads, ch.meta.clicks, esc(c.meta_label || "leads"))}${chRow("Google Ads", ch.google_ads.spend, ch.google_ads.conversions, ch.google_ads.clicks, "conversions")}</tbody></table></div>
         ${c.top_campaign ? `<p class="note">Biggest campaign: ${esc(c.top_campaign.name)}, ${money(c.top_campaign.spend)}.</p>` : ""}`)}</div>`;
   }
   function organicView(name, c, items) {
@@ -653,22 +666,42 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     const h1 = sum(c.series.gbp_actions) ? `<em>${num(g.cur)}</em> Google profile actions through ${esc(fmtDay(toDate(g.end)))}.` : `No Google profile actions in <em>28 days</em>.`;
     const kp = ORG.map(([key, label]) => { const w = windowOf(c, key); return k(label, num(w.cur), delta(w.cur, w.prev), spark(c.series[key], w.e)); });
     const pf = profs(c);
-    const prof = pf.list.length ? `<div class="grid one">${card("Google profiles", `${cap(pf.label)}. Each listing on its own row.`,
-      `<div class="tw"><table><thead><tr><th>Profile</th><th>Calls</th><th>Directions</th><th>Website clicks</th><th>Views</th></tr></thead><tbody>${pf.list.map((p) => `<tr><td>${esc(p.label)}</td><td>${num(p.calls || 0)}</td><td>${num(p.directions || 0)}</td><td>${num(p.web_clicks || 0)}</td><td>${num(p.impressions || 0)}</td></tr>`).join("")}</tbody></table></div>`)}</div>` : "";
+    const prof = pf.list.length ? `<div class="grid one">${card("Google profiles", `${cap(pf.label)}. Every listing on its own row, including ones sending no data.`,
+      `<div class="tw"><table class="src"><thead><tr><th>Profile</th><th>Calls</th><th>Directions</th><th>Website clicks</th><th>Views</th><th>Status</th></tr></thead><tbody>${pf.list.map((p) => `<tr><td>${esc(p.label)}</td><td>${num(p.calls || 0)}</td><td>${num(p.directions || 0)}</td><td>${num(p.web_clicks || 0)}</td><td>${num(p.impressions || 0)}</td><td>${listingStatus(p)}</td></tr>`).join("")}</tbody></table></div>`)}</div>` : "";
     return hero(h1, [...shortNote(c), ["info", "Each number covers the latest fully reported days. Google profile data arrives about 4 days late."]], kp) +
       `<div class="grid one">${card("Next steps", "Organic only.", stepsHTML(steps, name), `${steps.length}`)}</div>
        <div class="grid even">${card(`Google profile actions ${per()}`, "Calls, directions and website clicks. Dashed: not reported yet.", areaChart(c, "gbp_actions", num), "Windsor")}${card(`Search clicks ${per()}`, "Website results in Google, not the map listing.", areaChart(c, "sc_clicks", num), "Search Console")}</div>` + prof;
   }
   function crmView(name, c, items) {
     const g = c && c.crm, steps = nextSteps(name, c, items).filter((s) => s.area === "crm");
-    if (!g) return hero(`GHL isn't connected for <em>${esc(name)}</em> here.`, [["info", "Add its GHL location and a view-only Private Integration token to the GHL_TOKENS secret. The daily run fills this tab."]], []) +
-      `<div class="grid one">${card("Next steps", "CRM only.", stepsHTML(steps, name), `${steps.length}`)}</div>`;
+    const gs = (c && c.source_list && c.source_list.ghl) || {}, sys = (c && c.crm_system) || "";
+    const mine = items.filter((i) => i.client === name && i.lane === "CRM");
+    const recentCrm = mine.filter(recent).sort((a, b) => (a.days ?? 999) - (b.days ?? 999));
+    const shipped = shippedFor(name, items, S.recentDays).filter((e) => e.lane === "CRM");
+    const upd = (it) => (it.updates || [])[0];
+    const workRows = recentCrm.length ? `<ul class="ins">${recentCrm.map((it) => { const u = upd(it), st = stall(it);
+        return `<li><div class="t"><a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.name)}</a> <span class="pill ${st ? "a" : it.bucket === "review" ? "g" : ""}">${esc(st ? st[0] : it.status || "No status")}</span></div>
+        ${u ? `<div class="m">${esc(u.author || "")}${u.on ? ` on ${esc(u.on)}` : ""}, ${esc(fmtDay(toDate(u.date)))}</div><blockquote>${esc(String(u.text).slice(0, 320))}</blockquote>` : `<div class="m">No written update. Last touched ${ageText(it.days)} ago.</div>`}
+        ${(it.subitems || []).length ? `<div class="m">${it.subitems.slice(0, 8).map((x) => `${esc(x.name)} (${esc(x.status || "blank")})`).join(" · ")}</div>` : ""}</li>`; }).join("")}</ul>`
+      : `<div class="empty">No CRM work on Monday for ${esc(name)} in ${S.recentDays} days.</div>`;
+    const work = card(`CRM work, last ${S.recentDays} days`, "Every CRM board item with activity, newest first, with the latest update the team wrote.", workRows, `${recentCrm.length}`);
+    const done = shipped.length ? card(`CRM shipped, ${shipped.length}`, "Marked Done, recorded by Monday's webhook.", `<ul class="ins">${shipped.map((e) => `<li><div class="t">${esc(e.name)}</div><div class="m">${esc(fmtDay(e.date))}</div></li>`).join("")}</ul>`) : "";
+    const facts = factsBlock(c, ["crm_system", "booking_system", "intake_owner"]);
+    const stepsCard = `<div class="grid one">${card("Next steps", "CRM only.", stepsHTML(steps, name), `${steps.length}`)}</div>`;
+    if (!g) {
+      const why = gs.error ? [["bad", `GHL is set up but failing: ${esc(gs.error.slice(0, 200))}`]]
+        : sys && sys !== "GHL" ? [["info", `${esc(name)} runs on ${esc(sys)}. Its numbers aren't connected here; the team's CRM work is below.`]]
+        : [["info", "No CRM numbers connected for this client. The team's CRM work is below."]];
+      return hero(`<em>${plural(recentCrm.length, "CRM item", "CRM items")}</em> moving for ${esc(name)}.`, why, []) + stepsCard +
+        `<div class="grid one">${work}</div>` + (done ? `<div class="grid one">${done}</div>` : "") + (facts ? `<div class="grid one">${facts}</div>` : "");
+    }
     const days = g.window_days || 28;
-    const kp = [k("New contacts", num(g.contacts), `last ${days} days`), k("Opportunities", num(g.opps_created), "created"), k("Marked won", num(g.opps_won || 0), g.opps_won_value ? money(g.opps_won_value) : ""), k("Appointments", num(g.appointments || 0), "in GHL")];
+    const kp = [k("New contacts", num(g.contacts), `last ${days} days`), k("Opportunities", num(g.opps_created), "created"), k("Marked won", num(g.opps_won || 0), g.opps_won_value ? money(g.opps_won_value) : ""), k("Appointments", num(g.appointments || 0), "in GHL"), k("CRM items moving", num(recentCrm.length), `last ${S.recentDays} days`)];
     const bars = c.windsor_leads_28d != null ? barsHTML([["Ad leads reported", c.windsor_leads_28d], ["New GHL contacts", g.contacts, true], ["Opportunities", g.opps_created], ["Marked won", g.opps_won || 0]]) : "";
-    return hero(`<em>${num(g.contacts)}</em> new contacts, ${plural(g.opps_won || 0, "win", "wins")} marked in GHL.`, [], kp) +
-      `<div class="grid one">${card("Next steps", "CRM only.", stepsHTML(steps, name), `${steps.length}`)}</div>` +
-      (bars ? `<div class="grid one">${card("Ads vs GHL", `Last ${days} days. Booked and showed should come from ${esc((c.system && c.system.name) || "the client's own system")}, not GHL stages.`, bars, "GHL")}</div>` : "");
+    return hero(`<em>${num(g.contacts)}</em> new contacts, ${plural(g.opps_won || 0, "win", "wins")} marked in GHL.`, [], kp) + stepsCard +
+      `<div class="grid one">${work}</div>` + (done ? `<div class="grid one">${done}</div>` : "") +
+      (bars ? `<div class="grid one">${card("Ads vs GHL", `Last ${days} days. Booked and showed should come from ${esc((c.system && c.system.name) || "the client's own system")}, not GHL stages.`, bars, "GHL")}</div>` : "") +
+      (facts ? `<div class="grid one">${facts}</div>` : "");
   }
   function aboutView() {
     const rules = [
@@ -679,7 +712,9 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
       "AI read: a daily AI pass over the numbers, plus account facts and decisions read from WhatsApp and Fireflies. Each is labeled with its date and source; reporting-lag and plan claims are filtered out.",
       "Next steps: fixed rules. Each one appears only when its number crosses a line (for example, cost per lead up 50%), and says which number triggered it.",
       "Ads and organic: the latest fully reported days in the range (7, 14, 30 or 90) vs the same number of days before. Up to 186 days of daily history. Google profile data arrives about 4 days late. Trend only; LSA and anything billed outside Windsor isn't included.",
-      "GHL: last 28 days of contacts, opportunities and appointments.",
+      "Leads: Meta's result for the client (leads, calls or conversations) plus Google Ads conversions.",
+      "CRM tab: every CRM board item with activity and its latest written update, plus GHL contacts, opportunities and appointments (last 28 days) for clients on GHL.",
+      "Quiet this week: no Monday updates, WhatsApp threads, meetings or Done items in the last 7 days.",
     ];
     return hero(`How these numbers are <em>counted</em>.`, [], []) + `<div class="grid one">${card("Rules", "", `<ul class="rules">${rules.map((r) => `<li>${esc(r)}</li>`).join("")}</ul>`)}</div>`;
   }
@@ -693,7 +728,7 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     spend: { title: "Ad spend", series: "spend", fmt: moneyK, src: ["Meta Ads", "Google Ads"], chans: ["meta", "google", "cross", "paid"], area: "paid", facts: ["kpi", "scope"],
       how: "Meta and Google Ads spend as reported to Windsor. LSA and anything billed outside Windsor isn't included." },
     results: { title: "Leads", series: "leads", fmt: num, src: ["Meta Ads", "Google Ads"], chans: ["meta", "google", "cross", "paid"], area: "paid", facts: ["kpi"],
-      how: "What Meta and Google conversion tracking report. Not yet matched against the CRM or the client's own system." },
+      how: "Meta results (leads, calls or conversations, set per client) plus Google Ads conversions. Not yet matched against the CRM or the client's own system." },
     cost: { title: "Cost per lead", series: "spend", fmt: moneyK, src: ["Meta Ads", "Google Ads"], chans: ["meta", "google", "cross", "paid"], area: "paid", facts: ["kpi"],
       how: "Ad spend divided by the leads the ad platforms report, over the selected days." },
     revenue: { title: "Revenue", series: "revenue", fmt: moneyK, src: ["Meta Ads"], chans: ["meta", "cross"], area: "paid", facts: ["kpi"],
@@ -753,7 +788,7 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     return `<div class="eyebrow">${esc(name)}</div><h2 class="dt">${esc(key === "results" && sales ? "Sales" : key === "cost" && sales ? "Return on spend" : M.title)}</h2>
       <div class="dv">${value}</div><div class="dp">${sub || ""}${sub ? ". " : ""}Last ${daysLbl(w)} days through ${esc(fmtDay(toDate(w.end)))}.</div>` +
       card("By " + (S.n >= 30 ? "week" : "day"), `${esc(M.how)}`, areaChart(c, sk, M.fmt), "Windsor") +
-      (pf && pf.list.length ? card("Each listing", `${cap(pf.label)}.`, `<div class="tw"><table><thead><tr><th>Listing</th><th>Calls</th><th>Directions</th><th>Clicks</th><th>Views</th></tr></thead><tbody>${pf.list.map((p) => `<tr><td>${esc(p.label)}</td><td>${num(p.calls || 0)}</td><td>${num(p.directions || 0)}</td><td>${num(p.web_clicks || 0)}</td><td>${num(p.impressions || 0)}</td></tr>`).join("")}</tbody></table></div>`) : "") +
+      (pf && pf.list.length ? card("Each listing", `${cap(pf.label)}.`, `<div class="tw"><table class="src"><thead><tr><th>Listing</th><th>Calls</th><th>Directions</th><th>Clicks</th><th>Views</th><th>Status</th></tr></thead><tbody>${pf.list.map((p) => `<tr><td>${esc(p.label)}</td><td>${num(p.calls || 0)}</td><td>${num(p.directions || 0)}</td><td>${num(p.web_clicks || 0)}</td><td>${num(p.impressions || 0)}</td><td>${listingStatus(p)}</td></tr>`).join("")}</tbody></table></div>`) : "") +
       (aiList(c.ai, M.chans) ? card("AI read", `From ${esc(fmtDay(toDate(c.ai.at)))}. Labeled by how sure it is.`, aiList(c.ai, M.chans), "AI") : "") +
       (steps.filter((x) => x.area === M.area).length ? card("Next steps", "", stepsHTML(steps.filter((x) => x.area === M.area), name)) : "") +
       factsBlock(c, M.facts) +
@@ -942,15 +977,20 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
       const tds = CONN.map((name) => {
         const w = sl.windsor.find((x) => x.name === name);
         if (!w) return `<td class="na">—</td>`;
+        if (w.error) { issues.push(["bad", `${esc(n)}: ${esc(name)} error. ${esc(w.error.slice(0, 160))}`]); return `<td title="${esc(w.error)}"><span class="dot bad"></span>Error<span class="s">${esc(w.error.slice(0, 60))}</span></td>`; }
         if (!w.last) { issues.push(["warn", `${esc(n)}: ${esc(name)} is connected but sending no data.`]); return cell("warn", "No data"); }
         if (daysSince(toDate(w.last)) > 10) { issues.push(["warn", `${esc(n)}: ${esc(name)} data stopped ${esc(fmtDay(toDate(w.last)))}.`]); return cell("warn", "Stopped", fmtDay(toDate(w.last))); }
         return cell("ok", "Live", `through ${fmtDay(toDate(w.last))}`);
       });
-      const L = sl.listings || [], dead = L.filter((l) => !l.has_data);
-      dead.forEach((l) => issues.push(["warn", `${esc(n)}: listing "${esc(l.label)}" is linked but returns no data.`]));
-      L.forEach((l) => listRows.push(`<tr><td>${esc(n)}</td><td>${esc(l.label)}</td><td>${num(l.actions_28)}</td><td>${num(l.views_28)}</td>${l.has_data ? cell("ok", "Live") : cell("warn", "No data")}</tr>`));
-      const ghl = sl.ghl.data ? cell("ok", "Live") : sl.ghl.configured ? cell("warn", "No data") : `<td class="na">—</td>`;
-      if (!sl.ghl.data && c) issues.push(["info", `${esc(n)}: GHL ${sl.ghl.configured ? "is set up but sending nothing here" : "isn't connected here"}.`]);
+      const L = sl.listings || [];
+      L.filter((l) => l.error).forEach((l) => issues.push(["bad", `${esc(n)}: listing "${esc(l.label)}" error. ${esc(l.error.slice(0, 160))}`]));
+      L.filter((l) => !l.has_data && !l.error).forEach((l) => issues.push(["warn", `${esc(n)}: listing "${esc(l.label)}" is linked but returns no data.`]));
+      L.forEach((l) => listRows.push(`<tr><td>${esc(n)}</td><td>${esc(l.label)}</td><td>${num(l.actions_28)}</td><td>${num(l.views_28)}</td>${l.error ? `<td title="${esc(l.error)}"><span class="dot bad"></span>Error<span class="s">${esc(l.error.slice(0, 60))}</span></td>` : l.has_data ? cell("ok", "Live") : cell("warn", "No data")}</tr>`));
+      const ghl = sl.ghl.data ? cell("ok", "Live") : sl.ghl.error ? `<td title="${esc(sl.ghl.error)}"><span class="dot bad"></span>Error<span class="s">${esc(sl.ghl.error.slice(0, 60))}</span></td>`
+        : sl.ghl.configured ? cell("warn", "No data") : sl.ghl.crm ? `<td class="na">${esc(sl.ghl.crm)}</td>` : `<td class="na">—</td>`;
+      if (sl.ghl.error && c) issues.push(["bad", `${esc(n)}: GHL error. ${esc(sl.ghl.error.slice(0, 200))}`]);
+      else if (!sl.ghl.data && sl.ghl.configured && c) issues.push(["warn", `${esc(n)}: GHL is set up but sending nothing here.`]);
+      (sl.errors || []).filter((e) => e.connector === "all").forEach((e) => issues.push(["bad", `${esc(n)}: Windsor pull failed. ${esc(String(e.message).slice(0, 160))}`]));
       const read = (d) => !d ? `<td class="na">—</td>` : daysSince(toDate(d)) > 10 ? cell("warn", "Last read", fmtDay(toDate(d))) : cell("ok", "Read", fmtDay(toDate(d)));
       const mon = items.filter((i) => i.client === n && recent(i)).length;
       rows.push(`<tr><td>${esc(n)}</td>${tds.join("")}${ghl}${read(sl.chats)}${read(sl.meetings)}${mon ? cell("ok", `${mon} items`) : cell("warn", "Quiet")}<td>${sl.playbook ? "Yes" : `<span class="na">—</span>`}</td></tr>`);
@@ -960,16 +1000,21 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     const unlinked = (S.hub && S.hub.unlinked_listings) || [];
     if (unlinked.length) issues.unshift(["warn", `${unlinked.length} Google listings in Windsor aren't linked to a client.`]);
     const order = { bad: 0, warn: 1, info: 2 };
-    return hero(`<em>${plural(issues.filter((i) => i[0] !== "info").length, "source", "sources")}</em> need attention across ${plural(NAMES.length, "client", "clients")}.`, issues.slice().sort((a, b) => order[a[0]] - order[b[0]]).slice(0, 4), []) +
+    const allErr = NAMES.flatMap((n) => (((hubClient(n) || {}).source_list || {}).errors || []).map((e) => ({ ...e, client: n })));
+    const ghlErr = NAMES.map((n) => [n, (((hubClient(n) || {}).source_list || {}).ghl || {}).error]).filter((x) => x[1]);
+    const errCard = (allErr.length || ghlErr.length) ? `<div class="grid one">${card("Connector errors", "What each source said when it failed, from the last daily run. Fix these first: a failed source reads as zero everywhere else.",
+      `<ul class="ins">${allErr.map((e) => `<li><div class="t">${esc(e.client)}: ${esc(e.connector === "all" ? "Windsor" : e.connector)}${(e.accounts || []).length ? ` (${esc(e.accounts.join(", "))})` : ""}</div><div class="m">${esc(e.where || "")}</div><blockquote>${esc(e.message)}</blockquote></li>`).join("")}
+       ${ghlErr.map(([n, m]) => `<li><div class="t">${esc(n)}: GHL</div><blockquote>${esc(m)}</blockquote></li>`).join("")}</ul>`, `${allErr.length + ghlErr.length}`)}</div>` : "";
+    return hero(`<em>${plural(issues.filter((i) => i[0] !== "info").length, "source", "sources")}</em> need attention across ${plural(NAMES.length, "client", "clients")}.`, issues.slice().sort((a, b) => order[a[0]] - order[b[0]]).slice(0, 4), []) + errCard +
       `<div class="grid one">${card("Every client, every source", "Live means data arrived recently. — means not set up for that client.",
-        `<div class="tw"><table class="src"><thead><tr><th>Client</th>${CONN.map((x) => `<th>${esc(x.replace("Google Business Profile", "Google listings"))}</th>`).join("")}<th>GHL</th><th>Chats</th><th>Meetings</th><th>Monday, 30 days</th><th>Playbook</th></tr></thead><tbody>${rows.join("")}</tbody></table></div>`)}</div>
+        `<div class="tw"><table class="src"><thead><tr><th>Client</th>${CONN.map((x) => `<th>${esc(x.replace("Google Business Profile", "Google listings"))}</th>`).join("")}<th>CRM</th><th>Chats</th><th>Meetings</th><th>Monday, 30 days</th><th>Playbook</th></tr></thead><tbody>${rows.join("")}</tbody></table></div>`)}</div>
        <div class="grid one">${card("Google listings", "Each listing is pulled on its own so numbers never blend. Last 28 days.", `<div class="tw"><table class="src"><thead><tr><th>Client</th><th>Listing</th><th>Actions</th><th>Views</th><th>Status</th></tr></thead><tbody>${listRows.join("")}</tbody></table></div>`)}</div>` +
       `<div class="grid one">${card("Listings in Windsor not linked to a client", S.hub && S.hub.discovery_ok ? "Add the listing ID to config.json under ops.gbp_links to attach it." : "The listing check runs with the next daily update.",
         unlinked.length ? `<ul class="ins">${unlinked.map((l) => `<li><div class="t">${esc(l.title || "(no title)")}</div><div class="m">${esc(l.id)}</div></li>`).join("")}</ul>` : `<div class="empty">${S.hub && S.hub.discovery_ok ? "Every listing is linked." : "Not checked yet."}</div>`)}</div>` +
       `<div class="grid one">${card("Everything that feeds this page", "", `<ul class="rules">${[
         "Monday: four boards (CRM, Ads, Video, Web + SEO), read live when you unlock, otherwise each morning.",
         "Windsor: Meta, Google Ads, Google listings, Search Console, Google Analytics and Instagram, 186 days daily.",
-        "GHL: contacts, opportunities and appointments for each connected location, last 28 days.",
+        "GHL: contacts, opportunities and appointments for each connected location, last 28 days. JCL runs on Zoho, which isn't connected.",
         "WhatsApp and Fireflies: read by AI into account facts, decisions, commitments and blockers, each quoted with where it came from.",
         "AI read of the numbers: a daily pass over the Windsor and GHL numbers. Shown only when under 7 days old, with reporting-lag and plan claims removed.",
         "Monday webhook: every status change to Done.",
@@ -1016,7 +1061,7 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     NAMES = [...new Set([...items.map((i) => i.client), ...Object.keys((S.hub && S.hub.clients) || {})])]
       .filter((n) => n && !skip.has(n) && !inactive.has(n)).sort((a, b) => (a === "Flow Company") - (b === "Flow Company") || a.localeCompare(b));
     const r = route(); localStorage.setItem(LAST_KEY, r.client);
-    $("view").innerHTML = NAMES.map((n) => `<option value="${esc(n)}" ${r.client === n ? "selected" : ""}>${esc(n)}</option>`).join("");
+    $("view").innerHTML = NAMES.map((n) => `<option value="${esc(n)}" ${r.client === n ? "selected" : ""}>${esc(n)}${(hubClient(n) || {}).week && hubClient(n).week.quiet ? " · quiet this week" : ""}</option>`).join("");
     const pend = S.queueAll ? pendingDrafts().length : null;
     $("nav").innerHTML = TABS.map(([t, l]) => `<a href="${href(r.client, t)}" class="${r.screen === "client" && r.tab === t ? "on" : ""}"><svg viewBox="0 0 24 24">${ICON[t]}</svg>${l}</a>`).join("") +
       `<div class="sep"></div><a href="#v=ask" class="${r.screen === "ask" ? "on" : ""}"><svg viewBox="0 0 24 24">${ICON.ask}</svg>Ask</a>` +

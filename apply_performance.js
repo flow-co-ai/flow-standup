@@ -31,7 +31,7 @@ const CLIENTS = require('./clients.json');
 const API_KEY      = process.env.ANTHROPIC_API_KEY || '';
 const FORCE        = process.env.FORCE_PERFORMANCE === '1';
 const STATE_BRANCH = process.env.STATE_BRANCH || 'state';
-const MODEL        = 'claude-sonnet-4-6';
+const MODEL        = process.env.ANTHROPIC_MODEL || JSON.parse(readFileSync('config.json', 'utf8')).model || 'claude-sonnet-4-6'; // one setting: config.json "model"
 
 // ── steel canonical slug mapping ──────────────────────────────────
 // All three steel sub-slugs share one playbook and one timeline entry.
@@ -98,7 +98,7 @@ const EMIT_PERFORMANCE = {
     type: 'object',
     required: ['verdict', 'findings', 'suggestions', 'next_check'],
     properties: {
-      verdict: { type: 'string', description: 'One line, max 12 words. Extends or corrects the daily verdict, never repeats it.' },
+      verdict: { type: 'string', description: 'One line, max 12 words. The money answer for this client.' },
       findings: {
         type: 'array', maxItems: 5,
         items: {
@@ -160,11 +160,9 @@ function buildPrompt(lens, pulse, decisions) {
   const w = pulse.windsor || {};
   const parts = [filled];
 
-  // ── SOW & ENGAGEMENT PLAN (from playbook + timeline plan) ──
+  // ── SOW & ENGAGEMENT PLAN (from the playbook) ──
   const pSlug    = playbookSlug(pulse.slug);
   const playbook = readFile(`playbooks/${pSlug}.md`);
-  const plan     = readJSON(`timeline/${pSlug}.plan.json`);
-  const timeline = readJSON(`timeline/${pSlug}.json`);
 
   if (playbook) {
     parts.push('\n## SOW & ENGAGEMENT PLAN\n');
@@ -172,29 +170,8 @@ function buildPrompt(lens, pulse, decisions) {
     parts.push(playbook.slice(0, 3000));
   }
 
-  if (plan?.milestones?.length) {
-    const completedEvents = (timeline?.events || []).filter(e => e.kind === 'completed');
-    // Duplicate the substring matching used in build_timeline.js exactly.
-    const overdue = plan.milestones.filter(m => {
-      if (m.date >= today) return false;
-      const mLabel = m.label.toLowerCase();
-      return !completedEvents.some(e =>
-        e.label.toLowerCase().includes(mLabel) || mLabel.includes(e.label.toLowerCase())
-      );
-    });
-    if (overdue.length) {
-      parts.push('\n## OVERDUE MILESTONES (no completed event matches — each is a required priority-2 finding)\n');
-      parts.push(JSON.stringify(overdue, null, 1));
-    }
-  }
-
-  parts.push('\n## TRIAGE (machine-computed this morning)\n');
-  parts.push(JSON.stringify({
-    score:  pulse.score,
-    status: pulse.status,
-    flags:  w.flags || [],
-    daily_verdict: pulse.verdict || null,
-  }, null, 1));
+  parts.push('\n## FLAGS (machine-computed this morning)\n');
+  parts.push(JSON.stringify({ flags: w.flags || [], connector_errors: w.errors || [] }, null, 1));
 
   parts.push('\n## 28-DAY WINDOW\n');
   parts.push(JSON.stringify({

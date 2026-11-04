@@ -13,8 +13,8 @@
 // ENV VARS: GH_STATE_TOKEN, MONDAY_API_TOKEN (already set in Netlify)
 //
 // CONCURRENT WRITES to completed-accumulator.json (fixed 2026-08-06,
-// ee181cd): this webhook and standup.yml's Action both touch this file, so
-// standup.yml excludes it from its own git add/commit (pathspec
+// ee181cd): this webhook and the Daily Pulse workflow both touch this file, so
+// daily-pulse.yml excludes it from its own git add/commit (pathspec
 // ':!standups/completed-accumulator.json') and generate.py instead syncs it
 // through this SAME GitHub Contents API path -- sync_accumulator_via_github:
 // read fresh, re-dedup against whatever landed since the run started, merge,

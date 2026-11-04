@@ -68,8 +68,16 @@ def shipped_events(days: int = 14) -> list:
     return sorted(out, key=lambda x: x["date"], reverse=True)
 
 
+def active_ad_slugs(config: dict) -> dict:
+    """config.ops.ad_slugs without clients whose every slug is active:false in clients.json."""
+    inactive = {e.get("slug") for e in (load(Path("clients.json")) or []) if e.get("active") is False}
+    return {client: slugs for client, slugs in ((config.get("ops") or {}).get("ad_slugs") or {}).items()
+            if any(s not in inactive for s in slugs)}
+
+
 def main() -> None:
     config = json.loads(Path("config.json").read_text())
+    config.setdefault("ops", {})["ad_slugs"] = active_ad_slugs(config)
     ops = config.get("ops") or {}
     inactive_clients = [
         e["name"] for e in (load(Path("clients.json")) or [])
@@ -161,8 +169,19 @@ def build_hub(config: dict) -> dict:
     out = {"generated_at": datetime.now(timezone.utc).isoformat(), "complete_through": {}, "clients": {}}
     staged, global_end = {}, ""
 
+    disc = load(Path("series/_gbp_discovery.json")) or {}
     for client, slugs in (ops.get("ad_slugs") or {}).items():
         merged, prof_daily, found, kind, long_hist = {}, {}, [], "leads", True
+        # every listing configured for this client, named from clients.json first
+        lab = {}
+        for slug in slugs:
+            for l in disc.get("listings") or []:
+                if l.get("slug") == slug:
+                    lab[l["id"]] = l.get("title") or l["id"]
+            gmb = ((cfg.get(slug) or {}).get("windsor") or {}).get("google_my_business") or []
+            for lid in (gmb.get("accounts") or [] if isinstance(gmb, dict) else gmb):
+                lab.setdefault(lid, lid)
+            lab.update((cfg.get(slug) or {}).get("gbp_labels") or {})
         channels = {"meta": {"spend": 0, "leads": 0, "clicks": 0}, "google_ads": {"spend": 0, "conversions": 0, "clicks": 0}}
         profiles, top, crm, recon = [], None, None, None
         for slug in slugs:
@@ -174,13 +193,15 @@ def build_hub(config: dict) -> dict:
             if pulse.get("type") == "ecom" or (hist or {}).get("kind") == "sales":
                 kind = "sales"
             if hist and len(hist.get("rows") or []) >= 28:
-                labels = hist.get("profile_labels") or {}
+                for pid, name in (hist.get("profile_labels") or {}).items():
+                    if lab.get(pid, pid) == pid:
+                        lab[pid] = name
                 for r in hist["rows"]:
                     row = merged.setdefault(r["date"], {k: 0.0 for k in SERIES})
                     for k in SERIES:
                         row[k] += float(r.get(k) or 0)
                     for pid, vals in (r.get("gbp_by_profile") or {}).items():
-                        p = prof_daily.setdefault(labels.get(pid, pid), {})
+                        p = prof_daily.setdefault(pid, {})
                         day = p.setdefault(r["date"], {k: 0.0 for k in PROFILE_KEYS})
                         for k in PROFILE_KEYS:
                             day[k] += float(vals.get(k) or 0)
@@ -198,12 +219,13 @@ def build_hub(config: dict) -> dict:
                 for key in keys:
                     keys[key] += float((by.get(ch) or {}).get(key) or 0)
             for prof in (by.get("gbp") or {}).get("by_profile") or []:
-                profiles.append({key: prof.get(key) for key in ("label",) + PROFILE_KEYS})
+                pid = prof.get("account_id") or prof.get("label")
+                profiles.append({"id": pid, **{key: prof.get(key) for key in PROFILE_KEYS}})
             tc = w.get("top_campaign")
             if tc and tc.get("spend") and (not top or tc["spend"] > top["spend"]):
                 top = tc
-            if isinstance(pulse.get("ghl"), dict):
-                g = pulse["ghl"]
+            g = pulse.get("ghl")
+            if isinstance(g, dict) and not g.get("error") and (cfg.get(slug) or {}).get("ghl_location_id"):
                 opps = g.get("opportunities") or {}
                 crm = {"contacts": g.get("contacts"), "opps_created": (opps.get("created") or {}).get("count"),
                        "opps_won": (opps.get("won") or {}).get("count"), "opps_won_value": (opps.get("won") or {}).get("value"),
@@ -213,7 +235,7 @@ def build_hub(config: dict) -> dict:
             global_end = max(global_end, max(merged))
         sources = sorted({k for slug in slugs for k in ((cfg.get(slug) or {}).get("windsor") or {})
                           if not k.endswith("_field") and not k.endswith("_fields")})
-        staged[client] = dict(merged=merged, prof_daily=prof_daily, found=found, kind=kind, days=186 if (long_hist and found) else 28,
+        staged[client] = dict(labels=lab, merged=merged, prof_daily=prof_daily, found=found, kind=kind, days=186 if (long_hist and found) else 28,
                               channels=channels, profiles=profiles, top=top, crm=crm, recon=recon, sources=sources,
                               results=load(Path("results") / f"{slugs[0]}.json") if slugs else None)
 
@@ -223,12 +245,29 @@ def build_hub(config: dict) -> dict:
         dates = [_shift(end, -i) for i in range(n - 1, -1, -1)] if end else []
         zero = {k: 0.0 for k in SERIES}
         series = {k: [round((merged.get(d) or zero)[k], 2) for d in dates] for k in SERIES}
-        prof_series = [{"label": label, **{k: [round((days.get(d) or {}).get(k, 0)) for d in dates] for k in PROFILE_KEYS}}
-                       for label, days in sorted(st["prof_daily"].items())]
+        # one row per listing, keyed by listing id; listings with no data still get a row
+        lab = st["labels"]
+        for pid in st["prof_daily"]:
+            lab.setdefault(pid, pid)
+        seen_names = {}
+        for pid in sorted(lab, key=lambda x: str(lab[x]).lower()):
+            seen_names.setdefault(lab[pid], []).append(pid)
+        name_of = {pid: (lab[pid] if len(seen_names[lab[pid]]) == 1 else f"{lab[pid]} ({pid[-4:]})") for pid in lab}
+        prof_series = [{"id": pid, "label": name_of[pid], "has_data": pid in st["prof_daily"],
+                        **{k: [round((st["prof_daily"].get(pid, {}).get(d) or {}).get(k, 0)) for d in dates] for k in PROFILE_KEYS}}
+                       for pid in sorted(lab, key=lambda x: name_of[x].lower())]
+        profiles28 = [{"label": name_of.get(p["id"], p["id"]), **{k: p.get(k) for k in PROFILE_KEYS}} for p in st["profiles"]]
+        have28 = {p["id"] for p in st["profiles"]}
+        profiles28 += [{"label": name_of[pid], **{k: 0 for k in PROFILE_KEYS}, "no_data": True} for pid in lab if pid not in have28]
+        meta_label = next((cfg[s_].get("meta_leads_label") for s_ in (ops.get("ad_slugs") or {}).get(client, [])
+                           if (cfg.get(s_) or {}).get("meta_leads_label")), "leads")
+        crm_name = next((cfg[s_].get("crm") for s_ in (ops.get("ad_slugs") or {}).get(client, []) if (cfg.get(s_) or {}).get("crm")), None)
+        system = systems.get(client)
         out["clients"][client] = {
-            "accounts": st["found"], "sources": st["sources"], "kind": st["kind"], "system": systems.get(client),
+            "accounts": st["found"], "sources": st["sources"], "kind": st["kind"], "system": system,
+            "meta_label": meta_label, "crm_system": "GHL" if any((cfg.get(s_) or {}).get("ghl_location_id") for s_ in (ops.get("ad_slugs") or {}).get(client, [])) else crm_name,
             "dates": dates, "series": series, "profiles_daily": prof_series,
-            "channels": st["channels"], "top_campaign": st["top"], "profiles": st["profiles"],
+            "channels": st["channels"], "top_campaign": st["top"], "profiles": profiles28,
             "crm": st["crm"], "windsor_leads_28d": st["recon"], "results": st["results"],
         }
         for k in SERIES:
@@ -283,7 +322,7 @@ def add_context(config: dict, hub: dict, recent_days: int) -> None:
         # AI read of the numbers: only fresh, only findings about the data (not plan/playbook claims)
         perf = pulse.get("performance") or {}
         ai = None
-        if perf.get("generated_at") and _days_ago(perf["generated_at"]) <= 7 and not perf.get("stale"):
+        if perf.get("generated_at") and _days_ago(perf["generated_at"]) <= 7:
             plan = lambda t: any(w in (t or "").lower() for w in PLAN_WORDS)
             # Google profile data lands ~4 days late, so "0 in the last few days" is a reporting gap, not a drop.
             lag = lambda f: str(f.get("channel", "")).lower() in ("gbp", "organic", "google_my_business") and re.search(
@@ -307,36 +346,86 @@ def add_context(config: dict, hub: dict, recent_days: int) -> None:
         tail = lambda key: [d for d, v in zip(dates, series.get(key) or []) if v > 0]
         conns = sorted({k for s in slugs for k in ((cfg.get(s) or {}).get("windsor") or {}) if k in CONNECTOR_KEY}
                        | ({"google_my_business"} if c.get("profiles_daily") else set()))
+        errs = []
+        for s_ in slugs:
+            p_ = load(Path("pulse") / f"{s_}.json") or {}
+            h_ = load(Path("series") / f"{s_}.json") or {}
+            errs += [dict(e, where="28-day pull") for e in ((p_.get("windsor") or {}).get("errors") or [])]
+            errs += [dict(e, where="186-day history") for e in (h_.get("errors") or [])]
+        uniq = {}
+        for e in errs:
+            uniq.setdefault((e.get("connector"), tuple(e.get("accounts") or []), (e.get("message") or "")[:80]), e)
+        errs = list(uniq.values())
         windsor = []
         for k in conns:
             label, key = CONNECTOR_KEY[k]
             hits = tail(key)
-            windsor.append({"name": label, "last": hits[-1] if hits else None, "total_28": round(sum((series.get(key) or [])[-28:]))})
+            err = next((e["message"] for e in errs if e.get("connector") in (k, "all") and (k != "google_my_business" or e.get("connector") == "all")), None)
+            windsor.append({"name": label, "last": hits[-1] if hits else None, "total_28": round(sum((series.get(key) or [])[-28:])), "error": err})
         labels = {}
         for s in slugs:
             labels.update((cfg.get(s) or {}).get("gbp_labels") or {})
         for l in disc.get("listings") or []:
             if l.get("slug") in slugs:
                 labels.setdefault(l["id"], l.get("title") or l["id"])
-        daily = {p["label"]: p for p in c.get("profiles_daily") or []}
+        daily = {p["id"]: p for p in c.get("profiles_daily") or []}
         prof28 = {p["label"]: p for p in c.get("profiles") or []}
         listings = []
         for lid, label in labels.items():
-            p = daily.get(label) or prof28.get(label)
+            p = daily.get(lid) or prof28.get(label)
+            if p and p.get("has_data") is False:
+                p = None
+            if p and daily.get(lid):
+                label = daily[lid]["label"]
             total = (sum(sum(p[k][-28:]) for k in ("calls", "directions", "web_clicks")) if p and isinstance(p.get("calls"), list)
                      else (sum(p.get(k) or 0 for k in ("calls", "directions", "web_clicks")) if p else 0))
             views = (sum(p["impressions"][-28:]) if p and isinstance(p.get("impressions"), list) else (p or {}).get("impressions") or 0)
-            listings.append({"id": lid, "label": label, "actions_28": round(total), "views_28": round(views), "has_data": bool(p)})
+            lerr = next((e["message"] for e in errs if e.get("connector") == "google_my_business" and lid in (e.get("accounts") or [])), None)
+            listings.append({"id": lid, "label": label, "actions_28": round(total), "views_28": round(views), "has_data": bool(p), "error": lerr})
         first = cfg.get(slugs[0]) if slugs else None
         c["source_list"] = {
             "windsor": windsor, "listings": listings,
-            "ghl": {"configured": bool(first and first.get("ghl_location_id")), "data": bool(c.get("crm"))},
+            "ghl": {"configured": bool(first and first.get("ghl_location_id")), "data": bool(c.get("crm")),
+                    "error": (pulse.get("ghl") or {}).get("error") if isinstance(pulse.get("ghl"), dict) else None,
+                    "crm": "GHL" if (first and first.get("ghl_location_id")) else (first or {}).get("crm")},
+            "errors": errs,
             "chats": ((facts or {}).get("last_processed_at") or {}).get("whatsapp"),
             "meetings": ((facts or {}).get("last_processed_at") or {}).get("fireflies"),
             "facts": len(by_id), "playbook": any((Path("playbooks") / f"{s}.md").exists() for s in slugs + [name_slug]),
         }
+    add_week(config, hub)
     hub["unlinked_listings"] = [l for l in disc.get("listings") or [] if not l.get("slug")]
     hub["discovery_ok"] = disc.get("ok")
+
+
+# ── Quiet this week: no Monday activity, chats, meetings or Done items in 7 days ──
+def _stamp_days(stamp) -> int:
+    return _days_ago(str(stamp or "")[:19]) if stamp else 9999
+
+
+def add_week(config: dict, hub: dict) -> None:
+    ops = config.get("ops") or {}
+    snap = load(Path("site/monday-items.json")) or {}
+    meetings = (load(Path("facts/_meetings.json")) or {}).get("meetings") or []
+    shipped = shipped_events(7)
+    for client, c in hub["clients"].items():
+        slugs = (ops.get("ad_slugs") or {}).get(client) or []
+        items = 0
+        for it in (snap.get("by_client") or {}).get(client) or []:
+            stamps = [it.get(k) for k in ("item_updated_at", "updated_at", "last_activity", "created_at")]
+            stamps += [u.get("date") for u in it.get("recent_updates") or []]
+            for sub in it.get("subitems") or []:
+                stamps += [sub.get(k) for k in ("updated_at", "created_at")] + [u.get("date") for u in sub.get("recent_updates") or []]
+            if min((_stamp_days(x) for x in stamps if x), default=9999) <= 7:
+                items += 1
+        chats = 0
+        for s_ in slugs:
+            comms = load(Path("comms") / f"{s_}.json") or {}
+            chats += sum(1 for t in comms.get("threads") or [] if _stamp_days(t.get("last_at")) <= 7)
+        mtgs = sum(1 for m in meetings if m.get("client") == client and _stamp_days(m.get("date")) <= 7)
+        done = sum(1 for e in shipped if e.get("client") == client)
+        c["week"] = {"monday_items": items, "chat_threads": chats, "meetings": mtgs, "done": done,
+                     "quiet": not (items or chats or mtgs or done)}
 
 
 if __name__ == "__main__":

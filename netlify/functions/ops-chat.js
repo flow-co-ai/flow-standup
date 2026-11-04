@@ -30,7 +30,7 @@ const {
 } = require("./standup-overrides");
 const { dispatchWorkflow } = require("./refresh-everything");
 
-const ANTHROPIC_MODEL = "claude-sonnet-4-5"; // check docs.claude.com/en/docs/about-claude/models if this starts erroring
+const { MODEL: ANTHROPIC_MODEL } = require("./lib/model"); // one setting: config.json "model"
 const QUEUE_PATH = "checks/draft-queue.json";
 const EMPTY = { updatedAt: null, items: [] };
 const RUNDOWN_PATH = "site/latest.json"; // only ever pushed to main by the Weekly Standup workflow
@@ -686,7 +686,7 @@ exports.handler = async (event) => {
             try {
               const token = process.env.GH_STATE_TOKEN;
               if (!token) throw new Error("GH_STATE_TOKEN is not set");
-              await dispatchWorkflow("standup.yml", token);
+              await dispatchWorkflow("daily-pulse.yml", token); // one pipeline since Nov 2026
               result = { ok: true };
             } catch (err) {
               result = { error: String((err && err.message) || err) };

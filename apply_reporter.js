@@ -31,7 +31,7 @@ const FORCE       = process.env.FORCE_REPORTER === '1';
 const DRY_RUN_VAL = process.env.DRY_RUN || '';
 const DRY_RUN     = !!DRY_RUN_VAL;
 const DRY_RUN_SLUG = DRY_RUN_VAL !== '1' ? DRY_RUN_VAL : null; // null = all
-const MODEL       = 'claude-sonnet-4-6';
+const MODEL       = process.env.ANTHROPIC_MODEL || JSON.parse(readFileSync('config.json', 'utf8')).model || 'claude-sonnet-4-6'; // one setting: config.json "model"
 
 // Groups: multiple client slugs → one combined output report.
 // Members with no pulse file are skipped; if none exist, falls back to
@@ -127,11 +127,8 @@ function loadPulse(slug) {
   return JSON.parse(readFileSync(p, 'utf8'));
 }
 
-function loadTimeline(slug) {
-  const p = `timeline/${slug}.plan.json`;
-  if (!existsSync(p)) return null;
-  try { return JSON.parse(readFileSync(p, 'utf8')); } catch { return null; }
-}
+// Timeline was retired (Nov 2026). Kept as a no-op so the report shape is unchanged.
+function loadTimeline() { return null; }
 
 // Returns [{ slug, pulse }, ...] for a solo client.
 function resolveSoloPulses(client) {
@@ -157,12 +154,8 @@ function pulseBlock(slug, pulse) {
   const perf = pulse.performance || null;
   const parts = [];
 
-  parts.push('\n## TRIAGE\n');
-  parts.push(JSON.stringify({
-    score:         pulse.score,
-    status:        pulse.status,
-    daily_verdict: pulse.verdict || null,
-  }, null, 1));
+  parts.push('\n## FLAGS\n');
+  parts.push(JSON.stringify({ flags: w.flags || [] }, null, 1));
 
   parts.push('\n## 28-DAY TOTALS\n');
   parts.push(JSON.stringify({

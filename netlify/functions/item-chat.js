@@ -31,7 +31,7 @@ const {
   enforceSentInvariant,
 } = require("./lib/monday");
 
-const ANTHROPIC_MODEL = "claude-sonnet-4-5"; // check docs.claude.com/en/docs/about-claude/models if this starts erroring
+const { MODEL: ANTHROPIC_MODEL } = require("./lib/model"); // one setting: config.json "model"
 const QUEUE_PATH = "checks/draft-queue.json";
 const EMPTY = { updatedAt: null, items: [] };
 
