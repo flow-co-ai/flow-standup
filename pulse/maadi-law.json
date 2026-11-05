@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-05T09:12:02.144Z",
+  "generated_at": "2026-11-05T10:25:11.092Z",
   "date": "2026-11-05",
   "slug": "maadi-law",
   "name": "Maadi Law, LLC",
@@ -597,80 +597,79 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-11-05T09:33:38.561Z",
+    "generated_at": "2026-11-05T10:45:28.591Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "CPL improving; GHL pipeline gap needs urgent intake fix.",
+    "verdict": "CPL improving; GHL pipeline gap signals intake leak, not ads.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "CPL dropped 14.21% week-over-week to ~$88 blended; leads up 16.67% on flat spend (+0.09%). Efficiency is genuinely improving.",
+        "text": "CPL fell 14.21% week-over-week to ~$88 blended; leads up 16.67% on flat spend (+0.09%). Efficiency is moving in the right direction.",
         "confidence": "confirmed",
-        "channel": "meta+google"
+        "channel": "cross"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3-day lead signal (Nov 2–4): 6, 0, 1 leads vs prior 3 days (Oct 30–Nov 1): 3, 2, 0 — slight improvement but Nov 3–4 drag; Google spend spiked to $138 and $125 on Nov 2–3 without proportional leads, suggesting Google efficiency lags Meta.",
+        "text": "3-day signal (Nov 2–4): leads total 7 vs 5 in prior 3 days (Oct 30–Nov 1), but Nov 3 posted 0 leads on $70.73 spend and Nov 4 spiked to $217.03 — Google spend jumped to $125.39 on Nov 4, highest single day in 45-day series. Trend is choppy, not clean.",
         "confidence": "probable",
         "channel": "google"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "GHL shows 97 opportunities created but 0 won and 0 appointments in 28 days on 42 leads. Leads arriving but pipeline stalled — intake leak, not an ads problem.",
+        "text": "GHL shows 97 opportunities created vs 42 leads in 28 days and 0 won/0 appointments. Leads are arriving but no booked consults recorded — this is an intake process gap, not an ads problem.",
         "confidence": "confirmed",
-        "channel": "GHL"
+        "channel": "CRM"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Google Ads delivered only 9 conversions on $1,976 spend (28d), implying a $220 CPL vs Meta's $52 CPL (33 leads on $1,723). Google is 4× less efficient per conversion.",
-        "confidence": "probable",
-        "channel": "google"
+        "text": "Meta spend went to $0 on Nov 3 (series shows $0 meta_spend), then recovered to $91.64 on Nov 4. Single-day gap, not a trend, but worth monitoring for ad account or payment issues.",
+        "confidence": "hypothesis",
+        "channel": "meta"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GA4 shows 0 conversions recorded across 591 sessions in 28 days — pixel/conversion event likely misfiring; attribution is blind.",
-        "confidence": "confirmed",
-        "channel": "ga4"
+        "text": "GBP logged 0 actions on both Nov 3 and Nov 4 despite 130 actions over 28 days (avg ~4.6/day). Two consecutive zeros may reflect a weekend dip or profile data lag.",
+        "confidence": "hypothesis",
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Fix GHL intake: 0 appointments and 0 won from 97 opportunities signals broken routing or follow-up — resolve within 7 days.",
+        "text": "Fix intake: 97 opps created, 0 appointments booked. Audit GHL booking flow and speed-to-lead routing immediately.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Fix GHL Intake Pipeline",
-        "monday_update": "GHL shows 97 opportunities created but 0 appointments booked and 0 cases won in the last 28 days against 42 leads — this is a CRM/intake failure, not an ads problem. Action: audit the routing rules, speed-to-lead automation, and follow-up cadence in GHL immediately; confirm first-contact under 5 minutes is triggering. Success check: at least 10% of open opportunities convert to booked appointments within 7 days. Re-check by 2026-11-12."
+        "monday_item_name": "Fix GHL intake booking gap",
+        "monday_update": "GHL shows 97 opportunities created over 28 days against 42 tracked leads, but 0 appointments are recorded — meaning leads are entering the pipeline but not reaching a booked consult. Audit the GHL calendar/booking link, speed-to-lead routing, and auto-reply sequences per SOW (5-min first contact, missed-call-text-back). Success check: at least 20% of new opps show a booked appointment within 7 days. Re-check by 2026-11-12."
       },
       {
         "id": "S2",
-        "type": "fix",
-        "text": "Fix GA4 conversion events: 0 conversions recorded across 591 sessions — pixel is misfiring, attribution is completely blind.",
+        "type": "watch",
+        "text": "Watch Google spend spike: $125.39 on Nov 4 vs $35–65 prior days. Confirm it was deliberate, not a pacing error.",
         "cites": [
-          "F5"
+          "F2"
         ],
-        "monday_item_name": "Fix GA4 Conversion Tracking",
-        "monday_update": "GA4 is recording 0 conversions across 591 sessions in the 28-day window, meaning the conversion events (form submit, call click) are not firing or are misconfigured in GTM/GA4. Action: QA the GTM container and GA4 conversion events against a live test lead end-to-end. Success check: at least 1 conversion event confirmed firing in GA4 DebugView before next reporting cycle. Re-check by 2026-11-10."
+        "monday_item_name": "Watch Google spend Nov 4 spike",
+        "monday_update": "Google spend hit $125.39 on Nov 4, the highest single day in the 45-day series, against a recent daily range of $35–$84. This may reflect a valid budget change or a pacing anomaly. No action is taken this cycle. Re-check the 3-day lead yield from this spend level by 2026-11-08 — if CPL holds at or below the current $88 blended average, a measured scale can be considered then."
       },
       {
         "id": "S3",
-        "type": "budget_shift",
-        "text": "Shift ~$15/day from Google Search to Meta: Meta CPL ~$52 vs Google ~$220 over 28 days — a ≤15% rebalance.",
+        "type": "watch",
+        "text": "Watch Meta $0-spend day on Nov 3; confirm no payment or ad-account issue before next weekly review.",
         "cites": [
-          "F4",
-          "F2"
+          "F4"
         ],
-        "monday_item_name": "Shift Budget Meta vs Google",
-        "monday_update": "Meta is producing leads at roughly $52 CPL versus Google's implied $220 CPL over the last 28 days (33 vs 9 conversions on near-equal spend). Shift approximately $15/day from Google Search to Meta — this is a ≤15% rebalance within existing total budget. Success check: blended CPL remains below $88 and Meta lead volume holds or grows week-over-week. Re-check on 2026-11-12 after one full week of adjusted pacing."
+        "monday_item_name": "Watch Meta Nov 3 zero-spend",
+        "monday_update": "Meta spend recorded $0 on Nov 3, then recovered to $91.64 on Nov 4. This is a single data point and not yet a pattern. Verify no payment hold or ad disapproval triggered the gap. If a second zero-spend day appears before 2026-11-08, escalate to account access check. No budget action this cycle."
       }
     ],
-    "next_check": "2026-11-12"
+    "next_check": "2026-11-08"
   }
 }

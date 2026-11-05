@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-05T09:12:30.262Z",
+  "generated_at": "2026-11-05T10:25:23.635Z",
   "date": "2026-11-05",
   "slug": "senior-insurance",
   "name": "Senior Insurance",
@@ -616,80 +616,80 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-11-05T09:34:30.065Z",
+    "generated_at": "2026-11-05T10:46:14.224Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "CPL nearly doubled; fix intake leak before scaling spend.",
+    "verdict": "CPL nearly doubled; leads falling while spend rises — fix first.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "CPL spiked 86% week-over-week to ~$14.37 avg; spend rose 17% while leads fell 37% — efficiency is breaking, not holding.",
+        "text": "CPL spiked 86% week-over-week while leads dropped 37% and spend rose 17%; last 3 days (Nov 2–4) show 2, 2, 0 leads vs 3, 5, 0 prior 3 — efficiency collapse confirmed.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3-day signal (Nov 2–4): leads 2, 2, 0 vs prior 3 days (Oct 29–31): 3, 5, 0 — lead volume declining even as spend hit $61–63/day.",
-        "confidence": "confirmed",
-        "channel": "meta"
+        "text": "Google Ads spent $38.97 over 28 days with 0 conversions and only 8 clicks; pixel is not firing — data gap, not campaign failure, but spend is live with no measurable return.",
+        "confidence": "probable",
+        "channel": "google_ads"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GHL shows 560 contacts, 450 opportunities created, 0 appointments, 0 won — leads arriving but no pipeline progression; intake is the failure point, not ad volume.",
-        "confidence": "confirmed",
-        "channel": "CRM"
+        "text": "Top Meta campaign 'BWS - 28 States - Leads - Calls' consumed $278.88 (63% of spend) over 28 days; flat lead trend alongside rising spend is a creative fatigue pattern.",
+        "confidence": "probable",
+        "channel": "meta"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "Crown Point GBP call rate 0.0054 and Munster 0.0058 (both flagged low) vs Tinley Park at 0.0397 — IN profiles generating directions but not calls.",
+        "text": "GHL shows 560 contacts and 450 opportunities created but 0 appointments and 0 won; leads are arriving but no pipeline progression — intake or follow-up process leak, not an ads problem.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "crm"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "Google Ads spent $38.97 over 28 days with 0 conversions and only 8 clicks — no results attributed; pixel or conversion tracking not firing.",
-        "confidence": "confirmed",
-        "channel": "google_ads"
+        "text": "Crown Point GBP call rate is 0.54% and Munster is 0.58% over 28 days vs Tinley Park at 3.97%; both flagged low — likely profile completeness or category mismatch, not traffic volume.",
+        "confidence": "probable",
+        "channel": "gbp"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "watch",
-        "text": "Hold Meta budget flat; watch CPL over next 3 days — if CPL stays above $14, trigger creative refresh.",
+        "type": "creative_refresh",
+        "text": "Inject at least 2 new creatives into 'BWS - 28 States - Leads - Calls' to counter probable fatigue; hold budget flat.",
         "cites": [
           "F1",
-          "F2"
+          "F3"
         ],
-        "monday_item_name": "Watch Meta CPL 3-day",
-        "monday_update": "Meta CPL jumped 86% week-over-week to ~$14.37 while spend rose to $61–63/day and leads fell to 0 on Nov 4. Hold current daily budget flat and re-check CPL on Nov 8. If CPL remains above $14 for 3 consecutive days, escalate to creative refresh for the BWS - 28 States - Leads - Calls campaign."
+        "monday_item_name": "Refresh BWS Campaign Creatives",
+        "monday_update": "CPL rose 86% week-over-week while leads fell 37%; the top campaign at $278.88 spend shows the classic flat-results-with-rising-spend fatigue pattern. Action: brief Sabri for 2+ new ad creatives into 'BWS - 28 States - Leads - Calls' — hold daily budget flat during the swap. Success check: CPL returns below $14.37 (28-day baseline) within 7 days of creative launch. Re-check 2026-11-12."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Fix GHL intake: 450 opportunities, 0 appointments, 0 won — assign follow-up owner and stage-move protocol this week.",
+        "text": "Pause or cap Google Ads spend until conversion pixel is confirmed firing; $38.97 spent with 0 conversions and 8 clicks is an untracked leak.",
         "cites": [
-          "F3"
+          "F2"
         ],
-        "monday_item_name": "Fix GHL Pipeline Follow-Up",
-        "monday_update": "GHL shows 560 contacts and 450 opportunities created but 0 appointments booked and 0 policies won. Leads are arriving and stalling — this is a follow-up breakdown, not an ads problem. Sabri to confirm stage-move ownership and task reminders per the pipeline rebuild plan by Nov 8. Success check: at least 10 opportunities move past 'Attempting Contact' by Nov 12."
+        "monday_item_name": "Fix Google Ads Pixel Tracking",
+        "monday_update": "Google Ads has spent $38.97 over 28 days recording 0 conversions and 8 clicks — the client-side pixel is not firing, so every dollar spent is unattributed. Action: pause Google Ads spend and audit the conversion tag on the landing page; do not resume until at least one test conversion registers in the platform. Success check: a confirmed test conversion event visible in Google Ads before next spend is approved. Re-check 2026-11-12."
       },
       {
         "id": "S3",
         "type": "fix",
-        "text": "Fix Google Ads conversion tracking: $38.97 spent, 0 conversions, 8 clicks — verify pixel fires before adding any budget.",
+        "text": "Escalate GHL pipeline blockage: 450 opportunities created, 0 appointments, 0 won — follow-up workflow is broken, not the ads.",
         "cites": [
-          "F5"
+          "F4"
         ],
-        "monday_item_name": "Fix Google Ads Pixel",
-        "monday_update": "Google Ads has spent $38.97 over 28 days with zero attributed conversions and only 8 clicks, indicating the conversion pixel is not firing correctly on the client side. Do not increase Google budget until at least one test conversion registers. Sohib to confirm pixel placement with Sabri's team by Nov 8; re-check conversion data Nov 11."
+        "monday_item_name": "Fix GHL Pipeline Follow-Up",
+        "monday_update": "GHL shows 560 contacts and 450 opportunities created but zero appointments booked and zero policies won — leads are arriving but stalling immediately after intake. Action: audit the 'Attempting contact' stage in GHL to confirm automated task reminders are firing per the pipeline rebuild plan; identify how many contacts have had zero outreach attempts. This is a CRM/follow-up issue, not an ads delivery problem. Success check: at least 10% of open opportunities move to 'Waiting on client' or 'Waiting on eligibility' within 7 days. Re-check 2026-11-12."
       }
     ],
-    "next_check": "2026-11-08"
+    "next_check": "2026-11-12"
   }
 }

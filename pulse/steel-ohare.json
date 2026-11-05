@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-05T09:12:07.494Z",
+  "generated_at": "2026-11-05T10:25:13.199Z",
   "date": "2026-11-05",
   "slug": "steel-ohare",
   "name": "O'Hare Precision Metals",
@@ -603,7 +603,7 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-11-05T09:34:05.738Z",
+    "generated_at": "2026-11-05T10:45:46.558Z",
     "cadence": "flag_triggered",
     "stale": false,
     "verdict": "No paid spend active; GBP call conversion is broken.",
@@ -611,69 +611,52 @@
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google. No leads, no CPL to evaluate. Paid channel is entirely dark.",
+        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google. No leads generated. No CPL to evaluate.",
         "confidence": "confirmed",
-        "channel": "meta+google"
+        "channel": "paid"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "2 GBP profiles flagged: Precision Ground Bars (179 impressions, 0 calls) and Precision Ground Metals (56 impressions, 0 calls) — call rate 0% on both despite active impressions.",
+        "text": "GBP flags: Precision Ground Bars and Precision Ground Metals show 0 calls despite 179 and 56 impressions respectively over 28 days — call rate 0.00.",
         "confidence": "confirmed",
-        "channel": "gbp"
+        "channel": "GBP"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GBP actions fell 38.46% week-over-week. Last 3 days (Nov 2–4): 8, 0, 0 vs prior 3 days (Oct 30–Nov 1): 4, 10, 3 — sharp drop into the weekend, now two zeroes.",
-        "confidence": "probable",
-        "channel": "gbp"
+        "text": "GBP actions dropped 38.46% week-over-week. Last 2 days of series show 0 GBP actions (Nov 3–4), vs prior-3-day avg of ~5 — a confirmed 3-day dip.",
+        "confidence": "confirmed",
+        "channel": "GBP"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "Search clicks down 9.73% week-over-week. Last 3 days: 25, 23, 0 vs prior 3 days: 26, 19, 3 — pattern suggests Nov 4 (Tuesday) is a data lag day, not a true drop.",
+        "text": "Search clicks fell 9.73% week-over-week; Nov 4 shows 0 clicks vs prior-3-day avg of ~18 — may be a data lag on the most recent day, worth monitoring.",
         "confidence": "hypothesis",
-        "channel": "search"
-      },
-      {
-        "id": "F5",
-        "priority": 2,
-        "text": "SOW milestone overdue: 342 stub account reconciliation (Aug–Oct window) flagged as a blocker — Sales-i sync keys on Customer ID, so these accounts receive no data until resolved.",
-        "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "organic"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit call button/tracking on Precision Ground Bars and Precision Ground Metals GBP profiles — both show 0 calls across 26 impression days.",
+        "text": "Audit call button/CTA on Precision Ground Bars and Precision Ground Metals GBP profiles — 0 calls from 235 combined impressions.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Fix GBP Call Tracking x2",
-        "monday_update": "Both Precision Ground Bars (179 impressions, 0 calls) and Precision Ground Metals (56 impressions, 0 calls) are flagged with zero call rate despite consistent impressions over 26 days. Check that the phone number on each profile is correct, click-to-call is enabled, and GBP call tracking is not broken. Success is confirmed when at least 1 tracked call appears on each profile within 7 days. Re-check by 2026-11-12."
+        "monday_item_name": "Fix GBP Call CTAs – PGB & PGM",
+        "monday_update": "Both Precision Ground Bars and Precision Ground Metals GBP profiles are generating impressions (179 and 56 over 28 days respectively) but recording zero calls, triggering the gbp_no_calls_with_impressions flag. Action: audit each profile's phone number, call button placement, and any click-to-call tracking setup to confirm the number is correct and callable. Success is confirmed when at least 1 tracked call is recorded on each profile within 7 days of the fix. Re-check by 2026-11-12."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch GBP actions recovery after Nov 4–5 zero days; re-check 3-day signal on 2026-11-08 before drawing conclusions.",
+        "text": "Watch GBP actions recovery: 0 actions on Nov 3–4 after 38.46% weekly drop — re-check 3-day signal on 2026-11-08.",
         "cites": [
           "F3"
         ],
         "monday_item_name": "Watch GBP Actions Drop",
-        "monday_update": "GBP actions dropped 38.46% week-over-week and hit 0 on Nov 3 and Nov 4. The prior 3-day average was 5.7 actions/day, so two consecutive zeroes are notable but may reflect a weekend pattern. No action is taken this cycle. Re-check the 3-day signal on 2026-11-08 — if actions remain below 3/day, escalate to a GBP content or category audit."
-      },
-      {
-        "id": "S3",
-        "type": "fix",
-        "text": "Escalate the 342 stub account reconciliation blocker to Ahmed — Sales-i pipeline is blind to these accounts until Customer IDs are resolved.",
-        "cites": [
-          "F5"
-        ],
-        "monday_item_name": "Unblock 342 Stub Accounts",
-        "monday_update": "342 stub accounts remain unreconciled past the Aug–Oct SOW window. Because Sales-i keys on Customer ID, these accounts produce no pipeline data, meaning inactivity automations and CRM reporting are incomplete for a significant portion of the base. Ahmed to run name-based match against the authoritative customer sheet and post the reconciled workbook with rollback file to the Monday CRM board. Success is a reconciled batch delivered and confirmed syncing in Sales-i by 2026-11-19."
+        "monday_update": "GBP actions are down 38.46% week-over-week and hit 0 on the last 2 days of the series (Nov 3–4). This may reflect a weekend lull or the start of a sustained decline. No paid spend is active to compensate for organic softness. Re-check on 2026-11-08: if the 3-day avg (Nov 5–7) remains below 3 actions/day, escalate to a GBP content or category audit."
       }
     ],
     "next_check": "2026-11-08"
