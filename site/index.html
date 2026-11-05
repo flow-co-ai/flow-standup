@@ -465,12 +465,13 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
   }
   function profs(c) {
     const errOf = (label) => (((c.source_list || {}).listings || []).find((l) => l.label === label) || {}).error || "";
-    if (!(c.profiles_daily || []).length) return { list: (c.profiles || []).map((p) => ({ ...p, nodata: !!p.no_data, error: errOf(p.label) })), label: "28 days" };
+    if (!(c.profiles_daily || []).length) return { list: (c.profiles || []).map((p) => ({ ...p, nodata: !!p.no_data, pending: !!p.pending, error: errOf(p.label) })), label: "28 days" };
     const w = windowOf(c, "gbp_actions"), a = Math.max(0, w.e - S.n + 1), b = w.e + 1;
     return { list: c.profiles_daily.map((p) => ({ label: p.label, calls: sum(p.calls.slice(a, b)), directions: sum(p.directions.slice(a, b)),
-      web_clicks: sum(p.web_clicks.slice(a, b)), impressions: sum(p.impressions.slice(a, b)), nodata: p.has_data === false, error: errOf(p.label) })), label: `${S.n} days through ${fmtDay(toDate(w.end))}` };
+      web_clicks: sum(p.web_clicks.slice(a, b)), impressions: sum(p.impressions.slice(a, b)), nodata: p.has_data === false, pending: !!p.pending, error: errOf(p.label) })), label: `${S.n} days through ${fmtDay(toDate(w.end))}` };
   }
   function listingStatus(p) {
+    if (p.pending) return `<span class="dot"></span>Not active yet`;
     if (p.error) return `<span class="dot bad"></span>Error<span class="s" title="${esc(p.error)}">${esc(p.error.slice(0, 70))}</span>`;
     if (p.nodata) return `<span class="dot warn"></span>No data`;
     if (!(p.calls || p.directions || p.web_clicks)) return `<span class="dot warn"></span>No actions`;
@@ -542,7 +543,7 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
       if (sc.prev >= 20 && sc.cur < sc.prev * 0.7) add("organic", "Web + SEO", 2, "Find which pages lost Google clicks in Search Console", `Search clicks down ${Math.round(100 - (100 * sc.cur) / sc.prev)}% (${num(sc.prev)} to ${num(sc.cur)}) through ${fmtDay(toDate(sc.end))}.`);
       const pf = profs(c);
       for (const p of pf.list) if (p.error) add("organic", "Web + SEO", 0, `Restore access to the ${p.label} listing`, `Google refuses its numbers: ${p.error.slice(0, 120)}`);
-      for (const p of pf.list) if (!p.error && (p.impressions || 0) > 50 && !(p.calls || p.directions || p.web_clicks))
+      for (const p of pf.list) if (!p.error && !p.pending && (p.impressions || 0) > 50 && !(p.calls || p.directions || p.web_clicks))
         add("organic", "Web + SEO", 1, `Fill in the ${p.label} profile: phone, website, hours and photos`, `Seen ${num(p.impressions)} times in ${pf.label} with no calls, directions or clicks.`);
       const g = c.crm, gs = (c.source_list || {}).ghl || {};
       if (!g && gs.error) add("crm", "CRM", 0, `Fix ${poss(name)} GHL connection`, gs.error.slice(0, 160));
@@ -984,8 +985,8 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
       });
       const L = sl.listings || [];
       L.filter((l) => l.error).forEach((l) => issues.push(["bad", `${esc(n)}: listing "${esc(l.label)}" error. ${esc(l.error.slice(0, 160))}`]));
-      L.filter((l) => !l.has_data && !l.error).forEach((l) => issues.push(["warn", `${esc(n)}: listing "${esc(l.label)}" is linked but returns no data.`]));
-      L.forEach((l) => listRows.push(`<tr><td>${esc(n)}</td><td>${esc(l.label)}</td><td>${num(l.actions_28)}</td><td>${num(l.views_28)}</td>${l.error ? `<td title="${esc(l.error)}"><span class="dot bad"></span>Error<span class="s">see Connector errors</span></td>` : l.has_data ? cell("ok", "Live") : cell("warn", "No data")}</tr>`));
+      L.filter((l) => !l.has_data && !l.error && !l.pending).forEach((l) => issues.push(["warn", `${esc(n)}: listing "${esc(l.label)}" is linked but returns no data.`]));
+      L.forEach((l) => listRows.push(`<tr><td>${esc(n)}</td><td>${esc(l.label)}</td><td>${num(l.actions_28)}</td><td>${num(l.views_28)}</td>${l.pending ? `<td class="na">Not active yet</td>` : l.error ? `<td title="${esc(l.error)}"><span class="dot bad"></span>Error<span class="s">see Connector errors</span></td>` : l.has_data ? cell("ok", "Live") : cell("warn", "No data")}</tr>`));
       const ghl = sl.ghl.data ? cell("ok", "Live") : sl.ghl.error ? `<td title="${esc(sl.ghl.error)}"><span class="dot bad"></span>Error<span class="s">see Connector errors</span></td>`
         : sl.ghl.configured ? cell("warn", "No data") : sl.ghl.crm ? `<td class="na">${esc(sl.ghl.crm)}</td>` : `<td class="na">—</td>`;
       if (sl.ghl.error && c) issues.push(["bad", `${esc(n)}: GHL error. ${esc(sl.ghl.error.slice(0, 200))}`]);

@@ -182,6 +182,8 @@ def build_hub(config: dict) -> dict:
             for lid in (gmb.get("accounts") or [] if isinstance(gmb, dict) else gmb):
                 lab.setdefault(lid, lid)
             lab.update((cfg.get(slug) or {}).get("gbp_labels") or {})
+            for lid in (cfg.get(slug) or {}).get("gbp_pending") or []:
+                lab.setdefault(lid, lid)
         channels = {"meta": {"spend": 0, "leads": 0, "clicks": 0}, "google_ads": {"spend": 0, "conversions": 0, "clicks": 0}}
         profiles, top, crm, recon = [], None, None, None
         for slug in slugs:
@@ -253,12 +255,13 @@ def build_hub(config: dict) -> dict:
         for pid in sorted(lab, key=lambda x: str(lab[x]).lower()):
             seen_names.setdefault(lab[pid], []).append(pid)
         name_of = {pid: (lab[pid] if len(seen_names[lab[pid]]) == 1 else f"{lab[pid]} ({pid[-4:]})") for pid in lab}
-        prof_series = [{"id": pid, "label": name_of[pid], "has_data": pid in st["prof_daily"],
+        pending = {lid for s_ in (ops.get("ad_slugs") or {}).get(client, []) for lid in (cfg.get(s_) or {}).get("gbp_pending") or []}
+        prof_series = [{"id": pid, "label": name_of[pid], "has_data": pid in st["prof_daily"], "pending": pid in pending,
                         **{k: [round((st["prof_daily"].get(pid, {}).get(d) or {}).get(k, 0)) for d in dates] for k in PROFILE_KEYS}}
                        for pid in sorted(lab, key=lambda x: name_of[x].lower())]
         profiles28 = [{"label": name_of.get(p["id"], p["id"]), **{k: p.get(k) for k in PROFILE_KEYS}} for p in st["profiles"]]
         have28 = {p["id"] for p in st["profiles"]}
-        profiles28 += [{"label": name_of[pid], **{k: 0 for k in PROFILE_KEYS}, "no_data": True} for pid in lab if pid not in have28]
+        profiles28 += [{"label": name_of[pid], **{k: 0 for k in PROFILE_KEYS}, "no_data": True, "pending": pid in pending} for pid in lab if pid not in have28]
         meta_label = next((cfg[s_].get("meta_leads_label") for s_ in (ops.get("ad_slugs") or {}).get(client, [])
                            if (cfg.get(s_) or {}).get("meta_leads_label")), "leads")
         crm_name = next((cfg[s_].get("crm") for s_ in (ops.get("ad_slugs") or {}).get(client, []) if (cfg.get(s_) or {}).get("crm")), None)
@@ -381,7 +384,8 @@ def add_context(config: dict, hub: dict, recent_days: int) -> None:
                      else (sum(p.get(k) or 0 for k in ("calls", "directions", "web_clicks")) if p else 0))
             views = (sum(p["impressions"][-28:]) if p and isinstance(p.get("impressions"), list) else (p or {}).get("impressions") or 0)
             lerr = next((e["message"] for e in errs if e.get("connector") == "google_my_business" and lid in (e.get("accounts") or [])), None)
-            listings.append({"id": lid, "label": label, "actions_28": round(total), "views_28": round(views), "has_data": bool(p), "error": lerr})
+            pend = any(lid in ((cfg.get(s_) or {}).get("gbp_pending") or []) for s_ in slugs)
+            listings.append({"id": lid, "label": label, "actions_28": round(total), "views_28": round(views), "has_data": bool(p), "error": lerr, "pending": pend})
         first = cfg.get(slugs[0]) if slugs else None
         c["source_list"] = {
             "windsor": windsor, "listings": listings,

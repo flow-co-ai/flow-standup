@@ -40,6 +40,9 @@ async function discoverListings() {
 const slugOfClient = (name) => ((OPS.ad_slugs || {})[name] || [])[0];
 const configured = new Map(); // listing id -> slug
 for (const c of CLIENTS) for (const id of [].concat((c.windsor || {}).google_my_business || [])) configured.set(id, c.slug);
+// gbp_pending: listings not live yet (e.g. unverified). Linked to the client, never pulled.
+for (const c of CLIENTS) for (const id of c.gbp_pending || []) configured.set(id, c.slug);
+const PENDING = new Set(CLIENTS.flatMap((c) => c.gbp_pending || []));
 
 const extra = {};   // slug -> [{id,title}]
 let listings = [];
@@ -70,6 +73,7 @@ for (const client of bySlug.values()) {
     windsor.google_my_business = [...new Set([].concat(windsor.google_my_business || [], extra[client.slug].map((l) => l.id)))];
     for (const l of extra[client.slug]) labels[l.id] = labels[l.id] || l.title;
   }
+  if (windsor.google_my_business) windsor.google_my_business = [].concat(windsor.google_my_business).filter((id) => !PENDING.has(id));
   if (!Object.keys(windsor).length) continue;
   try {
     const raw = await fetchWindsor(windsor, KEY, labels, HISTORY_DAYS);
