@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-05T10:25:02.197Z",
+  "generated_at": "2026-11-05T14:24:26.391Z",
   "date": "2026-11-05",
   "slug": "jcl",
   "name": "Justice Consumer Law",
@@ -74,6 +74,8 @@
       "meta_clicks": 46,
       "google_conversions": 0,
       "google_clicks": 0,
+      "lsa_spend": 0,
+      "lsa_leads": 0,
       "gbp_actions": 0,
       "ig_reach": 115,
       "sc_clicks": 0,
@@ -583,78 +585,78 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-11-05T10:44:39.814Z",
+    "generated_at": "2026-11-05T14:45:15.082Z",
     "cadence": "scheduled_3d",
     "stale": false,
-    "verdict": "CPL spiking 38%; lead volume falling — efficiency is breaking down.",
+    "verdict": "CPL spiked 38%; leads falling while spend holds — fix efficiency now.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "CPL rose 38% week-over-week while spend fell only 4%, meaning fewer leads at higher cost — efficiency is deteriorating, not spend-driven.",
+        "text": "CPL jumped 38% week-over-week to ~$20+ while spend dropped only 4% and leads fell 31% (144 leads / $2,087 over 28 days, $14.49 avg CPL).",
         "confidence": "confirmed",
-        "channel": "meta"
+        "channel": "Meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3-day signal (Nov 2–4): leads averaged 4.3/day vs 4.7 prior 3 days (Oct 30–Nov 1) — volume soft but spend held at ~$80/day, confirming CPL pressure.",
-        "confidence": "confirmed",
-        "channel": "meta"
+        "text": "3-day signal (Nov 2–4): 13 leads at $239.57 spend vs prior 3 days (Oct 30–Nov 1): 9 leads at $204.57 — leads recovering slightly but CPL remains elevated at ~$18.4 vs ~$22.7 prior 3 days; not yet a clean recovery.",
+        "confidence": "probable",
+        "channel": "Meta"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "Flat ~$70–80/day spend with falling lead volume and no reported creative or tracking change is a classic fatigue signal in the single active campaign 'Leads - August Re-Launch'.",
+        "text": "GBP actions collapsed 69% week-over-week; last 2 days of series show 0 GBP actions, suggesting organic local intent has stalled or tracking dropped.",
         "confidence": "probable",
-        "channel": "meta"
+        "channel": "GBP"
       },
       {
         "id": "F4",
-        "priority": 4,
-        "text": "GBP actions collapsed 69% week-over-week; last 2 days of series show 0 actions — organic call and direction traffic has gone dark, reducing warm inbound volume.",
-        "confidence": "confirmed",
-        "channel": "gbp"
+        "priority": 3,
+        "text": "Creative fatigue probable: 'Leads - August Re-Launch' is the sole campaign carrying 100% of $2,087 spend; flat spend with falling leads and no new creative batch since July.",
+        "confidence": "probable",
+        "channel": "Meta"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GHL pipeline data is null — cannot confirm whether the 144 leads in 28 days translated into opportunities; intake leak cannot be ruled out.",
+        "text": "GHL pipeline data is null — cannot confirm whether 144 leads over 28 days are reaching intake; if opps are flat, this is an intake leak, not an ads problem.",
         "confidence": "hypothesis",
-        "channel": "crm"
+        "channel": "CRM"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "creative_refresh",
-        "text": "Inject at least 1 new video creative into 'Leads - August Re-Launch' to counter probable fatigue driving CPL +38%.",
+        "text": "Launch at least 2 new video creatives into 'Leads - August Re-Launch' to counter fatigue driving CPL up 38%.",
         "cites": [
           "F1",
-          "F3"
+          "F4"
         ],
         "monday_item_name": "JCL Meta Creative Refresh",
-        "monday_update": "CPL is up 38% week-over-week while spend is flat at ~$73/day, and lead volume dropped 30.6% — a probable creative fatigue pattern in the single active campaign. Brief Hamza/Hamdan to pull one of the existing approved 9:16 video formats (e.g. general paid-and-sued or a company-specific variant) and launch a fresh variant into 'Leads - August Re-Launch' this week. Success check: CPL returns below $20 (28-day baseline is $14.49) within 7 days of the new creative going live. Re-check by 2026-11-12."
+        "monday_update": "CPL rose 38% week-over-week against only a 4% spend drop, with leads down 31% — a classic fatigue signature on a campaign running the same creative since August. Brief Hamza/Hamdan to pull 2 new 9:16 video variants (Marwan/Rocco on-camera if available, otherwise repurpose existing footage with fresh hook) into the active 'Leads - August Re-Launch' campaign. Success check: CPL returns toward the 28-day baseline of $14.49 within 7 days of new creative going live. Review by 2026-11-12."
       },
       {
         "id": "S2",
-        "type": "watch",
-        "text": "Watch GBP — 0 actions on Nov 3–4 after 69% weekly drop; confirm listing is live and not suppressed before actioning.",
-        "cites": [
-          "F4"
-        ],
-        "monday_item_name": "JCL GBP Drop — Watch",
-        "monday_update": "GBP actions fell 69% week-over-week and hit 0 on the last 2 days of the series (Nov 3–4). This reduces warm organic inbound that supplements paid leads. Nacer to verify the GBP listing is active, not flagged, and that no info edits triggered a re-verification hold. If the listing is confirmed healthy and actions remain at 0 by Nov 8, escalate as a separate investigation. Re-check 2026-11-08."
-      },
-      {
-        "id": "S3",
         "type": "fix",
-        "text": "Request GHL pipeline data from Andrew — null CRM read means intake leak cannot be distinguished from an ads problem.",
+        "text": "Restore GHL pipeline reporting — 144 leads delivered with null CRM data means intake leak cannot be ruled out.",
         "cites": [
           "F5"
         ],
         "monday_item_name": "JCL GHL Pipeline Data Fix",
-        "monday_update": "GHL pipeline is returning null, so we cannot confirm whether 144 leads in the past 28 days produced any open opportunities in Zoho/GHL. Sohib to chase Andrew for a pipeline export or dashboard access showing leads → opportunities → signed cases. Success check: GHL data populates in the dashboard and opportunity count is visible for the Nov 12 review. If leads are arriving but opps are flat, this is an intake issue, not an ads problem."
+        "monday_update": "GHL pipeline returned null this cycle, making it impossible to confirm whether the 144 leads from the past 28 days are reaching Andrew's intake queue. Ask Andrew/Joy to verify the GHL–Zoho connector and confirm opportunities are logging. Success check: pipeline data populated and lead-to-opp ratio visible at next run. Review by 2026-11-08."
+      },
+      {
+        "id": "S3",
+        "type": "watch",
+        "text": "Watch GBP actions: 0 for 2 consecutive days after a 69% weekly drop — confirm tracking or flag organic stall by Nov 8.",
+        "cites": [
+          "F3"
+        ],
+        "monday_item_name": "JCL GBP Drop Watch",
+        "monday_update": "GBP actions hit 0 on both Nov 3 and Nov 4 after a 69% week-over-week decline. This may be a tracking gap or a genuine drop in local intent. Check the GBP connector and confirm impressions are still registering (28-day baseline: 229 actions, 80 calls). If actions remain at or near 0 by Nov 8, escalate to Nacer for a GBP audit. No paid action warranted until confirmed."
       }
     ],
     "next_check": "2026-11-08"
