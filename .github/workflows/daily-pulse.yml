@@ -10,6 +10,15 @@ on:
   schedule:
     - cron: '0 12 * * *'
   workflow_dispatch:
+    inputs:
+      rundown:
+        description: 'Also run the weekly AI rundown (normally Mondays only)'
+        type: boolean
+        default: false
+      full_history:
+        description: 'Re-pull all 186 days of history (normally Sundays only)'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -65,9 +74,10 @@ jobs:
         run: node pulse.js
 
       # 4. 186-day daily history and Google listing discovery
-      - name: Build 186-day history
+      - name: Build 186-day history (last 35 days daily, full pull Sundays)
         env:
           WINDSOR_API_KEY: ${{ secrets.WINDSOR_API_KEY }}
+          FULL_HISTORY: ${{ inputs.full_history && '1' || '0' }}
         run: node build_history.js
 
       # 5. Account facts from WhatsApp and Fireflies
@@ -84,15 +94,22 @@ jobs:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
         run: python build_comms.py
 
-      # 7. Weekly rundown, Monday update archive, Done log (feeds Ask)
-      - name: Generate standup rundown
+      # 7. Weekly rundown, Monday update archive, Done log (feeds Ask).
+      #    Mondays only: it only feeds Ask, and Ask reads Monday, facts and
+      #    numbers directly. Tick "rundown" on a manual run to force it.
+      - name: Generate standup rundown (Mondays)
         env:
           MONDAY_API_TOKEN: ${{ secrets.MONDAY_API_TOKEN }}
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           FIREFLIES_API_KEY: ${{ secrets.FIREFLIES_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GH_STATE_TOKEN: ${{ secrets.GH_STATE_TOKEN }}
-        run: python generate.py
+        run: |
+          if [ "${{ inputs.rundown }}" = "true" ] || { [ "${{ github.event_name }}" = "schedule" ] && [ "$(date -u +%u)" = "1" ]; }; then
+            python generate.py
+          else
+            echo "Skipped: the rundown runs on scheduled Monday runs (tick 'rundown' to force)."
+          fi
 
       # 8. AI read of the numbers: every 3 days per client, or when a flag fires
       - name: Apply performance lens
