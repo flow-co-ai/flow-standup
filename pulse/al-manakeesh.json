@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-05T14:25:49.352Z",
+  "generated_at": "2026-11-05T19:46:46.655Z",
   "date": "2026-11-05",
   "slug": "al-manakeesh",
   "name": "Al Manakeesh",
@@ -690,77 +690,77 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-11-05T14:47:45.700Z",
+    "generated_at": "2026-11-05T20:02:46.309Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Google Ads CPL efficient at $2.03; GBP calls need attention.",
+    "verdict": "Google Ads CPL efficient at $2.03; GBP calls lagging at most locations.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "CPL is $2.03 over 28 days on $235.15 Google spend — strong efficiency for a new account live only since 10/27.",
+        "text": "Google Ads CPL is $2.03 over 28 days across 116 conversions — efficient for a brand-new account live only since 10/27.",
         "confidence": "confirmed",
         "channel": "google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3-day lead signal is deteriorating: last 3 days (Nov 2–4) averaged 4.3 leads/day vs 18.0 leads/day the prior 3 (Oct 30–Nov 1), with 0 leads on Nov 4.",
-        "confidence": "confirmed",
+        "text": "Lead volume collapsed to 3 on 11/03 and 0 on 11/04 (last 2 days of series) vs a 3-day prior avg of ~18 — a 3-day downward signal forming.",
+        "confidence": "probable",
         "channel": "google_ads"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Canton and Fishers GBP call rates are 0.86% and 0.77% — the two paid-active locations have the lowest call rates of all 7 profiled GBPs; impressions are high (21K–24K) but calls are not converting.",
+        "text": "GBP call rate at Canton (0.86%) and Fishers (0.77%) is the lowest across all 7 profiled locations; 5 other profiles flag low call rate. Flagged profiles cover unoptimized locations where GBP work is incomplete per SOW.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions dropped 34% in the last 7 days; the series shows 0 actions on Nov 3 and Nov 4, likely a connector data-lag or access issue (HTTP 403 on one GBP account), not a real organic collapse.",
+        "text": "GBP actions dropped 34% week-over-week; last 2 days in series show 0 actions, likely a data-pull gap rather than a true zero — connector error on one GBP account (HTTP 403) confirms partial data loss.",
         "confidence": "hypothesis",
         "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "8 of 10 locations have no live Google Ads: Sterling Heights, Bridgeview, Columbus, Orland Park, Lombard, Paterson, Houston, and the unnamed 10th are blocked pending GBP verification, media assets, or contract confirmation — SOW milestone overdue.",
+        "text": "8 of 10 locations have no active Google Ads; only Canton and Fishers are live. Remaining 8 locations represent up to $4,000/mo in undeployed ad spend per SOW scope.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "google_ads"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "watch",
-        "text": "Watch the 0-lead day on Nov 4 — if leads stay below 5/day through Nov 7, investigate Google Ads conversion tracking.",
+        "text": "Watch leads/day for 3 days: if daily leads stay below 5, investigate bid strategy or budget pacing on Canton/Fishers campaigns.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Watch Nov 4 lead drop",
-        "monday_update": "Leads averaged 18/day (Oct 30–Nov 1) then collapsed to 4.3/day (Nov 2–4) with 0 on Nov 4. No budget cut occurred — Google spend was $21.12 on Nov 4. Success check: leads return above 10/day by Nov 7. If not, audit conversion tag and campaign status before any budget move."
+        "monday_item_name": "Watch Lead Drop Canton/Fishers",
+        "monday_update": "Leads fell to 3 on 11/03 and 0 on 11/04 against a prior 3-day average of ~18 — a signal forming but not yet confirmed over a full 3-day window. No budget or bid change yet. Re-check on 11/08: if daily leads are still below 5, escalate to bid strategy review or budget pacing audit on the live Canton and Fishers campaigns."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Fix Canton and Fishers GBP call-to-action: call rate 0.86% and 0.77% despite 21K–24K impressions each — review CTA button and phone number accuracy.",
+        "text": "Fix GBP call-rate weakness at Canton (0.86%) and Fishers (0.77%) by completing profile optimisation and verifying call button CTAs.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Fix Canton Fishers GBP calls",
-        "monday_update": "Canton and Fishers are the two paid-active locations and carry the lowest call rates of all profiled GBPs (0.86% and 0.77% vs 4.4% for Houston). Confirm GBP phone numbers match ads and storefront, and that the Call button is the primary CTA on both profiles. Success check: call rate moves above 1.5% within 14 days (by Nov 19)."
+        "monday_item_name": "Fix GBP Call CTAs Canton/Fishers",
+        "monday_update": "Canton and Fishers GBP call rates are 0.86% and 0.77% respectively — the two lowest among active, optimised profiles, and both flagged by the system. The profiles are listed as optimised in the SOW, so the likely cause is a weak call button placement or missing primary category emphasis. Hashir to audit the call-to-action prominence and primary category on both profiles. Success is call rate rising above 1.0% on each profile by the 11/19 check."
       },
       {
         "id": "S3",
-        "type": "fix",
-        "text": "Resolve HTTP 403 on GBP location 1799553… to restore performance data visibility — this is a permissions gap, not a performance drop.",
+        "type": "watch",
+        "text": "Watch GBP actions recovery after HTTP 403 connector error is resolved; do not act on the 34% GBP drop until clean data confirmed.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Fix GBP connector 403 error",
-        "monday_update": "The google_my_business connector is returning HTTP 403 for account locations/17995538154144281619, blocking performance metrics for that profile. Grant Flow manager-level GBP access for the affected location. Success check: connector returns clean data with no 403 error on next morning's pull (target Nov 6)."
+        "monday_item_name": "Watch GBP Data After 403 Fix",
+        "monday_update": "GBP actions show a 34% week-over-week drop and 0 actions on the last 2 days of the series, but a connector error (HTTP 403 on account locations/17995538154144281619) means data is missing, not necessarily zero. Nacer to resolve the GBP API permission for the flagged account. Re-check GBP actions on 11/08 once a clean 3-day read is available before any organic strategy decision is made."
       }
     ],
     "next_check": "2026-11-08"

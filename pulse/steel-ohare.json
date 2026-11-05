@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-05T14:25:13.198Z",
+  "generated_at": "2026-11-05T19:45:34.018Z",
   "date": "2026-11-05",
   "slug": "steel-ohare",
   "name": "O'Hare Precision Metals",
@@ -611,77 +611,77 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-11-05T14:46:25.816Z",
+    "generated_at": "2026-11-05T20:01:19.374Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "No paid activity; GBP calls dead across 2 of 3 profiles.",
+    "verdict": "No paid spend active; GBP call gap is the live revenue risk.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google. No leads, no CPL to measure. Paid channel is completely dark.",
+        "text": "Zero paid spend across all 45 days in series — $0 Meta, $0 Google. No paid channel is generating leads.",
         "confidence": "confirmed",
-        "channel": "paid"
+        "channel": "meta+google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "Precision Ground Bars and Precision Ground Metals, Inc each recorded 0 calls against 179 and 56 impressions respectively over 28 days — call_rate 0.00 on both profiles.",
+        "text": "2 GBP profiles flagged: Precision Ground Bars (0 calls, 179 impressions) and Precision Ground Metals (0 calls, 56 impressions) over 28 days — call rate is 0 despite visible impressions.",
         "confidence": "confirmed",
-        "channel": "GBP"
+        "channel": "gbp"
       },
       {
         "id": "F3",
-        "priority": 3,
-        "text": "GBP actions fell 38% week-on-week; last 2 days of series show 0 actions, down from a 3-day prior average of ~5. Short but confirmed drop.",
-        "confidence": "probable",
-        "channel": "GBP"
+        "priority": 2,
+        "text": "O'Hare main GBP profile: only 2 calls from 626 impressions over 28 days — call rate 0.32%, well below any functional threshold.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       },
       {
         "id": "F4",
-        "priority": 4,
-        "text": "Search clicks down 9.7% week-on-week; last 3 days avg ~16 clicks vs prior 3-day avg ~23 — consistent softening, not a one-day event.",
-        "confidence": "probable",
-        "channel": "organic"
+        "priority": 3,
+        "text": "GBP actions dropped 38% in the last 7 days vs prior 7. 3-day signal: last 3 days (Nov 2–4) show 8, 0, 0 actions vs prior 3 (Oct 30–Nov 1) of 4, 10, 3 — a sharp late-week collapse.",
+        "confidence": "confirmed",
+        "channel": "gbp"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GA4 sessions up 17% week-on-week (last 3-day avg ~52 vs prior ~43), but 0 GA4 conversions tracked across all 28 days — conversion tracking is likely broken or unconfigured.",
-        "confidence": "hypothesis",
-        "channel": "GA4"
+        "text": "GA4 sessions +17% (7d delta) with 460 search clicks in 28 days, yet 0 GA4 conversions recorded — tracking or goal configuration is likely broken.",
+        "confidence": "probable",
+        "channel": "ga4"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit call button/tracking on Precision Ground Bars and Precision Ground Metals GBP profiles — 0 calls across 26 impression-days each.",
+        "text": "Audit call button and phone number on Precision Ground Bars and Precision Ground Metals GBP profiles — 0 calls from 235 combined impressions.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Fix GBP call tracking 2 profiles",
-        "monday_update": "Precision Ground Bars (179 impressions, 0 calls) and Precision Ground Metals, Inc (56 impressions, 0 calls) have both triggered the gbp_no_calls_with_impressions flag. Check that the phone number on each GBP profile is correct, click-to-call is enabled, and no call-forwarding misconfiguration is suppressing recorded calls. Success is confirmed when at least one tracked call appears on each profile within 7 days. Re-check by 2026-11-12."
+        "monday_item_name": "Fix GBP call gap x2",
+        "monday_update": "Both Precision Ground Bars (179 impressions, 0 calls) and Precision Ground Metals (56 impressions, 0 calls) are receiving GBP visibility but generating zero phone calls. Check that the phone number is correct, the call button is enabled, and there are no NAP inconsistencies on each profile. Success is confirmed when at least 1 call is recorded on each profile within the next 14 days; re-check on 2026-11-19."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Investigate GA4 conversion event configuration — 0 conversions recorded across 1,131 sessions and 28 days.",
+        "text": "Investigate GA4 conversion tracking: 460 search clicks and 1,131 sessions in 28 days with 0 conversions recorded is a configuration fault.",
         "cites": [
           "F5"
         ],
         "monday_item_name": "Fix GA4 conversion tracking",
-        "monday_update": "GA4 shows 1,131 sessions over 28 days but zero conversion events recorded throughout. Verify that the conversion event (e.g. form submission, RFQ thank-you page) is correctly tagged and marked as a Key Event in GA4. Success is at least one conversion firing within 3 days of the fix. Re-check by 2026-11-08."
+        "monday_update": "GA4 shows 1,131 sessions and 460 search clicks over 28 days but zero conversions recorded. This is almost certainly a broken goal or missing event tag, not genuine zero conversions. Verify that contact form submissions and phone click events are firing correctly in GA4 DebugView. Success is confirmed when at least one conversion event registers in GA4 within 7 days of the fix; re-check on 2026-11-12."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch GBP actions decline — 38% weekly drop and 0 actions last 2 days. Re-check in 3 days.",
+        "text": "Watch GBP actions recovery after F2 fix: if 3-day total remains below 5 actions post-fix, escalate to Sohib for profile reinstatement check.",
         "cites": [
-          "F3"
+          "F4"
         ],
-        "monday_item_name": "Watch GBP actions decline",
-        "monday_update": "GBP total actions dropped 38% week-on-week and the last 2 days of the series recorded 0 actions each. This may be a weekend effect or the start of a real decline. No paid amplification is active to compensate. Monitor the daily series; if the 3-day average remains below 3 actions by 2026-11-08, escalate to a GBP content or category audit."
+        "monday_item_name": "Watch GBP action recovery",
+        "monday_update": "GBP actions collapsed to 0 on both Nov 3 and Nov 4, following a 38% weekly drop. After the GBP call-button fix (S1) is applied, monitor the daily action count for 3 consecutive days. If the 3-day total remains below 5 actions, flag to Sohib — this may indicate a broader profile health or suspension issue. Re-check on 2026-11-08."
       }
     ],
     "next_check": "2026-11-08"
