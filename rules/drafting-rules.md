@@ -30,18 +30,18 @@ probably also drop its priority number).
 A subitem (parentItemId set) belongs to whatever board its PARENT item is actually on. If you are changing an existing item/subitem's board (not drafting fresh), and it currently has a parentItemId, moving it to a different board almost always means it can no longer be that same parent's subitem -- the old parent lives on the old board, not the new one. When a board change is requested on something that's a subitem: either (a) find/create the equivalent parent workstream on the NEW board and re-point parentItemId there, or (b) if there's no sensible parent on the new board, convert it to a plain top-level item instead (clear parentItemId) and say so explicitly, or (c) ask Naz which he wants rather than silently leaving a stale parentItemId that now points at an item on a board this one no longer lives on. Never leave board and parentItemId pointing at two different boards at once -- that's a broken state, not a valid one.
 
 ## Client group IDs (Ads / Web+SEO / CRM / Video)
-Full audit 2026-07-22 -- every client below now has a real, live-confirmed group on all 4 boards. No more "verify before writing" guesses; these were checked directly against each board's live group list.
+Live-checked against all 4 boards on 2026-11-05. "none" = that client has no group on that board; don't create items there.
 - Maadi Law: group_mm51vdbk / group_mm51tkzh / group_mm5112vv / group_mm5064vm
 - MedStation: group_mm516qss / group_mm51nc9h / group_mm512p9w / group_mm5gq0cw
-- Quality HVAC: group_mm23tg6s / group_mm231wbb / group_mm231wbb / group_mm2660b4 (CRM and Web+SEO share an id -- confirmed coincidental, not a bug). **The board's own group TITLE differs across boards too** -- CRM/Web+SEO display "Quality HVAC by FIbid" (capital-I typo, live on Monday, not a rendering bug), Ads/Video display "Quality HVAC." Same client. Never copy the raw title you happen to read off one board into `group` -- write the canonical name on the left ("Quality HVAC") regardless of which board's audit you found it on. This exact drift (Daily Ops silently splitting one client into two buckets: 8 cards under one spelling, 3 under the other) is why `group` now gets resolved through `config.json`'s alias table (`client_aliases.py` / `clientAliases.js`) rather than trusted as-typed -- see §19b below and `validate.py`'s `build_card()`.
-- Full Smile: group_mkxdznat / group_mkxdmhbz / group_mkxdmhbz / group_mkxd24va (CRM and Web+SEO share an id -- confirmed coincidental)
-- Justice Consumer Law: group_mkqxyga2 / group_mkqxyga2 / group_mm5gdrn3 / group_mkqxyga2
-- Liferun: group_mkwj8zze / group_mkwj9a1c / group_mkwj9a1c / group_mkwj5qjb (CRM and Web+SEO share an id -- confirmed coincidental)
-- Billy Doe Meats: group_mm2dt8f / group_mm2dqm7n / group_mm5gt78e / group_mm2ddrwm
-- Steel Round Bars: group_mm5gmpwf / group_mkqxskcn / group_mkqxskcn / group_mkqxskcn (Ads group recreated 2026-07-22, its old one had vanished from the live board)
+- Quality HVAC: group_mm23tg6s / group_mm231wbb / group_mm231wbb / group_mm2660b4 (CRM and Web+SEO share an id, coincidental). Board titles differ ("Quality HVAC by FIbid" on CRM and Web+SEO); always write the canonical name "Quality HVAC" in `group`.
+- Justice Consumer Law: group_mkqxyga2 / group_mkqxyga2 / none / group_mkqxyga2 (JCL runs on Zoho; no CRM lane)
+- Liferun: group_mkwj8zze / group_mkwj9a1c / group_mkwj9a1c / group_mkwj5qjb
+- Billy Doe Meats: group_mm2dt8f / group_mm2dqm7n / none / group_mm2ddrwm
+- Steel Round Bars: group_mm5gmpwf / group_mkqxskcn / group_mkqxskcn / group_mkqxskcn
+- Senior Insurance: group_mm7qg7nm / group_mm7q5nnx / group_mm7qby8z / group_mm7hswp7 (board titles read "Senior Insurance Team" on Ads, Web+SEO and CRM)
+- Al Manakeesh: group_mm89h8pd / group_mm89dyxr / none / none (Web + SEO and Google Ads only)
 - Flow Company (internal): group_mkwjedjg / group_mkwjem1v / group_mm5g4pdh / group_mkwj30hd
-- Healing Helps: (no Ads group live) / group_mm0qsym9 / no CRM group yet / group_mm0qsmx7
-- Remedies: (no Ads group live) / (no Web+SEO group live) / no CRM group yet / group_mkwj2zbm
+- Remedies: none / none / none / group_mkwj2zbm
 If the client or its group id isn't listed here or you're unsure it's current, look it up on Monday rather than guessing -- group IDs can change, and this table has gone stale before (missed two board additions in a row -- always cross-check lib/monday.js's CLIENT_GROUPS, the real source of truth, if anything here looks off).
 
 ## MANDATORY board audit before drafting anything new (§19)

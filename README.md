@@ -11,10 +11,10 @@ One workflow, `.github/workflows/daily-pulse.yml`, runs at 12:00 UTC (6 am Chica
 | 1 | Playbooks from Drive | `sync_playbooks.py` | `playbooks/[slug].md` | none |
 | 2 | Monday snapshot | `write_monday_snapshot.py` | `site/monday-items.json` | none |
 | 3 | Ads, organic, GHL (28 days) | `pulse.js` + `fetch_windsor.js` + `fetch_ghl.js` | `pulse/[slug].json`, `history/[slug].json` | none |
-| 4 | 186-day history, Google listing discovery | `build_history.js` | `series/[slug].json` | none |
+| 4 | 186-day history (last 35 days re-pulled daily, full pull Sundays), Google listing discovery | `build_history.js` | `series/[slug].json` | none |
 | 5 | Account facts from WhatsApp + Fireflies | `build_facts.py` | `facts/[slug].json` | yes |
 | 6 | WhatsApp threads, "waiting on us" | `build_comms.py` | `comms/[slug].json` | none |
-| 7 | Weekly rundown, Monday update archive, Done log | `generate.py` | `site/latest.json`, `standups/`, `archive/` | yes |
+| 7 | Weekly rundown, Monday update archive, Done log (Mondays only) | `generate.py` | `site/latest.json`, `standups/`, `archive/` | yes |
 | 8 | AI read of the numbers (every 3 days per client, or on a flag) | `apply_performance.js` | `pulse/[slug].json` → `performance` | yes |
 | 9 | Weekly client report (Mondays) | `apply_reporter.js` | `reports/[slug].json` | yes |
 | 10 | Ops page data | `build_ops.py` | `site/ops.json`, `site/hub.json` | none |
@@ -25,13 +25,16 @@ If the push can't land, the run fails red. A green check means today's data is o
 
 Other workflows: `draft-queue.yml` (15:00 UTC, the Tasks drafter, writes to the `state` branch), `backfill.yml` (manual only).
 
+Manual run options on Daily Pulse: **rundown** forces the weekly AI rundown, **full_history** re-pulls all 186 days.
+
 ## Where each part of the page comes from
 
 | On the page | Source file | Written by |
 |---|---|---|
 | Client list, Monday rows, shipped | `site/monday-items.json`, `site/ops.json` | steps 2, 10 + Monday webhook |
 | Paid and Organic numbers, every Google listing | `site/hub.json` | step 10 from `pulse/` and `series/` |
-| Leads | Meta's result for the client (`meta_leads_field`: leads, calls or conversations) **plus Google Ads conversions** | `fetch_windsor.js` |
+| Leads | Meta's result for the client (`meta_leads_field`: leads, calls or conversations) **plus Google Ads conversions**, including LSA | `fetch_windsor.js` |
+| Google LSA | Google Ads campaigns of type LOCAL_SERVICES, shown as their own Paid row. Needs the client's LSA account linked to their Google Ads account | `fetch_windsor.js` |
 | CRM tab | CRM board items with their latest update, plus GHL counts for GHL clients | step 10 |
 | AI read | `pulse/[slug].json` → `performance`, shown if under 7 days old | step 8 |
 | Account facts, "said in chats" | `facts/[slug].json` | step 5 |
@@ -67,4 +70,4 @@ A connector that fails (expired access, revoked listing, bad token) is written t
 
 ## Retired (Nov 2026)
 
-The old standup grid (`old-standup.html`), the Performance and Timeline pages, cards, workstreams, the 0-100 score, the daily verdict and the ops-pulse brief. Their scripts and data were removed. `daily.html` (old Daily Ops page) is still served; the Tasks tab on the main page does the same job.
+The old standup grid, the Performance, Timeline and Daily Ops pages, cards, workstreams, the 0-100 score, the daily verdict and the ops-pulse brief, plus the Full Smile and Healing Helps clients. Their scripts, functions and data were removed. The Tasks tab on the main page is the only drafting surface; it uses `queue`, `send-to-monday`, `retry-monday-assignment` and `item-chat`, which route into the Monday groups listed in `netlify/functions/lib/monday.js` (`CLIENT_GROUPS`, keep `drafter/validate.py` and `rules/drafting-rules.md` in sync with it).

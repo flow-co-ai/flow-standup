@@ -11,7 +11,7 @@
 // Run after pulse.js:  node build_history.js   (needs WINDSOR_API_KEY)
 
 import { fetchWindsor } from './fetch_windsor.js';
-import { writeFileSync, mkdirSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { createRequire } from 'module';
 
 const require = createRequire(import.meta.url);
@@ -19,6 +19,13 @@ const CLIENTS = require('./clients.json');
 const CONFIG = require('./config.json');
 const { allAliasMatches } = require('./netlify/functions/lib/clientAliases.js');
 const HISTORY_DAYS = 186;
+// Incremental: most days only the last RECENT_DAYS are re-pulled and merged
+// into the stored rows (late GBP and Meta numbers settle inside that window).
+// A full 186-day pull happens on Sundays, when a file is missing or short,
+// when a client's connectors change, when SCHEMA changes, or with FULL_HISTORY=1.
+const RECENT_DAYS = 35;
+const SCHEMA = 2; // bump when fetch_windsor adds a daily field, to force one full refresh
+const FULL_TODAY = new Date().getUTCDay() === 0 || process.env.FULL_HISTORY === '1';
 const KEY = process.env.WINDSOR_API_KEY;
 const OPS = CONFIG.ops || {};
 
@@ -75,18 +82,31 @@ for (const client of bySlug.values()) {
   }
   if (windsor.google_my_business) windsor.google_my_business = [].concat(windsor.google_my_business).filter((id) => !PENDING.has(id));
   if (!Object.keys(windsor).length) continue;
+  const path = `series/${client.slug}.json`;
+  let prev = null;
+  try { prev = JSON.parse(readFileSync(path, 'utf8')); } catch { prev = null; }
+  const connectors = Object.keys(windsor).filter((k) => !/_fields?$/.test(k)).sort();
+  const full = FULL_TODAY || !prev || prev.schema !== SCHEMA || (prev.rows || []).length < HISTORY_DAYS - 10
+    || JSON.stringify((prev.connectors || []).slice().sort()) !== JSON.stringify(connectors);
   try {
-    const raw = await fetchWindsor(windsor, KEY, labels, HISTORY_DAYS);
-    const profileLabels = Object.fromEntries((raw._gbpProfiles || []).map((p) => [p.account_id, p.label]));
+    const raw = await fetchWindsor(windsor, KEY, labels, full ? HISTORY_DAYS : RECENT_DAYS);
+    const fresh = raw._dailyRows || [];
+    const cutoff = fresh.length ? fresh.map((r) => r.date).sort()[0] : '9999-12-31';
+    const kept = full ? [] : (prev.rows || []).filter((r) => r.date < cutoff);
+    const rows = kept.concat(fresh).sort((a, b) => a.date.localeCompare(b.date)).slice(-HISTORY_DAYS);
+    const profileLabels = { ...((!full && prev && prev.profile_labels) || {}),
+      ...Object.fromEntries((raw._gbpProfiles || []).map((p) => [p.account_id, p.label])) };
     for (const id of [].concat(windsor.google_my_business || [])) profileLabels[id] = profileLabels[id] || labels[id] || id;
-    writeFileSync(`series/${client.slug}.json`, JSON.stringify({
-      generated_at: new Date().toISOString(), days: HISTORY_DAYS, kind: client.type === 'ecom' ? 'sales' : 'leads',
-      connectors: Object.keys(windsor).filter((k) => !/_fields?$/.test(k)), profile_labels: profileLabels, rows: raw._dailyRows || [], errors: raw._errors || [],
+    writeFileSync(path, JSON.stringify({
+      generated_at: new Date().toISOString(), schema: SCHEMA, days: HISTORY_DAYS, kind: client.type === 'ecom' ? 'sales' : 'leads',
+      connectors, profile_labels: profileLabels, rows, errors: raw._errors || [],
+      last_full: full ? new Date().toISOString() : (prev && prev.last_full) || null,
     }));
-    console.log(`  ✓ ${client.slug}: ${(raw._dailyRows || []).length} days, ${Object.keys(profileLabels).length} listings`);
+    console.log(`  ✓ ${client.slug}: ${full ? 'full ' + HISTORY_DAYS : 'last ' + RECENT_DAYS} days pulled, ${rows.length} days stored, ${Object.keys(profileLabels).length} listings`);
   } catch (err) {
     console.log(`  ✗ ${client.slug}: ${err.message}`);
-    writeFileSync(`series/${client.slug}.json`, JSON.stringify({ generated_at: new Date().toISOString(), days: HISTORY_DAYS, rows: [],
+    // Keep yesterday's rows: a Windsor outage must not blank 186 days of history.
+    writeFileSync(path, JSON.stringify({ ...(prev || { days: HISTORY_DAYS, rows: [] }), generated_at: new Date().toISOString(),
       errors: [{ connector: 'all', accounts: [], message: String(err.message).slice(0, 300) }] }));
   }
 }

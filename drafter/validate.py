@@ -245,16 +245,17 @@ def board_label_for_id(board_id: str | None) -> str | None:
 # below returns None for it rather than raising, same as a genuinely
 # unmapped client.
 CLIENT_GROUPS: dict[str, dict[str, str]] = {
+    # Live-checked against all 4 boards on 2026-11-05. Keep in sync with lib/monday.js.
     "Maadi Law": {"Ads": "group_mm51vdbk", "Web+SEO": "group_mm51tkzh", "CRM": "group_mm5112vv", "Video": "group_mm5064vm"},
     "MedStation": {"Ads": "group_mm516qss", "Web+SEO": "group_mm51nc9h", "CRM": "group_mm512p9w", "Video": "group_mm5gq0cw"},
     "Quality HVAC": {"Ads": "group_mm23tg6s", "Web+SEO": "group_mm231wbb", "CRM": "group_mm231wbb", "Video": "group_mm2660b4"},
-    "Full Smile": {"Ads": "group_mkxdznat", "Web+SEO": "group_mkxdmhbz", "CRM": "group_mkxdmhbz", "Video": "group_mkxd24va"},
-    "Justice Consumer Law": {"Ads": "group_mkqxyga2", "Web+SEO": "group_mkqxyga2", "CRM": "group_mm5gdrn3", "Video": "group_mkqxyga2"},
+    "Justice Consumer Law": {"Ads": "group_mkqxyga2", "Web+SEO": "group_mkqxyga2", "Video": "group_mkqxyga2"},
     "Liferun": {"Ads": "group_mkwj8zze", "Web+SEO": "group_mkwj9a1c", "CRM": "group_mkwj9a1c", "Video": "group_mkwj5qjb"},
-    "Billy Doe Meats": {"Ads": "group_mm2dt8f", "Web+SEO": "group_mm2dqm7n", "CRM": "group_mm5gt78e", "Video": "group_mm2ddrwm"},
+    "Billy Doe Meats": {"Ads": "group_mm2dt8f", "Web+SEO": "group_mm2dqm7n", "Video": "group_mm2ddrwm"},
     "Steel Round Bars": {"Ads": "group_mm5gmpwf", "Web+SEO": "group_mkqxskcn", "CRM": "group_mkqxskcn", "Video": "group_mkqxskcn"},
+    "Senior Insurance": {"Ads": "group_mm7qg7nm", "Web+SEO": "group_mm7q5nnx", "CRM": "group_mm7qby8z", "Video": "group_mm7hswp7"},
+    "Al Manakeesh": {"Ads": "group_mm89h8pd", "Web+SEO": "group_mm89dyxr"},
     "Flow Company": {"Ads": "group_mkwjedjg", "Web+SEO": "group_mkwjem1v", "CRM": "group_mm5g4pdh", "Video": "group_mkwj30hd"},
-    "Healing Helps": {"Web+SEO": "group_mm0qsym9", "Video": "group_mm0qsmx7"},
     "Remedies": {"Video": "group_mkwj2zbm"},
 }
 

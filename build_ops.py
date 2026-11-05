@@ -152,7 +152,7 @@ def main() -> None:
 # Daily series come from series/<slug>.json (186 days, written by
 # build_history.js) when present, else the 28 days pulse.js keeps.
 SERIES = ("spend", "leads", "purchases", "revenue", "meta_spend", "google_spend",
-          "meta_leads", "meta_clicks", "google_conversions", "google_clicks",
+          "meta_leads", "meta_clicks", "google_conversions", "google_clicks", "lsa_spend", "lsa_leads",
           "gbp_actions", "sc_clicks", "sc_impressions", "ga4_sessions", "ig_reach")
 LAGGED = ("gbp_actions", "sc_clicks", "sc_impressions", "ga4_sessions", "ig_reach")
 PROFILE_KEYS = ("calls", "directions", "web_clicks", "impressions")
@@ -184,7 +184,8 @@ def build_hub(config: dict) -> dict:
             lab.update((cfg.get(slug) or {}).get("gbp_labels") or {})
             for lid in (cfg.get(slug) or {}).get("gbp_pending") or []:
                 lab.setdefault(lid, lid)
-        channels = {"meta": {"spend": 0, "leads": 0, "clicks": 0}, "google_ads": {"spend": 0, "conversions": 0, "clicks": 0}}
+        channels = {"meta": {"spend": 0, "leads": 0, "clicks": 0}, "google_ads": {"spend": 0, "conversions": 0, "clicks": 0},
+                    "lsa": {"spend": 0, "leads": 0}}
         profiles, top, crm, recon = [], None, None, None
         for slug in slugs:
             pulse = load(Path("pulse") / f"{slug}.json") or {}

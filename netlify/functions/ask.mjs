@@ -48,7 +48,6 @@ function sameSecret(a, b) {
 // Display name (as Monday and the page use it) -> repo file slugs.
 const CLIENTS = {
   "Billy Doe Meats": { slugs: ["billy-doe"] },
-  "Full Smile": { slugs: ["full-smile"] },
   "Quality HVAC": { slugs: ["hvac"], aliases: ["Quality HVAC by Fibid", "Quality HVAC by FIbid", "HVAC", "Fibid"] },
   "Justice Consumer Law": { slugs: ["jcl"], aliases: ["JCL"] },
   "Liferun": { slugs: ["liferun"] },
@@ -62,7 +61,6 @@ const CLIENTS = {
     aliases: ["Steel", "Forte", "Advance Grinding", "O'Hare"],
   },
   "Senior Insurance": { slugs: ["senior-insurance"] },
-  "Healing Helps": { slugs: ["healing-helps"] },
   "Flow Company": { slugs: ["flow-company"], aliases: ["Flow", "Flow Co"] },
   "Cotton Collections": { slugs: ["cotton-collections"], aliases: ["Cotton Collection"] },
 };

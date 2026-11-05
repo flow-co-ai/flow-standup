@@ -461,7 +461,8 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     if (!longHist(c)) return { ...c.channels, label: "28 days" };
     const w = (k) => windowOf(c, k).cur;
     return { meta: { spend: w("meta_spend"), leads: w("meta_leads"), clicks: w("meta_clicks") },
-      google_ads: { spend: w("google_spend"), conversions: w("google_conversions"), clicks: w("google_clicks") }, label: `${S.n} days` };
+      google_ads: { spend: w("google_spend"), conversions: w("google_conversions"), clicks: w("google_clicks") },
+      lsa: { spend: w("lsa_spend"), leads: w("lsa_leads") }, label: `${S.n} days` };
   }
   function profs(c) {
     const errOf = (label) => (((c.source_list || {}).listings || []).find((l) => l.label === label) || {}).error || "";
@@ -653,12 +654,12 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
         m.sales ? (m.sp.prev ? `was ${(m.rv.prev / m.sp.prev).toFixed(1)}×` : "") : (m.rs.prev ? `was ${money(m.sp.prev / m.rs.prev)}` : "")),
       m.sales ? k("Revenue", moneyK(m.rv.cur), delta(m.rv.cur, m.rv.prev), spark(c.series.revenue, m.rv.e)) : k("Meta / Google", `${Math.round(100 * meta / (m.sp.cur || 1))}/${Math.round(100 * goog / (m.sp.cur || 1))}`, "share of spend, %"),
     ];
-    const ch = chan(c), chRow = (l, s, r, cl, rl) => s ? `<tr><td>${l}</td><td>${money(s)}</td><td>${num(r)} ${rl}</td><td>${r ? money(s / r) : "—"}</td><td>${num(cl)}</td></tr>` : "";
+    const ch = chan(c), chRow = (l, s, r, cl, rl) => s ? `<tr><td>${l}</td><td>${money(s)}</td><td>${num(r)} ${rl}</td><td>${r ? money(s / r) : "—"}</td><td>${cl == null ? "—" : num(cl)}</td></tr>` : "";
     return hero(h1, shortNote(c), kp) +
       `<div class="grid one">${card("Next steps", "Paid only.", stepsHTML(steps, name), `${steps.length}`)}</div>
        <div class="grid even">${card(`Spend ${per()}`, `Last ${span(c)} days. Shaded: the ${S.n} days above.`, areaChart(c, "spend", moneyK), "Windsor")}${card(m.sales ? `Sales ${per()}` : `Leads ${per()}`, "As reported by Meta and Google.", areaChart(c, m.sales ? "purchases" : "leads", num), "Windsor")}</div>
-       <div class="grid one">${card("By channel", `${ch.label === "28 days" ? "Last 28 days" : `Last ${S.n} days`}. Leads above = Meta ${esc(c.meta_label || "leads")} plus Google Ads conversions. LSA and anything billed outside Windsor isn't included.`,
-        `<div class="tw"><table><thead><tr><th>Channel</th><th>Spend</th><th>Results</th><th>Cost each</th><th>Clicks</th></tr></thead><tbody>${chRow("Meta", ch.meta.spend, ch.meta.leads, ch.meta.clicks, esc(c.meta_label || "leads"))}${chRow("Google Ads", ch.google_ads.spend, ch.google_ads.conversions, ch.google_ads.clicks, "conversions")}</tbody></table></div>
+       <div class="grid one">${card("By channel", `${ch.label === "28 days" ? "Last 28 days" : `Last ${S.n} days`}. Leads above = Meta ${esc(c.meta_label || "leads")} plus Google Ads conversions, including Local Services (LSA) when the LSA account is linked to Google Ads. LSA and anything billed outside Windsor isn't included.`,
+        `<div class="tw"><table><thead><tr><th>Channel</th><th>Spend</th><th>Results</th><th>Cost each</th><th>Clicks</th></tr></thead><tbody>${chRow("Meta", ch.meta.spend, ch.meta.leads, ch.meta.clicks, esc(c.meta_label || "leads"))}${chRow("Google Ads", ch.google_ads.spend, ch.google_ads.conversions, ch.google_ads.clicks, "conversions")}${ch.lsa && (ch.lsa.spend || ch.lsa.leads) ? chRow("Google LSA", ch.lsa.spend, ch.lsa.leads, null, "leads") : ""}</tbody></table></div>
         ${c.top_campaign ? `<p class="note">Biggest campaign: ${esc(c.top_campaign.name)}, ${money(c.top_campaign.spend)}.</p>` : ""}`)}</div>`;
   }
   function organicView(name, c, items) {

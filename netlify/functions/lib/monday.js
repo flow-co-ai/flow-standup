@@ -291,25 +291,18 @@ const BOARD_LABEL_IDS = {
 // not a bug -- confirmed correct against each board's own live group list,
 // not assumed.
 const CLIENT_GROUPS = {
+  // Live-checked against all 4 boards on 2026-11-05. A missing key means that
+  // client has no group on that board (e.g. Al Manakeesh has no CRM or Video lane).
   "Maadi Law": { Ads: "group_mm51vdbk", "Web+SEO": "group_mm51tkzh", CRM: "group_mm5112vv", Video: "group_mm5064vm" },
   MedStation: { Ads: "group_mm516qss", "Web+SEO": "group_mm51nc9h", CRM: "group_mm512p9w", Video: "group_mm5gq0cw" },
   "Quality HVAC": { Ads: "group_mm23tg6s", "Web+SEO": "group_mm231wbb", CRM: "group_mm231wbb", Video: "group_mm2660b4" },
-  "Full Smile": { Ads: "group_mkxdznat", "Web+SEO": "group_mkxdmhbz", CRM: "group_mkxdmhbz", Video: "group_mkxd24va" },
-  "Justice Consumer Law": { Ads: "group_mkqxyga2", "Web+SEO": "group_mkqxyga2", CRM: "group_mm5gdrn3", Video: "group_mkqxyga2" }, // CRM group existed live, never recorded until 2026-07-22
+  "Justice Consumer Law": { Ads: "group_mkqxyga2", "Web+SEO": "group_mkqxyga2", Video: "group_mkqxyga2" },
   Liferun: { Ads: "group_mkwj8zze", "Web+SEO": "group_mkwj9a1c", CRM: "group_mkwj9a1c", Video: "group_mkwj5qjb" },
-  "Billy Doe Meats": { Ads: "group_mm2dt8f", "Web+SEO": "group_mm2dqm7n", CRM: "group_mm5gt78e", Video: "group_mm2ddrwm" }, // key renamed 2026-07-22 from "BillyDoe Meats" (no space) -- that never matched the real Monday group title or what the drafter actually writes to item.group ("Billy Doe Meats", with space), so every lookup for this client silently failed. Root cause of the live "no known group" alert Naz hit.
-  "Steel Round Bars": { Ads: "group_mm5gmpwf", "Web+SEO": "group_mkqxskcn", CRM: "group_mkqxskcn", Video: "group_mkqxskcn" }, // Ads group recreated 2026-07-22, old one had vanished
-  "Flow Company": { Ads: "group_mkwjedjg", "Web+SEO": "group_mkwjem1v", CRM: "group_mm5g4pdh", Video: "group_mkwj30hd" }, // CRM group created 2026-07-22
-  // Both added 2026-08-15, live-verified against Monday directly (never in
-  // this object before, despite already having rows in monday-automation.md
-  // §4) -- and both missing keys below are a real, confirmed absence, not an
-  // oversight: no Ads/CRM group exists for either client on the live board
-  // right now (§4's previously-recorded Ads ids for both, and a Web+SEO id
-  // for Remedies, no longer resolve to anything live -- deleted or renamed
-  // since, same pattern as the Steel Round Bars Ads-group vanishing note
-  // above). Omitted keys resolve to undefined through the normal "no known
-  // group" paths already handling that everywhere else.
-  "Healing Helps": { "Web+SEO": "group_mm0qsym9", Video: "group_mm0qsmx7" },
+  "Billy Doe Meats": { Ads: "group_mm2dt8f", "Web+SEO": "group_mm2dqm7n", Video: "group_mm2ddrwm" },
+  "Steel Round Bars": { Ads: "group_mm5gmpwf", "Web+SEO": "group_mkqxskcn", CRM: "group_mkqxskcn", Video: "group_mkqxskcn" },
+  "Senior Insurance": { Ads: "group_mm7qg7nm", "Web+SEO": "group_mm7q5nnx", CRM: "group_mm7qby8z", Video: "group_mm7hswp7" },
+  "Al Manakeesh": { Ads: "group_mm89h8pd", "Web+SEO": "group_mm89dyxr" },
+  "Flow Company": { Ads: "group_mkwjedjg", "Web+SEO": "group_mkwjem1v", CRM: "group_mm5g4pdh", Video: "group_mkwj30hd" },
   Remedies: { Video: "group_mkwj2zbm" },
 };
 

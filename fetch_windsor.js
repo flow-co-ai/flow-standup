@@ -124,7 +124,7 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}, days = 28
     ], windsorCfg.facebook, dateFrom, dateTo, apiKey, null, errors),
 
     safeFetch('google_ads', [
-      'segments.date', 'account_id', 'campaign.name',
+      'segments.date', 'account_id', 'campaign.name', 'campaign_type',
       'cost_micros', 'clicks', 'impressions', 'conversions',
     ], windsorCfg.google_ads, dateFrom, dateTo, apiKey, null, errors),
 
@@ -181,15 +181,22 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}, days = 28
   const metaRevenue   = metaRows.reduce((s, r) => s + toNum(r.action_values_purchase), 0);
 
   // cost_micros = spend in millionths of the currency unit
-  const gadsSpend       = gadsRows.reduce((s, r) => s + toNum(r.cost_micros) / 1_000_000, 0);
-  const gadsConversions = gadsRows.reduce((s, r) => s + toNum(r.conversions), 0);
-  const gadsClicks      = gadsRows.reduce((s, r) => s + toNum(r.clicks), 0);
+  // LSA runs inside the Google Ads account as campaign_type LOCAL_SERVICES.
+  // It is split out so the page can show it as its own channel; totals keep it.
+  const isLsa = (r) => String(r.campaign_type || '').toUpperCase() === 'LOCAL_SERVICES';
+  const lsaRows  = gadsRows.filter(isLsa);
+  const gSearch  = gadsRows.filter((r) => !isLsa(r));
+  const lsaSpend       = lsaRows.reduce((s, r) => s + toNum(r.cost_micros) / 1_000_000, 0);
+  const lsaConversions = lsaRows.reduce((s, r) => s + toNum(r.conversions), 0);
+  const gadsSpend       = gSearch.reduce((s, r) => s + toNum(r.cost_micros) / 1_000_000, 0);
+  const gadsConversions = gSearch.reduce((s, r) => s + toNum(r.conversions), 0);
+  const gadsClicks      = gSearch.reduce((s, r) => s + toNum(r.clicks), 0);
 
-  const totalSpend = round2(metaSpend + gadsSpend);
+  const totalSpend = round2(metaSpend + gadsSpend + lsaSpend);
   // Results = Meta's configured result field (leads, calls or conversations)
   // plus Google Ads conversions. Google used to be left out, which made
   // Google-only clients read as "no leads" and inflated cost per lead.
-  const totalLeads = Math.round(metaLeads + gadsConversions);
+  const totalLeads = Math.round(metaLeads + gadsConversions + lsaConversions);
   const cpl        = totalLeads > 0 ? round2(totalSpend / totalLeads) : 0;
   const roas       = metaRevenue > 0 && totalSpend > 0 ? round2(metaRevenue / totalSpend) : null;
 
@@ -269,7 +276,7 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}, days = 28
 
   const ensureDay = d => {
     if (!d) return null;
-    if (!daily[d]) daily[d] = { date: d, spend: 0, leads: 0, meta_spend: 0, google_spend: 0, meta_leads: 0, meta_clicks: 0, google_conversions: 0, google_clicks: 0, gbp_actions: 0, ig_reach: 0, sc_clicks: 0, sc_impressions: 0, ga4_sessions: 0, purchases: 0, revenue: 0, ctc_call_confirm: 0, ctc_call_placed: 0, ctc_20s_connect: 0, ctc_60s_connect: 0 };
+    if (!daily[d]) daily[d] = { date: d, spend: 0, leads: 0, meta_spend: 0, google_spend: 0, meta_leads: 0, meta_clicks: 0, google_conversions: 0, google_clicks: 0, lsa_spend: 0, lsa_leads: 0, gbp_actions: 0, ig_reach: 0, sc_clicks: 0, sc_impressions: 0, ga4_sessions: 0, purchases: 0, revenue: 0, ctc_call_confirm: 0, ctc_call_placed: 0, ctc_20s_connect: 0, ctc_60s_connect: 0 };
     return daily[d];
   };
 
@@ -293,10 +300,15 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}, days = 28
     if (!row) continue;
     const s = toNum(r.cost_micros) / 1_000_000;
     row.spend        += s;
+    row.leads        += toNum(r.conversions); // results = Meta results + Google conversions (incl. LSA)
+    if (isLsa(r)) {
+      row.lsa_spend += s;
+      row.lsa_leads += toNum(r.conversions);
+      continue;
+    }
     row.google_spend += s;
     row.google_conversions += toNum(r.conversions);
     row.google_clicks      += toNum(r.clicks);
-    row.leads              += toNum(r.conversions); // results = Meta results + Google conversions
   }
   const gbpCallsByDate = {};
   for (const r of gmbRows) {
@@ -340,6 +352,8 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}, days = 28
       meta_clicks:  Math.round(r.meta_clicks),
       google_conversions: round2(r.google_conversions),
       google_clicks: Math.round(r.google_clicks),
+      lsa_spend:    round2(r.lsa_spend),
+      lsa_leads:    round2(r.lsa_leads),
       gbp_actions:  Math.round(r.gbp_actions),
       ig_reach:     Math.round(r.ig_reach),
       sc_clicks:    Math.round(r.sc_clicks),
@@ -390,6 +404,7 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}, days = 28
           conversions: Math.round(gadsConversions),
           clicks:      Math.round(gadsClicks),
         },
+        ...(lsaRows.length ? { lsa: { spend: round2(lsaSpend), leads: Math.round(lsaConversions) } } : {}),
         gbp: {
           actions:    Math.round(gbpActions),
           calls:      Math.round(gbpCalls),
