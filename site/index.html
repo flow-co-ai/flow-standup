@@ -977,7 +977,7 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
       const tds = CONN.map((name) => {
         const w = sl.windsor.find((x) => x.name === name);
         if (!w) return `<td class="na">—</td>`;
-        if (w.error) { issues.push(["bad", `${esc(n)}: ${esc(name)} error. ${esc(w.error.slice(0, 160))}`]); return `<td title="${esc(w.error)}"><span class="dot bad"></span>Error<span class="s">${esc(w.error.slice(0, 60))}</span></td>`; }
+        if (w.error) { issues.push(["bad", `${esc(n)}: ${esc(name)} error. ${esc(w.error.slice(0, 160))}`]); return `<td title="${esc(w.error)}"><span class="dot bad"></span>Error<span class="s">see Connector errors</span></td>`; }
         if (!w.last) { issues.push(["warn", `${esc(n)}: ${esc(name)} is connected but sending no data.`]); return cell("warn", "No data"); }
         if (daysSince(toDate(w.last)) > 10) { issues.push(["warn", `${esc(n)}: ${esc(name)} data stopped ${esc(fmtDay(toDate(w.last)))}.`]); return cell("warn", "Stopped", fmtDay(toDate(w.last))); }
         return cell("ok", "Live", `through ${fmtDay(toDate(w.last))}`);
@@ -985,8 +985,8 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
       const L = sl.listings || [];
       L.filter((l) => l.error).forEach((l) => issues.push(["bad", `${esc(n)}: listing "${esc(l.label)}" error. ${esc(l.error.slice(0, 160))}`]));
       L.filter((l) => !l.has_data && !l.error).forEach((l) => issues.push(["warn", `${esc(n)}: listing "${esc(l.label)}" is linked but returns no data.`]));
-      L.forEach((l) => listRows.push(`<tr><td>${esc(n)}</td><td>${esc(l.label)}</td><td>${num(l.actions_28)}</td><td>${num(l.views_28)}</td>${l.error ? `<td title="${esc(l.error)}"><span class="dot bad"></span>Error<span class="s">${esc(l.error.slice(0, 60))}</span></td>` : l.has_data ? cell("ok", "Live") : cell("warn", "No data")}</tr>`));
-      const ghl = sl.ghl.data ? cell("ok", "Live") : sl.ghl.error ? `<td title="${esc(sl.ghl.error)}"><span class="dot bad"></span>Error<span class="s">${esc(sl.ghl.error.slice(0, 60))}</span></td>`
+      L.forEach((l) => listRows.push(`<tr><td>${esc(n)}</td><td>${esc(l.label)}</td><td>${num(l.actions_28)}</td><td>${num(l.views_28)}</td>${l.error ? `<td title="${esc(l.error)}"><span class="dot bad"></span>Error<span class="s">see Connector errors</span></td>` : l.has_data ? cell("ok", "Live") : cell("warn", "No data")}</tr>`));
+      const ghl = sl.ghl.data ? cell("ok", "Live") : sl.ghl.error ? `<td title="${esc(sl.ghl.error)}"><span class="dot bad"></span>Error<span class="s">see Connector errors</span></td>`
         : sl.ghl.configured ? cell("warn", "No data") : sl.ghl.crm ? `<td class="na">${esc(sl.ghl.crm)}</td>` : `<td class="na">—</td>`;
       if (sl.ghl.error && c) issues.push(["bad", `${esc(n)}: GHL error. ${esc(sl.ghl.error.slice(0, 200))}`]);
       else if (!sl.ghl.data && sl.ghl.configured && c) issues.push(["warn", `${esc(n)}: GHL is set up but sending nothing here.`]);

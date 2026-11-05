@@ -153,8 +153,8 @@ def main() -> None:
 # build_history.js) when present, else the 28 days pulse.js keeps.
 SERIES = ("spend", "leads", "purchases", "revenue", "meta_spend", "google_spend",
           "meta_leads", "meta_clicks", "google_conversions", "google_clicks",
-          "gbp_actions", "sc_clicks", "ga4_sessions", "ig_reach")
-LAGGED = ("gbp_actions", "sc_clicks", "ga4_sessions", "ig_reach")
+          "gbp_actions", "sc_clicks", "sc_impressions", "ga4_sessions", "ig_reach")
+LAGGED = ("gbp_actions", "sc_clicks", "sc_impressions", "ga4_sessions", "ig_reach")
 PROFILE_KEYS = ("calls", "directions", "web_clicks", "impressions")
 
 
@@ -282,7 +282,7 @@ def build_hub(config: dict) -> dict:
 # ── What the AI layers and the source list add to each client ──────────────
 CONNECTOR_KEY = {"facebook": ("Meta Ads", "meta_spend"), "google_ads": ("Google Ads", "google_spend"),
                  "googleanalytics4": ("Google Analytics", "ga4_sessions"), "instagram": ("Instagram", "ig_reach"),
-                 "searchconsole": ("Search Console", "sc_clicks"), "google_my_business": ("Google Business Profile", "gbp_actions")}
+                 "searchconsole": ("Search Console", "sc_impressions"), "google_my_business": ("Google Business Profile", "gbp_actions")}
 PROFILE_SUBJECTS = ("primary_contact", "intake_owner", "scope", "kpi", "crm_system", "booking_system", "contract_start", "contract_end")
 PLAN_WORDS = ("sow", "milestone", "playbook", "phase 1", "standup card")
 

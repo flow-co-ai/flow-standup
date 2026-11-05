@@ -132,10 +132,21 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}, days = 28
       'date', 'account_id', 'sessions', 'active_users', 'conversions',
     ], windsorCfg.googleanalytics4, dateFrom, dateTo, apiKey, 'sessions', errors),
 
-    safeFetch('instagram', [
-      'date', 'account_id',
-      'follower_count_1d', 'reach_1d', 'impressions_1d', 'media_engagement',
-    ], windsorCfg.instagram, dateFrom, dateTo, apiKey, null, errors),
+    // Windsor serves follower_count only for the last 30 days, and asking for it
+    // over a longer window fails the whole Instagram request. So the long
+    // window gets reach/impressions/engagement, and followers come from a
+    // second call capped at 30 days. Rows are merged by date below.
+    (days > 30
+      ? Promise.all([
+          safeFetch('instagram', ['date', 'account_id', 'reach_1d', 'impressions_1d', 'media_engagement'],
+            windsorCfg.instagram, dateFrom, dateTo, apiKey, null, errors),
+          safeFetch('instagram', ['date', 'account_id', 'follower_count_1d'],
+            windsorCfg.instagram, windowDates(30).dateFrom, dateTo, apiKey, null, errors),
+        ]).then(([a, b]) => a.concat(b))
+      : safeFetch('instagram', [
+          'date', 'account_id',
+          'follower_count_1d', 'reach_1d', 'impressions_1d', 'media_engagement',
+        ], windsorCfg.instagram, dateFrom, dateTo, apiKey, null, errors)),
 
     safeFetch('searchconsole', [
       'date', 'account_id', 'clicks', 'impressions',
@@ -258,7 +269,7 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}, days = 28
 
   const ensureDay = d => {
     if (!d) return null;
-    if (!daily[d]) daily[d] = { date: d, spend: 0, leads: 0, meta_spend: 0, google_spend: 0, meta_leads: 0, meta_clicks: 0, google_conversions: 0, google_clicks: 0, gbp_actions: 0, ig_reach: 0, sc_clicks: 0, ga4_sessions: 0, purchases: 0, revenue: 0, ctc_call_confirm: 0, ctc_call_placed: 0, ctc_20s_connect: 0, ctc_60s_connect: 0 };
+    if (!daily[d]) daily[d] = { date: d, spend: 0, leads: 0, meta_spend: 0, google_spend: 0, meta_leads: 0, meta_clicks: 0, google_conversions: 0, google_clicks: 0, gbp_actions: 0, ig_reach: 0, sc_clicks: 0, sc_impressions: 0, ga4_sessions: 0, purchases: 0, revenue: 0, ctc_call_confirm: 0, ctc_call_placed: 0, ctc_20s_connect: 0, ctc_60s_connect: 0 };
     return daily[d];
   };
 
@@ -310,6 +321,7 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}, days = 28
     const row = ensureDay(r.date);
     if (!row) continue;
     row.sc_clicks += toNum(r.clicks);
+    row.sc_impressions += toNum(r.impressions);
   }
   for (const r of ga4Rows) {
     const row = ensureDay(r.date);
@@ -331,6 +343,7 @@ export async function fetchWindsor(windsorCfg, apiKey, gbpLabels = {}, days = 28
       gbp_actions:  Math.round(r.gbp_actions),
       ig_reach:     Math.round(r.ig_reach),
       sc_clicks:    Math.round(r.sc_clicks),
+      sc_impressions: Math.round(r.sc_impressions),
       ga4_sessions: Math.round(r.ga4_sessions),
       purchases:        Math.round(r.purchases),
       revenue:          round2(r.revenue),
