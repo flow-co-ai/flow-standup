@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-08T17:49:28.980Z",
-  "date": "2026-11-08",
+  "generated_at": "2026-11-09T22:09:31.091Z",
+  "date": "2026-11-09",
   "slug": "liferun",
   "name": "Liferun",
   "type": "leadgen",
@@ -22,19 +22,19 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 56,
+          "actions": 53,
           "calls": 0,
-          "directions": 55,
+          "directions": 52,
           "web_clicks": 1,
           "by_profile": [
             {
               "account_id": "locations/1230522329202519428",
               "label": "Liferun",
               "calls": 0,
-              "directions": 55,
+              "directions": 52,
               "web_clicks": 1,
-              "impressions": 109,
-              "days_with_impressions": 24,
+              "impressions": 114,
+              "days_with_impressions": 26,
               "call_rate": 0
             }
           ]
@@ -42,21 +42,21 @@
       }
     },
     "organic": {
-      "gbp_actions": 56,
+      "gbp_actions": 53,
       "ig_reach": 0
     },
     "top_campaign": null,
     "analytics": {
-      "sessions": 587,
-      "users": 559,
+      "sessions": 580,
+      "users": 550,
       "conversions": 0
     },
     "search": {
       "clicks": 1,
-      "impressions": 146
+      "impressions": 151
     },
     "latest_day": {
-      "date": "2026-11-07",
+      "date": "2026-11-08",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -71,7 +71,7 @@
       "ig_reach": 0,
       "sc_clicks": 0,
       "sc_impressions": 0,
-      "ga4_sessions": 21,
+      "ga4_sessions": 18,
       "purchases": 0,
       "revenue": 0,
       "ctc_call_confirm": 0,
@@ -96,9 +96,9 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -70,
-      "sc_7d_pct": -100,
-      "ga4_7d_pct": 48.51,
+      "gbp_7d_pct": -80,
+      "sc_7d_pct": null,
+      "ga4_7d_pct": 52.67,
       "ig_7d_pct": null,
       "spend_per_day_7d": 0
     },
@@ -107,7 +107,6 @@
     ],
     "series": {
       "dates": [
-        "2026-10-11",
         "2026-10-12",
         "2026-10-13",
         "2026-10-14",
@@ -134,7 +133,8 @@
         "2026-11-04",
         "2026-11-05",
         "2026-11-06",
-        "2026-11-07"
+        "2026-11-07",
+        "2026-11-08"
       ],
       "spend": [
         0,
@@ -257,7 +257,6 @@
         0
       ],
       "gbp_actions": [
-        5,
         11,
         0,
         14,
@@ -282,6 +281,7 @@
         0,
         0,
         0,
+        2,
         0,
         0,
         0
@@ -330,8 +330,8 @@
         0,
         0,
         0,
-        0,
         1,
+        0,
         0,
         0,
         0,
@@ -347,7 +347,6 @@
         0
       ],
       "ga4_sessions": [
-        25,
         15,
         16,
         25,
@@ -374,7 +373,8 @@
         39,
         40,
         32,
-        21
+        21,
+        18
       ],
       "purchases": [
         0,
@@ -589,79 +589,72 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-11-08T18:07:59.646Z",
+    "generated_at": "2026-11-09T22:27:58.055Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Paid channels fully dark; GBP alive but generating zero calls.",
+    "verdict": "Paid ads are dark; GBP impressions exist but generate zero calls.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero spend across all 28 days on Meta and Google; $0 spent, 0 leads — paid media is completely off.",
+        "text": "Zero spend across all 28 days: Meta $0, Google $0. No paid activity means CPL is undefined and no leads are being generated.",
         "confidence": "confirmed",
         "channel": "meta+google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP flag: 109 impressions over 24 days, 55 directions, but 0 calls — call-rate is 0, a confirmed conversion gap.",
+        "text": "GBP had 114 impressions and 52 direction requests over 28 days but 0 calls — call-rate is 0, flagged by system.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GA4 sessions rose 48% week-over-week (peak 40 sessions Nov 5) with 0 paid spend — source is unknown organic or direct traffic.",
+        "text": "GA4 sessions rose 52.67% week-over-week (recent 3-day avg ~25 vs prior 3-day avg ~20), but 0 conversions recorded in 28 days — tracking or conversion goal likely broken.",
         "confidence": "probable",
         "channel": "ga4"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GBP actions dropped 70% last 7 days (3 recent days show 0 actions vs prior avg ~3/day) — organic engagement decelerating.",
+        "text": "GHL shows only 2 contacts and 2 opportunities created in 28 days, 0 appointments, 0 won — consistent with zero paid traffic, not a CRM intake leak.",
         "confidence": "confirmed",
-        "channel": "gbp"
-      },
-      {
-        "id": "F5",
-        "priority": 4,
-        "text": "GHL shows only 2 contacts and 0 won opportunities in 28 days with 0 appointments — pipeline is idle, intake untested at volume.",
-        "confidence": "confirmed",
-        "channel": "crm"
+        "channel": "ghl"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Confirm why Meta and Google spend is $0 for 28 days — diagnose and restore campaigns before any budget decisions.",
+        "text": "Diagnose why Meta and Google spend is $0 for 28+ days — billing, account suspension, or campaign status.",
         "cites": [
           "F1"
         ],
-        "monday_item_name": "Diagnose paid media blackout",
-        "monday_update": "Meta and Google have recorded $0 spend across the full 28-day window with 0 leads — paid media appears fully paused or broken. Sohib to confirm whether campaigns were intentionally paused or whether a billing/account issue is the cause. Success check: at least one active campaign spending by 2026-11-11. If intentional, document the restart date so the next performance cycle has a baseline."
+        "monday_item_name": "Fix: Paid Channels Dark",
+        "monday_update": "Meta and Google have recorded $0 spend across all 28 days with zero leads delivered. Immediately check account status, billing, campaign on/off toggles, and any policy flags on both platforms. Success is confirmed when daily spend resumes at the previously approved budget level. Resolve and re-check by 2026-11-12."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Fix GBP call path: 109 impressions and 0 calls suggest phone number is missing or broken on the profile.",
+        "text": "Investigate GBP call-rate: 114 impressions, 52 directions, 0 calls — verify phone number is correct and clickable.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Fix GBP call button zero",
-        "monday_update": "The Liferun GBP profile received 109 impressions and 55 direction requests over 28 days but generated exactly 0 calls. The most likely cause is a missing, incorrect, or unclickable phone number on the profile. Verify the click-to-call number is correct and matches the tracked line. Success check: at least 1 confirmed GBP call within 7 days of the fix, re-check 2026-11-15."
+        "monday_item_name": "Fix: GBP Zero Call Rate",
+        "monday_update": "The Liferun GBP profile received 114 impressions and 52 direction requests in 28 days but logged 0 calls, triggering a system flag. Verify the phone number displayed on the GBP profile is correct, formatted as a clickable link, and routes to an active line. Success is a non-zero call count in the next 7-day GBP report. Check by 2026-11-16."
       },
       {
         "id": "S3",
-        "type": "watch",
-        "text": "Watch GA4 session uptick (40 sessions Nov 5, +48% WoW) — identify traffic source before attributing to any channel.",
+        "type": "fix",
+        "text": "Audit GA4 conversion goal setup: 580 sessions in 28 days, 0 conversions recorded — goal or event likely misconfigured.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Watch GA4 session source",
-        "monday_update": "GA4 sessions spiked to 40 on Nov 5 and are up 48% week-over-week despite $0 paid spend. The source is unconfirmed — could be direct, referral, or residual SEO. Pull the GA4 source/medium breakdown to confirm before crediting any channel. Re-check 2026-11-15; if organic is driving real intent, flag to Sohib for SOW discussion."
+        "monday_item_name": "Fix: GA4 Conversion Tracking",
+        "monday_update": "GA4 recorded 580 sessions and 550 users over 28 days with zero conversions, despite sessions trending up 52.67% week-over-week. Check that the conversion event (likely a form submit or call click) is correctly defined and firing in GA4 DebugView. Success is at least one verified conversion event recorded within the next 7 days. Resolve by 2026-11-16."
       }
     ],
-    "next_check": "2026-11-15"
+    "next_check": "2026-11-12"
   }
 }
