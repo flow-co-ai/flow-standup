@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-09T22:09:54.901Z",
-  "date": "2026-11-09",
+  "generated_at": "2026-11-10T19:32:16.556Z",
+  "date": "2026-11-10",
   "slug": "steel-forte",
   "name": "Forte Precision Metals",
   "type": "leadgen",
@@ -33,9 +33,9 @@
               "calls": 2,
               "directions": 71,
               "web_clicks": 18,
-              "impressions": 419,
+              "impressions": 410,
               "days_with_impressions": 26,
-              "call_rate": 0.0048
+              "call_rate": 0.0049
             }
           ]
         }
@@ -53,10 +53,10 @@
     },
     "search": {
       "clicks": 18,
-      "impressions": 1376
+      "impressions": 1355
     },
     "latest_day": {
-      "date": "2026-11-08",
+      "date": "2026-11-09",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -71,7 +71,7 @@
       "ig_reach": 0,
       "sc_clicks": 0,
       "sc_impressions": 0,
-      "ga4_sessions": 0,
+      "ga4_sessions": 1,
       "purchases": 0,
       "revenue": 0,
       "ctc_call_confirm": 0,
@@ -96,16 +96,15 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": 125,
+      "gbp_7d_pct": 29.41,
       "sc_7d_pct": 25,
-      "ga4_7d_pct": -33.33,
+      "ga4_7d_pct": 0,
       "ig_7d_pct": null,
       "spend_per_day_7d": 0
     },
     "flags": [],
     "series": {
       "dates": [
-        "2026-10-12",
         "2026-10-13",
         "2026-10-14",
         "2026-10-15",
@@ -132,7 +131,8 @@
         "2026-11-05",
         "2026-11-06",
         "2026-11-07",
-        "2026-11-08"
+        "2026-11-08",
+        "2026-11-09"
       ],
       "spend": [
         0,
@@ -255,7 +255,6 @@
         0
       ],
       "gbp_actions": [
-        0,
         6,
         10,
         2,
@@ -281,6 +280,7 @@
         5,
         4,
         6,
+        0,
         0,
         0
       ],
@@ -315,7 +315,6 @@
         0
       ],
       "sc_clicks": [
-        0,
         2,
         2,
         0,
@@ -342,10 +341,10 @@
         4,
         0,
         0,
+        0,
         0
       ],
       "ga4_sessions": [
-        1,
         0,
         3,
         1,
@@ -372,7 +371,8 @@
         0,
         1,
         0,
-        0
+        0,
+        1
       ],
       "purchases": [
         0,
@@ -574,79 +574,63 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-11-07T17:57:06.935Z",
+    "generated_at": "2026-11-10T19:48:54.488Z",
     "cadence": "scheduled_3d",
-    "stale": true,
-    "verdict": "No paid spend active; only GBP organic keeping signal alive.",
+    "stale": false,
+    "verdict": "No paid spend active; organic GBP is the only signal.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google. No leads, no CPL to evaluate. Paid channel is fully dark.",
+        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google. No CPL exists; paid channel is entirely dark.",
         "confidence": "confirmed",
         "channel": "meta+google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions fell 20% week-on-week; last 3 days (Nov 4–6) show 0 actions vs 12 in the prior 3 days (Nov 1–3). Downward signal confirmed.",
+        "text": "GBP actions up 29% week-on-week (91 actions in 28d), but call rate is only 0.49% — 2 calls from 410 impressions.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "Search clicks dropped 75% week-on-week; last 3 days (Nov 4–6) logged only 1 click vs 1+0+0 in prior 3. Organic search visibility is thin at 1,342 impressions / 28 days.",
-        "confidence": "confirmed",
-        "channel": "organic"
+        "priority": 3,
+        "text": "3-day GBP signal (Nov 7–9): 0 actions vs prior 3 days (Nov 4–6) averaging 3.3/day — short-term stall after a stronger mid-Oct run.",
+        "confidence": "probable",
+        "channel": "gbp"
       },
       {
         "id": "F4",
-        "priority": 3,
-        "text": "GA4 sessions down 33% week-on-week; only 14 sessions in 28 days across 14 users — site is receiving near-zero traffic from all sources.",
-        "confidence": "confirmed",
-        "channel": "ga4"
-      },
-      {
-        "id": "F5",
         "priority": 4,
-        "text": "GBP call rate is 0.0052 (2 calls on 387 impressions over 28 days). Directions dominate at 62 — local discovery intent exists but is not converting to enquiries.",
-        "confidence": "probable",
-        "channel": "gbp"
+        "text": "GA4 shows only 14 sessions in 28 days with 0 search-click days in the last 4 days — organic web presence is effectively invisible.",
+        "confidence": "confirmed",
+        "channel": "organic"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "watch",
-        "text": "Watch GBP actions daily; if 3-day total stays at 0, escalate GBP profile health check by Nov 10.",
+        "text": "No paid budget to act on. Watch GBP call rate; re-check whether Google Ads activation is planned by 2026-11-17.",
         "cites": [
+          "F1",
           "F2"
         ],
-        "monday_item_name": "Watch GBP Action Drop",
-        "monday_update": "GBP actions hit 0 for the last 3 days (Nov 4–6) after averaging 4+ per day earlier in the window, and the 7d delta is -20%. No paid activity exists to explain the drop — this is organic signal degrading. Monitor the daily GBP action count; if the 3-day rolling total remains at 0 by Nov 10, escalate to a GBP profile audit (category, photo freshness, Q&A completeness). Success is 3-day total returning to 5+ actions by Nov 13."
+        "monday_item_name": "Forte Paid Activation Status",
+        "monday_update": "Paid spend has been $0 across the full 28-day window — no Meta or Google campaigns are running. GBP is generating 91 actions but only 2 calls (0.49% call rate), which is the client's only measurable demand signal right now. Confirm with Sohib/Nabil whether a Google Ads launch is planned and what the go-live date is. Re-check on 2026-11-17 to see if any spend has started."
       },
       {
         "id": "S2",
-        "type": "watch",
-        "text": "Watch search clicks; 75% drop to 1 click (last 3 days) warrants SEO content review by Nov 14.",
+        "type": "fix",
+        "text": "GBP call rate is 0.49% on 410 impressions — review listing CTA, phone prominence, and category accuracy to lift call conversion.",
         "cites": [
-          "F3"
+          "F2"
         ],
-        "monday_item_name": "Watch Search Click Collapse",
-        "monday_update": "Search clicks fell 75% week-on-week and the last 3 days (Nov 4–6) produced only 1 click against 1,342 impressions in 28 days — the click-through rate is effectively zero. This may reflect title/meta relevance decay or a ranking shift. No paid search is running to buffer this. Monitor through Nov 14; if clicks do not recover to at least 3 per 3-day window, flag for an SEO content and meta-title review within scope."
-      },
-      {
-        "id": "S3",
-        "type": "watch",
-        "text": "No paid media to act on this cycle; re-check Nov 10 for any spend activation signal.",
-        "cites": [
-          "F1"
-        ],
-        "monday_item_name": "No Paid Spend — Monitor",
-        "monday_update": "Forte Precision Metals has $0 paid spend across all 28 days with 0 leads generated. There is no active paid campaign to scale, kill, or shift. The only live signal is GBP organic, which is declining. This output is a formal hold: no buyer action is warranted until paid channels are activated or a confirmed spend source appears in the data. Re-check on Nov 10."
+        "monday_item_name": "Forte GBP Call Rate Fix",
+        "monday_update": "The Forte GBP profile logged 410 impressions and 71 direction requests in 28 days but only 2 calls — a 0.49% call rate. Check that the primary phone number is correct and prominent, the business category is set to 'Metal Fabricator' or most relevant match, and that the listing description includes a clear call-to-action. Success is a call rate above 1% within the next 28-day window; re-check on 2026-12-10."
       }
     ],
-    "next_check": "2026-11-10"
+    "next_check": "2026-11-17"
   }
 }
