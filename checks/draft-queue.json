@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-12T21:49:55.121792+00:00",
+  "updatedAt": "2026-11-13T21:25:38.643617+00:00",
   "items": [
     {
       "id": "qualityhvac-burr-ridge-gbp-move",
@@ -49,7 +49,7 @@
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-11-02T23:05:32.046222+00:00",
+      "verifiedAt": "2026-11-13T21:25:26.846747+00:00",
       "completionEvidence": null,
       "updatedAt": "2026-11-02T23:05:32.046223+00:00",
       "createdAt": "2026-10-07T20:30:48.868496+00:00"
@@ -75,7 +75,7 @@
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-10-26T12:33:07.112548+00:00",
+      "verifiedAt": "2026-11-13T21:25:26.846752+00:00",
       "completionEvidence": null,
       "updatedAt": "2026-10-26T12:33:07.112551+00:00",
       "createdAt": "2026-10-08T20:40:26.108326+00:00"
@@ -101,7 +101,7 @@
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-11-02T23:05:32.046189+00:00",
+      "verifiedAt": "2026-11-13T21:25:26.846750+00:00",
       "completionEvidence": null,
       "updatedAt": "2026-11-02T23:05:32.046191+00:00",
       "createdAt": "2026-10-21T19:14:17.150344+00:00"
@@ -229,7 +229,7 @@
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-11-04T21:09:08.501702+00:00",
+      "verifiedAt": "2026-11-13T21:25:26.846753+00:00",
       "completionEvidence": null,
       "createdAt": "2026-11-04T21:09:15.990745+00:00"
     },
@@ -287,26 +287,27 @@
     {
       "id": "medstation-attended-stage",
       "title": "Attended Stage",
-      "note": "From the 11/5 GHL review (two Fireflies recordings of the same call). Sohib promised the client an investigation.",
+      "note": "From the 11/5 GHL review (two Fireflies recordings of the same call). Sohib promised the client an investigation. Section 19b merge 11/12: booking sync crash fixed and resynced, but Attended still showed one opportunity on the call; card stays open.",
       "status": "ready",
       "board": "CRM",
       "group": "MedStation",
       "potentialClient": null,
       "source": "fireflies",
-      "sourceLabel": "Meeting with MedStation, 11/5",
+      "sourceLabel": "Meeting with MedStation, 11/5 + Meeting: Ops follow up review with Ahmed, 11/12",
       "payload": {
         "mode": "create_item",
         "boardId": "18418241405",
         "groupId": "group_mm512p9w",
         "itemName": "Attended Stage",
-        "updateBody": "<p>Salam,</p><ul><li>11/5 GHL review with MedStation (Melissa and Leonardo): the Weston Opportunities dashboard showed <strong>only one opportunity in Attended</strong>, although multiple appointments were completed. Sohib promised to investigate.</li><li><strong>Find</strong> why completed appointments are not moving opportunities from Booked to Attended in the Weston pipeline: the workflow trigger, the appointment status it listens for, and where that status comes from.</li><li><strong>Fix</strong> the automation, then move already completed appointments to Attended so the dashboard count is accurate.</li><li>Sunny Isles clones the Weston setup next, so <strong>fix this before that build starts</strong>.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "updateBody": "<p>Salam,</p><ul><li>11/5 GHL review with MedStation (Melissa and Leonardo): the Weston Opportunities dashboard showed <strong>only one opportunity in Attended</strong>, although multiple appointments were completed.</li><li>11/12: Ahmed fixed a separate booking discrepancy (the sync code crashed on returning patients booking a second service; fixed and resynced). Naz checked GHL during the call and <strong>Attended still showed one</strong>, so that fix did not cover this.</li><li><strong>Find</strong> why completed appointments are not moving opportunities from Booked to Attended: the workflow trigger, the appointment status it listens for, and where that status comes from.</li><li><strong>Fix</strong> the automation, then move already completed appointments to Attended so the count is accurate. Fix before the Sunny Isles build clones Weston.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
         "blocked": false,
         "needsNaz": false
       },
       "nullReason": null,
       "priority": 3,
-      "verifiedAt": "2026-11-06T20:49:13.061092+00:00",
+      "verifiedAt": "2026-11-13T21:25:26.846743+00:00",
       "completionEvidence": null,
+      "updatedAt": "2026-11-13T21:25:26.846745+00:00",
       "createdAt": "2026-11-06T20:49:20.424215+00:00"
     },
     {
@@ -386,26 +387,27 @@
     {
       "id": "maadilaw-attribution-dashboard",
       "title": "Attribution Dashboard",
-      "note": "Priority 2. Section 19: CRM Maadi Law has Lead Source Audit (13432464593), which fixes contact source data, not reporting; Lead Follow Up and review auto replies are unrelated. No dashboard item on any board. A net new build is a different kind of work from the audit fixes, so create_item rather than a subitem. Section 19b: no pending match.",
+      "note": "Priority 2. Section 19: CRM Maadi Law has Lead Source Audit (13432464593), which fixes contact source data, not reporting; Lead Follow Up and review auto replies are unrelated. No dashboard item on any board. A net new build is a different kind of work from the audit fixes, so create_item rather than a subitem. Section 19b: no pending match. Section 19b merge 11/12 (axis 3 recheck, same Monday target): Naz confirmed a simple GHL dashboard over Windsor; Ahmed needs Meta/Google owner access from the Ads team to assess spend. Depends on maadilaw-clio-zapier-sync.",
       "status": "ready",
       "board": "CRM",
       "group": "Maadi Law",
       "potentialClient": null,
       "source": "fireflies",
-      "sourceLabel": "Meeting with Maadi Law, 11/6",
+      "sourceLabel": "Meeting with Maadi Law, 11/6 + Meeting: Ops follow up review with Ahmed, 11/12",
       "payload": {
         "mode": "create_item",
         "boardId": "18418241405",
         "groupId": "group_mm5112vv",
         "itemName": "Attribution Dashboard",
-        "updateBody": "<p>Salam,</p><ul><li>On the 11/6 review Sharif said he cannot trust any current view of where leads and signed cases come from; both the GHL dashboard and the Windsor dashboard look low on Meta. He wants one clear answer before the <strong>December year end review</strong>, where he sets next year's budget. Naz assigned the build to Ahmed.</li><li><strong>Build a custom GHL dashboard</strong> for Maadi Law with a date filter (7, 30, 90 days, 12 months) showing total leads from every source, word of mouth and referrals included, and signed cases (Case Accepted), each broken down by source.</li><li>Show Meta as <strong>one source</strong> (instant forms plus Meta calls) with a drill down to campaign, form and video. Same drill down for Google Search and LSA. Contacts with no source show as a visible No source bucket.</li><li><strong>Constraint</strong>: build on the first touch contact source from Lead Source Audit, where the Clio overwrite fix is still open. Confirm Tracy's callbacks from the Google Ads line no longer rewrite source (Sohib says fixed). No historical backfill.</li><li>Ad spend is not in GHL; it stays on Sohib's Windsor dashboard unless Naz says otherwise.</li><li>Done = Sharif can read leads and signed cases from Meta for the last 90 days without help.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "updateBody": "<p>Salam,</p><ul><li>On the 11/6 review Sharif said he cannot trust any current view of where leads and signed cases come from; both the GHL and Windsor dashboards look low on Meta. He wants one clear answer before the <strong>December year end review</strong>. On 11/12 Naz confirmed the build goes to Ahmed as a <strong>simple GHL dashboard</strong>, since Windsor has trouble parsing GHL data.</li><li><strong>Build it in GHL</strong> for Maadi Law with a date filter (7, 30, 90 days, 12 months): total leads by source (word of mouth and referrals included), opportunity stages, and signed cases (Case Accepted) by source. Contacts with no source show as a visible No source bucket.</li><li>Show Meta as <strong>one source</strong> (instant forms plus Meta calls) with a drill down to campaign, form and video. Same drill down for Google Search and LSA.</li><li><strong>Constraint</strong>: build on the first touch contact source; the Clio overwrite fix (moving Clio to GHL onto Zapier) must land first. No historical backfill.</li><li><strong>Ad spend</strong>: Naz is asking the Ads team to give Ahmed owner access to Maadi Law's Meta and Google Ads. Once in, Ahmed checks whether spend can show in GHL; if not, it stays on Windsor.</li><li>Done = Sharif can read leads and signed cases from Meta for the last 90 days without help.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
         "blocked": false,
         "needsNaz": false
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-11-07T19:27:37.035307+00:00",
+      "verifiedAt": "2026-11-13T21:25:26.846628+00:00",
       "completionEvidence": null,
+      "updatedAt": "2026-11-13T21:25:26.846631+00:00",
       "createdAt": "2026-11-07T19:27:45.992741+00:00"
     },
     {
@@ -485,13 +487,13 @@
     {
       "id": "seniorinsurance-ken-tracking-number",
       "title": "Ken Tracking Number",
-      "note": "Drafted from the 11/11 Ads review call (Naz and Hamza). \u00a719: audited Ads, Web+SEO, CRM, Video for this client. \u00a719b: no pending match.",
+      "note": "Drafted from the 11/11 Ads review call (Naz and Hamza). \u00a719: audited Ads, Web+SEO, CRM, Video for this client. \u00a719b: no pending match. Section 19b merge 11/12: Naz set the forwarding order (Hanif, Nida, Sabri first, Ken second) and asked for a line check incl. voice AI; this replaces the earlier 'confirm forward to number with Naz' step.",
       "status": "ready",
       "board": "CRM",
       "group": "Senior Insurance",
       "potentialClient": null,
       "source": "fireflies",
-      "sourceLabel": "Meeting: Ads review with Hamza, 11/11",
+      "sourceLabel": "Meeting: Ads review with Hamza, 11/11 + Meeting: Ops follow up review with Ahmed, 11/12",
       "payload": {
         "mode": "create_item",
         "boardId": "18418241405",
@@ -499,24 +501,25 @@
         "itemName": "Ken Tracking Number",
         "blocked": false,
         "needsNaz": false,
-        "updateBody": "<p>Salam,</p><ul><li>11/11 Ads review: Ken Peterson's Meta ads run as their own ad set with a <strong>dedicated phone number</strong>. The number is <strong>already purchased</strong> and needs setting up.</li><li><strong>Configure forwarding</strong> so calls reach Ken directly. He no longer works at the agency but still wants to receive these calls; <strong>confirm the forward to number with Naz</strong> before going live.</li><li><strong>Track it in GHL</strong>: calls should log on the contact with a source that separates Ken's ad set from the main Senior Insurance line.</li><li><strong>Finish before Ken's video clips are ready</strong>, expected within days. Place a test call, confirm it rings through and logs in GHL, then post the number here for the Ads team.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
+        "updateBody": "<p>Salam,</p><ul><li>Ken Peterson's Meta ads run as their own ad set with a <strong>dedicated phone number</strong> (the Ken campaign number). Naz has already purchased it; it needs setting up.</li><li><strong>Check the line first</strong>: confirm it is set up the same way as the other Senior Insurance lines, including the voice AI.</li><li><strong>Configure forwarding</strong> in this order, per Naz on 11/12: first <strong>Hanif, Nida and Sabri</strong>; second <strong>Ken Peterson</strong>. Ken is not a GHL user, so forward to his own phone number.</li><li><strong>Track it in GHL</strong>: calls log on the contact with a source that separates Ken's ad set from the main line.</li><li><strong>Finish before Ken's clips are live.</strong> Place a test call, confirm it rings through and logs, then post the number here for the Ads team.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>"
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-11-12T21:49:47.999021+00:00",
+      "verifiedAt": "2026-11-13T21:25:26.846676+00:00",
       "completionEvidence": null,
+      "updatedAt": "2026-11-13T21:25:26.846678+00:00",
       "createdAt": "2026-11-12T21:49:55.121792+00:00"
     },
     {
       "id": "seniorinsurance-booking-conversion-tracking",
       "title": "Booking Conversion Tracking",
-      "note": "Drafted from the 11/11 Ads review call (Naz and Hamza). \u00a719: audited Ads, Web+SEO, CRM, Video for this client. \u00a719b: no pending match.",
-      "status": "ready",
+      "note": "Drafted from the 11/11 Ads review call (Naz and Hamza). \u00a719: audited Ads, Web+SEO, CRM, Video for this client. \u00a719b: no pending match. Section 19 re-audit 11/13: Monday CRM item 13543153920 'Crown Point Booking' (Senior Insurance, created 11/13) now carries exactly this: the Ads team added the tracking actions to the draft Crown Point booking workflow and asked Ahmed to make it live. On the 11/12 call Ahmed said testing and go live are all that remain on his side. Firing this card would duplicate it; status exists, payload kept.",
+      "status": "exists",
       "board": "CRM",
       "group": "Senior Insurance",
       "potentialClient": null,
       "source": "fireflies",
-      "sourceLabel": "Meeting: Ads review with Hamza, 11/11",
+      "sourceLabel": "Meeting: Ads review with Hamza, 11/11 + Meeting: Ops follow up review with Ahmed, 11/12",
       "payload": {
         "mode": "update_only",
         "existingItemId": "13458670850",
@@ -527,9 +530,155 @@
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-11-12T21:49:47.999824+00:00",
+      "verifiedAt": "2026-11-13T21:25:26.846707+00:00",
       "completionEvidence": null,
+      "updatedAt": "2026-11-13T21:25:26.846709+00:00",
       "createdAt": "2026-11-12T21:49:55.121792+00:00"
+    },
+    {
+      "id": "maadilaw-clio-zapier-sync",
+      "title": "Clio Zapier Sync",
+      "note": "Priority 2: the Clio overwrite is what keeps lead source unreliable, and the attribution dashboard Sharif wants before his December review builds on it. Section 19: all four boards for Maadi Law, subitems included; CRM Lead Source Audit (13432464593) already lists the native Clio overwrite as still open, so update_only there rather than a new item. Intake review folded in as the verification step since it rides on the same sync.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Maadi Law",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Ops follow up review with Ahmed, 11/12",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "13432464593",
+        "itemName": "Clio Zapier Sync",
+        "updateBody": "<p>Salam,</p><ul><li>New on 11/12 (ops review with Naz): Ahmed traced the open Clio overwrite of contact source and the blank Clio contact data to bugs in the <strong>native Clio marketplace plugin</strong>. The GHL to Clio direction already runs through Zapier with no reported issues. Naz approved moving the other direction to Zapier too.</li><li><strong>Rebuild Clio to GHL in Zapier</strong> on the Flow Zapier account, then <strong>switch off the native plugin</strong> for Maadi Law so the two never write at once.</li><li><strong>Constraint</strong>: UTM attribution and the first touch contact source must stay intact. A Clio update must never overwrite source, and phone and email must carry over.</li><li><strong>Then test</strong> one lead both ways and run it through the Maadi Law <strong>intake workflow</strong> end to end. No complaints have come in on intake; Naz wants a proactive check since the sync feeding it is changing. Post the result here.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "verifiedAt": "2026-11-13T21:25:26.819222+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-11-13T21:25:38.643617+00:00"
+    },
+    {
+      "id": "seniorinsurance-website-launch",
+      "title": "Website Launch",
+      "note": "Priority 2: hot season ends in about a month and Naz asked for full focus. Section 19: Senior Insurance on all four boards; Web+SEO Web Redesign (13186017874, In Progress) is this site, so update_only. Build Thank You Pages is Done; Website Suggestions is a different item.",
+      "status": "ready",
+      "board": "Web + SEO",
+      "group": "Senior Insurance",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Launch readiness review with Hashir, 11/12",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "13186017874",
+        "itemName": "Website Launch",
+        "updateBody": "<p>Salam,</p><ul><li>New on 11/12 (launch review with Naz): the new site is built, Naz's requested changes are in and the SEO work before launch is believed done. Open enrollment ends in about a month, so this is <strong>top priority</strong>.</li><li><strong>Move every tag and ad integration</strong> from the current live site to the new one before switching over: the tracking set up with the Ads team, call tracking, forms to GHL and the thank you pages.</li><li><strong>Final check, then launch</strong>: confirm the SEO items, run one test form and one test call on the new site, and post here when it is live so the Ads team can confirm conversions still record.</li><li>Sequence agreed on the call: GBP updates first, then the launch. Do not let the launch slip past this week.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "verifiedAt": "2026-11-13T21:25:26.825152+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-11-13T21:25:38.643617+00:00"
+    },
+    {
+      "id": "seniorinsurance-gbp-implementation",
+      "title": "GBP Fixes",
+      "note": "Priority 2: time sensitive, enrollment ends in about a month. Section 19: Web+SEO Start GBP SEO (13185930393, For Review) already holds the profile scope; status reads For Review but the 11/12 call says nothing is applied yet, so update_only to restate what is open.",
+      "status": "ready",
+      "board": "Web + SEO",
+      "group": "Senior Insurance",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Launch readiness review with Hashir, 11/12",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "13185930393",
+        "itemName": "GBP Fixes",
+        "updateBody": "<p>Salam,</p><ul><li>New on 11/12 (launch review with Naz): the profile audit is still running and <strong>no changes have been made on the listings yet</strong>. Enrollment season closes in about a month.</li><li><strong>Apply the audit fixes</strong> on all three profiles now, starting with the one whose <strong>business name shows in lowercase</strong>. Correct the name to match the brand exactly.</li><li><strong>Post the update here</strong> listing what changed per profile. Hashir committed to sending it on 11/13, ahead of the website launch.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "verifiedAt": "2026-11-13T21:25:26.829741+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-11-13T21:25:38.643617+00:00"
+    },
+    {
+      "id": "seniorinsurance-opportunity-source",
+      "title": "Opportunity Source",
+      "note": "Priority 2: attribution during enrollment season. Section 19: CRM Auto-create opportunities (13186008077, In Progress) is the parent workstream; update_only.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Senior Insurance",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Ops follow up review with Ahmed, 11/12",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "13186008077",
+        "itemName": "Opportunity Source",
+        "updateBody": "<p>Salam,</p><ul><li>New on 11/12 (ops review with Naz): opportunities are now being created, but <strong>several have no source</strong>, and some Meta leads that track correctly in Meta do not show as opportunities with a source in GHL.</li><li><strong>Find which creation paths</strong> (inbound call, website form, Meta form, Instagram) produce an opportunity without a source, and fix each so the source is written at creation.</li><li><strong>Backfill</strong> the source on existing opportunities where the contact already carries one.</li><li>Done = no new opportunity lands in the pipeline without a source over a week of live leads.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 2,
+      "verifiedAt": "2026-11-13T21:25:26.834457+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-11-13T21:25:38.643617+00:00"
+    },
+    {
+      "id": "seniorinsurance-related-contacts",
+      "title": "Related Contacts",
+      "note": "Priority 3. Section 19: CRM Pipeline Cleanup (13432454316) is where the spouse linking ask was last recorded (marked replaced by the seminar guest tag); Naz reopened it on 11/12 for callers, so update_only there.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Senior Insurance",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Ops follow up review with Ahmed, 11/12",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "13432454316",
+        "itemName": "Related Contacts",
+        "updateBody": "<p>Salam,</p><ul><li>New on 11/12 (ops review with Naz): linking related contacts is back on. Many callers are the <strong>adult children or spouses</strong> of the person who needs coverage, and the team needs both contacts tied together. This item earlier said the seminar guest tag replaced the spouse linking ask; for callers, it does not.</li><li><strong>Test</strong> whether two contacts can share one phone number and be linked to each other, or name the GHL alternative the team should use (associations or a related contact field).</li><li>Ahmed believes part of this was built earlier; <strong>confirm what exists</strong> and post the method the team should follow here.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 3,
+      "verifiedAt": "2026-11-13T21:25:26.839473+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-11-13T21:25:38.643617+00:00"
+    },
+    {
+      "id": "medstation-nextgen-financial-api",
+      "title": "NextGen Financial API",
+      "note": "Priority 3: no deadline named. Section 19: MedStation groups on all four boards, subitems included, plus a sweep for financial/API/NextGen; Medcard Account is a separate API ask, nothing covers the financial routes, so create_item. MedStation (Mateus, Renata) are client side, named in plain text only.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "MedStation",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Ops follow up review with Ahmed, 11/12",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm512p9w",
+        "itemName": "NextGen Financial API",
+        "updateBody": "<p>Salam,</p><ul><li>11/12 ops review: Naz wants GHL to show the <strong>cost and value of each patient</strong> from NextGen's financial API routes. When Ahmed last tried those routes they returned <strong>401 unauthorized</strong>; the team was waiting on MedStation to grant admin access.</li><li><strong>Retest the financial routes.</strong> If they still fail, ask MedStation in the group for the access, tagging Naz and Sohib so Naz can follow up if there is no reply.</li><li>Once access works, <strong>pull the value fields into GHL</strong> on the Weston contacts and confirm the numbers on a few patients against NextGen.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 3,
+      "verifiedAt": "2026-11-13T21:25:26.846572+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-11-13T21:25:38.643617+00:00"
     }
   ]
 }
