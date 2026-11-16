@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-15T18:41:35.834Z",
-  "date": "2026-11-15",
+  "generated_at": "2026-11-16T21:51:50.363Z",
+  "date": "2026-11-16",
   "slug": "steel-forte",
   "name": "Forte Precision Metals",
   "type": "leadgen",
@@ -22,27 +22,27 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 77,
+          "actions": 82,
           "calls": 2,
-          "directions": 56,
+          "directions": 61,
           "web_clicks": 19,
           "by_profile": [
             {
               "account_id": "locations/4223761406084917553",
               "label": "Forte Precision Metals, Inc.",
               "calls": 2,
-              "directions": 56,
+              "directions": 61,
               "web_clicks": 19,
-              "impressions": 419,
+              "impressions": 428,
               "days_with_impressions": 26,
-              "call_rate": 0.0048
+              "call_rate": 0.0047
             }
           ]
         }
       }
     },
     "organic": {
-      "gbp_actions": 77,
+      "gbp_actions": 82,
       "ig_reach": 0
     },
     "top_campaign": null,
@@ -53,10 +53,10 @@
     },
     "search": {
       "clicks": 17,
-      "impressions": 1118
+      "impressions": 1099
     },
     "latest_day": {
-      "date": "2026-11-14",
+      "date": "2026-11-15",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -96,7 +96,7 @@
       "cpl_7d_pct": null,
       "meta_leads_7d_pct": null,
       "google_spend_7d_pct": null,
-      "gbp_7d_pct": -62.96,
+      "gbp_7d_pct": -39.29,
       "sc_7d_pct": -20,
       "ga4_7d_pct": -50,
       "ig_7d_pct": null,
@@ -105,7 +105,6 @@
     "flags": [],
     "series": {
       "dates": [
-        "2026-10-18",
         "2026-10-19",
         "2026-10-20",
         "2026-10-21",
@@ -132,7 +131,8 @@
         "2026-11-11",
         "2026-11-12",
         "2026-11-13",
-        "2026-11-14"
+        "2026-11-14",
+        "2026-11-15"
       ],
       "spend": [
         0,
@@ -255,7 +255,6 @@
         0
       ],
       "gbp_actions": [
-        3,
         6,
         0,
         0,
@@ -281,7 +280,8 @@
         2,
         5,
         0,
-        0,
+        2,
+        6,
         0
       ],
       "ig_reach": [
@@ -315,7 +315,6 @@
         0
       ],
       "sc_clicks": [
-        0,
         2,
         0,
         0,
@@ -342,10 +341,10 @@
         0,
         0,
         0,
+        0,
         0
       ],
       "ga4_sessions": [
-        0,
         2,
         1,
         1,
@@ -368,6 +367,7 @@
         0,
         0,
         1,
+        0,
         0,
         0,
         0,
@@ -574,36 +574,43 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-11-13T19:41:18.458Z",
+    "generated_at": "2026-11-16T22:14:31.268Z",
     "cadence": "scheduled_3d",
-    "stale": true,
+    "stale": false,
     "verdict": "No paid spend active; GBP organic is the only signal.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google. No leads, no CPL to evaluate. Paid channel is entirely inactive.",
+        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google. No leads, no CPL to evaluate. Paid channel is entirely dark.",
         "confidence": "confirmed",
         "channel": "meta+google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP actions dropped 59% week-over-week; last 3 days (Nov 10–12) show 0, 0, 0 actions vs prior 3-day average of ~1.0. Signal is confirmed decline.",
+        "text": "GBP actions dropped 39% week-over-week (last 7d vs prior 7d); 3-day signal (Nov 13–15) totals 8 actions vs 13 in prior 3 days (Nov 10–12) — consistent decline.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Search clicks fell 33% week-over-week; last 3 days (Nov 10–12) logged 2, 0, 0 clicks vs prior 3-day total of 6. Organic discoverability is weakening.",
-        "confidence": "probable",
+        "text": "Search clicks fell 20% week-over-week; last 3 days (Nov 13–15) show 0 clicks vs 4 in prior 3 days (Nov 10–12) — organic discoverability weakening.",
+        "confidence": "confirmed",
         "channel": "search"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP call rate is 0.0053 on only 380 impressions over 25 days — just 2 calls total. Volume is too thin for the profile to generate meaningful inbound.",
+        "text": "GA4 sessions down 50% week-over-week; last 3 days show 0 sessions vs 1 in prior 3 — but volume is so low (10 sessions/28d) this is directional only.",
+        "confidence": "probable",
+        "channel": "ga4"
+      },
+      {
+        "id": "F5",
+        "priority": 4,
+        "text": "GBP call rate is 0.0047 (2 calls from 428 impressions over 26 days) — extremely low call conversion on the profile despite 61 direction requests.",
         "confidence": "confirmed",
         "channel": "gbp"
       }
@@ -612,16 +619,25 @@
       {
         "id": "S1",
         "type": "watch",
-        "text": "No paid media to act on. Watch GBP actions and search clicks through Nov 16 before any paid activation discussion.",
+        "text": "No paid channels active; watch GBP actions weekly — re-evaluate if 7-day total falls below 5 actions.",
         "cites": [
           "F1",
-          "F2",
-          "F3"
+          "F2"
         ],
-        "monday_item_name": "Watch GBP & Search Nov 16",
-        "monday_update": "Paid spend is $0 across the full 28-day window — there is no budget to shift or scale. GBP actions fell 59% week-over-week with 0 actions on each of the last 3 days (Nov 10–12), and search clicks are down 33% week-over-week. Re-check on Nov 16; if GBP actions remain at zero for a 7-day consecutive run, escalate to Sohib for a GBP profile health review. No paid action is possible or warranted this cycle."
+        "monday_item_name": "Watch GBP organic decline",
+        "monday_update": "Paid spend is confirmed at $0 across all 28 days — there is no ad budget to act on this cycle. GBP actions fell 39% week-over-week and the 3-day trend (Nov 13–15: 8 actions) is below the prior 3 days (Nov 10–12: 13 actions). Success check: GBP 7-day action total holds at 15+ by 2026-11-23. If it drops below 5, escalate to Sohib to confirm whether paid reactivation or GBP content update is in scope."
+      },
+      {
+        "id": "S2",
+        "type": "fix",
+        "text": "GBP call rate is 0.0047 from 428 impressions; review profile CTA and phone number placement to lift call conversion.",
+        "cites": [
+          "F5"
+        ],
+        "monday_item_name": "Fix GBP call rate issue",
+        "monday_update": "The Forte GBP profile generated only 2 calls from 428 impressions over 26 days — a call rate of 0.0047, while producing 61 direction requests. The disconnect suggests the profile may lack a prominent call-to-action or the phone number is not prominently surfaced. Review and update the GBP profile CTA, business description, and primary phone number. Confirm success if call rate rises above 0.01 by the next 28-day window (re-check 2026-12-14)."
       }
     ],
-    "next_check": "2026-11-16"
+    "next_check": "2026-11-23"
   }
 }
