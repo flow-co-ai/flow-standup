@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-16T17:39:13.391Z",
+  "updatedAt": "2026-11-16T17:40:09.218Z",
   "items": [
     {
       "id": "qualityhvac-burr-ridge-gbp-move",
@@ -451,7 +451,7 @@
     {
       "id": "qualityhvac-web-lead-source-params",
       "title": "Web Lead Tracking",
-      "note": "Drafted from the 11/11 Ads review call (Naz and Hamza). §19: audited Ads, Web+SEO, CRM, Video for this client. §19b: no pending match.",
+      "note": "Salam, / Context: Raised on the 11 / 11 Ads review call (Naz + Hamza). Quality HVAC web leads are coming through without proper source parameters, making it impossible to attribute which campaign, ad set, or channel is driving inbound form submissions. / Deliverable: Audit the current lead capture flow and ensure UTM / source parameters are being appended and passed through correctly on all paid traffic landing pages for Quality HVAC. Confirm the values are visible on the lead record (whether that's in GHL, the CRM, or the reporting layer). / Constraint: Coordinate with dev / web team if any tracking code or landing page changes are needed -- do not modify page structure or forms without looping in Hashir / Zayan. / @Khurram Jamil @Ads Team / Assigned to: Khurram Jamil, Ads Team",
       "status": "ready",
       "board": "Web + SEO",
       "group": "Quality HVAC",
@@ -460,18 +460,36 @@
       "sourceLabel": "Meeting: Ads review with Hamza, 11/11",
       "payload": {
         "mode": "create_item",
-        "boardId": "18099807701",
-        "groupId": "group_mm231wbb",
         "itemName": "Web Lead Tracking",
+        "boardId": "18405754310",
         "blocked": false,
         "needsNaz": false,
-        "updateBody": "<p>Salam,</p><ul><li>11/11 Ads review: Google Ads shows <strong>6 conversions</strong> for Quality HVAC in the last month, GHL shows <strong>1 Google Ads call</strong>. Hamza confirmed calls and Meta instant forms are tracked; the gap is <strong>website leads</strong>. They reach GHL but <strong>without the right source and tags</strong>, because ad parameters are not carried from the site into GHL.</li><li>The Google Ads call campaign points at the <strong>Fibid homepage</strong> (no landing page exists), so the homepage forms are where this has to work.</li><li><strong>Pass gclid and UTM parameters</strong> from the landing URL through the website forms into the GHL contact, the same setup already built for Maadi Law, so source and tags write correctly.</li><li><strong>Test</strong> with one form submission from a tagged URL and confirm the contact shows Google Ads as source. Post the result here and tell Hamza so he can verify on the Ads side.</li><li>Separate from the Ads side discrepancy Sohib raised on the Google Ads item (11/11); do not change Ads conversion settings here.</li></ul><p><a class=\"mention\" data-mention-id=\"69741994\" data-mention-type=\"User\">@Muhammad Hashir Faiz</a> <a class=\"mention\" data-mention-id=\"101662542\" data-mention-type=\"User\">@Zayan Faiz</a></p>"
+        "columnValues": {
+          "color_mkwb1trm": {
+            "label": "Start"
+          },
+          "multiple_person_mkwb5f2e": {
+            "personsAndTeams": [
+              {
+                "id": 102221064,
+                "kind": "person"
+              },
+              {
+                "id": 102221061,
+                "kind": "person"
+              }
+            ]
+          }
+        },
+        "updateBody": "<p>Salam,</p>\n<ul>\n<li><strong>Context:</strong> Raised on the 11/11 Ads review call (Naz + Hamza). Quality HVAC web leads are coming through without proper source parameters, making it impossible to attribute which campaign, ad set, or channel is driving inbound form submissions.</li>\n<li><strong>Deliverable:</strong> Audit the current lead capture flow and <strong>ensure UTM/source parameters are being appended and passed through correctly</strong> on all paid traffic landing pages for Quality HVAC. Confirm the values are visible on the lead record (whether that's in GHL, the CRM, or the reporting layer).</li>\n<li><strong>Constraint:</strong> Coordinate with dev/web team if any tracking code or landing page changes are needed -- <strong>do not modify page structure or forms without looping in Hashir/Zayan.</strong></li>\n</ul>\n<p><a class=\"mention\" data-mention-id=\"102221064\" data-mention-type=\"User\">@Khurram Jamil</a> <a class=\"mention\" data-mention-id=\"102221061\" data-mention-type=\"User\">@Ads Team</a></p>",
+        "groupId": "group_mm23tg6s"
       },
       "nullReason": null,
       "priority": 2,
       "verifiedAt": "2026-11-12T21:49:47.997488+00:00",
       "completionEvidence": null,
-      "createdAt": "2026-11-12T21:49:55.121792+00:00"
+      "createdAt": "2026-11-12T21:49:55.121792+00:00",
+      "updatedAt": "2026-11-16T17:40:09.216Z"
     },
     {
       "id": "qualityhvac-google-heating-keywords",
