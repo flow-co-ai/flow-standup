@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-16T21:51:33.306Z",
-  "date": "2026-11-16",
+  "generated_at": "2026-11-17T20:41:46.469Z",
+  "date": "2026-11-17",
   "slug": "liferun",
   "name": "Liferun",
   "type": "leadgen",
@@ -22,18 +22,18 @@
           "clicks": 0
         },
         "gbp": {
-          "actions": 36,
+          "actions": 30,
           "calls": 0,
-          "directions": 35,
+          "directions": 29,
           "web_clicks": 1,
           "by_profile": [
             {
               "account_id": "locations/1230522329202519428",
               "label": "Liferun",
               "calls": 0,
-              "directions": 35,
+              "directions": 29,
               "web_clicks": 1,
-              "impressions": 122,
+              "impressions": 125,
               "days_with_impressions": 26,
               "call_rate": 0
             }
@@ -42,21 +42,21 @@
       }
     },
     "organic": {
-      "gbp_actions": 36,
+      "gbp_actions": 30,
       "ig_reach": 0
     },
     "top_campaign": null,
     "analytics": {
       "sessions": 594,
-      "users": 562,
+      "users": 563,
       "conversions": 0
     },
     "search": {
       "clicks": 1,
-      "impressions": 167
+      "impressions": 172
     },
     "latest_day": {
-      "date": "2026-11-15",
+      "date": "2026-11-16",
       "spend": 0,
       "leads": 0,
       "meta_spend": 0,
@@ -71,7 +71,7 @@
       "ig_reach": 0,
       "sc_clicks": 0,
       "sc_impressions": 0,
-      "ga4_sessions": 14,
+      "ga4_sessions": 16,
       "purchases": 0,
       "revenue": 0,
       "ctc_call_confirm": 0,
@@ -98,7 +98,7 @@
       "google_spend_7d_pct": null,
       "gbp_7d_pct": 125,
       "sc_7d_pct": null,
-      "ga4_7d_pct": -31,
+      "ga4_7d_pct": -27.08,
       "ig_7d_pct": null,
       "spend_per_day_7d": 0
     },
@@ -107,7 +107,6 @@
     ],
     "series": {
       "dates": [
-        "2026-10-19",
         "2026-10-20",
         "2026-10-21",
         "2026-10-22",
@@ -134,7 +133,8 @@
         "2026-11-12",
         "2026-11-13",
         "2026-11-14",
-        "2026-11-15"
+        "2026-11-15",
+        "2026-11-16"
       ],
       "spend": [
         0,
@@ -257,7 +257,6 @@
         0
       ],
       "gbp_actions": [
-        6,
         0,
         0,
         4,
@@ -284,6 +283,7 @@
         0,
         4,
         1,
+        0,
         0
       ],
       "ig_reach": [
@@ -322,8 +322,8 @@
         0,
         0,
         0,
-        0,
         1,
+        0,
         0,
         0,
         0,
@@ -347,7 +347,6 @@
         0
       ],
       "ga4_sessions": [
-        16,
         22,
         31,
         9,
@@ -374,7 +373,8 @@
         16,
         30,
         15,
-        14
+        14,
+        16
       ],
       "purchases": [
         0,
@@ -560,7 +560,7 @@
     "errors": []
   },
   "ghl": {
-    "error": "GHL 422: {\"message\":[\"startTime must be epoch milliseconds, e.g. 1680373800000\",\"endTime must be epoch milliseconds, e.g. 1680373800000\"],\"error\":\"Unprocessable Entity\",\"statusCode\":422,\"traceId\":\"239b75d30c19"
+    "error": "GHL 422: {\"message\":[\"startTime must be epoch milliseconds, e.g. 1680373800000\",\"endTime must be epoch milliseconds, e.g. 1680373800000\"],\"error\":\"Unprocessable Entity\",\"statusCode\":422,\"traceId\":\"3ecd2c032a8a"
   },
   "reconciliation": {
     "windsor_leads": 0,
@@ -578,36 +578,36 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-11-16T22:14:12.245Z",
+    "generated_at": "2026-11-17T20:55:02.809Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "Paid channels are dark; only organic GBP activity remains.",
+    "verdict": "Paid channels fully dark; only organic GBP signal alive.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero spend across all 28 days — $0 Meta, $0 Google. No leads, no CPL to evaluate. Paid media is fully inactive.",
+        "text": "Zero spend and zero leads across all 28 days — Meta and Google budgets are $0; no paid activity has run at all.",
         "confidence": "confirmed",
         "channel": "meta+google"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP flag: 122 impressions over 26 days but 0 calls recorded — a confirmed call-tracking gap, not a demand problem.",
-        "confidence": "confirmed",
+        "text": "GBP flag: 125 impressions over 26 days produced 0 calls and 0 call-rate — the phone number or call button is likely broken or missing.",
+        "confidence": "probable",
         "channel": "gbp"
       },
       {
         "id": "F3",
         "priority": 3,
-        "text": "GA4 sessions down 31% (7d vs prior 7d); last 3 days avg 20 sessions vs prior 3-day avg 25 — soft declining trend, no paid traffic to explain it.",
-        "confidence": "probable",
+        "text": "GA4 sessions down 27% week-over-week (last 3 days avg ~15 vs prior 3-day avg ~20), consistent with zero paid traffic driving the site.",
+        "confidence": "confirmed",
         "channel": "ga4"
       },
       {
         "id": "F4",
         "priority": 4,
-        "text": "GHL pipeline data missing due to API 422 error — opportunity counts unreadable this cycle; intake health cannot be assessed.",
+        "text": "GHL pipeline data unavailable (API 422 error) — cannot confirm whether any opportunities exist; intake status is blind this cycle.",
         "confidence": "confirmed",
         "channel": "ghl"
       }
@@ -616,35 +616,34 @@
       {
         "id": "S1",
         "type": "fix",
-        "text": "Repair GBP call-tracking: 122 impressions with 0 calls logged is a tracking break, not zero demand.",
+        "text": "Identify and resolve why Meta and Google spend is $0 — confirm campaigns are not paused or budget-exhausted.",
         "cites": [
-          "F2"
+          "F1"
         ],
-        "monday_item_name": "Fix GBP Call Tracking",
-        "monday_update": "GBP recorded 122 impressions over 26 days but zero calls — the flag confirms call tracking is broken, not that calls aren't happening. Audit the GBP call-forwarding number and confirm it matches the number displayed on the profile and website. Success = at least 1 call logged within 3 days of fix going live. Resolve by 2026-11-19."
+        "monday_item_name": "Diagnose $0 paid spend",
+        "monday_update": "Both Meta and Google show $0 spend across the full 28-day window with zero leads delivered. Investigate whether campaigns are paused, accounts are suspended, billing has lapsed, or budgets hit a cap. Success is confirmed when daily spend resumes at the previously approved budget level, verified in platform dashboards within 24 hours of this check."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Resolve GHL API 422 error so pipeline opportunity counts are readable next cycle.",
+        "text": "Audit GBP call button: 125 impressions, 0 calls over 26 days — verify phone number is correct and clickable.",
         "cites": [
-          "F4"
+          "F2"
         ],
-        "monday_item_name": "Fix GHL API 422 Error",
-        "monday_update": "The GHL connector is returning a 422 Unprocessable Entity error due to a malformed epoch timestamp in the API call — pipeline data is completely unavailable this cycle. Engineering should correct the startTime/endTime parameter format to epoch milliseconds (e.g. 1680373800000) as indicated in the error message. Success = clean pipeline pull with opportunity counts on next scheduled run. Resolve by 2026-11-19."
+        "monday_item_name": "Fix GBP call button",
+        "monday_update": "The Liferun GBP profile received 125 impressions over 26 days but recorded 0 calls — a 0% call rate that flags a likely misconfiguration. Check that the phone number on the profile is correct, that the call button is enabled, and test it on mobile. Success is a non-zero call count within the next 7-day window, re-checked 2026-11-24."
       },
       {
         "id": "S3",
-        "type": "watch",
-        "text": "Watch GA4 sessions: 3-day avg 20 vs prior 20-25; confirm whether decline continues once paid media status is clarified.",
+        "type": "fix",
+        "text": "Resolve GHL API 422 error so pipeline visibility is restored before paid traffic restarts.",
         "cites": [
-          "F1",
-          "F3"
+          "F4"
         ],
-        "monday_item_name": "Watch GA4 Session Trend",
-        "monday_update": "GA4 sessions are down 31% week-over-week with the last 3 days averaging roughly 20 sessions versus ~25 in the prior window. With zero paid spend active, this decline is likely organic/direct traffic softening but cannot be fully diagnosed until paid channels are reactivated and GHL pipeline data is restored. Re-check on 2026-11-19 — if sessions remain below 20/day after paid is live, escalate to a landing-page or tracking investigation."
+        "monday_item_name": "Fix GHL API 422 error",
+        "monday_update": "The GHL pipeline query is returning a 422 Unprocessable Entity error due to a malformed epoch timestamp in the API call. The engineering or integrations team should correct the startTime/endTime parameters to valid epoch milliseconds. Success is confirmed when pipeline data populates in the next performance run, needed before paid campaigns relaunch so intake can be tracked."
       }
     ],
-    "next_check": "2026-11-19"
+    "next_check": "2026-11-20"
   }
 }
