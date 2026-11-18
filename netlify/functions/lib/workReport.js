@@ -42,6 +42,12 @@ const isDay = (s) => /^\d{4}-\d{2}-\d{2}$/.test(String(s || ""));
 const inWindow = (iso, w) => { const t = Date.parse(iso || ""); return t >= w.start && t <= w.end; };
 const clip = (s, n) => { s = String(s || "").trim(); return s.length > n ? s.slice(0, n) + "…" : s; };
 // "@Muhammad Hashir Faiz please…" -> "please…": who did what stays internal.
+// Emails and phone numbers never reach the model, so they can't land in a
+// report, a saved draft or the sent log. A "phone" needs 10+ digits, so dates
+// like 2026-11-17 and amounts are left alone.
+const redact = (s) => String(s || "")
+  .replace(/[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g, "[email]")
+  .replace(/\+?\(?\d[\d\s().-]{8,}\d/g, (m) => (m.replace(/\D/g, "").length >= 10 ? "[phone]" : m));
 const stripMentions = (s) => String(s || "").replace(/@[\p{Lu}][\p{L}'.-]*(\s+[\p{Lu}][\p{L}'.-]*){0,3}/gu, "").replace(/[ \t]{2,}/g, " ").trim();
 
 function colText(item, type) {
@@ -85,7 +91,7 @@ function postsOf(updates, w) {
     .sort((a, b) => a.created_at.localeCompare(b.created_at))
     .map((p) => {
       const by = (p.creator && p.creator.name) || "";
-      return { date: p.created_at.slice(0, 10), role: LEADS.has(by.toLowerCase()) ? "lead" : "specialist", by, text: clip(stripMentions(p.text_body), POST_CHARS) };
+      return { date: p.created_at.slice(0, 10), role: LEADS.has(by.toLowerCase()) ? "lead" : "specialist", by, text: clip(stripMentions(redact(p.text_body)), POST_CHARS) };
     });
 }
 
@@ -135,7 +141,7 @@ async function whatsappLog(client, w) {
     out.push(m);
   }
   return out.sort((a, b) => a.at.localeCompare(b.at)).slice(-WA_MAX)
-    .map((m, i) => ({ id: `wa${i + 1}`, date: m.at.slice(0, 10), chat: m.chat === "client" ? "client group" : "team group", text: clip(stripMentions(m.text), WA_CHARS) }));
+    .map((m, i) => ({ id: `wa${i + 1}`, date: m.at.slice(0, 10), chat: m.chat === "client" ? "client group" : "team group", text: clip(stripMentions(redact(m.text)), WA_CHARS) }));
 }
 
 async function collect(client, w) {
@@ -273,16 +279,19 @@ async function draft(client, w, payload) {
 }
 
 // Drop any bullet that doesn't trace to an item we actually sent.
+// House style: no em dashes in anything the page shows or sends.
+const noDash = (s) => String(s || "").replace(/\s*—\s*/g, ", ").trim();
+
 function clean(report, ids) {
   const keep = (list) => (Array.isArray(list) ? list : [])
-    .map((b) => ({ area: b.area || "Other", text: String(b.text || "").trim(), source_ids: (b.source_ids || []).map(String).filter((id) => ids.has(id)) }))
+    .map((b) => ({ area: b.area || "Other", text: noDash(b.text), source_ids: (b.source_ids || []).map(String).filter((id) => ids.has(id)) }))
     .filter((b) => b.text && b.source_ids.length)
     .map((b) => ({ ...b, whatsapp_only: b.source_ids.every((id) => id.startsWith("wa")) }));
   return {
-    headline: String(report.headline || "").trim(),
+    headline: noDash(report.headline),
     done: keep(report.done), in_progress: keep(report.in_progress),
     waiting_on_you: keep(report.waiting_on_you), next_week: keep(report.next_week),
-    internal_flags: (Array.isArray(report.internal_flags) ? report.internal_flags : []).map((f) => ({ text: String(f.text || "").trim(), source_ids: (f.source_ids || []).map(String) })).filter((f) => f.text),
+    internal_flags: (Array.isArray(report.internal_flags) ? report.internal_flags : []).map((f) => ({ text: noDash(f.text), source_ids: (f.source_ids || []).map(String) })).filter((f) => f.text),
   };
 }
 
@@ -305,7 +314,12 @@ function parseWindow(body) {
   return { client, w: { from: body.from, to: body.to, start: Date.parse(body.from + "T00:00:00Z"), end: Date.parse(body.to + "T23:59:59Z") } };
 }
 
+// One shared draft per client on the state branch, so everyone with the
+// passcode sees the same draft, edits and send status.
+const clientKey = (name) => String(name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const draftPath = (client) => `work-reports/drafts/${clientKey(client)}.json`;
+
 const JOB_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const jobPath = (id) => `work-reports/jobs/${id}.json`;
 
-module.exports = { buildDraft, parseWindow, sameSecret, clip, DUE_DAYS, JOB_ID, jobPath };
+module.exports = { buildDraft, parseWindow, sameSecret, clip, DUE_DAYS, JOB_ID, jobPath, draftPath };

@@ -6,8 +6,8 @@
 // for it. Everything else about work reports lives in work-report.js and
 // lib/workReport.js.
 
-const { putJSON } = require("./lib/github");
-const { buildDraft, parseWindow, sameSecret, JOB_ID, jobPath } = require("./lib/workReport");
+const { putJSON, updateJSON } = require("./lib/github");
+const { buildDraft, parseWindow, sameSecret, JOB_ID, jobPath, draftPath } = require("./lib/workReport");
 
 exports.handler = async (event) => {
   const key = event.headers["x-ops-key"] || event.headers["x-ops-passcode"];
@@ -25,6 +25,11 @@ exports.handler = async (event) => {
     result = { status: "error", error: err.name === "AbortError" ? "The model took too long. Try a shorter date range." : String((err && err.message) || err) };
   }
   result.finishedAt = new Date().toISOString();
+  // The shared copy everyone sees when they open this client's Work reports tab.
+  if (result.status === "done") {
+    await updateJSON(draftPath(result.client), () => ({ client: result.client, savedAt: result.finishedAt, data: result, text: null, subject: null, sentAt: null }), `work report draft: ${result.client}`, { fallback: {} })
+      .catch((err) => console.error("work-report-background: couldn't save the shared draft", err));
+  }
   try { await putJSON(jobPath(body.job), result, `work report draft ${body.job}`); }
   catch (err) { console.error("work-report-background: couldn't save the draft", err); }
 };

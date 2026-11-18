@@ -272,6 +272,9 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
 .wr-subject{width:100%;margin-top:14px;border:1px solid var(--line);border-radius:14px;padding:11px 16px;font:inherit;font-size:15px;color:var(--ink)}
 .wr-text{display:block;width:100%;min-height:440px;margin-top:14px;border:1px solid var(--line);border-radius:18px;padding:16px 18px;font:inherit;font-size:15px;line-height:1.6;color:var(--ink);background:var(--soft);resize:vertical}
 .wr-grid{align-items:start}
+.wr-saved{font-size:13.5px;color:var(--muted);margin-top:8px;min-height:20px}
+.wr-sent{margin-top:8px} .wr-sent summary{cursor:pointer;color:var(--green);font-size:14px}
+.wr-sent-text{white-space:pre-wrap;background:var(--soft);border-radius:14px;padding:14px 16px;margin-top:10px;font-size:14.5px;line-height:1.55}
 .wr-side{display:flex;flex-direction:column;gap:28px;min-width:0}
 .ins .t a{text-decoration:none} .ins .t a:hover{color:var(--green);text-decoration:underline}
 .btn:focus-visible,.chips button:focus-visible,.nav a:focus-visible{outline:2px solid var(--green);outline-offset:2px}
@@ -312,7 +315,7 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     sources: '<ellipse cx="12" cy="6" rx="7" ry="2.8"/><path d="M5 6v6c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8V6"/><path d="M5 12v6c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8v-6"/>',
   };
   const TABS = [["overview", "Overview"], ["paid", "Paid"], ["organic", "Organic"], ["crm", "CRM"]];
-  const S = { snapshot: null, live: null, ops: null, hub: null, quietDays: 14, quietOngoing: 30, recentDays: 30, liveError: "", askPass: false, n: 7, queueAll: null, qMsg: {}, qBusy: {}, qFilter: "", drawer: null, chat: [], askBusy: false, askDraft: "", askErr: "", wr: {}, wrLog: null, wrLogBusy: false, wrLogErr: "" };
+  const S = { snapshot: null, live: null, ops: null, hub: null, quietDays: 14, quietOngoing: 30, recentDays: 30, liveError: "", askPass: false, n: 7, queueAll: null, qMsg: {}, qBusy: {}, qFilter: "", drawer: null, chat: [], askBusy: false, askDraft: "", askErr: "", wr: {}, wrLog: null, wrLogBusy: false, wrLogErr: "", wrShared: {}, wrSharedBusy: {} };
 
   // ── helpers ────────────────────────────────────────────────────────────
   const $ = (id) => document.getElementById(id);
@@ -1030,7 +1033,8 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     if (!localStorage.getItem(PASS_KEY)) return hero("Work reports need the <em>ops passcode</em>.", [["info", "They read Monday live and draft with AI, so they stay behind the passcode."]], []) +
       `<div class="unlock"><input id="unlock" type="password" placeholder="Ops passcode" aria-label="Ops passcode"><button type="button" class="btn primary" data-act="unlock">Unlock</button></div>`;
     if (S.wrLog === null && !S.wrLogBusy) loadWrLog();
-    const st = wrState(name), last = wrLast(name), d = st.data;
+    if (!S.wrShared[name] && !S.wrSharedBusy[name]) loadWrShared(name);
+    const st = wrState(name), last = wrLast(name), d = st.data, shared = S.wrShared[name];
     const lastTxt = last ? `Last report sent ${fmtDay(new Date(last.sentAt))}, covering ${wrRange(last.from, last.to)}` : "No work report logged for this client yet";
     const due = S.wrLog ? wrIsDue(name) : false;
     const h1 = !S.wrLog ? `${esc(name)}: <em>work report</em>` : last ? (due ? `${esc(name)} is <em>due</em> a work report.` : `${esc(name)} got a report <em>${num(daysSince(new Date(last.sentAt)))} ${daysSince(new Date(last.sentAt)) === 1 ? "day" : "days"} ago</em>.`) : `${esc(name)} hasn't had a <em>work report</em> yet.`;
@@ -1043,18 +1047,23 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
        <div class="wr-range"><label>From <input type="date" id="wr-from" value="${esc(st.from)}" max="${isoDay(today)}"></label><label>To <input type="date" id="wr-to" value="${esc(st.to)}" max="${isoDay(today)}"></label>
        <button type="button" class="btn primary" data-wr="draft" ${st.busy ? "disabled" : ""}>${st.busy ? "Reading Monday and drafting, about a minute…" : d ? "Redraft" : "Draft report"}</button></div>
        ${st.err ? `<div class="dmsg err">${esc(st.err)}</div>` : ""}`);
-    if (!d) return hero(h1, bul, []) + `<div class="grid one">${controls}</div>`;
+    const sentList = (shared && shared.sent) || [];
+    const sentCard = card("Sent reports", sentList.length ? "What went to this client, newest first. Everyone with the passcode sees these." : "Nothing logged as sent for this client yet.",
+      sentList.length ? `<ul class="ins">${sentList.map((e, i) => `<li><div class="t">${esc(fmtDay(new Date(e.sentAt)))}, ${e.channel === "email" ? "email" : e.channel === "whatsapp" ? "WhatsApp" : "sent"}, covering ${esc(wrRange(e.from, e.to))}</div>${e.headline ? `<div class="m">${esc(e.headline)}</div>` : ""}
+        <details class="wr-sent"><summary>Show what was sent</summary><div class="wr-sent-text">${esc(e.text || "")}</div><div class="dacts"><button type="button" class="btn" data-wr="copy-sent" data-i="${i}">Copy</button></div></details></li>`).join("")}</ul>` : `<div class="empty">Mark a report as sent and it shows here for everyone.</div>`, sentList.length ? `${sentList.length}` : "");
+    if (!d) return hero(h1, bul, []) + `<div class="grid one">${controls}</div><div class="grid one">${sentCard}</div>`;
 
     const ch = st.channel || "whatsapp", txt = (st.text || {})[ch] || "";
     const left = d.empty
       ? card("Nothing to report yet", `No Monday posts or team chat about ${esc(name)} between ${esc(wrRange(d.window.from, d.window.to))}.`, `<div class="empty">Chase the team for updates first, then redraft.${d.silent.length ? " The list on the right has who to ask." : ""}</div>`)
-      : card("The report", "Edit anything before you send. Your edits are what gets logged.",
+      : card("The report", `${st.draftedAt ? `Drafted ${esc(fmtTime(new Date(st.draftedAt)))}${st.editedAt ? `, edited ${esc(fmtTime(new Date(st.editedAt)))}` : ""}${st.sentAt ? `, <b>sent ${esc(fmtDay(new Date(st.sentAt)))}</b>` : ""}. ` : ""}Edits save for everyone when you click away.`,
         `<div class="chips wr-channel" role="group" aria-label="Format"><button type="button" data-wr="channel" data-ch="whatsapp" class="${ch === "whatsapp" ? "on" : ""}" aria-pressed="${ch === "whatsapp"}">WhatsApp</button><button type="button" data-wr="channel" data-ch="email" class="${ch === "email" ? "on" : ""}" aria-pressed="${ch === "email"}">Email</button></div>
          ${ch === "email" ? `<input type="text" id="wr-subject" class="wr-subject" value="${esc(st.subject || "")}" aria-label="Email subject">` : ""}
          <textarea id="wr-text" class="wr-text" aria-label="Report text" spellcheck="true">${esc(txt)}</textarea>
          <div class="dacts"><button type="button" class="btn" data-wr="copy">Copy</button>
            <button type="button" class="btn" data-wr="open">${ch === "whatsapp" ? "Open WhatsApp" : "Open in email"}</button>
            <button type="button" class="btn primary" data-wr="sent" ${st.sending ? "disabled" : ""}>${st.sending ? "Logging…" : "Mark as sent"}</button></div>
+         <div class="wr-saved" id="wr-saved" aria-live="polite"></div>
          ${st.msg ? `<div class="dmsg ${st.msg.err ? "err" : ""}">${esc(st.msg.text)}</div>` : ""}`);
     const flags = (d.report.internal_flags || []).length ? card("Check before sending", "The draft held these back from the client.", `<ul class="ins">${d.report.internal_flags.map((f) => `<li><div class="t">${esc(f.text)}</div></li>`).join("")}</ul>`, "Internal") : "";
     const silent = card("No update from the team", d.silent.length ? "Open items with no post from whoever is doing the work in this window." : "Every open item had a post from the team in this window.",
@@ -1065,7 +1074,38 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     const srcs = card("Built from", `${plural(d.sources.length, "Monday item", "Monday items")} with posts in this window${d.whatsapp_count ? `, plus ${plural(d.whatsapp_count, "team chat message", "team chat messages")}` : ""}.`,
       d.sources.length ? `<ul class="ins">${d.sources.map((s) => `<li><div class="t"><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a></div><div class="m">${esc(s.area)}${s.status ? `, ${esc(s.status)}` : ""}</div></li>`).join("")}</ul>` : `<div class="empty">None.</div>`) +
       ((d.errors || []).length ? `<div class="dmsg err">Couldn't read part of Monday: ${esc(d.errors.join("; "))}</div>` : "");
-    return hero(h1, bul, []) + `<div class="grid one">${controls}</div><div class="grid wr-grid">${left}<div class="wr-side">${flags}${offMonday}${silent}${srcs}</div></div>`;
+    return hero(h1, bul, []) + `<div class="grid one">${controls}</div><div class="grid wr-grid"><div class="wr-side">${left}${sentCard}</div><div class="wr-side">${flags}${offMonday}${silent}${srcs}</div></div>`;
+  }
+  // The shared draft and send history for one client, so both partners see the same thing.
+  async function loadWrShared(name) {
+    S.wrSharedBusy[name] = true;
+    try {
+      const r = await fetch(`/.netlify/functions/work-report?client=${encodeURIComponent(name)}`, { headers: opsHeaders() });
+      if (r.ok) {
+        const x = await r.json();
+        S.wrShared[name] = x;
+        const st = wrState(name), dr = x.draft;
+        // Take the shared draft unless this browser is mid-draft or already holds a newer one.
+        if (dr && !st.busy && (!st.draftedAt || dr.savedAt > st.draftedAt || (dr.editedAt || "") > (st.editedAt || ""))) {
+          st.data = dr.data; st.draftedAt = dr.savedAt; st.editedAt = dr.editedAt || ""; st.sentAt = dr.sentAt || null;
+          st.from = dr.data.window.from; st.to = dr.data.window.to; st.touched = true; st.channel = st.channel || "whatsapp";
+          const wa = wrCompose(name, dr.data, "whatsapp"), em = wrCompose(name, dr.data, "email");
+          st.text = { whatsapp: (dr.text && dr.text.whatsapp) || wa.text, email: (dr.text && dr.text.email) || em.text };
+          st.subject = dr.subject || em.subject;
+        }
+      } else S.wrShared[name] = { sent: [], draft: null, err: true };
+    } catch { S.wrShared[name] = { sent: [], draft: null, err: true }; }
+    S.wrSharedBusy[name] = false; render();
+  }
+  async function saveWrEdits(name) {
+    const st = wrState(name), el = $("wr-saved");
+    if (!st.data || st.data.empty) return;
+    if (el) el.textContent = "Saving…";
+    try {
+      const { ok, d } = await post("work-report", { action: "save_draft", client: name, text: st.text, subject: st.subject });
+      st.editedAt = new Date().toISOString();
+      if ($("wr-saved")) $("wr-saved").textContent = ok ? "Edits saved. Everyone with the passcode sees this version." : (d.error || "Couldn't save your edits.");
+    } catch { if ($("wr-saved")) $("wr-saved").textContent = "Couldn't save your edits. Check your connection."; }
   }
   async function loadWrLog() {
     S.wrLogBusy = true;
@@ -1094,6 +1134,7 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     if (a === "channel") { st.channel = el.dataset.ch; render(); return; }
     if (a === "copy") { wrCopy(el, (st.channel === "email" ? `Subject: ${st.subject || ""}\n\n` : "") + ((st.text || {})[st.channel || "whatsapp"] || "")); return; }
     if (a === "chase") { wrCopy(el, wrChase(name, st.data)); return; }
+    if (a === "copy-sent") { const e = ((S.wrShared[name] || {}).sent || [])[+el.dataset.i]; if (e) wrCopy(el, e.text || ""); return; }
     if (a === "draft") {
       if (!st.from || !st.to || st.from > st.to) { st.err = "Pick a start date on or before the end date."; render(); return; }
       st.busy = true; st.err = ""; st.msg = null; render();
@@ -1112,7 +1153,7 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
         }
         if (!d) throw new Error("No draft came back after 4 minutes. Check the work-report-background log in Netlify.");
         if (d.status === "error") throw new Error(d.error || "The draft failed.");
-        st.data = d; st.channel = st.channel || "whatsapp";
+        st.data = d; st.channel = st.channel || "whatsapp"; st.draftedAt = d.finishedAt || new Date().toISOString(); st.editedAt = ""; st.sentAt = null;
         if (!d.empty) { const wa = wrCompose(name, d, "whatsapp"), em = wrCompose(name, d, "email"); st.text = { whatsapp: wa.text, email: em.text }; st.subject = em.subject; }
       } catch (err) { st.err = String((err && err.message) || "Couldn't reach the work report service. Check your connection and try again."); }
       st.busy = false; render(); return;
@@ -1127,11 +1168,16 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
           S.wrLog = S.wrLog || { last_sent: {}, due_days: 7 };
           S.wrLog.last_sent[name] = { sentAt: d.entry.sentAt, from: d.entry.from, to: d.entry.to, channel: d.entry.channel };
           st.msg = { text: `Logged as sent. Next one is due ${fmtDay(addDays(new Date(d.entry.sentAt), wrDueDays()))}.` };
+          st.sentAt = d.entry.sentAt; delete S.wrShared[name];
         } else st.msg = { text: d.error || "Couldn't log it. Try again.", err: true };
       } catch { st.msg = { text: "Couldn't reach the work report service.", err: true }; }
       st.sending = false; render();
     }
   }
+  document.addEventListener("change", (e) => {
+    if (route().screen !== "reports" || !["wr-text", "wr-subject"].includes(e.target.id)) return;
+    saveWrEdits(route().client);
+  });
   document.addEventListener("input", (e) => {
     if (route().screen !== "reports") return;
     const st = wrState(route().client), id = e.target.id;
@@ -1223,7 +1269,7 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     return { screen, client, tab: t === "about" || TABS.some(([x]) => x === t) ? t : "overview" };
   }
   const href = (client, tab) => `#c=${encodeURIComponent(client)}&t=${tab}`;
-  window.addEventListener("hashchange", () => { render(); window.scrollTo(0, 0); });
+  window.addEventListener("hashchange", () => { S.wrShared = {}; render(); window.scrollTo(0, 0); });
   $("view").addEventListener("change", (e) => { const r = route(); location.hash = (r.screen === "client" ? href(e.target.value, r.tab === "about" ? "overview" : r.tab) : `#v=${r.screen}&c=${encodeURIComponent(e.target.value)}`).slice(1); });
   $("range").addEventListener("click", (e) => { const b = e.target.closest("button[data-n]"); if (b) { S.n = +b.dataset.n; render(); } });
 

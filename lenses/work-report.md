@@ -67,6 +67,7 @@ internal team group. Use them for work that has no Monday post. Rules:
 - "We" is Flow. "You" is the client.
 - `headline`: one line, max 16 words, the honest summary of the week's work.
   No hype, no exclamation marks.
+- Never use em dashes. Use a comma, a colon or two sentences instead.
 
 ## KEEP INTERNAL THINGS INTERNAL
 
@@ -77,6 +78,10 @@ Never include in client-facing fields:
   internal deadlines missed, budget or margin talk between team members
 - names of leads, patients or any individual customer
 - anything a post marks as internal, a guess, or not yet confirmed
+
+Write `internal_flags` for Sohib and Nacer in plain language: name the Monday
+item by its name, never by id or field name, and say what to check. One or
+two sentences each. Don't repeat phone numbers or emails.
 
 If something matters but shouldn't go to the client (a missed internal
 deadline, a tracking bug the client hasn't been told about, a post that

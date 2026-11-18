@@ -1,6 +1,10 @@
 // Work reports: the weekly "here's what we did" message to each client.
 //
 // GET                         -> { due_days, last_sent: { [client]: entry }, recent: [entry] }
+// GET ?client=<name>          -> { sent: [entries with text, newest first], draft }
+//                                the shared draft and send history both partners see
+// POST { action: "save_draft", client, text: { whatsapp, email }, subject }
+//                             -> { ok } (edits to the shared draft)
 // GET ?job=<id>               -> { status: "pending" } until work-report-background.js
 //                                has saved the draft, then the draft itself (and the
 //                                job file is removed from the state branch)
@@ -16,7 +20,8 @@
 
 const crypto = require("crypto");
 const { getJSON, updateJSON, deleteFile } = require("./lib/github");
-const { parseWindow, sameSecret, clip, DUE_DAYS, JOB_ID, jobPath } = require("./lib/workReport");
+const { resolveClientName } = require("./lib/clientAliases");
+const { parseWindow, sameSecret, clip, DUE_DAYS, JOB_ID, jobPath, draftPath } = require("./lib/workReport");
 
 const LOG_PATH = "work-reports/log.json";
 const LOG_KEEP = 300;
@@ -47,6 +52,13 @@ exports.handler = async (event) => {
         await deleteFile(jobPath(job), sha, `work report draft ${job} picked up`).catch((e) => console.error("work-report: job cleanup", e));
         return json(200, data);
       }
+      const q = event.queryStringParameters || {};
+      if (q.client) {
+        const client = resolveClientName(String(q.client));
+        const [{ data: log }, { data: draft }] = await Promise.all([getJSON(LOG_PATH, { entries: [] }), getJSON(draftPath(client), null)]);
+        const sent = (log.entries || []).filter((e) => e.client === client).slice(-10).reverse();
+        return json(200, { client, sent, draft: draft && draft.data ? draft : null });
+      }
       const { data } = await getJSON(LOG_PATH, { entries: [] });
       const entries = data.entries || [];
       return json(200, { due_days: DUE_DAYS, last_sent: lastSentByClient(entries), recent: entries.slice(-40).reverse().map(({ text, ...e }) => e) });
@@ -54,6 +66,16 @@ exports.handler = async (event) => {
     if (event.httpMethod !== "POST") return json(405, { error: "method not allowed" });
 
     const body = JSON.parse(event.body || "{}");
+    if (body.action === "save_draft") {
+      const client = resolveClientName(String(body.client || "").trim());
+      const text = body.text || {};
+      // Throwing inside the mutate aborts without writing anything.
+      await updateJSON(draftPath(client), (d) => {
+        if (!d || !d.data) throw Object.assign(new Error("No shared draft for this client. Draft one first."), { status: 404 });
+        return { ...d, text: { whatsapp: clip(text.whatsapp, 12000), email: clip(text.email, 12000) }, subject: clip(body.subject, 300), editedAt: new Date().toISOString() };
+      }, `work report draft edited: ${client}`, { fallback: null });
+      return json(200, { ok: true });
+    }
     if (body.action !== "sent") return json(400, { error: "Unknown action." });
     const { client, w } = parseWindow(body);
     const text = String(body.text || "").trim();
@@ -64,6 +86,13 @@ exports.handler = async (event) => {
       headline: clip(body.headline, 200), text: clip(text, 12000), sentAt: new Date().toISOString(),
     };
     await updateJSON(LOG_PATH, (d) => ({ entries: [...(d.entries || []), entry].slice(-LOG_KEEP) }), `work report sent: ${client} ${w.from}..${w.to}`, { fallback: { entries: [] } });
+    // Mark the shared draft as sent so the other partner sees it was handled.
+    await updateJSON(draftPath(client), (d) => {
+      if (!d || !d.data) throw new Error("no shared draft to mark");
+      const t = { ...(d.text || {}) };
+      if (entry.channel === "whatsapp") t.whatsapp = text; // what actually went out
+      return { ...d, sentAt: entry.sentAt, sentChannel: entry.channel, text: t };
+    }, `work report draft sent: ${client}`, { fallback: null }).catch((e) => console.error("work-report: couldn't mark draft sent:", e.message));
     const { text: _omit, ...shown } = entry;
     return json(200, { ok: true, entry: shown });
   } catch (err) {
