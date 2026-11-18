@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-18T17:06:30.655Z",
+  "generated_at": "2026-11-18T17:48:46.785Z",
   "date": "2026-11-18",
   "slug": "al-manakeesh",
   "name": "Al Manakeesh",
@@ -682,79 +682,78 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-11-18T17:23:40.337Z",
+    "generated_at": "2026-11-18T18:06:20.385Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "CPL collapsed 129%; spend up but leads near zero.",
+    "verdict": "CPL collapsed 129%; leads cratering while spend rose 29%.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "CPL spiked +128.71% week-over-week while spend rose +29.27%; 28-day CPL is $2.16 but recent days show near-zero leads.",
+        "text": "CPL spiked 128.71% week-over-week; 28-day blended CPL is $2.16 but recent 7d is tracking far above that baseline.",
         "confidence": "confirmed",
         "channel": "google_ads"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3-day lead signal (Nov 15–17): 13, 8, 2 leads vs prior 3 days (Nov 12–14): 11, 14, 20 — a confirmed downward break, not noise.",
+        "text": "3-day lead signal (Nov 15–17: 13, 8, 2) vs prior 3 (Nov 12–14: 11, 14, 20) shows a confirmed declining trend; spend held at ~$80–111/day.",
         "confidence": "confirmed",
         "channel": "google_ads"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "6 of 7 tracked GBP profiles flagged gbp_low_call_rate; Canton and Fishers lowest at 0.0073 and 0.0077 despite 26 days of impressions each.",
-        "confidence": "confirmed",
+        "text": "GBP actions dropped 34.34% week-over-week; Nov 16–17 show 0 actions recorded — likely a data gap, not a true drop, but requires verification.",
+        "confidence": "hypothesis",
         "channel": "gbp"
       },
       {
         "id": "F4",
-        "priority": 2,
-        "text": "SOW milestone overdue: 8 of 10 locations (Bridgeview, Columbus, Orland Park, Lombard, Paterson, Houston, Sterling Heights, 10th unnamed) have GBP not fully optimized and Google Ads not launched, blocking revenue measurement across the account.",
+        "priority": 3,
+        "text": "6 of 7 tracked GBP profiles flagged gbp_low_call_rate; Canton and Fishers lowest at 0.73% and 0.77% call rate against 25k+ impressions each.",
         "confidence": "confirmed",
-        "channel": "SOW"
+        "channel": "gbp"
       },
       {
         "id": "F5",
-        "priority": 3,
-        "text": "Spend rose from ~$22/day (Oct 27–Nov 7) to $132/day peak on Nov 14, but leads did not scale with it — 20 leads on Nov 14 vs 33 at ~$36 spend on Nov 1, suggesting budget outran quality inventory.",
-        "confidence": "probable",
-        "channel": "google_ads"
+        "priority": 4,
+        "text": "SOW milestone gap: 8 of 10 locations have Google Ads not yet started; only Canton and Fishers are live as of 10/27 per engagement plan.",
+        "confidence": "confirmed",
+        "channel": "SOW"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
-        "type": "fix",
-        "text": "Cap daily Google Ads spend ≤20% above Nov 1–7 average (~$36/day) until CPL returns to sub-$3 baseline.",
+        "type": "watch",
+        "text": "Hold spend flat on Canton and Fishers; re-check CPL after 3 more days — leads hit 2 on Nov 17, need confirmation of floor.",
         "cites": [
           "F1",
-          "F2",
-          "F5"
+          "F2"
         ],
-        "monday_item_name": "Cap Google spend CPL fix",
-        "monday_update": "CPL jumped +128.71% week-over-week while leads fell to 2 on Nov 17; spend peaked at $132/day on Nov 14 with no proportional lead lift. Reduce daily budget cap to ~$43/day (≤20% above the $36/day Nov 1–7 average) to stop bleeding on low-quality inventory. Success check: CPL back below $3.00 and leads ≥10/day for 3 consecutive days. Re-check 2026-11-21."
+        "monday_item_name": "Watch CPL — Canton & Fishers",
+        "monday_update": "Leads dropped to 2 on Nov 17 while spend held at $80.70/day, pushing CPL 128.71% above the prior 7-day window. Hold current daily budgets and do not scale. If leads do not recover above 10/day by 2026-11-21, escalate to Sohib for a campaign structure review. Re-check on 2026-11-21."
       },
       {
         "id": "S2",
-        "type": "watch",
-        "text": "Watch Canton and Fishers GBP call rates (0.0073 and 0.0077); escalate to Hashir if below 0.01 on 2026-11-21.",
+        "type": "fix",
+        "text": "Verify GBP Nov 16–17 zero-action data for all profiles; connector gap or reporting outage — confirm before treating as organic drop.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Watch Canton Fishers call rate",
-        "monday_update": "Canton and Fishers GBP call rates are 0.0073 and 0.0077 respectively over 26 days — the two lowest of all 7 tracked profiles. No action is taken this cycle as these are the two longest-live locations and may reflect CTA or profile-content gaps rather than an ads issue. Escalate to Hashir for GBP profile review if rates remain below 0.01 at next check on 2026-11-21."
+        "monday_item_name": "Verify GBP Nov 16–17 Data Gap",
+        "monday_update": "GBP actions show 0 on both Nov 16 and Nov 17 across all profiles, following 403 on Nov 15 — this is inconsistent with 26 days of consistent impressions per profile. Check the GBP connector and pull actions manually for those two days. Success = data confirmed present or gap logged. Complete by 2026-11-19."
       },
       {
         "id": "S3",
         "type": "fix",
-        "text": "Unblock SOW: flag 10th location name and $900/location contract answer to Mohammad before any further ad launches.",
+        "text": "Raise call-to-action prominence on Canton and Fishers GBP profiles; call rate at 0.73%–0.77% against 25k+ impressions each is a clear CTA gap.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "SOW blockers to Mohammad",
-        "monday_update": "8 of 10 locations have GBP unoptimized and Google Ads unlaunched per SOW; the 10th location is still unnamed and $900/location pricing is unconfirmed. Naz to send Mohammad a single consolidated ask: confirm the 10th location name, approve $900/location, and confirm which locations are in contract. No new ad accounts or GBP work should begin until these are resolved. Deadline: response by 2026-11-21 to keep the rollout schedule viable."
+        "monday_item_name": "Fix GBP CTA — Canton & Fishers",
+        "monday_update": "Canton and Fishers GBP profiles each have 25k+ impressions over 26 days but call rates of only 0.73% and 0.77% respectively — the lowest of all tracked profiles. Review and strengthen the primary CTA in the GBP description and Q&A for both locations. Success = call rate rises above 1.0% within the next 28-day window. Re-check on 2026-12-18."
       }
     ],
     "next_check": "2026-11-21"
