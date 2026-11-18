@@ -1041,7 +1041,7 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     const controls = card("Draft a report", "Pick the window, then draft. It reads every post on this client's Monday items in that window.",
       `<div class="chips wr-presets">${presets}</div>
        <div class="wr-range"><label>From <input type="date" id="wr-from" value="${esc(st.from)}" max="${isoDay(today)}"></label><label>To <input type="date" id="wr-to" value="${esc(st.to)}" max="${isoDay(today)}"></label>
-       <button type="button" class="btn primary" data-wr="draft" ${st.busy ? "disabled" : ""}>${st.busy ? "Reading Monday and drafting…" : d ? "Redraft" : "Draft report"}</button></div>
+       <button type="button" class="btn primary" data-wr="draft" ${st.busy ? "disabled" : ""}>${st.busy ? "Reading Monday and drafting, about a minute…" : d ? "Redraft" : "Draft report"}</button></div>
        ${st.err ? `<div class="dmsg err">${esc(st.err)}</div>` : ""}`);
     if (!d) return hero(h1, bul, []) + `<div class="grid one">${controls}</div>`;
 
@@ -1096,14 +1096,23 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
       if (!st.from || !st.to || st.from > st.to) { st.err = "Pick a start date on or before the end date."; render(); return; }
       st.busy = true; st.err = ""; st.msg = null; render();
       try {
-        const { ok, d, status } = await post("work-report", { action: "draft", client: name, from: st.from, to: st.to });
-        if (status === 401) { localStorage.removeItem(PASS_KEY); st.err = "Passcode didn't match."; }
-        else if (!ok) st.err = d.error || "Couldn't draft the report. Try again.";
-        else {
-          st.data = d; st.channel = st.channel || "whatsapp";
-          if (!d.empty) { const wa = wrCompose(name, d, "whatsapp"), em = wrCompose(name, d, "email"); st.text = { whatsapp: wa.text, email: em.text }; st.subject = em.subject; }
+        // The draft runs in a background function (the model can take over a minute); poll for its result.
+        const job = crypto.randomUUID();
+        const r = await fetch("/.netlify/functions/work-report-background", { method: "POST", headers: opsHeaders(), body: JSON.stringify({ client: name, from: st.from, to: st.to, job }) });
+        if (r.status >= 400 && r.status !== 504) throw new Error(`The draft didn't start (error ${r.status}).`);
+        let d = null;
+        for (let i = 0; i < 90 && !d; i++) {
+          await new Promise((res) => setTimeout(res, i < 5 ? 4000 : 2500));
+          const q = await fetch(`/.netlify/functions/work-report?job=${job}`, { headers: opsHeaders() });
+          if (q.status === 401) { localStorage.removeItem(PASS_KEY); throw new Error("Passcode didn't match."); }
+          const x = await q.json().catch(() => null);
+          if (q.ok && x && x.status !== "pending") d = x;
         }
-      } catch { st.err = "Couldn't reach the work report service. Check your connection and try again."; }
+        if (!d) throw new Error("No draft came back after 4 minutes. Check the work-report-background log in Netlify.");
+        if (d.status === "error") throw new Error(d.error || "The draft failed.");
+        st.data = d; st.channel = st.channel || "whatsapp";
+        if (!d.empty) { const wa = wrCompose(name, d, "whatsapp"), em = wrCompose(name, d, "email"); st.text = { whatsapp: wa.text, email: em.text }; st.subject = em.subject; }
+      } catch (err) { st.err = String((err && err.message) || "Couldn't reach the work report service. Check your connection and try again."); }
       st.busy = false; render(); return;
     }
     if (a === "sent") {

@@ -85,4 +85,14 @@ async function updateJSON(filePath, mutate, message, { fallback = {}, branchOver
   }
 }
 
-module.exports = { getJSON, putJSON, updateJSON, ConflictError };
+// Removes a file from the state branch (used to clear finished work report
+// draft jobs once the page has picked them up).
+async function deleteFile(filePath, sha, message) {
+  const { repo, branch } = repoInfo();
+  await ghFetch(`/repos/${repo}/contents/${filePath}`, {
+    method: "DELETE",
+    body: JSON.stringify({ message: message || `remove ${filePath}`, sha, branch }),
+  });
+}
+
+module.exports = { getJSON, putJSON, updateJSON, deleteFile, ConflictError };

@@ -40,7 +40,7 @@ Manual run options on Daily Pulse: **rundown** forces the weekly AI rundown, **f
 | Account facts, "said in chats" | `facts/[slug].json` | step 5 |
 | Waiting on us | `comms/[slug].json`, last 14 days | step 6 |
 | Quiet this week | no Monday activity, WhatsApp thread, meeting or Done item in 7 days | step 10 |
-| Work reports | Monday read live on demand, drafted under `lenses/work-report.md`; sent log at `work-reports/log.json` on the `state` branch | `netlify/functions/work-report.js` |
+| Work reports | Monday read live on demand, drafted under `lenses/work-report.md` in a background function; sent log at `work-reports/log.json` on the `state` branch | `netlify/functions/work-report-background.js`, `work-report.js`, `lib/workReport.js` |
 | Scope / budget pace | `site/contracts.json` from `contracts/[slug].json` (edited by hand) | step 11 |
 | Sources page, connector errors | `pulse/*.windsor.errors`, `series/*.errors`, `pulse/*.ghl.error` | steps 3, 4 |
 
