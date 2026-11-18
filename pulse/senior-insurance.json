@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-18T17:48:42.193Z",
+  "generated_at": "2026-11-18T20:15:55.478Z",
   "date": "2026-11-18",
   "slug": "senior-insurance",
   "name": "Senior Insurance",
@@ -589,10 +589,10 @@
     "errors": []
   },
   "ghl": {
-    "contacts": 498,
+    "contacts": 507,
     "opportunities": {
       "created": {
-        "count": 309,
+        "count": 313,
         "value": 0
       },
       "won": {
@@ -604,8 +604,8 @@
   },
   "reconciliation": {
     "windsor_leads": 79,
-    "ghl_contacts": 498,
-    "ghl_opps_created": 309,
+    "ghl_contacts": 507,
+    "ghl_opps_created": 313,
     "ghl_opps_won": 0,
     "status": "both_active"
   },
@@ -618,78 +618,78 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-11-18T18:05:29.721Z",
+    "generated_at": "2026-11-18T20:33:04.334Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "CPL rising with flat leads; GBP call rate is the live gap.",
+    "verdict": "CPL rising with flat leads; GBP call rate is the live leak.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "CPL rose 12.29% in 7d (now $23.52 blended) while leads held flat at 0% delta — spend is buying the same volume at higher cost.",
+        "text": "CPL rose 12.29% in 7 days (now $23.52 blended) while leads held flat at 0% growth — spend is buying the same volume at higher cost.",
         "confidence": "confirmed",
         "channel": "meta"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "3-day lead signal: last 3 days (Nov 15–17) totalled 8 leads vs prior 3 (Nov 12–14) 12 leads — a 33% step-down despite spend holding at ~$105/day.",
-        "confidence": "confirmed",
+        "text": "3-day lead signal is weak: last 3 days (Nov 15–17) totalled 8 leads vs 11 in prior 3 (Nov 12–14), a 27% dip inside a volatile series.",
+        "confidence": "probable",
         "channel": "meta"
       },
       {
         "id": "F3",
-        "priority": 2,
-        "text": "GBP actions dropped 50.7% in 7d; Crown Point call rate is 0.78% and Munster 1.79% vs Tinley Park's 4.03% — flagged low call rates on both IN profiles.",
+        "priority": 3,
+        "text": "Google Ads spent $816.53 over 28 days with 0 recorded conversions; pixel is likely misfiring (known client-side issue), not a true zero-result campaign.",
+        "confidence": "hypothesis",
+        "channel": "google_ads"
+      },
+      {
+        "id": "F4",
+        "priority": 4,
+        "text": "Crown Point GBP call rate is 0.78% and Munster is 1.79% — both flagged low — against Tinley Park's 4.03% on 892 and 616 impressions respectively; organic call yield is leaking.",
         "confidence": "confirmed",
         "channel": "gbp"
       },
       {
-        "id": "F4",
-        "priority": 3,
-        "text": "Google Ads spent $816.53 over 28 days (106 clicks) with 0 recorded conversions — pixel is not firing; spend has no measurable lead attribution.",
-        "confidence": "confirmed",
-        "channel": "google_ads"
-      },
-      {
         "id": "F5",
         "priority": 4,
-        "text": "GHL shows 498 contacts and 309 opportunities created but 0 won and 0 pipeline value — leads are arriving but no policy enrolled; intake or follow-up is the gap, not ads.",
+        "text": "GHL shows 507 contacts and 313 opportunities created but 0 won — intake is capturing leads but conversion to policy is invisible; CRM pipeline rebuild is a Month 1 SOW milestone still open.",
         "confidence": "probable",
-        "channel": "crm"
+        "channel": "SOW"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Fix Google Ads conversion pixel; $816.53 spent with 0 conversions means zero attribution — confirm tag fires on thank-you page.",
+        "text": "Audit Crown Point and Munster GBP profiles — update call-to-action and business hours to close the gap from 0.78%/1.79% to Tinley Park's 4.03%.",
         "cites": [
           "F4"
         ],
-        "monday_item_name": "Fix Google Ads conversion pixel",
-        "monday_update": "Google Ads has spent $816.53 over 28 days across 106 clicks with zero recorded conversions, confirming the conversion pixel is not firing. The action is to audit the Google Ads tag on the post-lead thank-you page and verify it fires end-to-end before next spend cycle. Success is confirmed when at least one conversion records in Google Ads within 48 hours of the fix. Re-check by 2026-11-21."
+        "monday_item_name": "Fix GBP Call Rate IN Profiles",
+        "monday_update": "Crown Point (0.78% call rate) and Munster (1.79%) are significantly underperforming Tinley Park (4.03%) across 892 and 616 impressions respectively over 28 days. Review and align the call button, business hours, and primary category on both Indiana profiles to match Tinley Park's setup. Success is call rate reaching at least 2.5% on both profiles. Re-check on 2026-11-25 after one week of impression data."
       },
       {
         "id": "S2",
         "type": "fix",
-        "text": "Fix Crown Point and Munster GBP profiles; call rates of 0.78% and 1.79% vs Tinley Park's 4.03% — audit CTA and phone number accuracy on both.",
+        "text": "Verify Google Ads conversion pixel fires correctly — 0 conversions on $816.53 spend over 28 days is a tracking gap, not a performance verdict.",
         "cites": [
           "F3"
         ],
-        "monday_item_name": "Fix IN GBP call CTAs",
-        "monday_update": "Crown Point GBP has a 0.78% call rate and Munster 1.79% over 28 days, both flagged low versus Tinley Park at 4.03% on fewer impressions. Audit the primary phone number, call button placement, and business description CTA on both Indiana profiles and correct any discrepancies. Success is call rate on each IN profile reaching at least 2.5% within the next 14 days. Re-check 2026-12-02."
+        "monday_item_name": "Fix Google Ads Conversion Pixel",
+        "monday_update": "Google Ads recorded 0 conversions against $816.53 in 28-day spend — this matches the known client-side pixel issue and cannot be read as zero results. Submit a pixel QA request with the client: fire a test lead and confirm it registers in Google Ads. Success is at least one verified conversion event appearing in the account. Complete before 2026-11-21 so the next analysis window has clean data."
       },
       {
         "id": "S3",
         "type": "watch",
-        "text": "Watch Meta CPL trend: if 3-day CPL exceeds $30 by 2026-11-21, a creative refresh on top campaign is warranted.",
+        "text": "Watch Meta CPL trend: 12.29% rise with flat leads over 7 days — if CPL exceeds $28 in the next 3-day window, a creative refresh is warranted.",
         "cites": [
           "F1",
           "F2"
         ],
-        "monday_item_name": "Watch Meta CPL 3-day trend",
-        "monday_update": "Meta CPL rose 12.29% this week to a $23.52 blended rate while lead volume held flat, and the last 3 days showed 8 leads versus 12 in the prior 3-day window. No action is taken this cycle as the pattern is not yet 3+ confirmed days above a clear ceiling. If CPL crosses $30 or the downward lead trend persists through Nov 21, escalate to creative refresh on the BWS - 28 States - Leads - Calls campaign. Re-check 2026-11-21."
+        "monday_item_name": "Watch Meta CPL Trend",
+        "monday_update": "Meta CPL climbed 12.29% week-over-week to a blended $23.52 while lead volume held flat, and the most recent 3-day window (Nov 15–17) produced only 8 leads vs 11 the prior 3 days. No creative action is taken this cycle — the series is volatile and the threshold has not been crossed. Re-check on 2026-11-21: if CPL breaches $28 or the 3-day lead count drops below 5, escalate to Sabri for creative refresh approval."
       }
     ],
     "next_check": "2026-11-21"

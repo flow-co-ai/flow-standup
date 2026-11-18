@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-18T17:48:28.804Z",
+  "generated_at": "2026-11-18T20:15:41.733Z",
   "date": "2026-11-18",
   "slug": "steel-ohare",
   "name": "O'Hare Precision Metals",
@@ -611,78 +611,68 @@
     ]
   },
   "performance": {
-    "generated_at": "2026-11-18T18:05:05.931Z",
+    "generated_at": "2026-11-18T20:32:39.476Z",
     "cadence": "flag_triggered",
     "stale": false,
-    "verdict": "No paid spend active; organic signals weakening across all channels.",
+    "verdict": "No paid spend active; organic signals weakening — fix GBP call gaps.",
     "findings": [
       {
         "id": "F1",
         "priority": 1,
-        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google. No paid leads generated. CPL is undefined; no efficiency data exists.",
+        "text": "Zero paid spend across all 28 days — $0 Meta, $0 Google Ads — so CPL is undefined and no paid efficiency exists to evaluate.",
         "confidence": "confirmed",
         "channel": "paid"
       },
       {
         "id": "F2",
         "priority": 2,
-        "text": "GBP flags: Precision Ground Bars (0 calls, 181 impressions) and Precision Ground Metals (0 calls, 59 impressions) are showing impressions with no call conversions — call rate 0.00 on both profiles for 28 days.",
+        "text": "GBP calls have dropped 32.73% week-over-week; Precision Ground Bars (181 impressions, 0 calls) and Precision Ground Metals (59 impressions, 0 calls) are flagged with zero call rate despite active impressions.",
         "confidence": "confirmed",
         "channel": "GBP"
       },
       {
         "id": "F3",
         "priority": 2,
-        "text": "Search clicks fell 50.54% week-on-week; last 3 days (Nov 15–17) averaged 1.3 clicks/day vs prior 3 days (Nov 12–14) averaging 13.3 — a confirmed 3-day downtrend, not noise.",
+        "text": "Search clicks fell 50.54% week-over-week; last 3 days (Nov 15–17) averaged 1.3 clicks/day vs prior 3 days (Nov 12–14) averaging 13.3 — a confirmed 3-day signal, not noise.",
         "confidence": "confirmed",
-        "channel": "search"
+        "channel": "SEO"
       },
       {
         "id": "F4",
         "priority": 3,
-        "text": "GBP actions dropped 32.73% week-on-week; last 3 days (Nov 15–17) totalled 4 actions vs prior 3 days (Nov 12–14) totalling 22 — a 5× collapse in organic engagement.",
-        "confidence": "confirmed",
-        "channel": "GBP"
+        "text": "GA4 sessions dropped 19.06% week-over-week; last 3 days averaged 21.3 sessions/day vs prior 3 days averaging 54.0 — consistent with the search click decline, suggesting organic traffic is contracting.",
+        "confidence": "probable",
+        "channel": "GA4"
       },
       {
         "id": "F5",
         "priority": 4,
-        "text": "GA4 sessions down 19.06% week-on-week; O'Hare Precision Metals GBP call rate is 0.0088 (6 calls on 684 impressions over 28 days) — site traffic arriving but converting at near-zero rate.",
-        "confidence": "probable",
-        "channel": "GA4"
+        "text": "GBP actions hit 0 on Nov 16–17 (vs a 28-day average of ~7/day); GHL pipeline is null — no intake data to confirm whether the organic leads that do arrive are being captured.",
+        "confidence": "hypothesis",
+        "channel": "GBP"
       }
     ],
     "suggestions": [
       {
         "id": "S1",
         "type": "fix",
-        "text": "Audit GBP call button and phone number on Precision Ground Bars and Precision Ground Metals — 0 calls on 181 and 59 impressions respectively signals a broken CTA.",
+        "text": "Audit phone number and call-button on Precision Ground Bars and Precision Ground Metals GBP profiles — both show 0 calls across 24–21 impression days.",
         "cites": [
           "F2"
         ],
-        "monday_item_name": "Fix GBP call buttons PGB/PGM",
-        "monday_update": "Both Precision Ground Bars (181 impressions, 0 calls) and Precision Ground Metals (59 impressions, 0 calls) have flagged zero call rate for the full 28-day window. Check that the phone number is populated, correctly formatted, and clickable on each GBP profile. Success is at least 1 tracked call per profile within 7 days of fix. Re-check by 2026-11-25."
+        "monday_item_name": "Fix GBP call links PGB/PGM",
+        "monday_update": "Both Precision Ground Bars (181 impressions, 0 calls) and Precision Ground Metals (59 impressions, 0 calls) are flagged for zero call rate despite active impressions over 21–24 days. Check that the phone number is correctly entered, the call button is enabled, and call tracking (if any) is not broken on both profiles. Success = at least 1 tracked call per profile within 7 days of fix. Re-check by 2026-11-25."
       },
       {
         "id": "S2",
         "type": "watch",
-        "text": "Watch search clicks — 3-day average dropped from 13.3 to 1.3; confirm whether a GSC indexing or ranking event caused this before any action.",
+        "text": "Watch search clicks and GA4 sessions for 3 more days — last-3-day averages of 1.3 clicks and 21.3 sessions/day need confirmation before any SEO action.",
         "cites": [
-          "F3"
+          "F3",
+          "F4"
         ],
-        "monday_item_name": "Watch SC click collapse Nov",
-        "monday_update": "Search clicks averaged 1.3/day over Nov 15–17 versus 13.3/day over Nov 12–14, a 90% drop across 3 consecutive days. Pull Google Search Console for the same window to determine if a ranking drop, manual action, or seasonal effect is responsible. No paid action is warranted until cause is confirmed. Re-check by 2026-11-21."
-      },
-      {
-        "id": "S3",
-        "type": "watch",
-        "text": "Watch GBP action collapse — 4 total actions Nov 15–17 vs 22 on Nov 12–14; hold any profile optimisation until SC cause is ruled out.",
-        "cites": [
-          "F4",
-          "F3"
-        ],
-        "monday_item_name": "Watch GBP action drop Nov",
-        "monday_update": "GBP actions totalled only 4 over the last 3 days (Nov 15–17) versus 22 in the prior 3 days (Nov 12–14), coinciding with the search click collapse. The two signals likely share a cause — a broader visibility drop rather than a GBP-specific issue. Hold GBP optimisation work until the search investigation (S2) returns a cause. Re-check by 2026-11-21."
+        "monday_item_name": "Watch SC/GA4 drop Nov 21",
+        "monday_update": "Search clicks fell 50.54% week-over-week with the last 3 days (Nov 15–17) averaging only 1.3 clicks/day, down from 13.3. GA4 sessions similarly dropped to 21.3/day from 54.0. No action yet — one partial weekend in the window may be distorting the signal. Re-check on 2026-11-21; if the 3-day average remains below 10 clicks/day, escalate to an SEO content or technical audit."
       }
     ],
     "next_check": "2026-11-21"
