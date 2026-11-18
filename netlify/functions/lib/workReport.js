@@ -119,16 +119,36 @@ async function doneMarks(client, w) {
   }
 }
 
+// Team messages about this client from WhatsApp, written daily by
+// build_work_log.py (work-log/[slug].json, redacted, no sender names). The
+// safety net for work that never got a Monday update.
+const WA_MAX = 120, WA_CHARS = 600;
+async function whatsappLog(client, w) {
+  const ad = (config.ops && config.ops.ad_slugs) || {};
+  const slugs = ad[client] || [];
+  const files = await Promise.all(slugs.map((s) => getJSON(`work-log/${s}.json`, null, "main").then((r) => r.data).catch(() => null)));
+  const seen = new Set(), out = [];
+  for (const f of files) for (const m of (f && f.messages) || []) {
+    const key = `${m.at}|${m.text}`;
+    if (seen.has(key) || !inWindow(m.at, w)) continue;
+    seen.add(key);
+    out.push(m);
+  }
+  return out.sort((a, b) => a.at.localeCompare(b.at)).slice(-WA_MAX)
+    .map((m, i) => ({ id: `wa${i + 1}`, date: m.at.slice(0, 10), chat: m.chat === "client" ? "client group" : "team group", text: clip(stripMentions(m.text), WA_CHARS) }));
+}
+
 async function collect(client, w) {
   const groups = CLIENT_GROUPS[client];
   if (!groups) throw Object.assign(new Error(`No Monday groups are mapped for ${client}. Add it to CLIENT_GROUPS in netlify/functions/lib/monday.js.`), { status: 400 });
 
-  const [perBoard, done] = await Promise.all([
+  const [perBoard, done, whatsapp] = await Promise.all([
     Promise.all(BOARDS.filter((b) => groups[b]).map(async (b) => {
       try { return { board: b, items: await groupItems(b, groups[b]) }; }
       catch (e) { return { board: b, items: [], error: String(e.message || e) }; }
     })),
     doneMarks(client, w),
+    whatsappLog(client, w).catch((e) => { console.error("work-report: whatsapp log", e); return []; }),
   ]);
 
   // Boards that share one group id (e.g. Steel's Web+SEO/CRM/Video) return the same items: keep the first.
@@ -179,21 +199,50 @@ async function collect(client, w) {
     }
   }
 
-  // Keep the model input bounded: trim the longest posts first if needed.
-  let payload = JSON.stringify(evidence);
+  // Keep the model input bounded: trim the longest texts first if needed.
+  const input = () => JSON.stringify({ monday_items: evidence, whatsapp_team_messages: whatsapp });
+  let payload = input();
   while (payload.length > PAYLOAD_CHARS) {
-    const longest = evidence.flatMap((e) => e.posts).sort((a, b) => b.text.length - a.text.length)[0];
+    const longest = [...evidence.flatMap((e) => e.posts), ...whatsapp].sort((a, b) => b.text.length - a.text.length)[0];
     if (!longest || longest.text.length < 300) break;
     longest.text = clip(longest.text, Math.floor(longest.text.length * 0.6));
-    payload = JSON.stringify(evidence);
+    payload = input();
   }
 
   silent.sort((a, b) => String(a.last_team_post || "").localeCompare(String(b.last_team_post || "")));
   const errors = perBoard.filter((b) => b.error).map((b) => `${AREA[b.board]}: ${b.error}`);
-  return { evidence, payload, silent, sources, errors };
+  return { evidence, whatsapp, payload, silent, sources, errors };
 }
 
 // ── Model ──────────────────────────────────────────────────────────────
+// A forced tool call, so the report comes back as parsed JSON. Free-form JSON
+// broke on a stray quote inside a bullet.
+const BULLET = {
+  type: "object",
+  properties: {
+    area: { type: "string", enum: ["Ads", "Website & SEO", "Google listings", "CRM & automations", "Video & content", "Other"] },
+    text: { type: "string" },
+    source_ids: { type: "array", items: { type: "string" } },
+  },
+  required: ["area", "text", "source_ids"],
+};
+const REPORT_TOOL = {
+  name: "submit_work_report",
+  description: "Submit the client's work report for this window.",
+  input_schema: {
+    type: "object",
+    properties: {
+      headline: { type: "string" },
+      done: { type: "array", items: BULLET },
+      in_progress: { type: "array", items: BULLET },
+      waiting_on_you: { type: "array", items: BULLET },
+      next_week: { type: "array", items: BULLET },
+      internal_flags: { type: "array", items: { type: "object", properties: { text: { type: "string" }, source_ids: { type: "array", items: { type: "string" } } }, required: ["text"] } },
+    },
+    required: ["headline", "done", "in_progress", "waiting_on_you", "next_week", "internal_flags"],
+  },
+};
+
 async function draft(client, w, payload) {
   const system = LENS.replace("{today}", new Date().toISOString().slice(0, 10)).replace("{client}", client).replace("{from}", w.from).replace("{to}", w.to);
   const ctrl = new AbortController();
@@ -205,17 +254,19 @@ async function draft(client, w, payload) {
       headers: { "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01", "content-type": "application/json" },
       body: JSON.stringify({
         model: MODEL,
-        max_tokens: 3000,
+        max_tokens: 4000,
         system,
-        messages: [{ role: "user", content: `Monday items for ${client}, ${w.from} to ${w.to}:\n\n${payload}\n\nWrite the work report JSON.` }],
+        tools: [REPORT_TOOL],
+        tool_choice: { type: "tool", name: REPORT_TOOL.name },
+        messages: [{ role: "user", content: `What the team logged for ${client}, ${w.from} to ${w.to}:\n\n${payload}\n\nSubmit the work report.` }],
       }),
     });
     const body = await res.json();
     if (!res.ok) throw new Error(`Model call failed (${res.status}): ${(body.error && body.error.message) || "unknown"}`);
-    const text = (body.content || []).filter((c) => c.type === "text").map((c) => c.text).join("").trim();
-    const raw = text.replace(/^```(?:json)?\s*|\s*```$/g, "");
-    const start = raw.indexOf("{"), stop = raw.lastIndexOf("}");
-    return JSON.parse(raw.slice(start, stop + 1));
+    const call = (body.content || []).find((c) => c.type === "tool_use" && c.name === REPORT_TOOL.name);
+    if (!call) throw new Error("The model didn't return a report. Try again.");
+    if (body.stop_reason === "max_tokens") throw new Error("The report ran too long. Try a shorter date range.");
+    return call.input;
   } finally {
     clearTimeout(timer);
   }
@@ -225,7 +276,8 @@ async function draft(client, w, payload) {
 function clean(report, ids) {
   const keep = (list) => (Array.isArray(list) ? list : [])
     .map((b) => ({ area: b.area || "Other", text: String(b.text || "").trim(), source_ids: (b.source_ids || []).map(String).filter((id) => ids.has(id)) }))
-    .filter((b) => b.text && b.source_ids.length);
+    .filter((b) => b.text && b.source_ids.length)
+    .map((b) => ({ ...b, whatsapp_only: b.source_ids.every((id) => id.startsWith("wa")) }));
   return {
     headline: String(report.headline || "").trim(),
     done: keep(report.done), in_progress: keep(report.in_progress),
@@ -236,10 +288,13 @@ function clean(report, ids) {
 
 // Full draft for one client and window: what the page shows.
 async function buildDraft(client, w) {
-  const { evidence, payload, silent, sources, errors } = await collect(client, w);
+  const { evidence, whatsapp, payload, silent, sources, errors } = await collect(client, w);
+  const empty = !evidence.length && !whatsapp.length;
   let report = { headline: "", done: [], in_progress: [], waiting_on_you: [], next_week: [], internal_flags: [] };
-  if (evidence.length) report = clean(await draft(client, w, payload), new Set(evidence.map((e) => e.id)));
-  return { client, window: { from: w.from, to: w.to }, report, silent, sources, errors, empty: !evidence.length, model: MODEL };
+  if (!empty) report = clean(await draft(client, w, payload), new Set([...evidence.map((e) => e.id), ...whatsapp.map((m) => m.id)]));
+  // Work that reached the report only through chat: log it in Monday.
+  const notOnMonday = ["done", "in_progress", "waiting_on_you", "next_week"].flatMap((k) => report[k]).filter((b) => b.whatsapp_only).map((b) => b.text);
+  return { client, window: { from: w.from, to: w.to }, report, silent, sources, errors, empty, whatsapp_count: whatsapp.length, not_on_monday: notOnMonday, model: MODEL };
 }
 
 // Shared request checks for both handlers.

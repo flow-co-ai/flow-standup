@@ -14,6 +14,7 @@ One workflow, `.github/workflows/daily-pulse.yml`, runs at 12:00 UTC (6 am Chica
 | 4 | 186-day history (last 35 days re-pulled daily, full pull Sundays), Google listing discovery | `build_history.js` | `series/[slug].json` | none |
 | 5 | Account facts from WhatsApp + Fireflies | `build_facts.py` | `facts/[slug].json` | yes |
 | 6 | WhatsApp threads, "waiting on us" | `build_comms.py` | `comms/[slug].json` | none |
+| 6b | Team WhatsApp messages per client (redacted, no names), for Work reports | `build_work_log.py` | `work-log/[slug].json` | none |
 | 7 | Weekly rundown, Monday update archive, Done log (Mondays only) | `generate.py` | `site/latest.json`, `standups/`, `archive/` | yes |
 | 8 | AI read of the numbers (every 3 days per client, or on a flag) | `apply_performance.js` | `pulse/[slug].json` → `performance` | yes |
 | 9 | Weekly client report (Mondays) | `apply_reporter.js` | `reports/[slug].json` | yes |
@@ -46,7 +47,7 @@ Manual run options on Daily Pulse: **rundown** forces the weekly AI rundown, **f
 
 ## Work reports
 
-The **Work reports** tab drafts the weekly "here's what we did" message for one client. Pick the client and a window (defaults to everything since the last report), and it reads every post on that client's Monday items across all four boards, adds Done marks from the webhook, and drafts Done / In progress / Waiting on you / Coming up next under `lenses/work-report.md`. Every bullet must trace to a Monday item or it is dropped. You edit it, copy or open it in WhatsApp or email, and send it yourself. **Mark as sent** logs the final text so the tab shows who is due (`config.json` → `ops.work_report.due_days`).
+The **Work reports** tab drafts the weekly "here's what we did" message for one client. Pick the client and a window (defaults to everything since the last report), and it reads every post on that client's Monday items across all four boards, adds Done marks from the webhook, and drafts Done / In progress / Waiting on you / Coming up next under `lenses/work-report.md`. It also reads `work-log/[slug].json` (team WhatsApp messages, written daily by `build_work_log.py`) for work that never got a Monday update; those bullets show under **Not on Monday yet** so they get logged. Every bullet must trace to a Monday item or a message, or it is dropped. You edit it, copy or open it in WhatsApp or email, and send it yourself. **Mark as sent** logs the final text so the tab shows who is due (`config.json` → `ops.work_report.due_days`).
 
 The right side is internal: anything the draft held back, the open items with no post from the team in the window (posts from `ops.work_report.leads` count as instructions, not work), and a one-click chase message for the team. The report is only as good as the team's Monday replies: every specialist replies on the item with what they did, every week.
 

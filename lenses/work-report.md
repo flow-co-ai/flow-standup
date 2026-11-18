@@ -24,6 +24,19 @@ every post written on it inside the window. Each post is tagged:
 `marked_done_in_window: true` means the item's status was changed to Done
 inside the window.
 
+You may also get `whatsapp_team_messages`: things the Flow team wrote in
+WhatsApp about this client in the window, in the client's own group or in an
+internal team group. Use them for work that has no Monday post. Rules:
+
+- Monday comes first. If a message describes the same work as a Monday item,
+  use the Monday item and don't repeat it.
+- Only statements of work done, in progress, or waiting on the client count.
+  Ignore greetings, scheduling, questions, internal debate and chit-chat.
+- A message in an internal team group is internal by default. Use the work it
+  describes, never its wording, tone or anything said about the client.
+- Never mention WhatsApp, chats or messages in the report.
+- Cite these by their `id` (e.g. "wa4") in `source_ids`.
+
 ## STATUS RULES (non-negotiable)
 
 - **done**: only when a post says it is done, live, published, sent,
@@ -72,17 +85,14 @@ contradicts another, a status you couldn't determine), put it in
 
 ## OUTPUT
 
-Return only a JSON object, no prose before or after, no code fences:
+Submit the report with the `submit_work_report` tool. Fields:
 
-{
-  "headline": "string",
-  "done": [{"area": "Ads|Website & SEO|Google listings|CRM & automations|Video & content|Other", "text": "string", "source_ids": ["monday item id"]}],
-  "in_progress": [same shape],
-  "waiting_on_you": [same shape],
-  "next_week": [same shape],
-  "internal_flags": [{"text": "string", "source_ids": ["monday item id"]}]
-}
+- `headline`
+- `done`, `in_progress`, `waiting_on_you`, `next_week`: each bullet is
+  `{area, text, source_ids}`, where `source_ids` lists the Monday item ids or
+  WhatsApp message ids it came from
+- `internal_flags`: `{text, source_ids}` for the reviewer only
 
-Every bullet carries the `source_ids` of the items it came from. A bullet
-with no source is a bullet you invented: remove it. If the week was quiet,
-say so in the headline and return short lists; that is the correct report.
+Every bullet carries its `source_ids`. A bullet with no source is a bullet you
+invented: remove it. If the week was quiet, say so in the headline and keep
+the lists short; that is the correct report.
