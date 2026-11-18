@@ -263,6 +263,18 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
 .askbox textarea:disabled{background:var(--soft)}
 .askbox .btn{flex:0 0 auto;padding:12px 22px}
 .askfoot{display:flex;justify-content:flex-end;margin-top:4px}
+/* work reports */
+.wr-range{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;margin-top:16px}
+.wr-range label{display:flex;flex-direction:column;gap:4px;font-size:13.5px;color:var(--muted)}
+.wr-range input{border:1px solid var(--line);border-radius:12px;padding:8px 12px;font:inherit;font-size:15px;color:var(--ink);background:#fff}
+.wr-range input:focus,.wr-text:focus,.wr-subject:focus{border-color:var(--green);outline:none}
+.wr-channel{margin-top:0}
+.wr-subject{width:100%;margin-top:14px;border:1px solid var(--line);border-radius:14px;padding:11px 16px;font:inherit;font-size:15px;color:var(--ink)}
+.wr-text{display:block;width:100%;min-height:440px;margin-top:14px;border:1px solid var(--line);border-radius:18px;padding:16px 18px;font:inherit;font-size:15px;line-height:1.6;color:var(--ink);background:var(--soft);resize:vertical}
+.wr-grid{align-items:start}
+.wr-side{display:flex;flex-direction:column;gap:28px;min-width:0}
+.ins .t a{text-decoration:none} .ins .t a:hover{color:var(--green);text-decoration:underline}
+.btn:focus-visible,.chips button:focus-visible,.nav a:focus-visible{outline:2px solid var(--green);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -296,10 +308,11 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     crm: '<circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7"/><path d="M18 14.5c2 .8 3 2.8 3 5.5"/>',
     drafts: '<path d="M4 20h4L19 9l-4-4L4 16v4z"/><line x1="13.5" y1="6.5" x2="17.5" y2="10.5"/>',
     ask: '<path d="M4 5.5h16v10.5H10l-4.5 3.5V16H4z"/><line x1="8" y1="9.5" x2="16" y2="9.5"/><line x1="8" y1="12.5" x2="13" y2="12.5"/>',
+    reports: '<path d="M6 3.5h9l3 3V20.5H6z"/><polyline points="15 3.5 15 6.5 18 6.5"/><polyline points="9 13.5 11 15.5 15 11"/>',
     sources: '<ellipse cx="12" cy="6" rx="7" ry="2.8"/><path d="M5 6v6c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8V6"/><path d="M5 12v6c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8v-6"/>',
   };
   const TABS = [["overview", "Overview"], ["paid", "Paid"], ["organic", "Organic"], ["crm", "CRM"]];
-  const S = { snapshot: null, live: null, ops: null, hub: null, quietDays: 14, quietOngoing: 30, recentDays: 30, liveError: "", askPass: false, n: 7, queueAll: null, qMsg: {}, qBusy: {}, qFilter: "", drawer: null, chat: [], askBusy: false, askDraft: "", askErr: "" };
+  const S = { snapshot: null, live: null, ops: null, hub: null, quietDays: 14, quietOngoing: 30, recentDays: 30, liveError: "", askPass: false, n: 7, queueAll: null, qMsg: {}, qBusy: {}, qFilter: "", drawer: null, chat: [], askBusy: false, askDraft: "", askErr: "", wr: {}, wrLog: null, wrLogBusy: false, wrLogErr: "" };
 
   // ── helpers ────────────────────────────────────────────────────────────
   const $ = (id) => document.getElementById(id);
@@ -878,7 +891,7 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
   async function onAct(el) {
     const art = el.closest(".draft"), id = art && art.dataset.id, act = el.dataset.act;
     S.qOpen = S.qOpen || {};
-    if (act === "unlock") { const v = $("unlock").value; if (v) { localStorage.setItem(PASS_KEY, v); S.queueErr = ""; loadLive(); loadQueue(); } return; }
+    if (act === "unlock") { const v = $("unlock").value; if (v) { localStorage.setItem(PASS_KEY, v); S.queueErr = ""; loadLive(); loadQueue(); loadWrLog(); } return; }
     if (act === "filter") { S.qFilter = el.dataset.client; render(); return; }
     if (act === "expand") { const b = art.querySelector(".dbody"); b.classList.toggle("open"); el.textContent = b.classList.contains("open") ? "Show less" : "Show all"; return; }
     if (act === "ask" || act === "ignore") { S.qOpen[id] = S.qOpen[id] === act ? null : act; render(); const inp = document.querySelector(`.draft[data-id="${CSS.escape(id)}"] .dask input`); if (inp) inp.focus(); return; }
@@ -969,6 +982,153 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     else if (c === "clear") { S.chat = []; render(); }
   }
 
+  // ── Work reports: what the team did this week, drafted from Monday, reviewed here, sent by hand ─
+  // netlify/functions/work-report.js drafts and logs; the rules live in lenses/work-report.md.
+  const isoDay = (d) => d.toLocaleDateString("en-CA");
+  const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+  const mondayOf = (d) => addDays(d, -((d.getDay() + 6) % 7));
+  function wrRange(from, to) {
+    const a = toDate(from), b = toDate(to); if (!a || !b) return "";
+    const m = (d) => d.toLocaleDateString("en-US", { month: "short" });
+    return a.getMonth() === b.getMonth() ? `${m(a)} ${a.getDate()}–${b.getDate()}` : `${fmtDay(a)} – ${fmtDay(b)}`;
+  }
+  const wrLast = (name) => (S.wrLog && S.wrLog.last_sent && S.wrLog.last_sent[name]) || null;
+  const wrDueDays = () => (S.wrLog && S.wrLog.due_days) || 7;
+  const wrIsDue = (name) => { const l = wrLast(name); return !l || daysSince(new Date(l.sentAt)) >= wrDueDays(); };
+  function wrPresets(name) {
+    const t = new Date(today), last = wrLast(name), out = [];
+    if (last && last.to < isoDay(t)) out.push(["Since last report", isoDay(addDays(toDate(last.to), 1)), isoDay(t)]);
+    out.push(["Last 7 days", isoDay(addDays(t, -6)), isoDay(t)]);
+    out.push(["This week", isoDay(mondayOf(t)), isoDay(t)]);
+    out.push(["Last week", isoDay(addDays(mondayOf(t), -7)), isoDay(addDays(mondayOf(t), -1))]);
+    return out;
+  }
+  function wrState(name) {
+    S.wr[name] = S.wr[name] || {};
+    const st = S.wr[name];
+    // Default window: since the last report (if it was recent), else the last 7 days. Re-pick once the sent log arrives, unless the user already chose.
+    if (!st.touched && (!st.from || (!st.logAware && S.wrLog))) {
+      const ps = wrPresets(name), since = ps.find((x) => x[0] === "Since last report"), use = since && daysSince(toDate(since[1])) <= 21 ? since : ps.find((x) => x[0] === "Last 7 days");
+      st.from = use[1]; st.to = use[2]; st.logAware = !!S.wrLog;
+    }
+    return st;
+  }
+  const SECTIONS = [["done", "Done this week"], ["in_progress", "In progress"], ["waiting_on_you", "Waiting on you"], ["next_week", "Coming up next"]];
+  function wrCompose(name, d, channel) {
+    const r = d.report, range = wrRange(d.window.from, d.window.to);
+    const areas = new Set(SECTIONS.flatMap(([k]) => (r[k] || []).map((b) => b.area)));
+    const line = (b, wa) => `${wa ? "•" : "-"} ${areas.size > 1 && b.area ? (wa ? `*${b.area}:* ` : `${b.area}: `) : ""}${b.text}`;
+    const body = (wa) => SECTIONS.filter(([k]) => (r[k] || []).length).map(([k, t]) => `${wa ? `*${t}*` : t}\n${r[k].map((b) => line(b, wa)).join("\n")}`).join("\n\n");
+    if (channel === "email") return { subject: `${name}: what we worked on, ${range}`, text: `Hi,\n\nHere's what we worked on for you from ${range}.\n\n${r.headline}\n\n${body(false)}\n\nAny questions, just reply here.\n\nThe Flow team` };
+    return { subject: "", text: `*${name}: work report, ${range}*\n\n${r.headline}\n\n${body(true)}` };
+  }
+  function wrChase(name, d) {
+    const rows = d.silent.map((s) => `- ${s.name} (${s.area}${s.people ? `, ${s.people}` : ""}): ${s.url}`);
+    return `Salam team, I'm putting together ${name}'s work report for ${wrRange(d.window.from, d.window.to)}. These items have no update from you this week. Please reply on each one with what was done, or what's blocking it:\n\n${rows.join("\n")}`;
+  }
+  function reportsView(name) {
+    if (!localStorage.getItem(PASS_KEY)) return hero("Work reports need the <em>ops passcode</em>.", [["info", "They read Monday live and draft with AI, so they stay behind the passcode."]], []) +
+      `<div class="unlock"><input id="unlock" type="password" placeholder="Ops passcode" aria-label="Ops passcode"><button type="button" class="btn primary" data-act="unlock">Unlock</button></div>`;
+    if (S.wrLog === null && !S.wrLogBusy) loadWrLog();
+    const st = wrState(name), last = wrLast(name), d = st.data;
+    const lastTxt = last ? `Last report sent ${fmtDay(new Date(last.sentAt))}, covering ${wrRange(last.from, last.to)}` : "No work report logged for this client yet";
+    const due = S.wrLog ? wrIsDue(name) : false;
+    const h1 = !S.wrLog ? `${esc(name)}: <em>work report</em>` : last ? (due ? `${esc(name)} is <em>due</em> a work report.` : `${esc(name)} got a report <em>${num(daysSince(new Date(last.sentAt)))} ${daysSince(new Date(last.sentAt)) === 1 ? "day" : "days"} ago</em>.`) : `${esc(name)} hasn't had a <em>work report</em> yet.`;
+    const bul = [[due ? "warn" : "info", esc(lastTxt) + "."], ["info", "Drafted from this week's Monday posts. Nothing goes to the client until you send it yourself."]];
+    if (d && d.silent.length) bul.push(["warn", `${plural(d.silent.length, "open item has", "open items have")} no update from the team in this window.`]);
+    if (S.wrLogErr) bul.push(["bad", esc(S.wrLogErr)]);
+    const presets = wrPresets(name).map(([l, f, t]) => `<button type="button" data-wr="preset" data-from="${f}" data-to="${t}" class="${st.from === f && st.to === t ? "on" : ""}">${esc(l)}</button>`).join("");
+    const controls = card("Draft a report", "Pick the window, then draft. It reads every post on this client's Monday items in that window.",
+      `<div class="chips wr-presets">${presets}</div>
+       <div class="wr-range"><label>From <input type="date" id="wr-from" value="${esc(st.from)}" max="${isoDay(today)}"></label><label>To <input type="date" id="wr-to" value="${esc(st.to)}" max="${isoDay(today)}"></label>
+       <button type="button" class="btn primary" data-wr="draft" ${st.busy ? "disabled" : ""}>${st.busy ? "Reading Monday and drafting…" : d ? "Redraft" : "Draft report"}</button></div>
+       ${st.err ? `<div class="dmsg err">${esc(st.err)}</div>` : ""}`);
+    if (!d) return hero(h1, bul, []) + `<div class="grid one">${controls}</div>`;
+
+    const ch = st.channel || "whatsapp", txt = (st.text || {})[ch] || "";
+    const left = d.empty
+      ? card("Nothing to report yet", `No posts on ${esc(name)}'s Monday items between ${esc(wrRange(d.window.from, d.window.to))}.`, `<div class="empty">Chase the team for updates first, then redraft.${d.silent.length ? " The list on the right has who to ask." : ""}</div>`)
+      : card("The report", "Edit anything before you send. Your edits are what gets logged.",
+        `<div class="chips wr-channel" role="group" aria-label="Format"><button type="button" data-wr="channel" data-ch="whatsapp" class="${ch === "whatsapp" ? "on" : ""}" aria-pressed="${ch === "whatsapp"}">WhatsApp</button><button type="button" data-wr="channel" data-ch="email" class="${ch === "email" ? "on" : ""}" aria-pressed="${ch === "email"}">Email</button></div>
+         ${ch === "email" ? `<input type="text" id="wr-subject" class="wr-subject" value="${esc(st.subject || "")}" aria-label="Email subject">` : ""}
+         <textarea id="wr-text" class="wr-text" aria-label="Report text" spellcheck="true">${esc(txt)}</textarea>
+         <div class="dacts"><button type="button" class="btn" data-wr="copy">Copy</button>
+           <button type="button" class="btn" data-wr="open">${ch === "whatsapp" ? "Open WhatsApp" : "Open in email"}</button>
+           <button type="button" class="btn primary" data-wr="sent" ${st.sending ? "disabled" : ""}>${st.sending ? "Logging…" : "Mark as sent"}</button></div>
+         ${st.msg ? `<div class="dmsg ${st.msg.err ? "err" : ""}">${esc(st.msg.text)}</div>` : ""}`);
+    const flags = (d.report.internal_flags || []).length ? card("Check before sending", "The draft held these back from the client.", `<ul class="ins">${d.report.internal_flags.map((f) => `<li><div class="t">${esc(f.text)}</div></li>`).join("")}</ul>`, "Internal") : "";
+    const silent = card("No update from the team", d.silent.length ? "Open items with no post from whoever is doing the work in this window." : "Every open item had a post from the team in this window.",
+      d.silent.length ? `<ul class="ins">${d.silent.map((s) => `<li><div class="t"><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a></div><div class="m">${esc(s.area)}${s.people ? `, ${esc(s.people)}` : ""}, ${s.new_this_window ? "assigned in this window, no reply yet" : s.last_team_post ? `last team update ${esc(fmtDay(toDate(s.last_team_post)))}` : "no team update ever"}</div></li>`).join("")}</ul>
+        <div class="dacts"><button type="button" class="btn" data-wr="chase">Copy a chase message</button></div>` : `<div class="empty">Nothing to chase.</div>`, d.silent.length ? `${d.silent.length}` : "");
+    const srcs = card("Built from", `${plural(d.sources.length, "Monday item", "Monday items")} with posts in this window.`,
+      d.sources.length ? `<ul class="ins">${d.sources.map((s) => `<li><div class="t"><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a></div><div class="m">${esc(s.area)}${s.status ? `, ${esc(s.status)}` : ""}</div></li>`).join("")}</ul>` : `<div class="empty">None.</div>`) +
+      ((d.errors || []).length ? `<div class="dmsg err">Couldn't read part of Monday: ${esc(d.errors.join("; "))}</div>` : "");
+    return hero(h1, bul, []) + `<div class="grid one">${controls}</div><div class="grid wr-grid">${left}<div class="wr-side">${flags}${silent}${srcs}</div></div>`;
+  }
+  async function loadWrLog() {
+    S.wrLogBusy = true;
+    try {
+      const r = await fetch("/.netlify/functions/work-report", { headers: opsHeaders() });
+      if (r.status === 401) { localStorage.removeItem(PASS_KEY); S.wrLogErr = "Passcode didn't match."; }
+      else if (r.ok) { S.wrLog = await r.json(); S.wrLogErr = ""; }
+      else { S.wrLog = { last_sent: {}, due_days: 7 }; S.wrLogErr = "Couldn't read the sent log, so due dates may be off."; }
+    } catch { S.wrLog = { last_sent: {}, due_days: 7 }; S.wrLogErr = "Couldn't reach the work report service."; }
+    S.wrLogBusy = false; render();
+  }
+  async function wrCopy(btn, text) {
+    try { await navigator.clipboard.writeText(text); }
+    catch { const t = document.createElement("textarea"); t.value = text; document.body.appendChild(t); t.select(); document.execCommand("copy"); t.remove(); }
+    const was = btn.textContent; btn.textContent = "Copied"; setTimeout(() => (btn.textContent = was), 1500);
+  }
+  async function onWr(el) {
+    const name = route().client, st = wrState(name), a = el.dataset.wr;
+    if (a === "preset") { st.from = el.dataset.from; st.to = el.dataset.to; st.touched = true; render(); return; }
+    if (a === "open") {
+      const text = (st.text || {})[st.channel || "whatsapp"] || "";
+      if ((st.channel || "whatsapp") === "whatsapp") window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener");
+      else location.href = `mailto:?subject=${encodeURIComponent(st.subject || "")}&body=${encodeURIComponent(text)}`;
+      return;
+    }
+    if (a === "channel") { st.channel = el.dataset.ch; render(); return; }
+    if (a === "copy") { wrCopy(el, (st.channel === "email" ? `Subject: ${st.subject || ""}\n\n` : "") + ((st.text || {})[st.channel || "whatsapp"] || "")); return; }
+    if (a === "chase") { wrCopy(el, wrChase(name, st.data)); return; }
+    if (a === "draft") {
+      if (!st.from || !st.to || st.from > st.to) { st.err = "Pick a start date on or before the end date."; render(); return; }
+      st.busy = true; st.err = ""; st.msg = null; render();
+      try {
+        const { ok, d, status } = await post("work-report", { action: "draft", client: name, from: st.from, to: st.to });
+        if (status === 401) { localStorage.removeItem(PASS_KEY); st.err = "Passcode didn't match."; }
+        else if (!ok) st.err = d.error || "Couldn't draft the report. Try again.";
+        else {
+          st.data = d; st.channel = st.channel || "whatsapp";
+          if (!d.empty) { const wa = wrCompose(name, d, "whatsapp"), em = wrCompose(name, d, "email"); st.text = { whatsapp: wa.text, email: em.text }; st.subject = em.subject; }
+        }
+      } catch { st.err = "Couldn't reach the work report service. Check your connection and try again."; }
+      st.busy = false; render(); return;
+    }
+    if (a === "sent") {
+      const ch = st.channel || "whatsapp", text = ((st.text || {})[ch] || "").trim();
+      if (!text) { st.msg = { text: "The report is empty.", err: true }; render(); return; }
+      st.sending = true; st.msg = null; render();
+      try {
+        const { ok, d } = await post("work-report", { action: "sent", client: name, from: st.data.window.from, to: st.data.window.to, channel: ch, headline: st.data.report.headline, text: ch === "email" ? `Subject: ${st.subject || ""}\n\n${text}` : text });
+        if (ok) {
+          S.wrLog = S.wrLog || { last_sent: {}, due_days: 7 };
+          S.wrLog.last_sent[name] = { sentAt: d.entry.sentAt, from: d.entry.from, to: d.entry.to, channel: d.entry.channel };
+          st.msg = { text: `Logged as sent. Next one is due ${fmtDay(addDays(new Date(d.entry.sentAt), wrDueDays()))}.` };
+        } else st.msg = { text: d.error || "Couldn't log it. Try again.", err: true };
+      } catch { st.msg = { text: "Couldn't reach the work report service.", err: true }; }
+      st.sending = false; render();
+    }
+  }
+  document.addEventListener("input", (e) => {
+    if (route().screen !== "reports") return;
+    const st = wrState(route().client), id = e.target.id;
+    if (id === "wr-text") { st.text = st.text || {}; st.text[st.channel || "whatsapp"] = e.target.value; }
+    else if (id === "wr-subject") st.subject = e.target.value;
+    else if (id === "wr-from" || id === "wr-to") { st[id === "wr-from" ? "from" : "to"] = e.target.value; st.touched = true; document.querySelectorAll(".wr-presets button").forEach((b) => b.classList.toggle("on", b.dataset.from === st.from && b.dataset.to === st.to)); }
+  });
+
   // ── Sources: what feeds each client, and whether it's actually sending ─
   const CONN = ["Meta Ads", "Google Ads", "Google Business Profile", "Search Console", "Google Analytics", "Instagram"];
   function sourcesView(items) {
@@ -1025,6 +1185,7 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
   document.addEventListener("click", (e) => {
     if (e.target.closest("button.copy")) return;
     const ch = e.target.closest("[data-chat]"); if (ch) { onChat(ch); return; }
+    const wr = e.target.closest("[data-wr]"); if (wr) { onWr(wr); return; }
     const act = e.target.closest("[data-act]"); if (act) { onAct(act); return; }
     if (e.target.closest("a")) return;
     const r = route(), c = hubClient(r.client);
@@ -1045,7 +1206,7 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
   function route() {
     const p = new URLSearchParams(location.hash.slice(1));
     const v = p.get("v");
-    const screen = (v === "tasks" || v === "drafts") ? "tasks" : v === "sources" ? "sources" : v === "ask" ? "ask" : "client";
+    const screen = (v === "tasks" || v === "drafts") ? "tasks" : v === "sources" ? "sources" : v === "ask" ? "ask" : v === "reports" ? "reports" : "client";
     let client = p.get("c"); const t = p.get("t");
     if (!client || !NAMES.includes(client)) { const last = localStorage.getItem(LAST_KEY); client = NAMES.includes(last) ? last : NAMES[0]; }
     return { screen, client, tab: t === "about" || TABS.some(([x]) => x === t) ? t : "overview" };
@@ -1065,16 +1226,18 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     const r = route(); localStorage.setItem(LAST_KEY, r.client);
     $("view").innerHTML = NAMES.map((n) => `<option value="${esc(n)}" ${r.client === n ? "selected" : ""}>${esc(n)}${(hubClient(n) || {}).week && hubClient(n).week.quiet ? " · quiet this week" : ""}</option>`).join("");
     const pend = S.queueAll ? pendingDrafts().length : null;
+    const dueN = S.wrLog ? NAMES.filter((n) => n !== "Flow Company" && wrIsDue(n)).length : 0;
     $("nav").innerHTML = TABS.map(([t, l]) => `<a href="${href(r.client, t)}" class="${r.screen === "client" && r.tab === t ? "on" : ""}"><svg viewBox="0 0 24 24">${ICON[t]}</svg>${l}</a>`).join("") +
       `<div class="sep"></div><a href="#v=ask" class="${r.screen === "ask" ? "on" : ""}"><svg viewBox="0 0 24 24">${ICON.ask}</svg>Ask</a>` +
       `<a href="#v=tasks" class="${r.screen === "tasks" ? "on" : ""}"><svg viewBox="0 0 24 24">${ICON.drafts}</svg>Tasks${pend ? `<span class="n">${pend}</span>` : ""}</a>` +
+      `<a href="#v=reports&c=${encodeURIComponent(r.client)}" class="${r.screen === "reports" ? "on" : ""}"><svg viewBox="0 0 24 24">${ICON.reports}</svg>Work reports${dueN ? `<span class="n" title="Clients due a work report">${dueN}</span>` : ""}</a>` +
       `<a href="#v=sources" class="${r.screen === "sources" ? "on" : ""}"><svg viewBox="0 0 24 24">${ICON.sources}</svg>Sources</a>`;
-    const crumbLabel = r.screen === "ask" ? "Ask" : r.screen === "tasks" ? "Tasks" : r.screen === "sources" ? "Sources" : (r.tab === "about" ? "About these numbers" : TABS.find(([t]) => t === r.tab)[1]);
-    $("crumb").innerHTML = `<b>${esc(crumbLabel)}</b> · ${esc(r.screen === "client" ? r.client : "All clients")}`;
+    const crumbLabel = r.screen === "ask" ? "Ask" : r.screen === "tasks" ? "Tasks" : r.screen === "sources" ? "Sources" : r.screen === "reports" ? "Work reports" : (r.tab === "about" ? "About these numbers" : TABS.find(([t]) => t === r.tab)[1]);
+    $("crumb").innerHTML = `<b>${esc(crumbLabel)}</b> · ${esc(r.screen === "client" || r.screen === "reports" ? r.client : "All clients")}`;
     $("range").style.display = r.screen === "client" ? "" : "none";
     $("range").innerHTML = [7, 14, 30, 90].map((n) => `<button type="button" data-n="${n}" class="${S.n === n ? "on" : ""}" aria-pressed="${S.n === n}">${n} days</button>`).join("");
     const c = hubClient(r.client);
-    $("view-body").innerHTML = r.screen === "ask" ? askView() : r.screen === "tasks" ? draftsView(items) : r.screen === "sources" ? sourcesView(items)
+    $("view-body").innerHTML = r.screen === "reports" ? reportsView(r.client) : r.screen === "ask" ? askView() : r.screen === "tasks" ? draftsView(items) : r.screen === "sources" ? sourcesView(items)
       : r.tab === "about" ? aboutView() : ({ overview: overviewView, paid: paidView, organic: organicView, crm: crmView }[r.tab])(r.client, c, items);
     S.items = items;
     renderFoot(r);
@@ -1117,7 +1280,7 @@ details ul{margin:10px 0 0;padding-left:20px} details li{margin:4px 0}
     if (set.recent_days) S.recentDays = set.recent_days;
     if (!snap) { $("view-body").innerHTML = hero("Couldn't load <em>monday-items.json</em>.", [], []); return; }
     render();
-    if (localStorage.getItem(PASS_KEY)) loadLive();
+    if (localStorage.getItem(PASS_KEY)) { loadLive(); loadWrLog(); }
   })();
 })();
 </script>

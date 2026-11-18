@@ -40,8 +40,15 @@ Manual run options on Daily Pulse: **rundown** forces the weekly AI rundown, **f
 | Account facts, "said in chats" | `facts/[slug].json` | step 5 |
 | Waiting on us | `comms/[slug].json`, last 14 days | step 6 |
 | Quiet this week | no Monday activity, WhatsApp thread, meeting or Done item in 7 days | step 10 |
+| Work reports | Monday read live on demand, drafted under `lenses/work-report.md`; sent log at `work-reports/log.json` on the `state` branch | `netlify/functions/work-report.js` |
 | Scope / budget pace | `site/contracts.json` from `contracts/[slug].json` (edited by hand) | step 11 |
 | Sources page, connector errors | `pulse/*.windsor.errors`, `series/*.errors`, `pulse/*.ghl.error` | steps 3, 4 |
+
+## Work reports
+
+The **Work reports** tab drafts the weekly "here's what we did" message for one client. Pick the client and a window (defaults to everything since the last report), and it reads every post on that client's Monday items across all four boards, adds Done marks from the webhook, and drafts Done / In progress / Waiting on you / Coming up next under `lenses/work-report.md`. Every bullet must trace to a Monday item or it is dropped. You edit it, copy or open it in WhatsApp or email, and send it yourself. **Mark as sent** logs the final text so the tab shows who is due (`config.json` → `ops.work_report.due_days`).
+
+The right side is internal: anything the draft held back, the open items with no post from the team in the window (posts from `ops.work_report.leads` count as instructions, not work), and a one-click chase message for the team. The report is only as good as the team's Monday replies: every specialist replies on the item with what they did, every week.
 
 ## Connector errors
 
