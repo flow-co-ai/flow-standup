@@ -74,8 +74,9 @@ export async function fetchGHL(locationId, token) {
   const calendars      = Array.isArray(calsJson.calendars) ? calsJson.calendars : [];
   let appointmentCount = 0;
   for (const cal of calendars) {
+    // GHL now rejects ISO dates here: startTime/endTime must be epoch milliseconds.
     const evtUrl  = `${GHL_BASE}/calendars/events?locationId=${locationId}` +
-                    `&calendarId=${enc(cal.id)}&startTime=${enc(startDate)}&endTime=${enc(endDate)}`;
+                    `&calendarId=${enc(cal.id)}&startTime=${Date.parse(startDate)}&endTime=${Date.parse(endDate)}`;
     const evtJson = await ghlGet(evtUrl, token);
     appointmentCount += Array.isArray(evtJson.events) ? evtJson.events.length : 0;
   }
