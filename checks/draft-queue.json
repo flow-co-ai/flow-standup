@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-19T22:40:46.983441+00:00",
+  "updatedAt": "2026-11-20T22:13:01.599958+00:00",
   "items": [
     {
       "id": "qualityhvac-burr-ridge-gbp-move",
@@ -75,7 +75,7 @@
       },
       "nullReason": null,
       "priority": 2,
-      "verifiedAt": "2026-11-13T21:25:26.846750+00:00",
+      "verifiedAt": "2026-11-20T22:13:01.329234+00:00",
       "completionEvidence": null,
       "updatedAt": "2026-11-02T23:05:32.046191+00:00",
       "createdAt": "2026-10-21T19:14:17.150344+00:00"
@@ -450,6 +450,55 @@
       "verifiedAt": "2026-11-19T22:40:40.302723+00:00",
       "completionEvidence": null,
       "createdAt": "2026-11-19T22:40:46.983441+00:00"
+    },
+    {
+      "id": "flowco-fullsmile-digitalocean-removal",
+      "title": "DigitalOcean Removal",
+      "note": "From the 11/19 ops review (Ahmed's action items: verify Full Smile website changes, remove DigitalOcean machine). Lands as an update on the existing Full Smile offboarding item.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Flow Company",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Weekly ops priorities, 11/19",
+      "payload": {
+        "mode": "update_only",
+        "existingItemId": "13383800826",
+        "itemName": "DigitalOcean Removal",
+        "updateBody": "<p>Salam,</p><ul><li>New from the 11/19 ops review: Full Smile still has a <strong>DigitalOcean machine</strong> running alongside the GHL shutdown already tracked here.</li><li><strong>Verify</strong> the Full Smile website changes are live and that nothing on the site (forms, redirects, hosting) still depends on that machine.</li><li>Once confirmed, <strong>remove the DigitalOcean machine</strong> and post here when it is deleted so billing stops.</li><li><strong>Do not delete</strong> before the website check is done; if anything still points at it, post what and hold.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 3,
+      "verifiedAt": "2026-11-20T22:13:01.329145+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-11-20T22:13:01.599958+00:00"
+    },
+    {
+      "id": "flowco-ghl-onboarding-blueprint",
+      "title": "GHL Onboarding Blueprint",
+      "note": "From the 11/19 ops review (Ahmed's action item: provide GHL or CRM onboarding blueprint). No existing item on any of the 4 boards. The same call also mentioned updating web and SEO templates; that was too thin to draft separately.",
+      "status": "ready",
+      "board": "CRM",
+      "group": "Flow Company",
+      "potentialClient": null,
+      "source": "fireflies",
+      "sourceLabel": "Meeting: Weekly ops priorities, 11/19",
+      "payload": {
+        "mode": "create_item",
+        "boardId": "18418241405",
+        "groupId": "group_mm5g4pdh",
+        "itemName": "GHL Onboarding Blueprint",
+        "updateBody": "<p>Salam,</p><ul><li>From the 11/19 ops review: every GHL client setup is currently built from scratch. We need a <strong>repeatable GHL onboarding blueprint</strong> so new clients (and the MedStation multi clinic rollout) follow one standard.</li><li><strong>Write</strong> the blueprint as a step checklist: account and subaccount setup, phone numbers and tracking, pipelines, core workflows (lead notification, reactivation, review requests), templates, integrations to confirm (HCP, Clio, NextGen, etc.), and the go live test.</li><li>Use an existing build (Weston is the closest to a template) as the reference and note which steps are client specific.</li><li><strong>Share it</strong> in this item for Naz to review before it becomes the default for new onboardings.</li></ul><p><a class=\"mention\" data-mention-id=\"108080159\" data-mention-type=\"User\">@Ahmed Memon</a> <a class=\"mention\" data-mention-id=\"108080161\" data-mention-type=\"User\">@Ali Shaheer</a></p>",
+        "blocked": false,
+        "needsNaz": false
+      },
+      "nullReason": null,
+      "priority": 3,
+      "verifiedAt": "2026-11-20T22:13:01.329227+00:00",
+      "completionEvidence": null,
+      "createdAt": "2026-11-20T22:13:01.599958+00:00"
     }
   ]
 }
