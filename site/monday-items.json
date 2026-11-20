@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-19T20:18:25.240293+00:00",
+  "generated_at": "2026-11-20T19:49:43.405263+00:00",
   "by_client": {
     "Senior Insurance": [
       {
@@ -8,8 +8,13 @@
         "board": "CRM",
         "status": "In Progress",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13186008077",
-        "updated_at": "2026-11-16T17:37:02.000Z",
+        "updated_at": "2026-11-20T17:20:08.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-11-20",
+            "text": "@Nacer Amrouch ﻿﻿, progress on Auto-create opportunities: • Fixed all four appointment Create Opportunity actions to copy Contact Source and prevent duplicate creation. The existing appointment workflow remains live. • Rebuilt “Senior Insurance | Auto Create Opportunities | Inbound Intake”. It preserves existing attribution, waits for source handlers, finds an existing Sales opportunity first and creates New Lead only when absent. Missing-source fallbacks use the actual call/form entry channel; they do not guess paid attribution. Saved as Draft/off. • Prepared “Senior Insurance | Opportunity Source Repair | NO OUTBOUND | QA FIRST”. It fills only blank Sales opportunity sources when the contact already has a source. A separate per-opportunity request supports historical backfill without cha"
+          },
           {
             "author": "Nacer Amrouch",
             "date": "2026-11-16",
@@ -23,7 +28,7 @@
         ],
         "people": "Ahmed Memon, Ali Shaheer",
         "created_at": "2026-10-01",
-        "last_activity": "2026-11-16",
+        "last_activity": "2026-11-20",
         "due": null,
         "subitems": []
       },
@@ -31,10 +36,15 @@
         "monday_item_id": "13207258366",
         "name": "Waitlist tagging",
         "board": "CRM",
-        "status": "In Progress",
+        "status": "Done",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13207258366",
-        "updated_at": "2026-10-05T14:50:08.000Z",
+        "updated_at": "2026-11-19T22:34:00.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-11-19",
+            "text": "@Nacer Amrouch ﻿﻿﻿Brother, waitlist tagging is live and tested. Waitlist adds seminar:waitlist; Registered removes it. Repeat stage changes passed too, and the QA opportunity is closed. I checked all 309 seminar opportunities and found 29 older waitlisted contacts with no other seminar registration recorded. I excluded five QA entries and one contact already registered for another date. Can we add seminar:waitlist to those 29 contacts for future invitation lists? Tag only, no invitations or bulk workflow enrollment. I’ll leave these older contacts unchanged until you confirm."
+          },
           {
             "author": "Sohib Boundaoui",
             "date": "2026-10-05",
@@ -43,7 +53,7 @@
         ],
         "people": "Ahmed Memon, Ali Shaheer",
         "created_at": "2026-10-05",
-        "last_activity": "2026-10-26",
+        "last_activity": "2026-11-20",
         "due": null,
         "subitems": []
       },
@@ -51,10 +61,15 @@
         "monday_item_id": "13383800832",
         "name": "Seminar guests: reminders + missing guest names",
         "board": "CRM",
-        "status": "Start",
+        "status": "Waiting",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13383800832",
-        "updated_at": "2026-10-26T12:07:34.000Z",
+        "updated_at": "2026-11-20T16:32:00.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-11-20",
+            "text": "@Nacer Amrouch ﻿﻿, guest confirmation and 7-day, 3-day and 24-hour reminder emails are enabled on all four calendars. We still need to verify confirmation for guests added after booking. ﻿﻿Who can provide the missing guest names from LeadingResponse? The saved webhook sample only contains the main registrant’s details. We need the guest list/export to finish this task."
+          },
           {
             "author": "Sohib Boundaoui",
             "date": "2026-10-26",
@@ -63,7 +78,7 @@
         ],
         "people": "Ahmed Memon",
         "created_at": "2026-10-26",
-        "last_activity": "2026-10-26",
+        "last_activity": "2026-11-20",
         "due": null,
         "subitems": []
       },
@@ -71,7 +86,7 @@
         "monday_item_id": "13432454316",
         "name": "Pipeline Cleanup",
         "board": "CRM",
-        "status": "Start",
+        "status": "Waiting",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13432454316",
         "updated_at": "2026-11-16T17:37:04.000Z",
         "recent_updates": [
@@ -88,7 +103,7 @@
         ],
         "people": "Ahmed Memon, Ali Shaheer",
         "created_at": "2026-10-31",
-        "last_activity": "2026-11-16",
+        "last_activity": "2026-11-19",
         "due": null,
         "subitems": []
       },
@@ -96,10 +111,15 @@
         "monday_item_id": "13432454357",
         "name": "Appointment Reminders",
         "board": "CRM",
-        "status": "Start",
+        "status": "Done",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13432454357",
-        "updated_at": "2026-10-31T03:22:25.000Z",
+        "updated_at": "2026-11-19T21:51:08.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-11-19",
+            "text": "Completed and QA verified. - Rebuilt and saved Crown Point’s native calendar SMS reminder timings: 7 days, 3 days and 24 hours. - Verified calendar reminders do not depend on lead-type tags. The legacy “Appointment Confirmation + Reminder” workflow was already Draft and remains off. - Email QA passed: confirmations and all three reminder timings received in Gmail. Final SMS QA on Naccer’s approved test number passed 6/6 Delivered (3 confirmations + 3 scheduled reminders). The reminder texts fired on schedule at 3:45 PM Chicago time. - All QA appointments cancelled, QA opportunities closed, contact settings restored and further QA messages blocked. - Seminar RSVP workflows and the Attended stage were not changed. Marking this task Done."
+          },
           {
             "author": "Nacer Amrouch",
             "date": "2026-10-31",
@@ -108,7 +128,7 @@
         ],
         "people": "Ahmed Memon, Ali Shaheer",
         "created_at": "2026-10-31",
-        "last_activity": "2026-10-30",
+        "last_activity": "2026-11-19",
         "due": null,
         "subitems": []
       },
@@ -116,10 +136,15 @@
         "monday_item_id": "13458670850",
         "name": "Booking Sync",
         "board": "CRM",
-        "status": "Start",
+        "status": "Waiting",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13458670850",
-        "updated_at": "2026-11-03T21:41:31.000Z",
+        "updated_at": "2026-11-19T22:17:28.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-11-19",
+            "text": "Salam @Nacer Amrouch ﻿ ﻿﻿Waiting for Sabri to confirm Samir’s guest email and refresh/save the original Google Calendar event for October 30 at 1:30 PM Central. The request has been sent in the Senior Insurance WhatsApp group. The two-way sync is enabled, but this older appointment is still missing under Samir’s GHL contact. After Sabri confirms, we’ll verify it links to the existing contact without duplicates."
+          },
           {
             "author": "Nacer Amrouch",
             "date": "2026-11-03",
@@ -128,7 +153,7 @@
         ],
         "people": "Ahmed Memon, Ali Shaheer",
         "created_at": "2026-11-03",
-        "last_activity": "2026-11-03",
+        "last_activity": "2026-11-20",
         "due": null,
         "subitems": []
       },
@@ -161,10 +186,20 @@
         "monday_item_id": "13561445068",
         "name": "Ken Tracking Number",
         "board": "CRM",
-        "status": "Start",
+        "status": "Waiting",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13561445068",
-        "updated_at": "2026-11-16T17:37:09.000Z",
+        "updated_at": "2026-11-19T22:03:05.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-11-19",
+            "text": "@Nacer Amrouch ﻿﻿﻿Brother, Ken’s forwarding number is saved. Please coordinate one call to 219-832-5952 from a number new to GHL. Leave Haneef, Nedah and Sabri’s apps unanswered, check whether Ken’s 219-613-6098 rings next, and let Voice AI answer if Ken also leaves it unanswered. Please share the caller’s last four digits and call time so I can verify the logs, source and tags."
+          },
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-11-19",
+            "text": "@Nacer Amrouch ﻿ Salam brother, please share Ken Peterson’s personal phone number for call f﻿orwarding. His campaign number is 219-832-5952. Haneef, Nedah and Sabri are set to ring first; I need Ken’s number for the next step before we can finish and test the full route.﻿"
+          },
           {
             "author": "Nacer Amrouch",
             "date": "2026-11-16",
@@ -173,7 +208,7 @@
         ],
         "people": "Ahmed Memon, Ali Shaheer",
         "created_at": "2026-11-16",
-        "last_activity": "2026-11-16",
+        "last_activity": "2026-11-19",
         "due": null,
         "subitems": []
       },
@@ -286,7 +321,7 @@
         "monday_item_id": "13502808338",
         "name": "Meta Ads - New Videos",
         "board": "Ads",
-        "status": "",
+        "status": "Done",
         "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/13502808338",
         "updated_at": "2026-11-19T15:20:25.000Z",
         "recent_updates": [
@@ -308,6 +343,26 @@
         ],
         "people": "Nacer Amrouch",
         "created_at": "2026-11-09",
+        "last_activity": "2026-11-20",
+        "due": null,
+        "subitems": []
+      },
+      {
+        "monday_item_id": "13598021624",
+        "name": "$100 Budget",
+        "board": "Ads",
+        "status": "",
+        "monday_url": "https://flowcompany.monday.com/boards/18405754310/pulses/13598021624",
+        "updated_at": "2026-11-19T21:29:41.000Z",
+        "recent_updates": [
+          {
+            "author": "Ads Team",
+            "date": "2026-11-19",
+            "text": "Meta Ads: ﻿ ﻿﻿Since we now have the go-ahead to move to $100/day, I will set the budget up as below so no single ad set runs too thin: - Arabic video, 28 States: $25 - English video, 28 States: $12 - Arabic video, Ohio: $10 - Local (Illinois and Indiana): $23 - Ken Peterson ads: $24 in total ($10 for the 28 States, $8 for Illinois, $6 for Indiana) I will pause the﻿ English Indiana ad sets, as they have brought very few calls so far, and move that budget to the stronger ones. Please note this setup may look different from the earlier plan we agreed on. That is only because the budget is now higher, so I can add the Ken Peterson ads and give each ad set enough room to work. I will also adjust the budget between ad sets based on performance, moving more to what brings the best results and les"
+          }
+        ],
+        "people": "Sohib Boundaoui",
+        "created_at": "2026-11-19",
         "last_activity": "2026-11-19",
         "due": null,
         "subitems": []
@@ -508,7 +563,7 @@
         ],
         "people": "Muhammad Hashir Faiz, Zayan Faiz",
         "created_at": "2026-10-27",
-        "last_activity": "2026-11-19",
+        "last_activity": "2026-11-20",
         "due": null,
         "subitems": []
       }
@@ -1224,6 +1279,26 @@
         "people": "Muhammad Hashir Faiz, Zayan Faiz, Nacer Amrouch",
         "created_at": "2026-11-09",
         "last_activity": "2026-11-16",
+        "due": null,
+        "subitems": []
+      },
+      {
+        "monday_item_id": "13597609504",
+        "name": "Organic Growth Review",
+        "board": "Web + SEO",
+        "status": "Start",
+        "monday_url": "https://flowcompany.monday.com/boards/18099807701/pulses/13597609504",
+        "updated_at": "2026-11-19T20:49:09.000Z",
+        "recent_updates": [
+          {
+            "author": "Nacer Amrouch",
+            "date": "2026-11-19",
+            "text": "Salam, On 11/17 Sohib flagged in the Web & SEO chat (screenshot attached there) that the Maadi Law organic growth trend is flatlining . At this early stage of the work it should still be climbing. Hashir said he would review the overall campaign. Nothing on the board tracks it yet. Find why growth has stalled : compare Search Console clicks and impressions and GBP activity against the prior period, and check indexing of the newer pages, including the Arabic landing page that went live 11/12. Post the findings and a fix plan here , with what you will change first. @Muhammad Hashir Faiz @Zayan Faiz"
+          }
+        ],
+        "people": "Muhammad Hashir Faiz, Zayan Faiz",
+        "created_at": "2026-11-19",
+        "last_activity": "2026-11-19",
         "due": null,
         "subitems": []
       }
@@ -2098,7 +2173,7 @@
         ],
         "people": "Ads Team",
         "created_at": "2026-10-19",
-        "last_activity": "2026-11-16",
+        "last_activity": "2026-11-20",
         "due": null,
         "subitems": []
       },
@@ -2335,7 +2410,7 @@
         ],
         "people": "Ads Team",
         "created_at": "2026-05-05",
-        "last_activity": "2026-11-19",
+        "last_activity": "2026-11-20",
         "due": null,
         "subitems": []
       },
