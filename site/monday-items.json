@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-20T19:49:43.405263+00:00",
+  "generated_at": "2026-11-21T18:55:59.137857+00:00",
   "by_client": {
     "Senior Insurance": [
       {
@@ -573,10 +573,15 @@
         "monday_item_id": "13002507842",
         "name": "Lead Escalation Workflows",
         "board": "CRM",
-        "status": "Done",
+        "status": "For Review",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13002507842",
-        "updated_at": "2026-09-18T00:45:06.000Z",
+        "updated_at": "2026-11-21T00:32:13.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-11-21",
+            "text": "Configuration verified; final sign-off For Review — 21 Nov 2026 Completed/verified in Weston today: Missed Call Textback, Cancel Missed Call on Answer and Missed Message Textback are Published. The missed-message builder now waits for a staff reply, with a 120-minute timeout; the staff-replied path removes the contact. WhatsApp delivery branches, duplicate guards, business-opening handling and Renata notification actions are present. The latest written task QA note still leaves live staff-reply/no-reply tests awaiting sign-off. The original Done criterion also requires Renata to confirm receipt of the internal alert. Current workflow publication alone does not prove those results. Remaining before final Done: confirm the controlled missed-call and unanswered-message results, prove no autom"
+          },
           {
             "author": "Ahmed Memon",
             "date": "2026-09-18",
@@ -586,16 +591,11 @@
             "author": "Nacer Amrouch",
             "date": "2026-09-17",
             "text": "Salam, Renata sent four screenshots on 16 September showing automated messages going out while she was actively replying to the patient. Her words: this flow needs review, we cannot send an automated message while I am messaging the patient. The 16 September checkin reset the rule. The missed message textback and its internal alert fire only after 2 hours with no staff reply , not the 1 hour built on 10 September, and never at all once a staff member has replied on the thread. Add the staff reply filter that this item's 9 September context already named as wrong: the notification triggers on the contact replying at all, so every patient message restarts the clock instead of stopping it. Test on a live thread where staff reply inside the window and confirm nothing automated is sent, then re"
-          },
-          {
-            "author": "Ahmed Memon",
-            "date": "2026-09-10",
-            "text": "Completed the Missed Call Textback and Missed Message Textback drafts. Missed messages wait one hour for a staff response during business hours; if unanswered, Renata receives an internal alert. After-hours contacts receive the closed-office response immediately, while Renata’s notification waits until the next business opening. Missed-call alerts follow the same business-hours rules. WhatsApp is primary, SMS is only the undelivered fallback, duplicate-message protection is configured, and both workflows have zero builder errors. They remain unpublished pending approval and controlled live QA."
           }
         ],
         "people": "Ahmed Memon, Ali Shaheer",
         "created_at": "2026-09-09",
-        "last_activity": "2026-11-19",
+        "last_activity": "2026-11-20",
         "due": null,
         "subitems": []
       },
@@ -605,8 +605,13 @@
         "board": "CRM",
         "status": "Start",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13073772688",
-        "updated_at": "2026-09-17T20:07:58.000Z",
+        "updated_at": "2026-11-21T00:31:40.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-11-21",
+            "text": "Task reconciliation — 21 Nov 2026 The required geography trace is still open. The earlier general NextGen/import explanation and the later source-count report do not by themselves resolve Renata's specific Massachusetts inbound-message examples. Pending: for each example she shared, record the contact's entry date, original source, import/sync history and campaign (if present). Distinguish an imported patient replying on an old thread from a new paid enquiry. Tag confirmed imported records appropriately; send confirmed paid-campaign geography findings to the Ads Team, who own targeting. Completion requires the contact-by-contact evidence and one clear written conclusion. No targeting settings, sources or contact records were changed during this update."
+          },
           {
             "author": "Nacer Amrouch",
             "date": "2026-09-17",
@@ -615,7 +620,7 @@
         ],
         "people": "Ahmed Memon, Ali Shaheer",
         "created_at": "2026-09-17",
-        "last_activity": "2026-09-17",
+        "last_activity": "2026-11-20",
         "due": null,
         "subitems": []
       },
@@ -623,10 +628,15 @@
         "monday_item_id": "13383800827",
         "name": "GHL rollout: 5 clinics (clone Weston)",
         "board": "CRM",
-        "status": "Start",
+        "status": "Waiting",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13383800827",
-        "updated_at": "2026-10-26T12:07:32.000Z",
+        "updated_at": "2026-11-21T00:31:07.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-11-21",
+            "text": "WAITING — clinic rollout inputs and Weston sign-off Completed foundation: the Weston account has existing pipelines, workflows, templates and review automation that can serve as the rollout reference. This is not evidence that the five clinic clones are complete. Still pending from Medstation: the five clinic details, patient lists and a named representative. Rollout order remains lower-volume clinics first, with the existing December 18–24 build target and January training plan. Before cloning: resolve/verify Weston's Booked → Attended mapping and separate clinic-specific WhatsApp numbers, tracking, pipelines, workflows, templates, review settings and audiences. Each clinic needs its own validation and launch approval. No other clinic was cloned or launched during this update."
+          },
           {
             "author": "Sohib Boundaoui",
             "date": "2026-10-26",
@@ -635,7 +645,7 @@
         ],
         "people": "Ahmed Memon",
         "created_at": "2026-10-26",
-        "last_activity": "2026-11-19",
+        "last_activity": "2026-11-20",
         "due": null,
         "subitems": []
       },
@@ -645,8 +655,13 @@
         "board": "CRM",
         "status": "In Progress",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13383800828",
-        "updated_at": "2026-11-17T05:06:43.000Z",
+        "updated_at": "2026-11-21T00:31:25.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-11-21",
+            "text": "Progress verified in Weston GHL — 21 Nov 2026 Completed: separate Patient Reactivation pipeline and reply/booking tracking built; English, Portuguese and Spanish Utility follow-ups and controlled reply/booking/duplicate QA were completed previously. Current GHL status verified today (total / active enrollments): • Engaged Not Booked — Published, 78 / 4. • Recent WhatsApp Reply — Published, 386 / 0. • Reply Pipeline Tracking — Published, 396 / 0. • Booking Pipeline Tracking — Published, 1 / 0. • Existing 45-Day WhatsApp — Published, 4 / 0. • 45-Day NextGen Backfill | DRAFT — Draft, 0 / 0. These are workflow enrollment counters, not delivered messages, unique patients or successful reactivations. Prepared in the backfill draft: last-appointment/quiet-period eligibility, cohort tagging, dupli"
+          },
           {
             "author": "Nacer Amrouch",
             "date": "2026-11-17",
@@ -660,7 +675,7 @@
         ],
         "people": "Ahmed Memon",
         "created_at": "2026-10-26",
-        "last_activity": "2026-11-19",
+        "last_activity": "2026-11-20",
         "due": null,
         "subitems": []
       },
@@ -668,10 +683,15 @@
         "monday_item_id": "13432500995",
         "name": "Medcard Account",
         "board": "CRM",
-        "status": "Start",
+        "status": "Waiting",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13432500995",
-        "updated_at": "2026-10-31T03:37:43.000Z",
+        "updated_at": "2026-11-21T00:30:54.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-11-21",
+            "text": "Progress reconciliation — 21 Nov 2026 Scope confirmed: this task is the separate Medcard membership subaccount and integration, not the Medcard email campaign already prepared for Weston. Completed: reviewed Mateus's request and the account-separation requirement. The Weston campaign work does not complete this task. WAITING: Naz/Naccer to confirm scope with Mateus — the new subaccount, billing responsibility, integration requirements and the membership list. No confirmed subaccount creation, membership import or API credential handover is recorded here. Next: after scope approval, create the separate account, define restricted integration access, import the approved membership list and verify the integration. Keep membership records separate from clinic campaign audiences. No account, imp"
+          },
           {
             "author": "Nacer Amrouch",
             "date": "2026-10-31",
@@ -680,7 +700,7 @@
         ],
         "people": "Ahmed Memon, Ali Shaheer, Nacer Amrouch",
         "created_at": "2026-10-31",
-        "last_activity": "2026-10-30",
+        "last_activity": "2026-11-20",
         "due": null,
         "subitems": []
       },
@@ -690,8 +710,13 @@
         "board": "CRM",
         "status": "Start",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13560767339",
-        "updated_at": "2026-11-16T16:48:31.000Z",
+        "updated_at": "2026-11-21T00:31:46.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-11-21",
+            "text": "Task reconciliation — 21 Nov 2026 The reported Booked → Attended discrepancy is still open: the task reports only one Attended opportunity despite multiple completed appointments. Earlier appointment identity/sync and Google review fixes do not prove this stage-count issue is resolved. Pending: trace completed NextGen visits through the incoming appointment/checkout status, identify the exact GHL stage-update trigger and opportunity matching, then fix and verify it with approved QA. Backfill only verified completed visits after duplicate checks; preserve owners and unrelated opportunities. Do this before cloning Weston to Sunny Isles/other clinics. No appointments, opportunities or workflows were changed and no tests were run during this update."
+          },
           {
             "author": "Nacer Amrouch",
             "date": "2026-11-16",
@@ -700,7 +725,7 @@
         ],
         "people": "Ahmed Memon, Ali Shaheer",
         "created_at": "2026-11-16",
-        "last_activity": "2026-11-16",
+        "last_activity": "2026-11-20",
         "due": null,
         "subitems": []
       },
@@ -708,10 +733,15 @@
         "monday_item_id": "13566408010",
         "name": "Medstation — NextGen financial API routes",
         "board": "CRM",
-        "status": "In Progress",
+        "status": "Waiting",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13566408010",
-        "updated_at": "2026-11-17T05:06:40.000Z",
+        "updated_at": "2026-11-21T00:31:00.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-11-21",
+            "text": "WAITING — NextGen financial API access The latest task report says the financial routes return 401. This is separate from the appointment/checkout sync and Google review work; those do not establish access to patient cost/value data. Pending: Medstation IT must grant/confirm access to the required financial routes. Naccer is the escalation contact named in the task. After access is available, verify the authorized endpoints and mapping before testing patient cost/value into GHL. No new API test, patient-data transfer or client message was run as part of this status update. This task remains incomplete pending IT access."
+          },
           {
             "author": "Nacer Amrouch",
             "date": "2026-11-17",
@@ -720,7 +750,7 @@
         ],
         "people": "Ahmed Memon",
         "created_at": "2026-11-17",
-        "last_activity": "2026-11-19",
+        "last_activity": "2026-11-20",
         "due": null,
         "subitems": []
       },
@@ -901,10 +931,15 @@
         "monday_item_id": "13154741544",
         "name": "Lead Follow Up",
         "board": "CRM",
-        "status": "Start",
+        "status": "In Progress",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13154741544",
-        "updated_at": "2026-10-31T03:06:12.000Z",
+        "updated_at": "2026-11-21T00:25:48.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-11-21",
+            "text": "Progress update — 21 Nov 2026 (PKT) Completed: traced Tracy’s unwanted text to “Maadi Law - After Hours Auto Reply + Callback Queue”, which enrolled every new opportunity, including manual entries for repeat clients. Disabled only that customer SMS action and saved the live workflow; callback tasks and staff notifications remain enabled. Verified: one messaging-blocked dummy contact and one temporary opportunity triggered a restricted QA copy with its after-hours branch forced. GHL logged the SMS as “Skipped — This Action is disabled” and successfully created the callback task. The QA task was completed, opportunity abandoned, QA marker removed and QA copy turned off. No customer messages or calls were sent. The update was shared in Maadi WhatsApp and acknowledged by Tracy. Still pending o"
+          },
           {
             "author": "Nacer Amrouch",
             "date": "2026-10-31",
@@ -914,16 +949,11 @@
             "author": "Sohib Boundaoui",
             "date": "2026-10-26",
             "text": "Fixed 9/21: follow-ups now stop when the lead moves past Attempted, replies, or signs or declines the agreement, and only send 8 AM to 7 PM Central. Reopened: the firm reported on 10/23 that automatic texts went out to a lead before staff were in."
-          },
-          {
-            "author": "Nacer Amrouch",
-            "date": "2026-09-28",
-            "text": "Salam, Maadi Law sends an automatic acknowledgement when a lead comes in, then chases it about three hours later if the thread still looks unanswered. The firm sent us a screenshot of that chase firing again and asked why. The lead had actually come through the IVR and spoken to the firm, but because there was no typed reply, the workflow counted it as silence and chased anyway. Only a typed reply stops it today, so every phone conversation still looks unanswered to the system. We need an inbound or answered call, IVR included, to stop the follow-up the same way a reply does, we've already told the firm this is coming. We also need to fix whatever the workflow actually checks for a reply today, then prove it on a dummy contact down both paths, reply-only and call-only, and confirm the chas"
           }
         ],
         "people": "Ahmed Memon, Ali Shaheer",
         "created_at": "2026-09-28",
-        "last_activity": "2026-10-30",
+        "last_activity": "2026-11-20",
         "due": null,
         "subitems": []
       },
@@ -933,8 +963,13 @@
         "board": "CRM",
         "status": "Start",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13383782871",
-        "updated_at": "2026-10-26T12:07:34.000Z",
+        "updated_at": "2026-11-21T00:28:27.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-11-21",
+            "text": "Task reconciliation — 21 Nov 2026 (PKT) Still open: the firm reported that one Google review received no automatic reply while an earlier review on the same day did. The available task history does not contain a verified repair or a confirmed successful reply for the affected review. Pending: inspect the connected Google Business Profile, review auto-reply settings and the affected review/reply history; identify why that review was skipped, correct the relevant setting if needed and verify the result before reporting completion in Maadi WhatsApp. No new public review reply or customer message was posted during this task update. Keeping Start; not marking Done without verification."
+          },
           {
             "author": "Sohib Boundaoui",
             "date": "2026-10-26",
@@ -943,7 +978,7 @@
         ],
         "people": "Ahmed Memon",
         "created_at": "2026-10-26",
-        "last_activity": "2026-10-26",
+        "last_activity": "2026-11-20",
         "due": null,
         "subitems": []
       },
@@ -951,10 +986,15 @@
         "monday_item_id": "13432464593",
         "name": "Lead Source Audit",
         "board": "CRM",
-        "status": "Start",
+        "status": "Waiting",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13432464593",
-        "updated_at": "2026-11-16T15:42:30.000Z",
+        "updated_at": "2026-11-21T00:27:20.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-11-21",
+            "text": "WAITING — Zapier sign-in verification (21 Nov 2026 PKT) Completed: checked Maadi’s GHL integration and existing mapping fields. Clio Contact ID and both contact-level and opportunity-level Clio Matter ID fields are already present. Duplicate matching is Email first, Phone second, with duplicate contacts disabled. Located the Flow Zapier login shared in internal WhatsApp; the password was accepted. Waiting on Sohib’s emailed Zapier sign-in code and account verification/CAPTCHA before the existing Maadi Zaps can be inspected. No replacement Zap has been built or tested in this session, and the native connector has NOT been switched off. Next: audit the existing GHL → Clio and Clio → GHL Zaps, prepare the missing Clio → GHL create/update handling, preserve first-touch source and UTM/click-ID "
+          },
           {
             "author": "Nacer Amrouch",
             "date": "2026-11-16",
@@ -964,16 +1004,11 @@
             "author": "Nacer Amrouch",
             "date": "2026-11-03",
             "text": "Salam, Sharif confirmed on 10/30 that 708-670-2465 is Jasmine Barbarawi's number. Merge the phone only contact into her Clio imported record and add the number. The Clio overwrite of contact source and the blank phone and email on Clio imports are still open . @Ahmed Memon @Ali Shaheer"
-          },
-          {
-            "author": "Nacer Amrouch",
-            "date": "2026-10-31",
-            "text": "Salam, The 10/28 audit is mostly closed. On 10/29 Raheel explained the gaps: Meta and LSA had shared 708 741 2164 since 9/22, so the 15 \"LSA\" calls include Meta calls. Meta now uses 708 719 2305 and LSA stays on 2164. Ahmed's updated report (10/29) shows Meta, LSA and the website test passing with no duplicates. Raheel confirmed no finer Meta or LSA call data exists, so historical shared number attribution and the 10/23 Google conversion stay unconfirmed. Record that in the report and stop chasing it. Fix the native Clio overwrite of contact source, still open. Fix Clio imports with blank phone and email : on 10/29 a call from 708 670 2465 created a separate phone only contact because the Clio imported record for Jasmine Barbarawi had no phone. Waiting on Tracy to confirm the number. Rolli"
           }
         ],
         "people": "Ahmed Memon, Ali Shaheer",
         "created_at": "2026-10-31",
-        "last_activity": "2026-11-16",
+        "last_activity": "2026-11-20",
         "due": null,
         "subitems": []
       },
@@ -981,10 +1016,15 @@
         "monday_item_id": "13559921489",
         "name": "Attribution Dashboard",
         "board": "CRM",
-        "status": "Start",
+        "status": "Waiting",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13559921489",
-        "updated_at": "2026-11-16T15:46:25.000Z",
+        "updated_at": "2026-11-21T00:28:20.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-11-21",
+            "text": "WAITING — Clio source-preservation dependency (21 Nov 2026 PKT) Scope reviewed: the required GHL dashboard needs date filters (7/30/90 days and 12 months), leads by first-touch source including referrals/word of mouth, opportunity stages and Case Accepted by source, plus a visible No source bucket. Meta should combine forms and calls with campaign/form/video detail where data exists; Google Search and LSA need their corresponding detail. Not reporting this dashboard as built or verified. Naccer’s requirement is that the Clio → GHL source-overwrite replacement lands first. That work is currently waiting for the Flow Zapier emailed sign-in code/account verification. No historical source backfill is planned. Next: verify the replacement sync preserves source and UTM data, then build/check the"
+          },
           {
             "author": "Nacer Amrouch",
             "date": "2026-11-16",
@@ -993,7 +1033,7 @@
         ],
         "people": "Ahmed Memon, Ali Shaheer",
         "created_at": "2026-11-16",
-        "last_activity": "2026-11-16",
+        "last_activity": "2026-11-20",
         "due": null,
         "subitems": []
       },
@@ -1001,10 +1041,15 @@
         "monday_item_id": "13566436802",
         "name": "Maadi — IVR menu: repeat 2× instead of 3×",
         "board": "CRM",
-        "status": "Done",
+        "status": "Waiting",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13566436802",
-        "updated_at": "2026-11-17T05:06:39.000Z",
+        "updated_at": "2026-11-21T00:27:27.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-11-21",
+            "text": "WAITING — live IVR test with Tracy and Naccer (21 Nov 2026 PKT) Configuration completed: the Zoom main-line menu was changed from three plays to two, then routes no-selection callers to the New Client queue with Tracy first. This is recorded in the earlier task reply. Pending acceptance: one outside-phone call to 312-312-7558 during business hours, pressing no keys, to confirm the menu plays exactly twice and Tracy’s phone rings. Naccer repeated this request in the Maadi WhatsApp group; no successful result has been provided yet. Changed the task from Done to Waiting so configuration completion is not confused with a verified end-to-end call. No new test call was placed. Waiting for Tracy/Naccer’s caller number/time and ringing result."
+          },
           {
             "author": "Nacer Amrouch",
             "date": "2026-11-17",
@@ -1013,7 +1058,7 @@
         ],
         "people": "Ahmed Memon, Nacer Amrouch",
         "created_at": "2026-11-17",
-        "last_activity": "2026-11-19",
+        "last_activity": "2026-11-20",
         "due": null,
         "subitems": []
       },
@@ -1310,8 +1355,13 @@
         "board": "CRM",
         "status": "Start",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13251106239",
-        "updated_at": "2026-10-09T19:06:22.000Z",
+        "updated_at": "2026-11-21T00:34:50.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-11-21",
+            "text": "Progress reconciliation — 21 Nov 2026 The Junk Call Audit is still pending; no completed call-by-call audit or final findings are attached to this task. The new Meta number forwarding work is separate and does not complete the historical spam/source audit. Remaining: reconcile September 7–23 by receiving tracking number and source, identify which lines received the spam, account for the seven unexplained calls, and give Luis one consistent row-per-call method (date/time, caller, receiving number, source, category and outcome) for the September 24 onward period. Resolve any mismatched totals against the original call rows rather than treating the summary figures as a completed reconciliation. Recommend the appropriate response for the worst affected line and hand any advertising/targeting c"
+          },
           {
             "author": "Nacer Amrouch",
             "date": "2026-10-09",
@@ -1320,7 +1370,7 @@
         ],
         "people": "Ahmed Memon, Ali Shaheer",
         "created_at": "2026-10-09",
-        "last_activity": "2026-10-09",
+        "last_activity": "2026-11-20",
         "due": null,
         "subitems": []
       },
@@ -1328,10 +1378,15 @@
         "monday_item_id": "13383782870",
         "name": "New Meta tracking number",
         "board": "CRM",
-        "status": "Start",
+        "status": "For Review",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13383782870",
-        "updated_at": "2026-11-02T10:47:36.000Z",
+        "updated_at": "2026-11-21T00:34:56.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-11-21",
+            "text": "Forwarding completed; test verification For Review — 21 Nov 2026 Completed work already recorded here: forwarding for the new Meta tracking number 708-847-0570 was set up using HVAC's existing team routing, and the test request was posted on November 2. Naccer DID reply: he reported calling from his line ending 1459 at 10:14 CST on November 2. This is no longer waiting for him to make that test. Remaining before final Done: match that reported call to GHL and record the actual forwarding/answer result and receiving-number/source attribution. His comment confirms that he placed the call; it does not explicitly confirm which team member rang or answered. Marking For Review rather than leaving the configured work at Start or claiming an unverified end-to-end pass. No new test call or routing "
+          },
           {
             "author": "Ahmed Memon",
             "date": "2026-11-02",
@@ -1345,7 +1400,7 @@
         ],
         "people": "Ahmed Memon",
         "created_at": "2026-10-26",
-        "last_activity": "2026-11-02",
+        "last_activity": "2026-11-20",
         "due": null,
         "subitems": []
       },
@@ -1353,10 +1408,15 @@
         "monday_item_id": "13432475433",
         "name": "Lead Reactivation",
         "board": "CRM",
-        "status": "Stuck",
+        "status": "Waiting",
         "monday_url": "https://flowcompany.monday.com/boards/18418241405/pulses/13432475433",
-        "updated_at": "2026-10-31T03:18:56.000Z",
+        "updated_at": "2026-11-21T00:34:32.000Z",
         "recent_updates": [
+          {
+            "author": "Ahmed Memon",
+            "date": "2026-11-21",
+            "text": "WAITING — client-approved reactivation message The task specifies approximately 80 engaged contacts who never booked and a 45-day reactivation sequence. The latest task instruction says Sohib is obtaining Quality HVAC's message copy; no approved copy or completed launch/test result is attached here. Pending: confirm and attach the client's approved copy, verify the eligible engaged/unbooked audience, build/verify reply and booking stop conditions, run approved dummy-contact QA, then obtain launch approval and record the actual enrolled count. No replacement message was written, no contacts enrolled and no workflow activated during this update. Marking Waiting to make the client-copy dependency clear."
+          },
           {
             "author": "Nacer Amrouch",
             "date": "2026-10-31",
@@ -1365,7 +1425,7 @@
         ],
         "people": "Ahmed Memon, Ali Shaheer",
         "created_at": "2026-10-31",
-        "last_activity": "2026-10-30",
+        "last_activity": "2026-11-20",
         "due": null,
         "subitems": []
       },
